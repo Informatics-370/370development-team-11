@@ -1,10 +1,10 @@
 import { Role } from "./EmployeeRole";
 
 export interface User {
-  User_Id: Number;
-  Role_ID: Number;
-  Username: String;
-  Password: String;
-  Profile_Picture: String;
+  user_Id: Number;
+  role_ID: Number;
+  username: String;
+  password: String;
+  profile_Picture: String;
   role: Role;
 }

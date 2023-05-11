@@ -4,15 +4,15 @@ import { Mandate_Limit } from "./MandateLimit";
 import { User } from "./User";
 
 export interface Employee {
-  EmployeeID: Number;
-  User_Id: Number;
-  Department_ID: Number;
-  Branch_ID: Number;
-  Mandate_ID: Number;
-  EmployeeName: String;
-  EmployeeSurname: String;
-  CellPhone_Num: String;
-  Email: String;
+  employeeID: Number;
+  user_Id: Number;
+  department_ID: Number;
+  branch_ID: Number;
+  mandate_ID: Number;
+  employeeName: String;
+  employeeSurname: String;
+  cellPhone_Num: String;
+  email: String;
   branch: Branch;
   department: Department;
   user: User;

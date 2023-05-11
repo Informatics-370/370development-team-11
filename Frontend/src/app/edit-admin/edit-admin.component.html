@@ -57,23 +57,8 @@
                     <input matInput type="text" placeholder="" formControlName="CellPhone_Num" id="CellPhone_Num" required>
                     <mat-error *ngIf="myError('CellPhone_Num', 'required')">Phone is required</mat-error>
                     <mat-error *ngIf="myError('CellPhone_Num', 'maxlength')">Limit exceed</mat-error>
-                    <mat-error *ngIf="myError('CellPhone_Num', 'minlength')">Phone number must be atleast 10 numbers</mat-error>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'minlength')">Phone number must be 10 numbers</mat-error>
                     <mat-error *ngIf="myError('CellPhone_Num', 'pattern')">Please enter a valid phone number</mat-error>
-                  </mat-form-field>
-                </mat-card-content>
-              </td>
-            </tr>
-            <tr> 
-              <td style="width:100%;">
-                <mat-card-content>
-                  <label style=" color:black;">Role:</label>
-                  <br />
-                  <mat-form-field>
-                    <mat-label>Choose one</mat-label>
-                    <mat-select formControlName="Role" required>
-                      <mat-option *ngFor="let r of userRoles" [value]="r.role_ID">{{r.name}}</mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="myError('Role', 'required')">Please choose a role</mat-error>
                   </mat-form-field>
                 </mat-card-content>
               </td>

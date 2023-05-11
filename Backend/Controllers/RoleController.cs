@@ -56,7 +56,7 @@ namespace ProcionAPI.Controllers
             try
             {
                 var result = await _RoleRepository.GetRoleAsync(roleID);
-                if (result == null) return NotFound("Course does not exist. You need to create it first");
+                if (result == null) return NotFound("Role does not exist. You need to create it first");
 
                 return Ok(result);
             }
@@ -69,26 +69,18 @@ namespace ProcionAPI.Controllers
         
         [HttpPut]
         [Route("EditRole/{roleID}")]
-        public async Task<ActionResult<Role>> EditRole(int roleID, Role RoleEdit)
+        public async Task<ActionResult<Role>> EditRole([FromRoute] int roleID, Role RoleEdit)
         {
             try
             {
-                var existingRole = await _RoleRepository.GetRoleAsync(roleID);
-                if (existingRole == null) return NotFound($"The role does not exist");
+                var result = await _RoleRepository.UpdateRoleAsync(roleID, RoleEdit);
+                return Ok(result);
 
-                existingRole.Name = RoleEdit.Name;
-                existingRole.Description = RoleEdit.Description;
-
-                if (await _RoleRepository.SaveChangesAsync())
-                {
-                    return Ok(existingRole);
-                }
             }
             catch (Exception)
             {
                 return StatusCode(500, "Internal Server Error. Please contact support");
             }
-            return BadRequest("Your request is invalid");
         }
 
         [HttpDelete]
@@ -108,6 +100,21 @@ namespace ProcionAPI.Controllers
             }
             return BadRequest("Your request is invalid");
         }
-        
+
+        [HttpGet]
+        [Route("RoleValidation/{name}")]
+        public async Task<IActionResult> RoleValidation([FromRoute] string name)
+        {
+            try
+            {
+                var result = await _RoleRepository.RoleValidationAsync(name);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
 }

@@ -29,16 +29,16 @@
 
       <span style="flex: 1 1 auto;"></span>
 
-      <mat-form-field appearance="fill" style=" float:right; font-size: 12px; width: 300px; margin-top:0.5%; margin-right:1%;">
+      <mat-form-field appearance="fill" style=" float:right; font-size: 12px; width: 300px; margin-top:0.5%; margin-right:1%;" >
         <mat-label>Search</mat-label>
-        <input matInput />
+        <input matInput  (keyup)="search()" [(ngModel)]="searchWord" />
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
 
     </div>
     
     <div style="margin-right:1%; margin-left:1%;">
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <table mat-table [dataSource]="SearchedRole" class="mat-elevation-z8">
 
         <!-- Position Column -->
         <ng-container matColumnDef="id">

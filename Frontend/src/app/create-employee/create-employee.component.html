@@ -12,11 +12,11 @@
                   <label style=" color:black;">Name:</label>
                   <br />
                   <mat-form-field>
-                    <input matInput type="text" placeholder="" formControlName="EmployeeName" id="EmployeeName" required>
+                    <input matInput type="text" placeholder="E.g. John" formControlName="EmployeeName" id="EmployeeName" required>
                     <mat-hint align="end">Not more then 32 characters long.</mat-hint>
                     <mat-error *ngIf="myError('EmployeeName', 'required')">Name is required</mat-error>
                     <mat-error *ngIf="myError('EmployeeName', 'maxlength')">Limit exceed</mat-error>
-                    <mat-error *ngIf="myError('EmployeeName', 'minlength')">Name must be 3 to 32 characters long</mat-error>
+                    <mat-error *ngIf="myError('EmployeeName', 'minlength')">Name must be 2 to 32 characters long</mat-error>
                     <mat-error *ngIf="myError('EmployeeName', 'pattern')">Name can not contain numbers</mat-error>
                   </mat-form-field>
                 </mat-card-content>
@@ -26,12 +26,12 @@
                   <label style=" color: black;">Surname:</label>
                   <br />
                   <mat-form-field>
-                    <input matInput type="text" placeholder="" formControlName="EmployeeSurname" id="EmployeeSurname" required>
+                    <input matInput type="text" placeholder="E.g. Doe" formControlName="EmployeeSurname" id="EmployeeSurname" required>
                     <mat-hint align="end">Not more then 50 characters long.</mat-hint>
                     <mat-error *ngIf="myError('EmployeeSurname', 'required')">Surname is required</mat-error>
                     <mat-error *ngIf="myError('EmployeeSurname', 'maxlength')">Limit exceed</mat-error>
                     <mat-error *ngIf="myError('EmployeeSurname', 'pattern')">Surname can not contain numbers</mat-error>
-                    <mat-error *ngIf="myError('EmployeeSurname', 'minlength')">Surname must be 3 to 50 characters long</mat-error>
+                    <mat-error *ngIf="myError('EmployeeSurname', 'minlength')">Surname must be 2 to 50 characters long</mat-error>
                   </mat-form-field>
                 </mat-card-content>
               </td>
@@ -42,7 +42,7 @@
                   <label style=" color:black;">Email:</label>
                   <br />
                   <mat-form-field>
-                    <input matInput type="email" placeholder="" formControlName="Email" id="Email" required>
+                    <input matInput type="email" placeholder="E.g. example@gmail.com" formControlName="Email" id="Email" required>
                     <mat-error *ngIf="myError('Email', 'required')">Email is required</mat-error>
                     <mat-error *ngIf="myError('Email', 'maxlength')">Limit exceed</mat-error>
                     <mat-error *ngIf="myError('Email', 'email')">Enter a valid email</mat-error>
@@ -51,31 +51,19 @@
               </td>
               <td style="width:100%;">
                 <mat-card-content>
-                  <label style=" color: black;">Password:</label>
+                  <label style=" color:black;">Phone Number:</label>
                   <br />
                   <mat-form-field>
-                    <input matInput type="password" placeholder="" formControlName="Password" id="Password" required>
-                    <mat-error *ngIf="myError('Password', 'required')">Password is required</mat-error>
-                    <mat-error *ngIf="myError('Password', 'minlength')">Password must be atleast 6 characters long</mat-error>
-                    <mat-error *ngIf="myError('Password', 'pattern')">Password must be a combination of lower-case, upper-case, numbers.</mat-error>
+                    <input matInput type="text" placeholder="E.g. 082 123 4567" formControlName="CellPhone_Num" id="CellPhone_Num" required>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'required')">Phone is required</mat-error>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'maxlength')">Limit exceed</mat-error>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'minlength')">Phone number must be 10 numbers</mat-error>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'pattern')">Please enter a valid phone number</mat-error>
                   </mat-form-field>
                 </mat-card-content>
               </td>
             </tr>
             <tr>
-              <td style="width:100%;">
-                <mat-card-content>
-                  <label style=" color:black;">Phone Number:</label>
-                  <br />
-                  <mat-form-field>
-                    <input matInput type="text" placeholder="" formControlName="CellPhone_Num" id="CellPhone_Num" required>
-                    <mat-error *ngIf="myError('CellPhone_Num', 'required')">Phone is required</mat-error>
-                    <mat-error *ngIf="myError('CellPhone_Num', 'maxlength')">Limit exceed</mat-error>
-                    <mat-error *ngIf="myError('CellPhone_Num', 'minlength')">Phone number must be atleast 10 numbers</mat-error>
-                    <mat-error *ngIf="myError('CellPhone_Num', 'pattern')">Please enter a valid phone number</mat-error>
-                  </mat-form-field>
-                </mat-card-content>
-              </td>
               <td style="width:100%;">
                 <mat-card-content>
                   <label style=" color:black;">Role:</label>
@@ -84,9 +72,23 @@
                     <mat-label>Choose one</mat-label>
                     <mat-select formControlName="Role_ID" required>
                       <mat-option>---</mat-option>
-                      <mat-option *ngFor="let role of roles" [value]="role.name">{{role.name}}</mat-option>
+                      <mat-option *ngFor="let role of roles" [value]="role">{{role.name}}</mat-option>
                     </mat-select>
                     <mat-error *ngIf="myError('Role_ID', 'required')">Please choose a role</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Mandate Limit:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-label>Choose one</mat-label>
+                    <mat-select formControlName="Mandate_ID" required>
+                      <mat-option>---</mat-option>
+                      <mat-option *ngFor="let ml of mandate_limits" [value]="ml">{{ml.ammount}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="myError('Mandate_ID', 'required')">Please choose a mandate limit</mat-error>
                   </mat-form-field>
                 </mat-card-content>
               </td>
@@ -100,7 +102,7 @@
                     <mat-label>Choose one</mat-label>
                     <mat-select formControlName="Department_ID" required>
                       <mat-option>---</mat-option>
-                      <mat-option *ngFor="let dep of departments" [value]="dep.name">{{dep.name}}</mat-option>
+                      <mat-option *ngFor="let dep of departments" [value]="dep">{{dep.name}}</mat-option>
                     </mat-select>
                     <mat-error *ngIf="myError('Department_ID', 'required')">Please choose a department</mat-error>
                   </mat-form-field>
@@ -114,25 +116,9 @@
                     <mat-label>Choose one</mat-label>
                     <mat-select formControlName="Branch_ID" required>
                       <mat-option>---</mat-option>
-                      <mat-option *ngFor="let branch of branches" [value]="branch.name">{{branch.name}}</mat-option>
+                      <mat-option *ngFor="let branch of branches" [value]="branch">{{branch.name}}</mat-option>
                     </mat-select>
                     <mat-error *ngIf="myError('Branch_ID', 'required')">Please choose a branch</mat-error>
-                  </mat-form-field>
-                </mat-card-content>
-              </td>
-            </tr>
-            <tr>
-              <td style="width:100%;">
-                <mat-card-content>
-                  <label style=" color:black;">Mandate Limit:</label>
-                  <br />
-                  <mat-form-field>
-                    <mat-label>Choose one</mat-label>
-                    <mat-select formControlName="Mandate_ID" required>
-                      <mat-option>---</mat-option>
-                      <mat-option *ngFor="let ml of mandate_limits" [value]="ml">{{ml}}</mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="myError('Mandate_ID', 'required')">Please choose a mandate limit</mat-error>
                   </mat-form-field>
                 </mat-card-content>
               </td>

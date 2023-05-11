@@ -67,11 +67,11 @@ namespace ProcionAPI.Controllers
 
         [HttpPost]
         [Route("CreateUser")]
-        public async Task<IActionResult> CreateUser(User UserAdd, string name)
+        public async Task<IActionResult> CreateUser(User UserAdd)
         {
             try
             {
-                var result = await _UserRepository.AddUserAsync(UserAdd, name);
+                var result = await _UserRepository.AddUserAsync(UserAdd);
                 return Ok(result);
             }
             catch (Exception)
@@ -82,11 +82,11 @@ namespace ProcionAPI.Controllers
 
         [HttpPost]
         [Route("CreateEmployee")]
-        public async Task<IActionResult> CreateEmployee(Employee EmployeeAdd, string usrName, string brName, string depName, int mlAmount)
+        public async Task<IActionResult> CreateEmployee(Employee EmployeeAdd)
         {
             try
             {
-                var result = await _UserRepository.AddEmployeeAsync(EmployeeAdd, usrName, brName, depName, mlAmount);
+                var result = await _UserRepository.AddEmployeeAsync(EmployeeAdd);
                 return Ok(result);
             }
             catch (Exception)
@@ -114,56 +114,35 @@ namespace ProcionAPI.Controllers
 
         [HttpPut]
         [Route("EditUser/{userID}")]
-        public async Task<ActionResult> EditUser(User UserEdit, int userID)
+        public async Task<ActionResult> EditUser( User UserEdit, [FromRoute] int userID)
         {
             try
             {
-                var existingUser = await _UserRepository.GetUserAsync(userID);
-                if (existingUser == null) return NotFound($"The user does not exist");
-                existingUser.Username = UserEdit.Username;
-                existingUser.Password = UserEdit.Password;
-                existingUser.Role_ID = UserEdit.Role_ID;
-
-                if(await _UserRepository.SaveChangesAsync())
-                {
-                    return Ok(existingUser);
-                }
+                var result = await _UserRepository.UpdateUserAsync(UserEdit, userID);
+                return Ok(result);
 
             }
             catch (Exception)
             {
                 return StatusCode(500, "Internal Server Error. Please contact support");
             }
-            return BadRequest("Your request is invalid");
+            
         }
 
         [HttpPut]
         [Route("EditEmployee/{userID}")]
-        public async Task<ActionResult> EditEmployee(Employee EmpEdit, int userID)
+        public async Task<ActionResult> EditEmployee(Employee EmpEdit, [FromRoute] int userID)
         {
             try
             {
-                var existingEMP = await _UserRepository.GetEmployeeAsync(userID);
-                if (existingEMP == null) return NotFound($"The employee does not exist");
-                existingEMP.EmployeeName = EmpEdit.EmployeeName;
-                existingEMP.EmployeeSurname = EmpEdit.EmployeeSurname;
-                existingEMP.CellPhone_Num = EmpEdit.CellPhone_Num;
-                existingEMP.Email = EmpEdit.Email;
-                existingEMP.Branch_ID = EmpEdit.Branch_ID;
-                existingEMP.Department_ID = EmpEdit.Department_ID;
-                existingEMP.Mandate_ID = EmpEdit.Mandate_ID;
-
-                if (await _UserRepository.SaveChangesAsync())
-                {
-                    return Ok(existingEMP);
-                }
+                var result = await _UserRepository.UpdateEmployeeAsync(EmpEdit, userID);
+                return Ok(result);
 
             }
             catch (Exception)
             {
                 return StatusCode(500, "Internal Server Error. Please contact support");
             }
-            return BadRequest("Your request is invalid");
         }
 
         [HttpDelete]
@@ -235,11 +214,11 @@ namespace ProcionAPI.Controllers
 
         [HttpPost]
         [Route("CreateAdmin")]
-        public async Task<IActionResult> CreateAdmin(Admin AdminAdd, string usrName)
+        public async Task<IActionResult> CreateAdmin(Admin AdminAdd)
         {
             try
             {
-                var result = await _UserRepository.AddAdminAsync(AdminAdd, usrName);
+                var result = await _UserRepository.AddAdminAsync(AdminAdd);
                 return Ok(result);
             }
             catch (Exception)
@@ -250,28 +229,18 @@ namespace ProcionAPI.Controllers
 
         [HttpPut]
         [Route("EditAdmin/{userID}")]
-        public async Task<ActionResult> EditAdmin(Admin AdminEdit, int userID)
+        public async Task<ActionResult> EditAdmin(Admin AdminEdit, [FromRoute] int userID)
         {
             try
             {
-                var existingADM = await _UserRepository.GetAdminAsync(userID);
-                if (existingADM == null) return NotFound($"The admin does not exist");
-                existingADM.AdminName = AdminEdit.AdminName;
-                existingADM.AdminSurname = AdminEdit.AdminSurname;
-                existingADM.CellPhone_Num = AdminEdit.CellPhone_Num;
-                existingADM.Email = AdminEdit.Email;
-
-                if (await _UserRepository.SaveChangesAsync())
-                {
-                    return Ok(existingADM);
-                }
+                var result = await _UserRepository.UpdateAdminAsync(AdminEdit, userID);
+                return Ok(result);
 
             }
             catch (Exception)
             {
                 return StatusCode(500, "Internal Server Error. Please contact support");
             }
-            return BadRequest("Your request is invalid");
         }
 
         [HttpDelete]
@@ -290,6 +259,22 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support");
             }
             return BadRequest("Your request is invalid");
+        }
+
+        [HttpGet]
+        [Route("UserValidation/{name}")]
+        public async Task<IActionResult> UserValidation([FromRoute] string name)
+        {
+            try
+            {
+                var result = await _UserRepository.UserValidationAsync(name);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
         }
     }
 }

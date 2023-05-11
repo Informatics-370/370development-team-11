@@ -8,6 +8,9 @@ import { Branch } from '../Shared/Branch';
 import { Department } from '../Shared/Department';
 import { User } from '../Shared/User';
 import { Mandate_Limit } from '../Shared/MandateLimit';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
 
 
@@ -20,12 +23,13 @@ export class CreateEmployeeComponent implements OnInit {
 
   myForm: FormGroup = new FormGroup({});
 
-  constructor(private router: Router, private formBuilder: FormBuilder, private dataService: DataService) { }
+  constructor(private router: Router, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
+
 
   roles: any[] = []
   departments: any[] = []
   branches: any[] = []
-  mandate_limits: any[] = ['10000', '20000', '30000']
+  mandate_limits: any[] = []
 
   br: Branch = {
     branch_ID: 0,
@@ -43,36 +47,36 @@ export class CreateEmployeeComponent implements OnInit {
   }
 
   ml: Mandate_Limit = {
-    Mandate_ID: 0,
-    Ammount: 0,
-    Date: '2023-05-07T12:14:46.249Z',
+    mandate_ID: 0,
+    ammount: 0,
+    date: '2023-05-07T12:14:46.249Z',
   }
 
   rl: Role = {
-    Role_ID: 0,
-    Name: '',
-    Description: ''
+    role_ID: 0,
+    name: '',
+    description: ''
   }
 
   usr: User = {
-    User_Id: 0,
-    Role_ID: 0,
-    Username: '',
-    Password: '',
-    Profile_Picture: './assets/Images/Default_Profile.jpg',
+    user_Id: 0,
+    role_ID: 0,
+    username: '',
+    password: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
     role: this.rl
   }
 
   emp: Employee = {
-    EmployeeID: 0,
-    User_Id: 0,
-    Department_ID: 0,
-    Branch_ID: 0,
-    Mandate_ID: 0,
-    EmployeeName: '',
-    EmployeeSurname: '',
-    CellPhone_Num: '',
-    Email: '',
+    employeeID: 0,
+    user_Id: 0,
+    department_ID: 0,
+    branch_ID: 0,
+    mandate_ID: 0,
+    employeeName: '',
+    employeeSurname: '',
+    cellPhone_Num: '',
+    email: '',
     branch: this.br,
     department: this.dep,
     user: this.usr,
@@ -84,17 +88,17 @@ export class CreateEmployeeComponent implements OnInit {
     this.GetRoles();
     this.GetBranches();
     this.GetDepartments();
+    this.GetMandates();
 
     this.myForm = this.formBuilder.group({
       EmployeeName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       EmployeeSurname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
-      Password: ['', [Validators.required, Validators.minLength(6), Validators.pattern('^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{6,}$')]],
       CellPhone_Num: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12), Validators.pattern("^[0-9 ]*$")]],
       Role_ID: ['', [Validators.required]],
+      Mandate_ID: ['', [Validators.required]],
       Department_ID: ['', [Validators.required]],
-      Branch_ID: ['', [Validators.required]],
-      Mandate_ID: ['', [Validators.required]]
+      Branch_ID: ['', [Validators.required]]
     })
   }
 
@@ -116,6 +120,13 @@ export class CreateEmployeeComponent implements OnInit {
     });
   }
 
+  GetMandates() {
+    this.dataService.GetMandateLimits().subscribe(result => {
+      this.mandate_limits = result;
+      console.log(this.mandate_limits);
+    });
+  }
+
   get f() {
     return this.myForm.controls;
   }
@@ -133,32 +144,72 @@ export class CreateEmployeeComponent implements OnInit {
 
 
   onSubmit() {
-    var usrName = this.myForm.get('Username')?.value;
-    var brName = this.myForm.get('Branch_ID')?.value;
-    var depName = this.myForm.get('Department_ID')?.value;
-    var mlAmount = this.myForm.get('Mandate_ID')?.value;
-    this.emp.EmployeeName = this.myForm.get('EmployeeName')?.value;
-    this.emp.EmployeeSurname = this.myForm.get('EmployeeSurname')?.value;
-    this.emp.CellPhone_Num = this.myForm.get('CellPhone_Num')?.value;
-    this.emp.Email = this.myForm.get('Email')?.value;
-
-    var cel = this.myForm.get('CellPhone_Num')?.value;
-    var name = this.myForm.get('Name')?.value;
-    var surname = this.myForm.get('Surname')?.value;
-    var ts = name.concat(surname);
-    var username = ts.concat(cel.toString().substring(0, 3));
-
-    var rlName = this.myForm.get('Role_ID')?.value;
-    this.usr.Username = username;
-    this.usr.Password = this.myForm.get('Password')?.value;
     
+    var newPassword = '';
+    newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
 
-    this.dataService.AddUser(this.usr, rlName).subscribe(result => {
-      this.dataService.AddEmployee(this.emp, usrName, brName, depName, mlAmount).subscribe(r => {
-        this.router.navigate(['ViewEmployee'])
-      })
-        
+    
+    var cel = this.myForm.get('CellPhone_Num')?.value;
+    var name = this.myForm.get('EmployeeName')?.value;
+    var surname = this.myForm.get('EmployeeSurname')?.value;
+    var ts = name.concat(surname);
+    var username = ts.concat(cel.substring(4, 7));
+
+    this.rl = this.myForm.get('Role_ID')?.value;
+    this.rl.role_ID = 0;
+    
+    this.usr.username = username;
+    this.usr.password = newPassword;
+    this.usr.role = this.rl;
+
+    this.br = this.myForm.get('Branch_ID')?.value;
+    this.br.branch_ID = 0;
+    this.dep = this.myForm.get('Department_ID')?.value;
+    this.dep.department_ID = 0;
+    this.ml = this.myForm.get('Mandate_ID')?.value;
+    this.ml.mandate_ID = 0;
+
+    this.emp.employeeName = this.myForm.get('EmployeeName')?.value;
+    this.emp.employeeSurname = this.myForm.get('EmployeeSurname')?.value;
+    this.emp.cellPhone_Num = this.myForm.get('CellPhone_Num')?.value;
+    this.emp.email = this.myForm.get('Email')?.value;
+    this.emp.branch = this.br;
+    this.emp.department = this.dep;
+    this.emp.mandate_limit = this.ml;
+    this.emp.user.username = username;
+
+    //console.log(cel.substring(7,3));
+    //console.log(username);
+    //console.log(this.roles);
+
+    this.dataService.UserValidation(username).subscribe({
+      next: (Result) => {
+        if (Result == null) {
+          this.dataService.AddUser(this.usr).subscribe(result => {
+            this.dataService.AddEmployee(this.emp).subscribe(r => {
+              this.router.navigate(['ViewEmployee'])
+            })
+
+          })
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: User Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
+      }
     })
+      
   }
 }
 

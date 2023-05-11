@@ -3,6 +3,10 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn,
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../DataService/data-service';
 import { Role } from '../Shared/EmployeeRole';
+import { MatDialog } from '@angular/material/dialog';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-employee-role',
@@ -13,7 +17,7 @@ export class EditEmployeeRoleComponent implements OnInit {
   public myForm !: FormGroup;
 
   role:any
-  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.myForm = new FormGroup({
@@ -40,8 +44,25 @@ export class EditEmployeeRoleComponent implements OnInit {
   }
 
   onSubmit() {
-    this.dataService.EditRole(this.role.role_ID, this.myForm.value).subscribe(result => {
-      this.router.navigate(['ViewEmpRole'])
+    var name = this.myForm.get('Name')?.value;
+
+    this.dataService.EditRole(this.role.role_ID, this.myForm.value).subscribe({
+      next: (response) => {
+        var action = "Update";
+        var title = "UPDATE SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 1750;
+        setTimeout(() => {
+          this.router.navigate(['/ViewEmpRole']);
+          dialogRef.close();
+        }, duration);
+      }
     })
   }
 }
