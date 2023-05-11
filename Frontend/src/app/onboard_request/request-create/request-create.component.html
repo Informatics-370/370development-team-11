@@ -1,0 +1,218 @@
+<div class="content">
+    <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="selectedOption == 'True';Sole" #General>
+    <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
+      Create Vendor Onboard Request
+    </h1>
+    <div>  
+    <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;">Please select one of the two options:</label>
+    <br>
+    <mat-radio-group (change)="radioButtonChange($event)">
+      <mat-radio-button  checked value="True">General suppliers</mat-radio-button>
+      <mat-radio-button value="False">Sole suppliers</mat-radio-button>
+    </mat-radio-group>
+    </div>
+
+      <mat-tab-group style="background-color: white;">
+        <form [formGroup]="CompanyContactInfoFormGroup" >
+        <mat-tab  formArrayName="RequestData" *ngFor="let data of rows.controls; let i = index;" > 
+         <div [formGroupName]="i">
+          <ng-template  mat-tab-label > 
+            <label style="color:white">Quotation {{i + 1}}</label>
+          </ng-template> 
+          <table style="margin-left: 1%;">
+            <br>
+          <tr>
+            <td><label  for="name" style="margin-right: 1%;">Company Name:</label></td>
+            <td> 
+                <mat-form-field appearance="fill">
+                    <input matInput placeholder="Company Name" id="CompanyName" formControlName="CompanyName" [errorStateMatcher]="matcher" >
+                    <mat-error *ngIf="data.get('CompanyName')?.hasError('required')">Company name(s) is required</mat-error>
+                    <mat-error *ngIf="data.get('CompanyName')?.hasError('maxlength')">Company name(s) cannot be more than 32 characters</mat-error>
+                    <mat-error *ngIf="data.get('CompanyName')?.hasError('pattern')">Company name(s) is invalid</mat-error>
+                  </mat-form-field>
+            </td>
+        </tr>
+        <tr>
+          <td><label  for="name" style="margin-right: 1%;">Company Email:</label></td>
+          <td> 
+              <mat-form-field appearance="fill">
+                  <input matInput placeholder="Company Email" id="CompanyName" formControlName="CompanyEmail" [errorStateMatcher]="matcher" >
+                  <mat-error *ngIf="data.get('CompanyName')?.hasError('required')">Company email is required</mat-error>
+                  <mat-error *ngIf="data.get('CompanyName')?.hasError('maxlength')">Company email cannot be more than 32 characters</mat-error>
+                  <mat-error *ngIf="data.get('CompanyName')?.hasError('email')">Company email is invalid</mat-error>
+                </mat-form-field>
+          </td>
+      </tr>
+        <tr>
+          <td><label for="file" style="margin-right: 1%;">Company Quote: </label></td>
+          <td>  
+                <input id="file" type="file" class="file-upload" formControlName="CompanyQuote" (change)="onFileUpload(i,$event)">
+          </td>
+      </tr>
+      <br>
+      <tr>
+        <td></td>
+        <td>  
+           <button mat-raised-button [hidden]="i < 3" (click)="removeTab(i)" > Delete Tab </button>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+      </table> 
+    </div>
+         
+        </mat-tab>
+      </form>
+        <mat-tab disabled>
+          <ng-template  mat-tab-label> 
+            <button mat-icon-button  (click)="addTab()">  <mat-icon style="color: white">add_box</mat-icon> </button>
+          </ng-template>
+        </mat-tab> 
+       
+      </mat-tab-group>
+      <div  style="background-color: white;">
+        <button mat-raised-button style="margin:1%;"  (click)="AddRequest()" [disabled]="!CompanyContactInfoFormGroup.valid"> Create  </button>
+        <button mat-raised-button style="margin:1%;" routerLink="/request-view" > Cancel </button>
+     </div>
+    </div>
+    <!--  -->
+    <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="selectedOption == 'False';General" #Sole>
+      <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
+        Create Vendor Onboard Request
+      </h1>
+      <div>  
+      <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;">Please select one of the two options:</label>
+      <br>
+      <mat-radio-group (change)="radioButtonChange($event)">
+        <mat-radio-button  value="True">General suppliers</mat-radio-button>
+        <mat-radio-button value="False" checked >Sole suppliers</mat-radio-button>
+      </mat-radio-group>
+      </div>
+      <form  [formGroup]="SoleSupplierFormGroup" style="background-color: white;" >
+        <div style="margin-left:1%; margin-top:1%;margin-bottom: 20px;">
+          <table>
+            <br>
+            <tr>
+              <td><label for="name" style="margin-right: 1%;">Company name:</label></td>
+              <td>
+                <mat-form-field appearance="fill">
+                  <input matInput placeholder="Company Name" id="CompanyName" formControlName="CompanyName" [errorStateMatcher]="matcher" >
+                  <mat-error *ngIf="SoleSupplierFormGroup.controls['CompanyName'].hasError('required')">Company name is required</mat-error>
+                  <mat-error *ngIf="SoleSupplierFormGroup.controls['CompanyName'].hasError('maxlength')">Company name cannot be more than 32 characters</mat-error>
+                  <mat-error *ngIf="SoleSupplierFormGroup.controls['CompanyName'].hasError('pattern')">Company name is invalid</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td><label for="reason" style="margin-right: 1%;">Reason:</label></td>
+              <td>
+                <mat-form-field appearance="fill">
+                  <input matInput placeholder="Company Name" id="Reason" formControlName="Reason" [errorStateMatcher]="matcher" >
+                  <mat-error *ngIf="SoleSupplierFormGroup.controls['Reason'].hasError('required')">Reason is required</mat-error>
+                  <mat-error *ngIf="SoleSupplierFormGroup.controls['Reason'].hasError('maxlength')">cannot be more than 32 characters</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td><label for="file" style="margin-right: 1%;">Company Quote: </label></td>
+              <td>
+                <input id="file" type="file" class="file-upload"  formControlName="CompanyQuote" onchange="onFileUpload(event.target.files)">
+              </td>
+            </tr>
+            <br>
+          </table>
+        </div>
+        <button mat-raised-button style="margin: 1%;" [disabled]="!SoleSupplierFormGroup.valid"> Create  </button>
+        <button mat-raised-button style="margin: 1%;" routerLink="/request-view" > Cancel </button>
+      </form>
+      
+    </div>
+  
+  </div>
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <!-- <div class="content">
+    <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="selectedOption == 'True';Sole" #General>
+    <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
+      Create Vendor Onboard Request
+    </h1>
+    <div>  
+    <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;">Please select one of the two options:</label>
+    <br>
+    <mat-radio-group (change)="radioButtonChange($event)">
+      <mat-radio-button  checked value="True">General suppliers</mat-radio-button>
+      <mat-radio-button value="False">Sole suppliers</mat-radio-button>
+    </mat-radio-group>
+    </div>
+      <mat-tab-group style="margin-bottom: 20px;">
+        <mat-tab  *ngFor="let tab of tabs; let index = index" > 
+          <ng-template  mat-tab-label > 
+           <span style="color: white"> {{tab}} </span>
+          </ng-template>
+            <div style="margin-left:1%; margin-top:1%;">
+            <label for="name" style="margin-right: 1%;">Company name:</label>
+          <input id="name" matInput type="text"> <button mat-raised-button [disabled]="tabs.length === 3" (click)="removeTab(index)" style="float: right;"> Delete Tab </button> <br> <br>
+          <label for="file" style="margin-right: 1%;">Company Quote: </label>
+          <input id="file" type="file" class="file-upload" onchange="console.log(event.target.files)">
+          </div>
+          <div style="margin-right:1%; margin-bottom:1%">
+            <button mat-raised-button [disabled]="tabs.length === 3" (click)="removeTab(index)"> Delete Tab </button>
+          </div>
+        </mat-tab>
+        <mat-tab disabled>
+          <ng-template  mat-tab-label> 
+            <button mat-icon-button  (click)="addTab()">  <mat-icon style="color: white">add_box</mat-icon> </button>
+          </ng-template>
+        </mat-tab> 
+      </mat-tab-group>
+      <button mat-raised-button style="margin-right: 15px;"> Create  </button>
+      <button mat-raised-button routerLink="/request-view" > Cancel </button>
+    </div>
+  
+    <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="selectedOption == 'False';General" #Sole>
+      <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
+        Create Vendor Onboard Request
+      </h1>
+      <div>  
+      <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;">Please select one of the two options:</label>
+      <br>
+      <mat-radio-group (change)="radioButtonChange($event)">
+        <mat-radio-button  value="True">General suppliers</mat-radio-button>
+        <mat-radio-button value="False" checked >Sole suppliers</mat-radio-button>
+      </mat-radio-group>
+      </div>
+      <div style="margin-left:1%; margin-top:1%;margin-bottom: 20px;">
+        <label for="name" style="margin-right: 1%;">Company name:</label>
+        <input id="name" matInput type="text">  <br> <br>
+        <label for="file" style="margin-right: 1%;">Company Quote: </label>
+        <input id="file" type="file" class="file-upload" onchange="console.log(event.target.files)"> <br> <br>
+        <label for="reason" style="margin-right: 1%;">Reason:</label>
+        <input id="reason" matInput type="text"> 
+      </div>
+      <button mat-raised-button style="margin-right: 15px;"> Create  </button>
+      <button mat-raised-button routerLink="/request-view" > Cancel </button>
+    </div>
+  
+  </div> -->
