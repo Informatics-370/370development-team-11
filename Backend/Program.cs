@@ -4,6 +4,7 @@ using ProcionAPI.Data;
 using ProcionAPI.Models.Repositories;
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IConsumableCategoryRepository, ConsumableCategoryRepository>();
 builder.Services.AddScoped<IBudgetAllocationRepository, BudgetAllocationRepository>();
 
+builder.Services.AddScoped<IOnboardRequestRepository, OnboardRequestRepository>();
+
 builder.Services.AddScoped<IMandateRepository, MandateRepository>();
 
 var app = builder.Build();
@@ -58,3 +61,10 @@ app.UseAuthentication();
 app.MapControllers();
 
 app.Run();
+
+app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Files")),
+    RequestPath = new PathString("/Files")
+});

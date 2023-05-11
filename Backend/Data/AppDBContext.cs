@@ -38,7 +38,7 @@ namespace ProcionAPI.Data
         public DbSet<Procurement_Status> Procurement_Status { get; set; }
         public DbSet<Vendor> Vendor { get; set; }
         public DbSet<Vendor_Status> Vendor_Status { get; set; }
-        public DbSet<Onboard_Request> Pending_Vendor_Quotes { get; set; }
+        public DbSet<Onboard_Request> Onboard_Request { get; set; }
         public DbSet<Vendor_Detail> Vendor_Detail { get; set; }
         public DbSet<Vendor_Category> Vendor_Category { get; set; }
         public DbSet<Vendor_Fax> Vendor_Fax { get; set; }
@@ -74,7 +74,7 @@ namespace ProcionAPI.Data
                 .HasKey(bl => new { bl.Account_Code, bl.Budget_ID, bl.Category_ID });
 
             modelBuilder.Entity<Onboard_Request>()
-               .HasKey(or => new { or.User_Id, or.Vendor_ID });
+               .HasKey(or => new {or.Onboard_Request_Id, or.User_Id, or.Vendor_ID });
 
             modelBuilder.Entity<Procurement_Asset>()
                .HasKey(pa => new { pa.Procurement_Asset_ID, pa.Procurement_Request_ID, pa.Asset_ID });
@@ -187,6 +187,86 @@ namespace ProcionAPI.Data
 
             }
             );
+
+            modelBuilder.Entity<Vendor_Status>()
+           .HasData(
+           new
+           {
+               Vendor_Status_ID = 1,
+               Name = "pain",
+               Description = "more",
+
+           }
+           );
+
+            //modelBuilder.Entity<Vendor>()
+            //.HasData(
+            //new
+            //{
+            //    Vendor_ID = 1,
+            //    Vendor_Status_ID = 1,
+            //    Name = "why",
+            //    Email = "BE@gmail.com",
+            //    Number_Of_Times_Used = 0,
+            //}, 
+            //new
+            //{
+            //    Vendor_ID = 2,
+            //    Vendor_Status_ID = 1,
+            //    Name = "tell",
+            //    Email = "tell@gmail.com",
+            //    Number_Of_Times_Used = 0,
+            //},
+            //new
+            //{
+            //    Vendor_ID = 3,
+            //    Vendor_Status_ID = 1,
+            //    Name = "tebooll",
+            //    Email = "tebooll@gmail.com",
+            //    Number_Of_Times_Used = 0,
+            //},
+            //new
+            //{
+            //    Vendor_ID = 4,
+            //    Vendor_Status_ID = 1,
+            //    Name = "te",
+            //    Email = "te@wgmail.com",
+            //    Number_Of_Times_Used = 0,
+            //}
+            //);
+
+            //modelBuilder.Entity<Onboard_Request>()
+            //.HasData(
+            //new
+            //{
+            //    Onboard_Request_Id = 1,
+            //    User_Id = 1,
+            //    Vendor_ID = 1,
+            //    Quotes = "BE",
+            //},
+            //new
+            //{
+            //    Onboard_Request_Id = 1,
+            //    User_Id = 1,
+            //    Vendor_ID = 2,
+            //    Quotes = "SOwhy",
+            //},
+            //new
+            //{
+            //    Onboard_Request_Id = 2,
+            //    User_Id = 1,
+            //    Vendor_ID = 3,
+            //    Quotes = "ohno",
+            //},
+            //new
+            //{
+            //    Onboard_Request_Id = 2,
+            //    User_Id = 1,
+            //    Vendor_ID = 4,
+            //    Quotes = "anyway",
+            //}
+            //);
+
         }
     }
 }

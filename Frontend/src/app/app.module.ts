@@ -45,6 +45,17 @@ import { DeleteConsumableCategoryComponent } from './delete-consumable-category/
 import { ViewMandateLimitComponent } from './view-mandate-limit/view-mandate-limit.component';
 import { CreateMandateLimitComponent } from './create-mandate-limit/create-mandate-limit.component';
 import { EditMandateLimitComponent } from './edit-mandate-limit/edit-mandate-limit.component';
+import { RequestViewComponent } from './onboard_request/request-view/request-view.component';
+import { RequestCreateComponent } from './onboard_request/request-create/request-create.component';
+import { RequestUpdateComponent } from './onboard_request/request-update/request-update.component';
+
+
+
+import {MatRadioModule} from '@angular/material/radio';
+import {MatTabsModule} from '@angular/material/tabs';
+
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -75,6 +86,9 @@ import { EditMandateLimitComponent } from './edit-mandate-limit/edit-mandate-lim
     ViewMandateLimitComponent,
     CreateMandateLimitComponent,
     EditMandateLimitComponent
+    RequestViewComponent,
+    RequestCreateComponent,
+    RequestUpdateComponent
   ],
   imports: [
     BrowserModule,
@@ -96,11 +110,16 @@ import { EditMandateLimitComponent } from './edit-mandate-limit/edit-mandate-lim
     MatDialogModule,
     MaterialModule,
     HttpClientModule,
+    MatRadioModule,
+    MatTabsModule,
+    MatStepperModule,
+    MatCheckboxModule,
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
     MatExpansionModule,
 
+    
   ],
   bootstrap: [AppComponent]
 })

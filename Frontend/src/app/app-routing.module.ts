@@ -20,6 +20,11 @@ import { ViewMandateLimitComponent } from './view-mandate-limit/view-mandate-lim
 import { CreateMandateLimitComponent } from './create-mandate-limit/create-mandate-limit.component';
 import { EditMandateLimitComponent } from './edit-mandate-limit/edit-mandate-limit.component';
 
+import { RequestViewComponent } from './onboard_request/request-view/request-view.component';
+import { RequestCreateComponent } from './onboard_request/request-create/request-create.component';
+import { RequestUpdateComponent } from './onboard_request/request-update/request-update.component';
+
+
 const routes: Routes = [
   {
     path: "ViewEmployee",
@@ -96,7 +101,10 @@ const routes: Routes = [
   {
     path: 'EditMandateLimit/:id',
     component: EditMandateLimitComponent
-  }
+  },
+  {path: 'request-view', component: RequestViewComponent},  
+  {path: 'request-create/:RequestNo', component: RequestCreateComponent},  
+  {path: 'request-update', component: RequestUpdateComponent}
 ];
 
 @NgModule({

@@ -5,7 +5,8 @@ namespace ProcionAPI.Models.Entities
 {
     public class Onboard_Request
     {
-
+        [Key]
+        public int Onboard_Request_Id { get; set; }
         [Key]
         [Required]
         public int User_Id { get; set; }

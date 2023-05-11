@@ -11,6 +11,9 @@ import { Department } from '../Shared/Department';
 import { User } from '../Shared/User';
 import { Admin } from '../Shared/Admin';
 import { Mandate_Limit } from '../Shared/MandateLimit';
+import { OnboardRequest } from '../Shared/OnboardRequest';
+import { VendorOnboardRequestVM } from '../Shared/VendorOnboardRequestVM';
+import { VendorOnboardRequest } from '../Shared/VendorOnboardRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -192,5 +195,23 @@ export class DataService {
     return this.httpClient.put(`${this.apiUrl}Mandate/EditMandateLimit/${mlID}`, ml, this.httpOptions)
   }
 
+  GetAllOnboardRequest(): Observable<any> {
+    return this.httpClient.get<VendorOnboardRequestVM[]>(`${this.apiUrl}OnboardRequest/GetAllOnboardRequest`).pipe(map(result => result))
+  }
+
+  AddOnboardRequest(AddRequest : OnboardRequest) {
+    return this.httpClient.post(`${this.apiUrl}OnboardRequest/CreateOnboardRequest`, AddRequest, this.httpOptions)
+  }
+
+  GetVendorsRequest() {
+    return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendors`).pipe(map(result => result))
+  }
+
+  GetRequest(RequestID:number) {
+    return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetRequest/` + RequestID).pipe(map(result => result))
+  }
+
+
+  
 }
 
