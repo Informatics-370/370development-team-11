@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "H22Nzryr4MWduY0ZauETBzHENr4EqEMOTiIeXauYIbvpes5wM9HN6YmedpHLG5LdSm/DwOKChGDDBPODp2tyuA==",
+  "dgSpecHash": "b5o32eLG2LdRi15SAqfpRPbNNUV1zRe2f0yeVxxqNV6rfn9BjUKjvny1BmWywHo512g6ycCdwLM8g9mmR4ZEtA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Jason van der Merwe\\Source\\Repos\\inf370-development-team-11\\Backend\\ProcionAPI.csproj",
+  "projectFilePath": "C:\\Users\\Jason van der Merwe\\Source\\Repos\\Informatics-370\\370development-team-11\\Backend\\ProcionAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Jason van der Merwe\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\Jason van der Merwe\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
