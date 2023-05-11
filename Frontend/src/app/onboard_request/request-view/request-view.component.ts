@@ -87,6 +87,9 @@ export class RequestViewComponent implements OnInit {
     if (this.RequestVendors.length > 0) {
       iNumber = (this.RequestVendors[(this.RequestVendors.length-1)].onboard_Request_Id+1)
     }
+    else {
+      iNumber = 1
+    }
    
 
     return iNumber

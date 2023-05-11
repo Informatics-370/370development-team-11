@@ -152,9 +152,11 @@ export class DataService {
     return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendors`).pipe(map(result => result))
   }
 
-  GetRequest() {
-    return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendors`).pipe(map(result => result))
+  GetRequest(RequestID:number) {
+    return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetRequest/` + RequestID).pipe(map(result => result))
   }
 
+
+  
 }
 

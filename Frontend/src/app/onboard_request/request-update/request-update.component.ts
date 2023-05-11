@@ -90,15 +90,24 @@ removeTab(index: number) {
 }
 vendorsRequest : VendorOnboardRequest[] = [];
 onboardRequest : OnboardRequest[] = [];
+requestNo = 0;
 ngOnInit() {
 
 
 console.log(this.CompanyContactInfoFormGroup.controls.RequestData.value.length)
+
+this.ActRoute.paramMap.subscribe({
+  next: (paramater) => {
+    let requestNo = paramater.get("RequestNo");
+    this.requestNo = Number(requestNo)
+  }});
+
 this.getVendors()
-this.getRequestDetails()
+this.getRequestDetails(this.requestNo)
 
+console.log(this.onboardRequest.length)
 
-for(let i = 1; i < 4;i++) {
+for(let i = 1; i < this.onboardRequest.length;i++) {
   const row = this._formBuilder.group({
     tab: [i],
     CompanyName: ['',[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
@@ -122,11 +131,11 @@ getVendors() {
   })
 }
 
-getRequestDetails() {
-  this.dataService.GetRequest().subscribe(result => {
+getRequestDetails(ReqNo:number) {
+  this.dataService.GetRequest(ReqNo).subscribe(result => {
     let RequestList: any[] = result
     RequestList.forEach((element) => {
-      this.vendorsRequest.push(element)
+      this.onboardRequest.push(element)
       console.log(element)
     })
   })

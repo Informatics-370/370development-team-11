@@ -119,7 +119,7 @@ export class RequestCreateComponent implements OnInit{
       }
       }
   }
- 
+ sPath = "";
  AddRequest() {
   
   this.ActRoute.paramMap.subscribe({
@@ -132,11 +132,11 @@ export class RequestCreateComponent implements OnInit{
   for(let i = 0; i < this.CompanyContactInfoFormGroup.controls.RequestData.value.length; i++) 
   {
     this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
-    this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
-    this.Vendor.vendor_Status_ID = 1;
-    this.Vendor.number_Of_Times_Used = 0;
-    this.Onboard_Request.vendor = this.Vendor;
-    
+     this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
+     this.Vendor.vendor_Status_ID = 1;
+     this.Vendor.number_Of_Times_Used = 0;
+     this.Onboard_Request.vendor = this.Vendor;
+    console.log(i)
     const formData = new FormData();
     this.fileToUpload = this.files[i]
 
@@ -144,17 +144,30 @@ export class RequestCreateComponent implements OnInit{
       let test = "Request" + this.Onboard_Request.onboard_Request_Id.toString()
     formData.append('file',this.fileToUpload);
     formData.append('RequestNo',test)
-     this.http.post('https://localhost:7186/api/OnboardRequest/uploadFile/', formData).subscribe(response => {let sPath:any = response
-     this.Onboard_Request.quotes = sPath.filePath.toString()
-    this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe(
+     this.http.post('https://localhost:7186/api/OnboardRequest/uploadFile/', formData).subscribe(response => {let Path:any = response
+     this.sPath = Path.filePath.toString()
+     this.Onboard_Request.quotes = this.sPath
+     this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
+     this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
+     this.Vendor.vendor_Status_ID = 1;
+     this.Vendor.number_Of_Times_Used = 0;
+     this.Onboard_Request.vendor = this.Vendor;
+      console.log(i)
+     this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe(
       (RequestAdded) => {
         console.log(RequestAdded);
-        this.router.navigate(['/request-view']);
+        //this.router.navigate(['/request-view']);
+        console.log(i)
       }
-    );
+      );
+
     });
+   
+   
    }
    
+  
+
   }
 
  }
