@@ -1,0 +1,133 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+  <mat-card style="width: 600px; margin-top: 1%; align-items: center; ">
+    <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px" (ngSubmit)="onSubmit()">
+      <mat-card-header>
+        <mat-card-title style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">Edit Employee</mat-card-title>
+        <mat-card-subtitle>
+
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;" for="Name">Name:</label>
+                  <br />
+                  <mat-form-field>
+                    <input matInput type="text" placeholder="" formControlName="Name" id="Name" required>
+                    <mat-hint align="end">Not more then 32 characters long.</mat-hint>
+                    <mat-error *ngIf="myError('Name', 'required')">Name is required</mat-error>
+                    <mat-error *ngIf="myError('Name', 'maxlength')">Limit exceed</mat-error>
+                    <mat-error *ngIf="myError('Name', 'minlength')">Name must be 3 to 32 characters long</mat-error>
+                    <mat-error *ngIf="myError('Name', 'pattern')">Name can not contain numbers</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color: black;">Surname:</label>
+                  <br />
+                  <mat-form-field>
+                    <input matInput type="text" placeholder="" formControlName="Surname" id="Surname" required>
+                    <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+                    <mat-error *ngIf="myError('Surname', 'required')">Surname is required</mat-error>
+                    <mat-error *ngIf="myError('Surname', 'maxlength')">Limit exceed</mat-error>
+                    <mat-error *ngIf="myError('Surname', 'pattern')">Surname can not contain numbers</mat-error>
+                    <mat-error *ngIf="myError('Surname', 'minlength')">Surname must be 3 to 50 characters long</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Email:</label>
+                  <br />
+                  <mat-form-field>
+                    <input matInput type="email" placeholder="" formControlName="Email" id="Email" required>
+                    <mat-error *ngIf="myError('Email', 'required')">Email is required</mat-error>
+                    <mat-error *ngIf="myError('Email', 'maxlength')">Limit exceed</mat-error>
+                    <mat-error *ngIf="myError('Email', 'email')">Enter a valid email</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Phone Number:</label>
+                  <br />
+                  <mat-form-field>
+                    <input matInput type="text" placeholder="" formControlName="CellPhone_Num" id="CellPhone_Num" required>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'required')">Phone is required</mat-error>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'maxlength')">Limit exceed</mat-error>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'minlength')">Phone number must be 10 numbers</mat-error>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'pattern')">Please enter a valid phone number</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Role:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-label>Choose one</mat-label>
+                    <mat-select formControlName="Role" required>
+                      <mat-option *ngFor="let r of userRoles" [value]="r.role_ID">{{r.name}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="myError('Role', 'required')">Please choose a role</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Mandate Limit:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-label>Choose one</mat-label>
+                    <mat-select formControlName="Mandate" required>
+                      <mat-option *ngFor="let ml of mandate_limits" [value]="ml.mandate_ID">{{ml.ammount}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="myError('Mandate', 'required')">Please choose a branch</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Department:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-label>Choose one</mat-label>
+                    <mat-select formControlName="Department" required>
+                      <mat-option *ngFor="let dep of departments" [value]="dep.department_ID">{{dep.name}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="myError('Department', 'required')">Please choose a department</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Branch:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-label>Choose one</mat-label>
+                    <mat-select formControlName="Branch" required>
+                      <mat-option *ngFor="let branch of branches" [value]="branch.branch_ID">{{branch.name}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="myError('Branch', 'required')">Please choose a branch</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+            </tr>
+          </table>
+
+
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
+        <button mat-raised-button type="submit" style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color:#94CC5B; color: white;" [disabled]="!myForm.valid">Save</button>
+        <button mat-raised-button style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color:#244688; color:white;" (click)="Close()">Cancel</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>

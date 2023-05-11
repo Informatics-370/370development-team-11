@@ -1,0 +1,13 @@
+.main-spacer {
+  flex: 1 1 auto;
+}
+
+.sub-spacer {
+    margin-right: 1%;
+}
+
+.main-nav {
+  color: white;
+  background-color: #244688;
+  border-bottom:solid black;
+}

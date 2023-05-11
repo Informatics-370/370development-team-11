@@ -1,0 +1,21 @@
+using ProcionAPI.Models.Entities;
+
+namespace ProcionAPI.Models.Repositories { 
+    public interface IUserRepository {
+        Task<Employee[]> GetAllEmployeesAsync();
+        Task<User[]> GetAllUsersAsync();
+        Task<Employee[]> AddEmployeeAsync(Employee EmployeeAdd);
+        Task<User[]> AddUserAsync(User UserAdd);
+        Task<Employee> GetEmployeeAsync(int userID);
+        Task<User> GetUserAsync(int userID);
+        Task<Admin[]> GetAllAdminsAsync();
+        Task<Admin> GetAdminAsync(int userID);
+        Task<Admin[]> AddAdminAsync(Admin AdminAdd);
+        Task<bool> SaveChangesAsync();
+        void Delete<T>(T entity) where T : class;
+        Task<User> UpdateUserAsync(User UserEdit, int userID);
+        Task<Employee> UpdateEmployeeAsync(Employee EmpEdit, int userID);
+        Task<Admin> UpdateAdminAsync(Admin AdminEdit, int userID);
+        Task<User> UserValidationAsync(string name);
+    }
+}
