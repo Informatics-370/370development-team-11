@@ -56,6 +56,14 @@ import {MatTabsModule} from '@angular/material/tabs';
 
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { CreateDepartmentComponent } from './create-department/create-department/create-department.component';
+import { DeleteDepartmentComponent } from './delete-department/delete-department/delete-department.component';
+import { EditDepartmentComponent } from './edit-department/edit-department/edit-department.component';
+import { ViewDepartmentComponent } from './view-department/view-department/view-department.component';
+import { ViewBranchComponent } from './view-branch/view-branch/view-branch.component';
+import { CreateBranchComponent } from './create-branch/create-branch/create-branch.component';
+import { DeleteBranchComponent } from './delete-branch/delete-branch/delete-branch.component';
+import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.component';
 
 
 @NgModule({
@@ -89,6 +97,14 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     RequestViewComponent,
     RequestCreateComponent,
     RequestUpdateComponent
+    CreateDepartmentComponent,
+    DeleteDepartmentComponent,
+    EditDepartmentComponent,
+    ViewDepartmentComponent,
+    ViewBranchComponent,
+    CreateBranchComponent,
+    DeleteBranchComponent,
+    EditBranchComponent
   ],
   imports: [
     BrowserModule,
@@ -118,7 +134,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
     MatExpansionModule,
-
     
   ],
   bootstrap: [AppComponent]

@@ -23,6 +23,14 @@ import { EditMandateLimitComponent } from './edit-mandate-limit/edit-mandate-lim
 import { RequestViewComponent } from './onboard_request/request-view/request-view.component';
 import { RequestCreateComponent } from './onboard_request/request-create/request-create.component';
 import { RequestUpdateComponent } from './onboard_request/request-update/request-update.component';
+import { CreateDepartmentComponent } from './create-department/create-department/create-department.component';
+import { DeleteDepartmentComponent } from './delete-department/delete-department/delete-department.component';
+import { EditDepartmentComponent } from './edit-department/edit-department/edit-department.component';
+import { ViewDepartmentComponent } from './view-department/view-department/view-department.component';
+import { CreateBranchComponent } from './create-branch/create-branch/create-branch.component';
+import { DeleteBranchComponent } from './delete-branch/delete-branch/delete-branch.component';
+import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.component';
+import { ViewBranchComponent } from './view-branch/view-branch/view-branch.component';
 
 
 const routes: Routes = [
@@ -104,7 +112,39 @@ const routes: Routes = [
   },
   {path: 'request-view', component: RequestViewComponent},  
   {path: 'request-create/:RequestNo', component: RequestCreateComponent},  
-  {path: 'request-update', component: RequestUpdateComponent}
+  {path: 'request-update', component: RequestUpdateComponent},
+  {
+    path: 'ViewDepartment',
+    component: ViewDepartmentComponent
+  },
+  {
+    path: 'CreateDepartment',
+    component: CreateDepartmentComponent
+  },
+  {
+    path: 'DeleteDepartment',
+    component: DeleteDepartmentComponent
+  },
+  {
+    path: 'EditDepartment/:department_ID',
+    component: EditDepartmentComponent
+  },
+  {
+    path: 'ViewBranch',
+    component: ViewBranchComponent
+  },
+  {
+    path: 'CreateBranch',
+    component: CreateBranchComponent
+  },
+  {
+    path: 'DeleteBranch',
+    component: DeleteBranchComponent
+  },
+  {
+    path: 'EditBranch/:branch_ID',
+    component: EditBranchComponent
+  },
 ];
 
 @NgModule({

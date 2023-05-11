@@ -7,7 +7,8 @@ namespace ProcionAPI.Models.Repositories
         Task<Branch[]> GetAllBranchesAsync();
         Task<Branch[]> AddBranchAsync(Branch AddBranch);
         Task<Branch> GetBranchAsync(int Branch_ID);
-        Task<Branch> EditBranchAsync(int Branch_ID, Branch Request);
-        Task<Branch> DeleteBranchAsync(int Branch_ID);
+        void Delete<T>(T entity) where T : class;
+        Task<Branch> BranchValidationAsync(string name);
+        Task<bool> SaveChangesAsync();
     }
 }
