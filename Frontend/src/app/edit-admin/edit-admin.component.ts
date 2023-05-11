@@ -15,7 +15,7 @@ import { MatDialogRef } from '@angular/material/dialog';
   templateUrl: './edit-admin.component.html',
   styleUrls: ['./edit-admin.component.css']
 })
-export class EditAdminComponent implements OnInit{
+export class EditAdminComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
 
   admin: any
@@ -53,7 +53,7 @@ export class EditAdminComponent implements OnInit{
   ngOnInit() {
 
     this.GetRoles();
-    
+
 
     this.myForm = this.formBuilder.group({
       AdminName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],

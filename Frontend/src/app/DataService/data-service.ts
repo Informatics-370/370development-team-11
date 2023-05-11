@@ -85,7 +85,7 @@ export class DataService {
   GetDepartments(): Observable<any> {
     return this.httpClient.get<Department[]>(`${this.apiUrl}Department/GetAllDepartments`).pipe(map(result => result))
   }
-  
+
   AddUser(user: User) {
     return this.httpClient.post(`${this.apiUrl}User/CreateUser`, user, this.httpOptions)
   }
@@ -169,10 +169,6 @@ export class DataService {
     return this.httpClient.get<Role>(`${this.apiUrl}Role/RoleValidation/` + name, this.httpOptions)
   }
 
-  GetMandateLimits(): Observable<any> {
-    return this.httpClient.get<Mandate_Limit[]>(`${this.apiUrl}Mandate/GetAllMandateLimitsAsync`).pipe(map(result => result))
-  }
-
   GetUsers(): Observable<any> {
     return this.httpClient.get<User[]>(`${this.apiUrl}User/GetUsers`).pipe(map(result => result))
   }
@@ -180,5 +176,21 @@ export class DataService {
   GetUser(userID: Number) {
     return this.httpClient.get(`${this.apiUrl}User/GetUser` + "/" + userID).pipe(map(result => result))
   }
+  GetMandateLimits(): Observable<any> {
+    return this.httpClient.get<Mandate_Limit[]>(`${this.apiUrl}Mandate/GetAllMandateLimits`).pipe(map(result => result))
+  }
+
+  GetMandateLimit(mlID: number) {
+    return this.httpClient.get(`${this.apiUrl}Mandate/GetMandateLimit` + "/" + mlID).pipe(map(result => result))
+  }
+
+  AddMandateLimit(ml: Mandate_Limit) {
+    return this.httpClient.post(`${this.apiUrl}Mandate/AddMandateLimit`, ml, this.httpOptions)
+  }
+
+  EditMandateLimit(mlID: number | Number, ml: Mandate_Limit,) {
+    return this.httpClient.put(`${this.apiUrl}Mandate/EditMandateLimit/${mlID}`, ml, this.httpOptions)
+  }
+
 }
 

@@ -36,6 +36,7 @@ builder.Services.AddScoped<IBranchRepository, BranchRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IConsumableCategoryRepository, ConsumableCategoryRepository>();
+builder.Services.AddScoped<IBudgetAllocationRepository, BudgetAllocationRepository>();
 
 builder.Services.AddScoped<IMandateRepository, MandateRepository>();
 

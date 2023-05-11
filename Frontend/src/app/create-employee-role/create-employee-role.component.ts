@@ -17,7 +17,7 @@ export class CreateEmployeeRoleComponent implements OnInit {
   public myForm !: FormGroup;
   constructor(private router: Router, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
-  
+
 
   ngOnInit() {
     this.myForm = new FormGroup({
@@ -28,7 +28,7 @@ export class CreateEmployeeRoleComponent implements OnInit {
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
   }
-  
+
   Close() {
     this.myForm.reset();
     this.router.navigateByUrl('ViewEmpRole');
@@ -63,7 +63,7 @@ export class CreateEmployeeRoleComponent implements OnInit {
       }
     })
 
-    
+
   }
-  
+
 }

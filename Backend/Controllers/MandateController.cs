@@ -19,8 +19,8 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllMandateLimitsAsync")]
-        public async Task<IActionResult> GetAllMandateLimitsAsync()
+        [Route("GetAllMandateLimits")]
+        public async Task<IActionResult> GetAllMandateLimits()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace ProcionAPI.Controllers
 
         [HttpGet]
         [Route("GetMandateLimit/{mandateId}")]
-        public async Task <IActionResult> GetMandateLimitAsync(int mandateId)
+        public async Task <IActionResult> GetMandateLimit(int mandateId)
         {
             try
             {

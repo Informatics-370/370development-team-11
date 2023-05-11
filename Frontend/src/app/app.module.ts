@@ -42,6 +42,9 @@ import { ViewConsumableCategoryComponent } from './view-consumable-category/view
 import { CreateConsumableCategoryComponent } from './create-consumable-category/create-consumable-category.component';
 import { EditConsumableCategoryComponent } from './edit-consumable-category/edit-consumable-category.component';
 import { DeleteConsumableCategoryComponent } from './delete-consumable-category/delete-consumable-category.component';
+import { ViewMandateLimitComponent } from './view-mandate-limit/view-mandate-limit.component';
+import { CreateMandateLimitComponent } from './create-mandate-limit/create-mandate-limit.component';
+import { EditMandateLimitComponent } from './edit-mandate-limit/edit-mandate-limit.component';
 
 
 @NgModule({
@@ -69,6 +72,9 @@ import { DeleteConsumableCategoryComponent } from './delete-consumable-category/
     CreateConsumableCategoryComponent,
     EditConsumableCategoryComponent,
     DeleteConsumableCategoryComponent
+    ViewMandateLimitComponent,
+    CreateMandateLimitComponent,
+    EditMandateLimitComponent
   ],
   imports: [
     BrowserModule,
@@ -94,7 +100,7 @@ import { DeleteConsumableCategoryComponent } from './delete-consumable-category/
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
     MatExpansionModule,
-    
+
   ],
   bootstrap: [AppComponent]
 })

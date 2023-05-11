@@ -16,6 +16,9 @@ import { ViewAdminComponent } from './view-admin/view-admin.component';
 import { ViewConsumableCategoryComponent } from './view-consumable-category/view-consumable-category.component';
 import { CreateConsumableCategoryComponent } from './create-consumable-category/create-consumable-category.component';
 import { EditConsumableCategoryComponent } from './edit-consumable-category/edit-consumable-category.component';
+import { ViewMandateLimitComponent } from './view-mandate-limit/view-mandate-limit.component';
+import { CreateMandateLimitComponent } from './create-mandate-limit/create-mandate-limit.component';
+import { EditMandateLimitComponent } from './edit-mandate-limit/edit-mandate-limit.component';
 
 const routes: Routes = [
   {
@@ -82,6 +85,18 @@ const routes: Routes = [
     path: 'CreateCategory',
     component: CreateConsumableCategoryComponent
   },
+  {
+    path: "ViewMandateLimit",
+    component: ViewMandateLimitComponent
+  },
+  {
+    path: 'AddMandateLimit',
+    component: CreateMandateLimitComponent
+  },
+  {
+    path: 'EditMandateLimit/:id',
+    component: EditMandateLimitComponent
+  }
 ];
 
 @NgModule({
