@@ -15,7 +15,7 @@
                                     <br />
                                     <mat-form-field>
                                         <input matInput type="text" placeholder="" formControlName="amount" id="amount"
-                                            [(ngModel)]="mandateLimit.Ammount" required>
+                                            [(ngModel)]="mandateLimit.ammount" required>
                                         <mat-error *ngIf="myError('amount', 'pattern')">Amount must be in
                                             numbers.</mat-error>
                                     </mat-form-field>
@@ -27,7 +27,7 @@
                                     <br />
                                     <mat-form-field>
                                         <input matInput [matDatepicker]="picker" placeholder="Choose a date"
-                                            formControlName="date" id="date" [(ngModel)]="mandateLimit.Date" required>
+                                            formControlName="date" id="date" [(ngModel)]="mandateLimit.date" required>
                                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                         <mat-datepicker #picker></mat-datepicker>
                                     </mat-form-field>

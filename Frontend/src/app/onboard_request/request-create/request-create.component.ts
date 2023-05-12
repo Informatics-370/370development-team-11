@@ -33,17 +33,17 @@ export class RequestCreateComponent implements OnInit{
   }
 
   rl: Role = {
-    Role_ID: 0,
-    Name: '',
-    Description: ''
+    role_ID: 0,
+    name: '',
+    description: ''
   }
 
   usr: User = {
-    User_Id: 0,
-    Role_ID: 0,
-    Username: '',
-    Password: '',
-    Profile_Picture: './assets/Images/Default_Profile.jpg',
+    user_Id: 0,
+    role_ID: 0,
+    username: '',
+    password: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
     role: this.rl
   }
   
@@ -52,7 +52,7 @@ export class RequestCreateComponent implements OnInit{
     user_Id: 1,
     vendor_ID:0,
     vendor: { vendor_ID:0,vendor_Status_ID:0,vendor_Status:this.VStatus,name: '',email: '', number_Of_Times_Used:0},
-    users: {User_Id: 0,Role_ID:0,Username:'',Password:'',Profile_Picture:'./assets/Images/Default_Profile.jpg', role: this.rl},
+    users: {user_Id: 0,role_ID:0,username:'',password:'',profile_Picture:'./assets/Images/Default_Profile.jpg', role: this.rl},
     quotes: '',
   }
 

@@ -90,13 +90,13 @@ import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.compo
     ViewConsumableCategoryComponent,
     CreateConsumableCategoryComponent,
     EditConsumableCategoryComponent,
-    DeleteConsumableCategoryComponent
+    DeleteConsumableCategoryComponent,
     ViewMandateLimitComponent,
     CreateMandateLimitComponent,
-    EditMandateLimitComponent
+    EditMandateLimitComponent,
     RequestViewComponent,
     RequestCreateComponent,
-    RequestUpdateComponent
+    RequestUpdateComponent,
     CreateDepartmentComponent,
     DeleteDepartmentComponent,
     EditDepartmentComponent,

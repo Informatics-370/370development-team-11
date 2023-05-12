@@ -81,13 +81,7 @@ export class DataService {
   ConsumableValidation(name: String, category: String): Observable<Consumable> {
     return this.httpClient.get<Consumable>(`${this.apiUrl}Consumable/ConsumableValidation/` + name + "/" + category, this.httpOptions)
   }
-  GetBranches(): Observable<any> {
-    return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetAllBranches`).pipe(map(result => result))
-  }
-
-  GetDepartments(): Observable<any> {
-    return this.httpClient.get<Department[]>(`${this.apiUrl}Department/GetAllDepartments`).pipe(map(result => result))
-  }
+  
 
   AddUser(user: User) {
     return this.httpClient.post(`${this.apiUrl}User/CreateUser`, user, this.httpOptions)
@@ -105,9 +99,7 @@ export class DataService {
     return this.httpClient.get(`${this.apiUrl}User/GetEmployee` + "/" + userID).pipe(map(result => result))
   }
 
-  GetBranch(Branch_ID: number) {
-    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch` + Branch_ID).pipe(map(result => result))
-  }
+  
 
   EditUser(usr: User, userID: number) {
     return this.httpClient.put<User>(`${this.apiUrl}User/EditUser/` + userID, usr, this.httpOptions)

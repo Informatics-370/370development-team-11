@@ -12,9 +12,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class EditMandateLimitComponent {
   currentMandateLimit: Mandate_Limit = {
-    Mandate_ID: 0,
-    Ammount: 0,
-    Date: '2023-05-07T12:14:46.249'
+    mandate_ID: 0,
+    ammount: 0,
+    date: '2023-05-07T12:14:46.249'
   }
 
   mandateLimitForm: FormGroup = new FormGroup({});
