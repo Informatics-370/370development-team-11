@@ -115,7 +115,7 @@ for(let i = 1; i < this.onboardRequest.length;i++) {
     CompanyQuote: ['', Validators.required],
   });
   this.rows.push(row);
-  
+  this.files.push('');
 }
 
 
