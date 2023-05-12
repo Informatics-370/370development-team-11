@@ -33,16 +33,16 @@ export class EditMandateLimitComponent {
   GetMandateLimit(id: number) {
     this.dataService.GetMandateLimit(id).subscribe({
       next: (MandateLimit: Mandate_Limit) => {
-        this.currentMandateLimit = MandateLimit
+        this.currentMandateLimit = MandateLimit;
       }
-    })
+    });
   }
 
   onSubmit(): void {
-    // console.log(this.currentMandateLimit.Mandate_ID)
-    // this.dataService.EditMandateLimit(this.currentMandateLimit.Mandate_ID, this.currentMandateLimit).subscribe(result => {
-    //   this.router.navigate(['/ViewMandateLimit']);
-    // });
+    console.log(this.currentMandateLimit.mandate_ID)
+    this.dataService.EditMandateLimit(this.currentMandateLimit.mandate_ID, this.currentMandateLimit).subscribe(result => {
+      this.router.navigate(['/ViewMandateLimit']);
+    });
   }
 
   onCancel(): void {
