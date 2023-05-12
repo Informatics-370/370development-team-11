@@ -21,7 +21,7 @@ namespace ProcionAPI.Controllers
             }
 
             [HttpGet]
-            [Route("GetAllBranches")]
+            [Route("GetBranches")]
             public async Task<IActionResult> GetAllBranches()
             {
                 try
@@ -37,7 +37,7 @@ namespace ProcionAPI.Controllers
             }
 
             [HttpPost]
-            [Route("AddBranch")]
+            [Route("CreateBranch")]
             public async Task<IActionResult> AddBranch([FromBody] Branch AddBranch)
             {
                 try
@@ -52,37 +52,84 @@ namespace ProcionAPI.Controllers
                 }
             }
 
-            [HttpPut]
-            [Route("EditBranch{Branch_ID}")]
-            public async Task<ActionResult> EditBranch([FromRoute] int Branch_ID, Branch EditBranchRequest)
+        [HttpPut]
+        [Route("EditBracnh/{Branch_ID}")]
+        public async Task<ActionResult<Department>> EditBranch(int Branch_ID, Branch EditBranchRequest)
+        {
+            try
             {
-                var results = await _branchRepository.EditBranchAsync(Branch_ID, EditBranchRequest);
-                return Ok(results);
-            }
+                var existingBranch = await _branchRepository.GetBranchAsync(Branch_ID);
+                if (existingBranch == null) return NotFound($"The role does not exist");
 
-            [HttpDelete]
-            [Route("DeleteBranch{Branch_ID}")]
-            public async Task<ActionResult> DeleteBranch([FromRoute] int Branch_ID)
-            {
-                var results = await _branchRepository.DeleteBranchAsync(Branch_ID);
-                return Ok(results);
-            }
+                existingBranch.Name = EditBranchRequest.Name;
+                existingBranch.Street = EditBranchRequest.Street;
+                existingBranch.City = EditBranchRequest.City;
+                existingBranch.Postal_Code = EditBranchRequest.Postal_Code;
+                existingBranch.Province = EditBranchRequest.Province;
 
-            [HttpGet]
-            [Route("GetBranch{Branch_ID}")]
-            public async Task<IActionResult> GetBranch([FromRoute] int Branch_ID)
-            {
-                try
+
+                if (await _branchRepository.SaveChangesAsync())
                 {
-                    var result = await _branchRepository.GetBranchAsync(Branch_ID);
-                    return Ok(result);
-                }
-                catch (Exception)
-                {
-                    return StatusCode(500, "Internal Server Error. Please Contact Support");
-                    throw;
+                    return Ok(existingBranch);
                 }
             }
-        
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+            return BadRequest("Your request is invalid");
+        }
+
+        [HttpDelete]
+        [Route("DeleteBranch/{Branch_ID}")]
+        public async Task<IActionResult> DeleteBranch(int Branch_ID)
+        {
+            try
+            {
+                var existingBranch = await _branchRepository.GetBranchAsync(Branch_ID);
+                if (existingBranch == null) return NotFound($"The role does not exist");
+                _branchRepository.Delete(existingBranch);
+                if (await _branchRepository.SaveChangesAsync()) return Ok(existingBranch);
+            }
+            catch
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+            return BadRequest("Your request is invalid");
+        }
+
+        [HttpGet]
+        [Route("GetBranch/{Branch_ID}")]
+        public async Task<IActionResult> GetBranch(int Branch_ID)
+        {
+            try
+            {
+                var result = await _branchRepository.GetBranchAsync(Branch_ID);
+                if (result == null) return NotFound("Course does not exist. You need to create it first");
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
+
+        [HttpGet]
+        [Route("BranchValidation/{name}")]
+        public async Task<IActionResult> BranchValidation([FromRoute] string name)
+        {
+            try
+            {
+                var result = await _branchRepository.BranchValidationAsync(name);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
     }
 }

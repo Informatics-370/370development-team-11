@@ -19,14 +19,31 @@ export class ViewAdminComponent implements OnInit {
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService) { }
 
   Admins: Admin[] = [];
+  SearchedAdmin: Admin[] = [];
+  searchWord: string = "";
 
   ngOnInit() {
     this.GetAdmins();
   }
 
+  search() {
+    const searchTerm = this.searchWord.toLocaleLowerCase();
+    console.log(searchTerm);
+    console.log(this.Admins)
+
+
+    if (searchTerm) {
+      this.SearchedAdmin = this.Admins.filter(r => r.adminName.toLocaleLowerCase().includes(searchTerm))
+    }
+    else if (searchTerm == "") {
+      this.SearchedAdmin = [...this.Admins]
+    }
+  }
+
   GetAdmins() {
     this.dataService.GetAdmins().subscribe(result => {
-      this.dataSource = result;
+      this.Admins = result;
+      this.SearchedAdmin = this.Admins;
     });
   }
 

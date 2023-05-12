@@ -38,17 +38,32 @@ import { CreateAdminComponent } from './create-admin/create-admin.component';
 import { EditAdminComponent } from './edit-admin/edit-admin.component';
 import { DeleteAdminComponent } from './delete-admin/delete-admin.component';
 import { ViewAdminComponent } from './view-admin/view-admin.component';
+import { ViewConsumableCategoryComponent } from './view-consumable-category/view-consumable-category.component';
+import { CreateConsumableCategoryComponent } from './create-consumable-category/create-consumable-category.component';
+import { EditConsumableCategoryComponent } from './edit-consumable-category/edit-consumable-category.component';
+import { DeleteConsumableCategoryComponent } from './delete-consumable-category/delete-consumable-category.component';
+import { ViewMandateLimitComponent } from './view-mandate-limit/view-mandate-limit.component';
+import { CreateMandateLimitComponent } from './create-mandate-limit/create-mandate-limit.component';
+import { EditMandateLimitComponent } from './edit-mandate-limit/edit-mandate-limit.component';
 import { RequestViewComponent } from './onboard_request/request-view/request-view.component';
 import { RequestCreateComponent } from './onboard_request/request-create/request-create.component';
 import { RequestUpdateComponent } from './onboard_request/request-update/request-update.component';
 
 
 
-import {MatRadioModule} from '@angular/material/radio';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTabsModule } from '@angular/material/tabs';
 
-import {MatStepperModule} from '@angular/material/stepper';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { CreateDepartmentComponent } from './create-department/create-department/create-department.component';
+import { DeleteDepartmentComponent } from './delete-department/delete-department/delete-department.component';
+import { EditDepartmentComponent } from './edit-department/edit-department/edit-department.component';
+import { ViewDepartmentComponent } from './view-department/view-department/view-department.component';
+import { ViewBranchComponent } from './view-branch/view-branch/view-branch.component';
+import { CreateBranchComponent } from './create-branch/create-branch/create-branch.component';
+import { DeleteBranchComponent } from './delete-branch/delete-branch/delete-branch.component';
+import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.component';
 
 
 @NgModule({
@@ -72,9 +87,24 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     EditAdminComponent,
     DeleteAdminComponent,
     ViewAdminComponent,
+    ViewConsumableCategoryComponent,
+    CreateConsumableCategoryComponent,
+    EditConsumableCategoryComponent,
+    DeleteConsumableCategoryComponent,
+    ViewMandateLimitComponent,
+    CreateMandateLimitComponent,
+    EditMandateLimitComponent,
     RequestViewComponent,
     RequestCreateComponent,
-    RequestUpdateComponent
+    RequestUpdateComponent,
+    CreateDepartmentComponent,
+    DeleteDepartmentComponent,
+    EditDepartmentComponent,
+    ViewDepartmentComponent,
+    ViewBranchComponent,
+    CreateBranchComponent,
+    DeleteBranchComponent,
+    EditBranchComponent
   ],
   imports: [
     BrowserModule,
@@ -104,7 +134,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
     MatExpansionModule,
-    
+
   ],
   bootstrap: [AppComponent]
 })

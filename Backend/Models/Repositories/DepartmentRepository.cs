@@ -33,31 +33,40 @@ namespace ProcionAPI.Models.Repositories
             return new Department[] { AddDepartment };
         }
 
-        public async Task<Department> EditDepartmentAsync(int Department_ID, Department Request)
-        {
-            var department = await _dbContext.Department.FindAsync(Department_ID);
 
-            department.Name = Request.Name;
-            department.Description = Request.Description;  
-
-            await _dbContext.SaveChangesAsync();
-
-            return department;
-        }
-
-        public async Task<Department> DeleteDepartmentAsync(int Department_ID)
-        {
-           var deleteDepartment = await _dbContext.Department.FindAsync(Department_ID);
-            _dbContext.Department.Remove(deleteDepartment);
-            await _dbContext.SaveChangesAsync();
-            return deleteDepartment;
-        }
-        
 
         public async Task<Department> GetDepartmentAsync(int Department_ID)
         {
-            Department department = await _dbContext.Department.FirstOrDefaultAsync(x => x.Department_ID == Department_ID);
-            return department;
+            IQueryable<Department> query = _dbContext.Department.Where(c => c.Department_ID == Department_ID);
+            return await query.FirstOrDefaultAsync();
         }
+
+
+
+       
+
+        public async Task<Department> DepartmentValidationAsync(string name)
+        {
+            Department ExistingDepartment = await _dbContext.Department.FirstOrDefaultAsync(x => x.Name == name);
+            if (ExistingDepartment != null)
+            {
+                return ExistingDepartment;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+        public void Delete<T>(T entity) where T : class
+        {
+            _dbContext.Remove(entity);
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return await _dbContext.SaveChangesAsync() > 0;
+        }
+
     }
 }

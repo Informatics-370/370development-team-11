@@ -29,4 +29,8 @@
     <Folder Include="Files\OnboardRequests\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="ProcionAPI.sln" />
+  </ItemGroup>
+
 </Project>

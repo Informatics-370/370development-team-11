@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatAutocomplete } from '@angular/material/autocomplete';
 
 
 @Component({
@@ -45,7 +46,7 @@ export class EditConsumableComponent implements OnInit {
     // Function to build the table
     this.myForm = this.formBuilder.group({
       Name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
-      Description: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern("^[a-zA-Z ]+$")]],
+      Description: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
       On_Hand: [0, [Validators.required, Validators.pattern("^[0-9]+$")]],
       Minimum_Reorder_Quantity: [0, [Validators.required, Validators.pattern("^[0-9]+$")]],
       Maximum_Reorder_Quantity: [0, [Validators.required, Validators.pattern("^[0-9]+$")]],
@@ -62,7 +63,11 @@ export class EditConsumableComponent implements OnInit {
           this.dataService.GetConsumableByID(Number(id)).subscribe({
             next: (ConsumableRecieved) => {
               this.ConsumableToEdit = ConsumableRecieved
-              this.myForm.get('ConsumableCategory')?.setValue(this.consumableCategoryArray[Number(this.ConsumableToEdit.consumable_Category_ID) - 1].name);
+
+              const CategoryID = Number(this.ConsumableToEdit.consumable_Category_ID);
+              const CategoryIndex = this.consumableCategoryArray.findIndex((category) => category.consumable_Category_ID === CategoryID);
+
+              this.myForm.get('ConsumableCategory')?.setValue(this.consumableCategoryArray[CategoryIndex].name);
             }
           })
         }
@@ -83,25 +88,98 @@ export class EditConsumableComponent implements OnInit {
     this.ConsumableToEdit.maximum_Reorder_Quantity = this.myForm.get('Maximum_Reorder_Quantity')?.value;
     this.ConsumableToEdit.consumable_Category = this.ConsumableCategory;
 
-    this.dataService.UpdateConsumable(this.ConsumableToEdit.consumable_ID, this.ConsumableToEdit).subscribe({
-      next: (response) => {
-        var action = "Update";
-        var title = "UPDATE SUCCESSFUL";
-        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+    this.dataService.ConsumableValidation(this.ConsumableToEdit.name, this.ConsumableToEdit.consumable_Category.name).subscribe({
+      next: (Result) => {
+        if (Result == null) {
+          this.dataService.UpdateConsumable(this.ConsumableToEdit.consumable_ID, this.ConsumableToEdit).subscribe({
+            next: (response) => {
+              var action = "Update";
+              var title = "UPDATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-          disableClose: true,
-          data: { action, title, message }
-        });
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
 
-        const duration = 1750;
-        setTimeout(() => {
-          this.router.navigate(['/ViewConsumable']);
-          dialogRef.close();
-        }, duration);
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/ViewConsumable']);
+                dialogRef.close();
+              }, duration);
 
+            }
+          });
+        }
+        else if (Result.consumable_ID === this.ConsumableToEdit.consumable_ID &&
+          Result.consumable_Category_ID === this.ConsumableToEdit.consumable_Category_ID &&
+          Result.name === this.ConsumableToEdit.name &&
+          Result.description === this.ConsumableToEdit.description &&
+          Result.maximum_Reorder_Quantity === this.ConsumableToEdit.maximum_Reorder_Quantity &&
+          Result.minimum_Reorder_Quantity === this.ConsumableToEdit.minimum_Reorder_Quantity &&
+          Result.on_Hand === this.ConsumableToEdit.on_Hand) {
+          var action = "NOTIFICATION";
+          var title = "NOTIFICATION: NO CHANGES MADE";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to the consumable: <strong>" + this.ConsumableToEdit.name + "</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            this.router.navigate(['/ViewConsumable']);
+            dialogRef.close();
+          }, duration);
+        }
+        else if (Result.consumable_ID !== this.ConsumableToEdit.consumable_ID ||
+          Result.consumable_Category_ID !== this.ConsumableToEdit.consumable_Category_ID ||
+          Result.name !== this.ConsumableToEdit.name ||
+          Result.description !== this.ConsumableToEdit.description ||
+          Result.maximum_Reorder_Quantity !== this.ConsumableToEdit.maximum_Reorder_Quantity ||
+          Result.minimum_Reorder_Quantity !== this.ConsumableToEdit.minimum_Reorder_Quantity ||
+          Result.on_Hand !== this.ConsumableToEdit.on_Hand) {
+          this.dataService.UpdateConsumable(this.ConsumableToEdit.consumable_ID, this.ConsumableToEdit).subscribe({
+            next: (response) => {
+              var action = "Update";
+              var title = "UPDATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/ViewConsumable']);
+                dialogRef.close();
+              }, duration);
+
+            }
+          });
+
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: Consumable Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
       }
     })
+
+
   }
 
   GetCategories() {

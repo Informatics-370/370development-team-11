@@ -43,8 +43,8 @@ export class CreateConsumableComponent implements OnInit {
     this.GetCategories();
 
     this.myForm = this.formBuilder.group({
-      Name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
-      Description: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern("^[a-zA-Z ]+$")]],
+      Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
+      Description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
       On_Hand: [0, [Validators.required, Validators.pattern("^[0-9]+$")]],
       Minimum_Reorder_Quantity: [0, [Validators.required, Validators.pattern("^[0-9]+$")]],
       Maximum_Reorder_Quantity: [0, [Validators.required, Validators.pattern("^[0-9]+$")]],
@@ -71,7 +71,7 @@ export class CreateConsumableComponent implements OnInit {
     this.Consumables.maximum_Reorder_Quantity = this.myForm.get('Maximum_Reorder_Quantity')?.value;
     this.Consumables.consumable_Category = this.ConsumableCategory;
 
-    this.dataService.ConsumableValidation(this.Consumables.name).subscribe({
+    this.dataService.ConsumableValidation(this.Consumables.name, this.Consumables.consumable_Category.name).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.AddConsumables(this.Consumables).subscribe(

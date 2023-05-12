@@ -5,57 +5,60 @@ import { DataService } from '../DataService/data-service';
 import { Role } from '../Shared/EmployeeRole';
 import { User } from '../Shared/User';
 import { Admin } from '../Shared/Admin';
+import { MatDialog } from '@angular/material/dialog';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-admin',
   templateUrl: './edit-admin.component.html',
   styleUrls: ['./edit-admin.component.css']
 })
-export class EditAdminComponent implements OnInit{
+export class EditAdminComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
 
   admin: any
-  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
 
 
   userRoles: any[] = []
 
   rl: Role = {
-    Role_ID: 0,
-    Name: '',
-    Description: ''
+    role_ID: 0,
+    name: '',
+    description: ''
   }
 
   usr: User = {
-    User_Id: 0,
-    Role_ID: 0,
-    Username: '',
-    Password: '',
-    Profile_Picture: './assets/Images/Default_Profile.jpg',
+    user_Id: 0,
+    role_ID: 0,
+    username: '',
+    password: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
     role: this.rl
   }
 
   adm: Admin = {
-    Admin_ID: 0,
-    User_Id: 0,
-    AdminName: '',
-    AdminSurname: '',
-    CellPhone_Num: '',
-    Email: '',
+    admin_ID: 0,
+    user_Id: 0,
+    adminName: '',
+    adminSurname: '',
+    cellPhone_Num: '',
+    email: '',
     user: this.usr,
   }
 
   ngOnInit() {
 
     this.GetRoles();
-    
+
 
     this.myForm = this.formBuilder.group({
       AdminName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       AdminSurname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern('^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{6,}$')]],
       CellPhone_Num: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12), Validators.pattern("^[0-9 ]*$")]],
       Role: ['', [Validators.required]],
     })
@@ -74,11 +77,11 @@ export class EditAdminComponent implements OnInit{
   GetAdmin() {
     this.dataService.GetAdmin(+this.route.snapshot.params['uid']).subscribe(result => {
       this.admin = result
+      this.usr.role_ID = this.admin.user.role.role_ID
       this.myForm.patchValue({
         AdminName: this.admin.adminName,
         AdminSurname: this.admin.adminSurname,
         Email: this.admin.email,
-        password: this.admin.user.password,
         CellPhone_Num: this.admin.cellPhone_Num,
         Role: this.admin.user.role.role_ID
       });
@@ -101,26 +104,44 @@ export class EditAdminComponent implements OnInit{
   }
 
   onSubmit() {
-    this.adm.AdminName = this.myForm.get('AdminName')?.value;
-    this.adm.AdminSurname = this.myForm.get('AdminSurname')?.value;
-    this.adm.CellPhone_Num = this.myForm.get('CellPhone_Num')?.value;
-    this.adm.Email = this.myForm.get('Email')?.value;
+    this.adm.adminName = this.myForm.get('AdminName')?.value;
+    this.adm.adminSurname = this.myForm.get('AdminSurname')?.value;
+    this.adm.cellPhone_Num = this.myForm.get('CellPhone_Num')?.value;
+    this.adm.email = this.myForm.get('Email')?.value;
 
     var cel = this.myForm.get('CellPhone_Num')?.value;
     var name = this.myForm.get('AdminName')?.value;
     var surname = this.myForm.get('AdminSurname')?.value;
     var ts = name.concat(surname);
-    var username = ts.concat(cel.toString().substring(0, 3));
+    var username = ts.concat(cel.toString().substring(4, 7));
 
 
-    this.usr.Username = username;
-    this.usr.Password = this.myForm.get('password')?.value;
-    this.usr.Role_ID = this.myForm.get('Role')?.value;
+    this.usr.username = username;
 
+    //this.dataService.EditUser(this.usr, this.route.snapshot.params['uid']).subscribe(r => {
+    //  this.dataService.EditAdmin(this.adm, this.route.snapshot.params['uid']).subscribe(result => {
+    //    this.router.navigateByUrl('ViewAdmin');
+    //  })
+    //})
 
-    this.dataService.EditUser(this.usr, this.route.snapshot.params['uid']).subscribe(result => {
-      this.dataService.EditAdmin(this.adm, this.route.snapshot.params['uid']).subscribe(r => {
-        this.router.navigate(['ViewAdmin'])
+    this.dataService.EditUser(this.usr, this.admin.user_Id).subscribe(result => {
+      this.dataService.EditAdmin(this.adm, this.admin.admin_ID).subscribe({
+        next: (response) => {
+          var action = "Update";
+          var title = "UPDATE SUCCESSFUL";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The admin <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            this.router.navigate(['/ViewAdmin']);
+            dialogRef.close();
+          }, duration);
+        }
       })
     })
   }

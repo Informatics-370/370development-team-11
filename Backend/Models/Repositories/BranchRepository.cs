@@ -33,34 +33,37 @@ namespace ProcionAPI.Models.Repositories
             return new Branch[] { AddBranch };
         }
 
-        public async Task<Branch> EditBranchAsync(int Branch_ID, Branch Request)
-        {
-            var branch = await _dbContext.Branch.FindAsync(Branch_ID);
-
-            branch.Name = Request.Name;
-            branch.Street = Request.Street;
-            branch.City = Request.City;
-            branch.Postal_Code = Request.Postal_Code;
-            branch.Province = Request.Province;
-
-            await _dbContext.SaveChangesAsync();
-
-            return branch;
-        }
-
-        public async Task<Branch> DeleteBranchAsync(int Branch_ID)
-        {
-            var deleteBranch = await _dbContext.Branch.FindAsync(Branch_ID);
-            _dbContext.Branch.Remove(deleteBranch);
-            await _dbContext.SaveChangesAsync();
-            return deleteBranch;
-        }
-
-
         public async Task<Branch> GetBranchAsync(int Branch_ID)
         {
-            Branch branch = await _dbContext.Branch.FirstOrDefaultAsync(x => x.Branch_ID == Branch_ID);
-            return branch;
+            IQueryable<Branch> query = _dbContext.Branch.Where(c => c.Branch_ID == Branch_ID);
+            return await query.FirstOrDefaultAsync();
         }
+
+       
+
+
+        public async Task<Branch> BranchValidationAsync(string name)
+        {
+            Branch ExistingBranch = await _dbContext.Branch.FirstOrDefaultAsync(x => x.Name == name);
+            if (ExistingBranch != null)
+            {
+                return ExistingBranch;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+        public void Delete<T>(T entity) where T : class
+        {
+            _dbContext.Remove(entity);
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return await _dbContext.SaveChangesAsync() > 0;
+        }
+
     }
 }

@@ -51,31 +51,19 @@
               </td>
               <td style="width:100%;">
                 <mat-card-content>
-                  <label style=" color: black;">Password:</label>
-                  <br />
-                  <mat-form-field>
-                    <input matInput type="password" placeholder="" formControlName="password" id="password" required>
-                    <mat-error *ngIf="myError('password', 'required')">Password is required</mat-error>
-                    <mat-error *ngIf="myError('password', 'minlength')">Password must be atleast 6 characters long</mat-error>
-                    <mat-error *ngIf="myError('password', 'pattern')">Password must be a combination of lower-case, upper-case, numbers.</mat-error>
-                  </mat-form-field>
-                </mat-card-content>
-              </td>
-            </tr>
-            <tr>
-              <td style="width:100%;">
-                <mat-card-content>
                   <label style=" color:black;">Phone Number:</label>
                   <br />
                   <mat-form-field>
                     <input matInput type="text" placeholder="" formControlName="CellPhone_Num" id="CellPhone_Num" required>
                     <mat-error *ngIf="myError('CellPhone_Num', 'required')">Phone is required</mat-error>
                     <mat-error *ngIf="myError('CellPhone_Num', 'maxlength')">Limit exceed</mat-error>
-                    <mat-error *ngIf="myError('CellPhone_Num', 'minlength')">Phone number must be atleast 10 numbers</mat-error>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'minlength')">Phone number must be 10 numbers</mat-error>
                     <mat-error *ngIf="myError('CellPhone_Num', 'pattern')">Please enter a valid phone number</mat-error>
                   </mat-form-field>
                 </mat-card-content>
               </td>
+            </tr>
+            <tr>
               <td style="width:100%;">
                 <mat-card-content>
                   <label style=" color:black;">Role:</label>
@@ -86,6 +74,19 @@
                       <mat-option *ngFor="let r of userRoles" [value]="r.role_ID">{{r.name}}</mat-option>
                     </mat-select>
                     <mat-error *ngIf="myError('Role', 'required')">Please choose a role</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Mandate Limit:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-label>Choose one</mat-label>
+                    <mat-select formControlName="Mandate" required>
+                      <mat-option *ngFor="let ml of mandate_limits" [value]="ml.mandate_ID">{{ml.ammount}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="myError('Mandate', 'required')">Please choose a branch</mat-error>
                   </mat-form-field>
                 </mat-card-content>
               </td>
@@ -114,21 +115,6 @@
                       <mat-option *ngFor="let branch of branches" [value]="branch.branch_ID">{{branch.name}}</mat-option>
                     </mat-select>
                     <mat-error *ngIf="myError('Branch', 'required')">Please choose a branch</mat-error>
-                  </mat-form-field>
-                </mat-card-content>
-              </td>
-            </tr>
-            <tr>
-              <td style="width:100%;">
-                <mat-card-content>
-                  <label style=" color:black;">Mandate Limit:</label>
-                  <br />
-                  <mat-form-field>
-                    <mat-label>Choose one</mat-label>
-                    <mat-select formControlName="Mandate" required>
-                      <mat-option *ngFor="let ml of mandate_limits" [value]="ml">{{ml}}</mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="myError('Mandate', 'required')">Please choose a branch</mat-error>
                   </mat-form-field>
                 </mat-card-content>
               </td>

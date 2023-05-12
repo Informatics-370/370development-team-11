@@ -43,9 +43,9 @@ namespace ProcionAPI.Models.Repositories
             return new Consumable[] { ConsumableAdd };
         }
 
-        public async Task<Consumable> ConsumableValidationAsync(string name)
+        public async Task<Consumable> ConsumableValidationAsync(string name, string category)
         {
-            Consumable ExistingConsumable = await _dbContext.Consumable.FirstOrDefaultAsync(x => x.Name == name);
+            Consumable ExistingConsumable = await _dbContext.Consumable.FirstOrDefaultAsync(x => x.Name == name && x.Consumable_Category.Name == category);
             if (ExistingConsumable != null)
             {
                 return ExistingConsumable;
@@ -56,6 +56,21 @@ namespace ProcionAPI.Models.Repositories
                 return null;
             }
         }
+
+
+        //public async Task<Consumable> ConsumableValidationAsync(string name, string description, string category, int on_hand, int min, int max)
+        //{
+        //    Consumable ExistingConsumable = await _dbContext.Consumable.FirstOrDefaultAsync(x => x.Name == name && x.Description == description && x.Consumable_Category.Name == category && x.On_Hand == on_hand && x.Minimum_Reorder_Quantity == min && x.Maximum_Reorder_Quantity == max) ;
+        //    if (ExistingConsumable != null)
+        //    {
+        //        return ExistingConsumable;
+        //    }
+
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
 
         public async Task<Consumable> GetConsumablesByIDAsync(int id)
         {

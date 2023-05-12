@@ -67,12 +67,12 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
-        [Route("ConsumableValidation/{name}")]
-        public async Task<IActionResult> ConsumableValidation([FromRoute] string name)
+        [Route("ConsumableValidation/{name}/{category}")]
+        public async Task<IActionResult> ConsumableValidation([FromRoute] string name, [FromRoute] string category)
         {
             try
             {
-                var result = await _consumableRepository.ConsumableValidationAsync(name);
+                var result = await _consumableRepository.ConsumableValidationAsync(name, category);
                 return Ok(result);
             }
             catch (Exception)

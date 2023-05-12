@@ -1,12 +1,7 @@
-:host {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
 mat-error {
   display: none !important;
 }
 
-  mat-error:first-child {
-    display: block !important;
-  }
+mat-error:first-child {
+  display: block !important;
+}

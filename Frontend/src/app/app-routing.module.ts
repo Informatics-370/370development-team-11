@@ -13,10 +13,24 @@ import { EditConsumableComponent } from './edit-consumable/edit-consumable.compo
 import { CreateAdminComponent } from './create-admin/create-admin.component';
 import { EditAdminComponent } from './edit-admin/edit-admin.component';
 import { ViewAdminComponent } from './view-admin/view-admin.component';
+import { ViewConsumableCategoryComponent } from './view-consumable-category/view-consumable-category.component';
+import { CreateConsumableCategoryComponent } from './create-consumable-category/create-consumable-category.component';
+import { EditConsumableCategoryComponent } from './edit-consumable-category/edit-consumable-category.component';
+import { ViewMandateLimitComponent } from './view-mandate-limit/view-mandate-limit.component';
+import { CreateMandateLimitComponent } from './create-mandate-limit/create-mandate-limit.component';
+import { EditMandateLimitComponent } from './edit-mandate-limit/edit-mandate-limit.component';
 
 import { RequestViewComponent } from './onboard_request/request-view/request-view.component';
 import { RequestCreateComponent } from './onboard_request/request-create/request-create.component';
 import { RequestUpdateComponent } from './onboard_request/request-update/request-update.component';
+import { CreateDepartmentComponent } from './create-department/create-department/create-department.component';
+import { DeleteDepartmentComponent } from './delete-department/delete-department/delete-department.component';
+import { EditDepartmentComponent } from './edit-department/edit-department/edit-department.component';
+import { ViewDepartmentComponent } from './view-department/view-department/view-department.component';
+import { CreateBranchComponent } from './create-branch/create-branch/create-branch.component';
+import { DeleteBranchComponent } from './delete-branch/delete-branch/delete-branch.component';
+import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.component';
+import { ViewBranchComponent } from './view-branch/view-branch/view-branch.component';
 
 
 const routes: Routes = [
@@ -61,6 +75,10 @@ const routes: Routes = [
     component: EditConsumableComponent
   },
   {
+    path: 'ViewConsumableCategory',
+    component: ViewConsumableCategoryComponent
+  },
+  {
     path: 'ViewAdmin',
     component: ViewAdminComponent
   },
@@ -72,9 +90,61 @@ const routes: Routes = [
     path: "EditAdm/:uid",
     component: EditAdminComponent
   },
+  {
+    path: 'EditCategory/:consumable_Category_ID',
+    component: EditConsumableCategoryComponent
+  },
+  {
+    path: 'CreateCategory',
+    component: CreateConsumableCategoryComponent
+  },
+  {
+    path: "ViewMandateLimit",
+    component: ViewMandateLimitComponent
+  },
+  {
+    path: 'AddMandateLimit',
+    component: CreateMandateLimitComponent
+  },
+  {
+    path: 'EditMandateLimit/:id',
+    component: EditMandateLimitComponent
+  },
   {path: 'request-view', component: RequestViewComponent},  
   {path: 'request-create/:RequestNo', component: RequestCreateComponent},  
-  {path: 'request-update', component: RequestUpdateComponent}
+  {path: 'request-update', component: RequestUpdateComponent},
+  {
+    path: 'ViewDepartment',
+    component: ViewDepartmentComponent
+  },
+  {
+    path: 'CreateDepartment',
+    component: CreateDepartmentComponent
+  },
+  {
+    path: 'DeleteDepartment',
+    component: DeleteDepartmentComponent
+  },
+  {
+    path: 'EditDepartment/:department_ID',
+    component: EditDepartmentComponent
+  },
+  {
+    path: 'ViewBranch',
+    component: ViewBranchComponent
+  },
+  {
+    path: 'CreateBranch',
+    component: CreateBranchComponent
+  },
+  {
+    path: 'DeleteBranch',
+    component: DeleteBranchComponent
+  },
+  {
+    path: 'EditBranch/:branch_ID',
+    component: EditBranchComponent
+  },
 ];
 
 @NgModule({

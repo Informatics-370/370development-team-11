@@ -9,6 +9,6 @@ namespace ProcionAPI.Models.Repositories
         Task<Consumable> GetConsumablesByIDAsync(int id);
         Task<Consumable> DeleteConsumableAsync(int id);
         Task<Consumable> UpdateConsumableAsync(int id, Consumable Request);
-        Task<Consumable> ConsumableValidationAsync(string name);
+        Task<Consumable> ConsumableValidationAsync(string name, string category);
     }
 }

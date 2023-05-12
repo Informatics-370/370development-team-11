@@ -10,6 +10,7 @@ import { Branch } from '../Shared/Branch';
 import { Department } from '../Shared/Department';
 import { User } from '../Shared/User';
 import { Admin } from '../Shared/Admin';
+import { Mandate_Limit } from '../Shared/MandateLimit';
 import { OnboardRequest } from '../Shared/OnboardRequest';
 import { VendorOnboardRequestVM } from '../Shared/VendorOnboardRequestVM';
 import { VendorOnboardRequest } from '../Shared/VendorOnboardRequest';
@@ -28,7 +29,7 @@ export class DataService {
   }
 
   constructor(private httpClient: HttpClient) { }
-
+  //Consumables
   GetConsumables(): Observable<any> {
     return this.httpClient.get<Consumable[]>(`${this.apiUrl}Consumable/GetConsumables`).pipe(map(result => result))
   }
@@ -49,7 +50,7 @@ export class DataService {
   }
 
   EditRole(roleID: number, role: Role) {
-    return this.httpClient.put(`${this.apiUrl}Role/EditRole/${roleID}`, role, this.httpOptions)
+    return this.httpClient.put<Role>(`${this.apiUrl}Role/EditRole/` + roleID, role, this.httpOptions)
   }
 
   DeleteRole(roleID: number) {
@@ -77,8 +78,8 @@ export class DataService {
     return this.httpClient.put<Consumable>(`${this.apiUrl}Consumable/UpdateConsumable/` + consumableID, UpdateConsumableRequest, this.httpOptions)
   }
 
-  ConsumableValidation(name: String): Observable<Consumable> {
-    return this.httpClient.get<Consumable>(`${this.apiUrl}Consumable/ConsumableValidation/` + name, this.httpOptions)
+  ConsumableValidation(name: String, category: String): Observable<Consumable> {
+    return this.httpClient.get<Consumable>(`${this.apiUrl}Consumable/ConsumableValidation/` + name + "/" + category, this.httpOptions)
   }
   GetBranches(): Observable<any> {
     return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetAllBranches`).pipe(map(result => result))
@@ -88,15 +89,19 @@ export class DataService {
     return this.httpClient.get<Department[]>(`${this.apiUrl}Department/GetAllDepartments`).pipe(map(result => result))
   }
 
-  AddUser(user: User, name: string) {
-    return this.httpClient.post(`${this.apiUrl}User/CreateUser?name=${name}`, user, this.httpOptions)
+  AddUser(user: User) {
+    return this.httpClient.post(`${this.apiUrl}User/CreateUser`, user, this.httpOptions)
   }
 
-  AddEmployee(emp: Employee, usrName: string, brName: string, depName: string, mlAmount: number) {
-    return this.httpClient.post(`${this.apiUrl}User/CreateEmployee?usrName=${usrName}&brName=${brName}&depName=${depName}&mlAmount=${mlAmount}`, emp, this.httpOptions)
+  AddEmployee(emp: Employee) {
+    return this.httpClient.post(`${this.apiUrl}User/CreateEmployee`, emp, this.httpOptions)
   }
 
   GetEmployee(userID: number) {
+    return this.httpClient.get(`${this.apiUrl}User/GetEmployee` + "/" + userID).pipe(map(result => result))
+  }
+
+  GetEmployeeID(userID: Number) {
     return this.httpClient.get(`${this.apiUrl}User/GetEmployee` + "/" + userID).pipe(map(result => result))
   }
 
@@ -105,11 +110,11 @@ export class DataService {
   }
 
   EditUser(usr: User, userID: number) {
-    return this.httpClient.put(`${this.apiUrl}User/EditUser/${userID}`, usr, this.httpOptions)
+    return this.httpClient.put<User>(`${this.apiUrl}User/EditUser/` + userID, usr, this.httpOptions)
   }
 
   EditEmployee(emp: Employee, userID: number) {
-    return this.httpClient.put(`${this.apiUrl}User/EditEmployee/${userID}`, emp, this.httpOptions)
+    return this.httpClient.put<Employee>(`${this.apiUrl}User/EditEmployee/` + userID, emp, this.httpOptions)
   }
 
   DeleteEmployee(userID: number) {
@@ -120,6 +125,10 @@ export class DataService {
     return this.httpClient.delete<string>(`${this.apiUrl}User/DeleteUser` + "/" + userID, this.httpOptions)
   }
 
+
+
+
+  //Admin
   GetAdmins(): Observable<any> {
     return this.httpClient.get<Admin[]>(`${this.apiUrl}User/GetAdmins`).pipe(map(result => result))
   }
@@ -128,23 +137,73 @@ export class DataService {
     return this.httpClient.get(`${this.apiUrl}User/GetAdmin` + "/" + userID).pipe(map(result => result))
   }
 
-  AddAdmin(adm: Admin, usrName: string) {
-    return this.httpClient.post(`${this.apiUrl}User/CreateAdmin?usrName=${usrName}`, adm, this.httpOptions)
+  AddAdmin(adm: Admin) {
+    return this.httpClient.post(`${this.apiUrl}User/CreateAdmin`, adm, this.httpOptions)
   }
 
   EditAdmin(adm: Admin, userID: number) {
-    return this.httpClient.put(`${this.apiUrl}User/EditAdmin/${userID}`, adm, this.httpOptions)
+    return this.httpClient.put<Admin>(`${this.apiUrl}User/EditAdmin/` + userID, adm, this.httpOptions)
   }
 
   DeleteAdmin(userID: number) {
     return this.httpClient.delete<string>(`${this.apiUrl}User/DeleteAdmin` + "/" + userID, this.httpOptions)
   }
 
+  CreateCategory(AddCategoryRequest: ConsumableCategory) {
+    return this.httpClient.post<ConsumableCategory>(`${this.apiUrl}ConsumableCategory/CreateCategory`, AddCategoryRequest).pipe(map(result => result))
+  }
+
+  GetCategoryByID(categoryID: Number): Observable<ConsumableCategory> {
+    return this.httpClient.get<ConsumableCategory>(`${this.apiUrl}ConsumableCategory/GetConsumableCategoryByID/` + categoryID, this.httpOptions)
+
+  }
+
+  UpdateCategory(CategoryID: Number, UpdateCategoryRequest: ConsumableCategory): Observable<ConsumableCategory> {
+    return this.httpClient.put<ConsumableCategory>(`${this.apiUrl}ConsumableCategory/UpdateConsumableCategory/` + CategoryID, UpdateCategoryRequest, this.httpOptions)
+  }
+
+  DeleteCategory(CategoryID: Number): Observable<ConsumableCategory> {
+    return this.httpClient.delete<ConsumableCategory>(`${this.apiUrl}ConsumableCategory/DeleteCategory/` + CategoryID, this.httpOptions)
+  }
+  CategoryValidation(name: String, description: String): Observable<ConsumableCategory> {
+    return this.httpClient.get<ConsumableCategory>(`${this.apiUrl}ConsumableCategory/CategoryValidation/` + name + "/" + description, this.httpOptions)
+  }
+  UserValidation(name: String): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiUrl}User/UserValidation/` + name, this.httpOptions)
+  }
+
+  RoleValidation(name: String): Observable<Role> {
+    return this.httpClient.get<Role>(`${this.apiUrl}Role/RoleValidation/` + name, this.httpOptions)
+  }
+
+  GetUsers(): Observable<any> {
+    return this.httpClient.get<User[]>(`${this.apiUrl}User/GetUsers`).pipe(map(result => result))
+  }
+
+  GetUser(userID: Number) {
+    return this.httpClient.get(`${this.apiUrl}User/GetUser` + "/" + userID).pipe(map(result => result))
+  }
+  GetMandateLimits(): Observable<any> {
+    return this.httpClient.get<Mandate_Limit[]>(`${this.apiUrl}Mandate/GetAllMandateLimits`).pipe(map(result => result))
+  }
+
+  GetMandateLimit(mlID: number) {
+    return this.httpClient.get(`${this.apiUrl}Mandate/GetMandateLimit` + "/" + mlID).pipe(map(result => result))
+  }
+
+  AddMandateLimit(ml: Mandate_Limit) {
+    return this.httpClient.post(`${this.apiUrl}Mandate/AddMandateLimit`, ml, this.httpOptions)
+  }
+
+  EditMandateLimit(mlID: number | Number, ml: Mandate_Limit,) {
+    return this.httpClient.put(`${this.apiUrl}Mandate/EditMandateLimit/${mlID}`, ml, this.httpOptions)
+  }
+
   GetAllOnboardRequest(): Observable<any> {
     return this.httpClient.get<VendorOnboardRequestVM[]>(`${this.apiUrl}OnboardRequest/GetAllOnboardRequest`).pipe(map(result => result))
   }
 
-  AddOnboardRequest(AddRequest : OnboardRequest) {
+  AddOnboardRequest(AddRequest: OnboardRequest) {
     return this.httpClient.post(`${this.apiUrl}OnboardRequest/CreateOnboardRequest`, AddRequest, this.httpOptions)
   }
 
@@ -152,11 +211,68 @@ export class DataService {
     return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendors`).pipe(map(result => result))
   }
 
-  GetRequest(RequestID:number) {
+  GetRequest(RequestID: number) {
     return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetRequest/` + RequestID).pipe(map(result => result))
   }
 
 
-  
+
+
+
+
+
+
+  //Department
+  // GetDepartments(): Observable<any> {
+  //   return this.httpClient.get<Department[]>(`${this.apiUrl}Department/GetDepartments`).pipe(map(result => result))
+  // }
+
+  GetDepartment(Department_ID: number) {
+    return this.httpClient.get(`${this.apiUrl}Department/GetDepartment` + '/' + Department_ID).pipe(map(result => result))
+  }
+
+  AddDepartments(AddDepartmentRequest: Department) {
+    return this.httpClient.post<Department>(`${this.apiUrl}Department/CreateDepartment`, AddDepartmentRequest, this.httpOptions)
+  }
+
+  DeleteDepartment(Department_ID: Number): Observable<Department> {
+    return this.httpClient.delete<Department>(`${this.apiUrl}Department/DeleteDepartment` + '/' + Department_ID, this.httpOptions)
+  }
+
+  EditDepartment(Department_ID: Number, UpdateDepartmentRequest: Department): Observable<Department> {
+    return this.httpClient.put<Department>(`${this.apiUrl}Department/EditDepartment/${Department_ID}`, UpdateDepartmentRequest, this.httpOptions)
+  }
+
+  DepartmentValidation(name: String): Observable<Department> {
+    return this.httpClient.get<Department>(`${this.apiUrl}Department/DepartmentValidation/` + name, this.httpOptions)
+  }
+
+
+
+  //Branch
+  // GetBranches(): Observable<any> {
+  //   return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetBranches`).pipe(map(result => result))
+  // }
+
+  // GetBranch(Branch_ID: number) {
+  //   return this.httpClient.get(`${this.apiUrl}Branch/GetBranch`+'/' + Branch_ID).pipe(map(result => result))
+  // }
+
+  AddBranch(AddBranchRequest: Branch) {
+    return this.httpClient.post<Branch>(`${this.apiUrl}Branch/CreateBranch`, AddBranchRequest, this.httpOptions)
+  }
+
+  DeleteBranch(Branch_ID: Number): Observable<Branch> {
+    return this.httpClient.delete<Branch>(`${this.apiUrl}Branch/DeleteBranch` + '/' + Branch_ID, this.httpOptions)
+  }
+
+  EditBranch(Branch_ID: Number, UpdateBranchRequest: Branch): Observable<Branch> {
+    return this.httpClient.put<Branch>(`${this.apiUrl}Branch/UpdateBranch/${Branch_ID}`, UpdateBranchRequest, this.httpOptions)
+  }
+
+  BranchValidation(name: String): Observable<Branch> {
+    return this.httpClient.get<Branch>(`${this.apiUrl}Branch/BranchValidation/` + name, this.httpOptions)
+  }
+
 }
 

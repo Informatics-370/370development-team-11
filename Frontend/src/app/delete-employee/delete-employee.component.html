@@ -1,9 +1,10 @@
 <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;"
-    *ngIf="showConfirmationDialog == true">
+  *ngIf="showConfirmationDialog == true">
   DELETE EMPLOYEE
 </h1>
 <div mat-dialog-content *ngIf="showConfirmationDialog == true">
-  <p>You are about to delete the employee: <strong>{{Employee.employeeName}}</strong></p>
+  <p>You are about to delete the employee: <strong>{{Employee.employeeName}}</strong> and user:
+    <strong>{{Employee.user.username}}</strong></p>
   <p>Are you sure you want to continue?</p>
 </div>
 <div mat-dialog-actions align="end" *ngIf="showConfirmationDialog == true">
@@ -11,7 +12,7 @@
   <button mat-raised-button (click)="onCancel()" style="color: white; background-color: #244688;">Cancel</button>
 </div>
 
-<ng-container *ngIf ="showSuccessDialog == true">
+<ng-container *ngIf="showSuccessDialog == true">
   <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;">Delete Successful</h1>
   <div mat-dialog-content>
     <p>The employee "{{ Employee.employeeName }}" has been <strong style="color:red">DELETED</strong> successfully.</p>

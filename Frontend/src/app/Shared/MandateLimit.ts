@@ -1,5 +1,5 @@
 export interface Mandate_Limit {
-  Mandate_ID: Number;
-  Ammount: Number;
-  Date: String;
+  mandate_ID: Number;
+  ammount: Number;
+  date: String;
 }

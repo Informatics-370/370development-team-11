@@ -9,5 +9,7 @@ namespace ProcionAPI.Models.Repositories
         Task<bool> SaveChangesAsync();
         Task<Role> GetRoleAsync(int roleID);
         void Delete<T>(T entity) where T : class;
+        Task<Role> RoleValidationAsync(string name);
+        Task<Role> UpdateRoleAsync(int id, Role role);
     }
 }

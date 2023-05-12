@@ -1,5 +1,5 @@
 export interface Role {
-  Role_ID: Number;
-  Name: String;
-  Description: String;
+  role_ID: Number;
+  name: String;
+  description: String;
 }

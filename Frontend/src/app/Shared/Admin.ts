@@ -1,11 +1,11 @@
 import { User } from "./User";
 
 export interface Admin {
-  Admin_ID: Number;
-  User_Id: Number;
-  AdminName: String;
-  AdminSurname: String;
-  CellPhone_Num: String;
-  Email: String;
+  admin_ID: Number;
+  user_Id: Number;
+  adminName: String;
+  adminSurname: String;
+  cellPhone_Num: String;
+  email: String;
   user: User;
 }
