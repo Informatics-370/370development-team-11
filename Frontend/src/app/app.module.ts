@@ -51,11 +51,11 @@ import { RequestUpdateComponent } from './onboard_request/request-update/request
 
 
 
-import {MatRadioModule} from '@angular/material/radio';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTabsModule } from '@angular/material/tabs';
 
-import {MatStepperModule} from '@angular/material/stepper';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CreateDepartmentComponent } from './create-department/create-department/create-department.component';
 import { DeleteDepartmentComponent } from './delete-department/delete-department/delete-department.component';
 import { EditDepartmentComponent } from './edit-department/edit-department/edit-department.component';
@@ -90,13 +90,13 @@ import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.compo
     ViewConsumableCategoryComponent,
     CreateConsumableCategoryComponent,
     EditConsumableCategoryComponent,
-    DeleteConsumableCategoryComponent
+    DeleteConsumableCategoryComponent,
     ViewMandateLimitComponent,
     CreateMandateLimitComponent,
-    EditMandateLimitComponent
+    EditMandateLimitComponent,
     RequestViewComponent,
     RequestCreateComponent,
-    RequestUpdateComponent
+    RequestUpdateComponent,
     CreateDepartmentComponent,
     DeleteDepartmentComponent,
     EditDepartmentComponent,
@@ -134,7 +134,7 @@ import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.compo
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
     MatExpansionModule,
-    
+
   ],
   bootstrap: [AppComponent]
 })
