@@ -124,12 +124,34 @@ export class EditAdminComponent implements OnInit {
     //  })
     //})
 
-    this.dataService.EditUser(this.usr, this.admin.user_Id).subscribe(result => {
-      this.dataService.EditAdmin(this.adm, this.admin.admin_ID).subscribe({
-        next: (response) => {
-          var action = "Update";
-          var title = "UPDATE SUCCESSFUL";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The admin <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+    this.dataService.UserValidation(username).subscribe({
+      next: (Result) => {
+        if (Result == null) {
+          this.dataService.EditUser(this.usr, this.admin.user_Id).subscribe(result => {
+            this.dataService.EditAdmin(this.adm, this.admin.admin_ID).subscribe({
+              next: (response) => {
+                var action = "Update";
+                var title = "UPDATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The admin <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  this.router.navigate(['/ViewAdmin']);
+                  dialogRef.close();
+                }, duration);
+              }
+            })
+          })
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: User Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,
@@ -138,11 +160,10 @@ export class EditAdminComponent implements OnInit {
 
           const duration = 1750;
           setTimeout(() => {
-            this.router.navigate(['/ViewAdmin']);
             dialogRef.close();
           }, duration);
         }
-      })
+      }
     })
   }
 }

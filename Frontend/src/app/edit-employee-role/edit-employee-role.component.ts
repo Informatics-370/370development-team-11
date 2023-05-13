@@ -50,24 +50,47 @@ export class EditEmployeeRoleComponent implements OnInit {
   onSubmit() {
     var name = this.myForm.get('Name')?.value;
 
-    this.dataService.EditRole(this.role.role_ID, this.myForm.value).subscribe({
-      next: (response) => {
-        var action = "Update";
-        var title = "UPDATE SUCCESSFUL";
-        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+    this.dataService.RoleValidation(name).subscribe({
+      next: (Result) => {
+        if (Result == null) {
+          this.dataService.EditRole(this.role.role_ID, this.myForm.value).subscribe({
+            next: (response) => {
+              var action = "Update";
+              var title = "UPDATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-          disableClose: true,
-          data: { action, title, message }
-        });
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
 
-        const duration = 1750;
-        setTimeout(() => {
-          this.router.navigate(['/ViewEmpRole']);
-          dialogRef.close();
-        }, duration);
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/ViewEmpRole']);
+                dialogRef.close();
+              }, duration);
+            }
+          })
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: User Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
       }
     })
+
+    
 
 
 

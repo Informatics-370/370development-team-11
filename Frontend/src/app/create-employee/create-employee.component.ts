@@ -186,8 +186,24 @@ export class CreateEmployeeComponent implements OnInit {
       next: (Result) => {
         if (Result == null) {
           this.dataService.AddUser(this.usr).subscribe(result => {
-            this.dataService.AddEmployee(this.emp).subscribe(r => {
-              this.router.navigate(['ViewEmployee'])
+            this.dataService.AddEmployee(this.emp).subscribe({
+              next: (response) => {
+                console.log(response);
+                var action = "Create";
+                var title = "CREATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  this.router.navigate(['/ViewEmployee']);
+                  dialogRef.close();
+                }, duration);
+              }
             })
 
           })

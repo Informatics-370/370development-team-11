@@ -110,8 +110,23 @@ export class CreateAdminComponent implements OnInit {
       next: (Result) => {
         if (Result == null) {
           this.dataService.AddUser(this.usr).subscribe(result => {
-            this.dataService.AddAdmin(this.adm).subscribe(r => {
-              this.router.navigate(['ViewAdmin'])
+            this.dataService.AddAdmin(this.adm).subscribe({
+              next: (response) => {
+                var action = "Update";
+                var title = "UPDATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The admin <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  this.router.navigate(['/ViewAdmin']);
+                  dialogRef.close();
+                }, duration);
+              }
             })
 
           })
