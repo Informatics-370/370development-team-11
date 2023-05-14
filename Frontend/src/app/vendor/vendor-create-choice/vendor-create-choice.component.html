@@ -1,0 +1,22 @@
+<form [formGroup]="mySelect">
+<h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;"
+    *ngIf="showConfirmationDialog == true">AVAILABLE VENDORS:</h1>
+<div mat-dialog-content *ngIf="showConfirmationDialog == true">
+    <h1>Please choose a available vendor:</h1>
+    
+    <mat-form-field appearance="fill">
+        <mat-label>Select</mat-label>
+        <mat-select formControlName="VendorsApproved" [errorStateMatcher]="matcher">
+            <mat-option *ngFor="let Ven of VendorDetails" [value]="Ven.vendor_ID">
+                {{Ven.name}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="mySelect.get('VendorsApproved')?.hasError('required')">Please select a vendor required</mat-error>
+    </mat-form-field>
+   
+</div>
+<div mat-dialog-actions align="end" *ngIf="showConfirmationDialog == true">
+    <button mat-raised-button [disabled]="!mySelect.valid" (click)="onConfirm()" style="color: white; background-color: #94CC5B;">Confirm</button>
+    <button mat-raised-button (click)="onCancel()" style="color: white; background-color: #244688;">Cancel</button>
+</div>
+</form>

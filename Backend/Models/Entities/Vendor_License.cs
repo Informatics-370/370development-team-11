@@ -6,6 +6,7 @@ namespace ProcionAPI.Models.Entities
     public class Vendor_License
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int License_No { get; set; }
         public int Vendor_Detail_ID { get; set; }
 

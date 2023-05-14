@@ -82,6 +82,7 @@ export class RequestCreateComponent implements OnInit {
   }
 
   removeTab(index: number) {
+    
     this.rows.removeAt(index);
   }
 
@@ -92,14 +93,13 @@ export class RequestCreateComponent implements OnInit {
         CompanyName: ['', [Validators.required, Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
         CompanyEmail: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
         CompanyQuote: ['', Validators.required],
+        
       });
       this.rows.push(row);
 
     }
 
-
   }
-
 
   radioButtonChange(Supplier: MatRadioChange) {
     this.selectedOption = Supplier.value
@@ -127,24 +127,27 @@ export class RequestCreateComponent implements OnInit {
         this.Onboard_Request.onboard_Request_Id = Number(requestNo)
       }
     });
+  // this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
+      // this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
+      // this.Vendor.vendor_Status_ID = 1;
+      // this.Vendor.number_Of_Times_Used = 0;
+      // this.Onboard_Request.vendor = this.Vendor;
 
-
-    for (let i = 0; i < this.CompanyContactInfoFormGroup.controls.RequestData.value.length; i++) {
-      this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
-      this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
-      this.Vendor.vendor_Status_ID = 1;
-      this.Vendor.number_Of_Times_Used = 0;
-      this.Onboard_Request.vendor = this.Vendor;
+    for (let i = 0; i < this.CompanyContactInfoFormGroup.controls.RequestData.value.length+1; i++) {
+    
       console.log(i)
-      const formData = new FormData();
+      //we going to need to check that it does not repeat the same file 
+
       this.fileToUpload = this.files[i]
 
       if (this.fileToUpload != null) {
         let test = "Request" + this.Onboard_Request.onboard_Request_Id.toString()
+        const formData = new FormData();
         formData.append('file', this.fileToUpload);
         formData.append('RequestNo', test)
         this.http.post('https://localhost:7186/api/OnboardRequest/uploadFile/', formData).subscribe(response => {
           let Path: any = response
+          
           this.sPath = Path.filePath.toString()
           this.Onboard_Request.quotes = this.sPath
           this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
@@ -156,21 +159,16 @@ export class RequestCreateComponent implements OnInit {
           this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe(
             (RequestAdded) => {
               console.log(RequestAdded);
-              //this.router.navigate(['/request-view']);
+              this.router.navigate(['/request-view']);
               console.log(i)
-            }
-          );
+            }//response
+          );//dataservice
 
-        });
+        });//post
+      }//if
+    }//for loop
 
-
-      }
-
-
-
-    }
-
-  }
+  }//addrequest 
 
 };
 

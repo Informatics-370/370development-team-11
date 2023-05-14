@@ -6,6 +6,7 @@ namespace ProcionAPI.Models.Entities
     public class Vendor_Registration
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Company_Registration_Number { get; set; }
 
         public int Vendor_Detail_ID { get; set; }

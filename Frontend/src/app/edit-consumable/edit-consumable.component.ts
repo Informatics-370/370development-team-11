@@ -37,7 +37,7 @@ export class EditConsumableComponent implements OnInit {
     name: '',
     description: '',
   }
-
+  
   consumableCategoryArray: ConsumableCategory[] = [];
   ngOnInit(): void {
 

@@ -56,14 +56,14 @@
             <ng-container matColumnDef="action">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let element" style="width:100px;">
-                <button mat-raised-button routerLink="/request-update/{{getTotal()}}" style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 85px; margin-top: 0.5%;"><mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Edit</button>
+                <button mat-raised-button routerLink="/request-update/{{element.onboard_Request_Id}}" style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 85px; margin-top: 0.5%;"><mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Edit</button>
               </td>
             </ng-container>
     
             <ng-container matColumnDef="delete">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let element" style="width:140px;">
-                <button mat-raised-button style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;"><mat-icon matPrefix style="margin-right:10%;">delete</mat-icon>Delete</button>
+                <button mat-raised-button style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;" (click)="DeleteRequest(element.onboard_Request_Id)"><mat-icon matPrefix style="margin-right:10%;">delete</mat-icon>Delete</button>
               </td>
             </ng-container>
 

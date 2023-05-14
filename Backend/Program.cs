@@ -40,6 +40,7 @@ builder.Services.AddScoped<IConsumableCategoryRepository, ConsumableCategoryRepo
 builder.Services.AddScoped<IBudgetAllocationRepository, BudgetAllocationRepository>();
 
 builder.Services.AddScoped<IOnboardRequestRepository, OnboardRequestRepository>();
+builder.Services.AddScoped<IVendorRepository, VendorRepository>();
 
 builder.Services.AddScoped<IMandateRepository, MandateRepository>();
 

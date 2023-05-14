@@ -4,11 +4,13 @@ import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
 import {VendorOnboardRequest} from 'src/app/Shared/VendorOnboardRequest';
 import { MatTableDataSource } from '@angular/material/table';
 import { animate, state, style, transition, trigger} from '@angular/animations';
-import { buffer, elementAt, groupBy } from 'rxjs';
+import { Subscription, buffer, elementAt, groupBy } from 'rxjs';
 import { VendorOnboardRequestVM } from 'src/app/Shared/VendorOnboardRequestVM';
 import { HttpClient } from '@angular/common/http';
-//import { ListKeyManager } from '@angular/cdk/a11y';
-//import 'rxjs/Rx' ;
+import { ActivatedRoute,Params, Router } from '@angular/router';
+import { SafeHtml } from '@angular/platform-browser';
+import { RequestDeleteComponent } from '../request-delete/request-delete.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-request-view',
@@ -27,19 +29,40 @@ export class RequestViewComponent implements OnInit {
   OnboardRequest:VendorOnboardRequestVM[] = [];
   vendor:VendorOnboardRequest[] = [];
   RequestVendors:any[] = [];
-  
-  constructor(private RequestService: DataService,private http: HttpClient) { }
+  private refreshSubscription: Subscription;
+  constructor(private RequestService: DataService,private http: HttpClient, private route: ActivatedRoute,private router: Router, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.DisplayAllRequests();
+
+    this.refreshSubscription = this.route.queryParams.subscribe((params: Params) => {
+      // Check if the 'refresh' parameter exists and is truthy
+      if (params.refresh) {
+        // Remove the 'refresh' query parameter
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: { refresh: null },
+          queryParamsHandling: 'merge'
+        }).then(() => {
+          // Reload the page after the navigation has completed
+          window.location.reload();
+        });
+      }
+    });
     
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe from the query parameters subscription to prevent memory leaks
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
   }
 
   DisplayAllRequests() {
     this.RequestService.GetAllOnboardRequest().subscribe(result => {let RequestList:any[] = result
       RequestList.forEach((element) => this.OnboardRequest.push(element));
       RequestList.forEach((element) => this.vendor.push(element.vendors));
- 
      this.RequestVendors = this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)
       })
   }
@@ -95,24 +118,11 @@ export class RequestViewComponent implements OnInit {
     return iNumber
   }
 
-  getFileUrl(sFile : string) {
-    
-    // const byteCharacters = Buffer.from(sFile);
-    // const byteArray = new Uint8Array(byteCharacters.length);
-    // for (let i = 0; i < byteCharacters.length; i++) {
-    //   byteArray[i] = byteCharacters.charCodeAt(i);
-    // }
-    // const blob = new Blob([byteArray], { type: 'application/octet-stream' });
-    // const file = new File([blob], 'filename.docx', { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-
-   
-
-  
-    //  return file;
-    
-  
-  
-
+  DeleteRequest(ID: Number) {
+    const confirm = this.dialog.open(RequestDeleteComponent, {
+      disableClose: true,
+      data: { ID }
+    });
   }
 
   displayedColumns : string[] = ['ID','name','action','delete'];

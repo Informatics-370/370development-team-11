@@ -48,8 +48,13 @@ import { EditMandateLimitComponent } from './edit-mandate-limit/edit-mandate-lim
 import { RequestViewComponent } from './onboard_request/request-view/request-view.component';
 import { RequestCreateComponent } from './onboard_request/request-create/request-create.component';
 import { RequestUpdateComponent } from './onboard_request/request-update/request-update.component';
-
-
+import { RequestDeleteComponent } from './onboard_request/request-delete/request-delete.component';
+import { VendorCreateComponent } from './vendor/vendor-create/vendor-create.component';
+import { VendorUpdateComponent } from './vendor/vendor-update/vendor-update.component';
+import { VendorViewComponent } from './vendor/vendor-view/vendor-view.component';
+import { VendorDeleteComponent } from './vendor/vendor-delete/vendor-delete.component';
+import { VendordetailsViewComponent } from './vendor/vendordetails-view/vendordetails-view.component';
+import { VendorCreateChoiceComponent } from './vendor/vendor-create-choice/vendor-create-choice.component';
 
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -64,6 +69,8 @@ import { ViewBranchComponent } from './view-branch/view-branch/view-branch.compo
 import { CreateBranchComponent } from './create-branch/create-branch/create-branch.component';
 import { DeleteBranchComponent } from './delete-branch/delete-branch/delete-branch.component';
 import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.component';
+
+
 
 
 @NgModule({
@@ -104,7 +111,14 @@ import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.compo
     ViewBranchComponent,
     CreateBranchComponent,
     DeleteBranchComponent,
-    EditBranchComponent
+    EditBranchComponent,
+    RequestDeleteComponent,
+    VendorCreateComponent,
+    VendorUpdateComponent,
+    VendorViewComponent,
+    VendorDeleteComponent,
+    VendordetailsViewComponent,
+    VendorCreateChoiceComponent
   ],
   imports: [
     BrowserModule,
