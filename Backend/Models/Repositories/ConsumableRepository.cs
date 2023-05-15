@@ -57,21 +57,6 @@ namespace ProcionAPI.Models.Repositories
             }
         }
 
-
-        //public async Task<Consumable> ConsumableValidationAsync(string name, string description, string category, int on_hand, int min, int max)
-        //{
-        //    Consumable ExistingConsumable = await _dbContext.Consumable.FirstOrDefaultAsync(x => x.Name == name && x.Description == description && x.Consumable_Category.Name == category && x.On_Hand == on_hand && x.Minimum_Reorder_Quantity == min && x.Maximum_Reorder_Quantity == max) ;
-        //    if (ExistingConsumable != null)
-        //    {
-        //        return ExistingConsumable;
-        //    }
-
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
-
         public async Task<Consumable> GetConsumablesByIDAsync(int id)
         {
             Consumable ChosenConsumable = await _dbContext.Consumable.FirstOrDefaultAsync(x => x.Consumable_ID == id);
