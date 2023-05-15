@@ -242,6 +242,18 @@ export class DataService {
     return this.httpClient.delete<any>(`${this.apiUrl}OnboardRequest/DeleteFile/${RequestNo}/${fileName}`, this.httpOptions)
   }
 
+  OnboardFileAdd(RequestNo:string,file:File):  Observable<any> {
+    const formData = new FormData();
+    formData.append('file',file);
+    formData.append('RequestNo', RequestNo)
+    console.log("what")
+    return this.httpClient.post<any>(`${this.apiUrl}OnboardRequest/uploadOnboardFile`,formData, this.httpOptions)
+  }
+
+
+  GetOnboardFiles(RequestNo:string,filename:string): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`, this.httpOptions)
+  }
   
   //end of files
 

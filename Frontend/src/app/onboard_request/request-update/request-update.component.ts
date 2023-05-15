@@ -65,6 +65,7 @@ export class RequestUpdateComponent {
 
   SoleSupplierFormGroup = this._formBuilder.group({
     CompanyName: ['', [Validators.required, Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    CompanyEmail: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
     Reason: ['', [Validators.required, Validators.maxLength(32)]],
     CompanyQuote: ['', Validators.required],
   })
@@ -99,9 +100,9 @@ export class RequestUpdateComponent {
   vendorsRequest: VendorOnboardRequest[] = [];
   onboardRequest: OnboardRequest[] = [];
   selectedIndex = 0;
-
-  down: any[] = [] 
-  url: any[] = []
+  VendorType:boolean = true;
+  FileDetails:any[] = [];
+  
   ngOnInit() {
 
     const row = this._formBuilder.group({
@@ -138,22 +139,46 @@ export class RequestUpdateComponent {
           })  
           this.rows.removeAt(1);
           //this.CompanyContactInfoFormGroup = this._formBuilder.group({ 'RequestData': this.rows });
-          
+        if(RequestList.length > 2) {
           for (let i = 0; i < this.CompanyContactInfoFormGroup.controls.RequestData.value.length; i++) {
+            this.FileDetails.push({FileURL:"",FileName:""})
             this.rows.controls[i].get('CompanyName')?.setValue(this.onboardRequest[i].vendor.name);
             this.rows.controls[i].get('CompanyEmail')?.setValue(this.onboardRequest[i].vendor.email);
             let sFile = this.onboardRequest[i].quotes;
-            let sFi = sFile.substring(0,sFile.indexOf("\\"))
-             sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            let sOR = sFile.substring(0,sFile.indexOf("\\"))
-            sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            let sRS = sFile.substring(0,sFile.indexOf("\\"))
+            let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
             let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-              // this.rows.controls[i].get('CompanyQuote')?.setValue(sFile)
-              this.url.push(`https://localhost:7186/api/OnboardRequest/GetFileST/${sFi}/${sOR}/${sRS}/${filename}`)
-              this.down.push(filename)            
+              
+              this.FileDetails[i].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
+              this.FileDetails[i].FileName = filename;           
           }
+         }
+         else 
+         {
+          let sFile = this.onboardRequest[0].quotes;
+          if(sFile != "None") {
+            this.FileDetails.push({FileURL:"",FileName:""})
+           this.SoleSupplierFormGroup.get('CompanyName')?.setValue(this.onboardRequest[0].vendor.name);
+           this.SoleSupplierFormGroup.get('CompanyEmail')?.setValue(this.onboardRequest[0].vendor.email);
+           
+           let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
+           let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            
+            this.FileDetails[0].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
+            this.FileDetails[0].FileName = filename;
+          }
+          else {
+            this.SoleSupplierFormGroup.get('CompanyName')?.setValue(this.onboardRequest[0].vendor.name);
+            this.SoleSupplierFormGroup.get('CompanyEmail')?.setValue(this.onboardRequest[0].vendor.email);
+          }
+           
+         }  
           
+          if(RequestList.length < 2) {
+            this.VendorType = false;
+          }
+          else {
+            this.VendorType = true;
+          }
           this.setActiveTab()
           
         })
@@ -198,29 +223,24 @@ export class RequestUpdateComponent {
     
       //console.log(i)
       //we going to need to check that it does not repeat the same file 
-
+    //   let sFi = sFile.substring(0,sFile.indexOf("\\"))
+    //   sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+    //  let sOR = sFile.substring(0,sFile.indexOf("\\"))
+    //  sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
       
      // console.log(this.fileToUpload)
       if (this.files[i] != "" && this.onboardRequest[i] != undefined) {
         let sFile = this.onboardRequest[i].quotes;
-            let sFi = sFile.substring(0,sFile.indexOf("\\"))
-             sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            let sOR = sFile.substring(0,sFile.indexOf("\\"))
-            sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+        let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
+        let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
         this.dataService.DeleteFile(RequestNo,filename).subscribe!
     
         this.fileToUpload = this.files[i]
         console.log("if statement 1")
-        let ReqNo = "Request" + this.onboardRequest[0].onboard_Request_Id.toString()
-        const formData = new FormData();
-        formData.append('file', this.fileToUpload);
-        formData.append('RequestNo', ReqNo)
-        this.http.post('https://localhost:7186/api/OnboardRequest/uploadFile/', formData).subscribe(response => {
+        RequestNo = "Request" + this.onboardRequest[0].onboard_Request_Id.toString();
+        this.dataService.OnboardFileAdd(RequestNo,this.fileToUpload).subscribe(response => {
           let Path: any = response
-          
-          this.sPath = Path.filePath.toString()
+          this.sPath = Path.PathSaved.toString()
           this.Onboard_Request.quotes = this.sPath
           this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
           this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
@@ -257,14 +277,11 @@ export class RequestUpdateComponent {
         }
         else {
           console.log("if statement 3")
-          let test = "Request" + this.onboardRequest[0].onboard_Request_Id.toString()
-          const formData = new FormData();
-          formData.append('file', this.fileToUpload);
-          formData.append('RequestNo', test)
-          this.http.post('https://localhost:7186/api/OnboardRequest/uploadFile/', formData).subscribe(response => {
+          let RequestNo = "Request" + this.onboardRequest[0].onboard_Request_Id.toString()
+          this.dataService.OnboardFileAdd(RequestNo,this.fileToUpload).subscribe(response => {
           let Path: any = response
           
-          this.sPath = Path.filePath.toString()
+          this.sPath = Path.PathSaved.toString()
           this.Onboard_Request.quotes = this.sPath
           this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
           this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
@@ -290,11 +307,6 @@ export class RequestUpdateComponent {
   }
 
 }
-
-
-
-
-
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {

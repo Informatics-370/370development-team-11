@@ -29,6 +29,7 @@ export class RequestViewComponent implements OnInit {
   OnboardRequest:VendorOnboardRequestVM[] = [];
   vendor:VendorOnboardRequest[] = [];
   RequestVendors:any[] = [];
+  FileDetails:any[] = [];
   private refreshSubscription: Subscription;
   constructor(private RequestService: DataService,private http: HttpClient, private route: ActivatedRoute,private router: Router, private dialog: MatDialog) { }
 
@@ -63,7 +64,30 @@ export class RequestViewComponent implements OnInit {
     this.RequestService.GetAllOnboardRequest().subscribe(result => {let RequestList:any[] = result
       RequestList.forEach((element) => this.OnboardRequest.push(element));
       RequestList.forEach((element) => this.vendor.push(element.vendors));
-     this.RequestVendors = this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)
+      this.RequestVendors = this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)
+      console.log(RequestList)
+      for(let i = 0; i < RequestList.length; i++) {
+        this.FileDetails.push({FileURL:"",FileName:""})
+        let sFile = RequestList[i].quotes;
+        if(sFile != "None") {
+          
+          
+          let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
+          let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            
+            this.FileDetails[i].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
+            this.FileDetails[i].FileName = filename; 
+         
+        
+        }
+        else {
+            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            this.FileDetails[i].FileURL = ""
+            this.FileDetails[i].FileName = filename; 
+        }
+            
+            
+      }
       })
   }
 

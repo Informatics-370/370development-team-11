@@ -79,10 +79,11 @@
                         <th>Company Quotes:</th>
                       </thead>
                       <tbody *ngFor="let Req of OnboardRequest">
-                        <tr *ngFor="let Ven of vendor">
+                        <tr *ngFor="let Ven of vendor;let i = index">
                         <td *ngIf="Req.onboard_Request_Id == element.onboard_Request_Id && Req.vendor_ID == Ven.vendor_ID">{{Ven.name}}</td>
                         <td *ngIf="Req.onboard_Request_Id == element.onboard_Request_Id && Req.vendor_ID == Ven.vendor_ID">{{Ven.email}}</td>
-                        <td *ngIf="Req.onboard_Request_Id == element.onboard_Request_Id && Req.vendor_ID == Ven.vendor_ID"><a href="DownloadFile(Req.quotes)" download="{{DisplayFile(Req.quotes)}}">{{DisplayFile(Req.quotes)}}</a></td>
+                        <td *ngIf="Req.onboard_Request_Id == element.onboard_Request_Id && Req.vendor_ID == Ven.vendor_ID && FileDetails[i].FileName != 'None'" ><a href="{{FileDetails[i].FileURL}}" download="{{FileDetails[i].FileName}}">{{FileDetails[i].FileName}}</a>  </td>
+                        <td *ngIf="Req.onboard_Request_Id == element.onboard_Request_Id && Req.vendor_ID == Ven.vendor_ID && FileDetails[i].FileName == 'None'" ><b>{{FileDetails[i].FileName}}</b> </td>
                         </tr>
                       </tbody>
                     </table>

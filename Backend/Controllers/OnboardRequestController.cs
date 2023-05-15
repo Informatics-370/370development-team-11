@@ -52,13 +52,13 @@ namespace ProcionAPI.Controllers
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        [Route("uploadFile")]
+        [Route("uploadOnboardFile")]
         public async Task<IActionResult> UploadHandler()
         {
             var formCollection = await Request.ReadFormAsync();
             var file = formCollection.Files.First();
 
-            var RequestNo = Request.Form["RequestNo"].ToString();
+            var RequestNo = Request.Form["RequestNo"];
            // 
             if (file == null || file.Length == 0)
             {
@@ -78,20 +78,20 @@ namespace ProcionAPI.Controllers
             {
                 await file.CopyToAsync(stream);
             }
-            //Path.Combine("OnboardRequests", RequestNo, file.FileName)
-            return Ok(new { filePath });
+            var PathSaved = Path.Combine(RequestNo, file.FileName);
+            return Ok(new { PathSaved });
         }
 
-        [HttpPost]
-        [DisableRequestSizeLimit]
-        [Route("getFile")]
-        public async Task<IActionResult> getFileName()
-        {
-            var sFile = Request.Form["sfile"].ToString();
-            var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), sFile);
+        //[HttpPost]
+        //[DisableRequestSizeLimit]
+        //[Route("getFile")]
+        //public async Task<IActionResult> getFileName()
+        //{
+        //    var sFile = Request.Form["sfile"].ToString();
+        //    var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), sFile);
 
-            return Ok(new { absoluteFolderPath });
-        }
+        //    return Ok(new { absoluteFolderPath });
+        //}
 
         //redundant
         [HttpGet]
@@ -135,10 +135,10 @@ namespace ProcionAPI.Controllers
         }
             
         [HttpGet]
-        [Route("GetFileST/{sFi}/{sOR}/{sRS}/{filename}")]
-        public IActionResult GetFile(string sFi, string sOR , string sRS, string filename)
+        [Route("GetOnboardFiles/{RequestNo}/{filename}")]
+        public IActionResult GetFile(string RequestNo, string filename)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(),sFi,sOR,sRS,filename);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(),"Files","OnboardRequests", RequestNo, filename);
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
             var contentType = "application/octet-stream";
             return File(fileBytes, contentType, filename);

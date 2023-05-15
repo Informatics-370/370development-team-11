@@ -58,15 +58,16 @@ export class RequestCreateComponent implements OnInit {
 
   SoleSupplierFormGroup = this._formBuilder.group({
     CompanyName: ['', [Validators.required, Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    CompanyEmail: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
     Reason: ['', [Validators.required, Validators.maxLength(32)]],
-    CompanyQuote: ['', Validators.required],
+    CompanyQuote: ''
   })
   rows: FormArray = this._formBuilder.array([]);
   CompanyContactInfoFormGroup: FormGroup = this._formBuilder.group({ 'RequestData': this.rows });
   fileToUpload: File | null = null;
   files: any[] = ['', '', ''];
 
-  selectedOption: string = "True";
+  selectedOption: string = "true";
   matcher = new MyErrorStateMatcher()
 
   constructor(private _formBuilder: FormBuilder, private dataService: DataService, private router: Router, private ActRoute: ActivatedRoute, private http: HttpClient) { }
@@ -80,10 +81,11 @@ export class RequestCreateComponent implements OnInit {
     this.rows.push(row);
     this.files.push('');
   }
-
+  selectedIndex = 0;
   removeTab(index: number) {
     
     this.rows.removeAt(index);
+    this.selectedIndex = index-1;
   }
 
   ngOnInit() {
@@ -100,9 +102,10 @@ export class RequestCreateComponent implements OnInit {
     }
 
   }
-
+  
   radioButtonChange(Supplier: MatRadioChange) {
     this.selectedOption = Supplier.value
+   
   }
   //  : { target: { files: (File | null)[]; }; }
   onFileUpload(i: number, event: any) {
@@ -123,16 +126,17 @@ export class RequestCreateComponent implements OnInit {
 
     this.ActRoute.paramMap.subscribe({
       next: (paramater) => {
-        let requestNo = paramater.get("RequestNo");
-        this.Onboard_Request.onboard_Request_Id = Number(requestNo)
-      }
-    });
+        let ReqNo = paramater.get("RequestNo");
+        this.Onboard_Request.onboard_Request_Id = Number(ReqNo)
+       
+      }});
   // this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
       // this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
       // this.Vendor.vendor_Status_ID = 1;
       // this.Vendor.number_Of_Times_Used = 0;
       // this.Onboard_Request.vendor = this.Vendor;
-
+      
+  if(this.selectedOption == "true") {
     for (let i = 0; i < this.CompanyContactInfoFormGroup.controls.RequestData.value.length+1; i++) {
     
       console.log(i)
@@ -141,14 +145,14 @@ export class RequestCreateComponent implements OnInit {
       this.fileToUpload = this.files[i]
 
       if (this.fileToUpload != null) {
-        let test = "Request" + this.Onboard_Request.onboard_Request_Id.toString()
-        const formData = new FormData();
-        formData.append('file', this.fileToUpload);
-        formData.append('RequestNo', test)
-        this.http.post('https://localhost:7186/api/OnboardRequest/uploadFile/', formData).subscribe(response => {
+
+        let RequestNo:string = "Request" + this.Onboard_Request.onboard_Request_Id
+
+        let file:File = this.fileToUpload
+    
+        this.dataService.OnboardFileAdd(RequestNo,file).subscribe(response => {
           let Path: any = response
-          
-          this.sPath = Path.filePath.toString()
+          this.sPath = Path.pathSaved.toString()
           this.Onboard_Request.quotes = this.sPath
           this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
           this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
@@ -167,10 +171,54 @@ export class RequestCreateComponent implements OnInit {
         });//post
       }//if
     }//for loop
+  }
+  else if(this.selectedOption == "false")
+  {
+    this.fileToUpload = this.files[0]
+
+    if (this.files[0] != '') {
+      let RequestNo = "Request" + this.Onboard_Request.onboard_Request_Id 
+      this.dataService.OnboardFileAdd(RequestNo,this.fileToUpload).subscribe(response => {
+        let Path: any = response
+        console.log(Path)
+        this.sPath = Path.pathSaved.toString()
+        this.Onboard_Request.quotes = this.sPath
+        this.Vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value 
+        this.Vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value 
+        this.Vendor.vendor_Status_ID = 1;
+        this.Vendor.number_Of_Times_Used = 0;
+        this.Onboard_Request.vendor = this.Vendor;
+        this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe(
+          (RequestAdded) => {
+            console.log(RequestAdded);
+            this.router.navigate(['/request-view']);
+          }//response
+        );//dataservice
+
+      });//post
+    }//if
+    else {
+        this.Onboard_Request.quotes = "None"
+        this.Vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value 
+        this.Vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value 
+        this.Vendor.vendor_Status_ID = 1;
+        this.Vendor.number_Of_Times_Used = 0;
+        this.Onboard_Request.vendor = this.Vendor;
+        this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe(
+          (RequestAdded) => {
+            console.log(RequestAdded);
+            this.router.navigate(['/request-view']);
+          }//response
+        );//dataservice
+    }
+    console.log("why")
+  }
+}
+ 
+
+ 
 
   }//addrequest 
-
-};
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {

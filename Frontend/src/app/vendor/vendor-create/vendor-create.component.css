@@ -13,7 +13,7 @@ mat-form-field{
     background: #eee;
     border-top:solid;
     text-align: center;
-    position: absolute;
+   
 }
 
 mat-error {
