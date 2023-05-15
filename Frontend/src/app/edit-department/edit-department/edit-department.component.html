@@ -1,12 +1,14 @@
 <div style="display: flex; justify-content: center; align-items: center;">
     <mat-card style="width: 550px; margin-top: 1%; display: flex; justify-content: center; align-items: center; ">
+
       <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px" (ngSubmit)="onSubmit()">
+
         <mat-card-header>
-          <mat-card-title style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%;">Create Department</mat-card-title>
+          <mat-card-title style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%;">Edit Department</mat-card-title>
           <mat-card-subtitle style="justify-content: center; align-items: center;">
   
             <mat-card-content style="margin-left:10%;">
-              <label style="margin-right:11%; color:black;" for="name">Name:</label>
+              <label style="margin-right:11%; color:black;" for="Name">Name:</label>
               <mat-form-field>
                 <input matInput type="text" placeholder="" formControlName="name" id="name">
                 <mat-hint align="end">Not more then 32 characters long.</mat-hint>
@@ -18,7 +20,7 @@
             </mat-card-content>
             <br />
             <mat-card-content style="margin-left:10%;">
-              <label style="margin-right: 2.3%; color: black;" for="description">Description:</label>
+              <label style="margin-right: 2.3%; color: black;" for="Descriptions">Description:</label>
               <mat-form-field>
                 <input matInput type="text" placeholder="" formControlName="description" id="description">
                 <mat-hint align="end">Not more then 50 characters long.</mat-hint>
@@ -32,9 +34,7 @@
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
-            <button mat-raised-button type="submit"
-            style="width: 150px; font-size: 14px; height: 42px; margin: 10px;" [disabled]="!myForm.valid"
-            [ngStyle]="{'background-color': !myForm.valid ? 'rgba(148, 204, 91, 0.6)' : '#94CC5B','color': !myForm.valid ? 'rgba(255, 255, 255, 0.6)' : 'white'}">Save</button>
+          <button mat-raised-button style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color:#94CC5B; color: white;" [disabled]="!myForm.valid" type="submit">Save</button>
           <button mat-raised-button style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color:#244688; color:white;" (click)="Close()">Cancel</button>
         </mat-card-actions>
       </form>

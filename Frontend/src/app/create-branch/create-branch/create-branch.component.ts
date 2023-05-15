@@ -14,7 +14,7 @@ import { Branch } from 'src/app/Shared/Branch';
 })
 export class CreateBranchComponent {
   myForm: FormGroup = new FormGroup({});
-  constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
 
 
@@ -30,12 +30,36 @@ export class CreateBranchComponent {
   
 
   onSubmit() {
-    console.log(this.myForm.value);
-    this.dataService.AddBranch(this.myForm.value).subscribe(result => {
-      this.router.navigate(['ViewBranch'])    
+
+    var street = this.myForm.get('street')?.value;
+
+    this.dataService.BranchValidation(street).subscribe({
+      next: (Result) => {
+        if (Result == null) {
+          this.dataService.AddBranch(this.myForm.value).subscribe(result => {
+            this.router.navigate(['ViewBranch'])
+          })
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: Branch Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch street address <strong>" + street + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
+      }
     })
+
+
   }
- 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
   }
