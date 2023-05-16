@@ -76,8 +76,20 @@ export class CreateConsumableComponent implements OnInit {
         if (Result == null) {
           this.dataService.AddConsumables(this.Consumables).subscribe(
             (ConsumableAdded) => {
-              console.log(ConsumableAdded);
-              this.router.navigate(['/ViewConsumable']);
+              var action = "CREATE";
+              var title = "CREATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.Consumables.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/ViewConsumable']);
+                dialogRef.close();
+              }, duration);
             }
           );
         }

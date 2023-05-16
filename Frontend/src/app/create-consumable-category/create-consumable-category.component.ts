@@ -43,8 +43,20 @@ export class CreateConsumableCategoryComponent implements OnInit {
         if (Result == null) {
           this.dataService.CreateCategory(this.ConsumableCategory).subscribe(
             (CategoryAdded) => {
-              console.log(CategoryAdded);
-              this.router.navigate(['/ViewConsumableCategory']);
+              var action = "CREATE";
+              var title = "CREATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The category <strong>" + this.ConsumableCategory.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/ViewConsumableCategory']);
+                dialogRef.close();
+              }, duration);
             }
           );
         }
