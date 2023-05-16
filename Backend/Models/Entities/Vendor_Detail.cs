@@ -20,16 +20,16 @@ namespace ProcionAPI.Models.Entities
         public Vendor Vendor { get; set; }
 
         [MaxLength(10)]
-        public char Telephone_Num { get; set; }
+        public string Telephone_Num { get; set; }
 
         [MaxLength(3)]
         public string Contact_Person_Title { get; set; }
 
-        [MaxLength(3)]
+        [MaxLength(32)]
         public string Contact_Person_Name { get; set; }
 
         [MaxLength(10)]
-        public char Contact_Person_ContactNum { get; set; }
+        public string Contact_Person_ContactNum { get; set; }
 
         [MaxLength(32)]
         public string Contact_Person_Email { get; set; }
@@ -60,9 +60,9 @@ namespace ProcionAPI.Models.Entities
         public string Account_Holder { get; set; }
 
         [MaxLength(10)]
-        public char Bank_Account_Number { get; set; }
+        public string Bank_Account_Number { get; set; }
 
-        public char Branch_Code { get; set; }
+        public string Branch_Code { get; set; }
 
         [MaxLength(32)]
         public string Account_Type { get; set; }
@@ -70,7 +70,7 @@ namespace ProcionAPI.Models.Entities
         public string Bank_Contact_Name { get; set; }
 
         [MaxLength(10)]
-        public char Bank_Contact_PhoneNum { get; set; }
+        public string Bank_Contact_PhoneNum { get; set; }
 
         public string BankStampedConfirtmation { get; set; }
         public bool BeeRegistered { get; set; }

@@ -19,7 +19,7 @@
     background: #eee;
     border-top:solid;
     text-align: center;
-    position: absolute;
+   
 }
 
 
@@ -28,7 +28,7 @@ td {
 }
 
 ::ng-deep .mat-mdc-tab-body-content {
-    height:250px!important;
+    height:290px!important;
 }
 
 mat-error {
@@ -42,3 +42,11 @@ mat-error:first-child {
 mat-form-field{
     width:350px
 }
+
+
+.file-upload {
+    background-color: #244688;
+    color: white;
+    
+}
+

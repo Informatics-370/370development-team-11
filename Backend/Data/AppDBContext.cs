@@ -188,16 +188,54 @@ namespace ProcionAPI.Data
             }
             );
 
-            modelBuilder.Entity<Vendor_Status>()
-           .HasData(
-           new
-           {
-               Vendor_Status_ID = 1,
-               Name = "pain",
-               Description = "more",
+           
 
-           }
-           );
+            modelBuilder.Entity<Vendor_Status>()
+          .HasData(
+          new
+          {
+              Vendor_Status_ID = 1,
+              Name = "pain",
+              Description = "more",
+
+          },
+          new
+          {
+              Vendor_Status_ID = 2,
+              Name = "approved",
+              Description = "approved",
+
+          });
+
+            modelBuilder.Entity<Vendor>()
+            .HasData(
+            new
+            {
+                Vendor_ID = 1,
+                Vendor_Status_ID = 2,
+                Name = "why",
+                Email = "BE@gmail.com",
+                Number_Of_Times_Used = 0,
+            },
+            new
+            {
+                Vendor_ID = 2,
+                Vendor_Status_ID = 2,
+                Name = "tell",
+                Email = "tell@gmail.com",
+                Number_Of_Times_Used = 0,
+            });
+
+            modelBuilder.Entity<Vendor_Category>()
+            .HasData(
+            new
+            {
+                Vendor_Category_ID = 1,
+                Name = "General supplier",
+                Description = "General supplier",
+
+            }
+            );
 
             //modelBuilder.Entity<Vendor>()
             //.HasData(

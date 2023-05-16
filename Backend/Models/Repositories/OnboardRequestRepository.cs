@@ -89,6 +89,74 @@ namespace ProcionAPI.Models.Repositories
 
             return existingVendor;
         }
+
+        public async Task<Onboard_Request[]> GetRequestsAsync(int RequestID)
+        {
+            IQueryable<Onboard_Request> query = _dbContext.Onboard_Request.Include(x => x.Vendor).Where(x => x.Onboard_Request_Id == RequestID);
+
+            return await query.ToArrayAsync();
+        }
+
+
+        public async Task<Onboard_Request> EditRequestAsync(int RequestID, int VendorID, Onboard_Request UpdatedRequest)
+        { //also see userid
+            var ReqUpdt = await _dbContext.Onboard_Request.FirstOrDefaultAsync(x => x.Onboard_Request_Id == RequestID && x.Vendor_ID == VendorID);
+
+            // var existingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Name.ToLower().Trim() == UpdatedRequest.Vendor.Name.ToLower().Trim());
+
+
+            //await _dbContext.Onboard_Request.FirstOrDefaultAsync(x => x.Onboard_Request_Id == RequestID && x.Vendor_ID == UpdatedRequest.Vendor_ID);
+
+
+
+            ReqUpdt.Users = new User();
+
+            User existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == UpdatedRequest.User_Id);
+
+            ReqUpdt.Users = existingUser;
+
+            ReqUpdt.Vendor = new Vendor();
+
+            Vendor existingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Name.ToLower().Trim() == UpdatedRequest.Vendor.Name.ToLower().Trim());
+
+            if (existingVendor != null)
+            {
+                existingVendor.Email = UpdatedRequest.Vendor.Email;
+                ReqUpdt.Vendor = existingVendor;
+            }
+            else
+            {
+                existingVendor = await _dbContext.Vendor.FindAsync(VendorID);
+              
+                    existingVendor.Name = UpdatedRequest.Vendor.Name;
+                    existingVendor.Email = UpdatedRequest.Vendor.Email;
+                     ReqUpdt.Vendor = existingVendor;
+               
+               
+            }
+
+            var existingVendorStatus = await _dbContext.Vendor_Status.FindAsync(UpdatedRequest.Vendor.Vendor_Status_ID);
+
+
+            ReqUpdt.Vendor.Vendor_Status = existingVendorStatus;
+
+            ReqUpdt.Quotes = UpdatedRequest.Quotes;
+
+            await _dbContext.SaveChangesAsync();
+
+            return ReqUpdt;
+        }
+
+
+        public async Task<Onboard_Request> DeleteRequestAsync(int RequestId,int VendorID)
+        {
+            var RequestToDelete = await _dbContext.Onboard_Request.FirstOrDefaultAsync(x => x.Onboard_Request_Id == RequestId && x.Vendor_ID == VendorID);
+            _dbContext.Onboard_Request.Remove(RequestToDelete);
+            await _dbContext.SaveChangesAsync();
+
+            return RequestToDelete;
+        }
+
     }
    
 }

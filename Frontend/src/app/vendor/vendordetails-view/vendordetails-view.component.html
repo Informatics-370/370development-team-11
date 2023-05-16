@@ -1,0 +1,279 @@
+<div class="content">
+    <div style="display: inline-block; text-align: left;position: relative;width: 700px;">
+       <div style=" margin-top:1%; display: flex;  align-items: center; ">
+       <button  mat-raised-button routerLink="/vendor-view" style="float:right; background-color:#244688; color:white;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
+       
+        <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
+          Vendor Details
+        </h1> 
+      </div>
+      
+        <br>
+          <mat-tab-group style="background-color: white;">
+            <mat-tab> 
+            
+              <ng-template  mat-tab-label > 
+                <label style="color:white">Company Contact Info</label>
+              </ng-template> 
+              <table style="margin-left: 1%;">
+                <br>
+              <tr>
+                <td><label  for="name" style="margin-right: 1%;">Company Name:</label></td>
+                <td> 
+                   {{VendorDetail.vendor.name}}
+                </td>
+            </tr>
+            <br>
+            <tr>
+              <td><label  for="name" style="margin-right: 1%;">Company Email:</label></td>
+              <td> 
+                {{VendorDetail.vendor.email}}
+              </td>
+          </tr>
+          <br>
+            <tr>
+              <td><label for="file" style="margin-right: 1%;">Company Telphone: </label></td>
+              <td >  
+                {{VendorDetail.telephone_Num}} 
+              </td>
+          </tr>
+          <br>
+          <tr >
+            <td><label for="file" style="margin-right: 1%;" >Company Fax: </label></td>
+            <td *ngIf="VendorDetail.faxProvided == true">  
+                {{Vendorfax.fax}}
+            </td>
+            <td *ngIf="VendorDetail.faxProvided  == false">No fax provided</td>
+        </tr>
+        <br>
+        <tr >
+            <td><label for="file" style="margin-right: 1%;" >Company Website: </label></td> 
+            <td *ngIf="VendorDetail.websiteProvided == true">  
+                {{VendorWebsite.uRL}}
+            </td>
+            <td *ngIf="VendorDetail.websiteProvided == false">No website URL provided</td>
+        </tr>
+        <br>
+        <tr>
+            <td><label for="file" style="margin-right: 1%;">Company Registered Address: </label></td>
+            <td >  
+                {{VendorDetail.registered_Address}}  
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td><label for="file" style="margin-right: 1%;">Contact Person Title: </label></td>
+            <td >  
+                {{VendorDetail.contact_Person_Title}}  
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td><label for="file" style="margin-right: 1%;">Contact Person Name: </label></td>
+            <td >  
+                {{VendorDetail.contact_Person_Name}}  
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td><label for="file" style="margin-right: 1%;">Contact Person Phone: </label></td>
+            <td >  
+                {{VendorDetail.contact_Person_ContactNum}} 
+            </td>
+        </tr>
+        <br>
+        <tr>
+            <td><label for="file" style="margin-right: 1%;">Contact Person Email: </label></td>
+            <td >  
+                {{VendorDetail.contact_Person_Email}} 
+            </td>
+        </tr>
+        </table>
+      </mat-tab>
+      <mat-tab>
+      <ng-template  mat-tab-label > 
+        <label style="color:white">Company Overview</label>
+      </ng-template> 
+      <table style="margin-left: 1%;">
+        <br>
+      <tr>
+        <td><label  for="name" style="margin-right: 1%;">Details Of Service Or Goods:</label></td>
+        <td> 
+            {{VendorDetail.description_GSP}}
+        </td>
+    </tr>
+    <br>
+    <tr>
+      <td><label  for="name" style="margin-right: 1%;" *ngIf="VendorDetail.registration_Provided == true">Company Registration Number:</label></td>
+      <td > 
+        {{VendorRegistration.company_Registration_Number}}
+      </td>
+  </tr>
+  <br>
+    <tr>
+      <td><label for="file" style="margin-right: 1%;" *ngIf="VendorDetail.registration_Provided == true">Company Registration Document: </label></td>
+      <td >  
+        <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}">{{FileDetails[0].FileName}}</a>  
+      </td>
+  </tr>
+  <br>
+  <tr >
+    <td><label  style="margin-right: 1%;">Vat Registration Number: </label></td>
+    <td *ngIf="VendorDetail.vatRegistered == true">  
+        {{VendorVat.vat_Registration_Number}}
+    </td>
+    <td *ngIf="VendorDetail.vatRegistered == false">None</td>
+  </tr>
+  <br>
+  <tr >
+    <td><label for="file" style="margin-right: 1%;" >Vat Registration document: </label></td> 
+    <td *ngIf="VendorDetail.vatRegistered == true">  
+      <a href="{{FileDetails[1].FileURL}}" download="{{FileDetails[1].FileName}}">{{FileDetails[1].FileName}}</a>   
+    </td>
+    <td *ngIf="VendorDetail.vatRegistered == false">None provided</td>
+  </tr>
+  <br>
+  <tr >
+    <td><label for="file" style="margin-right: 1%;" >Income Tax Number: </label></td>
+    <td *ngIf="VendorDetail.income_Tax_Num_Provided == true">  
+      {{VendorTax.income_Tax_Num}}
+    </td>
+    <td *ngIf="VendorDetail.income_Tax_Num_Provided == false">None</td>
+  </tr>
+  <br>
+  <tr >
+    <td><label for="file" style="margin-right: 1%;" >Income Tax Number Document: </label></td>
+    <td *ngIf="VendorDetail.income_Tax_Num_Provided == true">  
+      <a href="{{FileDetails[2].FileURL}}" download="{{FileDetails[2].FileName}}">{{FileDetails[2].FileName}}</a>  
+    </td>
+    <td *ngIf="VendorDetail.income_Tax_Num_Provided == false">None provided</td>
+  </tr>
+  <br>
+  <tr >
+    <td><label for="file" style="margin-right: 1%;" >Signed Agreement Document:</label></td>
+    <td *ngIf="VendorDetail.signed_Agreement_Provided == true">  
+      <a href="{{FileDetails[3].FileURL}}" download="{{FileDetails[3].FileName}}">{{FileDetails[3].FileName}}</a> 
+    </td>
+    <td *ngIf="VendorDetail.signed_Agreement_Provided == false">None provided</td>
+  </tr>
+  <br>
+  <tr >
+    <td><label for="file" style="margin-right: 1%;">Insurance Cover document:</label></td>
+    <td  *ngIf="VendorDetail.insurance_Provided == true">  
+      <a href="{{FileDetails[4].FileURL}}" download="{{FileDetails[4].FileName}}">{{FileDetails[4].FileName}}</a>  
+    </td>
+    <td  *ngIf="VendorDetail.insurance_Provided == false">None provided</td>
+  </tr>
+  <br>
+  <tr >
+     <td><label for="file" style="margin-right: 1%;" >Payment Terms: </label></td>
+     <td *ngIf="VendorDetail.payment_Terms_Provided == true">  
+         {{VendorPaymentTerms.payment_Terms}}
+     </td>
+     <td *ngIf="VendorDetail.payment_Terms_Provided == false">None</td>
+  </tr>
+  <br>
+  <tr >
+     <td><label for="file" style="margin-right: 1%;" >License Or Accreditation Number: </label></td>
+     <td *ngIf="VendorDetail.license_Num_Provided == true">  
+         {{VendorLicense.license_No}}
+     </td>
+     <td *ngIf="VendorDetail.license_Num_Provided == false">None</td>
+  </tr>
+  <br>
+  <tr>
+     <td><label for="file" style="margin-right: 1%;" >License Or Accreditation document: </label></td>
+     <td *ngIf="VendorDetail.license_Num_Provided == true">  
+      <a href="{{FileDetails[5].FileURL}}" download="{{FileDetails[5].FileName}}">{{FileDetails[5].FileName}}</a> 
+     </td>
+     <td *ngIf="VendorDetail.license_Num_Provided == false">None provided</td>
+  </tr>
+  </table> 
+  
+    </mat-tab>
+    <mat-tab> 
+     
+      <ng-template  mat-tab-label > 
+        <label style="color:white">Bank Details</label>
+      </ng-template> 
+      <table style="margin-left: 1%;">
+        <br>
+      <tr>
+        <td><label  for="name" style="margin-right: 1%;">Bank Name:</label></td>
+        <td> 
+            {{VendorDetail.bank_Name}}
+        </td>
+    </tr>
+    <br>
+    <tr>
+        <td><label  for="name" style="margin-right: 1%;">Account Holder:</label></td>
+        <td> 
+            {{VendorDetail.account_Holder}}
+        </td>
+    </tr>
+    <br>
+    <tr>
+      <td><label  for="name" style="margin-right: 1%;">Branch Code:</label></td>
+      <td> 
+        {{VendorDetail.branch_Code}}
+      </td>
+  </tr>
+  <br>
+  <tr>
+    <td><label for="file" style="margin-right: 1%;">Account Type:</label></td>
+    <td >  
+        {{VendorDetail.account_Type}}
+    </td>
+  </tr>
+  <br>
+  <tr>
+    <td><label for="file" style="margin-right: 1%;">AccountNumber: </label></td> 
+    <td >  
+        {{VendorDetail.bank_Account_Number}}
+    </td>
+  </tr>
+  <br>
+  <tr>
+    <td><label for="file" style="margin-right: 1%;">Bank Contact Name: </label></td>
+    <td >  
+        {{VendorDetail.bank_Contact_Name}}
+    </td>
+  </tr>
+  <br>
+  <tr>
+    <td><label for="file" style="margin-right: 1%;">Bank Contact Phone Number: </label></td>
+    <td >  
+        {{VendorDetail.bank_Contact_PhoneNum}}
+    </td>
+  </tr>
+  <br>
+  <tr>
+    <td><label for="file" style="margin-right: 1%;">Bank Stamped Confirmation Letter: </label></td>
+    <td >  
+      <a href="{{FileDetails[6].FileURL}}" download="{{FileDetails[6].FileName}}">{{FileDetails[6].FileName}}</a> 
+    </td>
+  </tr>
+  <br>
+  <tr>
+    <td><label for="file" style="margin-right: 1%;">Date Accepted: </label></td>
+    <td >  
+        {{VendorDetail.dateAccepted}}
+    </td>
+  </tr>
+  </table> 
+  
+   </mat-tab>
+    </mat-tab-group>
+   
+   <div  style="background-color: white;display: flex;">
+    <button mat-raised-button routerLink="/vendor-update/{{VendorDetail.vendor_Detail_ID}}" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Update </button>
+    <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #FE4945;" (click)="DeleteRequest(VendorDetail.vendor_Detail_ID)" > Delete </button>
+   </div>
+          
+    </div>
+</div>
+
+
+
+
+
