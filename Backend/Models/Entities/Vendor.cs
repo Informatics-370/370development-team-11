@@ -21,5 +21,6 @@ namespace ProcionAPI.Models.Entities
         public string Email { get; set; }
 
         public int Number_Of_Times_Used { get; set; }
+        public bool Sole_Supplier_Provided { get; set; }
     }
 }

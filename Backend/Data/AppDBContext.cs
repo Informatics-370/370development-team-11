@@ -39,6 +39,7 @@ namespace ProcionAPI.Data
         public DbSet<Vendor> Vendor { get; set; }
         public DbSet<Vendor_Status> Vendor_Status { get; set; }
         public DbSet<Onboard_Request> Onboard_Request { get; set; }
+        public DbSet<Onboard_Status> Onboard_Status { get; set; }
         public DbSet<Vendor_Detail> Vendor_Detail { get; set; }
         public DbSet<Vendor_Category> Vendor_Category { get; set; }
         public DbSet<Vendor_Fax> Vendor_Fax { get; set; }
@@ -216,6 +217,7 @@ namespace ProcionAPI.Data
                 Name = "why",
                 Email = "BE@gmail.com",
                 Number_Of_Times_Used = 0,
+                Sole_Supplier_Provided = false
             },
             new
             {
@@ -224,7 +226,8 @@ namespace ProcionAPI.Data
                 Name = "tell",
                 Email = "tell@gmail.com",
                 Number_Of_Times_Used = 0,
-            });
+                Sole_Supplier_Provided = false
+            }); ;
 
             modelBuilder.Entity<Vendor_Category>()
             .HasData(
