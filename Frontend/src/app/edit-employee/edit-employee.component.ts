@@ -109,7 +109,11 @@ export class EditEmployeeComponent implements OnInit{
   GetRoles() {
     this.dataService.GetRoles().subscribe(result => {
       this.userRoles = result;
+      this.userRoles.forEach((element, index) => {
+        if (element.name == "Admin") this.userRoles.splice(index,1);
+      });
     });
+
   }
 
   GetBranches() {

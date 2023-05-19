@@ -105,6 +105,9 @@ export class CreateEmployeeComponent implements OnInit {
   GetRoles() {
     this.dataService.GetRoles().subscribe(result => {
       this.roles = result;
+      this.roles.forEach((element, index) => {
+        if (element.name == "Admin") this.roles.splice(index, 1);
+      });
     });
   }
 

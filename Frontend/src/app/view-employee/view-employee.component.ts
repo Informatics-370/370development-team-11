@@ -64,9 +64,17 @@ export class ViewEmployeeComponent implements OnInit {
 
   GetEmployees() {
     this.dataService.GetEmployees().subscribe(result => {
+      if (result) {
+        hideloader();
+      }
       this.Employees = result;
       this.SearchedEmployee = this.Employees;
     });
+    function hideloader() {
+      document.getElementById('loading')
+        .style.display = 'none';
+      document.getElementById('table').style.visibility = "visible";
+    }
   }
 
   DeleteEmployee(id: Number) {

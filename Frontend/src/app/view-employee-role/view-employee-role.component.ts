@@ -1,10 +1,11 @@
-import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeleteEmployeeRoleComponent } from '../delete-employee-role/delete-employee-role.component';
 import { Role } from '../Shared/EmployeeRole';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { DataService } from '../DataService/data-service';
 import { User } from '../Shared/User';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -16,9 +17,8 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
   styleUrls: ['./view-employee-role.component.css']
 })
 export class ViewEmployeeRoleComponent implements OnInit {
+ 
   displayedColumns: string[] = ['id', 'name', 'description', 'action', 'delete'];
-  dataSource = new MatTableDataSource<Role>();
-
   roleDelete: any
 
   RoleToDelete: Role = {
@@ -54,10 +54,20 @@ export class ViewEmployeeRoleComponent implements OnInit {
 
   GetRoles() {
     this.dataService.GetRoles().subscribe(result => {
+      if (result) {
+        hideloader();
+      }
       this.Roles = result;
       this.SearchedRole = this.Roles;
-    });  
+    });
+    function hideloader() {
+      document.getElementById('loading')
+        .style.display = 'none';
+      document.getElementById('table').style.visibility = "visible";
+    }
   }
+
+ 
 
   DeleteEmpRole(id: Number) {
     this.dataService.GetUsers().subscribe({

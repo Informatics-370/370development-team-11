@@ -29,7 +29,7 @@ export class DataService {
   }
 
   constructor(private httpClient: HttpClient) { }
-  //-------------------------------------------Consumables-------------------------------------------
+  //--------------------------------------------------------------------------------------Consumables--------------------------------------------------------------------------------------
   GetConsumables(): Observable<any> {
     return this.httpClient.get<Consumable[]>(`${this.apiUrl}Consumable/GetConsumables`).pipe(map(result => result))
   }
@@ -55,7 +55,7 @@ export class DataService {
     return this.httpClient.get<Consumable>(`${this.apiUrl}Consumable/ConsumableValidation/` + name + "/" + category, this.httpOptions)
   }
 
-  //-------------------------------------------Consumable Categories-------------------------------------------
+  //--------------------------------------------------------------------------------------Consumable Categories--------------------------------------------------------------------------------------
   GetCategories() {
     return this.httpClient.get<ConsumableCategory[]>(`${this.apiUrl}ConsumableCategory/GetConsumableCategories`).pipe(map(result => result))
   }
@@ -80,7 +80,7 @@ export class DataService {
     return this.httpClient.get<ConsumableCategory>(`${this.apiUrl}ConsumableCategory/CategoryValidation/` + name + "/" + description, this.httpOptions)
   }
   
-  //-------------------------------------------Branch-------------------------------------------
+  //--------------------------------------------------------------------------------------Branch--------------------------------------------------------------------------------------
   GetBranches(): Observable<any> {
     return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetBranches`).pipe(map(result => result))
   }
@@ -105,7 +105,7 @@ export class DataService {
     return this.httpClient.get<Branch>(`${this.apiUrl}Branch/BranchValidation/` + name, this.httpOptions)
   }
 
-  //-------------------------------------------Department-------------------------------------------
+  //--------------------------------------------------------------------------------------Department--------------------------------------------------------------------------------------
   GetDepartments(): Observable<any> {
     return this.httpClient.get<Department[]>(`${this.apiUrl}Department/GetDepartments`).pipe(map(result => result))
   }
@@ -130,7 +130,7 @@ export class DataService {
     return this.httpClient.get<Department>(`${this.apiUrl}Department/DepartmentValidation/` + name, this.httpOptions)
   }
 
-  //-------------------------------------------Mandate Limit-------------------------------------------
+  //--------------------------------------------------------------------------------------Mandate Limit--------------------------------------------------------------------------------------
   GetMandateLimits(): Observable<any> {
     return this.httpClient.get<Mandate_Limit[]>(`${this.apiUrl}Mandate/GetAllMandateLimits`).pipe(map(result => result))
   }
@@ -147,7 +147,7 @@ export class DataService {
     return this.httpClient.put(`${this.apiUrl}Mandate/EditMandateLimit/${mlID}`, ml, this.httpOptions)
   }
   
-  //-------------------------------------------User-------------------------------------------
+  //--------------------------------------------------------------------------------------User--------------------------------------------------------------------------------------
   GetUsers(): Observable<any> {
     return this.httpClient.get<User[]>(`${this.apiUrl}User/GetUsers`).pipe(map(result => result))
   }
@@ -172,7 +172,7 @@ export class DataService {
     return this.httpClient.get<User>(`${this.apiUrl}User/UserValidation/` + name, this.httpOptions)
   }
   
-  //-------------------------------------------Employee-------------------------------------------
+  //--------------------------------------------------------------------------------------Employee--------------------------------------------------------------------------------------
   GetEmployees(): Observable<any> {
     return this.httpClient.get<Employee[]>(`${this.apiUrl}User/GetEmployees`).pipe(map(result => result))
   }
@@ -197,7 +197,7 @@ export class DataService {
     return this.httpClient.delete<string>(`${this.apiUrl}User/DeleteEmployee` + "/" + userID, this.httpOptions)
   }
 
-  //-------------------------------------------Admin-------------------------------------------
+  //--------------------------------------------------------------------------------------Admin--------------------------------------------------------------------------------------
   GetAdmins(): Observable<any> {
     return this.httpClient.get<Admin[]>(`${this.apiUrl}User/GetAdmins`).pipe(map(result => result))
   }
@@ -218,7 +218,7 @@ export class DataService {
     return this.httpClient.delete<string>(`${this.apiUrl}User/DeleteAdmin` + "/" + userID, this.httpOptions)
   }
 
-  //-------------------------------------------Role-------------------------------------------
+  //--------------------------------------------------------------------------------------Role--------------------------------------------------------------------------------------
   GetRoles(): Observable<any> {
     return this.httpClient.get<Role[]>(`${this.apiUrl}Role/GetRoles`).pipe(map(result => result))
   }
@@ -243,7 +243,7 @@ export class DataService {
     return this.httpClient.get<Role>(`${this.apiUrl}Role/RoleValidation/` + name, this.httpOptions)
   }
 
-  //-------------------------------------------Onboard Request-------------------------------------------
+  //--------------------------------------------------------------------------------------Onboard Request--------------------------------------------------------------------------------------
   GetAllOnboardRequest(): Observable<any> {
     return this.httpClient.get<VendorOnboardRequestVM[]>(`${this.apiUrl}OnboardRequest/GetAllOnboardRequest`).pipe(map(result => result))
   }

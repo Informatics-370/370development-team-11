@@ -16,6 +16,7 @@ import { MatFormFieldModule, MatHint, MatLabel } from '@angular/material/form-fi
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { CreateEmployeeRoleComponent } from './create-employee-role/create-employee-role.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -130,6 +131,7 @@ import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.compo
     MatTabsModule,
     MatStepperModule,
     MatCheckboxModule,
+    MatPaginatorModule
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },

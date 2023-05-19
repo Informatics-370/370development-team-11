@@ -42,9 +42,17 @@ export class ViewAdminComponent implements OnInit {
 
   GetAdmins() {
     this.dataService.GetAdmins().subscribe(result => {
+      if (result) {
+        hideloader();
+      }
       this.Admins = result;
       this.SearchedAdmin = this.Admins;
     });
+    function hideloader() {
+      document.getElementById('loading')
+        .style.display = 'none';
+      document.getElementById('table').style.visibility = "visible";
+    }
   }
 
   DeleteAdmin(id: Number) {

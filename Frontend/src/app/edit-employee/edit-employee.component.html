@@ -55,6 +55,7 @@
                   <br />
                   <mat-form-field>
                     <input matInput type="text" placeholder="" formControlName="CellPhone_Num" id="CellPhone_Num" required>
+                    <mat-hint align="end">Please include spaces as shown in the placeholder.</mat-hint>
                     <mat-error *ngIf="myError('CellPhone_Num', 'required')">Phone is required</mat-error>
                     <mat-error *ngIf="myError('CellPhone_Num', 'maxlength')">Limit exceed</mat-error>
                     <mat-error *ngIf="myError('CellPhone_Num', 'minlength')">Phone number must be 10 numbers</mat-error>
@@ -86,6 +87,7 @@
                     <mat-select formControlName="Mandate" required>
                       <mat-option *ngFor="let ml of mandate_limits" [value]="ml.mandate_ID">{{ml.ammount}}</mat-option>
                     </mat-select>
+                    <mat-hint align="end">Employee spend limit.</mat-hint>
                     <mat-error *ngIf="myError('Mandate', 'required')">Please choose a branch</mat-error>
                   </mat-form-field>
                 </mat-card-content>
