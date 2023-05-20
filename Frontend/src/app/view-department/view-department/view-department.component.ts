@@ -53,9 +53,17 @@ export class ViewDepartmentComponent implements OnInit{
 
   GetDepartments() {
     this.dataService.GetDepartments().subscribe(result => {
+      if (result) {
+        hideloader();
+      }
       this.Departments = result;
       this.SearchedDepartment = this.Departments;
-    });  
+    }); 
+    function hideloader() {
+      document.getElementById('loading')
+        .style.display = 'none';
+      document.getElementById('table').style.visibility = "visible";
+    } 
   }
   GetEmployees(){
     this.dataService.GetEmployees().subscribe(result => {

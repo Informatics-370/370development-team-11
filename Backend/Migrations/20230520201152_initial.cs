@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace ProcionAPI.Migrations
 {
     /// <inheritdoc />
@@ -151,6 +153,20 @@ namespace ProcionAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Notification_Type", x => x.Notification_Type_ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Onboard_Status",
+                columns: table => new
+                {
+                    Status_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Onboard_Status", x => x.Status_ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -379,7 +395,8 @@ namespace ProcionAPI.Migrations
                     Vendor_Status_ID = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    Number_Of_Times_Used = table.Column<int>(type: "int", nullable: false)
+                    Number_Of_Times_Used = table.Column<int>(type: "int", nullable: false),
+                    Sole_Supplier_Provided = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -495,11 +512,18 @@ namespace ProcionAPI.Migrations
                     Onboard_Request_Id = table.Column<int>(type: "int", nullable: false),
                     User_Id = table.Column<int>(type: "int", nullable: false),
                     Vendor_ID = table.Column<int>(type: "int", nullable: false),
+                    Status_ID = table.Column<int>(type: "int", nullable: false),
                     Quotes = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Onboard_Request", x => new { x.Onboard_Request_Id, x.User_Id, x.Vendor_ID });
+                    table.ForeignKey(
+                        name: "FK_Onboard_Request_Onboard_Status_Status_ID",
+                        column: x => x.Status_ID,
+                        principalTable: "Onboard_Status",
+                        principalColumn: "Status_ID",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Onboard_Request_User_User_Id",
                         column: x => x.User_Id,
@@ -508,6 +532,28 @@ namespace ProcionAPI.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Onboard_Request_Vendor_Vendor_ID",
+                        column: x => x.Vendor_ID,
+                        principalTable: "Vendor",
+                        principalColumn: "Vendor_ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sole_Supplier",
+                columns: table => new
+                {
+                    Sole_Supplier_ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Vendor_ID = table.Column<int>(type: "int", nullable: false),
+                    MD_Approval = table.Column<bool>(type: "bit", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sole_Supplier", x => x.Sole_Supplier_ID);
+                    table.ForeignKey(
+                        name: "FK_Sole_Supplier_Vendor_Vendor_ID",
                         column: x => x.Vendor_ID,
                         principalTable: "Vendor",
                         principalColumn: "Vendor_ID",
@@ -524,7 +570,7 @@ namespace ProcionAPI.Migrations
                     Vendor_ID = table.Column<int>(type: "int", nullable: false),
                     Telephone_Num = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Contact_Person_Title = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
-                    Contact_Person_Name = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
+                    Contact_Person_Name = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     Contact_Person_ContactNum = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Contact_Person_Email = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     Registered_Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -543,7 +589,7 @@ namespace ProcionAPI.Migrations
                     Bank_Name = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     Account_Holder = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     Bank_Account_Number = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Branch_Code = table.Column<string>(type: "nvarchar(1)", nullable: false),
+                    Branch_Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Account_Type = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     Bank_Contact_Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Bank_Contact_PhoneNum = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
@@ -770,27 +816,6 @@ namespace ProcionAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sole_Supplier",
-                columns: table => new
-                {
-                    Sole_Supplier_ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Vendor_Detail_ID = table.Column<int>(type: "int", nullable: false),
-                    MD_Approval = table.Column<bool>(type: "bit", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sole_Supplier", x => x.Sole_Supplier_ID);
-                    table.ForeignKey(
-                        name: "FK_Sole_Supplier_Vendor_Detail_Vendor_Detail_ID",
-                        column: x => x.Vendor_Detail_ID,
-                        principalTable: "Vendor_Detail",
-                        principalColumn: "Vendor_Detail_ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Vendor_Agreement",
                 columns: table => new
                 {
@@ -907,8 +932,7 @@ namespace ProcionAPI.Migrations
                 name: "Vendor_License",
                 columns: table => new
                 {
-                    License_No = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    License_No = table.Column<int>(type: "int", nullable: false),
                     Vendor_Detail_ID = table.Column<int>(type: "int", nullable: false),
                     License_Doc_Upload = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -967,8 +991,7 @@ namespace ProcionAPI.Migrations
                 name: "Vendor_Registration",
                 columns: table => new
                 {
-                    Company_Registration_Number = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Company_Registration_Number = table.Column<int>(type: "int", nullable: false),
                     Vendor_Detail_ID = table.Column<int>(type: "int", nullable: false),
                     Proof_Of_Registration_Doc = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -1006,8 +1029,7 @@ namespace ProcionAPI.Migrations
                 name: "Vendor_Vat",
                 columns: table => new
                 {
-                    Vat_Registration_Number = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Vat_Registration_Number = table.Column<int>(type: "int", nullable: false),
                     Vendor_Detail_ID = table.Column<int>(type: "int", nullable: false),
                     VAT_Registration_Document = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -1306,17 +1328,30 @@ namespace ProcionAPI.Migrations
             migrationBuilder.InsertData(
                 table: "Mandate_Limit",
                 columns: new[] { "Mandate_ID", "Ammount", "Date" },
-                values: new object[] { 1, 10000.0, new DateTime(2023, 5, 12, 0, 23, 10, 142, DateTimeKind.Local).AddTicks(4369) });
+                values: new object[] { 1, 10000.0, new DateTime(2023, 5, 20, 22, 11, 52, 329, DateTimeKind.Local).AddTicks(8171) });
 
             migrationBuilder.InsertData(
                 table: "Role",
                 columns: new[] { "Role_ID", "Description", "Name" },
-                values: new object[] { 1, "Managing Director", "MD" });
+                values: new object[,]
+                {
+                    { 1, "Managing Director", "MD" },
+                    { 2, "Admin", "Admin" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Vendor_Category",
+                columns: new[] { "Vendor_Category_ID", "Description", "Name" },
+                values: new object[] { 1, "General supplier", "General supplier" });
 
             migrationBuilder.InsertData(
                 table: "Vendor_Status",
                 columns: new[] { "Vendor_Status_ID", "Description", "Name" },
-                values: new object[] { 1, "more", "pain" });
+                values: new object[,]
+                {
+                    { 1, "more", "pain" },
+                    { 2, "approved", "approved" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Consumable",
@@ -1326,7 +1361,20 @@ namespace ProcionAPI.Migrations
             migrationBuilder.InsertData(
                 table: "User",
                 columns: new[] { "User_Id", "Password", "Profile_Picture", "Role_ID", "Username" },
-                values: new object[] { 1, "JDoe123", "test", 1, "JDoe" });
+                values: new object[,]
+                {
+                    { 1, "JDoe123", "test", 1, "JDoe" },
+                    { 2, "Admin", "test", 2, "Admin" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Vendor",
+                columns: new[] { "Vendor_ID", "Email", "Name", "Number_Of_Times_Used", "Sole_Supplier_Provided", "Vendor_Status_ID" },
+                values: new object[,]
+                {
+                    { 1, "BE@gmail.com", "why", 0, false, 2 },
+                    { 2, "tell@gmail.com", "tell", 0, false, 2 }
+                });
 
             migrationBuilder.InsertData(
                 table: "Employee",
@@ -1434,6 +1482,11 @@ namespace ProcionAPI.Migrations
                 column: "Notification_Type_ID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Onboard_Request_Status_ID",
+                table: "Onboard_Request",
+                column: "Status_ID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Onboard_Request_User_Id",
                 table: "Onboard_Request",
                 column: "User_Id");
@@ -1524,9 +1577,9 @@ namespace ProcionAPI.Migrations
                 column: "Procurement_Request_ID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sole_Supplier_Vendor_Detail_ID",
+                name: "IX_Sole_Supplier_Vendor_ID",
                 table: "Sole_Supplier",
-                column: "Vendor_Detail_ID");
+                column: "Vendor_ID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Temporary_Access_Delegation_ID",
@@ -1712,6 +1765,9 @@ namespace ProcionAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Notification_Type");
+
+            migrationBuilder.DropTable(
+                name: "Onboard_Status");
 
             migrationBuilder.DropTable(
                 name: "Contracted_Partner_Type");

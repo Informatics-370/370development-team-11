@@ -18,11 +18,6 @@ export class EditDepartmentComponent implements OnInit{
 
   Department:any
  
-  DepartmentToEdit:any  = {
-    department_ID :0,
-    name:'',
-    description:'',
-  }
   constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
@@ -52,26 +47,45 @@ export class EditDepartmentComponent implements OnInit{
   onSubmit() {
     var name = this.myForm.get('name')?.value;
 
-    this.dataService.EditDepartment(this.Department.department_ID, this.myForm.value).subscribe({
-      next: (response) => {
-        var action = "Update";
-        var title = "UPDATE SUCCESSFUL";
-        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+    this.dataService.DepartmentValidation(name).subscribe({
+      next: (Result) => {
+        if (Result == null) {
+          this.dataService.EditDepartment(this.Department.department_ID, this.myForm.value).subscribe({
+            next: (response) => {
+              var action = "Update";
+              var title = "UPDATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-          disableClose: true,
-          data: { action, title, message }
-        });
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
 
-        const duration = 1750;
-        setTimeout(() => {
-          this.router.navigate(['/ViewDepartment']);
-          dialogRef.close();
-        }, duration);
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/ViewDepartment']);
+                dialogRef.close();
+              }, duration);
+            }
+          })
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: Department Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
       }
     })
-
-
 
 
   }

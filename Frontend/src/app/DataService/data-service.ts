@@ -97,8 +97,8 @@ export class DataService {
     return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetBranches`).pipe(map(result => result))
   }
 
-  GetBranch(Branch_ID: number) {
-    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch` + Branch_ID).pipe(map(result => result))
+  GetBranch(Branch_ID: Number) {
+    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch/` + Branch_ID).pipe(map(result => result))
   }
 
   AddBranch(AddBranchRequest: Branch) {
@@ -109,8 +109,8 @@ export class DataService {
     return this.httpClient.delete<Branch>(`${this.apiUrl}Branch/DeleteBranch` + '/' + Branch_ID, this.httpOptions)
   }
 
-  EditBranch(Branch_ID: Number, UpdateBranchRequest: Branch): Observable<Branch> {
-    return this.httpClient.put<Branch>(`${this.apiUrl}Branch/UpdateBranch/${Branch_ID}`, UpdateBranchRequest, this.httpOptions)
+  EditBranch(branch_ID: Number, UpdateBranchRequest: Branch): Observable<Branch> {
+    return this.httpClient.put<Branch>(`${this.apiUrl}Branch/UpdateBranch/${branch_ID}`, UpdateBranchRequest, this.httpOptions)
   }
 
   BranchValidation(name: String): Observable<Branch> {
