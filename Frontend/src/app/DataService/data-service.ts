@@ -96,7 +96,7 @@ export class DataService {
   }
 
   GetBranch(Branch_ID: number) {
-    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch` + Branch_ID).pipe(map(result => result))
+    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch/` + Branch_ID).pipe(map(result => result))
   }
 
   AddBranch(AddBranchRequest: Branch) {
@@ -520,14 +520,7 @@ export class DataService {
   //   return this.httpClient.get<Department[]>(`${this.apiUrl}Department/GetDepartments`).pipe(map(result => result))
   // }
 
-  //Branch
-  GetBranches(): Observable<any> {
-    return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetBranches`).pipe(map(result => result))
-  }
-
-  GetBranch(Branch_ID: number) {
-     return this.httpClient.get(`${this.apiUrl}Branch/GetBranch`+'/' + Branch_ID).pipe(map(result => result))
-  }
+ 
 
   
 
