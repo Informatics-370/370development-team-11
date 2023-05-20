@@ -71,6 +71,7 @@ import { CreateBranchComponent } from './create-branch/create-branch/create-bran
 import { DeleteBranchComponent } from './delete-branch/delete-branch/delete-branch.component';
 import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.component';
 import { LoginComponent } from './login/login.component';
+import { HomePageComponent } from './home-page/home-page.component';
 
 
 
@@ -121,7 +122,8 @@ import { LoginComponent } from './login/login.component';
     VendorDeleteComponent,
     VendordetailsViewComponent,
     VendorCreateChoiceComponent,
-    LoginComponent
+    LoginComponent,
+    HomePageComponent
   ],
   imports: [
     BrowserModule,

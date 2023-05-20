@@ -41,12 +41,17 @@ import { DeleteBranchComponent } from './delete-branch/delete-branch/delete-bran
 import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.component';
 import { ViewBranchComponent } from './view-branch/view-branch/view-branch.component';
 import { LoginComponent } from './login/login.component';
+import { HomePageComponent } from './home-page/home-page.component';
 
 
 const routes: Routes = [
   {
     path: "",
     component: LoginComponent
+  },
+  {
+    path: "Home",
+    component: HomePageComponent
   },
   {
     path: "ViewEmployee",
