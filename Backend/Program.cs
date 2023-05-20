@@ -2,6 +2,7 @@
 using NuGet.Protocol.Core.Types;
 using ProcionAPI.Data;
 using ProcionAPI.Models.Repositories;
+using ProcionAPI.MailKit_Config;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -29,6 +30,8 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
+builder.Services.AddTransient<IMailService, MailService>();
 
 builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IConsumableRepository, ConsumableRepository>();
@@ -55,6 +58,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
+app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseAuthentication();
 

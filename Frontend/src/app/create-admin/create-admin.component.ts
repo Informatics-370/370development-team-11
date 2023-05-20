@@ -8,6 +8,7 @@ import { Admin } from '../Shared/Admin';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { MailData } from '../Shared/Mail';
 
 @Component({
   selector: 'app-create-admin',
@@ -19,6 +20,12 @@ export class CreateAdminComponent implements OnInit {
 
   constructor(private router: Router, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
+  mail: MailData = {
+    Name: '',
+    Username: '',
+    Password: '',
+    Email: ''
+  }
 
   rl: Role = {
     role_ID: 0,
@@ -80,7 +87,7 @@ export class CreateAdminComponent implements OnInit {
     var surname = this.myForm.get('AdminSurname')?.value;
     var ts = name.concat(surname);
     var username = ts.concat(cel.substring(4, 7));
-
+    username = username.replace(/\s/g, "");
     
     this.rl.role_ID = 0;
     this.rl.name = "Admin";
@@ -106,29 +113,41 @@ export class CreateAdminComponent implements OnInit {
     this.usr.username = username;
     this.usr.password = this.myForm.get('Password')?.value;
 
+    this.mail.Name = name;
+    this.mail.Username = username;
+    this.mail.Password = newPassword;
+    this.mail.Email = this.myForm.get('Email')?.value;
+    document.getElementById('loading').style.display = 'block';
+
     this.dataService.UserValidation(username).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.AddUser(this.usr).subscribe(result => {
-            this.dataService.AddAdmin(this.adm).subscribe({
-              next: (response) => {
-                var action = "Update";
-                var title = "UPDATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The admin <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+            this.dataService.AddAdmin(this.adm).subscribe(r => {
+              this.dataService.SendEmail(this.mail).subscribe({
+                next: (response) => {
 
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
+                  if (response) {
+                    hideloader();
+                  }
 
-                const duration = 1750;
-                setTimeout(() => {
-                  this.router.navigate(['/ViewAdmin']);
-                  dialogRef.close();
-                }, duration);
-              }
+                  var action = "Create";
+                  var title = "CREATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The admin <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
+
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewAdmin']);
+                    dialogRef.close();
+                  }, duration);
+                }
+              })
             })
-
           })
         }
         else {
@@ -148,7 +167,10 @@ export class CreateAdminComponent implements OnInit {
         }
       }
     })
-
+    function hideloader() {
+      document.getElementById('loading')
+        .style.display = 'none';
+    }
     
   }
 }

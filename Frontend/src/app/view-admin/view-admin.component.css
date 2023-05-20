@@ -33,43 +33,56 @@ table {
 }
 
 .loader {
-  width: 84px;
-  height: 84px;
+  width: 175px;
+  height: 80px;
+  display: block;
+  margin: auto;
+  background-image: radial-gradient(circle 25px at 25px 25px, #244688 100%, transparent 0), radial-gradient(circle 50px at 50px 50px, #244688 100%, transparent 0), radial-gradient(circle 25px at 25px 25px, #244688 100%, transparent 0), linear-gradient(#244688 50px, transparent 0);
+  background-size: 50px 50px, 100px 76px, 50px 50px, 120px 40px;
+  background-position: 0px 30px, 37px 0px, 122px 30px, 25px 40px;
+  background-repeat: no-repeat;
   position: relative;
-  overflow: hidden;
+  box-sizing: border-box;
 }
 
-  .loader:before, .loader:after {
-    content: "";
-    position: absolute;
+  .loader::after {
+    content: '';
     left: 50%;
     bottom: 0;
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: #244688;
-    transform: translate(-50%, 100%) scale(0);
-    animation: push 2s infinite ease-in;
+    transform: translate(-50%, 0);
+    position: absolute;
+    border: 15px solid transparent;
+    border-top-color: #94CC5B;
+    box-sizing: border-box;
+    animation: fadePush 1s linear infinite;
   }
 
-  .loader:after {
-    animation-delay: 1s;
+  .loader::before {
+    content: '';
+    left: 50%;
+    bottom: 30px;
+    transform: translate(-50%, 0);
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: #94CC5B;
+    box-sizing: border-box;
+    animation: fadePush 1s linear infinite;
   }
 
-@keyframes push {
+@keyframes fadePush {
   0% {
-    transform: translate(-50%, 100%) scale(1);
+    transform: translate(-50%, -15px);
+    opacity: 0;
   }
 
-  15%, 25% {
-    transform: translate(-50%, 50%) scale(1);
+  50% {
+    transform: translate(-50%, 0px);
+    opacity: 1;
   }
 
-  50%, 75% {
-    transform: translate(-50%, -30%) scale(0.5);
-  }
-
-  80%, 100% {
-    transform: translate(-50%, -50%) scale(0);
+  100% {
+    transform: translate(-50%, 15px);
+    opacity: 0;
   }
 }

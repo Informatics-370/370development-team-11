@@ -16,12 +16,14 @@
                   <br />
                   <mat-form-field>
                     <input matInput type="text" placeholder="E.g. John" formControlName="EmployeeName" id="EmployeeName"
-                      required>
+                           required>
                     <mat-hint align="end">Not more than 32 characters long.</mat-hint>
                     <mat-error *ngIf="myError('EmployeeName', 'required')">Name is required</mat-error>
                     <mat-error *ngIf="myError('EmployeeName', 'maxlength')">Limit exceed</mat-error>
-                    <mat-error *ngIf="myError('EmployeeName', 'minlength')">Name must be 2 to 32 characters
-                      long</mat-error>
+                    <mat-error *ngIf="myError('EmployeeName', 'minlength')">
+                      Name must be 2 to 32 characters
+                      long
+                    </mat-error>
                     <mat-error *ngIf="myError('EmployeeName', 'pattern')">Name can not contain numbers</mat-error>
                   </mat-form-field>
                 </mat-card-content>
@@ -32,13 +34,15 @@
                   <br />
                   <mat-form-field>
                     <input matInput type="text" placeholder="E.g. Doe" formControlName="EmployeeSurname"
-                      id="EmployeeSurname" required>
+                           id="EmployeeSurname" required>
                     <mat-hint align="end">Not more than 50 characters long.</mat-hint>
                     <mat-error *ngIf="myError('EmployeeSurname', 'required')">Surname is required</mat-error>
                     <mat-error *ngIf="myError('EmployeeSurname', 'maxlength')">Limit exceed</mat-error>
                     <mat-error *ngIf="myError('EmployeeSurname', 'pattern')">Surname can not contain numbers</mat-error>
-                    <mat-error *ngIf="myError('EmployeeSurname', 'minlength')">Surname must be 2 to 50 characters
-                      long</mat-error>
+                    <mat-error *ngIf="myError('EmployeeSurname', 'minlength')">
+                      Surname must be 2 to 50 characters
+                      long
+                    </mat-error>
                   </mat-form-field>
                 </mat-card-content>
               </td>
@@ -50,7 +54,7 @@
                   <br />
                   <mat-form-field>
                     <input matInput type="email" placeholder="E.g. example@gmail.com" formControlName="Email" id="Email"
-                      required>
+                           required>
                     <mat-error *ngIf="myError('Email', 'required')">Email is required</mat-error>
                     <mat-error *ngIf="myError('Email', 'maxlength')">Limit exceed</mat-error>
                     <mat-error *ngIf="myError('Email', 'email')">Enter a valid email</mat-error>
@@ -98,8 +102,8 @@
                       <mat-option>---</mat-option>
                       <mat-option *ngFor="let ml of mandate_limits" [value]="ml">{{ml.ammount}}</mat-option>
                     </mat-select>
-                    <mat-hint align="end">Employee spend limit.</mat-hint>
                     <mat-error *ngIf="myError('Mandate_ID', 'required')">Please choose a mandate limit</mat-error>
+                    <mat-hint align="end">Employee spend limit.</mat-hint>
                   </mat-form-field>
                 </mat-card-content>
               </td>
@@ -136,7 +140,9 @@
             </tr>
           </table>
 
-
+          <div class="d-flex justify-content-center">
+            <span class="loader" id="loading"></span>
+          </div>
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">

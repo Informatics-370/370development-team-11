@@ -14,6 +14,7 @@ import { Mandate_Limit } from '../Shared/MandateLimit';
 import { OnboardRequest } from '../Shared/OnboardRequest';
 import { VendorOnboardRequestVM } from '../Shared/VendorOnboardRequestVM';
 import { VendorOnboardRequest } from '../Shared/VendorOnboardRequest';
+import { MailData } from '../Shared/Mail';
 
 @Injectable({
   providedIn: 'root'
@@ -170,6 +171,10 @@ export class DataService {
 
   UserValidation(name: String): Observable<User> {
     return this.httpClient.get<User>(`${this.apiUrl}User/UserValidation/` + name, this.httpOptions)
+  }
+
+  SendEmail(mail: MailData) {
+    return this.httpClient.post(`${this.apiUrl}Mail/sendemailusingtemplate`, mail, this.httpOptions)
   }
   
   //--------------------------------------------------------------------------------------Employee--------------------------------------------------------------------------------------

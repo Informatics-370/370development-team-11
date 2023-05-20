@@ -192,6 +192,7 @@ export class EditEmployeeComponent implements OnInit{
     var surname = this.myForm.get('Surname')?.value;
     var ts = name.concat(surname);
     var username = ts.concat(cel.toString().substring(4, 7));
+    username = username.replace(/\s/g, "");
 
     
     this.usr.username = username;

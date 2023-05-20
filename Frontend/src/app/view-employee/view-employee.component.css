@@ -33,81 +33,57 @@ table {
 }
 
 .loader {
-  width: 48px;
-  height: 24px;
-  color: #244688;
-  background: currentColor;
-  border-radius: 50% 50% 0 0;
-  position: relative;
+  width: 175px;
+  height: 80px;
   display: block;
-  margin: 60px auto 0;
+  margin: auto;
+  background-image: radial-gradient(circle 25px at 25px 25px, #244688 100%, transparent 0), radial-gradient(circle 50px at 50px 50px, #244688 100%, transparent 0), radial-gradient(circle 25px at 25px 25px, #244688 100%, transparent 0), linear-gradient(#244688 50px, transparent 0);
+  background-size: 50px 50px, 100px 76px, 50px 50px, 120px 40px;
+  background-position: 0px 30px, 37px 0px, 122px 30px, 25px 40px;
+  background-repeat: no-repeat;
+  position: relative;
   box-sizing: border-box;
-  animation: animloader 4s linear infinite;
 }
 
   .loader::after {
     content: '';
-    position: absolute;
     left: 50%;
-    transform: translateX(-50%);
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: currentColor;
-    top: -34px;
+    bottom: 0;
+    transform: translate(-50%, 0);
+    position: absolute;
+    border: 15px solid transparent;
+    border-top-color: #94CC5B;
     box-sizing: border-box;
-    animation: animloader1 4s linear infinite;
+    animation: fadePush 1s linear infinite;
   }
 
-@keyframes animloader {
+  .loader::before {
+    content: '';
+    left: 50%;
+    bottom: 30px;
+    transform: translate(-50%, 0);
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: #94CC5B;
+    box-sizing: border-box;
+    animation: fadePush 1s linear infinite;
+  }
+
+@keyframes fadePush {
   0% {
-    box-shadow: 0 0 0 -2px, 0 0 0 -2px, 0 0 0 -5px, 0 0 0 -5px;
+    transform: translate(-50%, -15px);
+    opacity: 0;
   }
 
-  20% {
-    box-shadow: 40px -1px 0 -2px, 0 0 0 -2px, 40px -1px 0 -5px, 0 0 0 -5px;
-  }
-
-  40% {
-    box-shadow: 40px -1px 0 -2px, -40px -1px 0 -2px, 40px -1px 0 -5px,-40px -1px 0 -5px;
-  }
-
-  60% {
-    box-shadow: 40px -1px 0 -2px, -40px -1px 0 -2px, 23px -29px 0 -5px,-40px -1px 0 -5px;
-  }
-
-  80%, 95% {
-    box-shadow: 40px -1px 0 -2px, -40px -1px 0 -2px, 23px -29px 0 -5px, -23px -29px 0 -5px;
+  50% {
+    transform: translate(-50%, 0px);
+    opacity: 1;
   }
 
   100% {
-    box-shadow: 40px -1px 0 -2px rgba(255, 255, 255, 0), -40px -1px 0 -2px rgba(255, 255, 255, 0), 23px -29px 0 -5px rgba(255, 255, 255, 0), -23px -29px 0 -5px rgba(255, 255, 255, 0);
-  }
-}
-
-@keyframes animloader1 {
-  0% {
-    box-shadow: 0 0 0 -2px, 0 0 0 -2px, 0 0 0 -5px, 0 0 0 -5px;
-  }
-
-  20% {
-    box-shadow: 40px 2px 0 -2px, 0 0 0 -2px, 40px 2px 0 -5px, 0 0 0 -5px;
-  }
-
-  40% {
-    box-shadow: 40px 2px 0 -2px, -40px 2px 0 -2px, 40px 2px 0 -5px, -40px 2px 0 -5px;
-  }
-
-  60% {
-    box-shadow: 40px 2px 0 -2px, -40px 2px 0 -2px, 23px -23px 0 -5px, -40px 2px 0 -5px;
-  }
-
-  80%, 95% {
-    box-shadow: 40px 2px 0 -2px, -40px 2px 0 -2px, 23px -23px 0 -5px, -23px -23px 0 -5px;
-  }
-
-  100% {
-    box-shadow: 40px 2px 0 -2px rgba(255, 255, 255, 0), -40px 2px 0 -2px rgba(255, 255, 255, 0), 23px -23px 0 -5px rgba(255, 255, 255, 0), -23px -23px 0 -5px rgba(255, 255, 255, 0);
+    transform: translate(-50%, 15px);
+    opacity: 0;
   }
 }
 
