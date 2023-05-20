@@ -18,6 +18,11 @@ export class EditDepartmentComponent implements OnInit{
 
   Department:any
  
+  DepartmentToEdit:any  = {
+    department_ID :0,
+    name:'',
+    description:'',
+  }
   constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
@@ -71,4 +76,6 @@ export class EditDepartmentComponent implements OnInit{
 
   }
 
+
+ 
 }

@@ -71,14 +71,17 @@ DeleteDepartment(department_ID: number) {
       EmployeeList.forEach((element) => {
         this.Employees.push(element)
       });
-      console.log(this.Employees)
+
       var Count: number = 0;
+
       this.Employees.forEach(element => {
         if (element.department_ID == department_ID) {
           Count = Count + 1;
           console.log(Count)
         }
       });
+
+      
 
       if (Count == 0) {
         const confirm = this.Dialog.open(DeleteDepartmentComponent, {
@@ -95,7 +98,7 @@ DeleteDepartment(department_ID: number) {
         })
         var action = "ERROR";
         var title = "ERROR: Department In Use";
-        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + this.DepartmentToDelete.name + " <strong style='color:red'>IS ASSOCIATED WITH A EMPLOYEE!</strong><br> Please remove the Department from the Employee to continue with deletion.");
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + this.DepartmentToDelete.name + " <strong style='color:red'>IS ASSOCIATED WITH A EMPLOYEE AND/OR BUDGET ALLOCATION!</strong><br> Please remove the Department from the Employee and/or Budget allocation to continue with deletion.");
 
         const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
           disableClose: true,
@@ -109,6 +112,8 @@ DeleteDepartment(department_ID: number) {
       }
     }
   })
+
+  
 
 }
 
