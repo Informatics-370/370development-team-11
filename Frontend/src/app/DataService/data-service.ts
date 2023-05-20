@@ -465,5 +465,9 @@ export class DataService {
     return this.httpClient.get<Branch>(`${this.apiUrl}Branch/BranchValidation/` + name, this.httpOptions)
   }
 
+  login(username: string, password: string) {
+    return this.httpClient.get<User>(`${this.apiUrl}User/Login/` + username + "/" + password, this.httpOptions)
+  }
+
 }
 

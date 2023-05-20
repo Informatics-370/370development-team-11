@@ -59,7 +59,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Consumable_Category> CategoryValidationAsync(string name)
         {
-            Consumable_Category ExistingCategory = await _dbContext.Consumable_Category.FirstOrDefaultAsync(x => x.Name == name);
+            Consumable_Category ExistingCategory = await _dbContext.Consumable_Category.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
             if (ExistingCategory != null)
             {
                 return ExistingCategory;

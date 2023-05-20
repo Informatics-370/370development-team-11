@@ -30,7 +30,7 @@ import { VendorCreateComponent } from './vendor/vendor-create/vendor-create.comp
 import { VendorUpdateComponent } from './vendor/vendor-update/vendor-update.component';
 import { VendorDeleteComponent } from './vendor/vendor-delete/vendor-delete.component';
 import { VendordetailsViewComponent } from './vendor/vendordetails-view/vendordetails-view.component';
-import {VendorCreateChoiceComponent} from './vendor/vendor-create-choice/vendor-create-choice.component'
+import { VendorCreateChoiceComponent } from './vendor/vendor-create-choice/vendor-create-choice.component'
 
 import { CreateDepartmentComponent } from './create-department/create-department/create-department.component';
 import { DeleteDepartmentComponent } from './delete-department/delete-department/delete-department.component';
@@ -40,9 +40,14 @@ import { CreateBranchComponent } from './create-branch/create-branch/create-bran
 import { DeleteBranchComponent } from './delete-branch/delete-branch/delete-branch.component';
 import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.component';
 import { ViewBranchComponent } from './view-branch/view-branch/view-branch.component';
+import { LoginComponent } from './login/login.component';
 
 
 const routes: Routes = [
+  {
+    path: "",
+    component: LoginComponent
+  },
   {
     path: "ViewEmployee",
     component: ViewEmployeeComponent
@@ -119,16 +124,16 @@ const routes: Routes = [
     path: 'EditMandateLimit/:id',
     component: EditMandateLimitComponent
   },
-  {path: 'request-view', component: RequestViewComponent},  
-  {path: 'request-create/:RequestNo', component: RequestCreateComponent},  
-  {path: 'request-update/:RequestNo', component: RequestUpdateComponent},
-  {path: 'request-delete', component: RequestDeleteComponent},
-  {path: 'vendor-view', component: VendorViewComponent},
-  {path: 'vendor-create/:VendorID', component: VendorCreateComponent},
-  {path: 'vendor-update/:VendorID', component: VendorUpdateComponent},
-  {path: 'vendor-delete', component: VendorDeleteComponent},
-  {path:'vendororderdetails-view/:VendorID',component: VendordetailsViewComponent},
-  {path:'vendor-create-choice',component:VendorCreateChoiceComponent},
+  { path: 'request-view', component: RequestViewComponent },
+  { path: 'request-create/:RequestNo', component: RequestCreateComponent },
+  { path: 'request-update/:RequestNo', component: RequestUpdateComponent },
+  { path: 'request-delete', component: RequestDeleteComponent },
+  { path: 'vendor-view', component: VendorViewComponent },
+  { path: 'vendor-create/:VendorID', component: VendorCreateComponent },
+  { path: 'vendor-update/:VendorID', component: VendorUpdateComponent },
+  { path: 'vendor-delete', component: VendorDeleteComponent },
+  { path: 'vendororderdetails-view/:VendorID', component: VendordetailsViewComponent },
+  { path: 'vendor-create-choice', component: VendorCreateChoiceComponent },
   {
     path: 'ViewDepartment',
     component: ViewDepartmentComponent

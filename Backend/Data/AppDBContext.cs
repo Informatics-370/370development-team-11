@@ -123,6 +123,14 @@ namespace ProcionAPI.Data
                 Password = "JDoe123",
                 Profile_Picture = "test",
 
+            },
+            new
+            {
+                User_Id = 2,
+                Role_ID = 2,
+                Username = "Admin",
+                Password = "Admin",
+                Profile_Picture = "test",
             }
             );
 
@@ -134,6 +142,12 @@ namespace ProcionAPI.Data
                 Name = "MD",
                 Description = "Managing Director",
  
+            },
+            new
+            {
+                Role_ID = 2,
+                Name = "Admin",
+                Description = "Admin",
             }
             );
 

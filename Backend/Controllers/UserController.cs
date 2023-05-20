@@ -32,6 +32,20 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+        [HttpGet]
+        [Route("Login/{Username}/{Password}")]
+        public async Task<IActionResult> Login(string Username, string Password)
+        {
+            try
+            {
+                var result = await _UserRepository.Login(Username, Password);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
 
         [HttpGet]
         [Route("GetUsers")]

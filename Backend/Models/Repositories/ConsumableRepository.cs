@@ -46,7 +46,7 @@ namespace ProcionAPI.Models.Repositories
         public async Task<Consumable> ConsumableValidationAsync(string name, string category)
         {
             //Consumable ExistingConsumable = await _dbContext.Consumable.FirstOrDefaultAsync(x => x.Name == name && x.Consumable_Category.Name == category);
-            Consumable ExistingConsumable = await _dbContext.Consumable.Include(x => x.Consumable_Category).FirstOrDefaultAsync(x => x.Name == name && x.Consumable_Category.Name == category);
+            Consumable ExistingConsumable = await _dbContext.Consumable.Include(x => x.Consumable_Category).FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower() && x.Consumable_Category.Name == category);
             
 
 

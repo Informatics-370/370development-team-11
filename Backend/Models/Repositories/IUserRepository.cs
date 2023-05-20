@@ -17,5 +17,6 @@ namespace ProcionAPI.Models.Repositories {
         Task<Employee> UpdateEmployeeAsync(Employee EmpEdit, int userID);
         Task<Admin> UpdateAdminAsync(Admin AdminEdit, int userID);
         Task<User> UserValidationAsync(string name);
+        Task<User> Login(string Username, string Password);
     }
 }

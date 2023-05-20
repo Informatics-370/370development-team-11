@@ -37,6 +37,24 @@ export class ViewEmployeeComponent implements OnInit {
     role: this.rl
   }
 
+  RoleToUse: string = "";
+  Notif() {
+    var action = "Error";
+    var title = "Authorization Error";
+    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("<strong style='color:red'> YOU DO NOT HAVE PERMISSION TO VIEW THIS PAGE! THIS IS ADMIN ONLY FUNCTIONALITY</strong>");
+
+    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+      disableClose: true,
+      data: { action, title, message }
+    });
+
+    const duration = 1750;
+    setTimeout(() => {
+      dialogRef.close();
+    }, duration);
+  }
+
+
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer) { }
 
   DeleteEmployees: Employee[] = [];
@@ -45,6 +63,10 @@ export class ViewEmployeeComponent implements OnInit {
   searchWord: string = "";
 
   ngOnInit() {
+    this.RoleToUse = localStorage.getItem("Role")
+    console.log(this.RoleToUse)
+    console.log(this.RoleToUse === "\"Admin\"")
+
     this.GetEmployees();
   }
 
@@ -60,7 +82,7 @@ export class ViewEmployeeComponent implements OnInit {
     else if (searchTerm == "") {
       this.SearchedEmployee = [...this.Employees]
     }
-  } 
+  }
 
   GetEmployees() {
     this.dataService.GetEmployees().subscribe(result => {

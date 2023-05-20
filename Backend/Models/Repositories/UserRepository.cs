@@ -114,6 +114,21 @@ namespace ProcionAPI.Models.Repositories
 
             return await query.FirstOrDefaultAsync();
         }
+        public async Task<User> Login(string Username, string Password)
+        {
+            IQueryable<User> query = _dbContext.User.Include(c => c.Role)
+                .Where(w => w.Username == Username && w.Password == Password);
+
+
+            if (query != null)
+            {
+                return await query.FirstOrDefaultAsync();
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         public async Task<Admin[]> GetAllAdminsAsync()
         {

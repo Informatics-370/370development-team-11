@@ -69,6 +69,7 @@ import { ViewBranchComponent } from './view-branch/view-branch/view-branch.compo
 import { CreateBranchComponent } from './create-branch/create-branch/create-branch.component';
 import { DeleteBranchComponent } from './delete-branch/delete-branch/delete-branch.component';
 import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.component';
+import { LoginComponent } from './login/login.component';
 
 
 
@@ -118,7 +119,8 @@ import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.compo
     VendorViewComponent,
     VendorDeleteComponent,
     VendordetailsViewComponent,
-    VendorCreateChoiceComponent
+    VendorCreateChoiceComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
