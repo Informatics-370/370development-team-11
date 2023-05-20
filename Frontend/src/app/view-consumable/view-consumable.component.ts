@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Consumable } from '../Shared/Consumable';
 import { DataService } from '../DataService/data-service';
 import { MatDialog } from '@angular/material/dialog';
@@ -39,14 +39,19 @@ export class ViewConsumableComponent implements OnInit {
   }
 
   GetConsumables() {
-    this.dataService.GetConsumables().subscribe(result => {
-      let ConsumableList: any[] = result
-      ConsumableList.forEach((element) => {
-        this.Consumables.push(element)
-        this.SearchedConsumables.push(element)
-      });
-    })
+    setTimeout(() => {
+      this.dataService.GetConsumables().subscribe(result => {
+        let ConsumableList: any[] = result
+        ConsumableList.forEach((element) => {
+          this.Consumables.push(element)
+          this.SearchedConsumables.push(element)
+        });
+      })
+    }, 1000);
+
   }
+  hoveredButton: number | null = null;
+
 
   DeleteConsumable(ID: Number) {
     const confirm = this.Dialog.open(DeleteConsumableComponent, {

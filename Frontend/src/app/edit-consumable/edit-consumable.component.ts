@@ -90,9 +90,13 @@ export class EditConsumableComponent implements OnInit {
 
     this.dataService.ConsumableValidation(this.ConsumableToEdit.name, this.ConsumableToEdit.consumable_Category.name).subscribe({
       next: (Result) => {
+        console.log(Result)
+        console.log(this.ConsumableToEdit)
+
         if (Result == null) {
           this.dataService.UpdateConsumable(this.ConsumableToEdit.consumable_ID, this.ConsumableToEdit).subscribe({
             next: (response) => {
+              console.log(null)
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -110,72 +114,82 @@ export class EditConsumableComponent implements OnInit {
 
             }
           });
-        }
-        else if (Result.consumable_ID === this.ConsumableToEdit.consumable_ID &&
-          Result.consumable_Category_ID === this.ConsumableToEdit.consumable_Category_ID &&
-          Result.name === this.ConsumableToEdit.name &&
-          Result.description === this.ConsumableToEdit.description &&
-          Result.maximum_Reorder_Quantity === this.ConsumableToEdit.maximum_Reorder_Quantity &&
-          Result.minimum_Reorder_Quantity === this.ConsumableToEdit.minimum_Reorder_Quantity &&
-          Result.on_Hand === this.ConsumableToEdit.on_Hand) {
-          var action = "NOTIFICATION";
-          var title = "NOTIFICATION: NO CHANGES MADE";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to the consumable: <strong>" + this.ConsumableToEdit.name + "</strong>");
-
-          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-            disableClose: true,
-            data: { action, title, message }
-          });
-
-          const duration = 1750;
-          setTimeout(() => {
-            this.router.navigate(['/ViewConsumable']);
-            dialogRef.close();
-          }, duration);
-        }
-        else if (Result.consumable_ID !== this.ConsumableToEdit.consumable_ID ||
-          Result.consumable_Category_ID !== this.ConsumableToEdit.consumable_Category_ID ||
-          Result.name !== this.ConsumableToEdit.name ||
-          Result.description !== this.ConsumableToEdit.description ||
-          Result.maximum_Reorder_Quantity !== this.ConsumableToEdit.maximum_Reorder_Quantity ||
-          Result.minimum_Reorder_Quantity !== this.ConsumableToEdit.minimum_Reorder_Quantity ||
-          Result.on_Hand !== this.ConsumableToEdit.on_Hand) {
-          this.dataService.UpdateConsumable(this.ConsumableToEdit.consumable_ID, this.ConsumableToEdit).subscribe({
-            next: (response) => {
-              var action = "Update";
-              var title = "UPDATE SUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
-
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
-
-              const duration = 1750;
-              setTimeout(() => {
-                this.router.navigate(['/ViewConsumable']);
-                dialogRef.close();
-              }, duration);
-
-            }
-          });
-
         }
         else {
-          var action = "ERROR";
-          var title = "ERROR: Consumable Exists";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+          if (Result.consumable_ID === this.ConsumableToEdit.consumable_ID && (Result.name !== this.ConsumableToEdit.name ||
+            Result.description !== this.ConsumableToEdit.description ||
+            Result.maximum_Reorder_Quantity !== this.ConsumableToEdit.maximum_Reorder_Quantity ||
+            Result.minimum_Reorder_Quantity !== this.ConsumableToEdit.minimum_Reorder_Quantity ||
+            Result.on_Hand !== this.ConsumableToEdit.on_Hand)) {
+            this.dataService.UpdateConsumable(this.ConsumableToEdit.consumable_ID, this.ConsumableToEdit).subscribe({
+              next: (response) => {
+                console.log("Some other")
+                var action = "Update";
+                var title = "UPDATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-            disableClose: true,
-            data: { action, title, message }
-          });
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
 
-          const duration = 1750;
-          setTimeout(() => {
-            dialogRef.close();
-          }, duration);
+                const duration = 1750;
+                setTimeout(() => {
+                  this.router.navigate(['/ViewConsumable']);
+                  dialogRef.close();
+                }, duration);
+
+              }
+            });
+
+          }
+
+          if (Result.consumable_ID === this.ConsumableToEdit.consumable_ID &&
+            Result.consumable_Category_ID === this.ConsumableToEdit.consumable_Category_ID &&
+            Result.name === this.ConsumableToEdit.name &&
+            Result.description === this.ConsumableToEdit.description &&
+            Result.maximum_Reorder_Quantity === this.ConsumableToEdit.maximum_Reorder_Quantity &&
+            Result.minimum_Reorder_Quantity === this.ConsumableToEdit.minimum_Reorder_Quantity &&
+            Result.on_Hand === this.ConsumableToEdit.on_Hand) {
+            console.log("No Changes")
+            var action = "NOTIFICATION";
+            var title = "NOTIFICATION: NO CHANGES MADE";
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to the consumable: <strong>" + this.ConsumableToEdit.name + "</strong>");
+
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
+
+            const duration = 1750;
+            setTimeout(() => {
+              this.router.navigate(['/ViewConsumable']);
+              dialogRef.close();
+            }, duration);
+          }
+          else if (Result.consumable_ID !== this.ConsumableToEdit.consumable_ID || (Result.name === this.ConsumableToEdit.name &&
+            Result.description === this.ConsumableToEdit.description &&
+            Result.maximum_Reorder_Quantity === this.ConsumableToEdit.maximum_Reorder_Quantity &&
+            Result.minimum_Reorder_Quantity === this.ConsumableToEdit.minimum_Reorder_Quantity &&
+            Result.on_Hand === this.ConsumableToEdit.on_Hand)) {
+            console.log("Error")
+            var action = "ERROR";
+            var title = "ERROR: Consumable Exists";
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
+
+            const duration = 1750;
+            setTimeout(() => {
+              dialogRef.close();
+            }, duration);
+          }
+
         }
+
       }
     })
 

@@ -50,13 +50,15 @@ export class ViewConsumableCategoryComponent implements OnInit {
   }
 
   GetCategories() {
-    this.dataService.GetCategories().subscribe(result => {
-      let CategoryList: any[] = result
-      CategoryList.forEach((element) => {
-        this.ConsumableCategories.push(element)
-        this.SearchedConsumableCategories.push(element)
+    setTimeout(() => {
+      this.dataService.GetCategories().subscribe(result => {
+        let CategoryList: any[] = result
+        CategoryList.forEach((element) => {
+          this.ConsumableCategories.push(element)
+          this.SearchedConsumableCategories.push(element)
+        })
       })
-    })
+    }, 1000);
   }
 
   GetConsumables() {
@@ -67,7 +69,7 @@ export class ViewConsumableCategoryComponent implements OnInit {
       });
     })
   }
-
+  hoveredButton: number | null = null;
   DeleteCategory(ID: Number) {
     this.dataService.GetConsumables().subscribe({
       next: (result) => {

@@ -100,12 +100,12 @@ namespace ProcionAPI.Controllers
             }
         }
         [HttpGet]
-        [Route("CategoryValidation/{name}/{description}")]
-        public async Task<IActionResult> ConsumableValidation([FromRoute] string name, [FromRoute] string description)
+        [Route("CategoryValidation/{name}")]
+        public async Task<IActionResult> ConsumableValidation([FromRoute] string name)
         {
             try
             {
-                var result = await _consumableCategoryRepository.CategoryValidationAsync(name, description);
+                var result = await _consumableCategoryRepository.CategoryValidationAsync(name);
                 return Ok(result);
             }
             catch (Exception)

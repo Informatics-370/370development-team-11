@@ -55,8 +55,10 @@ export class EditConsumableCategoryComponent implements OnInit {
 
   UpdateCategory() {
 
-    this.dataService.CategoryValidation(this.CategoryToEdit.name, this.CategoryToEdit.description).subscribe({
+    this.dataService.CategoryValidation(this.CategoryToEdit.name).subscribe({
       next: (Result) => {
+        console.log(Result)
+        console.log(this.CategoryToEdit)
         if (Result == null) {
           this.dataService.UpdateCategory(this.CategoryToEdit.consumable_Category_ID, this.CategoryToEdit).subscribe({
             next: (response) => {
@@ -78,6 +80,22 @@ export class EditConsumableCategoryComponent implements OnInit {
             }
           });
         }
+        if (Result.consumable_Category_ID !== this.CategoryToEdit.consumable_Category_ID && Result.name === this.CategoryToEdit.name) {
+          var action = "ERROR";
+          var title = "ERROR: Consumable Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.CategoryToEdit.name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
+
         else if (Result.name === this.CategoryToEdit.name &&
           Result.description === this.CategoryToEdit.description) {
           var action = "NOTIFICATION";
@@ -96,7 +114,8 @@ export class EditConsumableCategoryComponent implements OnInit {
           }, duration);
         }
         else if (Result.name !== this.CategoryToEdit.name ||
-          Result.description !== this.CategoryToEdit.description) {
+          Result.description !== this.CategoryToEdit.description
+          && Result.consumable_Category_ID == this.CategoryToEdit.consumable_Category_ID) {
           this.dataService.UpdateCategory(this.CategoryToEdit.consumable_Category_ID, this.CategoryToEdit).subscribe({
             next: (response) => {
               var action = "Update";
@@ -118,21 +137,8 @@ export class EditConsumableCategoryComponent implements OnInit {
           });
 
         }
-        else {
-          var action = "ERROR";
-          var title = "ERROR: Consumable Exists";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.CategoryToEdit.name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
 
-          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-            disableClose: true,
-            data: { action, title, message }
-          });
 
-          const duration = 1750;
-          setTimeout(() => {
-            dialogRef.close();
-          }, duration);
-        }
 
       }
     })

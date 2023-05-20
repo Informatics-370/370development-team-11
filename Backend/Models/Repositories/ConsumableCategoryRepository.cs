@@ -57,9 +57,9 @@ namespace ProcionAPI.Models.Repositories
             return CategoryToDelete;
         }
 
-        public async Task<Consumable_Category> CategoryValidationAsync(string name, string description)
+        public async Task<Consumable_Category> CategoryValidationAsync(string name)
         {
-            Consumable_Category ExistingCategory = await _dbContext.Consumable_Category.FirstOrDefaultAsync(x => x.Name == name && x.Description == description);
+            Consumable_Category ExistingCategory = await _dbContext.Consumable_Category.FirstOrDefaultAsync(x => x.Name == name);
             if (ExistingCategory != null)
             {
                 return ExistingCategory;

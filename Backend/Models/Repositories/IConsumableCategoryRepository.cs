@@ -9,6 +9,6 @@ namespace ProcionAPI.Models.Repositories
         Task<Consumable_Category> GetCategoryByIDAsync(int id);
         Task<Consumable_Category> UpdateConsumableCategoryAsync(int id, Consumable_Category Request);
         Task<Consumable_Category> DeleteCategoryAsync(int id);
-        Task<Consumable_Category> CategoryValidationAsync(string name, string description);
+        Task<Consumable_Category> CategoryValidationAsync(string name);
     }
 }

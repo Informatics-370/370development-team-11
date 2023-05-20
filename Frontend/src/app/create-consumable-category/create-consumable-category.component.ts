@@ -38,7 +38,7 @@ export class CreateConsumableCategoryComponent implements OnInit {
     this.ConsumableCategory.description = this.myForm.get('Description')?.value;
 
 
-    this.dataService.CategoryValidation(this.ConsumableCategory.name, this.ConsumableCategory.description).subscribe({
+    this.dataService.CategoryValidation(this.ConsumableCategory.name).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.CreateCategory(this.ConsumableCategory).subscribe(
