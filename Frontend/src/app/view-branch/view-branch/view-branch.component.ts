@@ -54,9 +54,17 @@ export class ViewBranchComponent implements OnInit {
 
   GetBranches() {
     this.dataService.GetBranches().subscribe(result => {
+      if (result) {
+        hideloader();
+      }
       this.Branches = result;
       this.SearchedBranch =this.Branches;
-    });  
+    }); 
+    function hideloader() {
+      document.getElementById('loading')
+        .style.display = 'none';
+      document.getElementById('table').style.visibility = "visible";
+    }  
   }
   GetEmployees(){
     this.dataService.GetEmployees().subscribe(result => {

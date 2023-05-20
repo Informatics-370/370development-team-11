@@ -95,8 +95,8 @@ export class DataService {
     return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetBranches`).pipe(map(result => result))
   }
 
-  GetBranch(Branch_ID: number) {
-    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch` + Branch_ID).pipe(map(result => result))
+  GetBranch(Branch_ID: Number) {
+    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch/` + Branch_ID).pipe(map(result => result))
   }
 
   AddBranch(AddBranchRequest: Branch) {
@@ -107,8 +107,8 @@ export class DataService {
     return this.httpClient.delete<Branch>(`${this.apiUrl}Branch/DeleteBranch` + '/' + Branch_ID, this.httpOptions)
   }
 
-  EditBranch(Branch_ID: Number, UpdateBranchRequest: Branch): Observable<Branch> {
-    return this.httpClient.put<Branch>(`${this.apiUrl}Branch/UpdateBranch/${Branch_ID}`, UpdateBranchRequest, this.httpOptions)
+  EditBranch(branch_ID: Number, UpdateBranchRequest: Branch): Observable<Branch> {
+    return this.httpClient.put<Branch>(`${this.apiUrl}Branch/UpdateBranch/${branch_ID}`, UpdateBranchRequest, this.httpOptions)
   }
 
   BranchValidation(name: String): Observable<Branch> {
@@ -475,17 +475,7 @@ export class DataService {
   }
 
   //--------------------------------------------------------------------------------------Onboard Request--------------------------------------------------------------------------------------
-  GetAllOnboardRequest(): Observable<any> {
-    return this.httpClient.get<VendorOnboardRequestVM[]>(`${this.apiUrl}OnboardRequest/GetAllOnboardRequest`).pipe(map(result => result))
-  }
-
-  AddOnboardRequest(AddRequest: OnboardRequest) {
-    return this.httpClient.post(`${this.apiUrl}OnboardRequest/CreateOnboardRequest`, AddRequest, this.httpOptions)
-  }
-
-  GetVendorsRequest() {
-    return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendors`).pipe(map(result => result))
-  }
+ 
 
   GetRequest(RequestID: number) {
     return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetRequest/` + RequestID).pipe(map(result => result))
@@ -521,13 +511,7 @@ export class DataService {
   // }
 
   //Branch
-  GetBranches(): Observable<any> {
-    return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetBranches`).pipe(map(result => result))
-  }
-
-  GetBranch(Branch_ID: number) {
-     return this.httpClient.get(`${this.apiUrl}Branch/GetBranch`+'/' + Branch_ID).pipe(map(result => result))
-  }
+ 
 
   
 

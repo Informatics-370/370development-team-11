@@ -49,29 +49,47 @@ export class EditBranchComponent implements OnInit{
   }
 
   onSubmit() {
-    var name = this.myForm.get('name')?.value;
+    var street = this.myForm.get('street')?.value;
 
-    this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe({
-      next: (response) => {
-        var action = "Update";
-        var title = "UPDATE SUCCESSFUL";
-        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+    this.dataService.BranchValidation(street).subscribe({
+      next: (Result) => {
+        if (Result == null) {
+          this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe({
+            next: (response) => {
+              var action = "Update";
+              var title = "UPDATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + street + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-          disableClose: true,
-          data: { action, title, message }
-        });
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
 
-        const duration = 1750;
-        setTimeout(() => {
-          this.router.navigate(['/ViewBranch']);
-          dialogRef.close();
-        }, duration);
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/ViewBranch']);
+                dialogRef.close();
+              }, duration);
+            }
+          })
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: Branch Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch street address <strong>" + street + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
       }
     })
-
-
-
 
   }
 }
