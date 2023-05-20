@@ -475,21 +475,21 @@ export class DataService {
   }
 
   //--------------------------------------------------------------------------------------Onboard Request--------------------------------------------------------------------------------------
-  GetAllOnboardRequest(): Observable<any> {
-    return this.httpClient.get<VendorOnboardRequestVM[]>(`${this.apiUrl}OnboardRequest/GetAllOnboardRequest`).pipe(map(result => result))
-  }
+  //GetAllOnboardRequest(): Observable<any> {
+  //  return this.httpClient.get<VendorOnboardRequestVM[]>(`${this.apiUrl}OnboardRequest/GetAllOnboardRequest`).pipe(map(result => result))
+  //}
 
-  AddOnboardRequest(AddRequest: OnboardRequest) {
-    return this.httpClient.post(`${this.apiUrl}OnboardRequest/CreateOnboardRequest`, AddRequest, this.httpOptions)
-  }
+  //AddOnboardRequest(AddRequest: OnboardRequest) {
+  //  return this.httpClient.post(`${this.apiUrl}OnboardRequest/CreateOnboardRequest`, AddRequest, this.httpOptions)
+  //}
 
-  GetVendorsRequest() {
-    return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendors`).pipe(map(result => result))
-  }
+  //GetVendorsRequest() {
+  //  return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendors`).pipe(map(result => result))
+  //}
 
-  GetRequest(RequestID: number) {
-    return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetRequest/` + RequestID).pipe(map(result => result))
-  }
+  //GetRequest(RequestID: number) {
+  //  return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetRequest/` + RequestID).pipe(map(result => result))
+  //}
   
 
   
