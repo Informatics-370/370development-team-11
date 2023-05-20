@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Mandate_Limit } from '../Shared/MandateLimit';
 import { DataService } from '../DataService/data-service';
 import { MatTableDataSource } from '@angular/material/table';
+import { DeleteMandateLimitComponent } from '../delete-mandate-limit/delete-mandate-limit.component';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./view-mandate-limit.component.css']
 })
 export class ViewMandateLimitComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'amount', 'date', 'action'];
+  displayedColumns: string[] = ['id', 'amount', 'date', 'action', 'delete'];
   dataSource = new MatTableDataSource<Mandate_Limit>();
 
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService) { }
@@ -28,8 +29,11 @@ export class ViewMandateLimitComponent implements OnInit {
       this.dataSource = result;
     });
   }
-  // DeleteMandateLimit(ID: Number) {
-
-  // }
+  DeleteMandateLimit(id: Number) {
+    const confirm = this.dialog.open(DeleteMandateLimitComponent, {
+      disableClose: true,
+      data: { id }
+    });
+  }
 
 }

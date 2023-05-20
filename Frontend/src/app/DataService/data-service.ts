@@ -14,6 +14,8 @@ import { Mandate_Limit } from '../Shared/MandateLimit';
 import { OnboardRequest } from '../Shared/OnboardRequest';
 import { VendorOnboardRequestVM } from '../Shared/VendorOnboardRequestVM';
 import { VendorOnboardRequest } from '../Shared/VendorOnboardRequest';
+import { BudgetCategory } from '../Shared/BudgetCategory';
+import { BudgetAllocation } from '../Shared/BudgetAllocation';
 
 @Injectable({
   providedIn: 'root'
@@ -81,13 +83,13 @@ export class DataService {
   ConsumableValidation(name: String, category: String): Observable<Consumable> {
     return this.httpClient.get<Consumable>(`${this.apiUrl}Consumable/ConsumableValidation/` + name + "/" + category, this.httpOptions)
   }
-  GetBranches(): Observable<any> {
-    return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetAllBranches`).pipe(map(result => result))
-  }
+  // GetBranches(): Observable<any> {
+  //   return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetAllBranches`).pipe(map(result => result))
+  // }
 
-  GetDepartments(): Observable<any> {
-    return this.httpClient.get<Department[]>(`${this.apiUrl}Department/GetAllDepartments`).pipe(map(result => result))
-  }
+  // GetDepartments(): Observable<any> {
+  //   return this.httpClient.get<Department[]>(`${this.apiUrl}Department/GetAllDepartments`).pipe(map(result => result))
+  // }
 
   AddUser(user: User) {
     return this.httpClient.post(`${this.apiUrl}User/CreateUser`, user, this.httpOptions)
@@ -105,9 +107,9 @@ export class DataService {
     return this.httpClient.get(`${this.apiUrl}User/GetEmployee` + "/" + userID).pipe(map(result => result))
   }
 
-  GetBranch(Branch_ID: number) {
-    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch` + Branch_ID).pipe(map(result => result))
-  }
+  // GetBranch(Branch_ID: number) {
+  //   return this.httpClient.get(`${this.apiUrl}Branch/GetBranch` + Branch_ID).pipe(map(result => result))
+  // }
 
   EditUser(usr: User, userID: number) {
     return this.httpClient.put<User>(`${this.apiUrl}User/EditUser/` + userID, usr, this.httpOptions)
@@ -195,8 +197,12 @@ export class DataService {
     return this.httpClient.post(`${this.apiUrl}Mandate/AddMandateLimit`, ml, this.httpOptions)
   }
 
-  EditMandateLimit(mlID: number | Number, ml: Mandate_Limit,) {
-    return this.httpClient.put(`${this.apiUrl}Mandate/EditMandateLimit/${mlID}`, ml, this.httpOptions)
+  EditMandateLimit(mlID: Number, ml: Mandate_Limit,) {
+    return this.httpClient.put<Mandate_Limit>(`${this.apiUrl}Mandate/EditMandateLimit/${mlID}`, ml, this.httpOptions)
+  }
+
+  DeleteMandateLimit(mlID: Number) {
+    return this.httpClient.delete<string>(`${this.apiUrl}Mandate/DeleteMandateLimit` + "/" + mlID, this.httpOptions)
   }
 
   GetAllOnboardRequest(): Observable<any> {
@@ -223,9 +229,9 @@ export class DataService {
 
 
   //Department
-  // GetDepartments(): Observable<any> {
-  //   return this.httpClient.get<Department[]>(`${this.apiUrl}Department/GetDepartments`).pipe(map(result => result))
-  // }
+  GetDepartments(): Observable<any> {
+    return this.httpClient.get<Department[]>(`${this.apiUrl}Department/GetDepartments`).pipe(map(result => result))
+  }
 
   GetDepartment(Department_ID: number) {
     return this.httpClient.get(`${this.apiUrl}Department/GetDepartment` + '/' + Department_ID).pipe(map(result => result))
@@ -250,13 +256,13 @@ export class DataService {
 
 
   //Branch
-  // GetBranches(): Observable<any> {
-  //   return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetBranches`).pipe(map(result => result))
-  // }
+  GetBranches(): Observable<any> {
+    return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetBranches`).pipe(map(result => result))
+  }
 
-  // GetBranch(Branch_ID: number) {
-  //   return this.httpClient.get(`${this.apiUrl}Branch/GetBranch`+'/' + Branch_ID).pipe(map(result => result))
-  // }
+  GetBranch(Branch_ID: number) {
+    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch` + '/' + Branch_ID).pipe(map(result => result))
+  }
 
   AddBranch(AddBranchRequest: Branch) {
     return this.httpClient.post<Branch>(`${this.apiUrl}Branch/CreateBranch`, AddBranchRequest, this.httpOptions)
@@ -272,6 +278,49 @@ export class DataService {
 
   BranchValidation(name: String): Observable<Branch> {
     return this.httpClient.get<Branch>(`${this.apiUrl}Branch/BranchValidation/` + name, this.httpOptions)
+  }
+
+  //Budget Allocations
+
+
+  GetBudgetCategories(): Observable<any> {
+    return this.httpClient.get<BudgetCategory[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetCategories`).pipe(map(result => result))
+  }
+
+  GetBudgetCategory(budgetCategoryID: number) {
+    return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetCategory` + '/' + budgetCategoryID).pipe(map(result => result))
+  }
+
+  AddBudgetCategory(budgetCategory: BudgetCategory) {
+    return this.httpClient.post<BudgetCategory>(`${this.apiUrl}BudgetAllocation/AddBudgetCategory`, budgetCategory, this.httpOptions)
+  }
+
+  EditBudgetCategory(budgetCategoryID: Number, budgetCategory: BudgetCategory) {
+    return this.httpClient.put<BudgetCategory>(`${this.apiUrl}BudgetAllocation/EditBudgetCategory/${budgetCategoryID}`, budgetCategory, this.httpOptions)
+  }
+
+  DeleteBudgetCategory(budgetCategoryID: Number) {
+    return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetCategory` + "/" + budgetCategoryID, this.httpOptions)
+  }
+
+  GetBudgetAllocations(): Observable<any> {
+    return this.httpClient.get<BudgetAllocation[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetAllocations`).pipe(map(result => result))
+  }
+
+  GetBudgetAllocation(budgetAllocationID: number) {
+    return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetAllocation` + '/' + budgetAllocationID).pipe(map(result => result))
+  }
+
+  AddBudgetAllocation(budgetAllocation: BudgetAllocation) {
+    return this.httpClient.post<BudgetAllocation>(`${this.apiUrl}BudgetAllocation/AddBudgetAllocation`, budgetAllocation, this.httpOptions)
+  }
+
+  EditBudgetAllocation(budgetAllocationID: Number, budgetAllocation: BudgetAllocation) {
+    return this.httpClient.put<BudgetAllocation>(`${this.apiUrl}BudgetAllocation/EditBudgetAllocation/${budgetAllocationID}`, budgetAllocation, this.httpOptions)
+  }
+
+  DeleteBudgetAllocation(budgetAllocationID: Number) {
+    return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetAllocation` + "/" + budgetAllocationID, this.httpOptions)
   }
 
 }

@@ -64,6 +64,14 @@ import { ViewBranchComponent } from './view-branch/view-branch/view-branch.compo
 import { CreateBranchComponent } from './create-branch/create-branch/create-branch.component';
 import { DeleteBranchComponent } from './delete-branch/delete-branch/delete-branch.component';
 import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.component';
+import { DeleteMandateLimitComponent } from './delete-mandate-limit/delete-mandate-limit.component';
+import { ViewBudgetCategoryComponent } from './view-budget-category/view-budget-category.component';
+import { CreateBudgetCategoryComponent } from './create-budget-category/create-budget-category.component';
+import { EditBudgetCategoryComponent } from './edit-budget-category/edit-budget-category.component';
+import { DeleteBudgetCategoryComponent } from './delete-budget-category/delete-budget-category.component';
+import { ViewBudgetAllocationComponent } from './view-budget-allocation/view-budget-allocation.component';
+import { CreateBudgetAllocationComponent } from './create-budget-allocation/create-budget-allocation.component';
+import { DeleteBudgetAllocationComponent } from './delete-budget-allocation/delete-budget-allocation.component';
 
 
 @NgModule({
@@ -104,7 +112,15 @@ import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.compo
     ViewBranchComponent,
     CreateBranchComponent,
     DeleteBranchComponent,
-    EditBranchComponent
+    EditBranchComponent,
+    DeleteMandateLimitComponent,
+    ViewBudgetCategoryComponent,
+    CreateBudgetCategoryComponent,
+    EditBudgetCategoryComponent,
+    DeleteBudgetCategoryComponent,
+    ViewBudgetAllocationComponent,
+    CreateBudgetAllocationComponent,
+    DeleteBudgetAllocationComponent
   ],
   imports: [
     BrowserModule,

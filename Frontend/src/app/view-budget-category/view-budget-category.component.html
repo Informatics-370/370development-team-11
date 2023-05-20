@@ -5,30 +5,24 @@
             <div mat-list-item style="display: flex; align-items: center;">
                 <mat-icon aria-hidden="false" aria-label="admin icon" fontIcon="admin_panel_settings"
                     style="width:30px; height: 44px; margin-left: 5%;"></mat-icon>
-                <h2 class="uni-font">Administration</h2>
+                <h2 class="uni-font">Finance</h2>
             </div>
 
-            <a mat-list-item class="uni-font" routerLink="/ViewEmployee">Employees</a>
-            <a mat-list-item class="uni-font" routerLink="/ViewAdmin">Admins</a>
-            <a mat-list-item class="uni-font" routerLink="/ViewEmpRole">Roles</a>
-            <a mat-list-item class="uni-font">Departments</a>
-            <a mat-list-item class="uni-font">Branch</a>
-            <a mat-list-item class="uni-font">Delegation of Authority</a>
-            <a mat-list-item class="uni-font" routerLink="/ViewMandateLimit">Mandate Limits</a>
-            <a mat-list-item class="uni-font">Manage Help</a>
-            <a mat-list-item class="uni-font">Settings</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewBudgetCategory">Budget Categories</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewBudgetAllocation">Budget Allocations</a>
+
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content class="Main-content">
         <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
-            Manage Mandate Limits
+            Manage Budget Categories
         </h1>
 
         <div mat-list-item style="margin-left: 0.5%; display: flex;  align-items: center; ">
             <button mat-raised-button
                 style="width: 200px; font-size: 14px; height: 42px; margin: 10px; background-color:#244688; color:white;"
-                routerLink="/AddMandateLimit">
-                Create Mandate Limit
+                routerLink="/AddBudgetCategory">
+                Create Category
             </button>
             <span style="flex: 1 1 auto;"></span>
 
@@ -44,31 +38,31 @@
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                 <ng-container matColumnDef="id">
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>
-                    <td mat-cell *matCellDef="let MandateLimits">{{MandateLimits.mandate_ID}}</td>
+                    <td mat-cell *matCellDef="let BudgetCategories">{{BudgetCategories.category_ID}}</td>
                 </ng-container>
-                <ng-container matColumnDef="amount">
-                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> Amount </th>
-                    <td mat-cell *matCellDef="let MandateLimits">{{MandateLimits.ammount}}</td>
+                <ng-container matColumnDef="account_Name">
+                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> Name </th>
+                    <td mat-cell *matCellDef="let BudgetCategories">{{BudgetCategories.account_Name}}</td>
                 </ng-container>
-                <ng-container matColumnDef="date">
-                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> Date </th>
-                    <td mat-cell *matCellDef="let MandateLimits">{{MandateLimits.date}}</td>
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> Description </th>
+                    <td mat-cell *matCellDef="let BudgetCategories">{{BudgetCategories.description}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="action">
                     <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let MandateLimits" style="width:100px;">
-                        <button mat-raised-button routerLink="/EditMandateLimit/{{MandateLimits.mandate_ID}}"
+                    <td mat-cell *matCellDef="let BudgetCategories" style="width:100px;">
+                        <button mat-raised-button routerLink="/EditBudgetCategory/{{BudgetCategories.category_ID}}"
                             style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 85px; margin-top: 0.5%;background-color: #94CC5B;"
                             type="button"><mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Edit</button>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="delete">
                     <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let MandateLimits" style="width:140px;">
+                    <td mat-cell *matCellDef="let BudgetCategories" style="width:140px;">
                         <button mat-raised-button
                             style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%; background-color: #FE4945; "
-                            (click)="DeleteMandateLimit(MandateLimits.mandate_ID)"><mat-icon matPrefix
+                            (click)="DeleteBudgetCategory(BudgetCategories.category_ID)"><mat-icon matPrefix
                                 style="margin-right:10%;">delete</mat-icon>Delete</button>
                     </td>
                 </ng-container>

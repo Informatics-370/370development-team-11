@@ -31,6 +31,11 @@ import { CreateBranchComponent } from './create-branch/create-branch/create-bran
 import { DeleteBranchComponent } from './delete-branch/delete-branch/delete-branch.component';
 import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.component';
 import { ViewBranchComponent } from './view-branch/view-branch/view-branch.component';
+import { ViewBudgetCategoryComponent } from './view-budget-category/view-budget-category.component';
+import { CreateBudgetCategoryComponent } from './create-budget-category/create-budget-category.component';
+import { EditBudgetCategoryComponent } from './edit-budget-category/edit-budget-category.component';
+import { ViewBudgetAllocationComponent } from './view-budget-allocation/view-budget-allocation.component';
+import { CreateBudgetAllocationComponent } from './create-budget-allocation/create-budget-allocation.component';
 
 
 const routes: Routes = [
@@ -110,9 +115,9 @@ const routes: Routes = [
     path: 'EditMandateLimit/:id',
     component: EditMandateLimitComponent
   },
-  {path: 'request-view', component: RequestViewComponent},  
-  {path: 'request-create/:RequestNo', component: RequestCreateComponent},  
-  {path: 'request-update', component: RequestUpdateComponent},
+  { path: 'request-view', component: RequestViewComponent },
+  { path: 'request-create/:RequestNo', component: RequestCreateComponent },
+  { path: 'request-update', component: RequestUpdateComponent },
   {
     path: 'ViewDepartment',
     component: ViewDepartmentComponent
@@ -145,6 +150,26 @@ const routes: Routes = [
     path: 'EditBranch/:branch_ID',
     component: EditBranchComponent
   },
+  {
+    path: 'ViewBudgetCategory',
+    component: ViewBudgetCategoryComponent
+  },
+  {
+    path: 'AddBudgetCategory',
+    component: CreateBudgetCategoryComponent
+  },
+  {
+    path: 'EditBudgetCategory/:id',
+    component: EditBudgetCategoryComponent
+  },
+  {
+    path: 'ViewBudgetAllocation',
+    component: ViewBudgetAllocationComponent
+  },
+  {
+    path: 'AddBudgetAllocation',
+    component: CreateBudgetAllocationComponent
+  }
 ];
 
 @NgModule({
