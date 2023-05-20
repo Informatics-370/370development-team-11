@@ -11,7 +11,7 @@
             <label style="margin-right:11%; color:black;">Name:</label>
             <mat-form-field>
               <input matInput type="text" placeholder="E.g. HR" formControlName="Name" id="Name">
-              <mat-hint align="end">Not more then 32 characters long.</mat-hint>
+              <mat-hint align="end">Not more than 32 characters long.</mat-hint>
               <mat-error *ngIf="myError('Name', 'required')">Name is required</mat-error>
               <mat-error *ngIf="myError('Name', 'maxlength')">Limit exceed</mat-error>
               <mat-error *ngIf="myError('Name', 'minlength')">Name must be 2 to 32 characters long</mat-error>
@@ -24,7 +24,7 @@
             <mat-form-field>
               <input matInput type="text" placeholder="E.g. Human Resources" formControlName="Description"
                 id="Description">
-              <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+              <mat-hint align="end">Not more than 50 characters long.</mat-hint>
               <mat-error *ngIf="myError('Description', 'required')">Description is required</mat-error>
               <mat-error *ngIf="myError('Description', 'maxlength')">Limit exceed</mat-error>
               <mat-error *ngIf="myError('Description', 'pattern')">Description can not contain numbers</mat-error>

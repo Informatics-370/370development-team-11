@@ -45,9 +45,12 @@
 
     </div>
 
+    <div class="d-flex justify-content-center">
+        <span class="loader" id="loading"></span>
+    </div>
 
     <div style="margin-right:1%; margin-left:1%;">
-      <table mat-table [dataSource]="SearchedEmployee" class="mat-elevation-z8">
+      <table mat-table [dataSource]="SearchedEmployee" class="mat-elevation-z8" id="table">
 
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>

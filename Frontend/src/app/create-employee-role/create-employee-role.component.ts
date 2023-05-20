@@ -41,8 +41,24 @@ export class CreateEmployeeRoleComponent implements OnInit {
     this.dataService.RoleValidation(name).subscribe({
       next: (Result) => {
         if (Result == null) {
-          this.dataService.AddRole(this.myForm.value).subscribe(result => {
-            this.router.navigate(['ViewEmpRole'])
+          this.dataService.AddRole(this.myForm.value).subscribe({
+            next: (response) => {
+              console.log(response);
+              var action = "Create";
+              var title = "CREATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/ViewEmpRole']);
+                dialogRef.close();
+              }, duration);
+            }
           })
         }
         else {

@@ -109,7 +109,11 @@ export class EditEmployeeComponent implements OnInit{
   GetRoles() {
     this.dataService.GetRoles().subscribe(result => {
       this.userRoles = result;
+      this.userRoles.forEach((element, index) => {
+        if (element.name == "Admin") this.userRoles.splice(index,1);
+      });
     });
+
   }
 
   GetBranches() {
@@ -188,20 +192,40 @@ export class EditEmployeeComponent implements OnInit{
     var surname = this.myForm.get('Surname')?.value;
     var ts = name.concat(surname);
     var username = ts.concat(cel.toString().substring(4, 7));
+    username = username.replace(/\s/g, "");
 
     
     this.usr.username = username;
     this.usr.role_ID = this.myForm.get('Role')?.value;
 
+    this.dataService.UserValidation(username).subscribe({
+      next: (Result) => {
+        if (Result == null) {
+          this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
+            this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
+              next: (response) => {
+                var action = "Update";
+                var title = "UPDATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-    this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
-      console.log(result);
-      this.dataService.EditEmployee(this.emp, this.employee.employee_ID).subscribe({
-        next: (response) => {
-          console.log(response);
-          var action = "Update";
-          var title = "UPDATE SUCCESSFUL";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  this.router.navigate(['/ViewEmployee']);
+                  dialogRef.close();
+                }, duration);
+              }
+            })
+          })
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: User Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,
@@ -210,11 +234,10 @@ export class EditEmployeeComponent implements OnInit{
 
           const duration = 1750;
           setTimeout(() => {
-            this.router.navigate(['/ViewEmployee']);
             dialogRef.close();
           }, duration);
         }
-      })
+      }
     })
   }
 }

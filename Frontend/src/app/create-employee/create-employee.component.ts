@@ -11,6 +11,7 @@ import { Mandate_Limit } from '../Shared/MandateLimit';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { MailData } from '../Shared/Mail';
 
 
 
@@ -30,6 +31,13 @@ export class CreateEmployeeComponent implements OnInit {
   departments: any[] = []
   branches: any[] = []
   mandate_limits: any[] = []
+
+  mail: MailData = {
+    Name: '',
+    Username: '',
+    Password: '',
+    Email: ''
+  }
 
   br: Branch = {
     branch_ID: 0,
@@ -105,6 +113,9 @@ export class CreateEmployeeComponent implements OnInit {
   GetRoles() {
     this.dataService.GetRoles().subscribe(result => {
       this.roles = result;
+      this.roles.forEach((element, index) => {
+        if (element.name == "Admin") this.roles.splice(index, 1);
+      });
     });
   }
 
@@ -154,6 +165,9 @@ export class CreateEmployeeComponent implements OnInit {
     var surname = this.myForm.get('EmployeeSurname')?.value;
     var ts = name.concat(surname);
     var username = ts.concat(cel.substring(4, 7));
+    username = username.replace(/\s/g, "");
+    
+
 
     this.rl = this.myForm.get('Role_ID')?.value;
     this.rl.role_ID = 0;
@@ -177,6 +191,12 @@ export class CreateEmployeeComponent implements OnInit {
     this.emp.department = this.dep;
     this.emp.mandate_limit = this.ml;
     this.emp.user.username = username;
+    
+    this.mail.Name = name;
+    this.mail.Username = username;
+    this.mail.Password = newPassword;
+    this.mail.Email = this.myForm.get('Email')?.value;
+    document.getElementById('loading').style.display = 'block';
 
     //console.log(cel.substring(7,3));
     //console.log(username);
@@ -187,9 +207,30 @@ export class CreateEmployeeComponent implements OnInit {
         if (Result == null) {
           this.dataService.AddUser(this.usr).subscribe(result => {
             this.dataService.AddEmployee(this.emp).subscribe(r => {
-              this.router.navigate(['ViewEmployee'])
-            })
+              this.dataService.SendEmail(this.mail).subscribe({
+                next: (response) => {
 
+                  if (response) {
+                    hideloader();
+                  }
+
+                  var action = "Create";
+                  var title = "CREATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
+
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewEmployee']);
+                    dialogRef.close();
+                  }, duration);
+                }
+              })
+            })
           })
         }
         else {
@@ -209,6 +250,10 @@ export class CreateEmployeeComponent implements OnInit {
         }
       }
     })
+    function hideloader() {
+      document.getElementById('loading')
+        .style.display = 'none';
+    }
       
   }
 }
