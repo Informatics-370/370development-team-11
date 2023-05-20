@@ -14,7 +14,7 @@ import { Department } from 'src/app/Shared/Department';
 })
 export class CreateDepartmentComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
-  constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.myForm = new FormGroup({
@@ -25,10 +25,35 @@ export class CreateDepartmentComponent implements OnInit {
   
 
   onSubmit() {
-    console.log(this.myForm.value);
-    this.dataService.AddDepartments(this.myForm.value).subscribe(result => {
-      this.router.navigate(['ViewDepartment'])    
+
+    var name = this.myForm.get('name')?.value;
+
+    this.dataService.DepartmentValidation(name).subscribe({
+      next: (Result) => {
+        if (Result == null) {
+          this.dataService.AddDepartments(this.myForm.value).subscribe(result => {
+            this.router.navigate(['ViewDepartment'])
+          })
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: Department Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
+      }
     })
+
+
   }
  
   public myError = (controlName: string, errorName: string) => {

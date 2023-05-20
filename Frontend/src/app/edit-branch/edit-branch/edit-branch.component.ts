@@ -3,7 +3,10 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn,
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/DataService/data-service';
 import { Branch } from 'src/app/Shared/Branch';
-
+import { MatDialog } from '@angular/material/dialog';
+import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-edit-branch',
   templateUrl: './edit-branch.component.html',
@@ -13,7 +16,7 @@ export class EditBranchComponent implements OnInit{
   public myForm !: FormGroup;
 
   Branch:any
-  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.myForm = new FormGroup({
@@ -46,8 +49,29 @@ export class EditBranchComponent implements OnInit{
   }
 
   onSubmit() {
-    this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe(result => {
-      this.router.navigate(['ViewBranch'])
+    var name = this.myForm.get('name')?.value;
+
+    this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe({
+      next: (response) => {
+        var action = "Update";
+        var title = "UPDATE SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 1750;
+        setTimeout(() => {
+          this.router.navigate(['/ViewBranch']);
+          dialogRef.close();
+        }, duration);
+      }
     })
+
+
+
+
   }
 }

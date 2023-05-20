@@ -50,9 +50,9 @@ export class RequestCreateComponent implements OnInit {
   Onboard_Request: OnboardRequest = {
     onboard_Request_Id: 0,
     user_Id: 1,
-    vendor_ID: 0,
-    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0 },
-    users: { user_Id: 0, role_ID: 0, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', role: this.rl },
+    vendor_ID:0,
+    vendor: { vendor_ID:0,vendor_Status_ID:0,vendor_Status:this.VStatus,name: '',email: '', number_Of_Times_Used:0},
+    users: {user_Id: 0,role_ID:0,username:'',password:'',profile_Picture:'./assets/Images/Default_Profile.jpg', role: this.rl},
     quotes: '',
   }
 

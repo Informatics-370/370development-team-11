@@ -53,7 +53,7 @@ namespace ProcionAPI.Controllers
             }
 
         [HttpPut]
-        [Route("EditBracnh/{Branch_ID}")]
+        [Route("EditBranch/{branch_ID}")]
         public async Task<ActionResult<Department>> EditBranch(int Branch_ID, Branch EditBranchRequest)
         {
             try
@@ -116,12 +116,12 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
-        [Route("BranchValidation/{name}")]
-        public async Task<IActionResult> BranchValidation([FromRoute] string name)
+        [Route("BranchValidation/{street}")]
+        public async Task<IActionResult> BranchValidation([FromRoute] string street)
         {
             try
             {
-                var result = await _branchRepository.BranchValidationAsync(name);
+                var result = await _branchRepository.BranchValidationAsync(street);
                 return Ok(result);
             }
             catch (Exception)

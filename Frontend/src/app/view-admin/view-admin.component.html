@@ -11,10 +11,10 @@
       <a mat-list-item class="uni-font" routerLink="/ViewEmployee">Employees</a>
       <a mat-list-item class="uni-font" routerLink="/ViewAdmin">Admins</a>
       <a mat-list-item class="uni-font" routerLink="/ViewEmpRole">Roles</a>
-      <a mat-list-item class="uni-font">Departments</a>
-      <a mat-list-item class="uni-font">Branch</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewDepartment">Departments</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewBranch">Branch</a>
       <a mat-list-item class="uni-font">Delegation of Authority</a>
-      <a mat-list-item class="uni-font">Mandate Limits</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewMandateLimit">Mandate Limits</a>
       <a mat-list-item class="uni-font">Manage Help</a>
       <a mat-list-item class="uni-font">Settings</a>
     </mat-nav-list>
@@ -106,11 +106,13 @@
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns" style="background-color:#244688;"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns" style="background-color:#244688;"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+      
+       
     </div>
-
+    
 
 
   </mat-sidenav-content>

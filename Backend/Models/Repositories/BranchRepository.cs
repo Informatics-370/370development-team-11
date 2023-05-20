@@ -42,9 +42,9 @@ namespace ProcionAPI.Models.Repositories
        
 
 
-        public async Task<Branch> BranchValidationAsync(string name)
+        public async Task<Branch> BranchValidationAsync(string street)
         {
-            Branch ExistingBranch = await _dbContext.Branch.FirstOrDefaultAsync(x => x.Name == name);
+            Branch ExistingBranch = await _dbContext.Branch.FirstOrDefaultAsync(x => x.Street == street);
             if (ExistingBranch != null)
             {
                 return ExistingBranch;
