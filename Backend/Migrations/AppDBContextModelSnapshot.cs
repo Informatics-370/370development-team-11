@@ -772,7 +772,7 @@ namespace ProcionAPI.Migrations
                         {
                             Mandate_ID = 1,
                             Ammount = 10000.0,
-                            Date = new DateTime(2023, 5, 13, 16, 8, 6, 854, DateTimeKind.Local).AddTicks(9228)
+                            Date = new DateTime(2023, 5, 20, 22, 11, 52, 329, DateTimeKind.Local).AddTicks(8171)
                         });
                 });
 
@@ -850,13 +850,41 @@ namespace ProcionAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Status_ID")
+                        .HasColumnType("int");
+
                     b.HasKey("Onboard_Request_Id", "User_Id", "Vendor_ID");
+
+                    b.HasIndex("Status_ID");
 
                     b.HasIndex("User_Id");
 
                     b.HasIndex("Vendor_ID");
 
                     b.ToTable("Onboard_Request");
+                });
+
+            modelBuilder.Entity("ProcionAPI.Models.Entities.Onboard_Status", b =>
+                {
+                    b.Property<int>("Status_ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Status_ID"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.HasKey("Status_ID");
+
+                    b.ToTable("Onboard_Status");
                 });
 
             modelBuilder.Entity("ProcionAPI.Models.Entities.POPI", b =>
@@ -1222,6 +1250,12 @@ namespace ProcionAPI.Migrations
                             Role_ID = 1,
                             Description = "Managing Director",
                             Name = "MD"
+                        },
+                        new
+                        {
+                            Role_ID = 2,
+                            Description = "Admin",
+                            Name = "Admin"
                         });
                 });
 
@@ -1262,12 +1296,16 @@ namespace ProcionAPI.Migrations
                     b.Property<bool>("MD_Approval")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Vendor_Detail_ID")
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Vendor_ID")
                         .HasColumnType("int");
 
                     b.HasKey("Sole_Supplier_ID");
 
-                    b.HasIndex("Vendor_Detail_ID");
+                    b.HasIndex("Vendor_ID");
 
                     b.ToTable("Sole_Supplier");
                 });
@@ -1336,6 +1374,14 @@ namespace ProcionAPI.Migrations
                             Profile_Picture = "test",
                             Role_ID = 1,
                             Username = "JDoe"
+                        },
+                        new
+                        {
+                            User_Id = 2,
+                            Password = "Admin",
+                            Profile_Picture = "test",
+                            Role_ID = 2,
+                            Username = "Admin"
                         });
                 });
 
@@ -1394,6 +1440,9 @@ namespace ProcionAPI.Migrations
                     b.Property<int>("Number_Of_Times_Used")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Sole_Supplier_Provided")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Vendor_Status_ID")
                         .HasColumnType("int");
 
@@ -1402,6 +1451,26 @@ namespace ProcionAPI.Migrations
                     b.HasIndex("Vendor_Status_ID");
 
                     b.ToTable("Vendor");
+
+                    b.HasData(
+                        new
+                        {
+                            Vendor_ID = 1,
+                            Email = "BE@gmail.com",
+                            Name = "why",
+                            Number_Of_Times_Used = 0,
+                            Sole_Supplier_Provided = false,
+                            Vendor_Status_ID = 2
+                        },
+                        new
+                        {
+                            Vendor_ID = 2,
+                            Email = "tell@gmail.com",
+                            Name = "tell",
+                            Number_Of_Times_Used = 0,
+                            Sole_Supplier_Provided = false,
+                            Vendor_Status_ID = 2
+                        });
                 });
 
             modelBuilder.Entity("ProcionAPI.Models.Entities.Vendor_Agreement", b =>
@@ -1474,6 +1543,14 @@ namespace ProcionAPI.Migrations
                     b.HasKey("Vendor_Category_ID");
 
                     b.ToTable("Vendor_Category");
+
+                    b.HasData(
+                        new
+                        {
+                            Vendor_Category_ID = 1,
+                            Description = "General supplier",
+                            Name = "General supplier"
+                        });
                 });
 
             modelBuilder.Entity("ProcionAPI.Models.Entities.Vendor_Consumable", b =>
@@ -1546,7 +1623,7 @@ namespace ProcionAPI.Migrations
 
                     b.Property<string>("Branch_Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(1)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Contact_Person_ContactNum")
                         .IsRequired()
@@ -1560,8 +1637,8 @@ namespace ProcionAPI.Migrations
 
                     b.Property<string>("Contact_Person_Name")
                         .IsRequired()
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<string>("Contact_Person_Title")
                         .IsRequired()
@@ -1685,10 +1762,7 @@ namespace ProcionAPI.Migrations
             modelBuilder.Entity("ProcionAPI.Models.Entities.Vendor_License", b =>
                 {
                     b.Property<int>("License_No")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("License_No"));
 
                     b.Property<string>("License_Doc_Upload")
                         .IsRequired()
@@ -1752,10 +1826,7 @@ namespace ProcionAPI.Migrations
             modelBuilder.Entity("ProcionAPI.Models.Entities.Vendor_Registration", b =>
                 {
                     b.Property<int>("Company_Registration_Number")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Company_Registration_Number"));
 
                     b.Property<string>("Proof_Of_Registration_Doc")
                         .IsRequired()
@@ -1799,6 +1870,12 @@ namespace ProcionAPI.Migrations
                             Vendor_Status_ID = 1,
                             Description = "more",
                             Name = "pain"
+                        },
+                        new
+                        {
+                            Vendor_Status_ID = 2,
+                            Description = "approved",
+                            Name = "approved"
                         });
                 });
 
@@ -1824,10 +1901,7 @@ namespace ProcionAPI.Migrations
             modelBuilder.Entity("ProcionAPI.Models.Entities.Vendor_Vat", b =>
                 {
                     b.Property<int>("Vat_Registration_Number")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Vat_Registration_Number"));
 
                     b.Property<string>("VAT_Registration_Document")
                         .IsRequired()
@@ -2063,6 +2137,12 @@ namespace ProcionAPI.Migrations
 
             modelBuilder.Entity("ProcionAPI.Models.Entities.Onboard_Request", b =>
                 {
+                    b.HasOne("ProcionAPI.Models.Entities.Onboard_Status", "Onboard_Status")
+                        .WithMany()
+                        .HasForeignKey("Status_ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ProcionAPI.Models.Entities.User", "Users")
                         .WithMany()
                         .HasForeignKey("User_Id")
@@ -2074,6 +2154,8 @@ namespace ProcionAPI.Migrations
                         .HasForeignKey("Vendor_ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Onboard_Status");
 
                     b.Navigation("Users");
 
@@ -2228,13 +2310,13 @@ namespace ProcionAPI.Migrations
 
             modelBuilder.Entity("ProcionAPI.Models.Entities.Sole_Supplier", b =>
                 {
-                    b.HasOne("ProcionAPI.Models.Entities.Vendor_Detail", "Vendor_Detail")
+                    b.HasOne("ProcionAPI.Models.Entities.Vendor", "Vendor")
                         .WithMany()
-                        .HasForeignKey("Vendor_Detail_ID")
+                        .HasForeignKey("Vendor_ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Vendor_Detail");
+                    b.Navigation("Vendor");
                 });
 
             modelBuilder.Entity("ProcionAPI.Models.Entities.Temporary_Access", b =>
