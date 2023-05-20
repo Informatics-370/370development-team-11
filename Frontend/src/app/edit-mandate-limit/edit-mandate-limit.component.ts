@@ -39,7 +39,7 @@ export class EditMandateLimitComponent {
   }
 
   onSubmit(): void {
-    console.log(this.currentMandateLimit.mandate_ID)
+    console.log(this.currentMandateLimit)
     this.dataService.EditMandateLimit(this.currentMandateLimit.mandate_ID, this.currentMandateLimit).subscribe(result => {
       this.router.navigate(['/ViewMandateLimit']);
     });

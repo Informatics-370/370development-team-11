@@ -42,6 +42,11 @@ import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.compo
 import { ViewBranchComponent } from './view-branch/view-branch/view-branch.component';
 import { LoginComponent } from './login/login.component';
 import { HomePageComponent } from './home-page/home-page.component';
+import { ViewBudgetCategoryComponent } from './view-budget-category/view-budget-category.component';
+import { CreateBudgetCategoryComponent } from './create-budget-category/create-budget-category.component';
+import { EditBudgetCategoryComponent } from './edit-budget-category/edit-budget-category.component';
+import { ViewBudgetAllocationComponent } from './view-budget-allocation/view-budget-allocation.component';
+import { CreateBudgetAllocationComponent } from './create-budget-allocation/create-budget-allocation.component';
 
 
 const routes: Routes = [
@@ -171,6 +176,26 @@ const routes: Routes = [
     path: 'EditBranch/:branch_ID',
     component: EditBranchComponent
   },
+  {
+    path: 'ViewBudgetCategory',
+    component: ViewBudgetCategoryComponent
+  },
+  {
+    path: 'AddBudgetCategory',
+    component: CreateBudgetCategoryComponent
+  },
+  {
+    path: 'EditBudgetCategory/:id',
+    component: EditBudgetCategoryComponent
+  },
+  {
+    path: 'ViewBudgetAllocation',
+    component: ViewBudgetAllocationComponent
+  },
+  {
+    path: 'AddBudgetAllocation',
+    component: CreateBudgetAllocationComponent
+  }
 ];
 
 @NgModule({
