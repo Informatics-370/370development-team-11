@@ -70,10 +70,7 @@
                 <ng-container matColumnDef="delete">
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let Category" style="width:140px;">
-                        <button mat-raised-button
-                            [style.background-color]="hoveredButton === Category.consumable_Category_ID ? '#FE4945' : '#22afbe'"
-                            (mouseenter)="hoveredButton = Category.consumable_Category_ID"
-                            (mouseleave)="hoveredButton = null"
+                        <button mat-raised-button id="DeleteButton"
                             (click)="DeleteCategory(this.Category.consumable_Category_ID)"><mat-icon matPrefix
                                 style="margin-right:2%;">delete</mat-icon>Delete</button>
                     </td>
