@@ -131,7 +131,7 @@ import { DeleteBudgetAllocationComponent } from './delete-budget-allocation/dele
     VendordetailsViewComponent,
     VendorCreateChoiceComponent,
     LoginComponent,
-    HomePageComponent
+    HomePageComponent,
     DeleteMandateLimitComponent,
     ViewBudgetCategoryComponent,
     CreateBudgetCategoryComponent,
