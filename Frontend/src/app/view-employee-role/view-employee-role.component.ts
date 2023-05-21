@@ -17,9 +17,10 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
   styleUrls: ['./view-employee-role.component.css']
 })
 export class ViewEmployeeRoleComponent implements OnInit {
- 
+
   displayedColumns: string[] = ['id', 'name', 'description', 'action', 'delete'];
   roleDelete: any
+  RoleToUse: string = "";
 
   RoleToDelete: Role = {
     role_ID: 0,
@@ -35,6 +36,7 @@ export class ViewEmployeeRoleComponent implements OnInit {
   searchWord: string = "";
 
   ngOnInit() {
+    this.RoleToUse = localStorage.getItem("Role")
     this.GetRoles();
   }
 
@@ -67,7 +69,7 @@ export class ViewEmployeeRoleComponent implements OnInit {
     }
   }
 
- 
+
 
   DeleteEmpRole(id: Number) {
     this.dataService.GetUsers().subscribe({
@@ -96,7 +98,7 @@ export class ViewEmployeeRoleComponent implements OnInit {
             this.RoleToDelete.name = this.roleDelete.name;
             this.RoleToDelete.description = this.roleDelete.description;
           });
-         
+
           var action = "ERROR";
           var title = "ERROR: Category In Use";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + this.RoleToDelete.name + " <strong style='color:red'>IS ASSOCIATED WITH A USER!</strong><br> Please remove the role from the user to continue with deletion.");
@@ -113,6 +115,6 @@ export class ViewEmployeeRoleComponent implements OnInit {
         }
       }
     })
-    
+
   }
 }

@@ -45,7 +45,7 @@
 
     <div class="d-flex justify-content-center">
       <span class="loader" id="loading"></span>
-  </div>
+    </div>
 
     <div style="margin-right:1%; margin-left:1%;">
 
@@ -92,23 +92,16 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="action">
+
+        <ng-container matColumnDef="delete">
           <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let Branches" style="width:100px;">
-            <button mat-raised-button routerLink="/EditBranch/{Branches.branch_ID}"
-              style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 85px; margin-top: 0.5%;background-color: #94CC5B;"
-              type="button"><mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Edit</button>
+          <td mat-cell *matCellDef="let Branches" style="width:140px;">
+            <button id="DeleteButton" mat-raised-button
+              style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;"
+              (click)="DeleteBranch(this.Branches.branch_ID)"><mat-icon matPrefix
+                style="margin-right:10%;">delete</mat-icon>Delete</button>
           </td>
         </ng-container>
-          <ng-container matColumnDef="delete">
-              <th mat-header-cell *matHeaderCellDef></th>
-              <td mat-cell *matCellDef="let Branches" style="width:140px;">
-                  <button id="DeleteButton" mat-raised-button
-                      style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;"
-                      (click)="DeleteBranch(this.Branches.branch_ID)"><mat-icon matPrefix
-                          style="margin-right:10%;">delete</mat-icon>Delete</button>
-              </td>
-          </ng-container>
 
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns" style="background-color:#244688;"></tr>
