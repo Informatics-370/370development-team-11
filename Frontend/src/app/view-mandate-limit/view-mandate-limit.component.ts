@@ -19,8 +19,10 @@ export class ViewMandateLimitComponent implements OnInit {
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService) { }
 
   Mandate_Limits: Mandate_Limit[] = [];
+  RoleToUse: string = "";
 
   ngOnInit() {
+    this.RoleToUse = localStorage.getItem("Role")
     this.GetMandateLimits();
   }
 
