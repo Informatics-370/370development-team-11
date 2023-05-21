@@ -89,7 +89,7 @@ export class DataService {
   CategoryValidation(name: String): Observable<ConsumableCategory> {
     return this.httpClient.get<ConsumableCategory>(`${this.apiUrl}ConsumableCategory/CategoryValidation/` + name, this.httpOptions)
   }
-  
+
   //--------------------------------------------------------------------------------------Branch--------------------------------------------------------------------------------------
   GetBranches(): Observable<any> {
     return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetBranches`).pipe(map(result => result))
@@ -373,7 +373,7 @@ export class DataService {
   EditMandateLimit(mlID: number | Number, ml: Mandate_Limit,) {
     return this.httpClient.put(`${this.apiUrl}Mandate/EditMandateLimit/${mlID}`, ml, this.httpOptions)
   }
-  
+
   //--------------------------------------------------------------------------------------User--------------------------------------------------------------------------------------
   GetUsers(): Observable<any> {
     return this.httpClient.get<User[]>(`${this.apiUrl}User/GetUsers`).pipe(map(result => result))
@@ -402,7 +402,7 @@ export class DataService {
   SendEmail(mail: MailData) {
     return this.httpClient.post(`${this.apiUrl}Mail/sendemailusingtemplate`, mail, this.httpOptions)
   }
-  
+
   //--------------------------------------------------------------------------------------Employee--------------------------------------------------------------------------------------
   GetEmployees(): Observable<any> {
     return this.httpClient.get<Employee[]>(`${this.apiUrl}User/GetEmployees`).pipe(map(result => result))
@@ -475,38 +475,38 @@ export class DataService {
   }
 
   //--------------------------------------------------------------------------------------Onboard Request--------------------------------------------------------------------------------------
-  GetAllOnboardRequest(): Observable<any> {
-    return this.httpClient.get<VendorOnboardRequestVM[]>(`${this.apiUrl}OnboardRequest/GetAllOnboardRequest`).pipe(map(result => result))
-  }
+  // GetAllOnboardRequest(): Observable<any> {
+  //   return this.httpClient.get<VendorOnboardRequestVM[]>(`${this.apiUrl}OnboardRequest/GetAllOnboardRequest`).pipe(map(result => result))
+  // }
 
-  AddOnboardRequest(AddRequest: OnboardRequest) {
-    return this.httpClient.post(`${this.apiUrl}OnboardRequest/CreateOnboardRequest`, AddRequest, this.httpOptions)
-  }
+  // AddOnboardRequest(AddRequest: OnboardRequest) {
+  //   return this.httpClient.post(`${this.apiUrl}OnboardRequest/CreateOnboardRequest`, AddRequest, this.httpOptions)
+  // }
 
-  GetVendorsRequest() {
-    return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendors`).pipe(map(result => result))
-  }
+  // GetVendorsRequest() {
+  //   return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendors`).pipe(map(result => result))
+  // }
 
   GetRequest(RequestID: number) {
     return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetRequest/` + RequestID).pipe(map(result => result))
   }
-  
 
-  
 
-  
 
-  
-  
 
-  
 
-  
 
-  
-  
 
-  
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -529,10 +529,12 @@ export class DataService {
   //   return this.httpClient.get(`${this.apiUrl}Branch/GetBranch`+'/' + Branch_ID).pipe(map(result => result))
   // }
 
-  
+
 
   login(username: string, password: string) {
-    return this.httpClient.get<User>(`${this.apiUrl}User/Login/` + username + "/" + password, this.httpOptions)
+    console.log(username)
+    console.log(password)
+    return this.httpClient.get<User>(`${this.apiUrl}User/Login/` + username + "/" + password, this.httpOptions).pipe(map(result => result))
   }
 
 }

@@ -142,7 +142,7 @@ export class CreateEmployeeComponent implements OnInit {
     return this.myForm.controls;
   }
 
-  
+
 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
@@ -155,23 +155,23 @@ export class CreateEmployeeComponent implements OnInit {
 
 
   onSubmit() {
-    
-    var newPassword = '';
-    newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
 
-    
+    var newPassword = '';
+    newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
+
+
     var cel = this.myForm.get('CellPhone_Num')?.value;
     var name = this.myForm.get('EmployeeName')?.value;
     var surname = this.myForm.get('EmployeeSurname')?.value;
     var ts = name.concat(surname);
     var username = ts.concat(cel.substring(4, 7));
     username = username.replace(/\s/g, "");
-    
+
 
 
     this.rl = this.myForm.get('Role_ID')?.value;
     this.rl.role_ID = 0;
-    
+
     this.usr.username = username;
     this.usr.password = newPassword;
     this.usr.role = this.rl;
@@ -191,7 +191,7 @@ export class CreateEmployeeComponent implements OnInit {
     this.emp.department = this.dep;
     this.emp.mandate_limit = this.ml;
     this.emp.user.username = username;
-    
+
     this.mail.Name = name;
     this.mail.Username = username;
     this.mail.Password = newPassword;
@@ -254,7 +254,7 @@ export class CreateEmployeeComponent implements OnInit {
       document.getElementById('loading')
         .style.display = 'none';
     }
-      
+
   }
 }
 

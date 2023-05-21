@@ -14,7 +14,7 @@
                                     <br />
                                     <mat-form-field>
                                         <input matInput type="text" placeholder="" formControlName="UserName" id="Name"
-                                            required [(ngModel)]="username">
+                                            required [(ngModel)]="userName">
                                     </mat-form-field>
                                 </mat-card-content>
                             </td>
@@ -32,9 +32,11 @@
                     </table>
 
 
+
                 </mat-card-subtitle>
             </mat-card-header>
             <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
+
                 <button mat-raised-button type="submit"
                     style="width: 150px; font-size: 14px; height: 42px; margin: 10px;" [disabled]="!myForm.valid"
                     [ngStyle]="{'background-color': !myForm.valid ? 'rgba(148, 204, 91, 0.6)' : '#94CC5B','color': !myForm.valid ? 'rgba(255, 255, 255, 0.6)' : 'white'}">Login</button>
