@@ -540,7 +540,9 @@ export class DataService {
 
 
   login(username: string, password: string) {
-    return this.httpClient.get<User>(`${this.apiUrl}User/Login/` + username + "/" + password, this.httpOptions)
+    console.log(username)
+    console.log(password)
+    return this.httpClient.get<User>(`${this.apiUrl}User/Login/` + username + "/" + password, this.httpOptions).pipe(map(result => result))
   }
 
   //Budget Allocations

@@ -50,15 +50,13 @@ export class ViewConsumableCategoryComponent implements OnInit {
   }
 
   GetCategories() {
-    setTimeout(() => {
-      this.dataService.GetCategories().subscribe(result => {
-        let CategoryList: any[] = result
-        CategoryList.forEach((element) => {
-          this.ConsumableCategories.push(element)
-          this.SearchedConsumableCategories.push(element)
-        })
+    this.dataService.GetCategories().subscribe(result => {
+      let CategoryList: any[] = result
+      CategoryList.forEach((element) => {
+        this.ConsumableCategories.push(element)
+        this.SearchedConsumableCategories.push(element)
       })
-    }, 1000);
+    })
   }
 
   GetConsumables() {

@@ -39,16 +39,13 @@ export class ViewConsumableComponent implements OnInit {
   }
 
   GetConsumables() {
-    setTimeout(() => {
-      this.dataService.GetConsumables().subscribe(result => {
-        let ConsumableList: any[] = result
-        ConsumableList.forEach((element) => {
-          this.Consumables.push(element)
-          this.SearchedConsumables.push(element)
-        });
-      })
-    }, 1000);
-
+    this.dataService.GetConsumables().subscribe(result => {
+      let ConsumableList: any[] = result
+      ConsumableList.forEach((element) => {
+        this.Consumables.push(element)
+        this.SearchedConsumables.push(element)
+      });
+    })
   }
   hoveredButton: number | null = null;
 

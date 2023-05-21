@@ -34,7 +34,7 @@ namespace ProcionAPI.Controllers
         }
         [HttpGet]
         [Route("Login/{Username}/{Password}")]
-        public async Task<IActionResult> Login(string Username, string Password)
+        public async Task<IActionResult> Login([FromRoute] string Username, [FromRoute] string Password)
         {
             try
             {

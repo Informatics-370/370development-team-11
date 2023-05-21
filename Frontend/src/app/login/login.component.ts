@@ -17,8 +17,9 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 })
 export class LoginComponent implements OnInit {
 
-  username: string = "";
+  userName: string = "";
   password: string = "";
+  loginConfirm: string = "";
 
   myForm: FormGroup = new FormGroup({});
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
@@ -29,12 +30,19 @@ export class LoginComponent implements OnInit {
       UserName: ['', []],
       Password: ['', []]
     })
+    this.loginConfirm = null;
+    console.log(this.loginConfirm)
   }
 
+
   LoginUser() {
-    this.dataService.login(this.username, this.password).subscribe({
+    this.loginConfirm = localStorage.getItem("User");
+    this.userName = this.myForm.get('UserName')?.value;
+    this.password = this.myForm.get('Password')?.value;
+    this.dataService.login(this.userName, this.password).subscribe({
       next: (response) => {
         if (response != null) {
+          console.log(response)
           localStorage.setItem("User", JSON.stringify(response.username))
           localStorage.setItem("Role", JSON.stringify(response.role.name))
 
@@ -43,9 +51,10 @@ export class LoginComponent implements OnInit {
         }
 
         else {
+          console.log(response)
           var action = "Error";
           var title = "LOGIN FAILED";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The User <strong>" + this.username + "</strong>  <strong style='color:red'> DOES NOT EXIST! </strong>");
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The User <strong>" + this.userName + "</strong>  <strong style='color:red'> DOES NOT EXIST! </strong>");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,
