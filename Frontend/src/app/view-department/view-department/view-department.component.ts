@@ -82,7 +82,14 @@ DeleteDepartment(department_ID: number) {
       EmployeeList.forEach((element) => {
         this.Employees.push(element)
       });
-
+     
+    this.dataService.GetBudgetAllocations().subscribe({
+      next: (result)=> {
+          let Budgetallocationlist: any[] = result
+          Budgetallocationlist.forEach((element) => {
+          this.Budget_Allocation.push(element)
+          });
+     
       
 
       var Count: number = 0;
@@ -130,6 +137,9 @@ DeleteDepartment(department_ID: number) {
           dialogRef.close();
         }, duration);
       }
+
+    }
+  })
     }
   })
 
