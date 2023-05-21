@@ -27,6 +27,7 @@ import { Vendor_Tax } from '../Shared/VendorDetailsIncomeTaxNum';
 import { MailData } from '../Shared/Mail';
 import { BudgetCategory } from '../Shared/BudgetCategory';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
+import { SoleSupplier } from '../Shared/Sole_Supplier';
 
 @Injectable({
   providedIn: 'root'
@@ -485,18 +486,179 @@ export class DataService {
   EditMandateLimit(mlID: Number, ml: Mandate_Limit,) {
     return this.httpClient.put<Mandate_Limit>(`${this.apiUrl}Mandate/EditMandateLimit/${mlID}`, ml, this.httpOptions)
   }
+
+  GetUser(userID: Number) {
+    return this.httpClient.get(`${this.apiUrl}User/GetUser` + "/" + userID).pipe(map(result => result))
+  }
+  GetMandateLimits(): Observable<any> {
+    return this.httpClient.get<Mandate_Limit[]>(`${this.apiUrl}Mandate/GetAllMandateLimits`).pipe(map(result => result))
+  }
+
+  GetMandateLimit(mlID: number) {
+    return this.httpClient.get(`${this.apiUrl}Mandate/GetMandateLimit` + "/" + mlID).pipe(map(result => result))
+  }
+
+  AddMandateLimit(ml: Mandate_Limit) {
+    return this.httpClient.post(`${this.apiUrl}Mandate/AddMandateLimit`, ml, this.httpOptions)
+  }
+
+  EditMandateLimit(mlID: number | Number, ml: Mandate_Limit,) {
+    return this.httpClient.put(`${this.apiUrl}Mandate/EditMandateLimit/${mlID}`, ml, this.httpOptions)
+  }
+
+  //requests
+
+  GetAllOnboardRequest(): Observable<any> {
+    return this.httpClient.get<VendorOnboardRequestVM[]>(`${this.apiUrl}OnboardRequest/GetAllOnboardRequest`).pipe(map(result => result))
+  }
+
+  AddOnboardRequest(AddRequest: OnboardRequest) {
+    return this.httpClient.post(`${this.apiUrl}OnboardRequest/CreateOnboardRequest`, AddRequest, this.httpOptions)
+  }
+
+  GetVendorsRequest() {
+    return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetAllVendor`).pipe(map(result => result))
+  }
+
+  GetRequestByID(RequestID:number): Observable<any> {
+    return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetRequest/${RequestID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  UpdateOnboardRequest(RequestID: number, UpdatedRequest: OnboardRequest,): Observable<OnboardRequest> {
+    return this.httpClient.put<OnboardRequest>(`${this.apiUrl}OnboardRequest/UpdateOnboardRequest/${RequestID}`, UpdatedRequest, this.httpOptions)
+  }
+// /${VendorID} ,VendorID:number
+  DeleteRequest(RequestId:number,VendorID:number): Observable<any> {
+    return this.httpClient.delete<OnboardRequest>(`${this.apiUrl}OnboardRequest/DeleteRequest/${RequestId}/${VendorID}`, this.httpOptions)
+  }
+
+  AddSoleSupplierDetails(VendorID:number,soleSupplier : SoleSupplier) {
+    return this.httpClient.post(`${this.apiUrl}OnboardRequest/AddSoleSupplierDetails/${VendorID}`,soleSupplier, this.httpOptions)
+  }
+
+  GetSoleSupplierByID(VendorID:number): Observable<any> {
+    return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetSoleSupplierByID/${VendorID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  UpdateSoleSupplier(SoleSupplierID: number, UpdatedSoleSupplier: SoleSupplier): Observable<SoleSupplier> {
+    return this.httpClient.put<SoleSupplier>(`${this.apiUrl}OnboardRequest/UpdateSoleSupplier/${SoleSupplierID}`, UpdatedSoleSupplier, this.httpOptions)
+  }
+  
+  GetVendorValidation(sVendorName:string): Observable<any> {
+    return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendorValidation/${sVendorName}`, this.httpOptions).pipe(map(result => result))
+  }
+  
+  //end of request 
+
+  //files
+
+  DeleteFile(RequestNo:string,fileName:string): Observable<any> {
+    return this.httpClient.delete<any>(`${this.apiUrl}OnboardRequest/DeleteFile/${RequestNo}/${fileName}`, this.httpOptions)
+  }
+
+  OnboardFileAdd(RequestNo:string,file:File):  Observable<any> {
+    const formData = new FormData();
+    console.log(file)
+    formData.append('file',file);
+    formData.append('RequestNo', RequestNo)
+    console.log("what")
+    return this.httpClient.post<any>(`${this.apiUrl}OnboardRequest/uploadOnboardFile`,formData, this.httpOptions)
+  }
+
+
+  GetOnboardFiles(RequestNo:string,filename:string): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`, this.httpOptions)
+  }
+  
+  //end of files
+
+  //vendor details
+  GetAllVendorDetails(): Observable<any> {
+    return this.httpClient.get<VendorDetails[]>(`${this.apiUrl}Vendor/GetAllVendorDetails`).pipe(map(result => result))
+  }
+
+  GetVendorDetailByID(VendorDetailID:number): Observable<any> {
+    return this.httpClient.get<VendorDetails>(`${this.apiUrl}Vendor/GetVendorDetailByID/${VendorDetailID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  getAllApprovedVendors(): Observable<any> {
+    return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}Vendor/getAllApprovedVendors`).pipe(map(result => result))
+  }
+
+  GetVendorByID(VendorID: number): Observable<any> {
+    return this.httpClient.get<VendorOnboardRequest>(`${this.apiUrl}Vendor/GetVendorByID/${VendorID}`).pipe(map(result => result))
+  }
+
+  AddVendorDetails(VenDetails:VendorDetails):Observable<any>{
+  return this.httpClient.post<VendorDetails>(`${this.apiUrl}Vendor/AddVendorDetails`,VenDetails, this.httpOptions).pipe(map(result => result))
+ }  
+
+ UpdateVendorDetails(VendorDetailsID:number,VenDetails:VendorDetails ):Observable<VendorDetails>{
+  return this.httpClient.put<VendorDetails>(`${this.apiUrl}Vendor/UpdateVendorDetails/${VendorDetailsID}`,VenDetails, this.httpOptions).pipe(map(result => result))
+ }  
  
 
   DeleteMandateLimit(mlID: Number) {
     return this.httpClient.delete<string>(`${this.apiUrl}Mandate/DeleteMandateLimit` + "/" + mlID, this.httpOptions)
   }
 
+  UpdateVendorStatus(VendorID:number,VendorStatusID:number):Observable<any>{
+    return this.httpClient.put<VendorOnboardRequest>(`${this.apiUrl}Vendor/UpdateVendorStatus/${VendorID}/${VendorStatusID}`, this.httpOptions).pipe(map(result => result))
+   }  
+
+   
+ //GetDifferentTables
+  GetFaxByID(FaxID:number): Observable<any> {
+    return this.httpClient.get<VendorDetails>(`${this.apiUrl}Vendor/GetFaxByID/${FaxID}`, this.httpOptions).pipe(map(result => result))
+  }
+  GetVatByID(VatID:number): Observable<any> {
+    return this.httpClient.get<Vendor_Vat>(`${this.apiUrl}Vendor/GetVatByID/${VatID}`, this.httpOptions).pipe(map(result => result))
+  }
+  GetWebsiteByID(WebsiteID:number): Observable<any> {
+    return this.httpClient.get<Vendor_Website>(`${this.apiUrl}Vendor/GetWebsiteByID/${WebsiteID}`, this.httpOptions).pipe(map(result => result))
+  }
+  GetLicenseByID(LicenseID:number): Observable<any> {
+    return this.httpClient.get<Vendor_License>(`${this.apiUrl}Vendor/GetLicenseByID/${LicenseID}`, this.httpOptions).pipe(map(result => result))
+  }
+  GetAgreementByID(AgreementID:number): Observable<any> {
+    return this.httpClient.get<Vendor_Agreement>(`${this.apiUrl}Vendor/GetAgreementByID/${AgreementID}`, this.httpOptions).pipe(map(result => result))
+  }
+  GetInsuranceByID(InsuranceID:number): Observable<any> {
+    return this.httpClient.get<Vendor_Insurance>(`${this.apiUrl}Vendor/GetInsuranceByID/${InsuranceID}`, this.httpOptions).pipe(map(result => result))
+  }
+  GetPaymentTerms(PaymentTermsID:number): Observable<any> {
+    return this.httpClient.get<Vendor_Payment_Terms>(`${this.apiUrl}Vendor/GetPaymentTerms/${PaymentTermsID}`, this.httpOptions).pipe(map(result => result))
+  }
 
 
 
 
 
+  DeleteRegistrationByID(RegistrationID:number): Observable<any> {
+    return this.httpClient.delete<Vendor_Registration>(`${this.apiUrl}Vendor/DeleteRegistrationByID/${RegistrationID}`, this.httpOptions).pipe(map(result => result))
+  }
+  DeleteIncomeTaxByID(IncomeTaxID:number): Observable<any> {
+    return this.httpClient.delete<Vendor_Tax>(`${this.apiUrl}Vendor/DeleteIncomeTaxByID/${IncomeTaxID}`, this.httpOptions).pipe(map(result => result))
+  }
+  //end of vendor details
+  //vendor validation 
 
+  LicenseNumberVal(LicenseNumber:Number): Observable<any> {
+    return this.httpClient.get<Vendor_License>(`${this.apiUrl}Vendor/LicenseNumberVal/${LicenseNumber}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  CompanyRegNumberVal(CompanyRegNumber:Number):Observable<any>{
+    return this.httpClient.get<Vendor_Registration>(`${this.apiUrl}Vendor/CompanyRegNumberVal/${CompanyRegNumber}`, this.httpOptions).pipe(map(result => result))
+   } 
+  VatRegNumberVal(vatNumber:Number): Observable<any> {
+    return this.httpClient.get<Vendor_Vat>(`${this.apiUrl}Vendor/VatRegNumberVal/${vatNumber}`, this.httpOptions).pipe(map(result => result))
+  }
+  IncomeTaxRegNumberVal(IncomeTaxNumber:Number): Observable<any> {
+    return this.httpClient.get<Vendor_Tax>(`${this.apiUrl}Vendor/IncomeTaxRegNumberVal/${IncomeTaxNumber}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  //end of vendor validation
+  //vendor files
 
 
 

@@ -7,4 +7,5 @@ export interface VendorOnboardRequest {
     name: string;
     email: string;
     number_Of_Times_Used: number;
+    sole_Supplier_Provided: boolean;
 }

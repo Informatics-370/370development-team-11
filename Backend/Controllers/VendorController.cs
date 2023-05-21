@@ -114,6 +114,24 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
+        [HttpPut]
+        [Route("UpdateVendorStatus/{VendorID}/{VendorStatusID}")]
+        public async Task<IActionResult> UpdateVendorStatus(int VendorID, int VendorStatusID)
+        {
+            try
+            {
+                var result = await _VendorRepository.UpdateVendorStatusAsync(VendorID, VendorStatusID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+
         [HttpGet]
         [Route("GetFaxByID/{FaxID}")]
         public async Task<IActionResult> GetFaxByID(int FaxID)
@@ -747,7 +765,7 @@ namespace ProcionAPI.Controllers
                 if (System.IO.File.Exists(filePath))
                 {
                     System.IO.File.Delete(filePath);
-                    return Ok($"File {fileName} deleted successfully");
+                    return Ok(new {fileName});
                 }
                 else
                 {
@@ -759,5 +777,74 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, $"Error deleting file: {ex.Message}");
             }
         }
+
+
+        //validation
+
+        [HttpGet]
+        [Route("VatRegNumberVal/{vatNumber}")]
+        public async Task<IActionResult> VatRegNumberVal(int vatNumber)
+        {
+            try
+            {
+                var result = await _VendorRepository.VatRegNumberValAsync(vatNumber);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("IncomeTaxRegNumberVal/{IncomeTaxNumber}")]
+        public async Task<IActionResult> IncomeTaxRegNumberVal(int IncomeTaxNumber)
+        {
+            try
+            {
+                var result = await _VendorRepository.IncomeTaxRegNumberValAsync(IncomeTaxNumber);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("CompanyRegNumberVal/{CompanyRegNumber}")]
+        public async Task<IActionResult> CompanyRegNumberVal(int CompanyRegNumber)
+        {
+            try
+            {
+                var result = await _VendorRepository.CompanyRegNumberValAsync(CompanyRegNumber);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("LicenseNumberVal/{LicenseNumber}")]
+        public async Task<IActionResult> LicenseNumberVal(int LicenseNumber)
+        {
+            try
+            {
+                var result = await _VendorRepository.LicenseNumberValAsync(LicenseNumber);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
 }
+
+// return Ok($"File {fileName} deleted successfully");

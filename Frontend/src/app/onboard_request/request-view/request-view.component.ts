@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component,OnInit, AfterViewInit ,ViewChild } from '@angular/core';
 import { DataService } from 'src/app/DataService/data-service';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
 import {VendorOnboardRequest} from 'src/app/Shared/VendorOnboardRequest';
@@ -11,6 +11,8 @@ import { ActivatedRoute,Params, Router } from '@angular/router';
 import { SafeHtml } from '@angular/platform-browser';
 import { RequestDeleteComponent } from '../request-delete/request-delete.component';
 import { MatDialog } from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
 
 @Component({
   selector: 'app-request-view',
@@ -26,16 +28,24 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class RequestViewComponent implements OnInit {
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+
   OnboardRequest:VendorOnboardRequestVM[] = [];
   vendor:VendorOnboardRequest[] = [];
-  RequestVendors:any[] = [];
+  RequestVendors:any;
+  ReqVenLen:any[] = [];
   FileDetails:any[] = [];
+  vendorIds:any[] = [];
+  
   private refreshSubscription: Subscription;
   constructor(private RequestService: DataService,private http: HttpClient, private route: ActivatedRoute,private router: Router, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.DisplayAllRequests();
-
+    //this.dataSource = new MatTableDataSource(this.RequestVendors);
+   // console.log(this.dataSource)
     this.refreshSubscription = this.route.queryParams.subscribe((params: Params) => {
       // Check if the 'refresh' parameter exists and is truthy
       if (params.refresh) {
@@ -64,8 +74,10 @@ export class RequestViewComponent implements OnInit {
     this.RequestService.GetAllOnboardRequest().subscribe(result => {let RequestList:any[] = result
       RequestList.forEach((element) => this.OnboardRequest.push(element));
       RequestList.forEach((element) => this.vendor.push(element.vendors));
-      this.RequestVendors = this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)
+      this.RequestVendors =  new MatTableDataSource(this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
+      this.ReqVenLen = this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)
       console.log(RequestList)
+      
       for(let i = 0; i < RequestList.length; i++) {
         this.FileDetails.push({FileURL:"",FileName:""})
         let sFile = RequestList[i].quotes;
@@ -81,14 +93,24 @@ export class RequestViewComponent implements OnInit {
         
         }
         else {
-            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
             this.FileDetails[i].FileURL = ""
-            this.FileDetails[i].FileName = filename; 
+            this.FileDetails[i].FileName = sFile; 
         }
             
-            
+       
       }
+      
+     
+        
+      this.vendorIds = [...new Set(this.OnboardRequest.map(req => req.vendor_ID))]
+      console.log(this.OnboardRequest)
+      console.log(RequestList)
       })
+  }
+
+  getVendorByVendorId(vendorId: number) {
+    // Filter the vendor array based on the vendor ID
+    return this.vendor.filter(ven => ven.vendor_ID === vendorId);
   }
 
   DisplayFile(sFile : string) {
@@ -107,6 +129,19 @@ export class RequestViewComponent implements OnInit {
     
   }
 
+
+  applyFilter(event: Event) {
+
+    const filterValue = (event.target as HTMLInputElement).value;
+
+    this.RequestVendors.filter = filterValue.trim().toLowerCase();
+  
+    if (this.RequestVendors.paginator) {
+      this.RequestVendors.paginator.firstPage();
+    }
+  }
+
+  
   DownloadFile(sFile :string ) {
     if(sFile.length > 20) {
       const formData = new FormData();
@@ -131,8 +166,8 @@ export class RequestViewComponent implements OnInit {
 
   getTotal() {
     let iNumber = 0
-    if (this.RequestVendors.length > 0) {
-      iNumber = (this.RequestVendors[(this.RequestVendors.length-1)].onboard_Request_Id+1)
+    if (this.ReqVenLen.length > 0) {
+      iNumber = (this.ReqVenLen[(this.ReqVenLen.length-1)].onboard_Request_Id+1)
     }
     else {
       iNumber = 1
@@ -149,8 +184,7 @@ export class RequestViewComponent implements OnInit {
     });
   }
 
-  displayedColumns : string[] = ['ID','name','action','delete'];
-  dataSource = this.OnboardRequest;
+  displayedColumns : string[] = ['ID','name','Status','action','delete'];
+  //dataSource = this.OnboardRequest;
   expandedElement: VendorOnboardRequest | undefined;
 }
-//, 'Created By' "Http failure response for https://localhost:7186/api/OnboardRequest/GetAllOnboardRequest: 404 OK"

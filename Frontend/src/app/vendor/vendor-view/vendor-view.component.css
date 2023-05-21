@@ -1,10 +1,4 @@
-mat-sidenav {
-    margin-right: 16px;
-    width: 200px;
-    background: white;
-    padding: 16px;
-    text-align: center;
-  }
+
   
   .content {
     /* background-color: lightgrey;
@@ -23,7 +17,10 @@ mat-sidenav {
     width: 100%;
   }
   
-  
+  .uni-font {
+    font-size: 16pt;
+  }
+
   .example-container {
     position: absolute;
     top: 63px;
@@ -31,7 +28,7 @@ mat-sidenav {
     left: 0;
     right: 0;
     background: #eee;
-    border-top:solid;
+    border-top:2px solid;
   }
   
   

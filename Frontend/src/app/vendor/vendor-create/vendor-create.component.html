@@ -9,7 +9,7 @@
     <mat-step [stepControl]="CompanyContactInfoFormGroup" >
       <form [formGroup]="CompanyContactInfoFormGroup" style="text-align: -webkit-center;">
         <ng-template matStepLabel>COMPANY CONTACT INFORMATION </ng-template>
-        <table>
+        <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
             <tr>
                 <td><label>Company Name:</label></td>
                 <td> 
@@ -41,7 +41,7 @@
                 <td> <label>Company Registered Address:</label></td>
                 <td>
                     <mat-form-field appearance="fill">
-                        <input matInput placeholder="Company Registered Address" formControlName="CompanyRegisteredAddress" [errorStateMatcher]="matcher">
+                        <textarea style="height: 80px" matInput placeholder="Company Registered Address" formControlName="CompanyRegisteredAddress" [errorStateMatcher]="matcher"></textarea>
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyRegisteredAddress'].hasError('required')">Company registered address is required</mat-error>
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyRegisteredAddress'].hasError('maxlength')">Company registered address cannot be more than 100 characters long</mat-error>
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyRegisteredAddress'].hasError('pattern')">Company registered address number cannot contain characters</mat-error>
@@ -116,21 +116,25 @@
                 </td>
             </tr>
         </table>
-        <div >
+        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 700px;justify-content: center;">
+            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/vendor-view"> Cancel</button>
+            <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
+           </div>
+        <!-- <div >
             <button mat-button routerLink="/vendor-view">Cancel</button>
           <button mat-button matStepperNext>Next</button>
-        </div>
+        </div> -->
       </form>
     </mat-step>
     <mat-step [stepControl]="CompanyOverviewFormGroup" >
       <form [formGroup]="CompanyOverviewFormGroup" style="text-align: -webkit-center;">
         <ng-template matStepLabel>COMPANY OVERVIEW  </ng-template>
-        <table  >
+        <table style="background-color: white;border:1px solid #244688;border-bottom: white;" >
             <tr>
                 <td><label>Details Of Service Or Goods:</label></td>
                 <td> 
                     <mat-form-field appearance="fill" >
-                        <input matInput placeholder="Details Of Service Or Goods" formControlName="DetailsOfServiceOrGoods" [errorStateMatcher]="matcher">
+                        <textarea matInput placeholder="Details Of Service Or Goods" formControlName="DetailsOfServiceOrGoods" [errorStateMatcher]="matcher"></textarea>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['DetailsOfServiceOrGoods'].hasError('required')">Details of service or goods is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['DetailsOfServiceOrGoods'].hasError('maxlength')">Details cannot be more than 50 characters long</mat-error>
                       </mat-form-field>
@@ -210,9 +214,9 @@
                 <td>
                     <mat-checkbox formControlName="PaymentTermsCheck" (click)="PaymentTermsChange()">Add Payment Terms?</mat-checkbox> <br>
                     <mat-form-field appearance="fill" *ngIf="PaymentTermsChecker === true;" >
-                        <input matInput placeholder="Payment Terms" formControlName="PaymentTerms"  [errorStateMatcher]="matcher">
+                        <textarea matInput placeholder="Payment Terms" formControlName="PaymentTerms"  [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['PaymentTerms'].hasError('required')">Payment Terms is required</mat-error>
-                       
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['PaymentTerms'].hasError('maxlength')">Payment Terms cannot be more than 50 characters long</mat-error>
                       </mat-form-field>    
                 </td>
             </tr>
@@ -222,7 +226,7 @@
                 <td>
                     <mat-checkbox formControlName="LicenseOrAccreditationCheck" (click)="LicenseOrAccreditationChange()">Add License Or Accreditation details?</mat-checkbox> <br>
                     <mat-form-field appearance="fill" *ngIf="LicenseOrAccreditationChecker === true;" >
-                        <input matInput placeholder="License Or Accreditation Number" formControlName="LicenseOrAccreditationNumber"  [errorStateMatcher]="matcher">
+                        <input matInput placeholder="License Or Accreditation Number" formControlName="LicenseOrAccreditationNumber"  [errorStateMatcher]="matcher"></textarea>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['LicenseOrAccreditationNumber'].hasError('required')">License or accreditation number is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['LicenseOrAccreditationNumber'].hasError('pattern')">License or accreditation number cannot contain numbers or other unique characters</mat-error> 
                       </mat-form-field>
@@ -235,16 +239,20 @@
                 </td>
             </tr>
         </table>
-        <div >
+        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 700px;justify-content: center;">
+            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >back</button>
+            <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
+           </div>
+        <!-- <div >
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>
-        </div>
+        </div> -->
       </form>
     </mat-step>
     <mat-step [stepControl]="BankDetailsFormGroup" >
         <form [formGroup]="BankDetailsFormGroup" style="text-align: -webkit-center;">
           <ng-template matStepLabel>BANKING INFORMATION</ng-template>
-          <table >
+          <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
             <tr>
                 <td><label>Bank Name:</label></td>
                 <td> 
@@ -330,20 +338,31 @@
                       <input  id="file" formControlName="BankStampedConfirmationLetter" type="file" class="file-upload" (change)="FileStorage(6,$event)">  
                 </td>
             </tr>
-        </table>     
-          <div>
+        </table>  
+        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 700px;justify-content: center;">
+            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >back</button>
+            <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
+           </div>      
+          <!-- <div>
             <button mat-button matStepperPrevious>Back</button>
             <button mat-button matStepperNext>Next</button>
-          </div>
+          </div> -->
         </form>
       </mat-step>
     <mat-step>
       <ng-template matStepLabel>Done</ng-template>
-      <p>*Please ensure that all details are correct before adding a new vendor*</p>
+      <div style="text-align: -webkit-center">
+        <p style="margin: 0px;background-color: #244688;color: white;width: 700px;"><b>*Please ensure that all details are correct before updating anything on the vendor*</b></p> 
+        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 700px;justify-content: center;">
+          <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
+          <button mat-raised-button (click)="Create()" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Update </button>
+         </div>
+      </div> 
+      <!-- <p>*Please ensure that all details are correct before adding a new vendor*</p>
       <div>
         <button mat-button matStepperPrevious>Back</button>
         <button mat-button (click)="Create()">Create</button>
-      </div>
+      </div> -->
     </mat-step>
   </mat-stepper>
 </div>

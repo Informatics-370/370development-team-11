@@ -13,7 +13,8 @@ namespace ProcionAPI.Models.Repositories
         Task<Vendor_Detail[]> AddVendorDetailsAsync(Vendor_Detail VenDetails);
         Task<Vendor_Detail> UpdateVendorDetailsAsync(int VendorDetailsID, Vendor_Detail VenDetails);
         Task<Vendor_Detail> DeleteVendorDetailsAsync(int VendorDetailsID);
-        
+
+        Task<Vendor> UpdateVendorStatusAsync(int VendorID, int VendorStatusID);
         ///
         Task<Vendor_Fax> GetFaxByIDAsync(int FaxID);
         Task<Vendor_Vat> GetVatByIDAsync(int VatID);
@@ -58,6 +59,10 @@ namespace ProcionAPI.Models.Repositories
         Task<Vendor_Registration> DeleteRegistrationByIDAsync(int RegistrationID);
         Task<Vendor_Tax> DeleteIncomeTaxByIDDAsync(int IncomeTaxID);
         ///
-
+        //validation
+        Task<Vendor_Vat> VatRegNumberValAsync(int vatNumber);
+        Task<Vendor_Tax> IncomeTaxRegNumberValAsync(int IncomeTaxNumber);
+        Task<Vendor_Registration> CompanyRegNumberValAsync(int CompanyRegNumber);
+        Task<Vendor_License> LicenseNumberValAsync(int LicenseNumber);
     }
 }

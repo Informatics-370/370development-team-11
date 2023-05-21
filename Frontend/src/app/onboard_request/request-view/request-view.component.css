@@ -1,10 +1,4 @@
-mat-sidenav {
-    margin-right: 16px;
-    width: 200px;
-    background: white;
-    padding: 16px;
-    text-align: center;
-  }
+
 
   .content {
     /* background-color: lightgrey;
@@ -31,7 +25,7 @@ mat-sidenav {
     left: 0;
     right: 0;
     background: #eee;
-    border-top:solid;
+    border-top:2px solid;
   }
 
 
@@ -53,3 +47,14 @@ tr.example-element-row:not(.example-expanded-row):active {
 }
 
 
+#btnHover:hover {
+  background-color: #fe4945;
+}
+
+#btnHover {
+  background-color: #22afbe;
+}
+
+.uni-font {
+  font-size: 16pt;
+}

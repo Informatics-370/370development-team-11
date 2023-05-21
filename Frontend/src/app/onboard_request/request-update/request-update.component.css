@@ -28,7 +28,7 @@ td {
 }
 
 ::ng-deep .mat-mdc-tab-body-content {
-    height:290px!important;
+    height:335px!important;
 }
 
 mat-error {
@@ -50,3 +50,17 @@ mat-form-field{
     
 }
 
+
+#btnHover:hover {
+    background-color: #fe4945;
+  }
+  
+  #btnHover {
+    background-color: #22afbe;
+  }
+
+
+mat-tab-group {
+    border-left: 1px solid #244688;
+    border-right: 1px solid #244688;
+}

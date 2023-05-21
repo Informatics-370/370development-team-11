@@ -133,6 +133,24 @@ namespace ProcionAPI.Models.Repositories
             return RequestToDelete;
         }
 
+        public async Task<Vendor> UpdateVendorStatusAsync(int VendorID, int VendorStatusID)
+        { //also see userid
+            var VendorUpdate = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Vendor_ID == VendorID);
+
+            var existingVendorStatus = await _dbContext.Vendor_Status.FindAsync(VendorStatusID);
+
+            VendorUpdate.Vendor_Status_ID = VendorStatusID;
+            VendorUpdate.Vendor_Status = existingVendorStatus;
+
+            
+
+            await _dbContext.SaveChangesAsync();
+
+            return VendorUpdate;
+        }
+
+
+
         //
         public async Task<Vendor_Fax> GetFaxByIDAsync(int FaxID)
         {
@@ -593,6 +611,66 @@ namespace ProcionAPI.Models.Repositories
             await _dbContext.SaveChangesAsync();
 
             return RequestToDelete;
+        }
+
+
+
+        //Validation
+
+        public async Task<Vendor_Vat> VatRegNumberValAsync(int vatNumber)
+        {
+            Vendor_Vat ExistingVat = await _dbContext.Vendor_Vat.FirstOrDefaultAsync(x => x.Vat_Registration_Number == vatNumber);
+            if (ExistingVat != null)
+            {
+                return ExistingVat;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Vendor_Tax> IncomeTaxRegNumberValAsync(int IncomeTaxNumber)
+        {
+            Vendor_Tax ExistingTax = await _dbContext.Vendor_Tax.FirstOrDefaultAsync(x => x.Income_Tax_Num == IncomeTaxNumber);
+            if (ExistingTax != null)
+            {
+                return ExistingTax;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Vendor_Registration> CompanyRegNumberValAsync(int CompanyRegNumber)
+        {
+            Vendor_Registration ExistingCompanyReg = await _dbContext.Vendor_Registration.FirstOrDefaultAsync(x => x.Company_Registration_Number == CompanyRegNumber);
+            if (ExistingCompanyReg != null)
+            {
+                return ExistingCompanyReg;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Vendor_License> LicenseNumberValAsync(int LicenseNumber)
+        {
+            Vendor_License ExistingLicense = await _dbContext.Vendor_License.FirstOrDefaultAsync(x => x.License_No == LicenseNumber);
+            if (ExistingLicense != null)
+            {
+                return ExistingLicense;
+            }
+
+            else
+            {
+                return null;
+            }
         }
 
     }

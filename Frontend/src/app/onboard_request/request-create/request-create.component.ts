@@ -10,6 +10,11 @@ import { Role } from 'src/app/Shared/EmployeeRole';
 import { User } from 'src/app/Shared/User';
 import { VendorStatus } from 'src/app/Shared/VendorStatus';
 import { HttpClient } from '@angular/common/http';
+import { SoleSupplier } from 'src/app/Shared/Sole_Supplier';
+import { Onboard_Status } from 'src/app/Shared/OnboardStatus';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 @Component({
   selector: 'app-request-create',
   templateUrl: './request-create.component.html',
@@ -30,6 +35,7 @@ export class RequestCreateComponent implements OnInit {
     name: '',
     email: '',
     number_Of_Times_Used: 0,
+    sole_Supplier_Provided: false,
   }
 
   rl: Role = {
@@ -47,13 +53,30 @@ export class RequestCreateComponent implements OnInit {
     role: this.rl
   }
 
+  OnboardStatus : Onboard_Status = {
+    status_ID: 1,
+    name: "",
+    description: "",
+  }
+
   Onboard_Request: OnboardRequest = {
     onboard_Request_Id: 0,
     user_Id: 1,
-    vendor_ID:0,
-    vendor: { vendor_ID:0,vendor_Status_ID:0,vendor_Status:this.VStatus,name: '',email: '', number_Of_Times_Used:0},
-    users: {user_Id: 0,role_ID:0,username:'',password:'',profile_Picture:'./assets/Images/Default_Profile.jpg', role: this.rl},
+    vendor_ID: 0,
+    status_ID:1,
+    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0,sole_Supplier_Provided:false },
+    onboard_Status: this.OnboardStatus,
+    users: { user_Id: 0, role_ID: 0, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', role: this.rl },
     quotes: '',
+  }
+
+  SoleSupply: SoleSupplier = {
+    sole_Supplier_ID: 0,
+    vendor_ID: 0,
+    vendor: this.Vendor,
+    mD_Approval : false,
+    date: new Date(),
+    reason : "",
   }
 
   SoleSupplierFormGroup = this._formBuilder.group({
@@ -70,7 +93,7 @@ export class RequestCreateComponent implements OnInit {
   selectedOption: string = "true";
   matcher = new MyErrorStateMatcher()
 
-  constructor(private _formBuilder: FormBuilder, private dataService: DataService, private router: Router, private ActRoute: ActivatedRoute, private http: HttpClient) { }
+  constructor(private _formBuilder: FormBuilder, private dataService: DataService, private router: Router, private ActRoute: ActivatedRoute, private http: HttpClient,private dialog: MatDialog, private sanitizer:DomSanitizer) { }
   addTab() {
     const row = this._formBuilder.group({
       tab: [this.rows.length + 1],
@@ -121,6 +144,104 @@ export class RequestCreateComponent implements OnInit {
       }
     }
   }
+  Passed: boolean = true
+  PassedSecVal: boolean = true
+  Validate() {
+    this.Passed = true;
+    this.PassedSecVal = true;
+    let sCompanyName = "";
+    for (let a = 0; a < this.CompanyContactInfoFormGroup.controls.RequestData.value.length; a++) { 
+      //this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
+    
+      for (let b = 0; b < this.CompanyContactInfoFormGroup.controls.RequestData.value.length; b++) { 
+        if(this.CompanyContactInfoFormGroup.controls.RequestData.value[a].CompanyName == this.CompanyContactInfoFormGroup.controls.RequestData.value[b].CompanyName) {
+            this.Passed = false;
+
+        }
+        else if(this.CompanyContactInfoFormGroup.controls.RequestData.value[a].CompanyEmail == this.CompanyContactInfoFormGroup.controls.RequestData.value[b].CompanyEmail) {
+            this.Passed = false;
+          
+        }
+        else if (this.files[a].name != "" && this.files[a].name == this.files[b].name && this.files[a].size == 0) {
+          this.Passed = false;
+        }
+      }
+      this.dataService.GetVendorValidation(this.CompanyContactInfoFormGroup.controls.RequestData.value[a].CompanyName).subscribe({next:
+        (Result) => {if (Result != null) {
+          this.PassedSecVal == false;
+          sCompanyName = this.CompanyContactInfoFormGroup.controls.RequestData.value[a].CompanyName;
+        }
+       }})
+    }
+
+    if(this.Passed == false) {
+      var action = "ERROR";
+    var title = "VALIDATION ERROR";
+    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Please ensure that no information is <strong> duplicated</strong> and contains <strong>value</strong>.");
+
+    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+      disableClose: true,
+      data: { action, title, message }
+    });
+
+    const duration = 1750;
+    setTimeout(() => {
+      //this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+      dialogRef.close();
+    }, duration);
+    }
+    else if(this.Passed == true) {
+      if(this.PassedSecVal != true) {
+        var action = "ERROR";
+          var title = "VALIDATION ERROR";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There already exist an approved vendor with the name <strong>" + sCompanyName +  "</strong>.");
+      
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+      
+          const duration = 2000;
+          setTimeout(() => {
+            //this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+            dialogRef.close();
+          }, duration);
+      }
+      else {
+        this.AddRequest()
+      }
+      
+    }
+  }
+
+  SoleSupplierValidation() {
+    this.dataService.GetVendorValidation(this.SoleSupplierFormGroup.get("CompanyName")?.value ).subscribe({next:
+      (Result) => {if (Result != null) {
+        this.Passed == false;
+        var action = "ERROR";
+        var title = "VALIDATION ERROR";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There already exist an approved vendor with the name <strong>" + this.SoleSupplierFormGroup.get("CompanyName")?.value  +  "</strong>.");
+    
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+    
+        const duration = 2000;
+        setTimeout(() => {
+          //this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+          dialogRef.close();
+        }, duration);
+      }else {
+        this.AddRequest()
+      }
+     }})
+  }
+
+
+
+
+
   sPath = "";
   AddRequest() {
 
@@ -149,7 +270,7 @@ export class RequestCreateComponent implements OnInit {
         let RequestNo:string = "Request" + this.Onboard_Request.onboard_Request_Id
 
         let file:File = this.fileToUpload
-    
+        //console.log(file)
         this.dataService.OnboardFileAdd(RequestNo,file).subscribe(response => {
           let Path: any = response
           this.sPath = Path.pathSaved.toString()
@@ -159,13 +280,26 @@ export class RequestCreateComponent implements OnInit {
           this.Vendor.vendor_Status_ID = 1;
           this.Vendor.number_Of_Times_Used = 0;
           this.Onboard_Request.vendor = this.Vendor;
-          console.log(i)
-          this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe(
-            (RequestAdded) => {
-              console.log(RequestAdded);
-              this.router.navigate(['/request-view']);
-              console.log(i)
-            }//response
+          this.Onboard_Request.onboard_Status = this.OnboardStatus;
+          console.log(this.Onboard_Request)
+          this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
+            next: (response) => {
+              console.log(response);
+              var action = "CREATE";
+              var title = "CREATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id  + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+    
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+    
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+                dialogRef.close();
+              }, duration);
+            }}
           );//dataservice
 
         });//post
@@ -175,7 +309,13 @@ export class RequestCreateComponent implements OnInit {
   else if(this.selectedOption == "false")
   {
     this.fileToUpload = this.files[0]
-
+    this.Vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value 
+    this.Vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value 
+    this.Vendor.vendor_Status_ID = 1;
+    this.Vendor.number_Of_Times_Used = 0;
+    this.Onboard_Request.vendor = this.Vendor;
+    this.Onboard_Request.onboard_Status = this.OnboardStatus;
+    this.SoleSupply.reason = this.SoleSupplierFormGroup.get("Reason")?.value
     if (this.files[0] != '') {
       let RequestNo = "Request" + this.Onboard_Request.onboard_Request_Id 
       this.dataService.OnboardFileAdd(RequestNo,this.fileToUpload).subscribe(response => {
@@ -183,32 +323,48 @@ export class RequestCreateComponent implements OnInit {
         console.log(Path)
         this.sPath = Path.pathSaved.toString()
         this.Onboard_Request.quotes = this.sPath
-        this.Vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value 
-        this.Vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value 
-        this.Vendor.vendor_Status_ID = 1;
-        this.Vendor.number_Of_Times_Used = 0;
-        this.Onboard_Request.vendor = this.Vendor;
-        this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe(
-          (RequestAdded) => {
-            console.log(RequestAdded);
-            this.router.navigate(['/request-view']);
-          }//response
+        this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
+          next: (response) => {
+            console.log(response);
+            var action = "CREATE";
+            var title = "CREATE SUCCESSFUL";
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id  + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+  
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
+  
+            const duration = 1750;
+            setTimeout(() => {
+              this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+              dialogRef.close();
+            }, duration);
+          }}
         );//dataservice
 
       });//post
     }//if
     else {
-        this.Onboard_Request.quotes = "None"
-        this.Vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value 
-        this.Vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value 
-        this.Vendor.vendor_Status_ID = 1;
-        this.Vendor.number_Of_Times_Used = 0;
-        this.Onboard_Request.vendor = this.Vendor;
-        this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe(
-          (RequestAdded) => {
-            console.log(RequestAdded);
-            this.router.navigate(['/request-view']);
-          }//response
+        this.Onboard_Request.quotes = "None"   
+        this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
+          next: (response) => {
+            console.log(response);
+            var action = "CREATE";
+            var title = "CREATE SUCCESSFUL";
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id  + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+  
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
+  
+            const duration = 1750;
+            setTimeout(() => {
+              this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+              dialogRef.close();
+            }, duration);
+          }}
         );//dataservice
     }
     console.log("why")

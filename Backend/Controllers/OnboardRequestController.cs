@@ -55,8 +55,10 @@ namespace ProcionAPI.Controllers
         [Route("uploadOnboardFile")]
         public async Task<IActionResult> UploadHandler()
         {
+            
             var formCollection = await Request.ReadFormAsync();
             var file = formCollection.Files.First();
+
 
             var RequestNo = Request.Form["RequestNo"];
            // 
@@ -110,11 +112,11 @@ namespace ProcionAPI.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("EditVendor/{Vendor_ID}")]
-        public async Task<ActionResult> EditVendor([FromRoute] int Vendor_ID, Vendor EditVendorRequest)
+        [HttpGet]
+        [Route("GetVendorValidation/{sVendorName}")]
+        public async Task<ActionResult> EditVendor(string sVendorName)
         {
-            var results = await _OnboardRequestRepository.EditVendorAsync(Vendor_ID, EditVendorRequest);
+            var results = await _OnboardRequestRepository.GetVendorValidationAsync(sVendorName);
             return Ok(results);
         }
 
@@ -146,13 +148,21 @@ namespace ProcionAPI.Controllers
 
 
         [HttpPut]
-        [Route("UpdateOnboardRequest/{RequestID}/{VendorID}")]
-        public async Task<ActionResult> EditRequest(int RequestID,int VendorID, Onboard_Request UpdatedRequest)
+        [Route("UpdateOnboardRequest/{RequestID}")]
+        public async Task<ActionResult> EditRequest(int RequestID, Onboard_Request UpdatedRequest)
         {
-            var results = await _OnboardRequestRepository.EditRequestAsync(RequestID, VendorID, UpdatedRequest);
-            return Ok(results);
-        }
+            try
+            {
+                var results = await _OnboardRequestRepository.EditRequestAsync(RequestID, UpdatedRequest);
+                return Ok(results);
+            }
+            catch (Exception)
+            {
 
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+        //,int VendorID , VendorID /{VendorID}
 
         [HttpDelete]
         [Route("DeleteFile/{RequestNo}/{fileName}")]
@@ -195,6 +205,47 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
+        [HttpPost]
+        [Route("AddSoleSupplierDetails/{VendorID}")]
+        public async Task<IActionResult> AddSoleSupplierDetails(int VendorID,Sole_Supplier soleSupplier)
+        {
+            try
+            {
+                var result = await _OnboardRequestRepository.AddSoleSupplierDetailsAsync(VendorID,soleSupplier);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetSoleSupplierByID/{VendorID}")]
+        public async Task<IActionResult> GetSoleSupplierByID(int VendorID)
+        {
+            try
+            {
+                var result = await _OnboardRequestRepository.GetSoleSupplierByIDAsync(VendorID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateSoleSupplier/{SoleSupplierID}")]
+        public async Task<ActionResult> UpdateSoleSupplier([FromRoute]  int SoleSupplierID, Sole_Supplier UpdatedSoleSupplier)
+        {
+            var results = await _OnboardRequestRepository.UpdateSoleSupplierAsync(SoleSupplierID, UpdatedSoleSupplier);
+            return Ok(results);
+        }
+
     }
     
 }
