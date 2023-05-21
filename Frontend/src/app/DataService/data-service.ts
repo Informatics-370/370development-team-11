@@ -24,6 +24,7 @@ import { Vendor_Payment_Terms } from '../Shared/VendorDetailsPaymentTerms';
 import { Vendor_Registration } from '../Shared/VendorDetailsRegistration';
 import { Vendor_Fax } from '../Shared/VendorDetailsFax';
 import { Vendor_Tax } from '../Shared/VendorDetailsIncomeTaxNum';
+import { SoleSupplier } from '../Shared/Sole_Supplier';
 
 @Injectable({
   providedIn: 'root'
@@ -227,13 +228,30 @@ export class DataService {
     return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetRequest/${RequestID}`, this.httpOptions).pipe(map(result => result))
   }
 
-  UpdateOnboardRequest(RequestID: number,VendorID:number, UpdatedRequest: OnboardRequest,): Observable<OnboardRequest> {
-    return this.httpClient.put<OnboardRequest>(`${this.apiUrl}OnboardRequest/UpdateOnboardRequest/${RequestID}/${VendorID}`, UpdatedRequest, this.httpOptions)
+  UpdateOnboardRequest(RequestID: number, UpdatedRequest: OnboardRequest,): Observable<OnboardRequest> {
+    return this.httpClient.put<OnboardRequest>(`${this.apiUrl}OnboardRequest/UpdateOnboardRequest/${RequestID}`, UpdatedRequest, this.httpOptions)
   }
-
+// /${VendorID} ,VendorID:number
   DeleteRequest(RequestId:number,VendorID:number): Observable<any> {
     return this.httpClient.delete<OnboardRequest>(`${this.apiUrl}OnboardRequest/DeleteRequest/${RequestId}/${VendorID}`, this.httpOptions)
   }
+
+  AddSoleSupplierDetails(VendorID:number,soleSupplier : SoleSupplier) {
+    return this.httpClient.post(`${this.apiUrl}OnboardRequest/AddSoleSupplierDetails/${VendorID}`,soleSupplier, this.httpOptions)
+  }
+
+  GetSoleSupplierByID(VendorID:number): Observable<any> {
+    return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetSoleSupplierByID/${VendorID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  UpdateSoleSupplier(SoleSupplierID: number, UpdatedSoleSupplier: SoleSupplier): Observable<SoleSupplier> {
+    return this.httpClient.put<SoleSupplier>(`${this.apiUrl}OnboardRequest/UpdateSoleSupplier/${SoleSupplierID}`, UpdatedSoleSupplier, this.httpOptions)
+  }
+  
+  GetVendorValidation(sVendorName:string): Observable<any> {
+    return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendorValidation/${sVendorName}`, this.httpOptions).pipe(map(result => result))
+  }
+  
   //end of request 
 
   //files
@@ -244,6 +262,7 @@ export class DataService {
 
   OnboardFileAdd(RequestNo:string,file:File):  Observable<any> {
     const formData = new FormData();
+    console.log(file)
     formData.append('file',file);
     formData.append('RequestNo', RequestNo)
     console.log("what")
@@ -286,6 +305,11 @@ export class DataService {
     return this.httpClient.delete<VendorDetails>(`${this.apiUrl}Vendor/DeleteVendorDetails/${vendorDetailsID}`, this.httpOptions).pipe(map(result => result))
   }
 
+  UpdateVendorStatus(VendorID:number,VendorStatusID:number):Observable<any>{
+    return this.httpClient.put<VendorOnboardRequest>(`${this.apiUrl}Vendor/UpdateVendorStatus/${VendorID}/${VendorStatusID}`, this.httpOptions).pipe(map(result => result))
+   }  
+
+   
  //GetDifferentTables
   GetFaxByID(FaxID:number): Observable<any> {
     return this.httpClient.get<VendorDetails>(`${this.apiUrl}Vendor/GetFaxByID/${FaxID}`, this.httpOptions).pipe(map(result => result))
@@ -404,7 +428,23 @@ export class DataService {
     return this.httpClient.delete<Vendor_Tax>(`${this.apiUrl}Vendor/DeleteIncomeTaxByID/${IncomeTaxID}`, this.httpOptions).pipe(map(result => result))
   }
   //end of vendor details
+  //vendor validation 
 
+  LicenseNumberVal(LicenseNumber:Number): Observable<any> {
+    return this.httpClient.get<Vendor_License>(`${this.apiUrl}Vendor/LicenseNumberVal/${LicenseNumber}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  CompanyRegNumberVal(CompanyRegNumber:Number):Observable<any>{
+    return this.httpClient.get<Vendor_Registration>(`${this.apiUrl}Vendor/CompanyRegNumberVal/${CompanyRegNumber}`, this.httpOptions).pipe(map(result => result))
+   } 
+  VatRegNumberVal(vatNumber:Number): Observable<any> {
+    return this.httpClient.get<Vendor_Vat>(`${this.apiUrl}Vendor/VatRegNumberVal/${vatNumber}`, this.httpOptions).pipe(map(result => result))
+  }
+  IncomeTaxRegNumberVal(IncomeTaxNumber:Number): Observable<any> {
+    return this.httpClient.get<Vendor_Tax>(`${this.apiUrl}Vendor/IncomeTaxRegNumberVal/${IncomeTaxNumber}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  //end of vendor validation
   //vendor files
 
     VendorFileAdd(FolderCategory:string,VendorNo:string,fileName:File):  Observable<any> {

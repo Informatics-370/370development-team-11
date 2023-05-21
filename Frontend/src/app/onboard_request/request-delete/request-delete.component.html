@@ -1,5 +1,6 @@
+
 <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;"
-    *ngIf="showConfirmationDialog == true">DELETE CONSUMABLE</h1>
+    *ngIf="showConfirmationDialog == true">DELETE ONBOARD REQUEST</h1>
 <div mat-dialog-content *ngIf="showConfirmationDialog == true">
     <p>You are about to delete the request no: <strong>{{data.ID}}</strong></p>
     <p>Containing The following company's:</p>
@@ -16,7 +17,9 @@
 <ng-container *ngIf="showSuccessDialog == true">
     <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;">DELETE SUCCESSFUL</h1>
     <div mat-dialog-content>
-        <p>The consumable <strong>{{ data.ID}}</strong> has been <strong style="color:red">DELETED</strong>
+        <p>The Request No <strong>{{ data.ID}}</strong> has been <strong style="color:red">DELETED</strong>
             successfully!</p>
     </div>
 </ng-container>
+
+

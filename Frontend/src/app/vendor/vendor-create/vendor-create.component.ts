@@ -16,6 +16,9 @@ import { Vendor_Payment_Terms } from 'src/app/Shared/VendorDetailsPaymentTerms';
 import { Vendor_Tax } from 'src/app/Shared/VendorDetailsIncomeTaxNum';
 import { Vendor_Registration } from 'src/app/Shared/VendorDetailsRegistration';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 @Component({
   selector: 'app-vendor-create',
   templateUrl: './vendor-create.component.html',
@@ -45,6 +48,7 @@ export class VendorCreateComponent implements OnInit{
     name: '',
     email: '',
     number_Of_Times_Used: 0,
+    sole_Supplier_Provided: false,
   }
   VendorDetail: VendorDetails = {
     vendor_Detail_ID:0,
@@ -96,14 +100,14 @@ export class VendorCreateComponent implements OnInit{
     vat_Registration_Number: 0,
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
-    vAT_Registration_Document:"",
+    vaT_Registration_Document:"",
   }
 
   VendorWebsite: Vendor_Website = {
     website_ID: 0,
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
-    uRL:"",
+    url:"",
   }
 
   VendorLicense: Vendor_License = {
@@ -114,10 +118,10 @@ export class VendorCreateComponent implements OnInit{
   }
 
   VendorAgreement: Vendor_Agreement = {
-    Agreement_ID: 0,
+    agreement_ID: 0,
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
-    Signed_Agreement_Doc:"",
+    signed_Agreement_Doc:"",
   }
 
   VendorInsurance: Vendor_Insurance = {
@@ -177,7 +181,7 @@ export class VendorCreateComponent implements OnInit{
     InsuranceCoverCheck: false,
     InsuranceCoverDoc: null,
     PaymentTermsCheck: false,
-    PaymentTerms: ['',Validators.pattern(/^[0-9a-zA-Z\s]*$/)],
+    PaymentTerms: ['',Validators.maxLength(50)],
     LicenseOrAccreditationCheck: false,
     LicenseOrAccreditationNumber: '',
     LicenseOrAccreditationNumberDoc: null,
@@ -203,7 +207,7 @@ export class VendorCreateComponent implements OnInit{
 
   matcher = new MyErrorStateMatcher()
 
-  constructor(private _formBuilder: FormBuilder,private VendorService: DataService,private route: ActivatedRoute ,private router: Router) {}
+  constructor(private _formBuilder: FormBuilder,private VendorService: DataService,private route: ActivatedRoute ,private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) {}
 
   fileName:any[] = ['','','','','','','']
   
@@ -227,6 +231,17 @@ export class VendorCreateComponent implements OnInit{
           this.CompanyContactInfoFormGroup.get('CompanyName').disable()
           this.CompanyContactInfoFormGroup.get('CompanyEmail')?.setValue(this.Vendor.email);
           this.CompanyContactInfoFormGroup.get('CompanyEmail').disable()
+
+          if(this.Vendor.sole_Supplier_Provided == false) {
+            this.VendorDetail.vendor_Category_ID = 1;
+          }
+          else {
+            this.VendorDetail.vendor_Category_ID = 2;
+            this.VendorDetail.soleSupplierProvided = true;
+          }
+
+          
+
         })
       }
     }
@@ -330,7 +345,122 @@ export class VendorCreateComponent implements OnInit{
      }
  
 
-     
+     Passed: boolean = true
+  Validate() {
+    this.Passed = true
+    for(let a = 0; a < this.fileName.length;a++) {
+      for(let b = 0;b<this.fileName.length;b++) {
+        if (this.fileName[a].name != "" && this.fileName[a].name == this.fileName[b].name || this.fileName[a].size == 0) {
+          this.Passed = false;
+        }
+      }
+    }
+    if(this.Passed == false) {
+      var action = "ERROR";
+    var title = "VALIDATION ERROR";
+    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Please ensure no files are <strong> duplicated</strong> and contains <strong>value</strong>.");
+
+    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+      disableClose: true,
+      data: { action, title, message }
+    });
+
+    const duration = 1750;
+    setTimeout(() => {
+      //this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+      dialogRef.close();
+    }, duration);
+    }
+    else if(this.Passed == true) {
+      if(this.VatRegistrationChecker == true)
+      {
+        this.VendorService.VatRegNumberVal(Number(this.CompanyOverviewFormGroup.get('VatRegistrationNumber')?.value)).subscribe({next:
+          (Result) => {if (Result != null) {
+            this.Passed == false;
+            var action = "ERROR";
+            var title = "VALIDATION ERROR";
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There already exist an <strong> Vat Registration Number</strong> with the same <strong>Value</strong>.");
+        
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
+        
+            const duration = 1750;
+            setTimeout(() => {
+              //this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+              dialogRef.close();
+            }, duration);
+          }
+       }})
+      }
+      else if(this.LicenseOrAccreditationChecker == true){
+        this.VendorService.LicenseNumberVal(Number(this.CompanyOverviewFormGroup.get('LicenseOrAccreditationNumber')?.value)).subscribe({next:
+          (Result) => {if (Result != null) {
+            this.Passed == false;
+            var action = "ERROR";
+            var title = "VALIDATION ERROR";
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There already exist an <strong>License Or Accreditation Number</strong> with the same <strong>Value</strong>.");
+        
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
+        
+            const duration = 1750;
+            setTimeout(() => {
+              //this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+              dialogRef.close();
+            }, duration);
+          }
+       }})
+        
+      }
+
+      this.VendorService.CompanyRegNumberVal(Number(this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value)).subscribe({next:
+        (Result) => {if (Result != null) {
+          this.Passed == false;
+          var action = "ERROR";
+          var title = "VALIDATION ERROR";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There already exist an <strong> Company Registration Number</strong> with the same <strong>Value</strong>.");
+      
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+      
+          const duration = 1750;
+          setTimeout(() => {
+            //this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+            dialogRef.close();
+          }, duration);
+        }
+     }})
+     this.VendorService.IncomeTaxRegNumberVal(Number(this.CompanyOverviewFormGroup.get('IncomeTaxNumber')?.value)).subscribe({next:
+      (Result) => {if (Result != null) {
+        this.Passed == false;
+        var action = "ERROR";
+        var title = "VALIDATION ERROR";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There already exist an <strong> Income Tax Number</strong> with the same <strong>Value</strong>.");
+    
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+    
+        const duration = 1750;
+        setTimeout(() => {
+          //this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+          dialogRef.close();
+        }, duration);
+      }
+   }})
+      
+      if(this.Passed == true) {
+        this.Create()
+      }
+    }
+  }
 
      VD_ID: 0;
 
@@ -383,6 +513,9 @@ export class VendorCreateComponent implements OnInit{
         this.VendorService.AddVendorDetails(this.VendorDetail).subscribe(result =>{
           let VendorList:VendorDetails = result
           
+          this.VendorService.UpdateVendorStatus(VendorList.vendor_ID,3).subscribe(result => {console.log(result)})
+
+
           this.VD_ID = VendorList[0].vendor_Detail_ID
           console.log(this.VD_ID )
           console.log(VendorList)
@@ -398,7 +531,7 @@ export class VendorCreateComponent implements OnInit{
             let file:File = this.fileName[1]
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
               let Path: any = response
-              this.VendorVat.vAT_Registration_Document = Path.returnedPath.toString();
+              this.VendorVat.vaT_Registration_Document = Path.returnedPath.toString();
               this.VendorVat.vendor_Detail_ID = this.VD_ID 
               this.VendorVat.vat_Registration_Number = Number(this.CompanyOverviewFormGroup.get("VatRegistrationNumber")?.value)
               console.log(this.VendorVat)
@@ -407,7 +540,7 @@ export class VendorCreateComponent implements OnInit{
             console.log(Path)
           }
           if(this.CompanyWebsiteChecker == true) {
-            this.VendorWebsite.uRL = this.CompanyContactInfoFormGroup.get("CompanyWebsite")?.value
+            this.VendorWebsite.url = this.CompanyContactInfoFormGroup.get("CompanyWebsite")?.value
             this.VendorWebsite.vendor_Detail_ID = this.VD_ID 
             this.VendorService.AddWebsite(this.VendorWebsite).subscribe(response => {console.log(response)})
           }
@@ -430,7 +563,7 @@ export class VendorCreateComponent implements OnInit{
             let file:File = this.fileName[3]
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
               let Path: any = response
-              this.VendorAgreement.Signed_Agreement_Doc = Path.returnedPath.toString();
+              this.VendorAgreement.signed_Agreement_Doc = Path.returnedPath.toString();
               this.VendorAgreement.vendor_Detail_ID = this.VD_ID 
              this.VendorService.AddAgreement(this.VendorAgreement).subscribe(response => {console.log(response)})
             })

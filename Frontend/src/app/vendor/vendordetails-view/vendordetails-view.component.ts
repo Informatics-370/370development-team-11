@@ -49,6 +49,7 @@ export class VendordetailsViewComponent implements OnInit {
     name: '',
     email: '',
     number_Of_Times_Used: 0,
+    sole_Supplier_Provided: false,
   }
   VendorDetail: VendorDetails = {
     vendor_Detail_ID:0,
@@ -100,14 +101,14 @@ export class VendordetailsViewComponent implements OnInit {
     vat_Registration_Number: 0,
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
-    vAT_Registration_Document:"",
+    vaT_Registration_Document:"",
   }
 
   VendorWebsite: Vendor_Website = {
     website_ID: 0,
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
-    uRL:"",
+    url:"",
   }
 
   VendorLicense: Vendor_License = {
@@ -118,10 +119,10 @@ export class VendordetailsViewComponent implements OnInit {
   }
 
   VendorAgreement: Vendor_Agreement = {
-    Agreement_ID: 0,
+    agreement_ID: 0,
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
-    Signed_Agreement_Doc:"",
+    signed_Agreement_Doc:"",
   }
 
   VendorInsurance: Vendor_Insurance = {
@@ -218,8 +219,10 @@ export class VendordetailsViewComponent implements OnInit {
   
   getVat(VatID:number) {
     this.VendorService.GetVatByID(VatID).subscribe(result => {
-      this.VendorTax = result
-      let sFilePath = this.VendorTax.tax_Clearance_Cert
+      
+      this.VendorVat = result
+      let sFilePath = this.VendorVat.vaT_Registration_Document
+      console.log(this.VendorVat.vaT_Registration_Document)
       this.getFileDetails(sFilePath,1)
     })
   }
@@ -227,6 +230,7 @@ export class VendordetailsViewComponent implements OnInit {
   getWebsite(WebsiteID:number) {
     this.VendorService.GetWebsiteByID(WebsiteID).subscribe(result => {
       this.VendorWebsite = result
+      console.log( this.VendorWebsite)
     })
   }
 
@@ -240,8 +244,9 @@ export class VendordetailsViewComponent implements OnInit {
 
   getAgreement(AgreementID:number) {
     this.VendorService.GetAgreementByID(AgreementID).subscribe(result => {
+      console.log(result)
       this.VendorAgreement = result
-      let sFilePath = this.VendorAgreement.Signed_Agreement_Doc
+      let sFilePath = this.VendorAgreement.signed_Agreement_Doc
       this.getFileDetails(sFilePath,3)
     })
   }

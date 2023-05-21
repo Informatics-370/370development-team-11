@@ -196,17 +196,25 @@ namespace ProcionAPI.Data
           new
           {
               Vendor_Status_ID = 1,
-              Name = "pain",
-              Description = "more",
+              Name = "Pending",
+              Description = "Pending to be rejected or accepted",
 
           },
           new
           {
               Vendor_Status_ID = 2,
               Name = "approved",
-              Description = "approved",
+              Description = "Vendor is Approved",
 
-          });
+          },
+          new
+          {
+              Vendor_Status_ID = 3,
+              Name = "Completed",
+              Description = "Completed Vendor Details",
+
+          }
+          );
 
             modelBuilder.Entity<Vendor>()
             .HasData(
@@ -240,6 +248,16 @@ namespace ProcionAPI.Data
             }
             );
 
+            modelBuilder.Entity<Onboard_Status>()
+           .HasData(
+           new
+           {
+               Status_ID = 1,
+               Name = "Pending",
+               Description = "Pending",
+
+           }
+           );
             //modelBuilder.Entity<Vendor>()
             //.HasData(
             //new

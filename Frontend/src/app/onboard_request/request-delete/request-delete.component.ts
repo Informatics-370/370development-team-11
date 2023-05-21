@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/DataService/data-service';
 import { Role } from 'src/app/Shared/EmployeeRole';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
+import { Onboard_Status } from 'src/app/Shared/OnboardStatus';
 import { VendorStatus } from 'src/app/Shared/VendorStatus';
 
 
@@ -27,11 +28,19 @@ export class RequestDeleteComponent {
     description: ''
   }
 
+  OnboardStatus : Onboard_Status = {
+    status_ID: 0,
+    name: "",
+    description: "",
+  }
+
   Onboard_Request: OnboardRequest = {
     onboard_Request_Id: 0,
     user_Id: 1,
     vendor_ID: 0,
-    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0 },
+    status_ID:0,
+    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0,sole_Supplier_Provided:false },
+    onboard_Status: this.OnboardStatus,
     users: { user_Id: 0, role_ID: 0, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', role: this.rl },
     quotes: '',
   }

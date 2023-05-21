@@ -45,17 +45,17 @@
           </td>
       </tr>
       <br>
-      <tr>
+      <tr *ngIf="FileDetails[i] != undefined ">
         <td><label for="file" style="margin-right: 1%;">View current Company Quote: </label></td>
         <td >  
           <a href="{{FileDetails[i].FileURL}}" download="{{FileDetails[i].FileName}}">{{FileDetails[i].FileName}}</a>  
         </td>
     </tr>
-      
+      <br>
       <tr>
         <td></td>
         <td>  
-           <button mat-raised-button [hidden]="i < 3" (click)="removeTab(i)" > Delete Tab </button>
+           <button id="btnHover" mat-raised-button [hidden]="i < 3" (click)="removeTab(i)" > Delete Quotation </button>
         </td>
       </tr>
       <tr>
@@ -75,9 +75,9 @@
        
       </mat-tab-group>
       
-      <div  style="background-color: white;">
-        <button mat-raised-button style="margin:1%;"  (click)="AddRequest()" [disabled]="!CompanyContactInfoFormGroup.valid"> Update </button>
-        <button mat-raised-button style="margin:1%;" routerLink="/request-view" > Cancel </button>
+      <div  style="background-color: white;display: flex;border-left:1px solid #244688;border-right:1px solid #244688;border-bottom:1px solid #244688;">
+        <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;"  (click)="Validate()" [disabled]="!CompanyContactInfoFormGroup.valid"> Update </button>
+        <button mat-raised-button id="btnHover" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/request-view" > Cancel </button>
      </div>
     </div>
 
@@ -92,7 +92,7 @@
     <!--  -->
     <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="VendorType == false ;General" #Sole>
       
-      <form  [formGroup]="SoleSupplierFormGroup" style="background-color: white;" >
+      <form  [formGroup]="SoleSupplierFormGroup" style="background-color: white;border:1px solid #244688;border-top:48px solid #244688;" >
         <div style="margin-left:1%; margin-top:1%;margin-bottom: 20px;">
           <table>
             <br>
@@ -122,13 +122,13 @@
               <td><label for="reason" style="margin-right: 1%;">Reason:</label></td>
               <td>
                 <mat-form-field appearance="fill">
-                  <input matInput placeholder="Company Name" id="Reason" formControlName="Reason" [errorStateMatcher]="matcher" >
+                  <input matInput placeholder="Company reason" id="Reason" formControlName="Reason" [errorStateMatcher]="matcher" >
                   <mat-error *ngIf="SoleSupplierFormGroup.controls['Reason'].hasError('required')">Reason is required</mat-error>
                   <mat-error *ngIf="SoleSupplierFormGroup.controls['Reason'].hasError('maxlength')">cannot be more than 32 characters</mat-error>
                 </mat-form-field>
               </td>
             </tr>
-            <tr>
+            <tr *ngIf="FileDetails[0] != undefined ">
               <td><label for="file" style="margin-right: 1%;" >Current Company Quote: </label></td>
               <td *ngIf="onboardRequest[0].quotes != 'None'">  
                <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}">{{FileDetails[0].FileName}}</a> 
@@ -144,8 +144,10 @@
             <br>
           </table>
         </div>
-        <button mat-raised-button style="margin: 1%;" [disabled]="!SoleSupplierFormGroup.valid"> Create  </button>
-        <button mat-raised-button style="margin: 1%;" routerLink="/request-view" > Cancel </button>
+        <div style="display: flex;">
+        <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" [disabled]="!SoleSupplierFormGroup.valid"  (click)="AddRequest()"> Create  </button> 
+        <button mat-raised-button id="btnHover" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/request-view" > Cancel </button>
+       </div>
       </form>
       
     </div>

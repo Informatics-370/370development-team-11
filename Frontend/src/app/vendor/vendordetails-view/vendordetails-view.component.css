@@ -9,9 +9,11 @@
 
 ::ng-deep .mdc-tab__text-label {
     color: white;
+    width: 120px;
 }
 
 
+  
 
 .content {
     top: 63px;
@@ -19,7 +21,7 @@
     left: 0;
     right: 0;
     background: #eee;
-    border-top:solid;
+    border-top:1px solid;
     text-align: center;
     position: absolute;
 }
@@ -42,7 +44,7 @@ mat-error:first-child {
 }
 
 mat-form-field{
-    width:350px
+    width:600px
 }
 
 
@@ -53,9 +55,22 @@ mat-form-field{
 }
 
 label {
+    
     margin-right: 20px;
     font-weight: 500;
     
 }
 
+#btnHover:hover {
+    background-color: #fe4945;
+  }
+  
+  #btnHover {
+    background-color: #22afbe;
+  }
 
+
+  mat-tab-group {
+    border-left: 1px solid #244688;
+    border-right: 1px solid #244688;
+}

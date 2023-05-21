@@ -76,9 +76,9 @@
         </mat-tab> 
        
       </mat-tab-group>
-      <div  style="background-color: white;display: flex;">
-        <button mat-raised-button (click)="AddRequest()" [disabled]="!CompanyContactInfoFormGroup.valid" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;"> Create  </button>
-        <button mat-raised-button  routerLink="/request-view" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #FE4945;"> Cancel </button>
+      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;">
+        <button mat-raised-button (click)="Validate()" [disabled]="!CompanyContactInfoFormGroup.valid" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;"> Create  </button>
+        <button mat-raised-button id="btnHover" routerLink="/request-view" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;"> Cancel </button>
      </div>
     </div>
   </div>
@@ -87,7 +87,7 @@
     <!--  -->
     <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="selectedOption == 'false' ;General" #Sole>
       
-      <form  [formGroup]="SoleSupplierFormGroup" style="background-color: white;" >
+      <form  [formGroup]="SoleSupplierFormGroup" style="background-color: white;border:1px solid #244688;border-top:48px solid #244688;" >
         <div style="margin-left:1%; margin-top:1%;margin-bottom: 20px;">
           <table>
             <br>
@@ -133,8 +133,8 @@
           </table>
         </div>
         <div style="display: flex;">
-        <button mat-raised-button style="margin: 1%;" (click)="AddRequest()" [disabled]="!SoleSupplierFormGroup.valid" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Create  </button>
-        <button mat-raised-button style="margin: 1%;" routerLink="/request-view" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #FE4945;"> Cancel </button>
+        <button mat-raised-button style="margin: 1%;" (click)="SoleSupplierValidation()" [disabled]="!SoleSupplierFormGroup.valid" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Create  </button>
+        <button mat-raised-button style="margin: 1%;" id="btnHover" routerLink="/request-view" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;"> Cancel </button>
       </div>
       </form>
       
@@ -144,85 +144,3 @@
   
   </div>
 </div> 
-
-    
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  <!-- <div class="content">
-    <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="selectedOption == 'True';Sole" #General>
-    <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
-      Create Vendor Onboard Request
-    </h1>
-    <div>  
-    <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;">Please select one of the two options:</label>
-    <br>
-    <mat-radio-group (change)="radioButtonChange($event)">
-      <mat-radio-button  checked value="True">General suppliers</mat-radio-button>
-      <mat-radio-button value="False">Sole suppliers</mat-radio-button>
-    </mat-radio-group>
-    </div>
-      <mat-tab-group style="margin-bottom: 20px;">
-        <mat-tab  *ngFor="let tab of tabs; let index = index" > 
-          <ng-template  mat-tab-label > 
-           <span style="color: white"> {{tab}} </span>
-          </ng-template>
-            <div style="margin-left:1%; margin-top:1%;">
-            <label for="name" style="margin-right: 1%;">Company name:</label>
-          <input id="name" matInput type="text"> <button mat-raised-button [disabled]="tabs.length === 3" (click)="removeTab(index)" style="float: right;"> Delete Tab </button> <br> <br>
-          <label for="file" style="margin-right: 1%;">Company Quote: </label>
-          <input id="file" type="file" class="file-upload" onchange="console.log(event.target.files)">
-          </div>
-          <div style="margin-right:1%; margin-bottom:1%">
-            <button mat-raised-button [disabled]="tabs.length === 3" (click)="removeTab(index)"> Delete Tab </button>
-          </div>
-        </mat-tab>
-        <mat-tab disabled>
-          <ng-template  mat-tab-label> 
-            <button mat-icon-button  (click)="addTab()">  <mat-icon style="color: white">add_box</mat-icon> </button>
-          </ng-template>
-        </mat-tab> 
-      </mat-tab-group>
-      <button mat-raised-button style="margin-right: 15px;"> Create  </button>
-      <button mat-raised-button routerLink="/request-view" > Cancel </button>
-    </div>
-  
-    <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="selectedOption == 'False';General" #Sole>
-      <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
-        Create Vendor Onboard Request
-      </h1>
-      <div>  
-      <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;">Please select one of the two options:</label>
-      <br>
-      <mat-radio-group (change)="radioButtonChange($event)">
-        <mat-radio-button  value="True">General suppliers</mat-radio-button>
-        <mat-radio-button value="False" checked >Sole suppliers</mat-radio-button>
-      </mat-radio-group>
-      </div>
-      <div style="margin-left:1%; margin-top:1%;margin-bottom: 20px;">
-        <label for="name" style="margin-right: 1%;">Company name:</label>
-        <input id="name" matInput type="text">  <br> <br>
-        <label for="file" style="margin-right: 1%;">Company Quote: </label>
-        <input id="file" type="file" class="file-upload" onchange="console.log(event.target.files)"> <br> <br>
-        <label for="reason" style="margin-right: 1%;">Reason:</label>
-        <input id="reason" matInput type="text"> 
-      </div>
-      <button mat-raised-button style="margin-right: 15px;"> Create  </button>
-      <button mat-raised-button routerLink="/request-view" > Cancel </button>
-    </div>
-  
-  </div> -->

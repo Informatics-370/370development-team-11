@@ -9,7 +9,7 @@
     <mat-step [stepControl]="CompanyContactInfoFormGroup" >
       <form [formGroup]="CompanyContactInfoFormGroup" style="text-align: -webkit-center;">
         <ng-template matStepLabel>COMPANY CONTACT INFORMATION </ng-template>
-        <table style="background-color: white">
+        <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
             <tr>
                 <td><label>Company Name:</label></td>
                 <td> 
@@ -41,7 +41,7 @@
                 <td> <label>Company Registered Address:</label></td>
                 <td>
                     <mat-form-field appearance="fill">
-                        <input matInput placeholder="Company Registered Address" formControlName="CompanyRegisteredAddress" [errorStateMatcher]="matcher">
+                        <textarea style="height: 80px" matInput placeholder="Company Registered Address" formControlName="CompanyRegisteredAddress" [errorStateMatcher]="matcher"></textarea>
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyRegisteredAddress'].hasError('required')">Company registered address is required</mat-error>
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyRegisteredAddress'].hasError('maxlength')">Company registered address cannot be more than 100 characters long</mat-error>
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyRegisteredAddress'].hasError('pattern')">Company registered address number cannot contain characters</mat-error>
@@ -117,21 +117,21 @@
                 </td>
             </tr>
         </table>
-        <div >
-            <button mat-button routerLink="/vendor-view">Cancel</button>
-          <button mat-button matStepperNext>Next</button>
-        </div>
+        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
+            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/vendor-view"> Cancel</button>
+            <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
+           </div>
       </form>
     </mat-step>
     <mat-step [stepControl]="CompanyOverviewFormGroup" >
       <form [formGroup]="CompanyOverviewFormGroup" style="text-align: -webkit-center;">
         <ng-template matStepLabel>COMPANY OVERVIEW  </ng-template>
-        <table style="background-color: white">
+        <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
             <tr>
                 <td><label>Details Of Service Or Goods:</label></td>
                 <td> 
                     <mat-form-field appearance="fill" >
-                        <input matInput placeholder="Details Of Service Or Goods" formControlName="DetailsOfServiceOrGoods" [errorStateMatcher]="matcher">
+                        <textarea  matInput placeholder="Details Of Service Or Goods" formControlName="DetailsOfServiceOrGoods" [errorStateMatcher]="matcher"></textarea>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['DetailsOfServiceOrGoods'].hasError('required')">Details of service or goods is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['DetailsOfServiceOrGoods'].hasError('maxlength')">Details cannot be more than 50 characters long</mat-error>
                       </mat-form-field>
@@ -148,35 +148,29 @@
                 </td>
             </tr>
             <tr>
-                <td><label for="file" style="margin-right: 1%;" *ngIf="VendorDetail.registration_Provided == true">Current Registration Document: </label></td>
-                <td >  
-                  <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}">{{FileDetails[0].FileName}}</a>  
-                </td>
-            </tr>
-            <tr>
                 <td> <label>New Company Registration Document:</label></td>
                 <td>
                     <input  id="file" formControlName="CompanyRegistrationNumberDoc" type="file" class="file-upload" (change)="FileStorage(0,$event)" > 
+                </td>
+            </tr>
+            <tr>
+                <td><label for="file" style="margin-right: 1%;" *ngIf="VendorDetail.registration_Provided == true">Current Registration Document: </label></td>
+                <td >  
+                  <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}">{{FileDetails[0].FileName}}</a>  
                 </td>
             </tr>
             <br>    
             <tr>
                 <td><label>Vat Registration Number:</label></td>
                 <td>
-                    <mat-checkbox formControlName="VatRegistrationCheck" (click)="VatRegistrationChange()">Add Vat Registration details?</mat-checkbox> <br>
+                    <mat-checkbox formControlName="VatRegistrationCheck" (click)="VatRegistrationChange()"><span *ngIf="VatRegistrationChecker === false;">Add Vat Registration details?</span><span *ngIf="VatRegistrationChecker === true;">Added Vat Registration details</span></mat-checkbox> <br>
                     <mat-form-field appearance="fill" *ngIf="VatRegistrationChecker === true;" >
                         <input matInput [errorStateMatcher]="matcher" placeholder="Vat Registration Number" formControlName="VatRegistrationNumber" >
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['VatRegistrationNumber'].hasError('required')">Vat registration number is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['VatRegistrationNumber'].hasError('pattern')">Vat registration number cannot contain characters</mat-error>
                       </mat-form-field>
                 </td>
-            </tr>
-            <tr *ngIf="VendorDetail.vatRegistered == true">
-                <td><label for="file" style="margin-right: 1%;" >Current Vat Registration document: </label></td> 
-                <td >  
-                  <a href="{{FileDetails[1].FileURL}}" download="{{FileDetails[1].FileName}}">{{FileDetails[1].FileName}}</a>   
-                </td>
-              </tr>
+            </tr> 
             <tr *ngIf="VatRegistrationChecker === true;">
                 <td> <label>New Vat Registration Number Document:</label></td>
                 <td>
@@ -184,6 +178,12 @@
                     <input  id="file" formControlName="VatRegistrationNumberDoc" type="file" class="file-upload" (change)="FileStorage(1,$event)"> 
                 </td>
             </tr>
+            <tr *ngIf="VatRegistrationChecker == true">
+                <td><label for="file" style="margin-right: 1%;" >Current Vat Registration document: </label></td> 
+                <td >  
+                  <a href="{{FileDetails[1].FileURL}}" download="{{FileDetails[1].FileName}}">{{FileDetails[1].FileName}}</a>   
+                </td>
+              </tr>
             <br>
             <tr>
                 <td> <label>Income Tax Number:</label></td>
@@ -195,57 +195,57 @@
                       </mat-form-field>
                 </td>
             </tr>
-            <tr *ngIf="VendorDetail.income_Tax_Num_Provided == true">
-                <td><label for="file" style="margin-right: 1%;" >Current Income Tax Number Document: </label></td> 
-                <td >  
-                    <a href="{{FileDetails[2].FileURL}}" download="{{FileDetails[2].FileName}}">{{FileDetails[2].FileName}}</a>   
-                </td>
-              </tr>
             <tr>
                 <td><label>New Income Tax Number Document:</label></td>
                 <td>
                     <input  id="file" formControlName="IncomeTaxNumberDoc" type="file" class="file-upload" (change)="FileStorage(2,$event)" >                   
                 </td>
             </tr>
+            <tr *ngIf="VendorDetail.income_Tax_Num_Provided == true">
+                <td><label for="file" style="margin-right: 1%;" >Current Income Tax Number Document: </label></td> 
+                <td >  
+                    <a href="{{FileDetails[2].FileURL}}" download="{{FileDetails[2].FileName}}">{{FileDetails[2].FileName}}</a>   
+                </td>
+              </tr>
             <br>
-            <tr *ngIf="VendorDetail.signed_Agreement_Provided == true">
+            <tr>
+                <td><span *ngIf="SignedAgreementChecker === true;"><br><br></span><label>New Signed Agreement Document:</label></td>
+                <td>
+                    <mat-checkbox formControlName="SignedAgreementCheck" (click)="SignedAgreementChange()"><span *ngIf="SignedAgreementChecker === false;">Add Signed Agreement Document?</span><span *ngIf="SignedAgreementChecker === true;">Added Signed Agreement Document</span></mat-checkbox> <br>
+                    <input  id="file" formControlName="SignedAgreementDoc" type="file" class="file-upload" *ngIf="SignedAgreementChecker === true;" (change)="FileStorage(3,$event)">           
+                </td>
+            </tr>
+            <tr *ngIf="SignedAgreementChecker == true">
                 <td><label for="file" style="margin-right: 1%;" >Current Signed Agreement Document: </label></td> 
                 <td >  
                     <a href="{{FileDetails[3].FileURL}}" download="{{FileDetails[3].FileName}}">{{FileDetails[3].FileName}}</a>   
                 </td>
               </tr>
             <tr>
+            <br>
             <tr>
-                <td><label>Signed Agreement Document:</label></td>
+                <td><span *ngIf="InsuranceCoverChecker === true;"><br><br></span><label>New Insurance Cover Document:</label></td>
                 <td>
-                    <mat-checkbox formControlName="SignedAgreementCheck" (click)="SignedAgreementChange()">Add Signed Agreement Document?</mat-checkbox> <br>
-                    <input  id="file" formControlName="SignedAgreementDoc" type="file" class="file-upload" *ngIf="SignedAgreementChecker === true;" (change)="FileStorage(3,$event)">           
+                    <mat-checkbox formControlName="InsuranceCoverCheck" (click)="InsuranceCoverChange()">Add Insurance Cover Document?</mat-checkbox> <br>  
+                    <input  id="file" formControlName="InsuranceCoverDoc" type="file" class="file-upload" *ngIf="InsuranceCoverChecker === true;" (change)="FileStorage(4,$event)">            
                 </td>
             </tr>
-            <br>
-            <tr *ngIf="VendorDetail.insurance_Provided == true">
+            <tr *ngIf="VendorDetail.insurance_Provided == true && InsuranceCoverChecker == true">
                 <td><label for="file" style="margin-right: 1%;" >Current Insurance Cover Document: </label></td> 
                 <td >  
                     <a href="{{FileDetails[4].FileURL}}" download="{{FileDetails[4].FileName}}">{{FileDetails[4].FileName}}</a>    
                 </td>
               </tr>
             <tr>
-            <tr>
-                <td><label>Insurance Cover Document:</label></td>
-                <td>
-                    <mat-checkbox formControlName="InsuranceCoverCheck" (click)="InsuranceCoverChange()">Add Insurance Cover Document?</mat-checkbox> <br>  
-                    <input  id="file" formControlName="InsuranceCoverDoc" type="file" class="file-upload" *ngIf="InsuranceCoverChecker === true;" (change)="FileStorage(4,$event)">            
-                </td>
-            </tr>
             <br>
             <tr>
                 <td> <label>Payment Terms:</label></td>
                 <td>
-                    <mat-checkbox formControlName="PaymentTermsCheck" (click)="PaymentTermsChange()">Add Payment Terms?</mat-checkbox> <br>
+                    <mat-checkbox formControlName="PaymentTermsCheck" (click)="PaymentTermsChange()"><span *ngIf="PaymentTermsChecker === false;">Add Payment Terms?</span><span *ngIf="PaymentTermsChecker === true;">Added Payment Terms</span></mat-checkbox> <br>
                     <mat-form-field appearance="fill" *ngIf="PaymentTermsChecker === true;" >
-                        <input matInput placeholder="Payment Terms" formControlName="PaymentTerms"  [errorStateMatcher]="matcher">
+                        <textarea matInput placeholder="Payment Terms" formControlName="PaymentTerms"  [errorStateMatcher]="matcher"></textarea>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['PaymentTerms'].hasError('required')">Payment Terms is required</mat-error>
-                       
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['PaymentTerms'].hasError('maxlength')">Payment Terms cannot be more than 50 characters long</mat-error>
                       </mat-form-field>    
                 </td>
             </tr>
@@ -253,7 +253,7 @@
             <tr>
                 <td> <label>License Or Accreditation Number:</label></td>
                 <td>
-                    <mat-checkbox formControlName="LicenseOrAccreditationCheck" (click)="LicenseOrAccreditationChange()">Add License Or Accreditation details?</mat-checkbox> <br>
+                    <mat-checkbox formControlName="LicenseOrAccreditationCheck" (click)="LicenseOrAccreditationChange()"><span *ngIf="LicenseOrAccreditationChecker === false;">Add License Or Accreditation details?</span><span *ngIf="LicenseOrAccreditationChecker === true;">Added License Or Accreditation details</span></mat-checkbox> <br>
                     <mat-form-field appearance="fill" *ngIf="LicenseOrAccreditationChecker === true;" >
                         <input matInput placeholder="License Or Accreditation Number" formControlName="LicenseOrAccreditationNumber"  [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['LicenseOrAccreditationNumber'].hasError('required')">License or accreditation number is required</mat-error>
@@ -261,30 +261,31 @@
                       </mat-form-field>
                 </td>
             </tr>
-            <tr *ngIf="VendorDetail.license_Num_Provided == true">
+            <tr *ngIf="LicenseOrAccreditationChecker === true;">
+                <td> <label>New License Or Accreditation Document:</label></td>
+                <td>  
+                    <input  id="file" formControlName="LicenseOrAccreditationNumberDoc" type="file" class="file-upload" (change)="FileStorage(5,$event)">  
+                </td>
+            </tr>
+            <tr *ngIf="LicenseOrAccreditationChecker == true">
                 <td><label for="file" style="margin-right: 1%;" >Current License Or Accreditation Document: </label></td> 
                 <td >  
                     <a href="{{FileDetails[5].FileURL}}" download="{{FileDetails[5].FileName}}">{{FileDetails[5].FileName}}</a>     
                 </td>
               </tr>
             <tr>
-            <tr *ngIf="LicenseOrAccreditationChecker === true;">
-                <td> <label>License Or Accreditation Number Document:</label></td>
-                <td>  
-                    <input  id="file" formControlName="LicenseOrAccreditationNumberDoc" type="file" class="file-upload" (change)="FileStorage(5,$event)">  
-                </td>
-            </tr>
         </table>
-        <div >
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
-        </div>
+        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
+            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >back</button>
+            <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
+           </div>
+        
       </form>
     </mat-step>
     <mat-step [stepControl]="BankDetailsFormGroup" >
         <form [formGroup]="BankDetailsFormGroup" style="text-align: -webkit-center;">
           <ng-template matStepLabel>BANKING INFORMATION</ng-template>
-          <table style="background-color: white">
+          <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
             <tr>
                 <td><label>Bank Name:</label></td>
                 <td> 
@@ -378,20 +379,23 @@
                 </td>
             </tr>
             <br>
-        </table>     
-          <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext>Next</button>
-          </div>
+        </table> 
+        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
+            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >back</button>
+            <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
+           </div>    
+          
         </form>
       </mat-step>
     <mat-step>
       <ng-template matStepLabel>Done</ng-template>
-      <p>*Please ensure that all details are correct before updating anything on the vendor*</p>
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button (click)="Create()">Update</button>
-      </div>
+      <div style="text-align: -webkit-center">
+      <p style="margin: 0px;background-color: #244688;color: white;width: 700px;"><b>*Please ensure that all details are correct before updating anything on the vendor*</b></p> 
+      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 700px;justify-content: center;">
+        <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
+        <button mat-raised-button (click)="Validate()" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Update </button>
+       </div>
+    </div>    
     </mat-step>
   </mat-stepper>
 </div>

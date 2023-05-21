@@ -1,8 +1,12 @@
 label {
     margin-right: 20px;
+    font-weight: 500;
+    margin-left: 1%;
 }
+
 mat-form-field{
-    width:350px
+    margin-top: 1%;
+    width:400px
 }
 
 .content {
@@ -11,9 +15,15 @@ mat-form-field{
     left: 0;
     right: 0;
     background: #eee;
-    border-top:solid;
+    border-top:1px solid;
     text-align: center;
    
+}
+table {
+    width: 700px;
+}
+td {
+    width: 500px;
 }
 
 mat-error {
@@ -29,3 +39,12 @@ mat-error:first-child {
     color: white;
     
 }
+
+
+#btnHover:hover {
+    background-color: #fe4945;
+  }
+  
+  #btnHover {
+    background-color: #22afbe;
+  }

@@ -43,6 +43,7 @@ export class VendorDeleteComponent {
     name: '',
     email: '',
     number_Of_Times_Used: 0,
+    sole_Supplier_Provided:false,
   }
   VendorDetail: VendorDetails = {
     vendor_Detail_ID:0,
@@ -94,14 +95,14 @@ export class VendorDeleteComponent {
     vat_Registration_Number: 0,
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
-    vAT_Registration_Document:"",
+    vaT_Registration_Document:"",
   }
 
   VendorWebsite: Vendor_Website = {
     website_ID: 0,
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
-    uRL:"",
+    url:"",
   }
 
   VendorLicense: Vendor_License = {
@@ -112,10 +113,10 @@ export class VendorDeleteComponent {
   }
 
   VendorAgreement: Vendor_Agreement = {
-    Agreement_ID: 0,
+    agreement_ID: 0,
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
-    Signed_Agreement_Doc:"",
+    signed_Agreement_Doc:"",
   }
 
   VendorInsurance: Vendor_Insurance = {
@@ -240,7 +241,7 @@ OnboardRequestDetails: any[] = [];
       VendorNo = "Vendor" + this.Vendor.vendor_ID
       fileName =  this.FileDetails[3].FileName
       this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName)!
-      this.VendorService.DeleteAgreementByID(this.VendorAgreement.Agreement_ID).subscribe(response => {console.log(response)})
+      this.VendorService.DeleteAgreementByID(this.VendorAgreement.agreement_ID).subscribe(response => {console.log(response)})
     }
     if(this.VendorDetail.insurance_Provided == true) {
       FolderCategory = "InsuranceCover";
@@ -272,6 +273,7 @@ OnboardRequestDetails: any[] = [];
     this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName)!
     this.VendorService.DeleteVendorDetails(this.VendorDetail.vendor_Detail_ID).subscribe({
       next:(response) => {
+      this.VendorService.UpdateVendorStatus(this.VendorDetail.vendor_ID,2).subscribe(result => {console.log(result)})
       this.showConfirmationDialog = false;
       this.showSuccessDialog = true;
       setTimeout(() => {
@@ -322,7 +324,7 @@ OnboardRequestDetails: any[] = [];
     getAgreement(AgreementID:number) {
      this.VendorService.GetAgreementByID(AgreementID).subscribe(result => {
      this.VendorAgreement = result
-     let sFilePath = this.VendorAgreement.Signed_Agreement_Doc
+     let sFilePath = this.VendorAgreement.signed_Agreement_Doc
      this.getFileDetails(sFilePath,3)
     })
     }

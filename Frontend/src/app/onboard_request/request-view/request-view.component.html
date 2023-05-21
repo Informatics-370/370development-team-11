@@ -1,18 +1,17 @@
 
 
 
-<mat-sidenav-container class="example-container">
-    <mat-sidenav mode="side" opened class="sidenav-container">
-        <button mat-button class="heading" >
-            <mat-icon style="height: 25px;width: 25px;  font-size: 25px;align-self: stretch;">add_business</mat-icon>
-            <h2>Vendor</h2>
-          </button>
-          <button mat-button class="menu-button" routerLink="/request-view">
-            <span>Onboard Request</span>
-          </button>
-          <button mat-button class="menu-button" routerLink="/vendor-view">
-            <span>Manage Vendor</span>
-          </button>
+<mat-sidenav-container class="example-container" style="padding: 0px;">
+    <mat-sidenav mode="side" opened class="sidenav-container" >
+      <mat-nav-list>
+        <div mat-list-item style="display: flex; align-items: center;">
+          <mat-icon aria-hidden="false" style="width:30px; height: 44px; margin-left: 5%;">add_business</mat-icon>
+          <h2 class="uni-font">Vendor</h2>
+        </div>
+        <a mat-list-item class="uni-font" routerLink="/request-view">Onboard Request</a>
+        <a mat-list-item class="uni-font">Approve Vendor</a>
+        <a mat-list-item class="uni-font"  routerLink="/vendor-view">Manage Vendor</a>
+      </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content class="content">
       
@@ -28,42 +27,43 @@
   
         <mat-form-field mat appearance="fill" style=" float:right; font-size: 12px; width: 300px; margin-top:0.5%; margin-right:1%;">
           <mat-label>Search</mat-label>
-          <input matInput />
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
   
       </div>
       
       <div style="margin-right:1%; margin-left:1%; margin-bottom: 1%;">
-          <table mat-table *ngIf="OnboardRequest.length > 0" [dataSource]="RequestVendors" multiTemplateDataRows>
+          <table mat-table *ngIf="OnboardRequest.length > 0" [dataSource]="RequestVendors" multiTemplateDataRows >
 
             <ng-container matColumnDef="ID">
-              <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>
+              <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;" > No. </th>
               <td mat-cell *matCellDef="let element"> {{element.onboard_Request_Id}} </td>
             </ng-container>
           
            
             <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> Name </th>
+              <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;" > Name </th>
               <td mat-cell *matCellDef="let element"> {{element.employeeName}} </td>
             </ng-container>
-          <!-- 
-            <ng-container matColumnDef="total">
-              <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> total </th>
-              <td mat-cell *matCellDef="let element"> {{element.total}} </td>
-            </ng-container> -->
-
+          
+            <ng-container matColumnDef="Status">
+              <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> Status </th>
+              <td mat-cell *matCellDef="let element" ><span *ngIf="element.onboard_Request_status_ID === 1" style="color: #22afbe;"> Pending </span><span *ngIf="element.onboard_Request_status_ID === 2" style="color: #94CC5B;"> Approved </span><span *ngIf="element.onboard_Request_status_ID === 3" style="color: #fe4945;"> Rejected </span></td>
+     
+            </ng-container> 
+            
             <ng-container matColumnDef="action">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let element" style="width:100px;">
-                <button mat-raised-button routerLink="/request-update/{{element.onboard_Request_Id}}" style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 85px; margin-top: 0.5%;"><mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Edit</button>
+                <button *ngIf="element.onboard_Request_status_ID == 1" mat-raised-button routerLink="/request-update/{{element.onboard_Request_Id}}" style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;background-color: #94CC5B;"><mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Edit</button>
               </td>
             </ng-container>
     
             <ng-container matColumnDef="delete">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let element" style="width:140px;">
-                <button mat-raised-button style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;" (click)="DeleteRequest(element.onboard_Request_Id)"><mat-icon matPrefix style="margin-right:10%;">delete</mat-icon>Delete</button>
+                <button *ngIf="element.onboard_Request_status_ID == 1" mat-raised-button id="btnHover" style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%" (click)="DeleteRequest(element.onboard_Request_Id)"><mat-icon matPrefix style="margin-right:10%;">delete</mat-icon>Delete</button>
               </td>
             </ng-container>
 
@@ -78,28 +78,42 @@
                         <th>Company Email:</th>
                         <th>Company Quotes:</th>
                       </thead>
-                      <tbody *ngFor="let Req of OnboardRequest">
-                        <tr *ngFor="let Ven of vendor;let i = index">
-                        <td *ngIf="Req.onboard_Request_Id == element.onboard_Request_Id && Req.vendor_ID == Ven.vendor_ID">{{Ven.name}}</td>
-                        <td *ngIf="Req.onboard_Request_Id == element.onboard_Request_Id && Req.vendor_ID == Ven.vendor_ID">{{Ven.email}}</td>
-                        <td *ngIf="Req.onboard_Request_Id == element.onboard_Request_Id && Req.vendor_ID == Ven.vendor_ID && FileDetails[i].FileName != 'None'" ><a href="{{FileDetails[i].FileURL}}" download="{{FileDetails[i].FileName}}">{{FileDetails[i].FileName}}</a>  </td>
-                        <td *ngIf="Req.onboard_Request_Id == element.onboard_Request_Id && Req.vendor_ID == Ven.vendor_ID && FileDetails[i].FileName == 'None'" ><b>{{FileDetails[i].FileName}}</b> </td>
-                        </tr>
+                      <tbody>
+                        <ng-container *ngFor="let Req of OnboardRequest; let a = index">
+                          <ng-container *ngIf="vendorIds.includes(Req.vendor_ID)">
+                            <tr *ngFor="let Ven of getVendorByVendorId(Req.vendor_ID); let i = index">
+                              <ng-container *ngIf="Req.onboard_Request_Id === element.onboard_Request_Id && Req.vendor_ID === Ven.vendor_ID">
+                              <td *ngIf="i === 0">{{Ven.name}}</td>
+                              <td *ngIf="i === 0">{{Ven.email}}</td>
+                              <td *ngIf="FileDetails[a].FileName !== 'None' && i === 0">
+                                <a href="{{FileDetails[a].FileURL}}" download="{{FileDetails[a].FileName}}">{{FileDetails[a].FileName}}</a>
+                              </td>
+                              <td *ngIf="FileDetails[a].FileName === 'None' && i === 0"><b>{{FileDetails[a].FileName}}</b></td>
+                            </ng-container>
+                            </tr>
+                          </ng-container>
+                        </ng-container>
                       </tbody>
                     </table>
                   </div>
                 </div>
               </td>
             </ng-container>
-          
+            
             <tr mat-header-row *matHeaderRowDef="displayedColumns"  style="background-color:#244688;"></tr>
             <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
             [class.example-expanded-row]="expandedElement === element"
             (click)="expandedElement = expandedElement === element ? null : element">
             </tr>
             <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+            </tr>
           </table>
+          <mat-paginator style="background-color: #eee;" [length]="ReqVenLen.length"  [pageSizeOptions]="[5, 10, 25, 100]"  [pageSize]="5" aria-label="Select page of GitHub search results"></mat-paginator>
         </div>
+       
     </mat-sidenav-content>
   </mat-sidenav-container>
 
