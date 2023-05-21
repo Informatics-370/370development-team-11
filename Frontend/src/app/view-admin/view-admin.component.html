@@ -97,8 +97,8 @@
         <ng-container matColumnDef="delete">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let Admins" style="width:140px;">
-            <button mat-raised-button
-                    style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%; background-color: #FE4945;"
+            <button id="DeleteButton" mat-raised-button
+                    style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;"
                     (click)="DeleteAdmin(Admins.user_Id)">
               <mat-icon matPrefix
                         style="margin-right:10%;">delete</mat-icon>Delete

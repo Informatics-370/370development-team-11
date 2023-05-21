@@ -10,6 +10,7 @@ import { DataService } from '../DataService/data-service';
 import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { OnboardRequest } from '../Shared/OnboardRequest';
 
 
 @Component({
@@ -60,6 +61,8 @@ export class ViewEmployeeComponent implements OnInit {
   DeleteEmployees: Employee[] = [];
   Employees: Employee[] = [];
   SearchedEmployee: Employee[] = [];
+  Users: User[] = [];
+  OnboardRequests: OnboardRequest[] = [];
   searchWord: string = "";
 
   ngOnInit() {
@@ -100,9 +103,51 @@ export class ViewEmployeeComponent implements OnInit {
   }
 
   DeleteEmployee(id: Number) {
-    const confirm = this.dialog.open(DeleteEmployeeComponent, {
-      disableClose: true,
-      data: { id }
-    });
+    this.dataService.GetAllOnboardRequest().subscribe({
+      next: (result) => {
+        let UserList: any[] = result
+        UserList.forEach((element) => {
+          this.OnboardRequests.push(element)
+        });
+        var Count: number = 0;
+        this.OnboardRequests.forEach(element => {
+          if (element.user_Id == id) {
+            Count = Count + 1;
+          }
+        });
+        if (Count == 0) {
+          const confirm = this.dialog.open(DeleteEmployeeComponent, {
+            disableClose: true,
+            data: { id }
+          });
+        }
+        else {
+
+          this.dataService.GetUser(id).subscribe(UserRecieved => {
+            this.userDelete = UserRecieved
+            this.UserToDelete.role_ID = this.userDelete.role_ID;
+            this.UserToDelete.username = this.userDelete.username;
+            this.UserToDelete.password = this.userDelete.password;
+            this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
+            this.UserToDelete.user_Id = this.userDelete.user_Id;
+            this.UserToDelete.role = this.userDelete.role;
+          });
+
+          var action = "ERROR";
+          var title = "ERROR: Category In Use";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A USER!</strong><br> Please remove the user from associated tables to continue with deletion.");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 4000;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
+      }
+    })
   }
 }

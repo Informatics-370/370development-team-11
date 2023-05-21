@@ -522,7 +522,7 @@ export class DataService {
   }
 
   GetBranch(Branch_ID: number) {
-    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch` + '/' + Branch_ID).pipe(map(result => result))
+    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch/` + '/' + Branch_ID).pipe(map(result => result))
   }
 
 

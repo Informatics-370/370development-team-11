@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
 
 
   ngOnInit(): void {
+    document.getElementById('nav').style.visibility = "hidden";
     this.myForm = this.formBuilder.group({
       UserName: ['', []],
       Password: ['', []]
@@ -47,7 +48,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem("Role", JSON.stringify(response.role.name))
 
           this.myForm.reset();
-          this.router.navigate(['/ViewConsumable']);
+          this.router.navigate(['/Home']);
         }
 
         else {
