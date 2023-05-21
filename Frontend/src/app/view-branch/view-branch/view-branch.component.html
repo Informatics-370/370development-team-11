@@ -92,16 +92,16 @@
           </td>
         </ng-container>
 
-
-        <ng-container matColumnDef="delete">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let Branches" style="width:140px;">
-            <button id="DeleteButton" mat-raised-button
-              style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;"
-              (click)="DeleteBranch(this.Branches.branch_ID)"><mat-icon matPrefix
-                style="margin-right:10%;">delete</mat-icon>Delete</button>
-          </td>
-        </ng-container>
+       
+          <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let Branches" style="width:140px;">
+                  <button id="DeleteButton" mat-raised-button
+                      style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;"
+                      (click)="DeleteBranch(this.Branches.branch_ID)"><mat-icon matPrefix
+                          style="margin-right:10%;">delete</mat-icon>Delete</button>
+              </td>
+          </ng-container>
 
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns" style="background-color:#244688;"></tr>

@@ -7,10 +7,12 @@ import { Router } from '@angular/router';
 import { DeleteDepartmentComponent } from 'src/app/delete-department/delete-department/delete-department.component';
 import { DataService } from 'src/app/DataService/data-service';
 import { Employee } from 'src/app/Shared/Employee';
+import { BudgetAllocation } from 'src/app/Shared/BudgetAllocation';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component'; 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
-import { count } from 'rxjs';
+import { count, elementAt } from 'rxjs';
+
 
 @Component({
   selector: 'app-view-department',
@@ -20,6 +22,7 @@ import { count } from 'rxjs';
 export class ViewDepartmentComponent implements OnInit{
   Departments: Department[] = [];
   Employees: Employee[]=[];
+  Budget_Allocation : BudgetAllocation[]=[];
   SearchedDepartment: Department[] = [];
   searchWord: string = "";
 
@@ -79,12 +82,28 @@ DeleteDepartment(department_ID: number) {
       EmployeeList.forEach((element) => {
         this.Employees.push(element)
       });
+     
+    this.dataService.GetBudgetAllocations().subscribe({
+      next: (result)=> {
+          let Budgetallocationlist: any[] = result
+          Budgetallocationlist.forEach((element) => {
+          this.Budget_Allocation.push(element)
+          });
+     
+      
 
       var Count: number = 0;
 
       this.Employees.forEach(element => {
         if (element.department_ID == department_ID) {
           Count = Count + 1;
+          console.log(Count)
+        }
+      });
+
+      this.Budget_Allocation.forEach(element => {
+        if(element.department_ID == department_ID){
+          Count = Count +1;
           console.log(Count)
         }
       });
@@ -118,6 +137,9 @@ DeleteDepartment(department_ID: number) {
           dialogRef.close();
         }, duration);
       }
+
+    }
+  })
     }
   })
 
