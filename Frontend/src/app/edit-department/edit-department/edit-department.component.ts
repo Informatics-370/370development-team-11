@@ -44,7 +44,101 @@ export class EditDepartmentComponent implements OnInit{
     this.router.navigateByUrl('ViewDepartment');
   }
 
-  onSubmit() {
+  // onSubmit() {
+  //   var name = this.myForm.get('name')?.value;
+
+  //   this.dataService.DepartmentValidation(name).subscribe({
+  //     next: (Result) => {
+  //       if (Result == null) {
+  //         this.dataService.EditDepartment(this.Department.department_ID, this.myForm.value).subscribe({
+  //           next: (response) => {
+  //             var action = "Update";
+  //             var title = "UPDATE SUCCESSFUL";
+  //             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+  //             const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+  //               disableClose: true,
+  //               data: { action, title, message }
+  //             });
+
+  //             const duration = 1750;
+  //             setTimeout(() => {
+  //               this.router.navigate(['/ViewDepartment']);
+  //               dialogRef.close();
+  //             }, duration);
+  //           }
+  //         })
+  //       }
+
+  //       if (Result.department_ID !== this.Department.department_ID && Result.name === this.Department.name) {
+  //         var action = "ERROR";
+  //         var title = "ERROR: Department Exists";
+  //         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + this.Department.name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+  //         const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+  //           disableClose: true,
+  //           data: { action, title, message }
+  //         });
+
+  //         const duration = 1750;
+  //         setTimeout(() => {
+  //           dialogRef.close();
+  //         }, duration);
+  //       }
+
+  //       else if (Result.name === this.Department.name &&
+  //         Result.description === this.Department.description) {
+  //         var action = "NOTIFICATION";
+  //         var title = "NOTIFICATION: NO CHANGES MADE";
+  //         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to the Department: <strong>" + this.Department.name + "</strong>");
+
+  //         const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+  //           disableClose: true,
+  //           data: { action, title, message }
+  //         });
+
+  //         const duration = 1750;
+  //         setTimeout(() => {
+  //           this.router.navigate(['/ViewDepartment']);
+  //           dialogRef.close();
+  //         }, duration);
+  //       }
+  //       else if (Result.name !== this.Department.name ||
+  //         Result.description !== this.Department.description
+  //         && Result.department_ID == this.Department.department_ID) {
+  //         this.dataService.EditDepartment(this.Department.department_ID, this.Department).subscribe({
+  //           next: (response) => {
+  //             var action = "Update";
+  //             var title = "UPDATE SUCCESSFUL";
+  //             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + this.Department.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+  //             const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+  //               disableClose: true,
+  //               data: { action, title, message }
+  //             });
+
+  //             const duration = 1750;
+  //             setTimeout(() => {
+  //               this.router.navigate(['/ViewDepartment']);
+  //               dialogRef.close();
+  //             }, duration);
+
+  //           }
+  //         });
+
+  //       }
+
+
+  //     }
+  //   })
+
+
+
+
+
+  // }
+
+  onSubmit(){
     var name = this.myForm.get('name')?.value;
 
     this.dataService.DepartmentValidation(name).subscribe({
@@ -69,6 +163,7 @@ export class EditDepartmentComponent implements OnInit{
             }
           })
         }
+
         else {
           var action = "ERROR";
           var title = "ERROR: Department Exists";
@@ -85,8 +180,7 @@ export class EditDepartmentComponent implements OnInit{
           }, duration);
         }
       }
-    })
-
+    });
 
   }
 

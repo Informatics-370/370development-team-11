@@ -93,13 +93,7 @@ export class DataService {
   }
 
   //--------------------------------------------------------------------------------------Branch--------------------------------------------------------------------------------------
-  GetBranches(): Observable<any> {
-    return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetBranches`).pipe(map(result => result))
-  }
-
-  GetBranch(Branch_ID: Number) {
-    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch/` + Branch_ID).pipe(map(result => result))
-  }
+ 
 
   AddBranch(AddBranchRequest: Branch) {
     return this.httpClient.post<Branch>(`${this.apiUrl}Branch/CreateBranch`, AddBranchRequest, this.httpOptions)
@@ -118,9 +112,7 @@ export class DataService {
   }
 
   //--------------------------------------------------------------------------------------Department--------------------------------------------------------------------------------------
-  GetDepartments(): Observable<any> {
-    return this.httpClient.get<Department[]>(`${this.apiUrl}Department/GetDepartments`).pipe(map(result => result))
-  }
+  
 
   //requests
 
@@ -372,9 +364,7 @@ export class DataService {
     return this.httpClient.post(`${this.apiUrl}Mandate/AddMandateLimit`, ml, this.httpOptions)
   }
 
-  EditMandateLimit(mlID: number | Number, ml: Mandate_Limit,) {
-    return this.httpClient.put(`${this.apiUrl}Mandate/EditMandateLimit/${mlID}`, ml, this.httpOptions)
-  }
+
 
   //--------------------------------------------------------------------------------------User--------------------------------------------------------------------------------------
   GetUsers(): Observable<any> {
@@ -497,6 +487,7 @@ export class DataService {
   EditMandateLimit(mlID: Number, ml: Mandate_Limit,) {
     return this.httpClient.put<Mandate_Limit>(`${this.apiUrl}Mandate/EditMandateLimit/${mlID}`, ml, this.httpOptions)
   }
+ 
 
   DeleteMandateLimit(mlID: Number) {
     return this.httpClient.delete<string>(`${this.apiUrl}Mandate/DeleteMandateLimit` + "/" + mlID, this.httpOptions)
@@ -528,13 +519,15 @@ export class DataService {
     return this.httpClient.get<Department[]>(`${this.apiUrl}Department/GetDepartments`).pipe(map(result => result))
   }
 
+
   //Branch
+
   GetBranches(): Observable<any> {
     return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetBranches`).pipe(map(result => result))
   }
 
-  GetBranch(Branch_ID: number) {
-    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch` + '/' + Branch_ID).pipe(map(result => result))
+  GetBranch(Branch_ID: Number) {
+    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch/` + Branch_ID).pipe(map(result => result))
   }
 
 

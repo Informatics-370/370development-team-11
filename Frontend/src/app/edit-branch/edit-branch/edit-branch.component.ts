@@ -92,4 +92,105 @@ export class EditBranchComponent implements OnInit{
     })
 
   }
+
+  // onSubmit() {
+  //   var street = this.myForm.get('street')?.value;
+
+  //   this.dataService.BranchValidation(street).subscribe({
+  //     next: (Result) => {
+  //       if (Result == null) {
+  //         this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe({
+  //           next: (response) => {
+  //             var action = "Update";
+  //             var title = "UPDATE SUCCESSFUL";
+  //             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + street + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+  //             const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+  //               disableClose: true,
+  //               data: { action, title, message }
+  //             });
+
+  //             const duration = 1750;
+  //             setTimeout(() => {
+  //               this.router.navigate(['/ViewBranch']);
+  //               dialogRef.close();
+  //             }, duration);
+  //           }
+  //         })
+  //       }
+
+  //       if (Result.branch_ID !== this.Branch.branch_ID && Result.street === this.Branch.street) {
+  //         var action = "ERROR";
+  //         var title = "ERROR: Branch Exists";
+  //         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch with this street address <strong>" + this.Branch.street + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+  //         const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+  //           disableClose: true,
+  //           data: { action, title, message }
+  //         });
+
+  //         const duration = 1750;
+  //         setTimeout(() => {
+  //           dialogRef.close();
+  //         }, duration);
+  //       }
+
+  //       else if (Result.name === this.Branch.name &&
+  //         Result.street === this.Branch.street  &&
+  //         Result.city === this.Branch.city &&
+  //         Result.postal_Code === this.Branch.postal_Code &&
+  //         Result.province === this.Branch.province) {
+  //         var action = "NOTIFICATION";
+  //         var title = "NOTIFICATION: NO CHANGES MADE";
+  //         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to the Branch: <strong>" + this.Branch.street + "</strong>");
+
+  //         const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+  //           disableClose: true,
+  //           data: { action, title, message }
+  //         });
+
+  //         const duration = 1750;
+  //         setTimeout(() => {
+  //           this.router.navigate(['/ViewBranch']);
+  //           dialogRef.close();
+  //         }, duration);
+  //       }
+  //       else if (Result.name !== this.Branch.name ||
+  //         Result.street !== this.Branch.street ||
+  //         Result.city !== this.Branch.city ||
+  //         Result.postal_Code !== this.Branch.postal_Code ||
+  //         Result.province !== this.Branch.province
+  //         && Result.branch_ID == this.Branch.branch_ID) {
+  //         this.dataService.EditBranch(this.Branch.branch_ID, this.Branch).subscribe({
+  //           next: (response) => {
+  //             var action = "Update";
+  //             var title = "UPDATE SUCCESSFUL";
+  //             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + this.Branch.street + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+  //             const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+  //               disableClose: true,
+  //               data: { action, title, message }
+  //             });
+
+  //             const duration = 1750;
+  //             setTimeout(() => {
+  //               this.router.navigate(['/ViewBranch']);
+  //               dialogRef.close();
+  //             }, duration);
+
+  //           }
+  //         });
+
+  //       }
+
+
+  //     }
+  //   })
+
+
+
+
+
+  // }
+
 }
