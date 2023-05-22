@@ -230,8 +230,8 @@ OnboardRequestDetails: any[] = [];
       FolderCategory = "VATRegistration";
       VendorNo = "Vendor" + this.Vendor.vendor_ID
       fileName =  this.FileDetails[1].FileName
-      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()!
-      this.VendorService.DeleteVatByID(this.VendorVat.vat_Registration_Number).subscribe(response => {console.log(response)})
+      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
+      this.VendorService.DeleteVatByID(this.VendorLicense.vendor_Detail_ID).subscribe(response => {console.log(response)})
     }
     if(this.VendorDetail.websiteProvided == true) {
       this.VendorService.DeleteWebsiteByID(this.VendorWebsite.website_ID).subscribe(response => {console.log(response)})
@@ -240,7 +240,7 @@ OnboardRequestDetails: any[] = [];
       FolderCategory = "LicenseOrAccreditationNumber";
       fileName =  this.FileDetails[5].FileName
       VendorNo = "Vendor" + this.Vendor.vendor_ID
-      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()!
+      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
       this.VendorService.DeleteLicenseByID(this.VendorLicense.vendor_Detail_ID).subscribe(response => {console.log(response)})
     }
     if(this.VendorDetail.signed_Agreement_Provided == true) {
@@ -248,14 +248,14 @@ OnboardRequestDetails: any[] = [];
       FolderCategory = "SignedAgreement";
       VendorNo = "Vendor" + this.Vendor.vendor_ID
       fileName =  this.FileDetails[3].FileName
-      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()!
+      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
       this.VendorService.DeleteAgreementByID(this.VendorAgreement.agreement_ID).subscribe(response => {console.log(response)})
     }
     if(this.VendorDetail.insurance_Provided == true) {
       FolderCategory = "InsuranceCover";
       VendorNo = "Vendor" + this.Vendor.vendor_ID
       fileName =  this.FileDetails[4].FileName
-      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()!
+      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
       this.VendorService.DeleteInsuranceByID(this.VendorInsurance.insurance_ID).subscribe(response => {console.log(response)})
     }
     if(this.VendorDetail.payment_Terms_Provided == true) {
@@ -265,14 +265,14 @@ OnboardRequestDetails: any[] = [];
       FolderCategory = "IncomeTax";
       VendorNo = "Vendor" + this.Vendor.vendor_ID
       fileName =  this.FileDetails[2].FileName
-      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()!
+      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
       this.VendorService.DeleteIncomeTaxByID(this.VendorTax.vendor_Detail_ID).subscribe(response => {console.log(response)})
     }
     if(this.VendorDetail.registration_Provided == true) {
       FolderCategory = "RegistrationProof";
       VendorNo = "Vendor" + this.Vendor.vendor_ID
       fileName =  this.FileDetails[0].FileName
-      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()!
+      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
       this.VendorService.DeleteRegistrationByID(this.VendorRegistration.vendor_Detail_ID).subscribe(response => {console.log(response)})
     } 
     this.FinalDelete();
@@ -283,7 +283,7 @@ OnboardRequestDetails: any[] = [];
     let  FolderCategory = "Bank";
     let  VendorNo = "Vendor" + this.Vendor.vendor_ID 
     let  fileName =  this.FileDetails[6].FileName
-    this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()!
+    this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
     this.VendorService.DeleteVendorDetails(this.VendorDetail.vendor_Detail_ID).subscribe({
       next:(response) => { 
         this.VendorService.UpdateVendorStatus(this.VendorDetail.vendor_ID,2).subscribe(result => {console.log(result)})

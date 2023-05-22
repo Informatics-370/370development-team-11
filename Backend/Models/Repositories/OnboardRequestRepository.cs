@@ -107,7 +107,7 @@ namespace ProcionAPI.Models.Repositories
 
             if (existingVendor != null)
             {
-               if(existingVendor.Vendor_Status_ID == 2)
+               if(existingVendor.Vendor_Status_ID == 3 || existingVendor.Vendor_Status_ID == 2)
                 {
                     return existingVendor;
                 }
@@ -157,14 +157,15 @@ namespace ProcionAPI.Models.Repositories
 
             if (existingVendor != null)
             {
+                existingVendor.Sole_Supplier_Provided = UpdatedRequest.Vendor.Sole_Supplier_Provided;
                 existingVendor.Email = UpdatedRequest.Vendor.Email;
                 ReqUpdt.Vendor = existingVendor;
             }
             else
             {
                 existingVendor = await _dbContext.Vendor.FindAsync(UpdatedRequest.Vendor.Vendor_ID);
-              
-                    existingVendor.Name = UpdatedRequest.Vendor.Name;
+                existingVendor.Sole_Supplier_Provided = UpdatedRequest.Vendor.Sole_Supplier_Provided;
+                existingVendor.Name = UpdatedRequest.Vendor.Name;
                     existingVendor.Email = UpdatedRequest.Vendor.Email;
                      ReqUpdt.Vendor = existingVendor;
                

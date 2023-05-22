@@ -452,6 +452,7 @@ export class RequestUpdateComponent {
     this.Vendor.vendor_Status_ID = 1;
     this.Vendor.number_Of_Times_Used = 0;
     this.Onboard_Request.vendor = this.Vendor;
+    this.Onboard_Request.vendor.sole_Supplier_Provided = true;
     this.Onboard_Request.onboard_Status = this.OnboardStatus;
     this.SoleSupply.reason = this.SoleSupplierFormGroup.get("Reason")?.value
     this.Onboard_Request = this.onboardRequest[0]
@@ -467,6 +468,7 @@ export class RequestUpdateComponent {
         console.log(Path)
         this.sPath = Path.pathSaved.toString()
         this.Onboard_Request.quotes = this.sPath
+        this.Onboard_Request.vendor.sole_Supplier_Provided = true;
         this.dataService.UpdateOnboardRequest(this.onboardRequest[0].onboard_Request_Id,this.Onboard_Request).subscribe(
           (RequestAdded) => {
             this.SoleSupply.vendor_ID = RequestAdded.vendor_ID

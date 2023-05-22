@@ -236,8 +236,8 @@ namespace ProcionAPI.Data
             {
                 Vendor_ID = 1,
                 Vendor_Status_ID = 2,
-                Name = "why",
-                Email = "BE@gmail.com",
+                Name = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                Email = "xxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxx",
                 Number_Of_Times_Used = 0,
                 Sole_Supplier_Provided = false
             },
@@ -245,8 +245,8 @@ namespace ProcionAPI.Data
             {
                 Vendor_ID = 2,
                 Vendor_Status_ID = 2,
-                Name = "tell",
-                Email = "tell@gmail.com",
+                Name = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2",
+                Email = "xxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxx",
                 Number_Of_Times_Used = 0,
                 Sole_Supplier_Provided = false
             }); ;
@@ -272,73 +272,7 @@ namespace ProcionAPI.Data
 
            }
            );
-            //modelBuilder.Entity<Vendor>()
-            //.HasData(
-            //new
-            //{
-            //    Vendor_ID = 1,
-            //    Vendor_Status_ID = 1,
-            //    Name = "why",
-            //    Email = "BE@gmail.com",
-            //    Number_Of_Times_Used = 0,
-            //}, 
-            //new
-            //{
-            //    Vendor_ID = 2,
-            //    Vendor_Status_ID = 1,
-            //    Name = "tell",
-            //    Email = "tell@gmail.com",
-            //    Number_Of_Times_Used = 0,
-            //},
-            //new
-            //{
-            //    Vendor_ID = 3,
-            //    Vendor_Status_ID = 1,
-            //    Name = "tebooll",
-            //    Email = "tebooll@gmail.com",
-            //    Number_Of_Times_Used = 0,
-            //},
-            //new
-            //{
-            //    Vendor_ID = 4,
-            //    Vendor_Status_ID = 1,
-            //    Name = "te",
-            //    Email = "te@wgmail.com",
-            //    Number_Of_Times_Used = 0,
-            //}
-            //);
-
-            //modelBuilder.Entity<Onboard_Request>()
-            //.HasData(
-            //new
-            //{
-            //    Onboard_Request_Id = 1,
-            //    User_Id = 1,
-            //    Vendor_ID = 1,
-            //    Quotes = "BE",
-            //},
-            //new
-            //{
-            //    Onboard_Request_Id = 1,
-            //    User_Id = 1,
-            //    Vendor_ID = 2,
-            //    Quotes = "SOwhy",
-            //},
-            //new
-            //{
-            //    Onboard_Request_Id = 2,
-            //    User_Id = 1,
-            //    Vendor_ID = 3,
-            //    Quotes = "ohno",
-            //},
-            //new
-            //{
-            //    Onboard_Request_Id = 2,
-            //    User_Id = 1,
-            //    Vendor_ID = 4,
-            //    Quotes = "anyway",
-            //}
-            //);
+         
 
         }
     }

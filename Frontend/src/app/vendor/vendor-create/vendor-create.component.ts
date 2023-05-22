@@ -529,11 +529,12 @@ export class VendorCreateComponent implements OnInit{
             FolderCategory = "VATRegistration";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let file:File = this.fileName[1]
+            this.VendorVat.vat_Registration_Number = Number(this.CompanyOverviewFormGroup.get("VatRegistrationNumber")?.value)
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
               let Path: any = response
               this.VendorVat.vaT_Registration_Document = Path.returnedPath.toString();
               this.VendorVat.vendor_Detail_ID = this.VD_ID 
-              this.VendorVat.vat_Registration_Number = Number(this.CompanyOverviewFormGroup.get("VatRegistrationNumber")?.value)
+              
               console.log(this.VendorVat)
               this.VendorService.AddVat(this.VendorVat).subscribe(response => {console.log(response)})
             })
@@ -548,6 +549,7 @@ export class VendorCreateComponent implements OnInit{
             FolderCategory = "LicenseOrAccreditationNumber";
             let file:File = this.fileName[5]
               VendorNo = "Vendor" + this.Vendor.vendor_ID
+              this.VendorLicense.license_No = Number(this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value)
               this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
                 let Path: any = response
                 this.VendorLicense.license_Doc_Upload = Path.returnedPath.toString();

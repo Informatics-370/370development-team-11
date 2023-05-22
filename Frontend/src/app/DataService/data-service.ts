@@ -151,7 +151,7 @@ export class DataService {
   }
 
   AddOnboardRequest(AddRequest: OnboardRequest) {
-    return this.httpClient.post(`${this.apiUrl}OnboardRequest/CreateOnboardRequest`, AddRequest, this.httpOptions)
+    return this.httpClient.post<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/CreateOnboardRequest`, AddRequest, this.httpOptions)
   }
 
   GetVendorsRequest() {
