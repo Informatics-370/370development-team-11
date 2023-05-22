@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../DataService/data-service';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BudgetCategory } from '../Shared/BudgetCategory';
+import { BudgetLine } from '../Shared/BudgetLine';
 import { DeleteBudgetCategoryComponent } from '../delete-budget-category/delete-budget-category.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
 @Component({
   selector: 'app-view-budget-category',
@@ -15,10 +18,20 @@ export class ViewBudgetCategoryComponent implements OnInit {
   displayedColumns: string[] = ['id', 'account_Name', 'description', 'action', 'delete'];
   dataSource = new MatTableDataSource<BudgetCategory>();
 
-  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService) { }
+  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService,
+    private sanitizer: DomSanitizer) { }
   SearchedBudgetCategories: BudgetCategory[] = [];
   BudgetCategories: BudgetCategory[] = [];
   searchWord: string = '';
+
+  deleteBudgetCategory: BudgetCategory = {
+    category_ID: 0,
+    account_Name: '',
+    description: ''
+  }
+
+  BudgetLines: BudgetLine[] = [];
+
 
   OnInPutChange() {
     const Searchterm = this.searchWord.toLocaleLowerCase();
@@ -46,10 +59,50 @@ export class ViewBudgetCategoryComponent implements OnInit {
     });
   }
   DeleteBudgetCategory(id: Number) {
-    const confirm = this.dialog.open(DeleteBudgetCategoryComponent, {
-      disableClose: true,
-      data: { id }
-    });
+    this.dataService.GetBudgetLines().subscribe({
+      next: (result) => {
+        let LineList: any[] = result
+        LineList.forEach((element) => {
+          this.BudgetLines.push(element)
+        });
+        console.log(this.BudgetLines)
+        var Count: number = 0;
+        this.BudgetLines.forEach(element => {
+          if (element.category_ID == id) {
+            Count = Count + 1;
+            console.log(Count)
+          }
+        });
+
+        if (Count == 0) {
+          const confirm = this.dialog.open(DeleteBudgetCategoryComponent, {
+            disableClose: true,
+            data: { id }
+          });
+        }
+        else {
+
+          this.dataService.GetBudgetCategory(id).subscribe({
+            next: (categoryReceived) => {
+              this.deleteBudgetCategory = categoryReceived as BudgetCategory;
+            }
+          })
+          var action = "ERROR";
+          var title = "ERROR: Budget Category In Use";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Category <strong>" + this.deleteBudgetCategory.account_Name + " <strong style='color:red'>IS ASSOCIATED WITH A BUDGET LINE!</strong><br> Please remove the budget category from the budget line to continue with deletion.");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 4000;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
+      }
+    })
   }
 
 }

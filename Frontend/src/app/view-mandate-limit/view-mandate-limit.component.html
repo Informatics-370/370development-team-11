@@ -54,7 +54,7 @@
                 </ng-container>
                 <ng-container matColumnDef="date">
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> Date </th>
-                    <td mat-cell *matCellDef="let MandateLimits">{{MandateLimits.date}}</td>
+                    <td mat-cell *matCellDef="let MandateLimits">{{MandateLimits.date | date:"dd/MM/yyyy"}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="action">
