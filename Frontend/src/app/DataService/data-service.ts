@@ -27,6 +27,7 @@ import { Vendor_Tax } from '../Shared/VendorDetailsIncomeTaxNum';
 import { MailData } from '../Shared/Mail';
 import { BudgetCategory } from '../Shared/BudgetCategory';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
+import { BudgetLine } from '../Shared/BudgetLine';
 
 @Injectable({
   providedIn: 'root'
@@ -494,9 +495,6 @@ export class DataService {
   //}
 
 
-  EditMandateLimit(mlID: Number, ml: Mandate_Limit,) {
-    return this.httpClient.put<Mandate_Limit>(`${this.apiUrl}Mandate/EditMandateLimit/${mlID}`, ml, this.httpOptions)
-  }
 
   DeleteMandateLimit(mlID: Number) {
     return this.httpClient.delete<string>(`${this.apiUrl}Mandate/DeleteMandateLimit` + "/" + mlID, this.httpOptions)
@@ -523,19 +521,6 @@ export class DataService {
 
 
 
-  //Department
-  GetDepartments(): Observable<any> {
-    return this.httpClient.get<Department[]>(`${this.apiUrl}Department/GetDepartments`).pipe(map(result => result))
-  }
-
-  //Branch
-  GetBranches(): Observable<any> {
-    return this.httpClient.get<Branch[]>(`${this.apiUrl}Branch/GetBranches`).pipe(map(result => result))
-  }
-
-  GetBranch(Branch_ID: number) {
-    return this.httpClient.get(`${this.apiUrl}Branch/GetBranch` + '/' + Branch_ID).pipe(map(result => result))
-  }
 
 
 
@@ -585,6 +570,27 @@ export class DataService {
   DeleteBudgetAllocation(budgetAllocationID: Number) {
     return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetAllocation` + "/" + budgetAllocationID, this.httpOptions)
   }
+
+  GetBudgetLineItems(budgetAllocationID: Number): Observable<any> {
+    return this.httpClient.get<BudgetLine[]>(`${this.apiUrl}BudgetAllocation/GetBudgetLinesForAllocation/${budgetAllocationID}`).pipe(map(result => result))
+  }
+
+  AddBudgetLine(budgetLine: BudgetLine) {
+    return this.httpClient.post<BudgetLine>(`${this.apiUrl}BudgetAllocation/AddBudgetLine`, budgetLine, this.httpOptions)
+  }
+
+  GetBudgetLine(accountCode: Number) {
+    return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetLine` + '/' + accountCode).pipe(map(result => result))
+  }
+
+  EditBudgetLine(accountCode: Number, budgetLine: BudgetLine) {
+    return this.httpClient.put<BudgetLine>(`${this.apiUrl}BudgetAllocation/EditBudgetLine/${accountCode}`, budgetLine, this.httpOptions)
+  }
+
+  DeleteBudgetLine(accountCode: Number) {
+    return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetLine` + "/" + accountCode, this.httpOptions)
+  }
+
 
 }
 

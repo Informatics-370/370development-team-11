@@ -82,6 +82,12 @@ import { DeleteBudgetCategoryComponent } from './delete-budget-category/delete-b
 import { ViewBudgetAllocationComponent } from './view-budget-allocation/view-budget-allocation.component';
 import { CreateBudgetAllocationComponent } from './create-budget-allocation/create-budget-allocation.component';
 import { DeleteBudgetAllocationComponent } from './delete-budget-allocation/delete-budget-allocation.component';
+import { ViewBudgetLinesComponent } from './view-budget-lines/view-budget-lines.component';
+import { CreateBudgetLineComponent } from './create-budget-line/create-budget-line.component';
+import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
+import { DeleteBudgetLineComponent } from './delete-budget-line/delete-budget-line.component';
+import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
+
 
 
 @NgModule({
@@ -131,7 +137,7 @@ import { DeleteBudgetAllocationComponent } from './delete-budget-allocation/dele
     VendordetailsViewComponent,
     VendorCreateChoiceComponent,
     LoginComponent,
-    HomePageComponent
+    HomePageComponent,
     DeleteMandateLimitComponent,
     ViewBudgetCategoryComponent,
     CreateBudgetCategoryComponent,
@@ -139,7 +145,12 @@ import { DeleteBudgetAllocationComponent } from './delete-budget-allocation/dele
     DeleteBudgetCategoryComponent,
     ViewBudgetAllocationComponent,
     CreateBudgetAllocationComponent,
-    DeleteBudgetAllocationComponent
+    DeleteBudgetAllocationComponent,
+    ViewBudgetLinesComponent,
+    CreateBudgetLineComponent,
+    EditBudgetLineComponent,
+    DeleteBudgetLineComponent,
+    EditBudgetAllocationComponent
   ],
   imports: [
     BrowserModule,
