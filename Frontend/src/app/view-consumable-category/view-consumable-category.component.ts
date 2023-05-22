@@ -51,13 +51,21 @@ export class ViewConsumableCategoryComponent implements OnInit {
 
   GetCategories() {
     this.dataService.GetCategories().subscribe(result => {
-      let CategoryList: any[] = result
-      CategoryList.forEach((element) => {
-        this.ConsumableCategories.push(element)
-        this.SearchedConsumableCategories.push(element)
-      })
-    })
+      let categoryList: any[] = result;
+      this.ConsumableCategories = [...categoryList];
+      this.SearchedConsumableCategories = [...categoryList];
+
+      if (result) {
+        hideloader();
+      }
+    });
+
+    function hideloader() {
+      document.getElementById('loading').style.display = "none";
+      document.getElementById('table').style.visibility = "visible";
+    }
   }
+
 
   GetConsumables() {
     this.dataService.GetConsumables().subscribe(result => {
