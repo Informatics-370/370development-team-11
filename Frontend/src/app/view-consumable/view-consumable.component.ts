@@ -40,13 +40,22 @@ export class ViewConsumableComponent implements OnInit {
 
   GetConsumables() {
     this.dataService.GetConsumables().subscribe(result => {
-      let ConsumableList: any[] = result
-      ConsumableList.forEach((element) => {
-        this.Consumables.push(element)
-        this.SearchedConsumables.push(element)
-      });
-    })
+      let consumableList: any[] = result;
+      this.Consumables = [...consumableList];
+      this.SearchedConsumables = [...consumableList];
+      console.log(this.SearchedConsumables)
+      if (result) {
+        hideloader();
+      }
+
+    });
+
+    function hideloader() {
+      document.getElementById('loading').style.display = "none";
+      document.getElementById('table').style.visibility = "visible";
+    }
   }
+
   hoveredButton: number | null = null;
 
 

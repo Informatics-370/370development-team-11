@@ -40,11 +40,12 @@
 
 
         <div style="margin-right:1%; margin-left:1%;">
-            <div class="d-flex justify-content-center" *ngIf="SearchedConsumableCategories.length === 0">
+
+            <div class="d-flex justify-content-center">
                 <span class="loader" id="loading"></span>
             </div>
-            <table mat-table *ngIf="SearchedConsumableCategories.length > 0" [dataSource]="SearchedConsumableCategories"
-                class="mat-elevation-z8">
+
+            <table mat-table [dataSource]="SearchedConsumableCategories" class="mat-elevation-z8" id="table">
 
                 <ng-container matColumnDef="Name">
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Name </th>
