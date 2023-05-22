@@ -31,8 +31,23 @@ export class CreateDepartmentComponent implements OnInit {
     this.dataService.DepartmentValidation(name).subscribe({
       next: (Result) => {
         if (Result == null) {
-          this.dataService.AddDepartments(this.myForm.value).subscribe(result => {
-            this.router.navigate(['ViewDepartment'])
+          this.dataService.AddDepartments(this.myForm.value).subscribe({
+            next: (response) => {
+              var action = "Create";
+              var title = "CREATED SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/ViewDepartment']);
+                dialogRef.close();
+              }, duration);
+            }
           })
         }
         else {
