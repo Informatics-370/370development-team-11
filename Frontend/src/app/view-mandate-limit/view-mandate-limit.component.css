@@ -23,3 +23,11 @@ table {
 .uni-font {
     font-size: 16pt;
 }
+
+#DeleteButton:hover {
+    background-color: #FE4945;
+}
+
+#DeleteButton {
+    background-color: #22afbe;
+}

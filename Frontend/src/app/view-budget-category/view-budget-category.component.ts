@@ -16,8 +16,24 @@ export class ViewBudgetCategoryComponent implements OnInit {
   dataSource = new MatTableDataSource<BudgetCategory>();
 
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService) { }
-
+  SearchedBudgetCategories: BudgetCategory[] = [];
   BudgetCategories: BudgetCategory[] = [];
+  searchWord: string = '';
+
+  OnInPutChange() {
+    const Searchterm = this.searchWord.toLocaleLowerCase();
+
+    if (Searchterm) {
+      this.SearchedBudgetCategories = this.BudgetCategories.filter(Category => Category.account_Name.toLocaleLowerCase().includes(Searchterm))
+      this.dataSource = new MatTableDataSource(this.SearchedBudgetCategories);
+    }
+    else if (Searchterm == "") {
+      this.SearchedBudgetCategories = [...this.BudgetCategories];
+      this.dataSource = new MatTableDataSource(this.SearchedBudgetCategories);
+    }
+  }
+
+
 
   ngOnInit() {
     this.GetBudgetCategories();
@@ -25,7 +41,8 @@ export class ViewBudgetCategoryComponent implements OnInit {
 
   GetBudgetCategories() {
     this.dataService.GetBudgetCategories().subscribe(result => {
-      this.dataSource = result;
+      this.BudgetCategories = result;
+      this.dataSource = new MatTableDataSource(this.BudgetCategories);
     });
   }
   DeleteBudgetCategory(id: Number) {

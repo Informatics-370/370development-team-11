@@ -14,10 +14,27 @@ import { DeleteBudgetAllocationComponent } from '../delete-budget-allocation/del
 export class ViewBudgetAllocationComponent {
 
   BudgetAllocations: BudgetAllocation[] = [];
-  displayedColumns: string[] = ['id', 'department', 'date', 'year', 'total', 'action', 'delete'];
+  SearchedBudgetAllocations: BudgetAllocation[] = [];
+  searchNumber: Number = 0;
+  displayedColumns: string[] = ['id', 'department', 'date', 'year', 'total', 'lines', 'action', 'delete'];
   dataSource = new MatTableDataSource<BudgetAllocation>();
 
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService) { }
+
+  OnInPutChange() {
+    const Searchterm = this.searchNumber;
+
+    if (Searchterm) {
+      this.SearchedBudgetAllocations = this.BudgetAllocations.filter(budgetAllocation => budgetAllocation.year == Searchterm)
+      this.dataSource = new MatTableDataSource(this.SearchedBudgetAllocations);
+    }
+    else if (Searchterm == 0) {
+      this.SearchedBudgetAllocations = [...this.BudgetAllocations];
+      this.dataSource = new MatTableDataSource(this.SearchedBudgetAllocations);
+    }
+
+    this.dataSource = new MatTableDataSource<BudgetAllocation>(this.SearchedBudgetAllocations);
+  }
 
   ngOnInit() {
     this.GetBudgetAllocations();
@@ -25,7 +42,8 @@ export class ViewBudgetAllocationComponent {
 
   GetBudgetAllocations() {
     this.dataService.GetBudgetAllocations().subscribe(result => {
-      this.dataSource = result;
+      this.BudgetAllocations = result;
+      this.dataSource = new MatTableDataSource(this.BudgetAllocations);
     });
   }
   DeleteBudgetAllocation(id: Number) {

@@ -113,6 +113,22 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetBudgetLinesForAllocation/{allocationId}")]
+        public async Task<IActionResult> GetBudgetLinesForAllocation(int allocationId)
+        {
+            try
+            {
+                var result = await _repository.GetBudgetLinesForAllocationAsync(allocationId);
+                if (result == null) return NotFound("Budget Lines do not exist");
+                return Ok(result);
+            }
+            catch(Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
         [HttpPost]
         [Route("AddBudgetCategory")]
         public async Task<IActionResult> AddBudgetCategory(Budget_Category budget_Category)
@@ -137,14 +153,13 @@ namespace ProcionAPI.Controllers
             
             try
             {
-                _repository.Add(budget_Allocation);
-                await _repository.SaveChangesAsync();
+                var result = await _repository.AddBudgetAllocationAsync(budget_Allocation);
+                return Ok(result);
             }
             catch (Exception)
             {
-                return BadRequest("Invalid transaction");
+                return StatusCode(500, "Internal Server Error. Please contact support.");
             }
-            return Ok(budget_Allocation);
         }
 
         [HttpPost]
@@ -154,14 +169,14 @@ namespace ProcionAPI.Controllers
 
             try
             {
-                _repository.Add(budget_Line);
-                await _repository.SaveChangesAsync();
+
+                var result = await _repository.AddBudgetLineAsync(budget_Line);
+                return Ok(result);
             }
             catch (Exception)
             {
-                return BadRequest("Invalid transaction");
+                return StatusCode(500, "Internal Server Error. Please contact support.");
             }
-            return Ok(budget_Line);
         }
 
         [HttpPut]
@@ -221,30 +236,21 @@ namespace ProcionAPI.Controllers
         [HttpPut]
         [Route("EditBudgetLine/{accountCode}")]
 
-        public async Task<IActionResult> EditBudgetLine(int accountCode, Budget_Line budgetLine )
+        public async Task<IActionResult> EditBudgetLine(int accountCode, Budget_Line budgetLine)
         {
             try
             {
-                var existingBudgetLine = await _repository.GetBudgetLineAsync(accountCode);
-                if (existingBudgetLine == null) return NotFound("The budget line does not exist.");
+                var result = await _repository.UpdateBudgetLineAsync(budgetLine, accountCode);
 
-                existingBudgetLine.Month = budgetLine.Month;
-                existingBudgetLine.BudgetAmt = budgetLine.BudgetAmt;
-                existingBudgetLine.ActualAmt = budgetLine.ActualAmt;
-                existingBudgetLine.Variance = budgetLine.Variance;
+                return Ok(result);
 
-                if (await _repository.SaveChangesAsync())
-                {
-                    return Ok(existingBudgetLine);
-                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(500, "Internal Server Error. Please contact support.");
+                return StatusCode(500, e.Message);
             }
-
-            return BadRequest("Your request is invalid.");
         }
+
 
         [HttpDelete]
         [Route("DeleteBudgetCategory/{budgetCategoryId}")]

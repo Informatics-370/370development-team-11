@@ -20,6 +20,20 @@ export class ViewMandateLimitComponent implements OnInit {
 
   Mandate_Limits: Mandate_Limit[] = [];
   RoleToUse: string = "";
+  SearchedMandate_Limits: Mandate_Limit[] = [];
+  searchNumber: Number = 0;
+  OnInPutChange() {
+    const Searchterm = this.searchNumber;
+
+    if (Searchterm) {
+      this.SearchedMandate_Limits = this.Mandate_Limits.filter(mandateLimit => mandateLimit.ammount == Searchterm)
+    }
+    else if (Searchterm == 0) {
+      this.SearchedMandate_Limits = [...this.Mandate_Limits];
+    }
+
+    this.dataSource = new MatTableDataSource<Mandate_Limit>(this.SearchedMandate_Limits);
+  }
 
   ngOnInit() {
     this.RoleToUse = localStorage.getItem("Role")
@@ -28,7 +42,8 @@ export class ViewMandateLimitComponent implements OnInit {
 
   GetMandateLimits() {
     this.dataService.GetMandateLimits().subscribe(result => {
-      this.dataSource = result;
+      this.Mandate_Limits = result;
+      this.dataSource = new MatTableDataSource(this.Mandate_Limits);
     });
   }
   DeleteMandateLimit(id: Number) {

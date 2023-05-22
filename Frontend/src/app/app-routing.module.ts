@@ -47,6 +47,10 @@ import { CreateBudgetCategoryComponent } from './create-budget-category/create-b
 import { EditBudgetCategoryComponent } from './edit-budget-category/edit-budget-category.component';
 import { ViewBudgetAllocationComponent } from './view-budget-allocation/view-budget-allocation.component';
 import { CreateBudgetAllocationComponent } from './create-budget-allocation/create-budget-allocation.component';
+import { ViewBudgetLinesComponent } from './view-budget-lines/view-budget-lines.component';
+import { CreateBudgetLineComponent } from './create-budget-line/create-budget-line.component';
+import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
+import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
 
 
 const routes: Routes = [
@@ -195,6 +199,22 @@ const routes: Routes = [
   {
     path: 'AddBudgetAllocation',
     component: CreateBudgetAllocationComponent
+  },
+  {
+    path: 'ViewBudgetLines/:id',
+    component: ViewBudgetLinesComponent
+  },
+  {
+    path: 'AddBudgetLine/:id',
+    component: CreateBudgetLineComponent
+  },
+  {
+    path: 'EditBudgetLine/:id/:id2',
+    component: EditBudgetLineComponent
+  },
+  {
+    path: 'EditBudgetAllocation/:id',
+    component: EditBudgetAllocationComponent
   }
 ];
 
