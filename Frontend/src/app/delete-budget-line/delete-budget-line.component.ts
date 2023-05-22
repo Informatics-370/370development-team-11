@@ -77,7 +77,7 @@ export class DeleteBudgetLineComponent {
         this.showConfirmationDialog = false;
         this.showSuccessDialog = true;
         setTimeout(() => {
-          this.dialogRef.close();
+          this.dialogRef.close('confirm');
           location.reload();
         }, 1750);
       }

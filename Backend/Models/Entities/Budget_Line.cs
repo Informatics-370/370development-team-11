@@ -22,7 +22,7 @@ namespace ProcionAPI.Models.Entities
 
         [ForeignKey("Category_ID")]
         public Budget_Category Budget_Category { get; set; }
-        public DateTime Month { get; set; }
+        public string Month { get; set; }
         public decimal BudgetAmt { get; set; }
         public decimal ActualAmt { get; set; }
         public decimal Variance { get; set; }

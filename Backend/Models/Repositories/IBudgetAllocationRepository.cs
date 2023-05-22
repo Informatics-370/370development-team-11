@@ -14,6 +14,9 @@ namespace ProcionAPI.Models.Repositories
         Task<Budget_Allocation[]> AddBudgetAllocationAsync(Budget_Allocation budget_Allocation);
         Task<Budget_Line[]> AddBudgetLineAsync(Budget_Line budget_Line);
         Task<Budget_Line> UpdateBudgetLineAsync(Budget_Line budget_Line, int accountCode);
+        Task<Budget_Category> BudgetCategoryValidationAsync(string name);
+        Task<Budget_Allocation> BudgetAllocationValidationAsync(string departmentName, int year);
+
         void Add<T>(T entity) where T : class;
         void Delete<T>(T entity) where T : class;
         Task<bool> SaveChangesAsync();
