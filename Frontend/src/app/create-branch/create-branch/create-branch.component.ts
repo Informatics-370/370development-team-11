@@ -36,8 +36,23 @@ export class CreateBranchComponent {
     this.dataService.BranchValidation(street).subscribe({
       next: (Result) => {
         if (Result == null) {
-          this.dataService.AddBranch(this.myForm.value).subscribe(result => {
-            this.router.navigate(['ViewBranch'])
+          this.dataService.AddBranch(this.myForm.value).subscribe({
+            next: (response) => {
+              var action = "Create";
+              var title = "CREATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + street + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/ViewBranch']);
+                dialogRef.close();
+              }, duration);
+            }
           })
         }
         else {
