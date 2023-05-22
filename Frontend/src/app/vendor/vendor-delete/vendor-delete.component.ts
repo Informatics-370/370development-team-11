@@ -313,8 +313,8 @@ OnboardRequestDetails: any[] = [];
     
     getVat(VatID:number) {
      this.VendorService.GetVatByID(VatID).subscribe(result => {
-     this.VendorTax = result
-     let sFilePath = this.VendorTax.tax_Clearance_Cert
+     this.VendorVat = result
+     let sFilePath = this.VendorVat.vaT_Registration_Document
      this.getFileDetails(sFilePath,1)
     })
     }

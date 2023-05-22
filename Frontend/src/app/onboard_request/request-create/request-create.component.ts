@@ -331,7 +331,7 @@ export class RequestCreateComponent implements OnInit {
             console.log(response);
             var action = "CREATE";
             var title = "CREATE SUCCESSFUL";
-            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id  + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.Onboard_Request.onboard_Request_Id  + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
   
             const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
               disableClose: true,
@@ -354,6 +354,7 @@ export class RequestCreateComponent implements OnInit {
     else {
         this.Onboard_Request.vendor.sole_Supplier_Provided = true;
         this.Onboard_Request.quotes = "None"   
+        console.log(this.Onboard_Request)
         this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe( response => {
           this.Onboard_Request = response[0]
           this.dataService.AddSoleSupplierDetails(this.Onboard_Request.vendor_ID,this.SoleSupply).subscribe( {
@@ -361,7 +362,7 @@ export class RequestCreateComponent implements OnInit {
              console.log(response);
              var action = "CREATE";
              var title = "CREATE SUCCESSFUL";
-             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id  + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.Onboard_Request.onboard_Request_Id  + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
    
              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
                disableClose: true,
