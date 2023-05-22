@@ -245,15 +245,15 @@ export class RequestUpdateComponent {
       //this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
     
       for (let b = 0; b < this.CompanyContactInfoFormGroup.controls.RequestData.value.length; b++) { 
-        if(this.CompanyContactInfoFormGroup.controls.RequestData.value[a].CompanyName == this.CompanyContactInfoFormGroup.controls.RequestData.value[b].CompanyName) {
+        if(this.CompanyContactInfoFormGroup.controls.RequestData.value[a].CompanyName == this.CompanyContactInfoFormGroup.controls.RequestData.value[b].CompanyName && a !=b) {
             this.Passed = false;
 
         }
-        else if(this.CompanyContactInfoFormGroup.controls.RequestData.value[a].CompanyEmail == this.CompanyContactInfoFormGroup.controls.RequestData.value[b].CompanyEmail) {
+        else if(this.CompanyContactInfoFormGroup.controls.RequestData.value[a].CompanyEmail == this.CompanyContactInfoFormGroup.controls.RequestData.value[b].CompanyEmail && a !=b) {
             this.Passed = false;
           
         }
-        else if (this.files[a].name != "" && this.files[a].name == this.files[b].name && this.files[a].size == 0) {
+        else if (this.files[a].name != "" && this.files[a].name == this.files[b].name && this.files[a].size == 0 && a !=b) {
           this.Passed = false;
         }
         
@@ -322,7 +322,7 @@ export class RequestUpdateComponent {
               console.log(response);
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.onboardRequest[0].onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
     
               const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
                 disableClose: true,
@@ -355,7 +355,7 @@ export class RequestUpdateComponent {
               console.log(response);
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.onboardRequest[0].onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
     
               const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
                 disableClose: true,
@@ -421,7 +421,7 @@ export class RequestUpdateComponent {
             console.log(response);
             var action = "Update";
             var title = "UPDATE SUCCESSFUL";
-            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.onboardRequest[0].onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
   
             const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
               disableClose: true,
@@ -469,7 +469,7 @@ export class RequestUpdateComponent {
         this.sPath = Path.pathSaved.toString()
         this.Onboard_Request.quotes = this.sPath
         this.Onboard_Request.vendor.sole_Supplier_Provided = true;
-        this.dataService.UpdateOnboardRequest(this.onboardRequest[0].onboard_Request_Id,this.Onboard_Request).subscribe(
+        this.dataService.UpdateOnboardRequest(response.onboard_Request_Id,this.Onboard_Request).subscribe(
           (RequestAdded) => {
             this.SoleSupply.vendor_ID = RequestAdded.vendor_ID
             this.dataService.UpdateSoleSupplier(RequestAdded.vendor_ID,this.SoleSupply).subscribe({
@@ -477,7 +477,7 @@ export class RequestUpdateComponent {
                 console.log(response);
                 var action = "Update";
                 var title = "UPDATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.onboardRequest[0].onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + RequestAdded.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
       
                 const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
                   disableClose: true,
@@ -509,7 +509,7 @@ export class RequestUpdateComponent {
                 console.log(response);
                 var action = "Update";
                 var title = "UPDATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.onboardRequest[0].onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + RequestAdded.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
       
                 const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
                   disableClose: true,
