@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { VendorDetails } from 'src/app/Shared/VendorDetails';
 import { VendorOnboardRequest } from 'src/app/Shared/VendorOnboardRequest';
 import { Vendor_Category } from 'src/app/Shared/VendorCategory';
@@ -16,6 +16,7 @@ import { Vendor_Tax } from 'src/app/Shared/VendorDetailsIncomeTaxNum';
 import { Vendor_Registration } from 'src/app/Shared/VendorDetailsRegistration';
 import { VendorDeleteComponent } from '../vendor-delete/vendor-delete.component';
 import { MatDialog } from '@angular/material/dialog';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-vendordetails-view',
   templateUrl: './vendordetails-view.component.html',
@@ -87,7 +88,7 @@ export class VendordetailsViewComponent implements OnInit {
     bankStampedConfirtmation:"",
     beeRegistered:false,
     dueDIllegenceRequired:false,
-    dateAccepted:new Date(),
+    dateAccepted:new Date('en-ZA'),
   }
 
   Vendorfax: Vendor_Fax = {
@@ -98,7 +99,7 @@ export class VendordetailsViewComponent implements OnInit {
   }
 
   VendorVat: Vendor_Vat = {
-    vat_Registration_Number: 0,
+    vat_Registration_Number: "",
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
     vaT_Registration_Document:"",
@@ -112,7 +113,7 @@ export class VendordetailsViewComponent implements OnInit {
   }
 
   VendorLicense: Vendor_License = {
-    license_No: 0,
+    license_No: "",
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
     license_Doc_Upload:"",
@@ -140,14 +141,14 @@ export class VendordetailsViewComponent implements OnInit {
   }
 
   VendorTax : Vendor_Tax = {
-    income_Tax_Num: 0,
+    income_Tax_Num: "",
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
     tax_Clearance_Cert:"",
   }
 
   VendorRegistration  : Vendor_Registration = {
-    company_Registration_Number: 0,
+    company_Registration_Number: "",
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
     proof_Of_Registration_Doc:"",
@@ -156,6 +157,9 @@ export class VendordetailsViewComponent implements OnInit {
   VenDetails: VendorDetails[] = [];
   FileDetails:any[] = [];
   ngOnInit(): void {
+
+
+
    for(let i = 0;i < 7;i++) {
       this.FileDetails.push({FileURL:"",FileName:""})
    }
@@ -169,6 +173,10 @@ export class VendordetailsViewComponent implements OnInit {
             
           }
           this.VendorDetail = result
+          let test: any
+          test = new DatePipe('en-ZA');
+          this.VendorDetail.dateAccepted = test.transform(this.VendorDetail.dateAccepted, 'MMM d, y, h:mm:ss a');
+          
           let sFilePath = this.VendorDetail.bankStampedConfirtmation
           this.getFileDetails(sFilePath,6)
           console.log(this.VendorDetail.vendor_Detail_ID)  

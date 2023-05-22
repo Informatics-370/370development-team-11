@@ -92,7 +92,7 @@ export class VendorDeleteComponent {
   }
 
   VendorVat: Vendor_Vat = {
-    vat_Registration_Number: 0,
+    vat_Registration_Number: "",
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
     vaT_Registration_Document:"",
@@ -106,7 +106,7 @@ export class VendorDeleteComponent {
   }
 
   VendorLicense: Vendor_License = {
-    license_No: 0,
+    license_No: "",
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
     license_Doc_Upload:"",
@@ -134,14 +134,14 @@ export class VendorDeleteComponent {
   }
 
   VendorTax : Vendor_Tax = {
-    income_Tax_Num: 0,
+    income_Tax_Num:"",
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
     tax_Clearance_Cert:"",
   }
 
   VendorRegistration  : Vendor_Registration = {
-    company_Registration_Number: 0,
+    company_Registration_Number: "",
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
     proof_Of_Registration_Doc:"",
@@ -283,7 +283,7 @@ OnboardRequestDetails: any[] = [];
     let  FolderCategory = "Bank";
     let  VendorNo = "Vendor" + this.Vendor.vendor_ID 
     let  fileName =  this.FileDetails[6].FileName
-    this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
+    this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe(Response => {
     this.VendorService.DeleteVendorDetails(this.VendorDetail.vendor_Detail_ID).subscribe({
       next:(response) => { 
         this.VendorService.UpdateVendorStatus(this.VendorDetail.vendor_ID,2).subscribe(result => {console.log(result)})
@@ -295,6 +295,7 @@ OnboardRequestDetails: any[] = [];
       }, 1750);
     }
     })
+  })
     }
 
     onCancel(): void {

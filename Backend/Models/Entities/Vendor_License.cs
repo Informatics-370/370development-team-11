@@ -7,7 +7,7 @@ namespace ProcionAPI.Models.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int License_No { get; set; }
+        public string License_No { get; set; }
         public int Vendor_Detail_ID { get; set; }
 
         [ForeignKey("Vendor_Detail_ID")]

@@ -127,7 +127,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Vendor_Detail> DeleteVendorDetailsAsync(int VendorDetailsID)
         {
-            var VendorToDelete = await _dbContext.Vendor_Detail.FindAsync(VendorDetailsID);
+            var VendorToDelete = await _dbContext.Vendor_Detail.FirstOrDefaultAsync(x => x.Vendor_Detail_ID == VendorDetailsID);
             _dbContext.Vendor_Detail.Remove(VendorToDelete);
             await _dbContext.SaveChangesAsync();
 
@@ -623,7 +623,7 @@ namespace ProcionAPI.Models.Repositories
 
         //Validation
 
-        public async Task<Vendor_Vat> VatRegNumberValAsync(int vatNumber)
+        public async Task<Vendor_Vat> VatRegNumberValAsync(string vatNumber)
         {
             Vendor_Vat ExistingVat = await _dbContext.Vendor_Vat.FirstOrDefaultAsync(x => x.Vat_Registration_Number == vatNumber);
             if (ExistingVat != null)
@@ -637,7 +637,7 @@ namespace ProcionAPI.Models.Repositories
             }
         }
 
-        public async Task<Vendor_Tax> IncomeTaxRegNumberValAsync(int IncomeTaxNumber)
+        public async Task<Vendor_Tax> IncomeTaxRegNumberValAsync(string IncomeTaxNumber)
         {
             Vendor_Tax ExistingTax = await _dbContext.Vendor_Tax.FirstOrDefaultAsync(x => x.Income_Tax_Num == IncomeTaxNumber);
             if (ExistingTax != null)
@@ -651,7 +651,7 @@ namespace ProcionAPI.Models.Repositories
             }
         }
 
-        public async Task<Vendor_Registration> CompanyRegNumberValAsync(int CompanyRegNumber)
+        public async Task<Vendor_Registration> CompanyRegNumberValAsync(string CompanyRegNumber)
         {
             Vendor_Registration ExistingCompanyReg = await _dbContext.Vendor_Registration.FirstOrDefaultAsync(x => x.Company_Registration_Number == CompanyRegNumber);
             if (ExistingCompanyReg != null)
@@ -665,7 +665,7 @@ namespace ProcionAPI.Models.Repositories
             }
         }
 
-        public async Task<Vendor_License> LicenseNumberValAsync(int LicenseNumber)
+        public async Task<Vendor_License> LicenseNumberValAsync(string LicenseNumber)
         {
             Vendor_License ExistingLicense = await _dbContext.Vendor_License.FirstOrDefaultAsync(x => x.License_No == LicenseNumber);
             if (ExistingLicense != null)

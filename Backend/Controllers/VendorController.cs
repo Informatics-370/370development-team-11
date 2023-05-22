@@ -783,7 +783,7 @@ namespace ProcionAPI.Controllers
 
         [HttpGet]
         [Route("VatRegNumberVal/{vatNumber}")]
-        public async Task<IActionResult> VatRegNumberVal(int vatNumber)
+        public async Task<IActionResult> VatRegNumberVal(string vatNumber)
         {
             try
             {
@@ -799,7 +799,7 @@ namespace ProcionAPI.Controllers
 
         [HttpGet]
         [Route("IncomeTaxRegNumberVal/{IncomeTaxNumber}")]
-        public async Task<IActionResult> IncomeTaxRegNumberVal(int IncomeTaxNumber)
+        public async Task<IActionResult> IncomeTaxRegNumberVal(string IncomeTaxNumber)
         {
             try
             {
@@ -815,7 +815,7 @@ namespace ProcionAPI.Controllers
 
         [HttpGet]
         [Route("CompanyRegNumberVal/{CompanyRegNumber}")]
-        public async Task<IActionResult> CompanyRegNumberVal(int CompanyRegNumber)
+        public async Task<IActionResult> CompanyRegNumberVal(string CompanyRegNumber)
         {
             try
             {
@@ -831,7 +831,7 @@ namespace ProcionAPI.Controllers
 
         [HttpGet]
         [Route("LicenseNumberVal/{LicenseNumber}")]
-        public async Task<IActionResult> LicenseNumberVal(int LicenseNumber)
+        public async Task<IActionResult> LicenseNumberVal(string LicenseNumber)
         {
             try
             {

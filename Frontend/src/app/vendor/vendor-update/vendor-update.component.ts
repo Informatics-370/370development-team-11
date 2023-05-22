@@ -95,7 +95,7 @@ export class VendorUpdateComponent {
   }
 
   VendorVat: Vendor_Vat = {
-    vat_Registration_Number: 0,
+    vat_Registration_Number: "",
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
     vaT_Registration_Document:"",
@@ -109,7 +109,7 @@ export class VendorUpdateComponent {
   }
 
   VendorLicense: Vendor_License = {
-    license_No: 0,
+    license_No: "",
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
     license_Doc_Upload:"",
@@ -137,14 +137,14 @@ export class VendorUpdateComponent {
   }
 
   VendorTax : Vendor_Tax = {
-    income_Tax_Num: 0,
+    income_Tax_Num: "",
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
     tax_Clearance_Cert:"",
   }
 
   VendorRegistration  : Vendor_Registration = {
-    company_Registration_Number: 0,
+    company_Registration_Number: "",
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
     proof_Of_Registration_Doc:"",
@@ -463,9 +463,9 @@ export class VendorUpdateComponent {
        }
        else if(this.Passed == true) {
         console.log(Number(this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value))
-        if(this.VendorVat.vat_Registration_Number != Number(this.CompanyOverviewFormGroup.get('VatRegistrationNumber')?.value))
+        if(this.VendorVat.vat_Registration_Number != this.CompanyOverviewFormGroup.get('VatRegistrationNumber')?.value)
         {
-          this.VendorService.VatRegNumberVal(Number(this.CompanyOverviewFormGroup.get('VatRegistrationNumber')?.value)).subscribe({next:
+          this.VendorService.VatRegNumberVal(this.CompanyOverviewFormGroup.get('VatRegistrationNumber')?.value).subscribe({next:
             (Result) => {if (Result != null) {
               this.Passed == false;
               var action = "ERROR";
@@ -487,8 +487,8 @@ export class VendorUpdateComponent {
         }
         console.log(this.VendorRegistration.company_Registration_Number)
         console.log(Number(this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value))
-        if(this.VendorRegistration.company_Registration_Number != Number(this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value)){
-          this.VendorService.CompanyRegNumberVal(Number(this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value)).subscribe({next:
+        if(this.VendorRegistration.company_Registration_Number != this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value){
+          this.VendorService.CompanyRegNumberVal(this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value).subscribe({next:
             (Result) => {if (Result != null) {
               this.Passed == false;
               var action = "ERROR";
@@ -509,8 +509,8 @@ export class VendorUpdateComponent {
          }})
         }
         
-        if(this.VendorLicense.license_No != Number(this.CompanyOverviewFormGroup.get('LicenseOrAccreditationNumber')?.value)){
-          this.VendorService.LicenseNumberVal(Number(this.CompanyOverviewFormGroup.get('LicenseOrAccreditationNumber')?.value)).subscribe({next:
+        if(this.VendorLicense.license_No != this.CompanyOverviewFormGroup.get('LicenseOrAccreditationNumber')?.value){
+          this.VendorService.LicenseNumberVal(this.CompanyOverviewFormGroup.get('LicenseOrAccreditationNumber')?.value).subscribe({next:
             (Result) => {if (Result != null) {
               this.Passed == false;
               var action = "ERROR";
@@ -531,8 +531,8 @@ export class VendorUpdateComponent {
          }})
         }
         
-        if(this.VendorTax.income_Tax_Num != Number(this.CompanyOverviewFormGroup.get('IncomeTaxNumber')?.value)){
-          this.VendorService.IncomeTaxRegNumberVal(Number(this.CompanyOverviewFormGroup.get('IncomeTaxNumber')?.value)).subscribe({next:
+        if(this.VendorTax.income_Tax_Num != this.CompanyOverviewFormGroup.get('IncomeTaxNumber')?.value){
+          this.VendorService.IncomeTaxRegNumberVal(this.CompanyOverviewFormGroup.get('IncomeTaxNumber')?.value).subscribe({next:
             (Result) => {if (Result != null) {
               this.Passed == false;
               var action = "ERROR";
@@ -678,7 +678,7 @@ CreateContinue(VenDetailsID:number) {
           }//fax
          
           this.VendorVat.vendor_Detail = this.VendorDetail
-          if(this.VatRegistrationChecker == true && this.VendorVat.vat_Registration_Number == 0 ) {
+          if(this.VatRegistrationChecker == true && this.VendorVat.vat_Registration_Number == "" ) {
             console.log("vat")
             FolderCategory = "VATRegistration";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
@@ -687,19 +687,19 @@ CreateContinue(VenDetailsID:number) {
               let Path: any = response
               this.VendorVat.vaT_Registration_Document = Path.returnedPath.toString();
               this.VendorVat.vendor_Detail_ID = this.VD_ID 
-              this.VendorVat.vat_Registration_Number = Number(this.CompanyOverviewFormGroup.get("VatRegistrationNumber")?.value)
+              this.VendorVat.vat_Registration_Number = this.CompanyOverviewFormGroup.get("VatRegistrationNumber")?.value
               console.log(this.VendorVat)
               this.VendorService.AddVat(this.VendorVat).subscribe(response => {console.log(response)})
             })
             
           }
-          else if(this.VatRegistrationChecker == true && (this.VendorVat.vat_Registration_Number != Number(this.CompanyOverviewFormGroup.get("VatRegistrationNumber")?.value) || this.fileName[1] != "" && this.fileName[1] != undefined)) {
+          else if(this.VatRegistrationChecker == true && (this.VendorVat.vat_Registration_Number != this.CompanyOverviewFormGroup.get("VatRegistrationNumber")?.value || this.fileName[1] != "" && this.fileName[1] != undefined)) {
             FolderCategory = "VATRegistration";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let fileName =  this.FileDetails[1].FileName
             this.VendorVat.vendor_Detail_ID = this.VD_ID 
             
-            if(this.VendorVat.vat_Registration_Number == Number(this.CompanyOverviewFormGroup.get("VatRegistrationNumber")?.value)) {
+            if(this.VendorVat.vat_Registration_Number == this.CompanyOverviewFormGroup.get("VatRegistrationNumber")?.value) {
               this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName)!
               let file:File = this.fileName[1]
               this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
@@ -712,7 +712,7 @@ CreateContinue(VenDetailsID:number) {
               this.VendorService.DeleteVatByID(this.VendorVat.vendor_Detail_ID).subscribe(response => {
                 this.VendorVat = response
                 this.VendorVat.vendor_Detail = this.VendorDetail
-                this.VendorVat.vat_Registration_Number =  Number(this.CompanyOverviewFormGroup.get("VatRegistrationNumber")?.value)
+                this.VendorVat.vat_Registration_Number =  this.CompanyOverviewFormGroup.get("VatRegistrationNumber")?.value
                 if(this.fileName[1] != "" && this.fileName[1] != undefined) {
                   let file:File = this.fileName[1]
                   this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
@@ -731,12 +731,12 @@ CreateContinue(VenDetailsID:number) {
 
             
           } 
-          else if(this.VatRegistrationChecker == false && this.VendorVat.vat_Registration_Number != 0) {
+          else if(this.VatRegistrationChecker == false && this.VendorVat.vat_Registration_Number != "") {
             FolderCategory = "VATRegistration";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let fileName =  this.FileDetails[1].FileName
             this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe({next: (Response) => {
-              this.VendorService.DeleteVatByID(this.VendorVat.vat_Registration_Number).subscribe(response => {console.log(response)})
+              this.VendorService.DeleteVatByID(this.VendorDetail.vendor_Detail_ID).subscribe(response => {console.log(response)})
             }})
             
           }//vatRegistered
@@ -759,9 +759,9 @@ CreateContinue(VenDetailsID:number) {
           }//website
 
           this.VendorLicense.vendor_Detail = this.VendorDetail
-          if(this.LicenseOrAccreditationChecker == true && this.VendorLicense.license_No == 0 ) {
+          if(this.LicenseOrAccreditationChecker == true && this.VendorLicense.license_No == "" ) {
             console.log(this.fileName[5])
-            this.VendorLicense.license_No = Number(this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value)
+            this.VendorLicense.license_No = this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value
             console.log(this.VendorLicense.license_No)
             FolderCategory = "LicenseOrAccreditationNumber";
             let file:File = this.fileName[5]
@@ -770,17 +770,17 @@ CreateContinue(VenDetailsID:number) {
                 let Path: any = response
                 this.VendorLicense.license_Doc_Upload = Path.returnedPath.toString();
                 this.VendorLicense.vendor_Detail_ID = this.VD_ID 
-                this.VendorLicense.license_No = Number(this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value)
+                this.VendorLicense.license_No = this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value
                 this.VendorService.AddLicense(this.VendorLicense).subscribe(response => {console.log(response)})
               })
              
           } 
-          else if(this.LicenseOrAccreditationChecker == true && (this.VendorLicense.license_No != Number(this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value) || this.fileName[5] != "" && this.fileName[5] != undefined)) {
+          else if(this.LicenseOrAccreditationChecker == true && (this.VendorLicense.license_No != this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value || this.fileName[5] != "" && this.fileName[5] != undefined)) {
             FolderCategory = "LicenseOrAccreditationNumber";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let fileName =  this.FileDetails[5].FileName
             
-            if(this.VendorLicense.license_No == Number(this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value)) {
+            if(this.VendorLicense.license_No == this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value) {
               this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName)!
               let file:File = this.fileName[5]
               this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
@@ -795,7 +795,7 @@ CreateContinue(VenDetailsID:number) {
               this.VendorService.DeleteLicenseByID(this.VendorVat.vendor_Detail_ID).subscribe(response => {
                 this.VendorLicense = response
                 this.VendorLicense.vendor_Detail = this.VendorDetail
-                this.VendorLicense.license_No = Number(this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value)
+                this.VendorLicense.license_No = this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value
                 if(this.fileName[5] != "" && this.fileName[5] != undefined) {
                   let file:File = this.fileName[5]
                   this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
@@ -813,7 +813,7 @@ CreateContinue(VenDetailsID:number) {
               
             }
           }
-          else if(this.LicenseOrAccreditationChecker == false && this.VendorLicense.license_No != 0) {
+          else if(this.LicenseOrAccreditationChecker == false && this.VendorLicense.license_No != "") {
             FolderCategory = "LicenseOrAccreditationNumber";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let fileName =  this.FileDetails[5].FileName
@@ -925,14 +925,14 @@ CreateContinue(VenDetailsID:number) {
 
        
 
-          if(this.VendorRegistration.company_Registration_Number != Number(this.CompanyOverviewFormGroup.get("CompanyRegistrationNumber")?.value) || (this.fileName[0] != "" && this.fileName[0] != undefined)) {
+          if(this.VendorRegistration.company_Registration_Number != this.CompanyOverviewFormGroup.get("CompanyRegistrationNumber")?.value || (this.fileName[0] != "" && this.fileName[0] != undefined)) {
            // this.VendorRegistration.company_Registration_Number = Number(this.CompanyOverviewFormGroup.get("CompanyRegistrationNumber")?.value)
             FolderCategory = "RegistrationProof";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let fileName =  this.FileDetails[0].FileName
             this.VendorRegistration.vendor_Detail = this.VendorDetail
             this.VendorRegistration.vendor_Detail_ID = this.VD_ID
-            if(this.VendorRegistration.company_Registration_Number == Number(this.CompanyOverviewFormGroup.get("CompanyRegistrationNumber")?.value)) {
+            if(this.VendorRegistration.company_Registration_Number == this.CompanyOverviewFormGroup.get("CompanyRegistrationNumber")?.value) {
               let file:File = this.fileName[0]
               this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
               this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
@@ -945,7 +945,7 @@ CreateContinue(VenDetailsID:number) {
               this.VendorService.DeleteRegistrationByID(this.VendorRegistration.vendor_Detail_ID).subscribe(response => {
                 this.VendorRegistration = response
                 this.VendorRegistration.vendor_Detail = this.VendorDetail
-                this.VendorRegistration.company_Registration_Number = Number(this.CompanyOverviewFormGroup.get("CompanyRegistrationNumber")?.value)
+                this.VendorRegistration.company_Registration_Number = this.CompanyOverviewFormGroup.get("CompanyRegistrationNumber")?.value
                 if(this.fileName[0] != "" && this.fileName[0] != undefined) {
                   let file:File = this.fileName[0]
                   this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
@@ -968,13 +968,13 @@ CreateContinue(VenDetailsID:number) {
           console.log(this.VendorTax.income_Tax_Num)
           console.log(Number(this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.value))
           console.log(this.fileName[2])
-          if((this.VendorTax.income_Tax_Num != Number(this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.value)) || (this.fileName[2] != "" && this.fileName[2] != undefined)) {
+          if((this.VendorTax.income_Tax_Num != this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.value) || (this.fileName[2] != "" && this.fileName[2] != undefined)) {
             
             FolderCategory = "IncomeTax";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let fileName =  this.FileDetails[2].FileName
             this.VendorTax.vendor_Detail = this.VendorDetail
-            if(this.VendorTax.income_Tax_Num == Number(this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.value)) {
+            if(this.VendorTax.income_Tax_Num == this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.value) {
               let file:File = this.fileName[2]
               this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
               this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
@@ -988,7 +988,7 @@ CreateContinue(VenDetailsID:number) {
               this.VendorService.DeleteIncomeTaxByID(this.VendorTax.vendor_Detail_ID).subscribe(response => {
                 this.VendorTax = response
                 this.VendorTax.vendor_Detail = this.VendorDetail
-                this.VendorTax.income_Tax_Num = this.VendorTax.income_Tax_Num = Number(this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.value)
+                this.VendorTax.income_Tax_Num = this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.value
                 if(this.fileName[2] != "" && this.fileName[2] != undefined) {
                   let file:File = this.fileName[2]
                   this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()

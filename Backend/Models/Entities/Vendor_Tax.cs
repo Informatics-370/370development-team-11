@@ -7,7 +7,7 @@ namespace ProcionAPI.Models.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Income_Tax_Num { get; set; }
+        public string Income_Tax_Num { get; set; }
 
         public int Vendor_Detail_ID { get; set; }
 
