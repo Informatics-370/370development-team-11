@@ -87,6 +87,7 @@ import { CreateBudgetLineComponent } from './create-budget-line/create-budget-li
 import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
 import { DeleteBudgetLineComponent } from './delete-budget-line/delete-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 
 
@@ -180,6 +181,7 @@ import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-bud
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     MatExpansionModule,
 
   ],

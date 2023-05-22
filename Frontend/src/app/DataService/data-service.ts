@@ -407,7 +407,7 @@ export class DataService {
     return this.httpClient.get<Mandate_Limit[]>(`${this.apiUrl}Mandate/GetAllMandateLimits`).pipe(map(result => result))
   }
 
-  GetMandateLimit(mlID: number) {
+  GetMandateLimit(mlID: number | Number) {
     return this.httpClient.get(`${this.apiUrl}Mandate/GetMandateLimit` + "/" + mlID).pipe(map(result => result))
   }
 
@@ -534,7 +534,7 @@ export class DataService {
     return this.httpClient.get<BudgetCategory[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetCategories`).pipe(map(result => result))
   }
 
-  GetBudgetCategory(budgetCategoryID: number) {
+  GetBudgetCategory(budgetCategoryID: number | Number) {
     return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetCategory` + '/' + budgetCategoryID).pipe(map(result => result))
   }
 
@@ -554,7 +554,7 @@ export class DataService {
     return this.httpClient.get<BudgetAllocation[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetAllocations`).pipe(map(result => result))
   }
 
-  GetBudgetAllocation(budgetAllocationID: number) {
+  GetBudgetAllocation(budgetAllocationID: number | Number) {
     return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetAllocation` + '/' + budgetAllocationID).pipe(map(result => result))
   }
 
@@ -572,6 +572,10 @@ export class DataService {
 
   GetBudgetLineItems(budgetAllocationID: Number): Observable<any> {
     return this.httpClient.get<BudgetLine[]>(`${this.apiUrl}BudgetAllocation/GetBudgetLinesForAllocation/${budgetAllocationID}`).pipe(map(result => result))
+  }
+
+  GetBudgetLines(): Observable<any> {
+    return this.httpClient.get<BudgetLine[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetLines`).pipe(map(result => result))
   }
 
   AddBudgetLine(budgetLine: BudgetLine) {
