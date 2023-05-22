@@ -32,6 +32,7 @@
                     <mat-form-field appearance="fill">
                         <input matInput placeholder="Company Telphone" formControlName="CompanyTelphone" [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyTelphone'].hasError('required')">Company telphone is required</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyTelphone'].hasError('maxlength')">Company telphone cannot be less than 10 numbers long</mat-error>
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyTelphone'].hasError('maxlength')">Company telphone cannot be more than 10 numbers long</mat-error>
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyTelphone'].hasError('pattern')">Company telphone cannot contain characters</mat-error>
                       </mat-form-field>
@@ -51,7 +52,7 @@
             <tr>
                 <td><label>Company Website:</label></td>
                 <td>
-                    <mat-checkbox formControlName="CompanyWebsiteCheck" (click)="CompanyWebsiteChange()">Add Company Website?</mat-checkbox> <br>
+                    <mat-checkbox formControlName="CompanyWebsiteCheck" (click)="CompanyWebsiteChange()"><span *ngIf="CompanyWebsiteChecker === false;">Add Company Website?</span><span *ngIf="CompanyWebsiteChecker === true;">Added Company Website</span></mat-checkbox> <br>
                     <mat-form-field appearance="fill" *ngIf="CompanyWebsiteChecker === true;">
                         <input matInput placeholder="Company Website" formControlName="CompanyWebsite"  [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyWebsite'].hasError('required')">Company Website is required</mat-error>
@@ -62,7 +63,7 @@
             <tr>
                 <td><label>Company Fax:</label></td>
                 <td>
-                    <mat-checkbox formControlName="CompanyFaxCheck" (click)="CompanyFaxChange()">Add Company Fax?</mat-checkbox> <br>
+                    <mat-checkbox formControlName="CompanyFaxCheck" (click)="CompanyFaxChange()"><span *ngIf="CompanyFaxChecker === false;">Add Company Fax?</span><span *ngIf="CompanyFaxChecker === true;">Added Company Fax</span></mat-checkbox> <br>
                     <mat-form-field appearance="fill" *ngIf="CompanyFaxChecker === true;">
                         <input matInput id="Fax" placeholder="Company Fax" formControlName="CompanyFax" [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyFax'].hasError('required')">Company Fax is required</mat-error>
@@ -99,7 +100,7 @@
                     <mat-form-field appearance="fill">
                         <input matInput placeholder="Contact Person Phone" formControlName="ContactPersonPhone" [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonPhone'].hasError('required')">Contact person phone is required</mat-error>
-                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonPhone'].hasError('maxlength')">Contact person phone cannot be more than 10 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonPhone'].hasError('maxlength')">Contact person phone cannot be less than 10 numbers long</mat-error>
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonPhone'].hasError('pattern')">Contact person phone can only contain numbers</mat-error>
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonPhone'].hasError('minlength')">Contact person phone should be 10 numbers</mat-error>
                       </mat-form-field>
@@ -144,6 +145,8 @@
                         <input matInput placeholder="Company Registration Number" formControlName="CompanyRegistrationNumber"  [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('required')">Company registration number number is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('pattern')">Company registration number cannot contain characters</mat-error> 
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('maxlength')">Company registration number cannot be less than 10 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('minlength')">Company registration number should be 10 numbers</mat-error>
                       </mat-form-field> 
                 </td>
             </tr>
@@ -192,6 +195,8 @@
                         <input matInput placeholder="Income Tax Number" formControlName="IncomeTaxNumber"  [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('required')">Income tax number is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('pattern')">Income tax number cannot contain characters</mat-error> 
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('maxlength')">Vat registration number cannot be less than 10 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('minlength')">Vat registration number should be 10 numbers</mat-error>
                       </mat-form-field>
                 </td>
             </tr>
@@ -215,7 +220,7 @@
                     <input  id="file" formControlName="SignedAgreementDoc" type="file" class="file-upload" *ngIf="SignedAgreementChecker === true;" (change)="FileStorage(3,$event)">           
                 </td>
             </tr>
-            <tr *ngIf="SignedAgreementChecker == true">
+            <tr *ngIf="SignedAgreementChecker == true && VendorDetail.signed_Agreement_Provided == true">
                 <td><label for="file" style="margin-right: 1%;" >Current Signed Agreement Document: </label></td> 
                 <td >  
                     <a href="{{FileDetails[3].FileURL}}" download="{{FileDetails[3].FileName}}">{{FileDetails[3].FileName}}</a>   

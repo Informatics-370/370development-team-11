@@ -147,6 +147,8 @@
                         <input matInput placeholder="Company Registration Number" formControlName="CompanyRegistrationNumber"  [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('required')">Company registration number number is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('pattern')">Company registration number cannot contain characters</mat-error> 
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('maxlength')">Company registration number cannot be less than 10 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('minlength')">Company registration number should be 10 numbers</mat-error>
                       </mat-form-field> 
                 </td>
             </tr>
@@ -165,6 +167,7 @@
                         <input matInput [errorStateMatcher]="matcher" placeholder="Vat Registration Number" formControlName="VatRegistrationNumber" >
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['VatRegistrationNumber'].hasError('required')">Vat registration number is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['VatRegistrationNumber'].hasError('pattern')">Vat registration number cannot contain characters</mat-error>
+                        
                       </mat-form-field>
                 </td>
             </tr>
@@ -183,6 +186,8 @@
                         <input matInput placeholder="Income Tax Number" formControlName="IncomeTaxNumber"  [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('required')">Income tax number is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('pattern')">Income tax number cannot contain characters</mat-error> 
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('maxlength')">Vat registration number cannot be less than 10 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('minlength')">Vat registration number should be 10 numbers</mat-error>
                       </mat-form-field>
                 </td>
             </tr>

@@ -29,7 +29,10 @@
 
   <ItemGroup>
     <Folder Include="Files\OnboardRequests\" />
-    <Folder Include="Files\VendorFileDetails\" />
+    <Folder Include="Files\VendorFileDetails\Bank\" />
+    <Folder Include="Files\VendorFileDetails\IncomeTax\" />
+    <Folder Include="Files\VendorFileDetails\LicenseOrAccreditationNumber\" />
+    <Folder Include="Files\VendorFileDetails\RegistrationProof\" />
   </ItemGroup>
 
   <ItemGroup>

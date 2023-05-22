@@ -100,8 +100,8 @@ namespace ProcionAPI.Controllers
 
 
         [HttpDelete]
-        [Route("DeleteVendorDetails/{vendorDetailsID}")]
-        public async Task<IActionResult> DeleteVendorDetails(int VendorDetailsID)
+        [Route("DeleteVendorDetails/{VendorDetailsID}")]
+        public async Task<IActionResult> DeleteVendorDetails([FromRoute] int VendorDetailsID)
         {
             try
             {

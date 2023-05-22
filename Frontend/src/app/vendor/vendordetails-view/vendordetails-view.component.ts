@@ -165,6 +165,9 @@ export class VendordetailsViewComponent implements OnInit {
         
         let VendorDetailID = paramater.get("VendorID");
         this.VendorService.GetVendorDetailByID(Number(VendorDetailID)).subscribe(result => {
+          if(result == null) {
+            
+          }
           this.VendorDetail = result
           let sFilePath = this.VendorDetail.bankStampedConfirtmation
           this.getFileDetails(sFilePath,6)

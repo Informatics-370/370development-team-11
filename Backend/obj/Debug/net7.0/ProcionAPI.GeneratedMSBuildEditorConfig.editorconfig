@@ -9,13 +9,13 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = ProcionAPI
 build_property.RootNamespace = ProcionAPI
-build_property.ProjectDir = C:\Users\Jason van der Merwe\source\repos\370development-team-11\Backend\
+build_property.ProjectDir = C:\Users\User\Documents\GitHub\370development-team-11\Backend\
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\Jason van der Merwe\source\repos\370development-team-11\Backend
+build_property.MSBuildProjectDirectory = C:\Users\User\Documents\GitHub\370development-team-11\Backend
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/Jason van der Merwe/source/repos/370development-team-11/Backend/Files/MailTemplates/newEmp.cshtml]
+[C:/Users/User/Documents/GitHub/370development-team-11/Backend/Files/MailTemplates/newEmp.cshtml]
 build_metadata.AdditionalFiles.TargetPath = RmlsZXNcTWFpbFRlbXBsYXRlc1xuZXdFbXAuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
