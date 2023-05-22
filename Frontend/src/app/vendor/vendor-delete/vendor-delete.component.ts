@@ -231,7 +231,7 @@ OnboardRequestDetails: any[] = [];
       VendorNo = "Vendor" + this.Vendor.vendor_ID
       fileName =  this.FileDetails[1].FileName
       this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
-      this.VendorService.DeleteVatByID(this.VendorLicense.vendor_Detail_ID).subscribe(response => {console.log(response)})
+      this.VendorService.DeleteVatByID(this.VendorVat.vendor_Detail_ID).subscribe(response => {console.log(response)})
     }
     if(this.VendorDetail.websiteProvided == true) {
       this.VendorService.DeleteWebsiteByID(this.VendorWebsite.website_ID).subscribe(response => {console.log(response)})
@@ -313,8 +313,8 @@ OnboardRequestDetails: any[] = [];
     
     getVat(VatID:number) {
      this.VendorService.GetVatByID(VatID).subscribe(result => {
-     this.VendorTax = result
-     let sFilePath = this.VendorTax.tax_Clearance_Cert
+     this.VendorVat = result
+     let sFilePath = this.VendorVat.vaT_Registration_Document
      this.getFileDetails(sFilePath,1)
     })
     }

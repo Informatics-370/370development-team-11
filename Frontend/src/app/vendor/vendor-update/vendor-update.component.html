@@ -145,7 +145,7 @@
                         <input matInput placeholder="Company Registration Number" formControlName="CompanyRegistrationNumber"  [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('required')">Company registration number number is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('pattern')">Company registration number cannot contain characters</mat-error> 
-                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('maxlength')">Company registration number cannot be less than 10 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('maxlength')">Company registration number cannot be more than 10 numbers long</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('minlength')">Company registration number should be 10 numbers</mat-error>
                       </mat-form-field> 
                 </td>
@@ -195,7 +195,7 @@
                         <input matInput placeholder="Income Tax Number" formControlName="IncomeTaxNumber"  [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('required')">Income tax number is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('pattern')">Income tax number cannot contain characters</mat-error> 
-                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('maxlength')">Vat registration number cannot be less than 10 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('maxlength')">Vat registration number cannot be more than 10 numbers long</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('minlength')">Vat registration number should be 10 numbers</mat-error>
                       </mat-form-field>
                 </td>
@@ -281,7 +281,7 @@
             <tr>
         </table>
         <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
-            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >back</button>
+            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
             <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
            </div>
         
@@ -386,7 +386,7 @@
             <br>
         </table> 
         <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
-            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >back</button>
+            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
             <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
            </div>    
           
