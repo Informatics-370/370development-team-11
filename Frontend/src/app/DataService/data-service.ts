@@ -389,17 +389,17 @@ export class DataService {
   }
 
   //--------------------------------------------------------------------------------------Vendor Validation--------------------------------------------------------------------------------------
-  LicenseNumberVal(LicenseNumber: Number): Observable<any> {
+  LicenseNumberVal(LicenseNumber: string): Observable<any> {
     return this.httpClient.get<Vendor_License>(`${this.apiUrl}Vendor/LicenseNumberVal/${LicenseNumber}`, this.httpOptions).pipe(map(result => result))
   }
 
-  CompanyRegNumberVal(CompanyRegNumber: Number): Observable<any> {
+  CompanyRegNumberVal(CompanyRegNumber: string): Observable<any> {
     return this.httpClient.get<Vendor_Registration>(`${this.apiUrl}Vendor/CompanyRegNumberVal/${CompanyRegNumber}`, this.httpOptions).pipe(map(result => result))
   }
-  VatRegNumberVal(vatNumber: Number): Observable<any> {
+  VatRegNumberVal(vatNumber: string): Observable<any> {
     return this.httpClient.get<Vendor_Vat>(`${this.apiUrl}Vendor/VatRegNumberVal/${vatNumber}`, this.httpOptions).pipe(map(result => result))
   }
-  IncomeTaxRegNumberVal(IncomeTaxNumber: Number): Observable<any> {
+  IncomeTaxRegNumberVal(IncomeTaxNumber: string): Observable<any> {
     return this.httpClient.get<Vendor_Tax>(`${this.apiUrl}Vendor/IncomeTaxRegNumberVal/${IncomeTaxNumber}`, this.httpOptions).pipe(map(result => result))
   }
   //--------------------------------------------------------------------------------------Mandate Limit--------------------------------------------------------------------------------------

@@ -60,9 +60,9 @@ namespace ProcionAPI.Models.Repositories
         Task<Vendor_Tax> DeleteIncomeTaxByIDDAsync(int IncomeTaxID);
         ///
         //validation
-        Task<Vendor_Vat> VatRegNumberValAsync(int vatNumber);
-        Task<Vendor_Tax> IncomeTaxRegNumberValAsync(int IncomeTaxNumber);
-        Task<Vendor_Registration> CompanyRegNumberValAsync(int CompanyRegNumber);
-        Task<Vendor_License> LicenseNumberValAsync(int LicenseNumber);
+        Task<Vendor_Vat> VatRegNumberValAsync(string vatNumber);
+        Task<Vendor_Tax> IncomeTaxRegNumberValAsync(string IncomeTaxNumber);
+        Task<Vendor_Registration> CompanyRegNumberValAsync(string CompanyRegNumber);
+        Task<Vendor_License> LicenseNumberValAsync(string LicenseNumber);
     }
 }

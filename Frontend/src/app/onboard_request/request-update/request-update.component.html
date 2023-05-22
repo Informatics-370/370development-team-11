@@ -1,7 +1,7 @@
 <div class="content">
   <div style="display: inline-block; text-align: left;position: relative;width: 700px;">
   <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
-    Edit Vendor Onboard Request
+    Update Vendor Onboard Request
   </h1>
 
   <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="VendorType == true ;Sole" #General>
@@ -145,7 +145,7 @@
           </table>
         </div>
         <div style="display: flex;">
-        <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" [disabled]="!SoleSupplierFormGroup.valid"  (click)="AddRequest()"> Create  </button> 
+        <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" [disabled]="!SoleSupplierFormGroup.valid"  (click)="AddRequest()"> Update  </button> 
         <button mat-raised-button id="btnHover" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/request-view" > Cancel </button>
        </div>
       </form>
