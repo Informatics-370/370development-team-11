@@ -154,15 +154,15 @@ export class RequestCreateComponent implements OnInit {
       //this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
     
       for (let b = 0; b < this.CompanyContactInfoFormGroup.controls.RequestData.value.length; b++) { 
-        if(this.CompanyContactInfoFormGroup.controls.RequestData.value[a].CompanyName == this.CompanyContactInfoFormGroup.controls.RequestData.value[b].CompanyName) {
+        if(this.CompanyContactInfoFormGroup.controls.RequestData.value[a].CompanyName == this.CompanyContactInfoFormGroup.controls.RequestData.value[b].CompanyName && a != b) {
             this.Passed = false;
 
         }
-        else if(this.CompanyContactInfoFormGroup.controls.RequestData.value[a].CompanyEmail == this.CompanyContactInfoFormGroup.controls.RequestData.value[b].CompanyEmail) {
+        else if(this.CompanyContactInfoFormGroup.controls.RequestData.value[a].CompanyEmail == this.CompanyContactInfoFormGroup.controls.RequestData.value[b].CompanyEmail  && a != b) {
             this.Passed = false;
           
         }
-        else if (this.files[a].name != "" && this.files[a].name == this.files[b].name && this.files[a].size == 0) {
+        else if (this.files[a].name != "" && this.files[a].name == this.files[b].name && this.files[a].size == 0  && a != b) {
           this.Passed = false;
         }
       }

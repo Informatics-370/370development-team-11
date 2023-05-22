@@ -4,6 +4,7 @@ using ProcionAPI.Data;
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Controllers;
 using Azure.Core;
+using Org.BouncyCastle.Asn1.Cmp;
 
 namespace ProcionAPI.Models.Repositories
 {
@@ -126,11 +127,11 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Vendor_Detail> DeleteVendorDetailsAsync(int VendorDetailsID)
         {
-            var RequestToDelete = await _dbContext.Vendor_Detail.FirstOrDefaultAsync(x => x.Vendor_Detail_ID == VendorDetailsID);
-            _dbContext.Vendor_Detail.Remove(RequestToDelete);
+            var VendorToDelete = await _dbContext.Vendor_Detail.FindAsync(VendorDetailsID);
+            _dbContext.Vendor_Detail.Remove(VendorToDelete);
             await _dbContext.SaveChangesAsync();
 
-            return RequestToDelete;
+            return VendorToDelete;
         }
 
         public async Task<Vendor> UpdateVendorStatusAsync(int VendorID, int VendorStatusID)
@@ -413,7 +414,7 @@ namespace ProcionAPI.Models.Repositories
 
             VenLicense.Vendor_Detail = existingVenDetail;
 
-            VenLicense.License_No = License.License_No;
+           // VenLicense.License_No = License.License_No;
             VenLicense.License_Doc_Upload = License.License_Doc_Upload; 
 
 
@@ -478,16 +479,21 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Vendor_Registration> UpdateRegisteredAsync(int RegistrationID, Vendor_Registration Registered)
         {
-            var VenRegistered = await _dbContext.Vendor_Registration.FirstOrDefaultAsync(x => x.Vendor_Detail_ID == Registered.Vendor_Detail_ID);
 
+
+            var VenRegistered = await _dbContext.Vendor_Registration.FirstOrDefaultAsync(x => x.Vendor_Detail_ID == RegistrationID);
+
+            
 
             VenRegistered.Vendor_Detail = new Vendor_Detail();
 
-            Vendor_Detail existingVenDetail = await _dbContext.Vendor_Detail.FirstOrDefaultAsync(x => x.Vendor_Detail_ID == Registered.Vendor_Detail_ID);
+            Vendor_Detail existingVenDetail = await _dbContext.Vendor_Detail.FirstOrDefaultAsync(x => x.Vendor_Detail_ID == RegistrationID);
 
             VenRegistered.Vendor_Detail = existingVenDetail;
 
-            VenRegistered.Company_Registration_Number = Registered.Company_Registration_Number;
+           
+
+           // VenRegistered.Company_Registration_Number = Registered.Company_Registration_Number;
             VenRegistered.Proof_Of_Registration_Doc = Registered.Proof_Of_Registration_Doc;
 
             await _dbContext.SaveChangesAsync();
@@ -506,7 +512,7 @@ namespace ProcionAPI.Models.Repositories
 
             VenVAT.Vendor_Detail = existingVenDetail;
 
-            VenVAT.Vat_Registration_Number = VAT.Vat_Registration_Number;
+           // VenVAT.Vat_Registration_Number = VAT.Vat_Registration_Number;
             VenVAT.VAT_Registration_Document = VAT.VAT_Registration_Document;
 
             await _dbContext.SaveChangesAsync();
@@ -525,7 +531,7 @@ namespace ProcionAPI.Models.Repositories
 
             VenIncomeTax.Vendor_Detail = existingVenDetail;
 
-            VenIncomeTax.Income_Tax_Num = IncomeTax.Income_Tax_Num;
+            //VenIncomeTax.Income_Tax_Num = IncomeTax.Income_Tax_Num;
             VenIncomeTax.Tax_Clearance_Cert = IncomeTax.Tax_Clearance_Cert;
 
             await _dbContext.SaveChangesAsync();
@@ -543,7 +549,7 @@ namespace ProcionAPI.Models.Repositories
         }
         public async Task<Vendor_Vat> DeleteVatByIDAsync(int VatID)
         {
-            var RequestToDelete = await _dbContext.Vendor_Vat.FirstOrDefaultAsync(x => x.Vat_Registration_Number == VatID);
+            var RequestToDelete = await _dbContext.Vendor_Vat.FirstOrDefaultAsync(x => x.Vendor_Detail_ID == VatID);
             _dbContext.Vendor_Vat.Remove(RequestToDelete);
             await _dbContext.SaveChangesAsync();
 

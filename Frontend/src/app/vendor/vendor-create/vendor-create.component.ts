@@ -169,12 +169,12 @@ export class VendorCreateComponent implements OnInit{
   });
   CompanyOverviewFormGroup = this._formBuilder.group({
     DetailsOfServiceOrGoods: ['', [Validators.required,Validators.maxLength(50)]],
-    CompanyRegistrationNumber: ['',Validators.pattern(/^[0-9]*$/)],
+    CompanyRegistrationNumber: ['',[Validators.required,Validators.maxLength(10),Validators.minLength(10),Validators.pattern(/^[0-9]*$/)]],
     CompanyRegistrationNumberDoc: ['', Validators.required],
     VatRegistrationCheck: false,
     VatRegistrationNumber: ['',Validators.pattern(/^[0-9]*$/)],
     VatRegistrationNumberDoc: null,
-    IncomeTaxNumber: ['', [Validators.required,Validators.pattern(/^[0-9]*$/)]],
+    IncomeTaxNumber: ['', [Validators.required,Validators.maxLength(10),Validators.minLength(10),Validators.pattern(/^[0-9]*$/)]],
     IncomeTaxNumberDoc: ['', Validators.required],
     SignedAgreementCheck: false,
     SignedAgreementDoc: null,
@@ -513,7 +513,7 @@ export class VendorCreateComponent implements OnInit{
         this.VendorService.AddVendorDetails(this.VendorDetail).subscribe(result =>{
           let VendorList:VendorDetails = result
           
-          this.VendorService.UpdateVendorStatus(VendorList.vendor_ID,3).subscribe(result => {console.log(result)})
+          this.VendorService.UpdateVendorStatus(VendorList[0].vendor_ID,3).subscribe(result => {console.log(result)})
 
 
           this.VD_ID = VendorList[0].vendor_Detail_ID
@@ -598,7 +598,7 @@ export class VendorCreateComponent implements OnInit{
               this.VendorRegistration.vendor_Detail_ID = this.VD_ID 
               console.log(this.VendorRegistration.vendor_Detail_ID)
               this,this.VendorRegistration.company_Registration_Number = Number(this.CompanyOverviewFormGroup.get("CompanyRegistrationNumber")?.value)
-              this.VendorService.AddRegistered(this.VendorRegistration).subscribe(response => {console.log(response)})
+              this.VendorService.AddRegistered(this.VendorRegistration).subscribe()
             })
             
         
@@ -612,10 +612,30 @@ export class VendorCreateComponent implements OnInit{
               this.VendorTax.vendor_Detail_ID = this.VD_ID 
               console.log(this.VendorTax.vendor_Detail_ID )
               this.VendorTax.income_Tax_Num = Number(this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.value)
-              this.VendorService.AddIncomeTax(this.VendorTax).subscribe(response => {console.log(response)})
+              this.VendorService.AddIncomeTax(this.VendorTax).subscribe()!
             })
             
-            this.router.navigate(['/vendor-view'], {queryParams: {refresh: true}});
+            this.VendorService.GetVendorDetailByID(VendorList[0].vendor_Detail_ID).subscribe({
+              next: (response) => {
+                var action = "CREATED";
+                var title = "SUCCESSFULLY CREATED";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Vendor <strong>" + this.Vendor.name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+        
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+        
+                 const duration = 1750;
+                 setTimeout(() => {
+                  this.router.navigate(['/vendor-view'], {queryParams: {refresh: true}});
+                  dialogRef.close();
+                 }, duration);
+              }
+            }
+
+
+            )
         })//adds vendor details
 
      
@@ -623,12 +643,10 @@ export class VendorCreateComponent implements OnInit{
      
     
 
-
+     
 
 
   }//create
-   
-
    
 }
 
