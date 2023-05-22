@@ -78,6 +78,7 @@ export class ViewEmployeeComponent implements OnInit {
       }
       this.Employees = result;
       this.SearchedEmployee = this.Employees;
+      console.log(result)
     });
     function hideloader() {
       document.getElementById('loading')

@@ -78,6 +78,7 @@ export class EditAdminComponent implements OnInit {
     this.dataService.GetAdmin(+this.route.snapshot.params['uid']).subscribe(result => {
       this.admin = result
       this.usr.role_ID = this.admin.user.role.role_ID
+      this.usr.password = this.admin.user.password;
       this.myForm.patchValue({
         AdminName: this.admin.adminName,
         AdminSurname: this.admin.adminSurname,

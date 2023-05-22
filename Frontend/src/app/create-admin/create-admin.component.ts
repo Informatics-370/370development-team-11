@@ -80,7 +80,7 @@ export class CreateAdminComponent implements OnInit {
   onSubmit() {
 
     var newPassword = '';
-    newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
+    newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
 
     var cel = this.myForm.get('CellPhone_Num')?.value;
     var name = this.myForm.get('AdminName')?.value;
@@ -88,7 +88,7 @@ export class CreateAdminComponent implements OnInit {
     var ts = name.concat(surname);
     var username = ts.concat(cel.substring(4, 7));
     username = username.replace(/\s/g, "");
-    
+
     this.rl.role_ID = 0;
     this.rl.name = "Admin";
     this.rl.description = "Admin";
@@ -111,7 +111,6 @@ export class CreateAdminComponent implements OnInit {
 
     var rlName = this.myForm.get('Role_ID')?.value;
     this.usr.username = username;
-    this.usr.password = this.myForm.get('Password')?.value;
 
     this.mail.Name = name;
     this.mail.Username = username;
@@ -171,6 +170,6 @@ export class CreateAdminComponent implements OnInit {
       document.getElementById('loading')
         .style.display = 'none';
     }
-    
+
   }
 }
