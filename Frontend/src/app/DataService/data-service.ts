@@ -565,6 +565,10 @@ export class DataService {
     return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetCategory` + "/" + budgetCategoryID, this.httpOptions)
   }
 
+  BudgetCategoryValidation(name: String): Observable<BudgetCategory> {
+    return this.httpClient.get<BudgetCategory>(`${this.apiUrl}BudgetAllocation/BudgetCategoryValidation/` + name, this.httpOptions)
+  }
+
   GetBudgetAllocations(): Observable<any> {
     return this.httpClient.get<BudgetAllocation[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetAllocations`)
       .pipe(
@@ -597,6 +601,10 @@ export class DataService {
 
   DeleteBudgetAllocation(budgetAllocationID: Number) {
     return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetAllocation` + "/" + budgetAllocationID, this.httpOptions)
+  }
+
+  BudgetAllocationValidation(departmentName: String, year: Number): Observable<BudgetAllocation> {
+    return this.httpClient.get<BudgetAllocation>(`${this.apiUrl}BudgetAllocation/BudgetAllocationValidation/` + departmentName + "/" + year, this.httpOptions)
   }
 
   GetBudgetLineItems(budgetAllocationID: Number): Observable<any> {

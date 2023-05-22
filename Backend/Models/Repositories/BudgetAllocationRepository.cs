@@ -103,6 +103,35 @@ namespace ProcionAPI.Models.Repositories
             return budget_Line;
         }
 
+        public async Task<Budget_Category> BudgetCategoryValidationAsync(string name)
+        {
+            Budget_Category ExistingCategory = await _dbContext.Budget_Category.FirstOrDefaultAsync(x => x.Account_Name.ToLower() == name.ToLower());
+            if (ExistingCategory != null)
+            {
+                return ExistingCategory;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Budget_Allocation> BudgetAllocationValidationAsync(string departmentName, int year)
+        {
+            Department ExistingDepartment = await _dbContext.Department.FirstOrDefaultAsync(x => x.Name.ToLower() == departmentName.ToLower());
+            Budget_Allocation ExistingAllocation = await _dbContext.Budget_Allocation.FirstOrDefaultAsync(x => x.Department == ExistingDepartment && x.Year == year);
+
+            if(ExistingAllocation != null)
+            {
+                return ExistingAllocation;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
 
 
         public void Add<T>(T entity) where T : class { _dbContext.Add(entity); }

@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { Department } from '../Shared/Department';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
 @Component({
   selector: 'app-create-budget-allocation',
@@ -30,7 +33,7 @@ export class CreateBudgetAllocationComponent {
   departments: any[] = []
 
   budgetAllocationForm: FormGroup = new FormGroup({});
-  constructor(private router: Router, private dataService: DataService, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private dataService: DataService, private formBuilder: FormBuilder, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.GetDepartments();
@@ -49,11 +52,46 @@ export class CreateBudgetAllocationComponent {
     this.budgetAllocation.date_Created = this.budgetAllocationForm.get('date_Created')?.value;
     this.budgetAllocation.year = this.budgetAllocationForm.get('year')?.value;
     this.budgetAllocation.total = this.budgetAllocationForm.get('total')?.value;
-    console.log(this.budgetAllocation);
+    console.log(this.budgetAllocation.department.name)
+    this.dataService.BudgetAllocationValidation(this.budgetAllocation.department.name, this.budgetAllocation.year).subscribe({
+      next: (Result) => {
+        if (Result == null) {
+          this.dataService.AddBudgetAllocation(this.budgetAllocation).subscribe(
+            (CategoryAdded) => {
+              var action = "CREATE";
+              var title = "CREATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Allocation for department <strong>" + this.budgetAllocation.department.name + " </strong> For year <strong>" + this.budgetAllocation.year + " <strong style='color:green'> ADDED </strong> successfully!");
 
-    this.dataService.AddBudgetAllocation(this.budgetAllocation).subscribe(result => {
-      this.router.navigate(['/ViewBudgetAllocation']);
-    });
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/ViewBudgetAllocation']);
+                dialogRef.close();
+              }, duration);
+            }
+          );
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: Budget Allocation Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Allocation for department <strong>" + this.budgetAllocation.department.name + " </strong> For year <strong>" + this.budgetAllocation.year + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
+      }
+    })
   }
 
   GetDepartments() {

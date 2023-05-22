@@ -47,7 +47,7 @@ export class CreateBudgetLineComponent {
     budget_ID: 0,
     account_Code: 0,
     budget_Category: this.category,
-    month: '2023-05-07',
+    month: '',
     budgetAmt: 0,
     actualAmt: 0,
     variance: 0
@@ -65,10 +65,9 @@ export class CreateBudgetLineComponent {
     this.budgetLineForm = this.formBuilder.group({
       category_ID: ['', [Validators.required]],
       account_Code: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8), Validators.pattern("^[0-9]+$")]],
-      month: ['', [Validators.required]],
+      month: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(9), Validators.pattern("^[a-zA-Z ]+$")]],
       budgetAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],
       actualAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],
-      variance: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]]
     })
   }
 
@@ -79,15 +78,15 @@ export class CreateBudgetLineComponent {
     this.budgetLine.month = this.budgetLineForm.get('month')?.value;
     this.budgetLine.budgetAmt = this.budgetLineForm.get('budgetAmt')?.value;
     this.budgetLine.actualAmt = this.budgetLineForm.get('actualAmt')?.value;
-    this.budgetLine.variance = this.budgetLineForm.get('variance')?.value;
+    this.budgetLine.variance = Number(this.budgetLine.budgetAmt) - Number(this.budgetLine.actualAmt);
     this.budgetLine.budget_Allocation.budget_ID = this.id;
     this.budgetLine.budget_Allocation.department_ID = 0;
     console.log(this.budgetLine);
 
     this.dataService.GetBudgetAllocation(this.id).subscribe((budgetAllocation: BudgetAllocation) => {
       this.dataService.GetBudgetLineItems(this.id).subscribe(budgetLineItems => {
-        let totalBudgetLinesAmount = budgetLineItems.reduce((prev, cur) => prev + cur.budgetAmt, 0);
-        if (totalBudgetLinesAmount + this.budgetLine.budgetAmt > budgetAllocation.total) {
+        let totalBudgetLinesAmount = budgetLineItems.reduce((prev, cur) => prev + Number(cur.budgetAmt), 0);
+        if (totalBudgetLinesAmount + Number(this.budgetLine.budgetAmt) > budgetAllocation.total) {
           var action = "Error";
           var title = "Budget Over Allocation";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The total budget amount for budget lines exceeds the total budget allocation.");

@@ -3,6 +3,9 @@ import { DataService } from '../DataService/data-service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BudgetCategory } from '../Shared/BudgetCategory';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
 
 @Component({
@@ -18,7 +21,7 @@ export class CreateBudgetCategoryComponent {
   }
 
   budgetCategoryForm: FormGroup = new FormGroup({});
-  constructor(private router: Router, private dataService: DataService, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private dataService: DataService, private formBuilder: FormBuilder, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.budgetCategoryForm = this.formBuilder.group({
@@ -30,11 +33,48 @@ export class CreateBudgetCategoryComponent {
   onSubmit(): void {
     this.budgetCategory.account_Name = this.budgetCategoryForm.get('account_Name')?.value;
     this.budgetCategory.description = this.budgetCategoryForm.get('description')?.value;
-    this.dataService.AddBudgetCategory(this.budgetCategory).subscribe(result => {
-      this.router.navigate(['/ViewBudgetCategory']);
-    });
-    console.log(this.budgetCategory);
+    this.dataService.BudgetCategoryValidation(this.budgetCategory.account_Name).subscribe({
+      next: (Result) => {
+        if (Result == null) {
+          this.dataService.AddBudgetCategory(this.budgetCategory).subscribe(
+            (CategoryAdded) => {
+              var action = "CREATE";
+              var title = "CREATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The budget category <strong>" + this.budgetCategory.account_Name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/ViewBudgetCategory']);
+                dialogRef.close();
+              }, duration);
+            }
+          );
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: Budget Category Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The category <strong>" + this.budgetCategory.account_Name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
+      }
+    })
   }
+
+
 
   onCancel(): void {
     this.budgetCategoryForm.reset();
