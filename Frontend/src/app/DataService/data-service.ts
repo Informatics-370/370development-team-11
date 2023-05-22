@@ -407,22 +407,24 @@ export class DataService {
   GetMandateLimits(): Observable<any> {
     return this.httpClient.get<Mandate_Limit[]>(`${this.apiUrl}Mandate/GetAllMandateLimits`).pipe(
       map(result => result.map((mandateLimit: Mandate_Limit) => {
-        const utcDate = moment.utc(mandateLimit.date as any);
-        const localDate = utcDate.local().format();
-        mandateLimit.date = localDate;
+        const utcDate = mandateLimit.date as any;
+        mandateLimit.date = moment.utc(utcDate).local().format();
         return mandateLimit;
+
       }))
     );
   }
 
   GetMandateLimit(mlID: number | Number) {
     return this.httpClient.get<Mandate_Limit>(`${this.apiUrl}Mandate/GetMandateLimit/` + mlID).pipe(
-      map(result => {
-        result.date = moment(result.date as any).format();
-        return result;
+      map(mandateLimit => {
+        const utcDate = mandateLimit.date as any;
+        mandateLimit.date = moment.utc(utcDate).local().format();
+        return mandateLimit;
       })
     );
   }
+
 
   AddMandateLimit(ml: Mandate_Limit) {
     return this.httpClient.post(`${this.apiUrl}Mandate/AddMandateLimit`, ml, this.httpOptions)
@@ -564,11 +566,25 @@ export class DataService {
   }
 
   GetBudgetAllocations(): Observable<any> {
-    return this.httpClient.get<BudgetAllocation[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetAllocations`).pipe(map(result => result))
+    return this.httpClient.get<BudgetAllocation[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetAllocations`)
+      .pipe(
+        map(budgetAllocations => budgetAllocations.map(budgetAllocation => {
+          const date = budgetAllocation.date_Created as any;
+          budgetAllocation.date_Created = moment.utc(date).local().format();
+          return budgetAllocation;
+        }))
+      );
   }
 
   GetBudgetAllocation(budgetAllocationID: number | Number) {
-    return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetAllocation` + '/' + budgetAllocationID).pipe(map(result => result))
+    return this.httpClient.get<BudgetAllocation>(`${this.apiUrl}BudgetAllocation/GetBudgetAllocation` + '/' + budgetAllocationID)
+      .pipe(
+        map(budgetAllocation => {
+          const date = budgetAllocation.date_Created as any;
+          budgetAllocation.date_Created = moment.utc(date).local().format();
+          return budgetAllocation;
+        })
+      );
   }
 
   AddBudgetAllocation(budgetAllocation: BudgetAllocation) {
