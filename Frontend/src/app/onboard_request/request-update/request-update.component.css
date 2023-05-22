@@ -17,7 +17,7 @@
     left: 0;
     right: 0;
     background: #eee;
-    border-top:solid;
+    border-top:1px solid;
     text-align: center;
    
 }
@@ -50,6 +50,11 @@ mat-form-field{
     
 }
 
+label {
+    margin-right: 20px;
+    font-weight: 500;
+    
+}
 
 #btnHover:hover {
     background-color: #fe4945;

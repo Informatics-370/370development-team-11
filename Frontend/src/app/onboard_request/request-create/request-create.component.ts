@@ -315,6 +315,7 @@ export class RequestCreateComponent implements OnInit {
     this.Vendor.number_Of_Times_Used = 0;
     this.Onboard_Request.vendor = this.Vendor;
     this.Onboard_Request.onboard_Status = this.OnboardStatus;
+    this.Onboard_Request.vendor.sole_Supplier_Provided = true;
     this.SoleSupply.reason = this.SoleSupplierFormGroup.get("Reason")?.value
     if (this.files[0] != '') {
       let RequestNo = "Request" + this.Onboard_Request.onboard_Request_Id 
@@ -323,7 +324,9 @@ export class RequestCreateComponent implements OnInit {
         console.log(Path)
         this.sPath = Path.pathSaved.toString()
         this.Onboard_Request.quotes = this.sPath
-        this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
+        this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe( response => {
+         this.Onboard_Request = response[0]
+         this.dataService.AddSoleSupplierDetails(this.Onboard_Request.vendor_ID,this.SoleSupply).subscribe( {
           next: (response) => {
             console.log(response);
             var action = "CREATE";
@@ -341,30 +344,39 @@ export class RequestCreateComponent implements OnInit {
               dialogRef.close();
             }, duration);
           }}
+
+         )
+        }  
         );//dataservice
 
       });//post
     }//if
     else {
+        this.Onboard_Request.vendor.sole_Supplier_Provided = true;
         this.Onboard_Request.quotes = "None"   
-        this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
-          next: (response) => {
-            console.log(response);
-            var action = "CREATE";
-            var title = "CREATE SUCCESSFUL";
-            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id  + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
-  
-            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-              disableClose: true,
-              data: { action, title, message }
-            });
-  
-            const duration = 1750;
-            setTimeout(() => {
-              this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
-              dialogRef.close();
-            }, duration);
-          }}
+        this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe( response => {
+          this.Onboard_Request = response[0]
+          this.dataService.AddSoleSupplierDetails(this.Onboard_Request.vendor_ID,this.SoleSupply).subscribe( {
+           next: (response) => {
+             console.log(response);
+             var action = "CREATE";
+             var title = "CREATE SUCCESSFUL";
+             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id  + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+   
+             const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+               disableClose: true,
+               data: { action, title, message }
+             });
+   
+             const duration = 1750;
+             setTimeout(() => {
+               this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+               dialogRef.close();
+             }, duration);
+           }}
+ 
+          )
+         }
         );//dataservice
     }
     console.log("why")

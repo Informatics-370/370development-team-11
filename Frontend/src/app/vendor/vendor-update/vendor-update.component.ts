@@ -485,7 +485,8 @@ export class VendorUpdateComponent {
             }
          }})
         }
-        
+        console.log(this.VendorRegistration.company_Registration_Number)
+        console.log(Number(this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value))
         if(this.VendorRegistration.company_Registration_Number != Number(this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value)){
           this.VendorService.CompanyRegNumberVal(Number(this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value)).subscribe({next:
             (Result) => {if (Result != null) {
@@ -756,9 +757,12 @@ CreateContinue(VenDetailsID:number) {
           else if(this.CompanyWebsiteChecker == false && this.VendorWebsite.website_ID != 0) {
             this.VendorService.DeleteWebsiteByID(this.VendorWebsite.website_ID).subscribe(response => {console.log(response)})
           }//website
+
           this.VendorLicense.vendor_Detail = this.VendorDetail
           if(this.LicenseOrAccreditationChecker == true && this.VendorLicense.license_No == 0 ) {
             console.log(this.fileName[5])
+            this.VendorLicense.license_No = Number(this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value)
+            console.log(this.VendorLicense.license_No)
             FolderCategory = "LicenseOrAccreditationNumber";
             let file:File = this.fileName[5]
               VendorNo = "Vendor" + this.Vendor.vendor_ID

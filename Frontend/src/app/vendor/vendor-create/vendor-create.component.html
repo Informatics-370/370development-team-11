@@ -3,7 +3,7 @@
 <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
     Create Vendor
   </h1>
-  <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;">Please fill in the following details:</label>
+  <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;width: 330px;">Please fill in the following details:</label>
 </div>
   <mat-stepper [linear]="true"  #stepper style="background-color: #eee;">
     <mat-step [stepControl]="CompanyContactInfoFormGroup" >
@@ -34,7 +34,8 @@
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyTelphone'].hasError('required')">Company telphone is required</mat-error>
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyTelphone'].hasError('maxlength')">Company telphone cannot be more than 10 numbers long</mat-error>
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyTelphone'].hasError('pattern')">Company telphone cannot contain characters</mat-error>
-                      </mat-form-field>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyTelphone'].hasError('minlength')">Company telphone should be 10 numbers</mat-error>
+                    </mat-form-field>
                 </td>
             </tr>
             <tr>
@@ -116,7 +117,7 @@
                 </td>
             </tr>
         </table>
-        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 700px;justify-content: center;">
+        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
             <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/vendor-view"> Cancel</button>
             <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
            </div>
@@ -167,7 +168,6 @@
                         <input matInput [errorStateMatcher]="matcher" placeholder="Vat Registration Number" formControlName="VatRegistrationNumber" >
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['VatRegistrationNumber'].hasError('required')">Vat registration number is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['VatRegistrationNumber'].hasError('pattern')">Vat registration number cannot contain characters</mat-error>
-                        
                       </mat-form-field>
                 </td>
             </tr>
@@ -186,8 +186,8 @@
                         <input matInput placeholder="Income Tax Number" formControlName="IncomeTaxNumber"  [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('required')">Income tax number is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('pattern')">Income tax number cannot contain characters</mat-error> 
-                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('maxlength')">Vat registration number cannot be less than 10 numbers long</mat-error>
-                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('minlength')">Vat registration number should be 10 numbers</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('maxlength')">Income tax number cannot be less than 10 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('minlength')">Income tax number should be 10 numbers</mat-error>
                       </mat-form-field>
                 </td>
             </tr>
@@ -219,7 +219,7 @@
                 <td>
                     <mat-checkbox formControlName="PaymentTermsCheck" (click)="PaymentTermsChange()">Add Payment Terms?</mat-checkbox> <br>
                     <mat-form-field appearance="fill" *ngIf="PaymentTermsChecker === true;" >
-                        <textarea matInput placeholder="Payment Terms" formControlName="PaymentTerms"  [errorStateMatcher]="matcher">
+                        <textarea matInput placeholder="Payment Terms" formControlName="PaymentTerms"  [errorStateMatcher]="matcher"></textarea>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['PaymentTerms'].hasError('required')">Payment Terms is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['PaymentTerms'].hasError('maxlength')">Payment Terms cannot be more than 50 characters long</mat-error>
                       </mat-form-field>    
@@ -227,11 +227,12 @@
             </tr>
             <br>
             <tr>
+                
                 <td> <label>License Or Accreditation Number:</label></td>
                 <td>
                     <mat-checkbox formControlName="LicenseOrAccreditationCheck" (click)="LicenseOrAccreditationChange()">Add License Or Accreditation details?</mat-checkbox> <br>
                     <mat-form-field appearance="fill" *ngIf="LicenseOrAccreditationChecker === true;" >
-                        <input matInput placeholder="License Or Accreditation Number" formControlName="LicenseOrAccreditationNumber"  [errorStateMatcher]="matcher"></textarea>
+                        <input matInput placeholder="License Or Accreditation Number" formControlName="LicenseOrAccreditationNumber"  [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['LicenseOrAccreditationNumber'].hasError('required')">License or accreditation number is required</mat-error>
                         <mat-error *ngIf="CompanyOverviewFormGroup.controls['LicenseOrAccreditationNumber'].hasError('pattern')">License or accreditation number cannot contain numbers or other unique characters</mat-error> 
                       </mat-form-field>
@@ -243,8 +244,10 @@
                     <input  id="file" formControlName="LicenseOrAccreditationNumberDoc" type="file" class="file-upload" (change)="FileStorage(5,$event)">  
                 </td>
             </tr>
+            
         </table>
-        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 700px;justify-content: center;">
+        
+        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
             <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >back</button>
             <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
            </div>
@@ -344,7 +347,7 @@
                 </td>
             </tr>
         </table>  
-        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 700px;justify-content: center;">
+        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
             <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >back</button>
             <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
            </div>      
