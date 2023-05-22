@@ -6,6 +6,10 @@ import { BudgetLine } from '../Shared/BudgetLine';
 import { BudgetCategory } from '../Shared/BudgetCategory';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { Department } from '../Shared/Department';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-create-budget-line',
@@ -51,7 +55,8 @@ export class CreateBudgetLineComponent {
 
   categories: any[] = []
   budgetLineForm: FormGroup = new FormGroup({});
-  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder,
+    private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -79,8 +84,29 @@ export class CreateBudgetLineComponent {
     this.budgetLine.budget_Allocation.department_ID = 0;
     console.log(this.budgetLine);
 
-    this.dataService.AddBudgetLine(this.budgetLine).subscribe(result => {
-      this.router.navigate(['/ViewBudgetLines', this.id]);
+    this.dataService.GetBudgetAllocation(this.id).subscribe((budgetAllocation: BudgetAllocation) => {
+      this.dataService.GetBudgetLineItems(this.id).subscribe(budgetLineItems => {
+        let totalBudgetLinesAmount = budgetLineItems.reduce((prev, cur) => prev + cur.budgetAmt, 0);
+        if (totalBudgetLinesAmount + this.budgetLine.budgetAmt > budgetAllocation.total) {
+          var action = "Error";
+          var title = "Budget Over Allocation";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The total budget amount for budget lines exceeds the total budget allocation.");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        } else {
+          this.dataService.AddBudgetLine(this.budgetLine).subscribe(result => {
+            this.router.navigate(['/ViewBudgetLines', this.id]);
+          });
+        }
+      });
     });
   }
 

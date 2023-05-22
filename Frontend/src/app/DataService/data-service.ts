@@ -27,7 +27,7 @@ import { Vendor_Tax } from '../Shared/VendorDetailsIncomeTaxNum';
 import { MailData } from '../Shared/Mail';
 import { BudgetCategory } from '../Shared/BudgetCategory';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
-// import { BudgetLine } from '../Shared/BudgetLine';
+import { BudgetLine } from '../Shared/BudgetLine';
 import { SoleSupplier } from '../Shared/Sole_Supplier';
 
 @Injectable({
@@ -407,7 +407,7 @@ export class DataService {
     return this.httpClient.get<Mandate_Limit[]>(`${this.apiUrl}Mandate/GetAllMandateLimits`).pipe(map(result => result))
   }
 
-  GetMandateLimit(mlID: number) {
+  GetMandateLimit(mlID: number | Number) {
     return this.httpClient.get(`${this.apiUrl}Mandate/GetMandateLimit` + "/" + mlID).pipe(map(result => result))
   }
 
@@ -534,7 +534,7 @@ export class DataService {
     return this.httpClient.get<BudgetCategory[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetCategories`).pipe(map(result => result))
   }
 
-  GetBudgetCategory(budgetCategoryID: number) {
+  GetBudgetCategory(budgetCategoryID: number | Number) {
     return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetCategory` + '/' + budgetCategoryID).pipe(map(result => result))
   }
 
@@ -554,7 +554,7 @@ export class DataService {
     return this.httpClient.get<BudgetAllocation[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetAllocations`).pipe(map(result => result))
   }
 
-  GetBudgetAllocation(budgetAllocationID: number) {
+  GetBudgetAllocation(budgetAllocationID: number | Number) {
     return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetAllocation` + '/' + budgetAllocationID).pipe(map(result => result))
   }
 
@@ -570,21 +570,25 @@ export class DataService {
     return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetAllocation` + "/" + budgetAllocationID, this.httpOptions)
   }
 
-  // GetBudgetLineItems(budgetAllocationID: Number): Observable<any> {
-  //   return this.httpClient.get<BudgetLine[]>(`${this.apiUrl}BudgetAllocation/GetBudgetLinesForAllocation/${budgetAllocationID}`).pipe(map(result => result))
-  // }
+  GetBudgetLineItems(budgetAllocationID: Number): Observable<any> {
+    return this.httpClient.get<BudgetLine[]>(`${this.apiUrl}BudgetAllocation/GetBudgetLinesForAllocation/${budgetAllocationID}`).pipe(map(result => result))
+  }
 
-  // AddBudgetLine(budgetLine: BudgetLine) {
-  //   return this.httpClient.post<BudgetLine>(`${this.apiUrl}BudgetAllocation/AddBudgetLine`, budgetLine, this.httpOptions)
-  // }
+  GetBudgetLines(): Observable<any> {
+    return this.httpClient.get<BudgetLine[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetLines`).pipe(map(result => result))
+  }
+
+  AddBudgetLine(budgetLine: BudgetLine) {
+    return this.httpClient.post<BudgetLine>(`${this.apiUrl}BudgetAllocation/AddBudgetLine`, budgetLine, this.httpOptions)
+  }
 
   GetBudgetLine(accountCode: Number) {
     return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetLine` + '/' + accountCode).pipe(map(result => result))
   }
 
-  // EditBudgetLine(accountCode: Number, budgetLine: BudgetLine) {
-  //   return this.httpClient.put<BudgetLine>(`${this.apiUrl}BudgetAllocation/EditBudgetLine/${accountCode}`, budgetLine, this.httpOptions)
-  // }
+  EditBudgetLine(accountCode: Number, budgetLine: BudgetLine) {
+    return this.httpClient.put<BudgetLine>(`${this.apiUrl}BudgetAllocation/EditBudgetLine/${accountCode}`, budgetLine, this.httpOptions)
+  }
 
   DeleteBudgetLine(accountCode: Number) {
     return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetLine` + "/" + accountCode, this.httpOptions)
