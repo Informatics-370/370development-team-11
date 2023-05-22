@@ -29,6 +29,7 @@ import { BudgetCategory } from '../Shared/BudgetCategory';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { BudgetLine } from '../Shared/BudgetLine';
 import { SoleSupplier } from '../Shared/Sole_Supplier';
+import * as moment from 'moment'
 
 @Injectable({
   providedIn: 'root'
@@ -404,11 +405,23 @@ export class DataService {
   }
   //--------------------------------------------------------------------------------------Mandate Limit--------------------------------------------------------------------------------------
   GetMandateLimits(): Observable<any> {
-    return this.httpClient.get<Mandate_Limit[]>(`${this.apiUrl}Mandate/GetAllMandateLimits`).pipe(map(result => result))
+    return this.httpClient.get<Mandate_Limit[]>(`${this.apiUrl}Mandate/GetAllMandateLimits`).pipe(
+      map(result => result.map((mandateLimit: Mandate_Limit) => {
+        const utcDate = moment.utc(mandateLimit.date as any);
+        const localDate = utcDate.local().format();
+        mandateLimit.date = localDate;
+        return mandateLimit;
+      }))
+    );
   }
 
   GetMandateLimit(mlID: number | Number) {
-    return this.httpClient.get(`${this.apiUrl}Mandate/GetMandateLimit` + "/" + mlID).pipe(map(result => result))
+    return this.httpClient.get<Mandate_Limit>(`${this.apiUrl}Mandate/GetMandateLimit/` + mlID).pipe(
+      map(result => {
+        result.date = moment(result.date as any).format();
+        return result;
+      })
+    );
   }
 
   AddMandateLimit(ml: Mandate_Limit) {
