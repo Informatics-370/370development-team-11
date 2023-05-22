@@ -9,7 +9,7 @@
       </div>
 
       <a mat-list-item class="uni-font" routerLink="/ViewEmployee">Employees</a>
-      <a mat-list-item class="uni-font" routerLink="/ViewAdmin">Admins</a>
+      <a mat-list-item *ngIf='RoleToUse === "\"Admin\""' class="uni-font" routerLink="/ViewAdmin">Admins</a>
       <a mat-list-item class="uni-font" routerLink="/ViewEmpRole">Roles</a>
       <a mat-list-item *ngIf='RoleToUse === "\"Admin\""' mat-list-item class="uni-font"
         routerLink="/ViewDepartment">Departments</a>
@@ -46,7 +46,7 @@
     </div>
 
     <div class="d-flex justify-content-center">
-        <span class="loader" id="loading"></span>
+      <span class="loader" id="loading"></span>
     </div>
 
     <div style="margin-right:1%; margin-left:1%;">

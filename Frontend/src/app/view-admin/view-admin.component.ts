@@ -22,7 +22,11 @@ export class ViewAdminComponent implements OnInit {
   SearchedAdmin: Admin[] = [];
   searchWord: string = "";
 
+  RoleToUse: string = "";
+
+
   ngOnInit() {
+    this.RoleToUse = localStorage.getItem("Role")
     this.GetAdmins();
   }
 

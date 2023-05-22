@@ -27,7 +27,7 @@ import { Vendor_Tax } from '../Shared/VendorDetailsIncomeTaxNum';
 import { MailData } from '../Shared/Mail';
 import { BudgetCategory } from '../Shared/BudgetCategory';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
-import { BudgetLine } from '../Shared/BudgetLine';
+// import { BudgetLine } from '../Shared/BudgetLine';
 import { SoleSupplier } from '../Shared/Sole_Supplier';
 
 @Injectable({
@@ -144,7 +144,7 @@ export class DataService {
     return this.httpClient.get<Department>(`${this.apiUrl}Department/DepartmentValidation/` + name, this.httpOptions)
   }
 
- //--------------------------------------------------------------------------------------Requests--------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------Requests--------------------------------------------------------------------------------------
 
   GetAllOnboardRequest(): Observable<any> {
     return this.httpClient.get<VendorOnboardRequestVM[]>(`${this.apiUrl}OnboardRequest/GetAllOnboardRequest`).pipe(map(result => result))
@@ -186,7 +186,7 @@ export class DataService {
     return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendorValidation/${sVendorName}`, this.httpOptions).pipe(map(result => result))
   }
 
-//--------------------------------------------------------------------------------------Request Files--------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------Request Files--------------------------------------------------------------------------------------
 
   DeleteFile(RequestNo: string, fileName: string): Observable<any> {
     return this.httpClient.delete<any>(`${this.apiUrl}OnboardRequest/DeleteFile/${RequestNo}/${fileName}`, this.httpOptions)
@@ -204,7 +204,7 @@ export class DataService {
     return this.httpClient.post<any>(`${this.apiUrl}OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`, this.httpOptions)
   }
 
-//--------------------------------------------------------------------------------------Vendor Details--------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------Vendor Details--------------------------------------------------------------------------------------
   GetAllVendorDetails(): Observable<any> {
     return this.httpClient.get<VendorDetails[]>(`${this.apiUrl}Vendor/GetAllVendorDetails`).pipe(map(result => result))
   }
@@ -231,12 +231,12 @@ export class DataService {
 
   UpdateVendorStatus(VendorID: number, VendorStatusID: number): Observable<any> {
     return this.httpClient.put<VendorOnboardRequest>(`${this.apiUrl}Vendor/UpdateVendorStatus/${VendorID}/${VendorStatusID}`, this.httpOptions).pipe(map(result => result))
-  } 
+  }
 
 
   DeleteVendorDetails(vendorDetailsID: number): Observable<any> {
     return this.httpClient.delete<VendorDetails>(`${this.apiUrl}Vendor/DeleteVendorDetails/${vendorDetailsID}`, this.httpOptions).pipe(map(result => result))
-  } 
+  }
 
   //GetDifferentTables
   GetFaxByID(FaxID: number): Observable<any> {
@@ -370,7 +370,7 @@ export class DataService {
     return this.httpClient.delete<Vendor_Tax>(`${this.apiUrl}Vendor/DeleteIncomeTaxByID/${IncomeTaxID}`, this.httpOptions).pipe(map(result => result))
   }
 
-//--------------------------------------------------------------------------------------Vendor Files--------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------Vendor Files--------------------------------------------------------------------------------------
 
   VendorFileAdd(FolderCategory: string, VendorNo: string, fileName: File): Observable<any> {
     const formData = new FormData();
@@ -426,7 +426,7 @@ export class DataService {
   GetUsers(): Observable<any> {
     return this.httpClient.get<User[]>(`${this.apiUrl}User/GetUsers`).pipe(map(result => result))
   }
-  
+
   GetUser(userID: Number) {
     return this.httpClient.get(`${this.apiUrl}User/GetUser` + "/" + userID).pipe(map(result => result))
   }
@@ -570,21 +570,21 @@ export class DataService {
     return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetAllocation` + "/" + budgetAllocationID, this.httpOptions)
   }
 
-  GetBudgetLineItems(budgetAllocationID: Number): Observable<any> {
-    return this.httpClient.get<BudgetLine[]>(`${this.apiUrl}BudgetAllocation/GetBudgetLinesForAllocation/${budgetAllocationID}`).pipe(map(result => result))
-  }
+  // GetBudgetLineItems(budgetAllocationID: Number): Observable<any> {
+  //   return this.httpClient.get<BudgetLine[]>(`${this.apiUrl}BudgetAllocation/GetBudgetLinesForAllocation/${budgetAllocationID}`).pipe(map(result => result))
+  // }
 
-  AddBudgetLine(budgetLine: BudgetLine) {
-    return this.httpClient.post<BudgetLine>(`${this.apiUrl}BudgetAllocation/AddBudgetLine`, budgetLine, this.httpOptions)
-  }
+  // AddBudgetLine(budgetLine: BudgetLine) {
+  //   return this.httpClient.post<BudgetLine>(`${this.apiUrl}BudgetAllocation/AddBudgetLine`, budgetLine, this.httpOptions)
+  // }
 
   GetBudgetLine(accountCode: Number) {
     return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetLine` + '/' + accountCode).pipe(map(result => result))
   }
 
-  EditBudgetLine(accountCode: Number, budgetLine: BudgetLine) {
-    return this.httpClient.put<BudgetLine>(`${this.apiUrl}BudgetAllocation/EditBudgetLine/${accountCode}`, budgetLine, this.httpOptions)
-  }
+  // EditBudgetLine(accountCode: Number, budgetLine: BudgetLine) {
+  //   return this.httpClient.put<BudgetLine>(`${this.apiUrl}BudgetAllocation/EditBudgetLine/${accountCode}`, budgetLine, this.httpOptions)
+  // }
 
   DeleteBudgetLine(accountCode: Number) {
     return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetLine` + "/" + accountCode, this.httpOptions)
