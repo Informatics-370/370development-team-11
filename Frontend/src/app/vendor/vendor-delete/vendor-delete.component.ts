@@ -273,9 +273,11 @@ OnboardRequestDetails: any[] = [];
       VendorNo = "Vendor" + this.Vendor.vendor_ID
       fileName =  this.FileDetails[0].FileName
       this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
-      this.VendorService.DeleteRegistrationByID(this.VendorRegistration.vendor_Detail_ID).subscribe(response => {console.log(response)})
+      this.VendorService.DeleteRegistrationByID(this.VendorRegistration.vendor_Detail_ID).subscribe(Response => {
+        this.FinalDelete();
+      })
     } 
-    this.FinalDelete();
+    
        
     }
 
@@ -283,7 +285,7 @@ OnboardRequestDetails: any[] = [];
     let  FolderCategory = "Bank";
     let  VendorNo = "Vendor" + this.Vendor.vendor_ID 
     let  fileName =  this.FileDetails[6].FileName
-    this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe(Response => {
+    this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe({next:(Response) => {
     this.VendorService.DeleteVendorDetails(this.VendorDetail.vendor_Detail_ID).subscribe({
       next:(response) => { 
         this.VendorService.UpdateVendorStatus(this.VendorDetail.vendor_ID,2).subscribe(result => {console.log(result)})
@@ -295,7 +297,7 @@ OnboardRequestDetails: any[] = [];
       }, 1750);
     }
     })
-  })
+  }})
     }
 
     onCancel(): void {
