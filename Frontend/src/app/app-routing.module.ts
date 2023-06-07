@@ -51,6 +51,8 @@ import { ViewBudgetLinesComponent } from './view-budget-lines/view-budget-lines.
 import { CreateBudgetLineComponent } from './create-budget-line/create-budget-line.component';
 import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
+import { UserProfileComponent } from './User/user-profile/user-profile.component';
+import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
 
 
 const routes: Routes = [
@@ -61,6 +63,14 @@ const routes: Routes = [
   {
     path: "Home",
     component: HomePageComponent
+  },
+  {
+    path: "Profile",
+    component: UserProfileComponent
+  },
+  {
+    path: "ProfileEdit",
+    component: UserProfileEditComponent
   },
   {
     path: "ViewEmployee",

@@ -1,29 +1,35 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, ReactiveFormsModule, FormBuilder, AbstractControlOptions } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DataService } from '../DataService/data-service';
-import { Role } from '../Shared/EmployeeRole';
-import { User } from '../Shared/User';
-import { Admin } from '../Shared/Admin';
+import { DataService } from '../../DataService/data-service';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Admin } from '../../Shared/Admin';
+import { Role } from '../../Shared/EmployeeRole';
+import { User } from '../../Shared/User';
+import { NotificationdisplayComponent } from '../../notificationdisplay/notificationdisplay.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { MatDialogRef } from '@angular/material/dialog';
+import { CropperModalComponent } from '../cropper-modal/cropper-modal.component';
 
 @Component({
-  selector: 'app-edit-admin',
-  templateUrl: './edit-admin.component.html',
-  styleUrls: ['./edit-admin.component.css']
+  selector: 'app-user-profile-edit',
+  templateUrl: './user-profile-edit.component.html',
+  styleUrls: ['./user-profile-edit.component.css']
 })
-export class EditAdminComponent implements OnInit {
+export class UserProfileEditComponent {
+  imgChangeEvt: string = '';
+  file: string = '';
+  iName: string;
+  iRole: string;
+  admin: any;
   myForm: FormGroup = new FormGroup({});
+  cropImgPreview: string = '';
 
-  admin: any
-  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
-
-
-
-  userRoles: any[] = []
+  fileToUpload: File | null = null;
+  files: any[] = ['', '', ''];
 
   rl: Role = {
     role_ID: 0,
@@ -36,7 +42,7 @@ export class EditAdminComponent implements OnInit {
     role_ID: 0,
     username: '',
     password: '',
-    profile_Picture: './assets/Images/Default_Profile.jpg',
+    profile_Picture: '',
     role: this.rl
   }
 
@@ -50,10 +56,13 @@ export class EditAdminComponent implements OnInit {
     user: this.usr,
   }
 
-  ngOnInit() {
+  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
-    this.GetRoles();
-
+  ngOnInit(): void {
+    this.iName = localStorage.getItem("User");
+    this.iName = this.iName.substr(1, this.iName.length - 2);
+    this.iRole = localStorage.getItem("Role");
+    this.iRole = this.iRole.substr(1, this.iRole.length - 2);
 
     this.myForm = this.formBuilder.group({
       AdminName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
@@ -65,20 +74,29 @@ export class EditAdminComponent implements OnInit {
 
     this.GetAdmin();
 
+    console.log(this.iRole)
+    if (this.iRole == "Admin") {
+      console.log(this.iName)
+    } else {
 
+    }
   }
 
-  GetRoles() {
-    this.dataService.GetRoles().subscribe(result => {
-      this.userRoles = result;
-    });
+  get f() {
+    return this.myForm.controls;
+  }
+
+  public myError = (controlName: string, errorName: string) => {
+    return this.myForm.controls[controlName].hasError(errorName);
   }
 
   GetAdmin() {
-    this.dataService.GetAdmin(+this.route.snapshot.params['uid']).subscribe(result => {
+    this.dataService.GetAdminByUsername(this.iName).subscribe(result => {
       this.admin = result
       this.usr.role_ID = this.admin.user.role.role_ID
       this.usr.password = this.admin.user.password;
+      this.usr.profile_Picture = this.admin.user.profile_Picture;
+      this.cropImgPreview = this.admin.user.profile_Picture;
       this.myForm.patchValue({
         AdminName: this.admin.adminName,
         AdminSurname: this.admin.adminSurname,
@@ -89,19 +107,23 @@ export class EditAdminComponent implements OnInit {
     })
   }
 
+  onFileChange(event: any): void {
+    this.imgChangeEvt = event;
+    var img = this.imgChangeEvt;
+    console.log(event.target.files[0].name);
+    
+    const dialogRef: MatDialogRef<CropperModalComponent> = this.dialog.open(CropperModalComponent, {
+      disableClose: true,
+      data: { img }
+    });
 
-
-  get f() {
-    return this.myForm.controls;
-  }
-
-  public myError = (controlName: string, errorName: string) => {
-    return this.myForm.controls[controlName].hasError(errorName);
-  }
-
-  Close() {
-    this.myForm.reset();
-    this.router.navigateByUrl('ViewAdmin');
+    dialogRef.afterClosed().subscribe(result => {
+      this.cropImgPreview = result;
+      this.usr.profile_Picture = this.cropImgPreview;
+      var fileName = event.target.files[0].name;
+      
+      console.log(this.cropImgPreview);
+    })
   }
 
   onSubmit() {
@@ -117,16 +139,11 @@ export class EditAdminComponent implements OnInit {
     var username = ts.concat(cel.toString().substring(4, 7));
     username = username.replace(/\s/g, "");
 
+    localStorage.setItem("User", JSON.stringify(username))
+
     this.usr.username = username;
-    var id = this.usr.user_Id;
 
-    //this.dataService.EditUser(this.usr, this.route.snapshot.params['uid']).subscribe(r => {
-    //  this.dataService.EditAdmin(this.adm, this.route.snapshot.params['uid']).subscribe(result => {
-    //    this.router.navigateByUrl('ViewAdmin');
-    //  })
-    //})
-
-    this.dataService.UserValidation(username, id).subscribe({
+    this.dataService.UserValidation(username, this.usr.user_Id).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.EditUser(this.usr, this.admin.user_Id).subscribe(result => {
@@ -134,7 +151,7 @@ export class EditAdminComponent implements OnInit {
               next: (response) => {
                 var action = "Update";
                 var title = "UPDATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The admin <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
 
                 const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
                   disableClose: true,
@@ -143,7 +160,7 @@ export class EditAdminComponent implements OnInit {
 
                 const duration = 1750;
                 setTimeout(() => {
-                  this.router.navigate(['/ViewAdmin']);
+                  this.router.navigate(['/Profile']);
                   dialogRef.close();
                 }, duration);
               }
@@ -153,7 +170,7 @@ export class EditAdminComponent implements OnInit {
         else {
           var action = "ERROR";
           var title = "ERROR: User Exists";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A user with the username: <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,
@@ -167,5 +184,11 @@ export class EditAdminComponent implements OnInit {
         }
       }
     })
+  }
+
+
+  Close() {
+    this.myForm.reset();
+    this.router.navigateByUrl('Profile');
   }
 }

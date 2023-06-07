@@ -202,7 +202,7 @@ export class CreateEmployeeComponent implements OnInit {
     //console.log(username);
     //console.log(this.roles);
 
-    this.dataService.UserValidation(username).subscribe({
+    this.dataService.UserValidation(username, this.usr.user_Id).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.AddUser(this.usr).subscribe(result => {

@@ -88,6 +88,10 @@ import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.com
 import { DeleteBudgetLineComponent } from './delete-budget-line/delete-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { UserProfileComponent } from './User/user-profile/user-profile.component';
+import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { CropperModalComponent } from './User/cropper-modal/cropper-modal.component';
 
 
 
@@ -151,7 +155,10 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     CreateBudgetLineComponent,
     EditBudgetLineComponent,
     DeleteBudgetLineComponent,
-    EditBudgetAllocationComponent
+    EditBudgetAllocationComponent,
+    UserProfileComponent,
+    UserProfileEditComponent,
+    CropperModalComponent
   ],
   imports: [
     BrowserModule,
@@ -177,7 +184,8 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     MatTabsModule,
     MatStepperModule,
     MatCheckboxModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    ImageCropperModule
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },

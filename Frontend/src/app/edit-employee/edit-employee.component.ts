@@ -199,7 +199,7 @@ export class EditEmployeeComponent implements OnInit {
     this.usr.username = username;
     this.usr.role_ID = this.myForm.get('Role')?.value;
 
-    this.dataService.UserValidation(username).subscribe({
+    this.dataService.UserValidation(username, this.usr.user_Id).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
