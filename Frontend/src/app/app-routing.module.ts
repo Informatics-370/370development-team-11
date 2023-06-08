@@ -51,6 +51,7 @@ import { ViewBudgetLinesComponent } from './view-budget-lines/view-budget-lines.
 import { CreateBudgetLineComponent } from './create-budget-line/create-budget-line.component';
 import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
+import { AuthService } from './DataService/AuthService';
 
 
 const routes: Routes = [
@@ -63,7 +64,7 @@ const routes: Routes = [
     component: HomePageComponent
   },
   {
-    path: "ViewEmployee",
+    path: "ViewEmployee", canActivate: [AuthService],
     component: ViewEmployeeComponent
   },
   {

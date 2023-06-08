@@ -16,7 +16,7 @@ namespace ProcionAPI.Models.Entities
         [MaxLength(32)]
         public string? Username { get; set; }
 
-        [MaxLength(32)]
+        [MaxLength(100)]
         public string? Password { get; set; }
 
         public string? Profile_Picture { get; set; }

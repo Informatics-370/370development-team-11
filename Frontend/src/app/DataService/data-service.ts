@@ -539,9 +539,7 @@ export class DataService {
 
   //--------------------------------------------------------------------------------------Login--------------------------------------------------------------------------------------
   login(username: string, password: string) {
-    console.log(username)
-    console.log(password)
-    return this.httpClient.get<User>(`${this.apiUrl}User/Login/` + username + "/" + password, this.httpOptions).pipe(map(result => result))
+    return this.httpClient.post(`${this.apiUrl}User/login/` + username + "/" + password, this.httpOptions)
   }
 
   //--------------------------------------------------------------------------------------Budget Allocations--------------------------------------------------------------------------------------
@@ -629,6 +627,20 @@ export class DataService {
 
   DeleteBudgetLine(accountCode: Number) {
     return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetLine` + "/" + accountCode, this.httpOptions)
+  }
+
+  decodeUserRole(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.role;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
   }
 
 }

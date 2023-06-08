@@ -13,7 +13,11 @@ namespace ProcionAPI.Models.Repositories
         {
             _dbContext = dbContext;
         }
-    
+
+        public UserRepository()
+        {
+        }
+
         public async Task<Employee[]> GetAllEmployeesAsync()
         {
             IQueryable<Employee> query = _dbContext.Employee.Include(c => c.Branch)
@@ -39,6 +43,8 @@ namespace ProcionAPI.Models.Repositories
         {
 
             Role existingRole = await _dbContext.Role.FirstOrDefaultAsync(u => u.Name == UserAdd.Role.Name);
+            string Pass = HashPassword(UserAdd.Password);
+            UserAdd.Password = Pass;
 
             if (existingRole != null)
             {
@@ -249,6 +255,36 @@ namespace ProcionAPI.Models.Repositories
             await _dbContext.SaveChangesAsync();
 
             return admin;
+        }
+
+        public async Task<User> GetUserByUsername(string username)
+        {
+            var ExistingUser = _dbContext.User.Include(u => u.Role).FirstOrDefault(c => c.Username == username);
+            return ExistingUser;
+        }
+
+        public async Task<bool> VerifyCredentials(string UserName, string Password)
+        {
+            var ExistingUser = await _dbContext.User.FirstOrDefaultAsync(c => c.Username == UserName);
+
+            if (ExistingUser != null)
+            {
+
+                var Mypass = ExistingUser.Password;
+                // UserName Exists
+                bool isPasswordValid = BCrypt.Net.BCrypt.Verify(Password, Mypass);
+                return isPasswordValid;
+
+            }
+            return false;
+
+        }
+
+        public string HashPassword(string Password)
+        {
+            string salt = BCrypt.Net.BCrypt.GenerateSalt();
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(Password, salt);
+            return hashedPassword;
         }
 
     }

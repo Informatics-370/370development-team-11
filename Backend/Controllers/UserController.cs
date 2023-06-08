@@ -4,6 +4,10 @@ using ProcionAPI.Models.Entities;
 using ProcionAPI.Models.Repositories;
 using ProcionAPI.Data;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace ProcionAPI.Controllers
 {
@@ -32,19 +36,48 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
-        [HttpGet]
-        [Route("Login/{Username}/{Password}")]
-        public async Task<IActionResult> Login([FromRoute] string Username, [FromRoute] string Password)
+        [HttpPost("login/{UserName}/{Password}")]
+        public async Task<IActionResult> Login([FromRoute] string UserName, [FromRoute] string Password)
         {
-            try
+            bool isCredentialsValid = await _UserRepository.VerifyCredentials(UserName, Password);
+            if (isCredentialsValid == true)
             {
-                var result = await _UserRepository.Login(Username, Password);
-                return Ok(result);
+                User user = await _UserRepository.GetUserByUsername(UserName);
+
+                // Generate token
+                var token = GenerateToken(user);
+
+                // Return the token as a response to the Angular frontend
+                return Ok(new { token });
             }
-            catch (Exception)
+
+            return Unauthorized(new { error = "Invalid credentials" });
+        }
+        private string GenerateToken(User user)
+        {
+            byte[] key;
+            using (var randomNumberGenerator = new RNGCryptoServiceProvider())
             {
-                return StatusCode(500, "Internal Server Error. Please contact support.");
+                key = new byte[32]; // 256 bits
+                randomNumberGenerator.GetBytes(key);
             }
+            string encodedKey = Convert.ToBase64String(key);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, user.Role.Name)
+                }),
+                Expires = DateTime.UtcNow.AddHours(3), // Set token expiration time
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
 
         [HttpGet]

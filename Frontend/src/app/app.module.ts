@@ -88,6 +88,8 @@ import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.com
 import { DeleteBudgetLineComponent } from './delete-budget-line/delete-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { AuthInterceptorComponent } from './auth-interceptor/auth-interceptor.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 
@@ -151,7 +153,8 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     CreateBudgetLineComponent,
     EditBudgetLineComponent,
     DeleteBudgetLineComponent,
-    EditBudgetAllocationComponent
+    EditBudgetAllocationComponent,
+    AuthInterceptorComponent
   ],
   imports: [
     BrowserModule,
@@ -183,6 +186,11 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     MatExpansionModule,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorComponent, // Add the AuthInterceptor as a provider
+      multi: true
+    },
 
   ],
   bootstrap: [AppComponent]

@@ -18,5 +18,7 @@ namespace ProcionAPI.Models.Repositories {
         Task<Admin> UpdateAdminAsync(Admin AdminEdit, int userID);
         Task<User> UserValidationAsync(string name);
         Task<User> Login(string Username, string Password);
+        Task<bool> VerifyCredentials(string UserName, string Password);
+        Task<User> GetUserByUsername(string username);
     }
 }

@@ -8,6 +8,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthService } from '../DataService/AuthService';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class LoginComponent implements OnInit {
   loginConfirm: string = "";
 
   myForm: FormGroup = new FormGroup({});
-  constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
+  constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer, private AuthServ: AuthService) { }
 
 
   ngOnInit(): void {
@@ -44,15 +45,23 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         if (response != null) {
           console.log(response)
-          localStorage.setItem("User", JSON.stringify(response.username))
-          localStorage.setItem("Role", JSON.stringify(response.role.name))
+          const stringToken = JSON.stringify(response)
+          const expirationDate = new Date();
+          expirationDate.setTime(expirationDate.getTime() + 3 * 60 * 60 * 1000); // Expires in 3 hours
 
+          sessionStorage.setItem("token", stringToken);
+          sessionStorage.setItem("tokenExpiration", expirationDate.getTime().toString());
+
+          this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
           this.myForm.reset();
           this.router.navigate(['/Home']);
-        }
 
-        else {
-          console.log(response)
+        }
+      },
+      error: (error) => {
+        console.log(error)
+        if (error.status === 401) {
+          // Unauthorized: Invalid credentials
           var action = "Error";
           var title = "LOGIN FAILED";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The User <strong>" + this.userName + "</strong>  <strong style='color:red'> DOES NOT EXIST! </strong>");
@@ -66,10 +75,14 @@ export class LoginComponent implements OnInit {
           setTimeout(() => {
             dialogRef.close();
           }, duration);
+        } else {
+          // Handle other errors
+          // ...
         }
       }
     })
   }
+
   Close() {
     this.myForm.reset();
     this.router.navigate(['/ViewEmployee']);

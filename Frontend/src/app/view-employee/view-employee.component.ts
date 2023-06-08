@@ -50,9 +50,9 @@ export class ViewEmployeeComponent implements OnInit {
   searchWord: string = "";
 
   ngOnInit() {
-    this.RoleToUse = localStorage.getItem("Role")
+    this.RoleToUse = this.dataService.decodeUserRole(sessionStorage.getItem("token"))
     console.log(this.RoleToUse)
-    console.log(this.RoleToUse === "\"Admin\"")
+    console.log(this.RoleToUse === "Admin")
 
     this.GetEmployees();
   }
@@ -86,6 +86,8 @@ export class ViewEmployeeComponent implements OnInit {
       document.getElementById('table').style.visibility = "visible";
     }
   }
+
+
 
   DeleteEmployee(id: Number) {
     this.dataService.GetAllOnboardRequest().subscribe({
