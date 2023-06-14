@@ -52,6 +52,7 @@ import { CreateBudgetLineComponent } from './create-budget-line/create-budget-li
 import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
 import { AuthService } from './DataService/AuthService';
+import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dialog.component';
 
 
 const routes: Routes = [
@@ -216,6 +217,10 @@ const routes: Routes = [
   {
     path: 'EditBudgetAllocation/:id',
     component: EditBudgetAllocationComponent
+  },
+  {
+    path: 'ForgotPass',
+    component: ForgotPassDialogComponent
   }
 ];
 

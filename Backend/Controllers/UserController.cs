@@ -112,6 +112,22 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetEmployeeByEmail/{Email}")]
+        public async Task<IActionResult> GetEmployeeByEmail(string Email)
+        {
+            try
+            {
+                var result = await _UserRepository.GetEmployeeByEmailAsync(Email);
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
+
         [HttpPost]
         [Route("CreateUser")]
         public async Task<IActionResult> CreateUser(User UserAdd)
@@ -174,6 +190,22 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support");
             }
             
+        }
+        [HttpPut]
+        [Route("UpdatePassword/{userID}/{NewPassword}")]
+        public async Task<ActionResult> EditUser([FromRoute] int userID, [FromRoute] string NewPassword)
+        {
+            try
+            {
+                var result = await _UserRepository.UpdateUserPassword(userID, NewPassword);
+                return Ok(result);
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+
         }
 
         [HttpPut]

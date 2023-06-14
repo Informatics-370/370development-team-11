@@ -465,6 +465,13 @@ export class DataService {
   SendEmail(mail: MailData) {
     return this.httpClient.post(`${this.apiUrl}Mail/sendemailusingtemplate`, mail, this.httpOptions)
   }
+  SendPasswordEmail(mail: MailData) {
+    return this.httpClient.post(`${this.apiUrl}Mail/ForgotPasswordEmail`, mail, this.httpOptions)
+  }
+
+  UpdatePassword(UserID: Number, NewPassword: String) {
+    return this.httpClient.put<User>(`${this.apiUrl}User/UpdatePassword/` + UserID + "/" + NewPassword, this.httpOptions)
+  }
 
   //--------------------------------------------------------------------------------------Employee--------------------------------------------------------------------------------------
   GetEmployees(): Observable<any> {
@@ -473,6 +480,9 @@ export class DataService {
 
   GetEmployee(userID: number) {
     return this.httpClient.get(`${this.apiUrl}User/GetEmployee` + "/" + userID).pipe(map(result => result))
+  }
+  getEmployeebyEmail(Email: String) {
+    return this.httpClient.get<Employee>(`${this.apiUrl}User/GetEmployeeByEmail/` + Email).pipe(map(result => result))
   }
 
   GetEmployeeID(userID: Number) {

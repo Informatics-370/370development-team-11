@@ -106,6 +106,18 @@ namespace ProcionAPI.Models.Repositories
 
             return await query.FirstOrDefaultAsync();
         }
+        public async Task<Employee> GetEmployeeByEmailAsync(string Email)
+        {
+            IQueryable <Employee> Query = _dbContext.Employee.Include(U => U.User).Where(c => c.Email == Email);
+            if (Query != null)
+            {
+                return await Query.FirstOrDefaultAsync();
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         public void Delete<T>(T entity) where T : class
         {
@@ -207,6 +219,17 @@ namespace ProcionAPI.Models.Repositories
             Role existingRole = await _dbContext.Role.FirstOrDefaultAsync(c => c.Name == UserEdit.Role.Name);
 
             user.Role = existingRole;
+
+            await _dbContext.SaveChangesAsync();
+
+            return user;
+        }
+
+        public async Task<User> UpdateUserPassword(int userID, string NewPassword)
+        {
+            var user = await _dbContext.User.FindAsync(userID);
+
+            user.Password = HashPassword(NewPassword);
 
             await _dbContext.SaveChangesAsync();
 

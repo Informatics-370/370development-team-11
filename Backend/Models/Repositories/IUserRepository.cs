@@ -20,5 +20,7 @@ namespace ProcionAPI.Models.Repositories {
         Task<User> Login(string Username, string Password);
         Task<bool> VerifyCredentials(string UserName, string Password);
         Task<User> GetUserByUsername(string username);
+        Task<Employee> GetEmployeeByEmailAsync(string Email);
+        Task<User> UpdateUserPassword(int userID, string NewPassword);
     }
 }

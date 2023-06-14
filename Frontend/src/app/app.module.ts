@@ -90,6 +90,7 @@ import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-bud
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { AuthInterceptorComponent } from './auth-interceptor/auth-interceptor.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dialog.component';
 
 
 
@@ -154,7 +155,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
     EditBudgetLineComponent,
     DeleteBudgetLineComponent,
     EditBudgetAllocationComponent,
-    AuthInterceptorComponent
+    AuthInterceptorComponent,
+    ForgotPassDialogComponent
   ],
   imports: [
     BrowserModule,

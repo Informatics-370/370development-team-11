@@ -9,6 +9,7 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthService } from '../DataService/AuthService';
+import { ForgotPassDialogComponent } from '../forgot-pass-dialog/forgot-pass-dialog.component';
 
 
 @Component({
@@ -34,6 +35,12 @@ export class LoginComponent implements OnInit {
     })
     this.loginConfirm = null;
     console.log(this.loginConfirm)
+  }
+
+  ForgotPass() {
+    const dialogRef: MatDialogRef<ForgotPassDialogComponent> = this.dialog.open(ForgotPassDialogComponent, {
+      disableClose: true
+    });
   }
 
 
