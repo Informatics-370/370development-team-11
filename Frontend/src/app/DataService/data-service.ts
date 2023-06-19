@@ -493,6 +493,10 @@ export class DataService {
     return this.httpClient.get(`${this.apiUrl}User/GetEmployee` + "/" + userID).pipe(map(result => result))
   }
 
+  GetEmployeeByUsername(username: string) {
+    return this.httpClient.get(`${this.apiUrl}User/GetEmployeeByUsername` + "/" + username).pipe(map(result => result))
+  }
+
   AddEmployee(emp: Employee) {
     return this.httpClient.post(`${this.apiUrl}User/CreateEmployee`, emp, this.httpOptions)
   }

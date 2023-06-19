@@ -101,6 +101,20 @@ namespace ProcionAPI.Models.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
+        public async Task<Employee> GetEmployeeByUserNameAsync(string username)
+        {
+            IQueryable<Employee> query = _dbContext.Employee
+                .Include(c => c.Branch)
+                .Include(d => d.Department)
+                .Include(m => m.Mandate_Limit)
+                .Include(u => u.User)
+                .ThenInclude(r => r.Role)
+                .Where(w => w.User.Username == username);
+
+
+            return await query.FirstOrDefaultAsync();
+        }
+
         public void Delete<T>(T entity) where T : class
         {
             _dbContext.Remove(entity);

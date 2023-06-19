@@ -49,5 +49,6 @@ export class MainNavComponent implements OnInit {
       this.usr.username = this.user.username;
       this.usr.password = this.user.password;
     })
+    
   }
 }

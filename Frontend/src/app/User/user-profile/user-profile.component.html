@@ -18,53 +18,135 @@
       </div>
     </mat-card-header>
     <mat-card-content>
-      <h1 style="text-align:center; margin-bottom:5%;">
-        {{adm.adminName}} {{adm.adminSurname}} <br /> <sub style="color: #747474">{{rl.description}}</sub>
-        <br />
-        <button mat-raised-button
-                style="color:white; margin-top: 10px; font-size: 16px; width: 85px; background-color: #244688;"
-                type="button" routerLink="/ProfileEdit">
-          <mat-icon matPrefix
-                    style="margin-right:10%;">edit</mat-icon>Edit
-        </button>
-      </h1>
+      <div *ngIf="rAdmin; else elseBlock">
+        <h1 style="text-align:center; margin-bottom:5%;">
+          {{adm.adminName}} {{adm.adminSurname}} <br /> <sub style="color: #747474">{{rl.description}}</sub>
+          <br />
+          <button mat-raised-button
+                  style="color:white; margin-top: 10px; font-size: 16px; width: 85px; background-color: #244688;"
+                  type="button" routerLink="/ProfileEdit">
+            <mat-icon matPrefix
+                      style="margin-right:10%;">edit</mat-icon>Edit
+          </button>
+        </h1>
+      </div>
+      <ng-template #elseBlock>
+        <h1 style="text-align:center; margin-bottom:5%;">
+          {{emp.employeeName}} {{emp.employeeSurname}} <br /> <sub style="color: #747474">{{rl.description}}</sub>
+          <br />
+          <button mat-raised-button
+                  style="color:white; margin-top: 10px; font-size: 16px; width: 85px; background-color: #244688;"
+                  type="button" routerLink="/ProfileEdit">
+            <mat-icon matPrefix
+                      style="margin-right:10%;">edit</mat-icon>Edit
+          </button>
+        </h1>
+      </ng-template>
       <!--<h4 style="text-align:center;"></h4>-->
 
+      <div *ngIf="rAdmin; else elseBlock2">
+        <table style="width: 450px; font-size: 18px; background-color: #b9ccf1; border-radius: 8px;  margin: 8px 0; display: inline-block; border: 2px solid #244688; box-sizing: border-box; ">
+          <tr>
+            <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
 
-      <table style="width: 450px; font-size: 18px; background-color: #b9ccf1; border-radius: 8px;  margin: 8px 0; display: inline-block; border: 2px solid #244688; box-sizing: border-box; ">
-        <tr>
-          <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
+              <label style="margin-left: 3px; margin-right: 3px; margin-bottom:2px;"> Username:</label>
+              <br />
+              <label style="margin-left: 3px; margin-right: 3px;">{{usr.username}}</label>
 
-            <label style="margin-left: 3px; margin-right: 3px; margin-bottom:2px;"> Username:</label>
-            <br />
-            <label style="margin-left: 3px; margin-right: 3px;">{{usr.username}}</label>
+            </td>
+            <mat-divider style="margin-left:20px; border-top-color: black; width: 400px; "></mat-divider>
+          </tr>
 
-          </td>
+
+          <tr>
+            <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
+
+              <label style="margin-left: 3px; margin-right: 3px; margin-bottom:2px;"> Email:</label>
+              <br />
+              <label style="margin-left: 3px; margin-right: 3px;">{{adm.email}}</label>
+
+            </td>
+          </tr>
           <mat-divider style="margin-left:20px; border-top-color: black; width: 400px; "></mat-divider>
-        </tr>
-        
 
-        <tr>
-          <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
+          <tr>
+            <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
 
-            <label style="margin-left: 3px; margin-right: 3px; margin-bottom:2px;"> Email:</label>
-            <br />
-            <label style="margin-left: 3px; margin-right: 3px;">{{adm.email}}</label>
+              <label style="margin-left: 3px; margin-right: 3px; margin-bottom:2px;"> Phone Number:</label>
+              <br />
+              <label style="margin-left: 3px; margin-right: 3px;">{{adm.cellPhone_Num}}</label>
 
-          </td>
-        </tr>
-        <mat-divider style="margin-left:20px; border-top-color: black; width: 400px; "></mat-divider>
+            </td>
+          </tr>
+        </table>
+      </div>
 
-        <tr>
-          <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
+      <ng-template #elseBlock2>
+        <table style="width: 450px; font-size: 18px; background-color: #b9ccf1; border-radius: 8px;  margin: 8px 0; display: inline-block; border: 2px solid #244688; box-sizing: border-box; ">
+          <tr>
+            <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
 
-            <label style="margin-left: 3px; margin-right: 3px; margin-bottom:2px;"> Phone Number:</label>
-            <br />
-            <label style="margin-left: 3px; margin-right: 3px;">{{adm.cellPhone_Num}}</label>
+              <label style="margin-left: 3px; margin-right: 3px; margin-bottom:2px;"> Username:</label>
+              <br />
+              <label style="margin-left: 3px; margin-right: 3px;">{{usr.username}}</label>
 
-          </td>
-        </tr>
-      </table>
+            </td>
+            <mat-divider style="margin-left:20px; border-top-color: black; width: 400px; "></mat-divider>
+          </tr>
+
+          <tr>
+            <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
+
+              <label style="margin-left: 3px; margin-right: 3px; margin-bottom:2px;"> Email:</label>
+              <br />
+              <label style="margin-left: 3px; margin-right: 3px;">{{emp.email}}</label>
+
+            </td>
+          </tr>
+          <mat-divider style="margin-left:20px; border-top-color: black; width: 400px; "></mat-divider>
+
+          <tr>
+            <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
+
+              <label style="margin-left: 3px; margin-right: 3px; margin-bottom:2px;"> Phone Number:</label>
+              <br />
+              <label style="margin-left: 3px; margin-right: 3px;">{{emp.cellPhone_Num}}</label>
+
+            </td>
+          </tr>
+          <mat-divider style="margin-left:20px; border-top-color: black; width: 400px; "></mat-divider>
+
+          <tr>
+            <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
+
+              <label style="margin-left: 3px; margin-right: 3px; margin-bottom:2px;"> Mandate Limit:</label>
+              <br />
+              <label style="margin-left: 3px; margin-right: 3px;">{{ml.ammount}}</label>
+
+            </td>
+          </tr>
+          <mat-divider style="margin-left:20px; border-top-color: black; width: 400px; "></mat-divider>
+          <tr>
+            <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
+
+              <label style="margin-left: 3px; margin-right: 3px; margin-bottom:2px;"> Department:</label>
+              <br />
+              <label style="margin-left: 3px; margin-right: 3px;">{{dep.description}}</label>
+
+            </td>
+          </tr>
+          <mat-divider style="margin-left:20px; border-top-color: black; width: 400px; "></mat-divider>
+          <tr>
+            <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
+
+              <label style="margin-left: 3px; margin-right: 3px; margin-bottom:2px;"> Branch:</label>
+              <br />
+              <label style="margin-left: 3px; margin-right: 3px;">{{br.name}}</label>
+
+            </td>
+          </tr>
+        </table>
+      </ng-template>
 
     </mat-card-content>
   </mat-card>

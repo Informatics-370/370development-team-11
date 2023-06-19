@@ -7,6 +7,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Admin } from '../../Shared/Admin';
 import { Role } from '../../Shared/EmployeeRole';
 import { User } from '../../Shared/User';
+import { Branch } from '../../Shared/Branch';
+import { Department } from '../../Shared/Department';
+import { Mandate_Limit } from '../../Shared/MandateLimit';
+import { Employee } from '../../Shared/Employee';
 
 @Component({
   selector: 'app-user-profile',
@@ -17,7 +21,9 @@ export class UserProfileComponent implements OnInit {
   file: string = '';
   iName: string;
   iRole: string;
+  rAdmin: string;
   admin: any;
+  employee: any;
 
   rl: Role = {
     role_ID: 0,
@@ -32,6 +38,43 @@ export class UserProfileComponent implements OnInit {
     password: '',
     profile_Picture: '',
     role: this.rl
+  }
+
+  br: Branch = {
+    branch_ID: 0,
+    name: '',
+    street: '',
+    city: '',
+    postal_Code: '',
+    province: '',
+  }
+
+  dep: Department = {
+    department_ID: 0,
+    name: '',
+    description: ''
+  }
+
+  ml: Mandate_Limit = {
+    mandate_ID: 0,
+    ammount: 0,
+    date: '2023-05-07T12:14:46.249Z',
+  }
+
+  emp: Employee = {
+    employeeID: 0,
+    user_Id: 0,
+    department_ID: 0,
+    branch_ID: 0,
+    mandate_ID: 0,
+    employeeName: '',
+    employeeSurname: '',
+    cellPhone_Num: '',
+    email: '',
+    branch: this.br,
+    department: this.dep,
+    user: this.usr,
+    mandate_limit: this.ml
   }
 
   adm: Admin = {
@@ -51,14 +94,32 @@ export class UserProfileComponent implements OnInit {
     this.iName = this.iName.substr(1, this.iName.length - 2);
     this.iRole = localStorage.getItem("Role");
     this.iRole = this.iRole.substr(1, this.iRole.length - 2);
-    this.GetAdmin();
+    
 
-    console.log(this.iRole)
+    
     if (this.iRole == "Admin") {
-      console.log(this.iName)
+      this.rAdmin = "true";
+      this.GetAdmin();
     } else {
-
+      this.GetEmployee();
     }
+  }
+
+  GetEmployee() {
+    this.dataService.GetEmployeeByUsername(this.iName).subscribe(result => {
+      this.employee = result
+      this.emp.employeeName = this.employee.employeeName;
+      this.emp.employeeSurname = this.employee.employeeSurname;
+      this.emp.cellPhone_Num = this.employee.cellPhone_Num;
+      this.emp.email = this.employee.email;
+      this.rl.description = this.employee.user.role.description;
+      this.usr.profile_Picture = this.employee.user.profile_Picture;
+      this.usr.username = this.employee.user.username;
+      this.usr.password = this.employee.user.password;
+      this.ml.ammount = this.employee.mandate_Limit.ammount;
+      this.dep.description = this.employee.department.description;
+      this.br.name = this.employee.branch.name;
+    })
   }
 
   GetAdmin() {

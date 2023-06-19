@@ -7,6 +7,7 @@ namespace ProcionAPI.Models.Repositories {
         Task<Employee[]> AddEmployeeAsync(Employee EmployeeAdd);
         Task<User[]> AddUserAsync(User UserAdd);
         Task<Employee> GetEmployeeAsync(int userID);
+        Task<Employee> GetEmployeeByUserNameAsync(string username);
         Task<User> GetUserAsync(int userID);
         Task<User> GetUserByUserNameAsync(string username);
         Task<Admin[]> GetAllAdminsAsync();

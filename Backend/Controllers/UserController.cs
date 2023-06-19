@@ -80,6 +80,23 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetEmployeeByUsername/{username}")]
+        public async Task<IActionResult> GetEmployeeByUserNameAsync(string username)
+        {
+            try
+            {
+                var result = await _UserRepository.GetEmployeeByUserNameAsync(username);
+                if (result == null) return NotFound("Employee does not exist. You need to create it first");
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
+
         [HttpPost]
         [Route("CreateUser")]
         public async Task<IActionResult> CreateUser(User UserAdd)
