@@ -675,5 +675,17 @@ export class DataService {
     }
   }
 
-}
+  decodeUser(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
 
+      return decodedPayload.unique_name;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+}

@@ -36,6 +36,9 @@ export class ViewConsumableComponent implements OnInit {
   ngOnInit() {
     this.GetConsumables();
     console.log(this.Consumables)
+
+    var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+    console.log(User)
   }
 
   GetConsumables() {
