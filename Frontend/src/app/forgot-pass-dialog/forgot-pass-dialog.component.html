@@ -13,7 +13,7 @@
                                 <mat-card-content>
                                     <label style=" color:black;">Email:</label>
                                     <mat-form-field>
-                                        <input matInput type="text" placeholder="johndoe@gmail.com"
+                                        <input matInput type="email" placeholder="johndoe@gmail.com"
                                             formControlName="EmailUsername" id="Name" required [(ngModel)]="Email">
                                         <mat-hint align="end">Please enter a valid email to reset your
                                             password</mat-hint>
@@ -38,7 +38,10 @@
 
             </mat-card-actions>
         </form>
-        <p><b><i>If the account is found an email will be sent to the email address linked to the account containing
+        <p style="text-align:center;font-size: small;"><b><i>If the account is found an email will be sent to the
+                    email
+                    address linked to
+                    the account containing
                     your new
                     password</i></b></p>
     </mat-card>
