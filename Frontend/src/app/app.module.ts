@@ -160,7 +160,7 @@ import { CropperModalComponent } from './User/cropper-modal/cropper-modal.compon
     DeleteBudgetLineComponent,
     EditBudgetAllocationComponent,
     AuthInterceptorComponent,
-    ForgotPassDialogComponent
+    ForgotPassDialogComponent,
     UserProfileComponent,
     UserProfileEditComponent,
     CropperModalComponent
