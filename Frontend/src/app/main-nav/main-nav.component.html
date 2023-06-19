@@ -19,7 +19,7 @@
       style="font-size:19pt;"></mat-icon>
     <img class="image-container" src="{{usr.profile_Picture}}" style="object-fit: cover;" [matMenuTriggerFor]="beforeMenu"/>
     <mat-menu #beforeMenu="matMenu" xPosition="before">
-      <button mat-menu-item><mat-icon matPrefix>pageview</mat-icon>Profile</button>
+      <button mat-menu-item routerLink="/Profile"><mat-icon matPrefix>pageview</mat-icon>Profile</button>
       <button mat-menu-item><mat-icon matPrefix>calendar_today</mat-icon>Calendar</button>
       <button mat-menu-item (click)="Logout()"><mat-icon matPrefix>logout</mat-icon>Logout</button>
     </mat-menu>

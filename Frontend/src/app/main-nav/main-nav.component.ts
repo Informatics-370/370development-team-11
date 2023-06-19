@@ -16,23 +16,8 @@ import { User } from '../Shared/User';
 
 
 export class MainNavComponent implements OnInit {
-  constructor(private router: Router, private dataService: DataService, private AuthServ: AuthService) { }
-  RoleToUse: string = "";
-  ngOnInit() {
-    this.AuthServ.userRole$.subscribe(role => {
-      this.RoleToUse = role
-    })
-  }
-
-  Logout() {
-    sessionStorage.removeItem("token")
-    sessionStorage.removeItem("tokenExpiration")
-    this.router.navigate([""]);
-  }
-
 
   iName: string;
-  iRole: string;
   user: any;
 
   rl: Role = {
@@ -50,23 +35,30 @@ export class MainNavComponent implements OnInit {
     role: this.rl
   }
 
-  // ngOnInit(): void {
-  //   this.iName = localStorage.getItem("User");
-  //   this.iName = this.iName.substr(1, this.iName.length - 2);
-  //   this.iRole = localStorage.getItem("Role");
-  //   this.iRole = this.iRole.substr(1, this.iRole.length - 2);
-  //   this.GetUser()
-    
-  // }
+  constructor(private router: Router, private dataService: DataService, private AuthServ: AuthService) { }
+  RoleToUse: string = "";
+  ngOnInit() {
+    this.AuthServ.userRole$.subscribe(role => {
+      this.RoleToUse = role
+    })
+    this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    this.GetUser()
+  }
 
-  // GetUser() {
-  //   this.dataService.GetUserByUsername(this.iName).subscribe(result => {
-  //     this.user = result
-  //     this.rl.description = this.user.role.description;
-  //     this.usr.profile_Picture = this.user.profile_Picture;
-  //     this.usr.username = this.user.username;
-  //     this.usr.password = this.user.password;
-  //   })
+  Logout() {
+    sessionStorage.removeItem("token")
+    sessionStorage.removeItem("tokenExpiration")
+    this.router.navigate([""]);
+  }
+
+   GetUser() {
+     this.dataService.GetUserByUsername(this.iName).subscribe(result => {
+       this.user = result
+       this.rl.description = this.user.role.description;
+       this.usr.profile_Picture = this.user.profile_Picture;
+       this.usr.username = this.user.username;
+       this.usr.password = this.user.password;
+     })
     
-  // }
+   }
 }
