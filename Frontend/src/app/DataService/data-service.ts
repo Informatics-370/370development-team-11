@@ -446,6 +446,10 @@ export class DataService {
     return this.httpClient.get(`${this.apiUrl}User/GetUser` + "/" + userID).pipe(map(result => result))
   }
 
+  GetUserByUsername(username: string) {
+    return this.httpClient.get(`${this.apiUrl}User/GetUserByUsername` + "/" + username).pipe(map(result => result))
+  }
+
   AddUser(user: User) {
     return this.httpClient.post(`${this.apiUrl}User/CreateUser`, user, this.httpOptions)
   }
@@ -458,8 +462,8 @@ export class DataService {
     return this.httpClient.delete<string>(`${this.apiUrl}User/DeleteUser` + "/" + userID, this.httpOptions)
   }
 
-  UserValidation(name: String): Observable<User> {
-    return this.httpClient.get<User>(`${this.apiUrl}User/UserValidation/` + name, this.httpOptions)
+  UserValidation(name: String, id: Number): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiUrl}User/UserValidation/` + name + '/' + id, this.httpOptions)
   }
 
   SendEmail(mail: MailData) {
@@ -472,6 +476,16 @@ export class DataService {
   UpdatePassword(UserID: Number, NewPassword: String) {
     return this.httpClient.put<User>(`${this.apiUrl}User/UpdatePassword/` + UserID + "/" + NewPassword, this.httpOptions)
   }
+
+  //ProfilePhotoAdd(file: File): Observable<any> {
+  //  const formData = new FormData();
+  //  formData.append('file', file);
+  //  return this.httpClient.post<any>(`${this.apiUrl}User/uploadPhoto`, formData, this.httpOptions)
+  //}
+
+  //getPhoto(imgURL: string): Observable<Blob> {
+  //  return this.httpClient.get(imgURL, { responseType: 'blob' })
+  //}
 
   //--------------------------------------------------------------------------------------Employee--------------------------------------------------------------------------------------
   GetEmployees(): Observable<any> {
@@ -487,6 +501,10 @@ export class DataService {
 
   GetEmployeeID(userID: Number) {
     return this.httpClient.get(`${this.apiUrl}User/GetEmployee` + "/" + userID).pipe(map(result => result))
+  }
+
+  GetEmployeeByUsername(username: string) {
+    return this.httpClient.get(`${this.apiUrl}User/GetEmployeeByUsername` + "/" + username).pipe(map(result => result))
   }
 
   AddEmployee(emp: Employee) {
@@ -508,6 +526,10 @@ export class DataService {
 
   GetAdmin(userID: number) {
     return this.httpClient.get(`${this.apiUrl}User/GetAdmin` + "/" + userID).pipe(map(result => result))
+  }
+
+  GetAdminByUsername(username: string) {
+    return this.httpClient.get(`${this.apiUrl}User/GetAdminByUsername` + "/" + username).pipe(map(result => result))
   }
 
   AddAdmin(adm: Admin) {

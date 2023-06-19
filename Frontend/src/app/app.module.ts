@@ -91,6 +91,10 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { AuthInterceptorComponent } from './auth-interceptor/auth-interceptor.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dialog.component';
+import { UserProfileComponent } from './User/user-profile/user-profile.component';
+import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { CropperModalComponent } from './User/cropper-modal/cropper-modal.component';
 
 
 
@@ -157,6 +161,9 @@ import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dial
     EditBudgetAllocationComponent,
     AuthInterceptorComponent,
     ForgotPassDialogComponent
+    UserProfileComponent,
+    UserProfileEditComponent,
+    CropperModalComponent
   ],
   imports: [
     BrowserModule,
@@ -182,7 +189,8 @@ import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dial
     MatTabsModule,
     MatStepperModule,
     MatCheckboxModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    ImageCropperModule
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },

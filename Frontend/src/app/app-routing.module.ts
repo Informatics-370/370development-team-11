@@ -53,6 +53,8 @@ import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.com
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
 import { AuthService } from './DataService/AuthService';
 import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dialog.component';
+import { UserProfileComponent } from './User/user-profile/user-profile.component';
+import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
 
 
 const routes: Routes = [
@@ -63,6 +65,15 @@ const routes: Routes = [
   {
     path: "Home",
     component: HomePageComponent
+  },
+  {
+    
+    path: "Profile",
+    component: UserProfileComponent
+  },
+  {
+    path: "ProfileEdit",
+    component: UserProfileEditComponent
   },
   {
     path: "ViewEmployee", canActivate: [AuthService],

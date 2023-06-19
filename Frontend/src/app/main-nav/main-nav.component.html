@@ -17,8 +17,7 @@
     <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button>Reports</a>
     <mat-icon aria-hidden="false" aria-label="notification icon" fontIcon="notifications" class="sub-spacer"
       style="font-size:19pt;"></mat-icon>
-    <mat-icon aria-hidden="false" aria-label="profile icon" fontIcon="account_circle" class="sub-spacer"
-      style="font-size:19pt;" [matMenuTriggerFor]="beforeMenu"></mat-icon>
+    <img class="image-container" src="{{usr.profile_Picture}}" style="object-fit: cover;" [matMenuTriggerFor]="beforeMenu"/>
     <mat-menu #beforeMenu="matMenu" xPosition="before">
       <button mat-menu-item><mat-icon matPrefix>pageview</mat-icon>Profile</button>
       <button mat-menu-item><mat-icon matPrefix>calendar_today</mat-icon>Calendar</button>

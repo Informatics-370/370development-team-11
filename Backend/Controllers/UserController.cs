@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Net.Http.Headers;
 
 namespace ProcionAPI.Controllers
 {
@@ -128,6 +129,23 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetEmployeeByUsername/{username}")]
+        public async Task<IActionResult> GetEmployeeByUserNameAsync(string username)
+        {
+            try
+            {
+                var result = await _UserRepository.GetEmployeeByUserNameAsync(username);
+                if (result == null) return NotFound("Employee does not exist. You need to create it first");
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
+
         [HttpPost]
         [Route("CreateUser")]
         public async Task<IActionResult> CreateUser(User UserAdd)
@@ -165,6 +183,23 @@ namespace ProcionAPI.Controllers
             try
             {
                 var result = await _UserRepository.GetUserAsync(userID);
+                if (result == null) return NotFound("User does not exist. You need to create it first");
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetUserByUsername/{username}")]
+        public async Task<IActionResult> GetUserByUserNameAsync(string username)
+        {
+            try
+            {
+                var result = await _UserRepository.GetUserByUserNameAsync(username);
                 if (result == null) return NotFound("User does not exist. You need to create it first");
 
                 return Ok(result);
@@ -291,6 +326,23 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetAdminByUsername/{username}")]
+        public async Task<IActionResult> GetAdminByUserNameAsync(string username)
+        {
+            try
+            {
+                var result = await _UserRepository.GetAdminByUserNameAsync(username);
+                if (result == null) return NotFound("Admin does not exist. You need to create it first");
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
+
         [HttpPost]
         [Route("CreateAdmin")]
         public async Task<IActionResult> CreateAdmin(Admin AdminAdd)
@@ -341,18 +393,48 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
-        [Route("UserValidation/{name}")]
-        public async Task<IActionResult> UserValidation([FromRoute] string name)
+        [Route("UserValidation/{name}/{id}")]
+        public async Task<IActionResult> UserValidation([FromRoute] string name, int id)
         {
             try
             {
-                var result = await _UserRepository.UserValidationAsync(name);
+                var result = await _UserRepository.UserValidationAsync(name, id);
                 return Ok(result);
             }
             catch (Exception)
             {
 
                 return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPost, DisableRequestSizeLimit]
+        [Route("uploadPhoto")]
+        public async Task<IActionResult> Upload()
+        {
+            try
+            {
+                var formCollection = await Request.ReadFormAsync();
+                var file = formCollection.Files.First();
+                var folderName = Path.Combine("Files", "Images");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                if (file == null || file.Length == 0) return BadRequest("No file selected");
+                var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                var fullPath = Path.Combine(pathToSave, fileName);
+                var dbPath = Path.Combine(folderName, fileName);
+                if (!Directory.Exists(pathToSave))
+                {
+                    Directory.CreateDirectory(pathToSave);
+                }
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                }
+                return Ok(new {dbPath});
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
             }
         }
     }

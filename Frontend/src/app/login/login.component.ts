@@ -61,7 +61,10 @@ export class LoginComponent implements OnInit {
 
           this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
           this.myForm.reset();
-          this.router.navigate(['/Home']);
+          this.router.navigate(['/Home']).then(() => {
+            window.location.reload();
+          });
+        }
 
         }
       },
