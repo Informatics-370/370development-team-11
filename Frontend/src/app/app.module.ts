@@ -95,6 +95,7 @@ import { UserProfileComponent } from './User/user-profile/user-profile.component
 import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { CropperModalComponent } from './User/cropper-modal/cropper-modal.component';
+import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 
 
 
@@ -163,7 +164,8 @@ import { CropperModalComponent } from './User/cropper-modal/cropper-modal.compon
     ForgotPassDialogComponent,
     UserProfileComponent,
     UserProfileEditComponent,
-    CropperModalComponent
+    CropperModalComponent,
+    ViewNotificationHubComponent
   ],
   imports: [
     BrowserModule,

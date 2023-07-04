@@ -126,12 +126,14 @@ export class EditAdminComponent implements OnInit {
     //  })
     //})
 
-    this.dataService.UserValidation(username, id).subscribe({
+    this.dataService.EditUserValidation(username, id).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.EditUser(this.usr, this.admin.user_Id).subscribe(result => {
             this.dataService.EditAdmin(this.adm, this.admin.admin_ID).subscribe({
               next: (response) => {
+                document.getElementById('cBtn').style.display = "none";
+                document.querySelector('button').classList.toggle("is_active");
                 var action = "Update";
                 var title = "UPDATE SUCCESSFUL";
                 var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The admin <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");

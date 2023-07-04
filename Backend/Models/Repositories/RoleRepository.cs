@@ -45,9 +45,23 @@ namespace ProcionAPI.Models.Repositories
             return await _dbContext.SaveChangesAsync() > 0;
         }
 
-        public async Task<Role> RoleValidationAsync(string name)
+        public async Task<Role> CreateRoleValidationAsync(string name)
         {
             Role ExistingRole = await _dbContext.Role.FirstOrDefaultAsync(x => x.Name == name);
+            if (ExistingRole == null)
+            {
+                return ExistingRole;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Role> EditRoleValidationAsync(string name, int id)
+        {
+            Role ExistingRole = await _dbContext.Role.FirstOrDefaultAsync(x => x.Name == name && x.Role_ID == id);
             if (ExistingRole != null)
             {
                 return ExistingRole;

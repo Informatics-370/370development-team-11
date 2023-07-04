@@ -462,8 +462,12 @@ export class DataService {
     return this.httpClient.delete<string>(`${this.apiUrl}User/DeleteUser` + "/" + userID, this.httpOptions)
   }
 
-  UserValidation(name: String, id: Number): Observable<User> {
-    return this.httpClient.get<User>(`${this.apiUrl}User/UserValidation/` + name + '/' + id, this.httpOptions)
+  EditUserValidation(name: String, id: Number): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiUrl}User/EditUserValidation/` + name + '/' + id, this.httpOptions)
+  }
+
+  CreateUserValidation(name: String): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiUrl}User/CreateUserValidation/` + name, this.httpOptions)
   }
 
   SendEmail(mail: MailData) {
@@ -565,8 +569,12 @@ export class DataService {
     return this.httpClient.delete<string>(`${this.apiUrl}Role/DeleteRole` + "/" + roleID, this.httpOptions)
   }
 
-  RoleValidation(name: String): Observable<Role> {
-    return this.httpClient.get<Role>(`${this.apiUrl}Role/RoleValidation/` + name, this.httpOptions)
+  CreateRoleValidation(name: String): Observable<Role> {
+    return this.httpClient.get<Role>(`${this.apiUrl}Role/CreateRoleValidation/` + name, this.httpOptions)
+  }
+
+  EditRoleValidation(name: String, id: Number): Observable<Role> {
+    return this.httpClient.get<Role>(`${this.apiUrl}Role/EditRoleValidation/` + name + '/' + id, this.httpOptions)
   }
 
   //--------------------------------------------------------------------------------------Login--------------------------------------------------------------------------------------

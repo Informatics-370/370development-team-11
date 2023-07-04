@@ -17,11 +17,19 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CropperModalComponent } from '../cropper-modal/cropper-modal.component';
+import { MainNavComponent } from '../../main-nav/main-nav.component';
+import { MatIconRegistry } from '@angular/material/icon';
+
+//const CHECK_ICON = `<svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
+      
+//                <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+// </svg>`;
 
 @Component({
   selector: 'app-user-profile-edit',
   templateUrl: './user-profile-edit.component.html',
-  styleUrls: ['./user-profile-edit.component.css']
+  styleUrls: ['./user-profile-edit.component.css'],
+  providers: [MainNavComponent],
 })
 export class UserProfileEditComponent {
   imgChangeEvt: string = '';
@@ -99,13 +107,13 @@ export class UserProfileEditComponent {
     user: this.usr,
   }
 
-  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer, private nav: MainNavComponent, iconRegistry: MatIconRegistry) {
+    /*iconRegistry.addSvgIconLiteral('check', sanitizer.bypassSecurityTrustHtml(CHECK_ICON));*/
+  }
 
   ngOnInit(): void {
-    this.iName = localStorage.getItem("User");
-    this.iName = this.iName.substr(1, this.iName.length - 2);
-    this.iRole = localStorage.getItem("Role");
-    this.iRole = this.iRole.substr(1, this.iRole.length - 2);
+    this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
     if (this.iRole == "Admin") {
       this.rAdmin = "true";
@@ -204,12 +212,12 @@ export class UserProfileEditComponent {
       this.cropImgPreview = result;
       this.usr.profile_Picture = this.cropImgPreview;
       var fileName = event.target.files[0].name;
-      
-      console.log(this.cropImgPreview);
     })
   }
 
   onSubmitA() {
+    
+
     this.adm.adminName = this.myForm.get('AdminName')?.value;
     this.adm.adminSurname = this.myForm.get('AdminSurname')?.value;
     this.adm.cellPhone_Num = this.myForm.get('CellPhone_Num')?.value;
@@ -226,12 +234,14 @@ export class UserProfileEditComponent {
 
     this.usr.username = username;
 
-    this.dataService.UserValidation(username, this.usr.user_Id).subscribe({
+    this.dataService.EditUserValidation(username, this.usr.user_Id).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.EditUser(this.usr, this.admin.user_Id).subscribe(result => {
             this.dataService.EditAdmin(this.adm, this.admin.admin_ID).subscribe({
               next: (response) => {
+                document.getElementById('cBtn').style.display = "none";
+                document.querySelector('button').classList.toggle("is_active");
                 var action = "Update";
                 var title = "UPDATE SUCCESSFUL";
                 var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -244,6 +254,9 @@ export class UserProfileEditComponent {
                 const duration = 1750;
                 setTimeout(() => {
                   this.router.navigate(['/Profile']);
+                  //this.nav.reload();
+                  //const NavbarElement = document.getElementById("nav");
+                  //NavbarElement.innerHTML = NavbarElement.innerHTML;
                   dialogRef.close();
                 }, duration);
               }
@@ -290,12 +303,14 @@ export class UserProfileEditComponent {
     this.usr.username = username;
     this.usr.role_ID = this.myForm.get('Role')?.value;
 
-    this.dataService.UserValidation(username, this.usr.user_Id).subscribe({
+    this.dataService.EditUserValidation(username, this.usr.user_Id).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
             this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
               next: (response) => {
+                document.getElementById('cBtn').style.display = "none";
+                document.querySelector('button').classList.toggle("is_active");
                 var action = "Update";
                 var title = "UPDATE SUCCESSFUL";
                 var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -308,6 +323,9 @@ export class UserProfileEditComponent {
                 const duration = 1750;
                 setTimeout(() => {
                   this.router.navigate(['/Profile']);
+                  //this.nav.reload();
+                  //const NavbarElement = document.getElementById("nav");
+                  //NavbarElement.innerHTML = NavbarElement.innerHTML;
                   dialogRef.close();
                 }, duration);
               }
@@ -337,4 +355,5 @@ export class UserProfileEditComponent {
     this.myForm.reset();
     this.router.navigateByUrl('Profile');
   }
+
 }

@@ -61,9 +61,7 @@ export class LoginComponent implements OnInit {
 
           this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
           this.myForm.reset();
-          this.router.navigate(['/Home']).then(() => {
-            window.location.reload();
-          });
+          this.router.navigate(['/Home']);
         }
 
         
@@ -97,4 +95,20 @@ export class LoginComponent implements OnInit {
     this.myForm.reset();
     this.router.navigate(['/ViewEmployee']);
   }
+
+
+
+  /*container = document.getElementById('container');*/
+
+  removeList() {
+    document.getElementById('container').classList.remove("right-panel-active");
+    /*this.container.classList.remove("right-panel-active");*/
+  }
+
+  addList() {
+    document.getElementById('container').classList.add("right-panel-active");
+    /*this.container.classList.add("right-panel-active");*/
+  }
+
+
 }

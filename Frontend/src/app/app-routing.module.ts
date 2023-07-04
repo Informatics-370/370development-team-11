@@ -55,6 +55,7 @@ import { AuthService } from './DataService/AuthService';
 import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dialog.component';
 import { UserProfileComponent } from './User/user-profile/user-profile.component';
 import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
+import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 
 
 const routes: Routes = [
@@ -68,11 +69,11 @@ const routes: Routes = [
   },
   {
     
-    path: "Profile",
+    path: "Profile", canActivate: [AuthService],
     component: UserProfileComponent
   },
   {
-    path: "ProfileEdit",
+    path: "ProfileEdit", canActivate: [AuthService],
     component: UserProfileEditComponent
   },
   {
@@ -232,6 +233,10 @@ const routes: Routes = [
   {
     path: 'ForgotPass', canActivate: [AuthService],
     component: ForgotPassDialogComponent
+  },
+  {
+    path: 'NotificationHub', canActivate: [AuthService],
+    component: ViewNotificationHubComponent
   }
 ];
 

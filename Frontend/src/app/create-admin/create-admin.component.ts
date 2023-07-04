@@ -113,7 +113,7 @@ export class CreateAdminComponent implements OnInit {
     this.mail.Email = this.myForm.get('Email')?.value;
     document.getElementById('loading').style.display = 'block';
 
-    this.dataService.UserValidation(username, this.usr.user_Id).subscribe({
+    this.dataService.CreateUserValidation(username).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.AddUser(this.usr).subscribe(result => {
@@ -123,6 +123,8 @@ export class CreateAdminComponent implements OnInit {
 
                   if (response) {
                     hideloader();
+                    document.getElementById('cBtn').style.display = "none";
+                    document.querySelector('button').classList.toggle("is_active");
                   }
 
                   var action = "Create";

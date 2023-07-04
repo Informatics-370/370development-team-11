@@ -50,11 +50,13 @@ export class EditEmployeeRoleComponent implements OnInit {
   onSubmit() {
     var name = this.myForm.get('Name')?.value;
 
-    this.dataService.RoleValidation(name).subscribe({
+    this.dataService.EditRoleValidation(name, this.role.role_ID).subscribe({
       next: (Result) => {
-        if (Result == null) {
+        if (Result != null) {
           this.dataService.EditRole(this.role.role_ID, this.myForm.value).subscribe({
             next: (response) => {
+              document.getElementById('cBtn').style.display = "none";
+              document.querySelector('button').classList.toggle("is_active");
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");

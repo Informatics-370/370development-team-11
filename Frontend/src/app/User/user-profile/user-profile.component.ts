@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, OnInit } from '@angular/core';
 import { DataService } from '../../DataService/data-service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,13 +11,15 @@ import { Branch } from '../../Shared/Branch';
 import { Department } from '../../Shared/Department';
 import { Mandate_Limit } from '../../Shared/MandateLimit';
 import { Employee } from '../../Shared/Employee';
+import { MainNavComponent } from '../../main-nav/main-nav.component';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css']
+  styleUrls: ['./user-profile.component.css'],
+  providers: [MainNavComponent],
 })
-export class UserProfileComponent implements OnInit {
+export class UserProfileComponent implements OnInit, AfterViewInit {
   file: string = '';
   iName: string;
   iRole: string;
@@ -87,13 +89,11 @@ export class UserProfileComponent implements OnInit {
     user: this.usr,
   }
 
-  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService) { }
+  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private nav: MainNavComponent) { }
 
   ngOnInit(): void {
-    this.iName = localStorage.getItem("User");
-    this.iName = this.iName.substr(1, this.iName.length - 2);
-    this.iRole = localStorage.getItem("Role");
-    this.iRole = this.iRole.substr(1, this.iRole.length - 2);
+    this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
     
 
     
@@ -101,8 +101,12 @@ export class UserProfileComponent implements OnInit {
       this.rAdmin = "true";
       this.GetAdmin();
     } else {
-      this.GetEmployee();
+      this.GetEmployee();      
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.nav.reload();
   }
 
   GetEmployee() {
