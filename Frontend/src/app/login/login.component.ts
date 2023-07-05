@@ -62,11 +62,9 @@ export class LoginComponent implements OnInit {
           this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
           this.myForm.reset();
           this.router.navigate(['/Home']);
-          const NavbarElement = document.getElementById("nav")
-          NavbarElement.innerHTML = NavbarElement.innerHTML;
-
-
         }
+
+
       },
       error: (error) => {
         console.log(error)
@@ -97,4 +95,20 @@ export class LoginComponent implements OnInit {
     this.myForm.reset();
     this.router.navigate(['/ViewEmployee']);
   }
+
+
+
+  /*container = document.getElementById('container');*/
+
+  removeList() {
+    document.getElementById('container').classList.remove("right-panel-active");
+    /*this.container.classList.remove("right-panel-active");*/
+  }
+
+  addList() {
+    document.getElementById('container').classList.add("right-panel-active");
+    /*this.container.classList.add("right-panel-active");*/
+  }
+
+
 }

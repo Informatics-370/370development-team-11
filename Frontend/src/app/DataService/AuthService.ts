@@ -13,6 +13,7 @@ export class AuthService {
     private userRoleSubject = new BehaviorSubject<string>(null);
     userRole$ = this.userRoleSubject.asObservable();
 
+
     setUserRole(role: string) {
         this.userRoleSubject.next(role);
     }

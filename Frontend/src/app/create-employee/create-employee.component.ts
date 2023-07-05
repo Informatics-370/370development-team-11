@@ -202,7 +202,7 @@ export class CreateEmployeeComponent implements OnInit {
     //console.log(username);
     //console.log(this.roles);
 
-    this.dataService.UserValidation(username).subscribe({
+    this.dataService.CreateUserValidation(username).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.AddUser(this.usr).subscribe(result => {
@@ -212,6 +212,8 @@ export class CreateEmployeeComponent implements OnInit {
 
                   if (response) {
                     hideloader();
+                    document.getElementById('cBtn').style.display = "none";
+                    document.querySelector('button').classList.toggle("is_active");
                   }
 
                   var action = "Create";

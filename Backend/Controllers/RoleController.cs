@@ -102,12 +102,28 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
-        [Route("RoleValidation/{name}")]
-        public async Task<IActionResult> RoleValidation([FromRoute] string name)
+        [Route("CreateRoleValidation/{name}")]
+        public async Task<IActionResult> CreateRoleValidation([FromRoute] string name)
         {
             try
             {
-                var result = await _RoleRepository.RoleValidationAsync(name);
+                var result = await _RoleRepository.CreateRoleValidationAsync(name);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("EditRoleValidation/{name}/{id}")]
+        public async Task<IActionResult> EditRoleValidation([FromRoute] string name, int id)
+        {
+            try
+            {
+                var result = await _RoleRepository.EditRoleValidationAsync(name, id);
                 return Ok(result);
             }
             catch (Exception)
