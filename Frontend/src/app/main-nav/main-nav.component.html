@@ -20,7 +20,7 @@
     <mat-icon aria-hidden="false" aria-label="profile icon" fontIcon="account_circle" class="sub-spacer"
       style="font-size:19pt;" [matMenuTriggerFor]="beforeMenu"></mat-icon>
     <mat-menu #beforeMenu="matMenu" xPosition="before">
-      <button mat-menu-item><mat-icon matPrefix>pageview</mat-icon>Profile</button>
+      <button mat-menu-item><mat-icon matPrefix *ngif="IsLoggedIn === true">pageview</mat-icon>Profile</button>
       <button mat-menu-item><mat-icon matPrefix>calendar_today</mat-icon>Calendar</button>
       <button mat-menu-item (click)="Logout()"><mat-icon matPrefix>logout</mat-icon>Logout</button>
     </mat-menu>

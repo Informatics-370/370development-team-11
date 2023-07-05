@@ -103,7 +103,7 @@
                                     <label style=" color:black;">On Hand:</label>
                                     <br />
                                     <mat-form-field>
-                                        <input matInput type="number" placeholder="" formControlName="On_Hand"
+                                        <input readonly matInput type="number" placeholder="" formControlName="On_Hand"
                                             id="Email" [(ngModel)]="ConsumableToEdit.on_Hand" required>
                                         <mat-error *ngIf="myError('On_Hand', 'required')">The on hand
                                             amount is required</mat-error>
@@ -123,6 +123,11 @@
                 <button mat-raised-button type="submit"
                     style="width: 150px; font-size: 14px; height: 42px; margin: 10px;" [disabled]="!myForm.valid"
                     [ngStyle]="{'background-color': !myForm.valid ? 'rgba(148, 204, 91, 0.6)' : '#94CC5B','color': !myForm.valid ? 'rgba(255, 255, 255, 0.6)' : 'white'}">Save</button>
+
+                <button mat-raised-button type="submit"
+                    style="width: 150px; font-size: 14px; height: 42px; margin: 10px;" [disabled]="!myForm.valid"
+                    [ngStyle]="{'background-color': !myForm.valid ? 'rgba(148, 204, 91, 0.6)' : '#94CC5B','color': !myForm.valid ? 'rgba(255, 255, 255, 0.6)' : 'white'}">Update
+                    Stock</button>
 
                 <button mat-raised-button
                     style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color:#244688; color:white;"

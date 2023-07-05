@@ -16,10 +16,15 @@ import { AuthService } from '../DataService/AuthService';
 export class MainNavComponent implements OnInit {
   constructor(private router: Router, private dataService: DataService, private AuthServ: AuthService) { }
   RoleToUse: string = "";
+
+  IsLoggedIn: boolean = false;
   ngOnInit() {
     this.AuthServ.userRole$.subscribe(role => {
       this.RoleToUse = role
+      this.IsLoggedIn = true;
     })
+
+
   }
 
   Logout() {
