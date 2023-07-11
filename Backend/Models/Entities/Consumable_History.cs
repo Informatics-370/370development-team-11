@@ -14,6 +14,8 @@ namespace ProcionAPI.Models.Entities
         [ForeignKey("Consumable_ID")]
         public Consumable Consumable { get; set; }
 
+        public int StockAmt { get; set; }
+
         public DateTime DateCaptured { get; set; }
     }
 }

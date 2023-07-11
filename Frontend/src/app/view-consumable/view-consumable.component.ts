@@ -6,6 +6,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableDataSource } from '@angular/material/table';
 import { DeleteConsumableComponent } from '../delete-consumable/delete-consumable.component';
 import { Router } from '@angular/router';
+import { UpdateConsumableStockComponent } from '../update-consumable-stock/update-consumable-stock.component';
 
 
 @Component({
@@ -18,9 +19,22 @@ import { Router } from '@angular/router';
 export class ViewConsumableComponent implements OnInit {
   Consumables: Consumable[] = [];
   SearchedConsumables: Consumable[] = [];
-  displayedColumns: string[] = ['Name', 'Description', 'On Hand', 'Minimum Reorder Quantity', 'Maximum Reorder Quantity', 'Category', 'action', 'delete'];
+  displayedColumns: string[] = ['Name', 'Description', 'On Hand', 'Minimum Reorder Quantity', 'Maximum Reorder Quantity', 'Category', 'action', 'update', 'delete'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
+
+  openDialog(name: string, ID: Number) {
+    console.log(name)
+    this.Dialog.open(UpdateConsumableStockComponent, {
+      data: { name, ID }
+    });
+
+    this.Dialog.afterAllClosed.subscribe({
+      next: (response) => {
+        this.ngOnInit();
+      }
+    })
+  }
 
   OnInPutChange() {
     const Searchterm = this.searchWord.toLocaleLowerCase();

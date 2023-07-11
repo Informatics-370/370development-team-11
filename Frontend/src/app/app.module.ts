@@ -97,6 +97,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { CropperModalComponent } from './User/cropper-modal/cropper-modal.component';
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
+import { UpdateConsumableStockComponent } from './update-consumable-stock/update-consumable-stock.component';
 
 
 
@@ -167,7 +168,8 @@ import { ViewDelegationComponent } from './Delegation/view-delegation/view-deleg
     UserProfileEditComponent,
     CropperModalComponent,
     ViewNotificationHubComponent,
-    ViewDelegationComponent
+    ViewDelegationComponent,
+    UpdateConsumableStockComponent
   ],
   imports: [
     BrowserModule,

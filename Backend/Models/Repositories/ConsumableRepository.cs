@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProcionAPI.Data;
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Controllers;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProcionAPI.Models.Repositories
 {
@@ -96,8 +97,25 @@ namespace ProcionAPI.Models.Repositories
             return consumable;
         }
 
+        public async Task<Consumable_History[]> UpdateStockAsync(Consumable_History HistoryAdd)
+        {
+            Consumable ExistingConsumable = await _dbContext.Consumable.FirstOrDefaultAsync(c => c.Name == HistoryAdd.Consumable.Name);
 
+            // Update Stock of Consumable
+            ExistingConsumable.On_Hand = HistoryAdd.StockAmt;
 
+            // Add the new history entry
+            var history = new Consumable_History
+            {
+                Consumable_ID = ExistingConsumable.Consumable_ID,
+                StockAmt = HistoryAdd.StockAmt,
+                DateCaptured = HistoryAdd.DateCaptured
+            };
+            await _dbContext.Consumable_History.AddAsync(history);
+            await _dbContext.SaveChangesAsync();
+
+            return new Consumable_History[] { history };
+        }
 
     }
 }

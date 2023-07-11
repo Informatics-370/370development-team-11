@@ -30,6 +30,7 @@ import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { BudgetLine } from '../Shared/BudgetLine';
 import { SoleSupplier } from '../Shared/Sole_Supplier';
 import * as moment from 'moment'
+import { Consumable_History } from '../Shared/Consumable_History';
 
 @Injectable({
   providedIn: 'root'
@@ -695,5 +696,9 @@ export class DataService {
       console.error('Error decoding token:', error);
       return null;
     }
+  }
+
+  UpdateStock(HistoryAdd: Consumable_History) {
+    return this.httpClient.post<Consumable_History>(`${this.apiUrl}Consumable/UpdateStock`, HistoryAdd).pipe(map(result => result))
   }
 }
