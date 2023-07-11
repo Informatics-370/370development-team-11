@@ -1,9 +1,12 @@
-﻿using Azure.Core;
+﻿using Azure;
+using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using MimeKit;
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Models.Repositories;
 using System.Data.SqlTypes;
+using System.Net;
 using System.Net.Mime;
 
 namespace ProcionAPI.Controllers
@@ -143,8 +146,17 @@ namespace ProcionAPI.Controllers
             var filePath = Path.Combine(Directory.GetCurrentDirectory(),"Files","OnboardRequests", RequestNo, filename);
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
             var contentType = "application/octet-stream";
+
+            if(filename.Contains(".pdf"))
+            {
+                contentType = "application/pdf";
+            }
+            // var contentType = "application/pdf";
+            //var contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
             return File(fileBytes, contentType, filename);
         }
+
 
 
         [HttpPut]

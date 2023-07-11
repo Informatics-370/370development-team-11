@@ -31,6 +31,9 @@ import { VendorUpdateComponent } from './vendor/vendor-update/vendor-update.comp
 import { VendorDeleteComponent } from './vendor/vendor-delete/vendor-delete.component';
 import { VendordetailsViewComponent } from './vendor/vendordetails-view/vendordetails-view.component';
 import { VendorCreateChoiceComponent } from './vendor/vendor-create-choice/vendor-create-choice.component'
+import { VendorApproveComponent } from './vendor/vendor-approve/vendor-approve.component';
+import { VendorUnofficialVendorlistComponent } from './vendor/vendor-unofficial-vendorlist/vendor-unofficial-vendorlist.component';
+import { VendorApprovedAddDetailsComponent } from './vendor/vendor-approved-add-details/vendor-approved-add-details.component';
 
 import { CreateDepartmentComponent } from './create-department/create-department/create-department.component';
 import { DeleteDepartmentComponent } from './delete-department/delete-department/delete-department.component';
@@ -148,6 +151,9 @@ const routes: Routes = [
   { path: 'vendor-delete', component: VendorDeleteComponent },
   { path: 'vendororderdetails-view/:VendorID', component: VendordetailsViewComponent },
   { path: 'vendor-create-choice', component: VendorCreateChoiceComponent },
+  { path: 'vendor-approve/:RequestNo', component: VendorApproveComponent },
+  { path: 'vendor-unofficial-vendorlist', component: VendorUnofficialVendorlistComponent },
+  { path: 'vendor-approved-add-details/:VendorID', component: VendorApprovedAddDetailsComponent },
   {
     path: 'ViewDepartment',
     component: ViewDepartmentComponent

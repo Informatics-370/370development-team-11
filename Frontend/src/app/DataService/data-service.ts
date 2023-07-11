@@ -200,10 +200,10 @@ export class DataService {
     return this.httpClient.post<any>(`${this.apiUrl}OnboardRequest/uploadOnboardFile`, formData, this.httpOptions)
   }
 
-
   GetOnboardFiles(RequestNo: string, filename: string): Observable<any> {
-    return this.httpClient.post<any>(`${this.apiUrl}OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`, this.httpOptions)
+    return this.httpClient.get(`${this.apiUrl}OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`,{headers: new HttpHeaders({ContentType: 'application/octet-stream'}),responseType:"blob"} )
   }
+
 
   //--------------------------------------------------------------------------------------Vendor Details--------------------------------------------------------------------------------------
   GetAllVendorDetails(): Observable<any> {

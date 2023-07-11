@@ -56,6 +56,9 @@ import { VendorViewComponent } from './vendor/vendor-view/vendor-view.component'
 import { VendorDeleteComponent } from './vendor/vendor-delete/vendor-delete.component';
 import { VendordetailsViewComponent } from './vendor/vendordetails-view/vendordetails-view.component';
 import { VendorCreateChoiceComponent } from './vendor/vendor-create-choice/vendor-create-choice.component';
+import { VendorApproveComponent } from './vendor/vendor-approve/vendor-approve.component';
+import { VendorUnofficialVendorlistComponent } from './vendor/vendor-unofficial-vendorlist/vendor-unofficial-vendorlist.component';
+import { VendorApprovedAddDetailsComponent } from './vendor/vendor-approved-add-details/vendor-approved-add-details.component';
 
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -73,7 +76,6 @@ import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.compo
 import { LoginComponent } from './login/login.component';
 import { HomePageComponent } from './home-page/home-page.component';
 
-
 import { DeleteMandateLimitComponent } from './delete-mandate-limit/delete-mandate-limit.component';
 import { ViewBudgetCategoryComponent } from './view-budget-category/view-budget-category.component';
 import { CreateBudgetCategoryComponent } from './create-budget-category/create-budget-category.component';
@@ -88,6 +90,9 @@ import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.com
 import { DeleteBudgetLineComponent } from './delete-budget-line/delete-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+
+
+
 
 
 
@@ -151,7 +156,10 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     CreateBudgetLineComponent,
     EditBudgetLineComponent,
     DeleteBudgetLineComponent,
-    EditBudgetAllocationComponent
+    EditBudgetAllocationComponent,
+    VendorApproveComponent,
+    VendorUnofficialVendorlistComponent,
+    VendorApprovedAddDetailsComponent
   ],
   imports: [
     BrowserModule,
