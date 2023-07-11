@@ -90,6 +90,15 @@ import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.com
 import { DeleteBudgetLineComponent } from './delete-budget-line/delete-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { AuthInterceptorComponent } from './auth-interceptor/auth-interceptor.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dialog.component';
+import { UserProfileComponent } from './User/user-profile/user-profile.component';
+import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { CropperModalComponent } from './User/cropper-modal/cropper-modal.component';
+import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
+import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
 
 
 
@@ -159,7 +168,14 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     EditBudgetAllocationComponent,
     VendorApproveComponent,
     VendorUnofficialVendorlistComponent,
-    VendorApprovedAddDetailsComponent
+    VendorApprovedAddDetailsComponent,
+    AuthInterceptorComponent,
+    ForgotPassDialogComponent,
+    UserProfileComponent,
+    UserProfileEditComponent,
+    CropperModalComponent,
+    ViewNotificationHubComponent,
+    ViewDelegationComponent
   ],
   imports: [
     BrowserModule,
@@ -185,12 +201,18 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     MatTabsModule,
     MatStepperModule,
     MatCheckboxModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    ImageCropperModule
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     MatExpansionModule,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorComponent, // Add the AuthInterceptor as a provider
+      multi: true
+    },
 
   ],
   bootstrap: [AppComponent]

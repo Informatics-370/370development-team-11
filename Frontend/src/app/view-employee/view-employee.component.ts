@@ -39,6 +39,8 @@ export class ViewEmployeeComponent implements OnInit {
   }
 
   RoleToUse: string = "";
+  iRole: string;
+  rAdmin: string;
 
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer) { }
 
@@ -50,17 +52,20 @@ export class ViewEmployeeComponent implements OnInit {
   searchWord: string = "";
 
   ngOnInit() {
-    this.RoleToUse = localStorage.getItem("Role")
-    console.log(this.RoleToUse)
-    console.log(this.RoleToUse === "\"Admin\"")
+    this.RoleToUse = this.dataService.decodeUserRole(sessionStorage.getItem("token"))
+
+    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+
+    if (this.iRole == "Admin") {
+      this.rAdmin = "true";
+    }
 
     this.GetEmployees();
   }
 
   search() {
     const searchTerm = this.searchWord.toLocaleLowerCase();
-    console.log(searchTerm);
-    console.log(this.Employees)
+    
 
 
     if (searchTerm) {
@@ -78,6 +83,7 @@ export class ViewEmployeeComponent implements OnInit {
       }
       this.Employees = result;
       this.SearchedEmployee = this.Employees;
+      console.log(result)
     });
     function hideloader() {
       document.getElementById('loading')
@@ -85,6 +91,8 @@ export class ViewEmployeeComponent implements OnInit {
       document.getElementById('table').style.visibility = "visible";
     }
   }
+
+
 
   DeleteEmployee(id: Number) {
     this.dataService.GetAllOnboardRequest().subscribe({

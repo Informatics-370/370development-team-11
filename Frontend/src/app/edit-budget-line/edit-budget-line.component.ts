@@ -68,7 +68,6 @@ export class EditBudgetLineComponent {
       month: ['', [Validators.required]],
       budgetAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],
       actualAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],
-      variance: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]]
     });
     this.GetBudgetLineByID();
   }
@@ -92,12 +91,14 @@ export class EditBudgetLineComponent {
     this.budgetLine.month = this.budgetLineForm.get('month')?.value;
     this.budgetLine.budgetAmt = this.budgetLineForm.get('budgetAmt')?.value;
     this.budgetLine.actualAmt = this.budgetLineForm.get('actualAmt')?.value;
-    this.budgetLine.variance = this.budgetLineForm.get('variance')?.value;
+    this.budgetLine.variance = Number(this.budgetLine.budgetAmt) - Number(this.budgetLine.actualAmt);
     this.budgetLine.budget_Allocation.budget_ID = this.id;
     this.budgetLine.budget_Allocation.department_ID = 0;
     console.log(this.budgetLine);
 
     this.dataService.EditBudgetLine(this.id2, this.budgetLine).subscribe(result => {
+      document.getElementById('cBtn').style.display = "none";
+      document.querySelector('button').classList.toggle("is_active");
       this.router.navigate(['/ViewBudgetLines', this.id]);
     });
   }

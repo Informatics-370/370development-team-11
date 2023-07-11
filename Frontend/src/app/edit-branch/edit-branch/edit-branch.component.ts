@@ -56,6 +56,8 @@ export class EditBranchComponent implements OnInit{
         if (Result == null) {
           this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe({
             next: (response) => {
+              document.getElementById('cBtn').style.display = "none";
+              document.querySelector('button').classList.toggle("is_active");
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + street + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");

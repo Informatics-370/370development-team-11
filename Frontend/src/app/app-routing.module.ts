@@ -54,6 +54,12 @@ import { ViewBudgetLinesComponent } from './view-budget-lines/view-budget-lines.
 import { CreateBudgetLineComponent } from './create-budget-line/create-budget-line.component';
 import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
+import { AuthService } from './DataService/AuthService';
+import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dialog.component';
+import { UserProfileComponent } from './User/user-profile/user-profile.component';
+import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
+import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
+import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
 
 
 const routes: Routes = [
@@ -62,83 +68,92 @@ const routes: Routes = [
     component: LoginComponent
   },
   {
-    path: "Home",
+    path: "Home", canActivate: [AuthService],
     component: HomePageComponent
   },
   {
-    path: "ViewEmployee",
+    
+    path: "Profile", canActivate: [AuthService],
+    component: UserProfileComponent
+  },
+  {
+    path: "ProfileEdit", canActivate: [AuthService],
+    component: UserProfileEditComponent
+  },
+  {
+    path: "ViewEmployee", canActivate: [AuthService],
     component: ViewEmployeeComponent
   },
   {
-    path: "AddEmployee",
+    path: "AddEmployee", canActivate: [AuthService],
     component: CreateEmployeeComponent
   },
   {
-    path: "EditEmp/:uid",
+    path: "EditEmp/:uid", canActivate: [AuthService],
     component: EditEmployeeComponent
   },
   {
-    path: 'ViewEmpRole',
+    path: 'ViewEmpRole', canActivate: [AuthService],
     component: ViewEmployeeRoleComponent
   },
   {
-    path: 'AddEmpRole',
+    path: 'AddEmpRole', canActivate: [AuthService],
     component: CreateEmployeeRoleComponent
   },
   {
-    path: 'EditEmpRole/:id',
+    path: 'EditEmpRole/:id', canActivate: [AuthService],
     component: EditEmployeeRoleComponent
   },
   {
-    path: 'ViewConsumable',
+    path: 'ViewConsumable', canActivate: [AuthService],
     component: ViewConsumableComponent
   },
   {
-    path: 'CreateConsumable',
+    path: 'CreateConsumable', canActivate: [AuthService],
     component: CreateConsumableComponent
   },
   {
-    path: 'DeleteConsumable',
+    path: 'DeleteConsumable', canActivate: [AuthService],
     component: DeleteConsumableComponent
   },
   {
-    path: 'EditConsumable/:consumable_ID',
+    path: 'EditConsumable/:consumable_ID', canActivate: [AuthService],
     component: EditConsumableComponent
   },
   {
-    path: 'ViewConsumableCategory',
+    path: 'ViewConsumableCategory', canActivate: [AuthService],
     component: ViewConsumableCategoryComponent
   },
   {
-    path: 'ViewAdmin',
+    path: 'ViewAdmin', canActivate: [AuthService],
     component: ViewAdminComponent
   },
   {
-    path: 'AddAdmin',
+    path: 'AddAdmin', canActivate: [AuthService],
     component: CreateAdminComponent
   },
   {
-    path: "EditAdm/:uid",
+    path: "EditAdm/:uid", canActivate: [AuthService],
     component: EditAdminComponent
   },
   {
-    path: 'EditCategory/:consumable_Category_ID',
+    path: 'EditCategory/:consumable_Category_ID', canActivate: [AuthService],
     component: EditConsumableCategoryComponent
   },
   {
-    path: 'CreateCategory',
+    path: 'CreateCategory', canActivate: [AuthService],
     component: CreateConsumableCategoryComponent
   },
   {
-    path: "ViewMandateLimit",
+    path: "ViewMandateLimit", canActivate: [AuthService],
     component: ViewMandateLimitComponent
   },
   {
-    path: 'AddMandateLimit',
+    path: 'AddMandateLimit', canActivate: [AuthService],
     component: CreateMandateLimitComponent
   },
   {
-    path: 'EditMandateLimit/:id',
+    path: 'EditMandateLimit/:id', canActivate: [AuthService],
     component: EditMandateLimitComponent
   },
   { path: 'request-view', component: RequestViewComponent },
@@ -155,72 +170,84 @@ const routes: Routes = [
   { path: 'vendor-unofficial-vendorlist', component: VendorUnofficialVendorlistComponent },
   { path: 'vendor-approved-add-details/:VendorID', component: VendorApprovedAddDetailsComponent },
   {
-    path: 'ViewDepartment',
+    path: 'ViewDepartment', canActivate: [AuthService],
     component: ViewDepartmentComponent
   },
   {
-    path: 'CreateDepartment',
+    path: 'CreateDepartment', canActivate: [AuthService],
     component: CreateDepartmentComponent
   },
   {
-    path: 'DeleteDepartment',
+    path: 'DeleteDepartment', canActivate: [AuthService],
     component: DeleteDepartmentComponent
   },
   {
-    path: 'EditDepartment/:department_ID',
+    path: 'EditDepartment/:department_ID', canActivate: [AuthService],
     component: EditDepartmentComponent
   },
   {
-    path: 'ViewBranch',
+    path: 'ViewBranch', canActivate: [AuthService],
     component: ViewBranchComponent
   },
   {
-    path: 'CreateBranch',
+    path: 'CreateBranch', canActivate: [AuthService],
     component: CreateBranchComponent
   },
   {
-    path: 'DeleteBranch',
+    path: 'DeleteBranch', canActivate: [AuthService],
     component: DeleteBranchComponent
   },
   {
-    path: 'EditBranch/:branch_ID',
+    path: 'EditBranch/:branch_ID', canActivate: [AuthService],
     component: EditBranchComponent
   },
   {
-    path: 'ViewBudgetCategory',
+    path: 'ViewBudgetCategory', canActivate: [AuthService],
     component: ViewBudgetCategoryComponent
   },
   {
-    path: 'AddBudgetCategory',
+    path: 'AddBudgetCategory', canActivate: [AuthService],
     component: CreateBudgetCategoryComponent
   },
   {
-    path: 'EditBudgetCategory/:id',
+    path: 'EditBudgetCategory/:id', canActivate: [AuthService],
     component: EditBudgetCategoryComponent
   },
   {
-    path: 'ViewBudgetAllocation',
+    path: 'ViewBudgetAllocation', canActivate: [AuthService],
     component: ViewBudgetAllocationComponent
   },
   {
-    path: 'AddBudgetAllocation',
+    path: 'AddBudgetAllocation', canActivate: [AuthService],
     component: CreateBudgetAllocationComponent
   },
   {
-    path: 'ViewBudgetLines/:id',
+    path: 'ViewBudgetLines/:id', canActivate: [AuthService],
     component: ViewBudgetLinesComponent
   },
   {
-    path: 'AddBudgetLine/:id',
+    path: 'AddBudgetLine/:id', canActivate: [AuthService],
     component: CreateBudgetLineComponent
   },
   {
-    path: 'EditBudgetLine/:id/:id2',
+    path: 'EditBudgetLine/:id/:id2', canActivate: [AuthService],
     component: EditBudgetLineComponent
   },
   {
-    path: 'EditBudgetAllocation/:id',
+    path: 'EditBudgetAllocation/:id', canActivate: [AuthService],
     component: EditBudgetAllocationComponent
+  },
+  {
+    path: 'ForgotPass', canActivate: [AuthService],
+    component: ForgotPassDialogComponent
+  },
+  {
+    path: 'NotificationHub', canActivate: [AuthService],
+    component: ViewNotificationHubComponent
+  },
+  {
+    path: 'Delegation', canActivate: [AuthService],
+    component: ViewDelegationComponent
   }
 ];
 

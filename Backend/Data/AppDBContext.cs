@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProcionAPI.Models.Entities;
+using ProcionAPI.Models.Repositories;
 
 namespace ProcionAPI.Data
 {
@@ -66,6 +67,9 @@ namespace ProcionAPI.Data
         public DbSet<Asset> Asset { get; set; } 
         public DbSet<Vendor_Asset> Vendor_Asset { get; set; }
         public DbSet<Procurement_Asset> Procurement_Asset { get; set; }
+        public DbSet<Consumable_History> Consumable_History { get; set; }
+
+        UserRepository userrep = new UserRepository();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -118,9 +122,9 @@ namespace ProcionAPI.Data
             new
             {
                 User_Id = 1,
-                Role_ID = 1,
-                Username = "JDoe",
-                Password = "JDoe123",
+                Role_ID = 2,
+                Username = "Admin",
+                Password = userrep.HashPassword("Admin123"),
                 Profile_Picture = "test",
 
             },

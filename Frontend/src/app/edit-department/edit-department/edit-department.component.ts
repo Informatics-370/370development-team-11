@@ -146,6 +146,9 @@ export class EditDepartmentComponent implements OnInit{
         if (Result == null) {
           this.dataService.EditDepartment(this.Department.department_ID, this.myForm.value).subscribe({
             next: (response) => {
+
+              document.getElementById('cBtn').style.display = "none";
+              document.querySelector('button').classList.toggle("is_active");
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");

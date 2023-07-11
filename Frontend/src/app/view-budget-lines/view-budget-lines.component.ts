@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { DataService } from '../DataService/data-service';
 import { MatTableDataSource } from '@angular/material/table';
 import { BudgetLine } from '../Shared/BudgetLine';
+import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { DeleteBudgetLineComponent } from '../delete-budget-line/delete-budget-line.component';
 
 @Component({
@@ -64,6 +65,21 @@ export class ViewBudgetLinesComponent {
     const confirm = this.dialog.open(DeleteBudgetLineComponent, {
       disableClose: true,
       data: { id2 }
+    });
+    confirm.afterClosed().subscribe(result => {
+      if (result === 'confirm') {
+        this.dataService.DeleteBudgetLine(id2).subscribe(() => {
+          this.dataService.GetBudgetAllocation(this.id).subscribe((budgetAllocation: BudgetAllocation) => {
+            this.dataService.GetBudgetLineItems(this.id).subscribe(budgetLineItems => {
+              let totalBudgetLinesAmount = budgetLineItems.reduce((prev, cur) => prev + Number(cur.budgetAmt), 0);
+              if (totalBudgetLinesAmount <= budgetAllocation.total) {
+                this.GetBudgetLines(Number(this.id)); // Refresh budget lines
+              } else {
+              }
+            });
+          });
+        });
+      }
     });
   }
 }

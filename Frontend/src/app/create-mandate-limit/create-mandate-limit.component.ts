@@ -31,6 +31,12 @@ export class CreateMandateLimitComponent {
 
   onSubmit(): void {
     this.dataService.AddMandateLimit(this.mandateLimit).subscribe(result => {
+
+      if (result) {
+        document.getElementById('cBtn').style.display = "none";
+        document.querySelector('button').classList.toggle("is_active");
+      }
+
       this.router.navigate(['/ViewMandateLimit']);
     });
   }

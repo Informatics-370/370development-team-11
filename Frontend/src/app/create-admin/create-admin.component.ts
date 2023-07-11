@@ -80,7 +80,7 @@ export class CreateAdminComponent implements OnInit {
   onSubmit() {
 
     var newPassword = '';
-    newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
+    newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
 
     var cel = this.myForm.get('CellPhone_Num')?.value;
     var name = this.myForm.get('AdminName')?.value;
@@ -88,7 +88,7 @@ export class CreateAdminComponent implements OnInit {
     var ts = name.concat(surname);
     var username = ts.concat(cel.substring(4, 7));
     username = username.replace(/\s/g, "");
-    
+
     this.rl.role_ID = 0;
     this.rl.name = "Admin";
     this.rl.description = "Admin";
@@ -103,15 +103,9 @@ export class CreateAdminComponent implements OnInit {
     this.adm.email = this.myForm.get('Email')?.value;
     this.adm.user.username = username;
 
-    var cel = this.myForm.get('CellPhone_Num')?.value;
-    var name = this.myForm.get('AdminName')?.value;
-    var surname = this.myForm.get('AdminSurname')?.value;
-    var ts = name.concat(surname);
-    var username = ts.concat(cel.toString().substring(5, 3));
 
     var rlName = this.myForm.get('Role_ID')?.value;
-    this.usr.username = username;
-    this.usr.password = this.myForm.get('Password')?.value;
+
 
     this.mail.Name = name;
     this.mail.Username = username;
@@ -119,7 +113,7 @@ export class CreateAdminComponent implements OnInit {
     this.mail.Email = this.myForm.get('Email')?.value;
     document.getElementById('loading').style.display = 'block';
 
-    this.dataService.UserValidation(username).subscribe({
+    this.dataService.CreateUserValidation(username).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.AddUser(this.usr).subscribe(result => {
@@ -129,6 +123,8 @@ export class CreateAdminComponent implements OnInit {
 
                   if (response) {
                     hideloader();
+                    document.getElementById('cBtn').style.display = "none";
+                    document.querySelector('button').classList.toggle("is_active");
                   }
 
                   var action = "Create";
@@ -171,6 +167,6 @@ export class CreateAdminComponent implements OnInit {
       document.getElementById('loading')
         .style.display = 'none';
     }
-    
+
   }
 }

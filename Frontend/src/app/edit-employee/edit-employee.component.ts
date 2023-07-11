@@ -18,14 +18,14 @@ import { MatDialogRef } from '@angular/material/dialog';
   templateUrl: './edit-employee.component.html',
   styleUrls: ['./edit-employee.component.css']
 })
-export class EditEmployeeComponent implements OnInit{
+export class EditEmployeeComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
 
   employee: any
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
 
-  
+
   userRoles: any[] = []
   departments: any[] = []
   branches: any[] = []
@@ -89,7 +89,7 @@ export class EditEmployeeComponent implements OnInit{
     this.GetBranches();
     this.GetDepartments();
     this.GetMandates();
-    
+
     this.myForm = this.formBuilder.group({
       Name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       Surname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
@@ -102,15 +102,15 @@ export class EditEmployeeComponent implements OnInit{
     })
 
     this.GetEmployee();
-    
-    
+
+
   }
 
   GetRoles() {
     this.dataService.GetRoles().subscribe(result => {
       this.userRoles = result;
       this.userRoles.forEach((element, index) => {
-        if (element.name == "Admin") this.userRoles.splice(index,1);
+        if (element.name == "Admin") this.userRoles.splice(index, 1);
       });
     });
 
@@ -147,7 +147,7 @@ export class EditEmployeeComponent implements OnInit{
         Mandate: this.employee.mandate_Limit.mandate_ID,
         Department: this.employee.department.department_ID,
         Branch: this.employee.branch.branch_ID,
-        
+
       });
       this.emp.employeeName = this.employee.employeeName;
       this.emp.employeeSurname = this.employee.employeeSurname;
@@ -158,12 +158,13 @@ export class EditEmployeeComponent implements OnInit{
       this.emp.mandate_ID = this.employee.mandate_Limit.mandate_ID;
 
       this.usr.role_ID = this.employee.user.role.role_ID;
+      this.usr.password = this.employee.user.password;
 
 
     })
   }
 
-  
+
 
   get f() {
     return this.myForm.controls;
@@ -194,16 +195,21 @@ export class EditEmployeeComponent implements OnInit{
     var username = ts.concat(cel.toString().substring(4, 7));
     username = username.replace(/\s/g, "");
 
-    
+
     this.usr.username = username;
     this.usr.role_ID = this.myForm.get('Role')?.value;
 
-    this.dataService.UserValidation(username).subscribe({
+
+    
+    this.dataService.EditUserValidation(username, this.employee.user_Id).subscribe({
       next: (Result) => {
-        if (Result == null) {
+        
+        if (Result != null) {
           this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
             this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
               next: (response) => {
+                document.getElementById('cBtn').style.display = "none";
+                document.querySelector('button').classList.toggle("is_active");
                 var action = "Update";
                 var title = "UPDATE SUCCESSFUL";
                 var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");

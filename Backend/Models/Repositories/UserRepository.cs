@@ -13,7 +13,11 @@ namespace ProcionAPI.Models.Repositories
         {
             _dbContext = dbContext;
         }
-    
+
+        public UserRepository()
+        {
+        }
+
         public async Task<Employee[]> GetAllEmployeesAsync()
         {
             IQueryable<Employee> query = _dbContext.Employee.Include(c => c.Branch)
@@ -39,6 +43,8 @@ namespace ProcionAPI.Models.Repositories
         {
 
             Role existingRole = await _dbContext.Role.FirstOrDefaultAsync(u => u.Name == UserAdd.Role.Name);
+            string Pass = HashPassword(UserAdd.Password);
+            UserAdd.Password = Pass;
 
             if (existingRole != null)
             {
@@ -100,6 +106,32 @@ namespace ProcionAPI.Models.Repositories
 
             return await query.FirstOrDefaultAsync();
         }
+        public async Task<Employee> GetEmployeeByEmailAsync(string Email)
+        {
+            IQueryable <Employee> Query = _dbContext.Employee.Include(U => U.User).Where(c => c.Email == Email);
+            if (Query != null)
+            {
+                return await Query.FirstOrDefaultAsync();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Employee> GetEmployeeByUserNameAsync(string username)
+        {
+            IQueryable<Employee> query = _dbContext.Employee
+                .Include(c => c.Branch)
+                .Include(d => d.Department)
+                .Include(m => m.Mandate_Limit)
+                .Include(u => u.User)
+                .ThenInclude(r => r.Role)
+                .Where(w => w.User.Username == username);
+
+
+            return await query.FirstOrDefaultAsync();
+        }
 
         public void Delete<T>(T entity) where T : class
         {
@@ -114,6 +146,17 @@ namespace ProcionAPI.Models.Repositories
 
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<User> GetUserByUserNameAsync(string username)
+        {
+            IQueryable<User> query = _dbContext.User
+                .Include(r => r.Role)
+                .Where(w => w.Username == username);
+
+
+            return await query.FirstOrDefaultAsync();
+        }
+
         public async Task<User> Login(string Username, string Password)
         {
             IQueryable<User> query = _dbContext.User.Include(c => c.Role)
@@ -151,6 +194,17 @@ namespace ProcionAPI.Models.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
+        public async Task<Admin> GetAdminByUserNameAsync(string username)
+        {
+            IQueryable<Admin> query = _dbContext.Admin
+                .Include(u => u.User)
+                .ThenInclude(r => r.Role)
+                .Where(w => w.User.Username == username);
+
+
+            return await query.FirstOrDefaultAsync();
+        }
+
         public async Task<Admin[]> AddAdminAsync(Admin AdminAdd)
         {
 
@@ -174,9 +228,23 @@ namespace ProcionAPI.Models.Repositories
             return await _dbContext.SaveChangesAsync() > 0;
         }
 
-        public async Task<User> UserValidationAsync(string name)
+        public async Task<User> CreateUserValidationAsync(string name)
         {
             User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.Username == name);
+            if (ExistingUser != null)
+            {
+                return ExistingUser;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<User> EditUserValidationAsync(string name, int id)
+        {
+            User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.Username == name && x.User_Id == id);
             if (ExistingUser != null)
             {
                 return ExistingUser;
@@ -195,12 +263,24 @@ namespace ProcionAPI.Models.Repositories
             user.Username = UserEdit.Username;
             user.Password = UserEdit.Password;
             user.Role_ID = UserEdit.Role_ID;
+            user.Profile_Picture = UserEdit.Profile_Picture;
 
             user.Role = new Role();
 
             Role existingRole = await _dbContext.Role.FirstOrDefaultAsync(c => c.Name == UserEdit.Role.Name);
 
             user.Role = existingRole;
+
+            await _dbContext.SaveChangesAsync();
+
+            return user;
+        }
+
+        public async Task<User> UpdateUserPassword(int userID, string NewPassword)
+        {
+            var user = await _dbContext.User.FindAsync(userID);
+
+            user.Password = HashPassword(NewPassword);
 
             await _dbContext.SaveChangesAsync();
 
@@ -249,6 +329,36 @@ namespace ProcionAPI.Models.Repositories
             await _dbContext.SaveChangesAsync();
 
             return admin;
+        }
+
+        public async Task<User> GetUserByUsername(string username)
+        {
+            var ExistingUser = _dbContext.User.Include(u => u.Role).FirstOrDefault(c => c.Username == username);
+            return ExistingUser;
+        }
+
+        public async Task<bool> VerifyCredentials(string UserName, string Password)
+        {
+            var ExistingUser = await _dbContext.User.FirstOrDefaultAsync(c => c.Username == UserName);
+
+            if (ExistingUser != null)
+            {
+
+                var Mypass = ExistingUser.Password;
+                // UserName Exists
+                bool isPasswordValid = BCrypt.Net.BCrypt.Verify(Password, Mypass);
+                return isPasswordValid;
+
+            }
+            return false;
+
+        }
+
+        public string HashPassword(string Password)
+        {
+            string salt = BCrypt.Net.BCrypt.GenerateSalt();
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(Password, salt);
+            return hashedPassword;
         }
 
     }

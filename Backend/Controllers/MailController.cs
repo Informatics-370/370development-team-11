@@ -52,5 +52,29 @@ namespace ProcionAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. The Mail could not be sent.");
             }
         }
+
+
+        [HttpPost("ForgotPasswordEmail")]
+        public async Task<IActionResult> ForgotPasswordEmail(NewEmpMail ForgotPassMail)
+        {
+            // Create MailData object
+            MailData mailData = new MailData(
+                new List<string> { ForgotPassMail.Email },
+                "Login Credentials",
+                _mail.GetEmailTemplate("ForgotPass", ForgotPassMail));
+
+
+            bool sendResult = await _mail.SendAsync(mailData, new CancellationToken());
+
+            if (sendResult)
+            {
+                return Ok(sendResult);
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. The Mail could not be sent.");
+            }
+        }
+
     }
 }

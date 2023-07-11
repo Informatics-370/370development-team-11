@@ -78,6 +78,7 @@ export class EditAdminComponent implements OnInit {
     this.dataService.GetAdmin(+this.route.snapshot.params['uid']).subscribe(result => {
       this.admin = result
       this.usr.role_ID = this.admin.user.role.role_ID
+      this.usr.password = this.admin.user.password;
       this.myForm.patchValue({
         AdminName: this.admin.adminName,
         AdminSurname: this.admin.adminSurname,
@@ -114,9 +115,10 @@ export class EditAdminComponent implements OnInit {
     var surname = this.myForm.get('AdminSurname')?.value;
     var ts = name.concat(surname);
     var username = ts.concat(cel.toString().substring(4, 7));
-
+    username = username.replace(/\s/g, "");
 
     this.usr.username = username;
+    var id = this.usr.user_Id;
 
     //this.dataService.EditUser(this.usr, this.route.snapshot.params['uid']).subscribe(r => {
     //  this.dataService.EditAdmin(this.adm, this.route.snapshot.params['uid']).subscribe(result => {
@@ -124,12 +126,14 @@ export class EditAdminComponent implements OnInit {
     //  })
     //})
 
-    this.dataService.UserValidation(username).subscribe({
+    this.dataService.EditUserValidation(username, id).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.EditUser(this.usr, this.admin.user_Id).subscribe(result => {
             this.dataService.EditAdmin(this.adm, this.admin.admin_ID).subscribe({
               next: (response) => {
+                document.getElementById('cBtn').style.display = "none";
+                document.querySelector('button').classList.toggle("is_active");
                 var action = "Update";
                 var title = "UPDATE SUCCESSFUL";
                 var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The admin <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");

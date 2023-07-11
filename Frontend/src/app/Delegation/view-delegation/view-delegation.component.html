@@ -1,0 +1,137 @@
+<mat-sidenav-container class="main-sidenav-container">
+  <mat-sidenav mode="side" opened class="sidenav-container">
+    <mat-nav-list>
+
+      <div mat-list-item style="display: flex; align-items: center;">
+        <mat-icon aria-hidden="false" aria-label="admin icon" fontIcon="admin_panel_settings"
+                  style="width:30px; height: 44px; margin-left: 5%;"></mat-icon>
+        <h2 class="uni-font">Administration</h2>
+      </div>
+
+      <a mat-list-item class="uni-font" routerLink="/ViewEmployee">Employees</a>
+      <a mat-list-item *ngIf="rAdmin" class="uni-font" routerLink="/ViewAdmin">Admins</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewEmpRole">Roles</a>
+      <a mat-list-item *ngIf="rAdmin" mat-list-item class="uni-font"
+         routerLink="/ViewDepartment">Departments</a>
+      <a mat-list-item *ngIf="rAdmin" mat-list-item class="uni-font" routerLink="/ViewBranch">Branch</a>
+      <a mat-list-item class="uni-font" routerLink="/Delegation">Delegation of Authority</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewMandateLimit">Mandate Limits</a>
+      <a mat-list-item class="uni-font">Manage Help</a>
+      <a mat-list-item class="uni-font">Settings</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="Main-content">
+    <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
+      Manage Delegation of Authority
+    </h1>
+
+    <div mat-list-item style="margin-left: 0.5%; display: flex;  align-items: center; ">
+
+      <button mat-raised-button *ngIf="rAdmin"
+              style="width: 230px; font-size: 14px; height: 42px; margin: 10px; background-color:#244688; color:white;"
+              routerLink="/">
+        Assign New Delegation
+      </button>
+
+      <span style="flex: 1 1 auto;"></span>
+
+      <mat-form-field appearance="fill"
+                      style=" float:right; font-size: 12px; width: 300px; margin-top:0.5%; margin-right:1%;">
+        <mat-label>Search</mat-label>
+        <input matInput (keyup)="search()" [(ngModel)]="searchWord" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <span class="loader" id="loading"></span>
+    </div>
+
+    <div style="margin-right:1%; margin-left:1%;">
+      <table mat-table [dataSource]="SearchedEmployee" class="mat-elevation-z8" id="table">
+
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>
+          <td mat-cell *matCellDef="let Employees">{{Employees.employeeID}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> Username </th>
+          <td mat-cell *matCellDef="let Employees"> {{Employees.user.username}} </td>
+        </ng-container>
+
+        <!-- name Column -->
+        <ng-container matColumnDef="sDate">
+          <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> Start Date </th>
+          <td mat-cell *matCellDef="let Employees"> {{Employees.employeeName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="eDate">
+          <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> End Date </th>
+          <td mat-cell *matCellDef="let Employees"> {{Employees.employeeSurname}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="doaForm">
+          <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> Delegation Form </th>
+          <td mat-cell *matCellDef="let Employees"> {{Employees.employeeSurname}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> Status </th>
+          <td mat-cell *matCellDef="let Employees"> {{Employees.employeeSurname}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let Employees" style="width:100px;">
+            <!--<button mat-raised-button
+      style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 85px; margin-top: 0.5%; background-color: #94CC5B;"
+      [routerLink]="['/EditEmp', Employees.user_Id]" type="button"><mat-icon matPrefix
+        style="margin-right:10%;">edit</mat-icon>Edit</button>-->
+
+            <button class="noselect" [routerLink]="['/EditEmp', Employees.user_Id]" type="button" style="background-color: #94CC5B;">
+              <span class='text'>Edit</span>
+              <span class="icon" style="border-left: 1px solid #94CC5B; ">
+                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" /></svg>
+              </span>
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let Employees" style="width:140px;">
+            <!--<button id="DeleteButton" mat-raised-button
+      style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;"
+      (click)="DeleteEmployee(Employees.user_Id)"><mat-icon matPrefix
+        style="margin-right:10%;">delete</mat-icon>Delete</button>-->
+
+            <!--(click)="DeleteEmployee(Employees.user_Id)"-->
+            <button class="noselect" >
+              <span class='text'>Delete</span>
+              <span class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+                  <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                  <style>
+                    svg {
+                      fill: #000000
+                    }
+                  </style>
+                  <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                </svg>
+              </span>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" style="background-color:#244688;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

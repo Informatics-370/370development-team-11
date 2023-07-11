@@ -55,6 +55,8 @@ export class EditBudgetAllocationComponent {
     console.log(this.budgetAllocation);
 
     this.dataService.EditBudgetAllocation(this.budgetAllocation.budget_ID, this.budgetAllocation).subscribe(result => {
+      document.getElementById('cBtn').style.display = "none";
+      document.querySelector('button').classList.toggle("is_active");
       this.router.navigate(['/ViewBudgetAllocation']);
     });
   }

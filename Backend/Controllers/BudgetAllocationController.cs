@@ -312,5 +312,37 @@ namespace ProcionAPI.Controllers
             return BadRequest("Your request is invalid.");
         }
 
+        [HttpGet]
+        [Route("BudgetCategoryValidation/{name}")]
+        public async Task<IActionResult> BudgetCategoryValidation([FromRoute] string name)
+        {
+            try
+            {
+                var result = await _repository.BudgetCategoryValidationAsync(name);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("BudgetAllocationValidation/{departmentName}/{year}")]
+        public async Task<IActionResult> BudgetAllocationValidation([FromRoute] string departmentName, int year)
+        {
+            try
+            {
+                var result = await _repository.BudgetAllocationValidationAsync(departmentName, year);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+
+                return StatusCode(500, e.Message);
+            }
+        }
+
     }
 }

@@ -41,6 +41,8 @@ export class EditMandateLimitComponent {
   onSubmit(): void {
     console.log(this.currentMandateLimit)
     this.dataService.EditMandateLimit(this.currentMandateLimit.mandate_ID, this.currentMandateLimit).subscribe(result => {
+      document.getElementById('cBtn').style.display = "none";
+      document.querySelector('button').classList.toggle("is_active");
       this.router.navigate(['/ViewMandateLimit']);
     });
   }

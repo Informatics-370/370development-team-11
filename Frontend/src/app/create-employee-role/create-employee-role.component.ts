@@ -38,12 +38,14 @@ export class CreateEmployeeRoleComponent implements OnInit {
 
     var name = this.myForm.get('Name')?.value;
 
-    this.dataService.RoleValidation(name).subscribe({
+    this.dataService.CreateRoleValidation(name).subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.AddRole(this.myForm.value).subscribe({
             next: (response) => {
-              console.log(response);
+              document.getElementById('cBtn').style.display = "none";
+              document.querySelector('button').classList.toggle("is_active");
+              
               var action = "Create";
               var title = "CREATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");

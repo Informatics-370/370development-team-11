@@ -76,6 +76,12 @@ export class CreateConsumableComponent implements OnInit {
         if (Result == null) {
           this.dataService.AddConsumables(this.Consumables).subscribe(
             (ConsumableAdded) => {
+
+              if (ConsumableAdded) {
+                document.getElementById('cBtn').style.display = "none";
+                document.querySelector('button').classList.toggle("is_active");
+              }
+
               var action = "CREATE";
               var title = "CREATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.Consumables.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");

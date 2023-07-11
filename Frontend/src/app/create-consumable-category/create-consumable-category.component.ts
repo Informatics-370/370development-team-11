@@ -43,6 +43,12 @@ export class CreateConsumableCategoryComponent implements OnInit {
         if (Result == null) {
           this.dataService.CreateCategory(this.ConsumableCategory).subscribe(
             (CategoryAdded) => {
+
+              if (CategoryAdded) {
+                document.getElementById('cBtn').style.display = "none";
+                document.querySelector('button').classList.toggle("is_active");
+              }
+
               var action = "CREATE";
               var title = "CREATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The category <strong>" + this.ConsumableCategory.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
