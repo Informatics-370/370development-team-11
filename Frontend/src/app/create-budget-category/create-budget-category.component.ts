@@ -38,6 +38,12 @@ export class CreateBudgetCategoryComponent {
         if (Result == null) {
           this.dataService.AddBudgetCategory(this.budgetCategory).subscribe(
             (CategoryAdded) => {
+
+              if (CategoryAdded) {
+                document.getElementById('cBtn').style.display = "none";
+                document.querySelector('button').classList.toggle("is_active");
+              }
+
               var action = "CREATE";
               var title = "CREATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The budget category <strong>" + this.budgetCategory.account_Name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");

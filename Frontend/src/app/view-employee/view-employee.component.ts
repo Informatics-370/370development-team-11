@@ -39,6 +39,8 @@ export class ViewEmployeeComponent implements OnInit {
   }
 
   RoleToUse: string = "";
+  iRole: string;
+  rAdmin: string;
 
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer) { }
 
@@ -51,16 +53,19 @@ export class ViewEmployeeComponent implements OnInit {
 
   ngOnInit() {
     this.RoleToUse = this.dataService.decodeUserRole(sessionStorage.getItem("token"))
-    console.log(this.RoleToUse)
-    console.log(this.RoleToUse === "Admin")
+
+    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+
+    if (this.iRole == "Admin") {
+      this.rAdmin = "true";
+    }
 
     this.GetEmployees();
   }
 
   search() {
     const searchTerm = this.searchWord.toLocaleLowerCase();
-    console.log(searchTerm);
-    console.log(this.Employees)
+    
 
 
     if (searchTerm) {

@@ -33,6 +33,9 @@ export class ViewMandateLimitComponent implements OnInit {
   RoleToUse: string = "";
   SearchedMandate_Limits: Mandate_Limit[] = [];
   searchNumber: Number = 0;
+  iRole: string;
+  rAdmin: string;
+
   OnInPutChange() {
     const Searchterm = this.searchNumber;
 
@@ -47,6 +50,12 @@ export class ViewMandateLimitComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+
+    if (this.iRole == "Admin") {
+      this.rAdmin = "true";
+    }
+
     this.RoleToUse = localStorage.getItem("Role")
     this.GetMandateLimits();
   }

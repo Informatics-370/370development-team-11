@@ -35,7 +35,17 @@ export class ViewEmployeeRoleComponent implements OnInit {
   SearchedRole: Role[] = [];
   searchWord: string = "";
 
+  iRole: string;
+  rAdmin: string;
+
   ngOnInit() {
+
+    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+
+    if (this.iRole == "Admin") {
+      this.rAdmin = "true";
+    }
+
     this.RoleToUse = localStorage.getItem("Role")
     this.GetRoles();
   }

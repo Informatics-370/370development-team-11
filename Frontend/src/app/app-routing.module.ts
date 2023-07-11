@@ -56,6 +56,7 @@ import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dial
 import { UserProfileComponent } from './User/user-profile/user-profile.component';
 import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
+import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
 
 
 const routes: Routes = [
@@ -237,6 +238,10 @@ const routes: Routes = [
   {
     path: 'NotificationHub', canActivate: [AuthService],
     component: ViewNotificationHubComponent
+  },
+  {
+    path: 'Delegation', canActivate: [AuthService],
+    component: ViewDelegationComponent
   }
 ];
 

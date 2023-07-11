@@ -33,6 +33,12 @@ export class CreateDepartmentComponent implements OnInit {
         if (Result == null) {
           this.dataService.AddDepartments(this.myForm.value).subscribe({
             next: (response) => {
+
+              if (response) {
+                document.getElementById('cBtn').style.display = "none";
+                document.querySelector('button').classList.toggle("is_active");
+              }
+
               var action = "Create";
               var title = "CREATED SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");

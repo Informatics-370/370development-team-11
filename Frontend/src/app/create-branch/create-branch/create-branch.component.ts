@@ -38,6 +38,12 @@ export class CreateBranchComponent {
         if (Result == null) {
           this.dataService.AddBranch(this.myForm.value).subscribe({
             next: (response) => {
+
+              if (response) {
+                document.getElementById('cBtn').style.display = "none";
+                document.querySelector('button').classList.toggle("is_active");
+              }
+
               var action = "Create";
               var title = "CREATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + street + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
