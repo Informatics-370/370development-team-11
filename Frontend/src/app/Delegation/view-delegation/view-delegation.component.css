@@ -1,38 +1,45 @@
 .main-sidenav-container {
-    position: absolute;
-    top: 64px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #eee;
+  position: absolute;
+  top: 64px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #eee;
 }
 
 .sidenav-container {
-    border-left: solid;
-    border-right: solid;
+  border-left: solid;
+  border-right: solid;
 }
 
 table {
-    width: 100%;
+  width: 100%;
 }
 
 .Main-content {
-    position: center;
+  position: center;
 }
 
 .uni-font {
-    font-size: 16pt;
+  font-size: 16pt;
 }
 
-#table{
-    visibility:hidden;
-  }
-  
-  #loading{
-    
-  }
-  
-  .loader {
+#DeleteButton:hover {
+  background-color: #FE4945;
+}
+
+#DeleteButton {
+  background-color: #22afbe;
+}
+
+#table {
+  visibility: hidden;
+}
+
+#loading {
+}
+
+.loader {
   width: 175px;
   height: 80px;
   display: block;
@@ -43,8 +50,8 @@ table {
   background-repeat: no-repeat;
   position: relative;
   box-sizing: border-box;
-  }
-  
+}
+
   .loader::after {
     content: '';
     left: 50%;
@@ -56,7 +63,7 @@ table {
     box-sizing: border-box;
     animation: fadePush 1s linear infinite;
   }
-  
+
   .loader::before {
     content: '';
     left: 50%;
@@ -69,31 +76,23 @@ table {
     box-sizing: border-box;
     animation: fadePush 1s linear infinite;
   }
-  
-  #DeleteButton:hover {
-    background-color: #FE4945;
-  }
-  
-  #DeleteButton {
-    background-color: #22afbe;
-  }
 
-  @keyframes fadePush {
+@keyframes fadePush {
   0% {
     transform: translate(-50%, -15px);
     opacity: 0;
   }
-  
+
   50% {
     transform: translate(-50%, 0px);
     opacity: 1;
   }
-  
+
   100% {
     transform: translate(-50%, 15px);
     opacity: 0;
   }
-  }
+}
 
 .noselect {
   -webkit-touch-callout: none;

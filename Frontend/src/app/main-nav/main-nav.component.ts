@@ -39,6 +39,9 @@ export class MainNavComponent implements OnInit {
 
   previousRoute: string;
 
+  iRole: string;
+  rAdmin: string;
+
   constructor(private router: Router, private dataService: DataService, private AuthServ: AuthService) {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
@@ -53,7 +56,14 @@ export class MainNavComponent implements OnInit {
       this.RoleToUse = role
       this.isLoggedIn = true;
     })
+
     this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+
+    if (this.iRole == "Admin") {
+      this.rAdmin = "true";
+    }
+
     this.GetUser()
   }
 

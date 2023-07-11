@@ -123,6 +123,9 @@ export class EditConsumableComponent implements OnInit {
             Result.on_Hand !== this.ConsumableToEdit.on_Hand)) {
             this.dataService.UpdateConsumable(this.ConsumableToEdit.consumable_ID, this.ConsumableToEdit).subscribe({
               next: (response) => {
+
+                document.getElementById('cBtn').style.display = "none";
+                document.querySelector('button').classList.toggle("is_active");
                 console.log("Some other")
                 var action = "Update";
                 var title = "UPDATE SUCCESSFUL";

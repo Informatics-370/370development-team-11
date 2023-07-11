@@ -18,7 +18,7 @@
             </mat-card-content>
           </mat-card>
         </mat-grid-tile>
-        <mat-grid-tile>
+        <mat-grid-tile *ngIf="rAdmin">
           <mat-card class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center;" routerLink="/ViewEmployee">
             <img mat-card-image src="./assets/Images/admin-menu-item.jpg" width="412" height="251">
             <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">

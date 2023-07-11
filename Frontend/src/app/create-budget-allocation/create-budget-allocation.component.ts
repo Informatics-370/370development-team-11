@@ -58,6 +58,12 @@ export class CreateBudgetAllocationComponent {
         if (Result == null) {
           this.dataService.AddBudgetAllocation(this.budgetAllocation).subscribe(
             (CategoryAdded) => {
+
+              if (CategoryAdded) {
+                document.getElementById('cBtn').style.display = "none";
+                document.querySelector('button').classList.toggle("is_active");
+              }
+
               var action = "CREATE";
               var title = "CREATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Allocation for department <strong>" + this.budgetAllocation.department.name + " </strong> For year <strong>" + this.budgetAllocation.year + " <strong style='color:green'> ADDED </strong> successfully!");

@@ -97,6 +97,8 @@ export class EditBudgetLineComponent {
     console.log(this.budgetLine);
 
     this.dataService.EditBudgetLine(this.id2, this.budgetLine).subscribe(result => {
+      document.getElementById('cBtn').style.display = "none";
+      document.querySelector('button').classList.toggle("is_active");
       this.router.navigate(['/ViewBudgetLines', this.id]);
     });
   }

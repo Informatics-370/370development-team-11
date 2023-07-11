@@ -23,9 +23,16 @@ export class ViewAdminComponent implements OnInit {
   searchWord: string = "";
 
   RoleToUse: string = "";
-
+  iRole: string;
+  rAdmin: string;
 
   ngOnInit() {
+    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+
+    if (this.iRole == "Admin") {
+      this.rAdmin = "true";
+    }
+
     this.RoleToUse = localStorage.getItem("Role")
     this.GetAdmins();
   }

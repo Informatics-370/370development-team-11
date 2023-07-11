@@ -102,6 +102,11 @@ export class CreateBudgetLineComponent {
           }, duration);
         } else {
           this.dataService.AddBudgetLine(this.budgetLine).subscribe(result => {
+            if (result) {
+              document.getElementById('cBtn').style.display = "none";
+              document.querySelector('button').classList.toggle("is_active");
+            }
+
             this.router.navigate(['/ViewBudgetLines', this.id]);
           });
         }

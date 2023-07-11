@@ -43,6 +43,8 @@ export class EditBudgetCategoryComponent {
     this.currentBudgetCategory.description = this.budgetCategoryForm.get('description')?.value;
     console.log(this.currentBudgetCategory)
     this.dataService.EditBudgetCategory(this.currentBudgetCategory.category_ID, this.currentBudgetCategory).subscribe(result => {
+      document.getElementById('cBtn').style.display = "none";
+      document.querySelector('button').classList.toggle("is_active");
       this.router.navigate(['/ViewBudgetCategory']);
     });
   }

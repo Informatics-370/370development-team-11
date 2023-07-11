@@ -62,6 +62,9 @@ export class EditConsumableCategoryComponent implements OnInit {
         if (Result == null) {
           this.dataService.UpdateCategory(this.CategoryToEdit.consumable_Category_ID, this.CategoryToEdit).subscribe({
             next: (response) => {
+
+              document.getElementById('cBtn').style.display = "none";
+              document.querySelector('button').classList.toggle("is_active");
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The category <strong>" + this.CategoryToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
