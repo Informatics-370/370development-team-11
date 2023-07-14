@@ -504,6 +504,10 @@ export class DataService {
     return this.httpClient.get<Employee>(`${this.apiUrl}User/GetEmployeeByEmail/` + Email).pipe(map(result => result))
   }
 
+  getAdminbyEmail(Email: String) {
+    return this.httpClient.get<Admin>(`${this.apiUrl}User/GetAdminByEmail/` + Email).pipe(map(result => result))
+  }
+
   GetEmployeeID(userID: Number) {
     return this.httpClient.get(`${this.apiUrl}User/GetEmployee` + "/" + userID).pipe(map(result => result))
   }
@@ -700,5 +704,14 @@ export class DataService {
 
   UpdateStock(HistoryAdd: Consumable_History) {
     return this.httpClient.post<Consumable_History>(`${this.apiUrl}Consumable/UpdateStock`, HistoryAdd).pipe(map(result => result))
+  }
+
+  GetConsumablePredictions(id: Number): Observable<{ Year: Number, Month: Number, ActualAmount: Number, PredictedAmount: Number }[]> {
+    return this.httpClient.get<any[]>(`${this.apiUrl}Consumable/PredictConsumable/` + id).pipe(
+      map(result => {
+        console.log(result); // Log the returned result
+        return result.map(item => ({ Year: item.item1, Month: item.item2, ActualAmount: item.item3, PredictedAmount: item.item4 }));
+      })
+    );
   }
 }

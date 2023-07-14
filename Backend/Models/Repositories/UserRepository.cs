@@ -119,6 +119,19 @@ namespace ProcionAPI.Models.Repositories
             }
         }
 
+        public async Task<Admin> GetAdminByEmailAsync(string Email)
+        {
+            IQueryable<Admin> Query = _dbContext.Admin.Include(U => U.User).Where(c => c.Email == Email);
+            if (Query != null)
+            {
+                return await Query.FirstOrDefaultAsync();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public async Task<Employee> GetEmployeeByUserNameAsync(string username)
         {
             IQueryable<Employee> query = _dbContext.Employee

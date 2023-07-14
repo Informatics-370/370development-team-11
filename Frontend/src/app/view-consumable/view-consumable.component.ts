@@ -26,7 +26,8 @@ export class ViewConsumableComponent implements OnInit {
   openDialog(name: string, ID: Number) {
     console.log(name)
     this.Dialog.open(UpdateConsumableStockComponent, {
-      data: { name, ID }
+      data: { name, ID },
+      disableClose: true
     });
 
     this.Dialog.afterAllClosed.subscribe({

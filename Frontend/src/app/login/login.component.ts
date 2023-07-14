@@ -9,7 +9,7 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthService } from '../DataService/AuthService';
-import { ForgotPassDialogComponent } from '../forgot-pass-dialog/forgot-pass-dialog.component';
+import { MailData } from '../Shared/Mail';
 
 
 @Component({
@@ -23,7 +23,18 @@ export class LoginComponent implements OnInit {
   password: string = "";
   loginConfirm: string = "";
 
+  mail: MailData = {
+    Name: '',
+    Username: '',
+    Password: '',
+    Email: ''
+  }
+
+  Email: string = "";
+
   myForm: FormGroup = new FormGroup({});
+
+  fPass: FormGroup = new FormGroup({});
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer, private AuthServ: AuthService) { }
 
 
@@ -33,15 +44,19 @@ export class LoginComponent implements OnInit {
       UserName: ['', []],
       Password: ['', []]
     })
+
+    this.fPass = this.formBuilder.group({
+      Email: ['', []]
+    })
     this.loginConfirm = null;
     console.log(this.loginConfirm)
   }
 
-  ForgotPass() {
-    const dialogRef: MatDialogRef<ForgotPassDialogComponent> = this.dialog.open(ForgotPassDialogComponent, {
-      disableClose: true
-    });
-  }
+  // ForgotPass() {
+  //   const dialogRef: MatDialogRef<ForgotPassDialogComponent> = this.dialog.open(ForgotPassDialogComponent, {
+  //     disableClose: true
+  //   });
+  // }
 
 
   LoginUser() {
@@ -58,6 +73,9 @@ export class LoginComponent implements OnInit {
 
           sessionStorage.setItem("token", stringToken);
           sessionStorage.setItem("tokenExpiration", expirationDate.getTime().toString());
+
+          console.log("Login Succeessss");
+
 
           this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
           this.myForm.reset();
@@ -89,6 +107,120 @@ export class LoginComponent implements OnInit {
         }
       }
     })
+  }
+
+  ResetPassword() {
+    this.dataService.getEmployeebyEmail(this.Email).subscribe(result => {
+      console.log(result)
+      if (result != null) {
+        let newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
+        console.log(result)
+        this.mail.Name = result.employeeName,
+          this.mail.Username = result.user.username,
+          this.mail.Password = newPassword;
+        this.mail.Email = this.Email;
+        document.getElementById('loading').style.display = 'block';
+
+        this.dataService.UpdatePassword(result.user.user_Id, newPassword).subscribe({
+          next: (response) => {
+            if (response) {
+              this.dataService.SendPasswordEmail(this.mail).subscribe({
+                next: (response) => {
+
+                  if (response) {
+                    this.hideloader();
+                  }
+
+                  var action = "Update";
+                  var title = "PASSWORD UPDATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your Password as been updated successfully!");
+
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
+
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['']);
+                    dialogRef.close();
+                  }, duration);
+                }
+              })
+            }
+          }
+        })
+      }
+
+      else {
+        this.dataService.getAdminbyEmail(this.Email).subscribe(result => {
+          console.log(result)
+          if (result != null) {
+            let newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
+            console.log(result)
+            this.mail.Name = result.adminName,
+              this.mail.Username = result.user.username,
+              this.mail.Password = newPassword;
+            this.mail.Email = this.Email;
+            document.getElementById('loading').style.display = 'block';
+
+            this.dataService.UpdatePassword(result.user.user_Id, newPassword).subscribe({
+              next: (response) => {
+
+                console.log(response)
+                if (response) {
+                  this.dataService.SendPasswordEmail(this.mail).subscribe({
+                    next: (response) => {
+
+                      if (response) {
+                        this.hideloader();
+                      }
+
+                      var action = "Update";
+                      var title = "PASSWORD UPDATE SUCCESSFUL";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your Password as been updated successfully!");
+
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
+
+                      const duration = 1750;
+                      setTimeout(() => {
+                        this.router.navigate(['']);
+                        dialogRef.close();
+                      }, duration);
+                    }
+                  })
+                }
+              }
+            })
+          }
+
+          else {
+            var action = "Update";
+            var title = "RESET UNSUCCESSFUL";
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("User does not exist. Please try again!");
+
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
+
+            const duration = 1750;
+            setTimeout(() => {
+              dialogRef.close();
+              location.reload();
+            }, duration);
+          }
+        })
+      }
+    })
+  }
+
+  hideloader() {
+    document.getElementById('loading')
+      .style.display = 'none';
   }
 
   Close() {

@@ -52,52 +52,65 @@
 
 
 
+<!--Forgot Password-->
 <div class="container" id="container">
-  <!--Forgot Password-->
   <div class="form-container sign-up-container">
-    <form action="#">
+    <form [formGroup]="fPass" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px"
+      (ngSubmit)="ResetPassword()">
       <h1>Forgot Password</h1>
 
       <mat-form-field appearance="outline" style="margin-top:10px; margin-bottom:25px;">
         <mat-label>Email</mat-label>
-        <input matInput type="email" placeholder="johndoe@gmail.com">
-               <!--formControlName="EmailUsername" id="Name" required [(ngModel)]="Email"-->
+        <input matInput type="email" placeholder="johndoe@gmail.com" formControlName="Email" [(ngModel)]="Email">
+        <!--formControlName="EmailUsername" id="Name" required [(ngModel)]="Email"-->
         <mat-hint align="end">
           Please enter a valid email to reset your
           password
         </mat-hint>
       </mat-form-field>
 
-      <button>Reset Password</button>
+      <button type="submit">Reset Password</button>
+      &nbsp;
+      <div class="d-flex justify-content-center">
+        <span class="loader" id="loading"></span>
+      </div>
+
     </form>
+
+
+
   </div>
+
+
 
   <!--Login-->
   <div class="form-container sign-in-container">
     <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px"
-          (ngSubmit)="LoginUser()">
+      (ngSubmit)="LoginUser()">
 
       <h1>Login</h1>
 
       <mat-form-field appearance="outline" style="margin-top:10px;">
         <mat-label>Username</mat-label>
-        <input matInput type="text" placeholder="" formControlName="UserName" id="Name"
-               required [(ngModel)]="userName">
+        <input matInput type="text" placeholder="" formControlName="UserName" id="Name" required [(ngModel)]="userName">
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
-        <input matInput type="password" placeholder="" formControlName="Password"
-               id="Surname" required [(ngModel)]="password">
+        <input matInput type="password" placeholder="" formControlName="Password" id="Surname" required
+          [(ngModel)]="password">
       </mat-form-field>
 
-      <button type="submit"
-              [disabled]="!myForm.valid">
+      <button type="submit" [disabled]="!myForm.valid">
         Login
       </button>
 
     </form>
+    <div class="d-flex justify-content-center">
+      <span class="loader" id="loading"></span>
+    </div>
   </div>
+
 
   <!--Side Containers-->
   <div class="overlay-container">
@@ -114,5 +127,3 @@
     </div>
   </div>
 </div>
-
-

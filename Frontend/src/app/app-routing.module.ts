@@ -52,7 +52,6 @@ import { CreateBudgetLineComponent } from './create-budget-line/create-budget-li
 import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
 import { AuthService } from './DataService/AuthService';
-import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dialog.component';
 import { UserProfileComponent } from './User/user-profile/user-profile.component';
 import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
@@ -69,7 +68,7 @@ const routes: Routes = [
     component: HomePageComponent
   },
   {
-    
+
     path: "Profile", canActivate: [AuthService],
     component: UserProfileComponent
   },
@@ -230,10 +229,6 @@ const routes: Routes = [
   {
     path: 'EditBudgetAllocation/:id', canActivate: [AuthService],
     component: EditBudgetAllocationComponent
-  },
-  {
-    path: 'ForgotPass', canActivate: [AuthService],
-    component: ForgotPassDialogComponent
   },
   {
     path: 'NotificationHub', canActivate: [AuthService],
