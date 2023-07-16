@@ -29,7 +29,7 @@ export class ViewAdminComponent implements OnInit {
   ngOnInit() {
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin") {
+    if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
 

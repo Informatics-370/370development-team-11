@@ -160,3 +160,8 @@ button {
     button:focus {
       outline: none;
     }
+
+a:not([href]):not([class]), a:not([href]):not([class]):hover {
+  text-decoration: underline;
+  cursor: pointer !important;
+}

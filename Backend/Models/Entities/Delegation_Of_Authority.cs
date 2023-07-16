@@ -14,6 +14,12 @@ namespace ProcionAPI.Models.Entities
         [Required]
         public int Admin_ID { get; set; }
 
+        [Required]
+        public int DelegationStatus_ID { get; set; }
+
+        [ForeignKey("DelegationStatus_ID")]
+        public Delegation_Status Delegation_Status { get; set; }
+
         [ForeignKey("User_Id")]
         public User User { get; set; }
 
@@ -23,6 +29,7 @@ namespace ProcionAPI.Models.Entities
         public DateTime From_Date { get; set; }
         public DateTime To_Date { get; set; }
         public string Delegation_Document { get; set; }
-        public ICollection<Temporary_Access> Temporary_Access { get; set; }
+        public string DelegatingParty { get; set; }
+        //public ICollection<Temporary_Access> Temporary_Access { get; set; }
     }
 }

@@ -56,6 +56,8 @@ import { UserProfileComponent } from './User/user-profile/user-profile.component
 import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
+import { CreateDelegationComponent } from './Delegation/create-delegation/create-delegation.component';
+import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
 
 
 const routes: Routes = [
@@ -237,6 +239,14 @@ const routes: Routes = [
   {
     path: 'Delegation', canActivate: [AuthService],
     component: ViewDelegationComponent
+  },
+  {
+    path: "AssignDelegation/:uid", canActivate: [AuthService],
+    component: CreateDelegationComponent
+  },
+  {
+    path: "EditDelegation/:did", canActivate: [AuthService],
+    component: EditDelegationComponent
   }
 ];
 

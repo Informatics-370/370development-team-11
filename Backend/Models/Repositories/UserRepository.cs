@@ -13,7 +13,7 @@ namespace ProcionAPI.Models.Repositories
         {
             _dbContext = dbContext;
         }
-
+        
         public UserRepository()
         {
         }
