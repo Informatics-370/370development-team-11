@@ -157,9 +157,6 @@ export class RequestViewComponent implements OnInit {
       let test = ""
       return test
     } 
-    
- 
-  
   }
 
   

@@ -48,7 +48,7 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IConsumableCategoryRepository, ConsumableCategoryRepository>();
 builder.Services.AddScoped<IBudgetAllocationRepository, BudgetAllocationRepository>();
-
+builder.Services.AddScoped<IHelpRepository, HelpRepository>();
 builder.Services.AddScoped<IOnboardRequestRepository, OnboardRequestRepository>();
 builder.Services.AddScoped<IVendorRepository, VendorRepository>();
 

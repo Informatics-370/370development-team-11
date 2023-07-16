@@ -97,6 +97,10 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { CropperModalComponent } from './User/cropper-modal/cropper-modal.component';
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
+import { CreateHelpComponent } from './create-help/create-help/create-help.component';
+import { ViewHelpComponent } from './view-help/view-help/view-help.component';
+import { EditHelpComponent } from './edit-help/edit-help/edit-help.component';
+import { DeleteHelpComponent } from './delete-help/delete-help/delete-help.component';
 
 
 
@@ -167,7 +171,11 @@ import { ViewDelegationComponent } from './Delegation/view-delegation/view-deleg
     UserProfileEditComponent,
     CropperModalComponent,
     ViewNotificationHubComponent,
-    ViewDelegationComponent
+    ViewDelegationComponent,
+    CreateHelpComponent,
+    ViewHelpComponent,
+    EditHelpComponent,
+    DeleteHelpComponent
   ],
   imports: [
     BrowserModule,
