@@ -30,6 +30,8 @@ import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { BudgetLine } from '../Shared/BudgetLine';
 import { SoleSupplier } from '../Shared/Sole_Supplier';
 import * as moment from 'moment'
+import { Delegation_Of_Authority } from '../Shared/DelegationOfAuthority';
+import { DelegationStatus } from '../Shared/DelegationStatus';
 
 @Injectable({
   providedIn: 'root'
@@ -462,7 +464,7 @@ export class DataService {
     return this.httpClient.delete<string>(`${this.apiUrl}User/DeleteUser` + "/" + userID, this.httpOptions)
   }
 
-  EditUserValidation(name: String, id: Number): Observable<User> {
+  EditUserValidation(name: string, id: Number): Observable<User> {
     return this.httpClient.get<User>(`${this.apiUrl}User/EditUserValidation/` + name + '/' + id, this.httpOptions)
   }
 
@@ -695,5 +697,53 @@ export class DataService {
       console.error('Error decoding token:', error);
       return null;
     }
+  }
+
+  //--------------------------------------------------------------------------------------Delegation--------------------------------------------------------------------------------------
+  GetDelegations(): Observable<any> {
+    return this.httpClient.get<Delegation_Of_Authority[]>(`${this.apiUrl}Delegation/GetDelegations`).pipe(map(result => result))
+  }
+
+  GetDelegationsByRole(): Observable<any> {
+    return this.httpClient.get<Delegation_Of_Authority[]>(`${this.apiUrl}Delegation/GetDelegationsByRole`).pipe(map(result => result))
+  }
+
+  DelegateFileAdd(DelegateName: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('DelegateName', DelegateName)
+    return this.httpClient.post<any>(`${this.apiUrl}Delegation/uploadDelegationFile`, formData, this.httpOptions)
+  }
+
+  AddDelegation(doa: Delegation_Of_Authority) {
+    return this.httpClient.post(`${this.apiUrl}Delegation/CreateDelegation`, doa, this.httpOptions)
+  }
+
+  GetDelegateionFiles(DelegateName: string, filename: string): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}Delegation/GetDelegateionFiles/${DelegateName}/${filename}`, this.httpOptions)
+  }
+
+  GetDelegation(delegationID: Number) {
+    return this.httpClient.get(`${this.apiUrl}Delegation/GetDelegation` + "/" + delegationID).pipe(map(result => result))
+  }
+
+  DeleteDelegationFile(DelegateName: string, fileName: string): Observable<any> {
+    return this.httpClient.delete<any>(`${this.apiUrl}Delegation/DeleteFile/${DelegateName}/${fileName}`, this.httpOptions)
+  }
+
+  DeleteDelegation(delegationID: number): Observable<any> {
+    return this.httpClient.delete<Delegation_Of_Authority>(`${this.apiUrl}Delegation/DeleteDelegation/${delegationID}`, this.httpOptions)
+  }
+
+  EditDelegation(DelegationUpdate: Delegation_Of_Authority, delegationID: number) {
+    return this.httpClient.put<Delegation_Of_Authority>(`${this.apiUrl}Delegation/EditDelegation/` + delegationID, DelegationUpdate, this.httpOptions)
+  }
+
+  EditDelegationStatus(statusID: number, delegationID: number) {
+    return this.httpClient.put<Delegation_Of_Authority>(`${this.apiUrl}Delegation/EditDelegationStatus/` + statusID + `/` + delegationID, this.httpOptions)
+  }
+
+  GetStatuses(): Observable<any> {
+    return this.httpClient.get<DelegationStatus[]>(`${this.apiUrl}Delegation/GetStatuses`).pipe(map(result => result))
   }
 }

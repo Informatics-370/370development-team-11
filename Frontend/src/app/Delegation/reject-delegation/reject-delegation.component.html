@@ -1,0 +1,38 @@
+<h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;"
+    *ngIf="showConfirmationDialog == true">
+  REJECT DELEGATION REQUEST
+</h1>
+
+<form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px"
+      (ngSubmit)="onSubmit(data.ID)">
+
+  <div mat-dialog-content *ngIf="showConfirmationDialog == true">
+
+    <label style=" color:black;">Please select reason for rejection.</label>
+    <br />
+    <mat-form-field>
+      <mat-label>Choose one</mat-label>
+      <mat-select formControlName="Status_ID" required>
+        <mat-option>---</mat-option>
+        <mat-option *ngFor="let s of statuses" [value]="s.status_ID">{{s.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions align="end" *ngIf="showConfirmationDialog == true">
+    <button mat-raised-button type="submit" [disabled]="!myForm.valid" style="color: white; background-color: #94CC5B;">Yes</button>
+    <button mat-raised-button (click)="onCancel()" style="color: white; background-color: #244688;">Cancel</button>
+  </div>
+
+</form>
+
+  
+
+  <ng-container *ngIf="showSuccessDialog == true">
+    <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;">REJECT SUCCESSFUL</h1>
+    <div mat-dialog-content>
+      <p>
+        The Request No <strong>{{data.ID}}</strong> has been <strong style="color:red">REJECTED</strong>
+        successfully!
+      </p>
+    </div>
+  </ng-container>

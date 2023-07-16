@@ -8,12 +8,6 @@ namespace ProcionAPI.Models.Entities
         [Key]
         public int Status_ID { get; set; }
 
-        [Required]
-        public int Delegation_ID { get; set; }
-
-        [ForeignKey("Delegation_ID")]
-        public Delegation_Of_Authority Delegation_Of_Authority { get; set; }
-
         [MaxLength(32)]
         public string Name { get; set; }
 

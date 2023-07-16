@@ -97,6 +97,14 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { CropperModalComponent } from './User/cropper-modal/cropper-modal.component';
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
+import { CreateDelegationComponent } from './Delegation/create-delegation/create-delegation.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { DeleteDelegationComponent } from './Delegation/delete-delegation/delete-delegation.component';
+import { MatSortModule } from '@angular/material/sort';
+import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DatePipe } from '@angular/common';
+import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
 
 
 
@@ -167,7 +175,11 @@ import { ViewDelegationComponent } from './Delegation/view-delegation/view-deleg
     UserProfileEditComponent,
     CropperModalComponent,
     ViewNotificationHubComponent,
-    ViewDelegationComponent
+    ViewDelegationComponent,
+    CreateDelegationComponent,
+    DeleteDelegationComponent,
+    EditDelegationComponent,
+    RejectDelegationComponent
   ],
   imports: [
     BrowserModule,
@@ -194,7 +206,10 @@ import { ViewDelegationComponent } from './Delegation/view-delegation/view-deleg
     MatStepperModule,
     MatCheckboxModule,
     MatPaginatorModule,
-    ImageCropperModule
+    ImageCropperModule,
+    MatAutocompleteModule,
+    MatSortModule,
+    MatTooltipModule,
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
@@ -205,6 +220,7 @@ import { ViewDelegationComponent } from './Delegation/view-delegation/view-deleg
       useClass: AuthInterceptorComponent, // Add the AuthInterceptor as a provider
       multi: true
     },
+    DatePipe
 
   ],
   bootstrap: [AppComponent]

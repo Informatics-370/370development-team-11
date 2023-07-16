@@ -19,7 +19,7 @@ import { OnboardRequest } from '../Shared/OnboardRequest';
   styleUrls: ['./view-employee.component.css']
 })
 export class ViewEmployeeComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete'];
+  displayedColumns: string[] = ['id', 'name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete', 'delegation'];
   dataSource = new MatTableDataSource<Employee>();
 
   userDelete: any
@@ -56,7 +56,7 @@ export class ViewEmployeeComponent implements OnInit {
 
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin") {
+    if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
 
@@ -126,7 +126,7 @@ export class ViewEmployeeComponent implements OnInit {
           });
 
           var action = "ERROR";
-          var title = "ERROR: Category In Use";
+          var title = "ERROR: Role In Use";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A USER!</strong><br> Please remove the user from associated tables to continue with deletion.");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {

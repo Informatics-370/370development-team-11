@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MainNavComponent } from '../main-nav/main-nav.component';
 import { DataService } from '../DataService/data-service';
 
@@ -8,7 +8,7 @@ import { DataService } from '../DataService/data-service';
   styleUrls: ['./home-page.component.css'],
   providers: [MainNavComponent],
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent implements OnInit, AfterViewInit {
 
   iRole: string;
   rAdmin: string;
@@ -20,12 +20,20 @@ export class HomePageComponent implements OnInit {
 
     console.log(this.iRole)
 
-    if (this.iRole == "Admin") {
+    if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
 
     document.getElementById('nav').style.visibility = "visible";
-    this.nav.reload();
+
+    setTimeout(() => {
+      this.nav.reload();
+    }, 1000);
+    
+  }
+
+  ngAfterViewInit(): void {
+    /*this.nav.reload();*/
   }
 
 }
