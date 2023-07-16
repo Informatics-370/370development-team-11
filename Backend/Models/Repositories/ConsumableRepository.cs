@@ -32,9 +32,8 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Consumable[]> AddConsumableAsync(Consumable ConsumableAdd)
         {
-            // Check if the category already exists ?
+            // Check if the category already exists
             Consumable_Category existingCategory = await _dbContext.Consumable_Category.FirstOrDefaultAsync(c => c.Name == ConsumableAdd.Consumable_Category.Name);
-
 
             if (existingCategory != null)
             {
@@ -42,14 +41,37 @@ namespace ProcionAPI.Models.Repositories
                 ConsumableAdd.Consumable_Category = existingCategory;
             }
 
-
-
             // Add the consumable to the database and save changes
             await _dbContext.AddAsync(ConsumableAdd);
             await _dbContext.SaveChangesAsync();
 
+            // Generate dummy data for Consumable_History
+            var dummyData = new List<Consumable_History>();
+
+            var random = new Random();
+
+            for (int i = 0; i < 1000; i++)
+            {
+                var histAmt = random.Next(1, 51);
+                var histDate = DateTime.UtcNow.AddMonths(-i).AddMonths(-1);
+
+                var dummyHistory = new Consumable_History
+                {
+                    Consumable = ConsumableAdd,
+                    StockAmt = histAmt,
+                    DateCaptured = histDate
+                };
+
+                dummyData.Add(dummyHistory);
+            }
+
+            // Add the dummy data to the database and save changes
+            await _dbContext.Consumable_History.AddRangeAsync(dummyData);
+            await _dbContext.SaveChangesAsync();
+
             return new Consumable[] { ConsumableAdd };
         }
+
 
         public async Task<Consumable> ConsumableValidationAsync(string name, string category)
         {
@@ -77,6 +99,13 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Consumable> DeleteConsumableAsync(int id)
         {
+            var hasHistory = await _dbContext.Consumable_History.FirstOrDefaultAsync(x => x.Consumable_ID == id);
+
+            if (hasHistory != null)
+            {
+                var histRemove = _dbContext.Consumable_History.Where(x => x.Consumable_ID == id);
+                _dbContext.Consumable_History.RemoveRange(histRemove);
+            }
             var ConsumableToDelete = await _dbContext.Consumable.FindAsync(id);
             _dbContext.Consumable.Remove(ConsumableToDelete);
             await _dbContext.SaveChangesAsync();
@@ -171,12 +200,12 @@ namespace ProcionAPI.Models.Repositories
 
                 Console.WriteLine(nameof(StockData.DateCaptured) + " + " + nameof(StockData.StockAmt));
 
-                // Define the pipeline
-                var pipeline = mlContext.Transforms.NormalizeMinMax(nameof(StockData.StockAmt))
-                    .Append(mlContext.Transforms.Concatenate("Features", nameof(StockData.DateCaptured), nameof(StockData.StockAmt)));
+                //// Define the pipeline
+                //var pipeline = mlContext.Transforms.NormalizeMinMax(nameof(StockData.StockAmt))
+                //    .Append(mlContext.Transforms.Concatenate("Features", nameof(StockData.DateCaptured), nameof(StockData.StockAmt)));
 
-                // Train the model
-                var trainedModel = pipeline.Fit(dataView);
+                //// Train the model
+                //var trainedModel = pipeline.Fit(dataView);
 
 
 
@@ -210,8 +239,11 @@ namespace ProcionAPI.Models.Repositories
 
                     if (adjustedMonth >= 13)
                     {
-                        adjustedMonth = 1;
-                        adjustedYear = adjustedYear + 1;
+                        adjustedMonth = adjustedMonth - 12;
+                        if (adjustedMonth == 1)
+                        {
+                            adjustedYear = adjustedYear + 1;
+                        }
                     }
                     Console.WriteLine(adjustedMonth);
 
@@ -241,6 +273,8 @@ namespace ProcionAPI.Models.Repositories
                     var MonthAverage = Predictions.Average();
                     var ActualsMonthAverage = Actuals.Average();
                     Console.WriteLine(MonthAverage);
+                    var Accuracy = (ActualsMonthAverage - MonthAverage) / ActualsMonthAverage;
+                    Console.WriteLine("Accuracy: " + Accuracy);
                     predictions.Add((Year: (int)adjustedYear, Month: (int)adjustedMonth,ActualAmount: (int)Math.Round(ActualsMonthAverage), PredictedAmount: (int)Math.Round(MonthAverage))); ;
 
 
