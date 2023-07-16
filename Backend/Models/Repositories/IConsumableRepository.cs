@@ -10,5 +10,8 @@ namespace ProcionAPI.Models.Repositories
         Task<Consumable> DeleteConsumableAsync(int id);
         Task<Consumable> UpdateConsumableAsync(int id, Consumable Request);
         Task<Consumable> ConsumableValidationAsync(string name, string category);
+        Task<Consumable_History[]> UpdateStockAsync(Consumable_History HistoryAdd);
+        //Task<IEnumerable<int>> PredictStockLevelAsync(int id);
+        Task<IEnumerable<(int Year, int Month, int ActualAmount, int PredictedAmount)>> PredictStockLevelAsync(int id);
     }
 }

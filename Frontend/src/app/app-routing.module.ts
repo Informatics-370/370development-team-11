@@ -52,7 +52,6 @@ import { CreateBudgetLineComponent } from './create-budget-line/create-budget-li
 import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
 import { AuthService } from './DataService/AuthService';
-import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dialog.component';
 import { UserProfileComponent } from './User/user-profile/user-profile.component';
 import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
@@ -61,6 +60,8 @@ import { ViewHelpComponent } from './view-help/view-help/view-help.component';
 import { CreateHelpComponent } from './create-help/create-help/create-help.component';
 import { EditHelpComponent } from './edit-help/edit-help/edit-help.component';
 import { DeleteHelpComponent} from './delete-help/delete-help/delete-help.component';
+import { CreateDelegationComponent } from './Delegation/create-delegation/create-delegation.component';
+import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
 
 
 const routes: Routes = [
@@ -73,7 +74,7 @@ const routes: Routes = [
     component: HomePageComponent
   },
   {
-    
+
     path: "Profile", canActivate: [AuthService],
     component: UserProfileComponent
   },
@@ -252,16 +253,20 @@ const routes: Routes = [
     component: EditBudgetAllocationComponent
   },
   {
-    path: 'ForgotPass', canActivate: [AuthService],
-    component: ForgotPassDialogComponent
-  },
-  {
     path: 'NotificationHub', canActivate: [AuthService],
     component: ViewNotificationHubComponent
   },
   {
     path: 'Delegation', canActivate: [AuthService],
     component: ViewDelegationComponent
+  },
+  {
+    path: "AssignDelegation/:uid", canActivate: [AuthService],
+    component: CreateDelegationComponent
+  },
+  {
+    path: "EditDelegation/:did", canActivate: [AuthService],
+    component: EditDelegationComponent
   }
 ];
 

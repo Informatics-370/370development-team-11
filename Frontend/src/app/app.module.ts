@@ -90,7 +90,6 @@ import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-bud
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { AuthInterceptorComponent } from './auth-interceptor/auth-interceptor.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dialog.component';
 import { UserProfileComponent } from './User/user-profile/user-profile.component';
 import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
@@ -101,6 +100,15 @@ import { CreateHelpComponent } from './create-help/create-help/create-help.compo
 import { ViewHelpComponent } from './view-help/view-help/view-help.component';
 import { EditHelpComponent } from './edit-help/edit-help/edit-help.component';
 import { DeleteHelpComponent } from './delete-help/delete-help/delete-help.component';
+import { UpdateConsumableStockComponent } from './update-consumable-stock/update-consumable-stock.component';
+import { CreateDelegationComponent } from './Delegation/create-delegation/create-delegation.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { DeleteDelegationComponent } from './Delegation/delete-delegation/delete-delegation.component';
+import { MatSortModule } from '@angular/material/sort';
+import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { DatePipe } from '@angular/common';
+import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
 
 
 
@@ -166,7 +174,6 @@ import { DeleteHelpComponent } from './delete-help/delete-help/delete-help.compo
     DeleteBudgetLineComponent,
     EditBudgetAllocationComponent,
     AuthInterceptorComponent,
-    ForgotPassDialogComponent,
     UserProfileComponent,
     UserProfileEditComponent,
     CropperModalComponent,
@@ -175,7 +182,12 @@ import { DeleteHelpComponent } from './delete-help/delete-help/delete-help.compo
     CreateHelpComponent,
     ViewHelpComponent,
     EditHelpComponent,
-    DeleteHelpComponent
+    DeleteHelpComponent,
+    UpdateConsumableStockComponent,
+    CreateDelegationComponent,
+    DeleteDelegationComponent,
+    EditDelegationComponent,
+    RejectDelegationComponent,
   ],
   imports: [
     BrowserModule,
@@ -202,7 +214,10 @@ import { DeleteHelpComponent } from './delete-help/delete-help/delete-help.compo
     MatStepperModule,
     MatCheckboxModule,
     MatPaginatorModule,
-    ImageCropperModule
+    ImageCropperModule,
+    MatAutocompleteModule,
+    MatSortModule,
+    MatTooltipModule,
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
@@ -213,6 +228,7 @@ import { DeleteHelpComponent } from './delete-help/delete-help/delete-help.compo
       useClass: AuthInterceptorComponent, // Add the AuthInterceptor as a provider
       multi: true
     },
+    DatePipe
 
   ],
   bootstrap: [AppComponent]

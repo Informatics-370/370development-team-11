@@ -51,7 +51,7 @@ export class DeleteConsumableComponent implements OnInit {
         this.showSuccessDialog = true;
         setTimeout(() => {
           this.dialogRef.close();
-          location.reload();
+          this.route.navigate(['/ViewConsumable']);
         }, 1750);
       }
     });

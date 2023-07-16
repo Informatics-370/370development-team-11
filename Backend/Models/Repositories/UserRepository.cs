@@ -13,7 +13,7 @@ namespace ProcionAPI.Models.Repositories
         {
             _dbContext = dbContext;
         }
-
+        
         public UserRepository()
         {
         }
@@ -109,6 +109,19 @@ namespace ProcionAPI.Models.Repositories
         public async Task<Employee> GetEmployeeByEmailAsync(string Email)
         {
             IQueryable <Employee> Query = _dbContext.Employee.Include(U => U.User).Where(c => c.Email == Email);
+            if (Query != null)
+            {
+                return await Query.FirstOrDefaultAsync();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Admin> GetAdminByEmailAsync(string Email)
+        {
+            IQueryable<Admin> Query = _dbContext.Admin.Include(U => U.User).Where(c => c.Email == Email);
             if (Query != null)
             {
                 return await Query.FirstOrDefaultAsync();

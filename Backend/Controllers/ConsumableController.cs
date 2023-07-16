@@ -114,5 +114,37 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("UpdateStock")]
+        public async Task<IActionResult> UpdateStock([FromBody] Consumable_History HistoryRequest)
+        {
+            try
+            {
+                var result = await _consumableRepository.UpdateStockAsync(HistoryRequest);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("PredictConsumable/{id}")]
+        public async Task<IActionResult> PredictConsumable([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _consumableRepository.PredictStockLevelAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
     }
 }

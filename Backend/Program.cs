@@ -53,6 +53,7 @@ builder.Services.AddScoped<IOnboardRequestRepository, OnboardRequestRepository>(
 builder.Services.AddScoped<IVendorRepository, VendorRepository>();
 
 builder.Services.AddScoped<IMandateRepository, MandateRepository>();
+builder.Services.AddScoped<IDelegationRepository, DelegationRepository>();
 
 var app = builder.Build();
 

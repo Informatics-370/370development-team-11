@@ -42,7 +42,7 @@ export class ViewEmployeeRoleComponent implements OnInit {
 
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin") {
+    if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
 

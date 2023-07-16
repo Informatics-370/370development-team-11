@@ -130,6 +130,22 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
+        [Route("GetAdminByEmail/{Email}")]
+        public async Task<IActionResult> GetAdminByEmail(string Email)
+        {
+            try
+            {
+                var result = await _UserRepository.GetAdminByEmailAsync(Email);
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
+
+        [HttpGet]
         [Route("GetEmployeeByUsername/{username}")]
         public async Task<IActionResult> GetEmployeeByUserNameAsync(string username)
         {

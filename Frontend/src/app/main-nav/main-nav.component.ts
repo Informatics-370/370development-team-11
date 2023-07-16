@@ -61,7 +61,7 @@ export class MainNavComponent implements OnInit {
     this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin") {
+    if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
 
