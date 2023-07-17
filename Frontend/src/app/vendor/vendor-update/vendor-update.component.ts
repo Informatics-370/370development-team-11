@@ -1020,7 +1020,7 @@ CreateContinue(VenDetailsID:number) {
         
                  const duration = 1750;
                  setTimeout(() => {
-                  this.router.navigate(['/vendor-view'], {queryParams: {refresh: true}});
+                  this.router.navigate(['/vendor-view']);
                   dialogRef.close();
                  }, duration);
               }

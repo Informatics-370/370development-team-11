@@ -157,17 +157,17 @@ namespace ProcionAPI.Models.Repositories
 
             if (existingVendor != null)
             {
-                existingVendor.Sole_Supplier_Provided = UpdatedRequest.Vendor.Sole_Supplier_Provided;
+                //existingVendor.Sole_Supplier_Provided = UpdatedRequest.Vendor.Sole_Supplier_Provided;
                 existingVendor.Email = UpdatedRequest.Vendor.Email;
                 ReqUpdt.Vendor = existingVendor;
             }
             else
             {
                 existingVendor = await _dbContext.Vendor.FindAsync(UpdatedRequest.Vendor.Vendor_ID);
-                existingVendor.Sole_Supplier_Provided = UpdatedRequest.Vendor.Sole_Supplier_Provided;
+               // existingVendor.Sole_Supplier_Provided = UpdatedRequest.Vendor.Sole_Supplier_Provided;
                 existingVendor.Name = UpdatedRequest.Vendor.Name;
-                    existingVendor.Email = UpdatedRequest.Vendor.Email;
-                     ReqUpdt.Vendor = existingVendor;
+                existingVendor.Email = UpdatedRequest.Vendor.Email;
+                ReqUpdt.Vendor = existingVendor;
                
                
             }
@@ -187,7 +187,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Onboard_Request> DeleteRequestAsync(int RequestId,int VendorID)
         {
-            var RequestToDelete = await _dbContext.Onboard_Request.FirstOrDefaultAsync(x => x.Onboard_Request_Id == RequestId && x.Vendor_ID == VendorID);
+            var RequestToDelete = await _dbContext.Onboard_Request.FirstOrDefaultAsync(x => (x.Onboard_Request_Id == RequestId) && (x.Vendor_ID == VendorID));
             _dbContext.Onboard_Request.Remove(RequestToDelete);
             await _dbContext.SaveChangesAsync();
 
@@ -257,6 +257,24 @@ namespace ProcionAPI.Models.Repositories
 
                 return SoleSupplierRequest;
            
+        }
+
+        public async Task<Sole_Supplier> DeleteSoleSupplierAsync(int VendorID)
+        {
+            var SoleSupplierToDelete = await _dbContext.Sole_Supplier.FirstOrDefaultAsync(x=> x.Vendor_ID == VendorID);
+            _dbContext.Sole_Supplier.Remove(SoleSupplierToDelete);
+            await _dbContext.SaveChangesAsync();
+
+            return SoleSupplierToDelete;
+        }
+
+        public async Task<Vendor> DeleteVendorAsync(int VendorID)
+        {
+            var VendorToDelete = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Vendor_ID == VendorID);
+            _dbContext.Vendor.Remove(VendorToDelete);
+            await _dbContext.SaveChangesAsync();
+
+            return VendorToDelete;
         }
 
 

@@ -99,7 +99,8 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { CropperModalComponent } from './User/cropper-modal/cropper-modal.component';
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
-
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-approve-edit.component';
 
 
 
@@ -175,7 +176,8 @@ import { ViewDelegationComponent } from './Delegation/view-delegation/view-deleg
     UserProfileEditComponent,
     CropperModalComponent,
     ViewNotificationHubComponent,
-    ViewDelegationComponent
+    ViewDelegationComponent,
+    VendorApproveEditComponent
   ],
   imports: [
     BrowserModule,
@@ -202,7 +204,8 @@ import { ViewDelegationComponent } from './Delegation/view-delegation/view-deleg
     MatStepperModule,
     MatCheckboxModule,
     MatPaginatorModule,
-    ImageCropperModule
+    ImageCropperModule,
+    MatDatepickerModule
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },

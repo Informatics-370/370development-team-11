@@ -288,12 +288,13 @@ OnboardRequestDetails: any[] = [];
     this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe({next:(Response) => {
     this.VendorService.DeleteVendorDetails(this.VendorDetail.vendor_Detail_ID).subscribe({
       next:(response) => { 
-        this.VendorService.UpdateVendorStatus(this.VendorDetail.vendor_ID,2).subscribe(result => {console.log(result)})
        this.showConfirmationDialog = false;
       this.showSuccessDialog = true;
       setTimeout(() => {
         this.dialogRef.close();
-        this.router.navigate(['/vendor-view'], {queryParams: {refresh: true}});
+        this.VendorService.ChangeVendorStatus(2,this.Vendor.vendor_ID).subscribe(result => {
+         this.router.navigate(['/vendor-view']);
+        });
       }, 1750);
     }
     })

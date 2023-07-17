@@ -8,13 +8,18 @@ import { MatDialog } from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import { Subscription, buffer, elementAt, groupBy } from 'rxjs';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
+import { TestScheduler } from 'rxjs/testing';
 
 
 export interface PendOnboardRequestDetails {
   onboard_Request_Id : number;
+  SelectedRequestVendorName: string;
   requestType: string;
   quoteTotal : number;
   employeeName : string;
+  vendorId: number;
+  VendorStatusId:number;
+  onboardRequestStatusID:number;
 }
 
 @Component({
@@ -34,15 +39,36 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
   PendingOnboardDetails: OnboardRequest[] = [];
   PendingOnboardRequests: any = [];
   PendingOnboardDetailSummary : PendOnboardRequestDetails[] = [];
-  ngOnInit(): void {
+  onboardRequestData: any[] = [];
+ 
+  iRole: string;
+  rAdmin: string;
+
+
+  ngOnInit() {
     
+    this.PendingOnboardDetails = [];
+    this.PendingOnboardRequests = [];
+    this.PendingOnboardDetailSummary  = [];
+    this.onboardRequestData = [];
+
+
+    this.iRole = this.VendorService.decodeUserRole(sessionStorage.getItem("token"));
+
+    console.log(this.iRole)
+
+    if (this.iRole == "Admin") {
+      this.rAdmin = "true";
+    }
+
    this.VendorService.GetAllOnboardRequest().subscribe((result) => {
       let RequestList:any[] = result
+      this.onboardRequestData = result
       RequestList.forEach((element) => this.PendingOnboardDetails.push(element));
       //RequestList.forEach((element) => this.vendor.push(element.vendors));
       this.PendingOnboardRequests =  new MatTableDataSource(this.PendingOnboardDetails.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
       console.log(this.PendingOnboardRequests.data)
-
+      console.log(this.PendingOnboardDetails)
       const countsByPart = this.PendingOnboardDetails.reduce((accumulator, currentValue) => {
         const partId = currentValue.onboard_Request_Id;
         
@@ -63,29 +89,29 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
         }
         let result:PendOnboardRequestDetails = {
           onboard_Request_Id: element.onboard_Request_Id,
+          SelectedRequestVendorName: this.getVendorName(element.onboard_Request_Id),
           requestType: sType,
           quoteTotal: countsByPart[element.onboard_Request_Id],
           employeeName:element.employeeName,
+          vendorId:element.vendor_ID,
+          VendorStatusId:element.vendors.vendor_Status_ID,
+          onboardRequestStatusID: element.onboard_Request_status_ID
         }
-        this.PendingOnboardDetailSummary.push(result)
+        console.log(result.SelectedRequestVendorName)
+        if(result.SelectedRequestVendorName != "Request Rejected") {
+          if(this.rAdmin == "true" && result.VendorStatusId == 4) {
+            this.PendingOnboardDetailSummary.push(result)
+          }
+          else if(result.VendorStatusId != 4) {
+            this.PendingOnboardDetailSummary.push(result)
+          }
+          
+        }
+        
       })
       this.PendingOnboardRequests = new MatTableDataSource(this.PendingOnboardDetailSummary)
       console.log(this.PendingOnboardRequests)
    })
-   this.refreshSubscription = this.route.queryParams.subscribe((params: Params) => {
-    // Check if the 'refresh' parameter exists and is truthy
-    if (params.refresh) {
-      // Remove the 'refresh' query parameter
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { refresh: null },
-        queryParamsHandling: 'merge'
-      }).then(() => {
-        // Reload the page after the navigation has completed
-        window.location.reload();
-      });
-    }
-  });
 
   }//ngoninIt
 
@@ -105,10 +131,63 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
     }
   }
 
+  Edit(i:number) {
+    for (let a = 0; a < this.onboardRequestData.length;a++) {
+      if (this.onboardRequestData[a].onboard_Request_Id == i) {
+        if(this.onboardRequestData[a].vendors.vendor_Status_ID == 4) {
+          this.router.navigate(['/vendor-approve-edit/' + this.onboardRequestData[a].vendor_ID])
+        }
+      }
+    }
+    
+      
+    
+  }
+  
+  getVendorName(i:number) {
+    let result = "Request pending"
+    for (let a = 0;a < this.onboardRequestData.length;a++) {
+        if(this.onboardRequestData[a].onboard_Request_Id == i) {
+          if(this.onboardRequestData[a].onboard_Request_status_ID == 3) {
+            result = ""
+            return this.onboardRequestData[a].vendors.name
+          }
+          else if(this.onboardRequestData[a].onboard_Request_status_ID == 2 && result != ""){
+            result = "Request Rejected"
+          }
+        }
+    }
+      return result
+  }
 
+  UpdateOnboardRequestStatus(i:number) {
 
+    for (let a = 0;a < this.onboardRequestData.length;a++) {
+        if(this.onboardRequestData[a].onboard_Request_Id == i) {
+          if(this.onboardRequestData[a].onboard_Request_status_ID == 1) {
+            this.VendorService.ChangeOnboardStatus(5,i,this.onboardRequestData[a].vendor_ID).subscribe()
+          }
+        }
+    }
+    this.router.navigate(['/vendor-approve/' + i])
+  }
 
-  displayedColumns : string[] = ["Id","Type", "TotalQuotes","user","View"];
+  CorrectRouteChoice(i:number) {
+  
+    for (let a = 0;a < this.onboardRequestData.length;a++) {
+      if(this.onboardRequestData[a].onboard_Request_Id == i) {
+        if(this.onboardRequestData[a].onboard_Request_status_ID == 4) {
+          this.VendorService.ChangeOnboardStatus(5,i,this.onboardRequestData[a].vendor_ID).subscribe()
+          this.router.navigate(['/vendor-approve/' + i])
+        }
+        else if(this.onboardRequestData[a].vendors.vendor_Status_ID == 5 || this.onboardRequestData[a].onboard_Request_status_ID == 3) {
+          this.router.navigate(['/vendor-approve/' + i])
+        }
+      }
+  }
+  }
+
+  displayedColumns : string[] = ["Id","selected","Type", "TotalQuotes","user","Edit","View"];
 
 
 }

@@ -21,28 +21,42 @@
            
             <ng-container matColumnDef="Id">
               <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> Onboard Request Number </th>
-              <td mat-cell *matCellDef="let element"> {{element.onboard_Request_Id}} </td>
+              <td mat-cell *matCellDef="let element" ><span *ngIf="element.quoteTotal > 2"> {{element.onboard_Request_Id}} </span> <span *ngIf="element.quoteTotal == 1">{{element.onboard_Request_Id}}</span></td>
+            </ng-container>
+
+            <ng-container matColumnDef="selected">
+              <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> Selected Option </th>
+              <td mat-cell *matCellDef="let element" >{{element.SelectedRequestVendorName}}</td>
             </ng-container>
             
             <ng-container matColumnDef="Type">
                 <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> Request Type </th>
-                <td mat-cell *matCellDef="let element"> {{element.requestType}} </td>
+                <td mat-cell *matCellDef="let element"><span *ngIf="element.quoteTotal > 2"> {{element.requestType}}</span> <span *ngIf="element.quoteTotal == 1"> {{element.requestType}}</span> </td>
             </ng-container>
 
             <ng-container matColumnDef="TotalQuotes">
               <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> Total Quotes </th>
-              <td mat-cell *matCellDef="let element"> {{element.quoteTotal}} </td>
+              <td mat-cell *matCellDef="let element"><span *ngIf="element.quoteTotal > 2"> {{element.quoteTotal}}</span> <span *ngIf="element.quoteTotal ==1"> {{element.quoteTotal}}</span> </td>
             </ng-container>
                  
             <ng-container matColumnDef="user">
                 <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> Created By </th>
-                <td mat-cell *matCellDef="let element"> {{element.employeeName}} </td>
+                <td mat-cell *matCellDef="let element"><span *ngIf="element.quoteTotal > 2"> {{element.employeeName}}</span> <span *ngIf="element.quoteTotal ==1"> {{element.employeeName}}</span> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Edit">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" style="width:100px;">
+                <button mat-raised-button [disabled]="element.VendorStatusId != 4" (click)="Edit(element.onboard_Request_Id)"  style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;background-color: #94CC5B;"><mat-icon>search</mat-icon>Edit</button>
+              </td>
             </ng-container>
 
             <ng-container matColumnDef="View">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let element" style="width:100px;">
-                <button mat-raised-button routerLink="/vendor-approve/{{element.onboard_Request_Id}}" style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;background-color: #94CC5B;"><mat-icon>search</mat-icon>View</button>
+                <button mat-raised-button *ngIf="element.quoteTotal > 2" (click)="UpdateOnboardRequestStatus(element.onboard_Request_Id)" style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;background-color: #94CC5B;"><mat-icon>search</mat-icon>View</button>
+                <button mat-raised-button *ngIf="element.quoteTotal == 1 && (element.VendorStatusId == 4 || element.onboardRequestStatusID == 4 || element.onboard_Request_status_ID == 3)"  (click)="CorrectRouteChoice(element.onboard_Request_Id)"  style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;background-color: #94CC5B;"><mat-icon>search</mat-icon>View</button>
+                <button mat-raised-button *ngIf="element.quoteTotal == 1 && element.VendorStatusId == 2"  routerLink="/vendor-approved-add-details/{{element.onboard_Request_Id}}/{{element.vendorId}}"  style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;background-color: #94CC5B;"><mat-icon>search</mat-icon>Add</button>
               </td>
             </ng-container>
     
@@ -56,3 +70,4 @@
   </mat-sidenav-container>
 
  
+  

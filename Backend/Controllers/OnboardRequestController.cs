@@ -204,7 +204,7 @@ namespace ProcionAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteRequest/{RequestId}/{VendorID}")]
-        public async Task<IActionResult> DeleteConsumable(int RequestId,int VendorID)
+        public async Task<IActionResult> DeleteRequest(int RequestId,int VendorID)
         {
             try
             {
@@ -258,6 +258,21 @@ namespace ProcionAPI.Controllers
             return Ok(results);
         }
 
+        [HttpDelete]
+        [Route("DeleteSoleSupplier/{VendorID}")]
+        public async Task<ActionResult> DeleteSoleSupplier(int VendorID)
+        {
+            var results = await _OnboardRequestRepository.DeleteSoleSupplierAsync(VendorID);
+            return Ok(results);
+        }
+
+        [HttpDelete]
+        [Route("DeleteVendor/{VendorID}")]
+        public async Task<ActionResult> DeleteVendor(int VendorID)
+        {
+            var results = await _OnboardRequestRepository.DeleteVendorAsync(VendorID);
+            return Ok(results);
+        }
     }
     
 }

@@ -7,13 +7,13 @@
 </div>
 <mat-stepper [linear]="true"  #stepper style="background-color: #eee;" orientation="vertical" (selectionChange)="setFocus(stepper)" >
   <mat-step [stepControl]="FoundationaldocumentsFormGroup" >
-    <form [formGroup]="FoundationaldocumentsFormGroup" style="text-align: -webkit-center;">
+    <form [formGroup]="FoundationaldocumentsFormGroup" style="text-align: -webkit-center;" class="table-responsive">
       <ng-template id="0" matStepLabel>FOUNDATIONAL DOCUMENTS</ng-template>
-      <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
+      <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;">
           <tr>
               <td><label >Mutual Non-Disclosure Agreement or Confidentiality Agreement:</label></td>
               <td> 
-                 <mat-checkbox formControlName="MutualNDA"></mat-checkbox>
+                 <mat-checkbox formControlName="MutualNDA" ></mat-checkbox>
               </td>
           </tr>
           <tr>
@@ -50,15 +50,55 @@
           <tr>
               <td><label>Letters of good standing COID:</label></td>
               <td>
-                  <mat-checkbox formControlName="LetterOfGoodStanding"></mat-checkbox>
+                  <mat-checkbox formControlName="LetterofGoodStanding"></mat-checkbox>
               </td>
           </tr>
           <tr>
-              <td><label>B-BBEE certificate:</label></td>
+              <td><label>Has BEE?:</label></td>
               <td>
-                  <mat-checkbox formControlName="BBBEECertificate"></mat-checkbox>
+                  <mat-checkbox formControlName="BBBEECertificate"  (click)="onBEEChecked()" checked="{{BEEChecked}}"></mat-checkbox>
               </td>
           </tr>
+          <mat-accordion >
+            <mat-expansion-panel hideToggle disabled expanded="{{BEEChecked}}" style="margin-left: 10px" >
+              <div>
+                <div class="row">
+                  <div class="col-7">
+                    <label style="width: 450px;">BEE level:</label>
+                  </div>
+                  <div class="col-5">
+                    <mat-form-field appearance="fill">
+                      <input matInput type="number" formControlName="BEELevel" >
+                    </mat-form-field> 
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-7">
+                    <label style="width: 450px;">BEE Certificate:</label>
+                  </div>
+                  <div class="col-5">
+                      <input  id="file"  type="file" class="file-upload" (change)="CreateTest($event)" formControlName="BEECertificateDoc" > 
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-7">
+                    <label style="width: 450px;">Date of BEE validity:</label>
+                  </div>
+                  <div class="col-5">
+                    <mat-form-field appearance="fill">
+                      <mat-label>Choose a date</mat-label>
+                      <input matInput [matDatepicker]="picker" formControlName="BEEValidatityDate" >
+                      <mat-hint>MM/DD/YYYY</mat-hint>
+                      <mat-datepicker-toggle matIconSuffix [for]="picker">
+                      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                      </mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field> 
+                  </div>
+                </div>
+              </div>        
+            </mat-expansion-panel>
+          </mat-accordion>
           <tr>
               <td> <label>Directors details and ID's:</label></td>
               <td>
@@ -72,8 +112,8 @@
               </td>
           </tr>
       </table>
-      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
-          <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/vendor-view"> Cancel</button>
+      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
+          <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/vendor-unofficial-vendorlist"> Cancel</button>
           <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
          </div>
       <!-- <div >
@@ -83,9 +123,9 @@
     </form>
   </mat-step>
   <mat-step [stepControl]="FinancialsFormGroup" >
-    <form [formGroup]="FinancialsFormGroup" style="text-align: -webkit-center;">
+    <form [formGroup]="FinancialsFormGroup" style="text-align: -webkit-center;" class="table-responsive">
       <ng-template matStepLabel >FINANCIALS</ng-template>
-      <table style="background-color: white;border:1px solid #244688;border-bottom: white;" id="1">
+      <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="1">
           <tr>
               <td><label >Details Of Service Or Goods:</label></td>
               <td> 
@@ -100,16 +140,16 @@
           </tr>     
       </table>
       
-      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
+      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
           <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
           <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
          </div>
     </form>
   </mat-step>
   <mat-step [stepControl]="SubContractingFormGroup" >
-      <form [formGroup]="SubContractingFormGroup" style="text-align: -webkit-center;">
+      <form [formGroup]="SubContractingFormGroup" style="text-align: -webkit-center;" class="table-responsive">
         <ng-template matStepLabel>SUB-CONTRACTING</ng-template>
-        <table style="background-color: white;border:1px solid #244688;border-bottom: white;" id="2">
+        <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="2">
           <tr>
               <td><label >Name of sub-contractor:</label></td>
               <td> 
@@ -129,16 +169,16 @@
               </td>
           </tr>
       </table>  
-      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
+      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
           <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
           <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
          </div>      
       </form>
     </mat-step>
     <mat-step [stepControl]="InsuranceFormGroup" >
-      <form [formGroup]="InsuranceFormGroup" style="text-align: -webkit-center;">
+      <form [formGroup]="InsuranceFormGroup" style="text-align: -webkit-center;" class="table-responsive">
         <ng-template matStepLabel >INSURANCE</ng-template>
-        <table style="background-color: white;border:1px solid #244688;border-bottom: white;" id="3">
+        <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="3">
           <tr>
               <td><label >General liability insurance:</label></td>
               <td> 
@@ -164,16 +204,16 @@
             </td>
         </tr>
       </table>  
-      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
+      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
           <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
           <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
          </div>      
       </form>
     </mat-step>
     <mat-step [stepControl]="LicensesOrProfessionalAccreditationFormGroup" >
-      <form [formGroup]="LicensesOrProfessionalAccreditationFormGroup" style="text-align: -webkit-center;">
+      <form [formGroup]="LicensesOrProfessionalAccreditationFormGroup" style="text-align: -webkit-center;" class="table-responsive">
         <ng-template matStepLabel >LICENSES OR PROFESSIONAL ACCREDITATION</ng-template>
-        <table style="background-color: white;border:1px solid #244688;border-bottom: white;" id="4">
+        <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="4">
           <tr>
               <td><label >Licenses required:</label></td>
               <td> 
@@ -193,16 +233,16 @@
               </td>
           </tr>
       </table>  
-      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
+      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
           <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
           <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
          </div>      
       </form>
     </mat-step>
     <mat-step [stepControl]="InformationSecurityFormGroup" >
-      <form [formGroup]="InformationSecurityFormGroup" style="text-align: -webkit-center;">
+      <form [formGroup]="InformationSecurityFormGroup" style="text-align: -webkit-center;" class="table-responsive">
         <ng-template matStepLabel >INFORMATION SECURITY</ng-template>
-        <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
+        <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;">
           <tr>
               <td><label id="5" >Business continuity plan:</label></td>
               <td> 
@@ -221,70 +261,99 @@
                   <mat-checkbox formControlName="POPI" (click)="onPOPIChecked(stepper)" checked="{{POPIChecked}}"></mat-checkbox> 
               </td>
           </tr>
-          <mat-accordion >
+          <tr>
             <mat-expansion-panel hideToggle disabled expanded="{{POPIChecked}}" style="margin-left: 10px">
-              <tr>
-                <td><label>Does the contract set out what personal data is used for what purpose?</label></td>
-                <td>              
-                    <mat-checkbox></mat-checkbox> 
-                </td>
-              </tr>
-              <tr>
-                <td><label>Is the contracted partner a controller (C), joint controller (JC), processor (P) or sub-processor (SP)?</label></td>
-                <td>              
-                    <mat-checkbox></mat-checkbox> 
-                </td>
-              </tr>
-              <tr>
-                <td><label>Depending on the controller/processor relationship, do you have a Data Processing Agreement or a Joint Controller Agreement in place?</label></td>
-                <td>              
-                    <mat-checkbox></mat-checkbox> 
-                </td>
-              </tr>
-              <tr>
-                <td><label>Does the contract highlight the importance of confidentiality?</label></td>
-                <td>              
-                    <mat-checkbox></mat-checkbox> 
-                </td>
-              </tr>
-              <tr>
-                <td><label>Does the contract provide for audits and inspections?</label></td>
-                <td>              
-                    <mat-checkbox></mat-checkbox> 
-                </td>
-              </tr>
-              <tr>
-                <td><label>Is it clear who is accountable and liable for different activities?</label></td>
-                <td>              
-                    <mat-checkbox></mat-checkbox> 
-                </td>
-              </tr>
-              <tr>
-                <td><label>Is there a provision to cover third party processing of data?</label></td>
-                <td>              
-                    <mat-checkbox></mat-checkbox> 
-                </td>
-              </tr>
-              <tr>
-                <td><label>Does a process exist for managing data when the contract ends?</label></td>
-                <td>              
-                    <mat-checkbox></mat-checkbox> 
-                </td>
-              </tr>
-              <tr>
-                <td><label>Is the personal data that's being processed detailed in your and their 'Record of Processing Activities'?</label></td>
-                <td>              
-                    <mat-checkbox></mat-checkbox> 
-                </td>
-              </tr>
-              <tr>
-                <td><label>Does the supplier hold any form of certification for their processing activities?</label></td>
-                <td>              
-                    <mat-checkbox></mat-checkbox> 
-                </td>
-              </tr>
+              <div>
+              <div class="row">
+                <div class="col-9">
+                  <label>Does the contract set out what personal data is used for what purpose?</label>
+                </div>
+                <div class="col-3">
+                  <mat-checkbox formControlName="Personal_Data_Purpose"></mat-checkbox>
+                </div> 
+              </div>
+              <div class="row">
+                <div class="col-9">
+                  <label>Is the contracted partner a controller (C), joint controller (JC), processor (P) or sub-processor (SP)?</label>
+                </div>
+                <div class="col-3">
+                  <mat-form-field style="width: 200px;">
+                    <mat-select formControlName="Contracted_Partner_Type_ID" placeholder="Controller (C)">
+                      <mat-option value="1">Controller (C)</mat-option>
+                      <mat-option value="2">Joint Controller (JC)</mat-option>
+                      <mat-option value="3">Processor (P)</mat-option>
+                      <mat-option value="4">Sub-Processor (SP)</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div> 
+              </div>
+              <div class="row">
+                <div class="col-9">
+                  <label>Depending on the controller/processor relationship, do you have a Data Processing Agreement or a Joint Controller Agreement in place?</label>
+                </div>
+                <div class="col-3">
+                  <mat-checkbox formControlName="DataProcessing_JointController_Agreement"></mat-checkbox>
+                </div> 
+              </div>
+              <div class="row">
+                <div class="col-9">
+                  <label>Does the contract highlight the importance of confidentiality?</label>
+                </div>
+                <div class="col-3">
+                  <mat-checkbox formControlName="Confidentiality_Importance_Highlighted"></mat-checkbox>
+                </div> 
+              </div>
+              <div class="row">
+                <div class="col-9">
+                  <label>Does the contract provide for audits and inspections?</label>
+                </div>
+                <div class="col-3">
+                  <mat-checkbox formControlName="Contract_Audits_Provisions_Provided"></mat-checkbox>
+                </div> 
+              </div>
+              <div class="row">
+                <div class="col-9">
+                  <label>Is it clear who is accountable and liable for different activities?</label>
+                </div>
+                <div class="col-3">
+                  <mat-checkbox formControlName="Activity_Liability_Present"></mat-checkbox>
+                </div> 
+              </div>
+              <div class="row">
+                <div class="col-9">
+                  <label>Is there a provision to cover third party processing of data?</label>
+                </div>
+                <div class="col-3">
+                  <mat-checkbox formControlName="Third_Party_Data_Processing_Provisioned"></mat-checkbox>
+                </div> 
+              </div>
+              <div class="row">
+                <div class="col-9">
+                  <label>Does a process exist for managing data when the contract ends?</label>
+                </div>
+                <div class="col-3">
+                  <mat-checkbox formControlName="Contract_End_Data_Management_Provided"></mat-checkbox>
+                </div> 
+              </div>
+              <div class="row">
+                <div class="col-9">
+                  <label>Is the personal data that's being processed detailed in your and their 'Record of Processing Activities'?</label>
+                </div>
+                <div class="col-3">
+                  <mat-checkbox formControlName="Personal_Data_Processing_Details_Present"></mat-checkbox>
+                </div> 
+              </div>
+              <div class="row">
+                <div class="col-9">
+                  <label>Does the supplier hold any form of certification for their processing activities?</label>
+                </div>
+                <div class="col-3">
+                  <mat-checkbox formControlName="Processing_Activities_Certification_Held"></mat-checkbox>
+                </div> 
+              </div>
+            </div>          
             </mat-expansion-panel>
-          </mat-accordion>
+          </tr>
           <tr>
             <td><label>History of data breaches and security incidents:</label></td>
             <td>              
@@ -298,16 +367,16 @@
           </td>
       </tr>
       </table>  
-      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
+      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
           <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
           <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
          </div>      
       </form>
     </mat-step>
     <mat-step [stepControl]="PolicyReviewFormGroup" >
-      <form [formGroup]="PolicyReviewFormGroup" style="text-align: -webkit-center;">
+      <form [formGroup]="PolicyReviewFormGroup" style="text-align: -webkit-center;" class="table-responsive">
         <ng-template matStepLabel>POLICY REVIEW</ng-template>
-        <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
+        <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;">
           <tr>
               <td><label id="6">Information security or Data protection policy:</label></td>
               <td> 
@@ -351,16 +420,16 @@
         </td>
       </tr>
       </table>  
-      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
+      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
           <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
           <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
          </div>      
       </form>
     </mat-step>
     <mat-step [stepControl]="BusinessReferencesFormGroup" >
-      <form [formGroup]="BusinessReferencesFormGroup" style="text-align: -webkit-center;">
+      <form [formGroup]="BusinessReferencesFormGroup" style="text-align: -webkit-center;" class="table-responsive">
         <ng-template matStepLabel>BUSINESS REFERENCES</ng-template>
-        <table style="background-color: white;border:1px solid #244688;border-bottom: white;" id="7">
+        <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="7">
           <tr>
               <td><label >Details of at least two business references:</label></td>
               <td> 
@@ -368,7 +437,7 @@
               </td>
           </tr>
       </table>  
-      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
+      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
           <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
           <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
          </div>      
@@ -377,10 +446,10 @@
   <mat-step>
     <ng-template matStepLabel>Done</ng-template>
     <div style="text-align: -webkit-center" id="8">
-      <p style="margin: 0px;background-color: #244688;color: white;width: 700px;"><b>*Please ensure that all details are correct before updating anything on the vendor*</b></p> 
+      <p style="margin: 0px;background-color: #244688;color: white;width: 700px;"><b>*Please ensure that all details are correct*</b></p> 
       <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 700px;justify-content: center;">
         <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
-        <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;"  > Create </button>
+        <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" (click)="Create()" > Create </button>
        </div>
     </div> 
     <!-- <p>*Please ensure that all details are correct before adding a new vendor*</p>

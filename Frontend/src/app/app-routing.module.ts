@@ -34,6 +34,7 @@ import { VendorCreateChoiceComponent } from './vendor/vendor-create-choice/vendo
 import { VendorApproveComponent } from './vendor/vendor-approve/vendor-approve.component';
 import { VendorUnofficialVendorlistComponent } from './vendor/vendor-unofficial-vendorlist/vendor-unofficial-vendorlist.component';
 import { VendorApprovedAddDetailsComponent } from './vendor/vendor-approved-add-details/vendor-approved-add-details.component';
+import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-approve-edit.component';
 
 import { CreateDepartmentComponent } from './create-department/create-department/create-department.component';
 import { DeleteDepartmentComponent } from './delete-department/delete-department/delete-department.component';
@@ -168,7 +169,8 @@ const routes: Routes = [
   { path: 'vendor-create-choice', component: VendorCreateChoiceComponent },
   { path: 'vendor-approve/:RequestNo', component: VendorApproveComponent },
   { path: 'vendor-unofficial-vendorlist', component: VendorUnofficialVendorlistComponent },
-  { path: 'vendor-approved-add-details/:VendorID', component: VendorApprovedAddDetailsComponent },
+  { path: 'vendor-approved-add-details/:RequestNo/:VendorID', component: VendorApprovedAddDetailsComponent },
+  { path: 'vendor-approve-edit/:VendorID', component: VendorApproveEditComponent },
   {
     path: 'ViewDepartment', canActivate: [AuthService],
     component: ViewDepartmentComponent

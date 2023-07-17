@@ -9,10 +9,14 @@
 
 ::ng-deep .mdc-tab__text-label {
     color: white;
-    width: 120px;
+    width: 160px;
+    place-content: center;
+   
 }
 
-
+::ng-deep .mat-tab-header {
+    width: max-content!important;
+}
   
 
 .content {
@@ -33,6 +37,10 @@ td {
 
 ::ng-deep .mat-mdc-tab-body-content {
     height:600px!important;
+    display: grid!important;
+    align-items: baseline!important;
+    justify-content: space-evenly!important;
+    align-content: space-between!important;
 }
 
 mat-error {
@@ -55,11 +63,12 @@ mat-form-field{
 }
 
 label {
-    
     margin-right: 20px;
     font-weight: 500;
     
 }
+
+
 
 #btnHover:hover {
     background-color: #fe4945;
@@ -73,4 +82,10 @@ label {
   mat-tab-group {
     border-left: 1px solid #244688;
     border-right: 1px solid #244688;
+}
+
+a:not([href]):not([class]), a:not([href]):not([class]):hover {
+    text-decoration:underline;
+    cursor: pointer!important;
+    
 }

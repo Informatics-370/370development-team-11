@@ -30,6 +30,9 @@ import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { BudgetLine } from '../Shared/BudgetLine';
 import { SoleSupplier } from '../Shared/Sole_Supplier';
 import * as moment from 'moment'
+import { Due_Dillegence } from '../Shared/DueDillegence';
+import { Vendor_BEE } from '../Shared/VendorBEE';
+import { POPI } from '../Shared/POPI';
 
 @Injectable({
   providedIn: 'root'
@@ -185,6 +188,14 @@ export class DataService {
 
   GetVendorValidation(sVendorName: string): Observable<any> {
     return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendorValidation/${sVendorName}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  DeleteSoleSupplier(VendorID: number): Observable<any> {
+    return this.httpClient.delete<SoleSupplier>(`${this.apiUrl}OnboardRequest/DeleteSoleSupplier/${VendorID}`, this.httpOptions)
+  }
+
+  DeleteVendor(VendorID: number): Observable<any> {
+    return this.httpClient.delete<VendorOnboardRequest>(`${this.apiUrl}OnboardRequest/DeleteVendor/${VendorID}`, this.httpOptions)
   }
 
   //--------------------------------------------------------------------------------------Request Files--------------------------------------------------------------------------------------
@@ -403,6 +414,67 @@ export class DataService {
   IncomeTaxRegNumberVal(IncomeTaxNumber: string): Observable<any> {
     return this.httpClient.get<Vendor_Tax>(`${this.apiUrl}Vendor/IncomeTaxRegNumberVal/${IncomeTaxNumber}`, this.httpOptions).pipe(map(result => result))
   }
+
+  //--------------------------------------------------------------------------------------Vendor Approved--------------------------------------------------------------------------------------
+
+  AddBEEDetails(VenBEE: Vendor_BEE): Observable<any> {
+    return this.httpClient.post<Vendor_BEE>(`${this.apiUrl}Vendor/AddBEEDetails`, VenBEE, this.httpOptions).pipe(map(result => result))
+  }
+
+  AddDueDiligence(VenDueDillegence: Due_Dillegence): Observable<any> {
+    return this.httpClient.post<Due_Dillegence>(`${this.apiUrl}Vendor/AddDueDiligence`, VenDueDillegence, this.httpOptions).pipe(map(result => result))
+  }
+
+  AddPOPI(VenPOPI: POPI): Observable<any> {
+    return this.httpClient.post<POPI>(`${this.apiUrl}Vendor/AddPOPI`, VenPOPI, this.httpOptions).pipe(map(result => result))
+  }
+
+  GetBEEDetails(VendorID:Number): Observable<any> {
+    return this.httpClient.get<Vendor_BEE>(`${this.apiUrl}Vendor/GetBEEDetails/${VendorID}`).pipe(map(result => result))
+  }
+
+  GetDueDiligence(VendorID:Number): Observable<any> {
+    return this.httpClient.get<Due_Dillegence>(`${this.apiUrl}Vendor/GetDueDiligence/${VendorID}`).pipe(map(result => result))
+  }
+
+  GetPOPI(DueDiligenceID:Number): Observable<any> {
+    return this.httpClient.get<POPI>(`${this.apiUrl}Vendor/GetPOPI/${DueDiligenceID}`).pipe(map(result => result))
+  }
+
+  UpdateBEEDetails(VendorID: number, VenBEE: Vendor_BEE): Observable<any> {
+    return this.httpClient.put<Vendor_BEE>(`${this.apiUrl}Vendor/UpdateBEEDetails/${VendorID}`, VenBEE, this.httpOptions).pipe(map(result => result))
+  }
+
+  UpdateDueDiligence(VendorID: number, VenDueDillegence: Due_Dillegence): Observable<any> {
+    return this.httpClient.put<Due_Dillegence>(`${this.apiUrl}Vendor/UpdateDueDiligence/${VendorID}`, VenDueDillegence, this.httpOptions).pipe(map(result => result))
+  }
+
+  UpdatePOPI(DueDiligenceID: number, VenPOPI: POPI): Observable<any> {
+    return this.httpClient.put<POPI>(`${this.apiUrl}Vendor/UpdatePOPI/${DueDiligenceID}`, VenPOPI, this.httpOptions).pipe(map(result => result))
+  }
+
+  DeleteBEEDetails(VenBeeID: number): Observable<any> {
+    return this.httpClient.delete<Vendor_BEE>(`${this.apiUrl}Vendor/DeleteBEEDetails/${VenBeeID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  DeleteDueDiligence(DueDiligenceID: number): Observable<any> {
+    return this.httpClient.delete<Due_Dillegence>(`${this.apiUrl}Vendor/DeleteDueDiligence/${DueDiligenceID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  DeletePOPI(POPIID: number): Observable<any> {
+    return this.httpClient.delete<POPI>(`${this.apiUrl}Vendor/DeletePOPI/${POPIID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  //--------------------------------------------------------------------------------------Vendor Status Change--------------------------------------------------------------------------------------
+
+  ChangeVendorStatus(statusID: number, VenID:number): Observable<any> {
+    return this.httpClient.put(`${this.apiUrl}Vendor/ChangeVendorStatus/${statusID}/${VenID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  ChangeOnboardStatus(statusID: number, onboardRequestId:number,VenID:number): Observable<any> {
+    return this.httpClient.put(`${this.apiUrl}Vendor/ChangeOnboardStatus/${statusID}/${onboardRequestId}/${VenID}`, this.httpOptions).pipe(map(result => result))
+  }
+
   //--------------------------------------------------------------------------------------Mandate Limit--------------------------------------------------------------------------------------
   GetMandateLimits(): Observable<any> {
     return this.httpClient.get<Mandate_Limit[]>(`${this.apiUrl}Mandate/GetAllMandateLimits`).pipe(

@@ -64,5 +64,28 @@ namespace ProcionAPI.Models.Repositories
         Task<Vendor_Tax> IncomeTaxRegNumberValAsync(string IncomeTaxNumber);
         Task<Vendor_Registration> CompanyRegNumberValAsync(string CompanyRegNumber);
         Task<Vendor_License> LicenseNumberValAsync(string LicenseNumber);
+
+        //approved vendor
+        Task<Vendor_BEE[]> AddBEEDetailsAsync(Vendor_BEE VenBee);
+        Task<Due_Dillegence[]> AddDueDiligenceAsync(Due_Dillegence VenDueDiligence);
+        Task<POPI[]> AddPOPIAsync(POPI VenPOPI);
+
+        Task<Vendor_BEE> GetBEEDetailsAsync(int VendorID);
+        Task<Due_Dillegence> GetDueDiligenceAsync(int VendorID);
+        Task<POPI> GetPOPIAsync(int DueDiligenceID);
+
+        Task<Vendor_BEE> UpdateBEEDetailsAsync(int VendorID, Vendor_BEE VenBee);
+        Task<Due_Dillegence> UpdateDueDiligenceAsync(int VendorID, Due_Dillegence VenDueDiligence);
+        Task<POPI> UpdatePOPIAsync(int DueDiligenceID, POPI VenPOPI);
+
+        Task<Vendor_BEE> DeleteBEEDetailsAsync(int VenBeeID);
+        Task<Due_Dillegence> DeleteDueDiligenceAsync(int DueDiligenceID);
+        Task<POPI> DeletePOPIAsync(int POPIID);
+        //update status
+        Task<Vendor> ChangeVendorStatusAsync(int statusID, int VendorID);
+
+        Task<Onboard_Request[]> getAllOnboardRequestAsync(int OnboardRequestID);
+
+        Task<Onboard_Request> ChangeOnboardStatusAsync(int statusID, int onboardRequestId, int VenID);
     }
 }

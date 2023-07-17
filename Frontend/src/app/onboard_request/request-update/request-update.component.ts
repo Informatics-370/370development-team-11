@@ -332,6 +332,7 @@ export class RequestUpdateComponent {
               const duration = 1750;
               setTimeout(() => {
                 this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+                
                 dialogRef.close();
               }, duration);
             }}
@@ -365,6 +366,7 @@ export class RequestUpdateComponent {
               const duration = 1750;
               setTimeout(() => {
                 this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+                
                 dialogRef.close();
               }, duration);
             }});//dataservice
@@ -398,7 +400,8 @@ export class RequestUpdateComponent {
     
               const duration = 1750;
               setTimeout(() => {
-                this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+                this.router.navigate(['/request-view']);
+                
                 dialogRef.close();
               }, duration);
             }});//dataservice
@@ -430,7 +433,7 @@ export class RequestUpdateComponent {
   
             const duration = 1750;
             setTimeout(() => {
-              this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+              this.router.navigate(['/request-view']);
               dialogRef.close();
             }, duration);
           }})
@@ -444,32 +447,39 @@ export class RequestUpdateComponent {
     //this.onboardRequest[0].users.role = this.rl;
     this.onboardRequest[0].vendor.vendor_Status = this.VStatus
     this.onboardRequest[0].user_Id = 1
-    console.log(this.onboardRequest)
-    console.log(this.Onboard_Request)
+   // console.log(this.onboardRequest)
+    //console.log(this.files[0])
     this.fileToUpload = this.files[0]
     this.Vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value 
     this.Vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value 
     this.Vendor.vendor_Status_ID = 1;
     this.Vendor.number_Of_Times_Used = 0;
-    this.Onboard_Request.vendor = this.Vendor;
+   // this.Onboard_Request.vendor = this.Vendor;
+    this.Onboard_Request.vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value ;
+    this.Onboard_Request.vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value;
     this.Onboard_Request.vendor.sole_Supplier_Provided = true;
     this.Onboard_Request.onboard_Status = this.OnboardStatus;
+    
     this.SoleSupply.reason = this.SoleSupplierFormGroup.get("Reason")?.value
     this.Onboard_Request = this.onboardRequest[0]
     if (this.files[0] != '') {
-      let sFile = this.onboardRequest[0].quotes;
-      let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-      let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-      this.dataService.DeleteFile(RequestNo,filename).subscribe!
+      if(this.Onboard_Request.quotes != "None") {
+        let sFile = this.onboardRequest[0].quotes;
+        let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
+        let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+        this.dataService.DeleteFile(RequestNo,filename).subscribe();
 
-      RequestNo = "Request" + this.Onboard_Request.onboard_Request_Id 
+      }
+   
+  
+      let RequestNo = "Request" + this.Onboard_Request.onboard_Request_Id 
       this.dataService.OnboardFileAdd(RequestNo,this.fileToUpload).subscribe(response => {
         let Path: any = response
         console.log(Path)
         this.sPath = Path.pathSaved.toString()
         this.Onboard_Request.quotes = this.sPath
         this.Onboard_Request.vendor.sole_Supplier_Provided = true;
-        this.dataService.UpdateOnboardRequest(response.onboard_Request_Id,this.Onboard_Request).subscribe(
+        this.dataService.UpdateOnboardRequest(this.Onboard_Request.onboard_Request_Id ,this.Onboard_Request).subscribe(
           (RequestAdded) => {
             this.SoleSupply.vendor_ID = RequestAdded.vendor_ID
             this.dataService.UpdateSoleSupplier(RequestAdded.vendor_ID,this.SoleSupply).subscribe({
@@ -486,24 +496,28 @@ export class RequestUpdateComponent {
       
                 const duration = 1750;
                 setTimeout(() => {
-                  this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+                  this.router.navigate(['/request-view']);
                   dialogRef.close();
                 }, duration);
               }});
           }//response
         );//dataservice
-//this.onboardRequest[0].vendor_ID, this.onboardRequest[0].vendor.vendor_ID,
       });//post
     }//if
     else {
-      
+     this.Onboard_Request.vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value ;
+     this.Onboard_Request.vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value;
+      console.log(this.Onboard_Request)
      // this.SoleSupply.vendor = this.Onboard_Request.vendor  
       console.log(this.SoleSupply)  
       this.Onboard_Request.quotes = this.onboardRequest[0].quotes 
         console.log(this.Onboard_Request.vendor_ID)
+        console.log(this.Onboard_Request)
         this.dataService.UpdateOnboardRequest(this.onboardRequest[0].onboard_Request_Id, this.Onboard_Request).subscribe(
           (RequestAdded) => {
+            console.log(RequestAdded)
             this.SoleSupply.vendor_ID = this.Onboard_Request.vendor_ID
+            this.SoleSupply.vendor = RequestAdded.vendor
             this.dataService.UpdateSoleSupplier(RequestAdded.vendor_ID,this.SoleSupply).subscribe({
               next: (response) => {
                 console.log(response);
@@ -518,7 +532,8 @@ export class RequestUpdateComponent {
       
                 const duration = 1750;
                 setTimeout(() => {
-                  this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+                  this.router.navigate(['/request-view']);
+                  
                   dialogRef.close();
                 }, duration);
               }});

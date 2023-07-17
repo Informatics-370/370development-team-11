@@ -296,7 +296,12 @@ export class RequestCreateComponent implements OnInit {
     
               const duration = 1750;
               setTimeout(() => {
-                this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+                this.router.navigate(['/request-view']);
+                this.dialog.afterAllClosed.subscribe({
+                  next: (response) => {
+                    this.ngOnInit();
+                  }
+                })
                 dialogRef.close();
               }, duration);
             }}
@@ -326,9 +331,11 @@ export class RequestCreateComponent implements OnInit {
         this.Onboard_Request.quotes = this.sPath
         this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe( response => {
          this.Onboard_Request = response[0]
+         this.dataService.ChangeOnboardStatus(4,this.Onboard_Request.onboard_Request_Id,this.Onboard_Request.vendor_ID).subscribe()
          this.dataService.AddSoleSupplierDetails(this.Onboard_Request.vendor_ID,this.SoleSupply).subscribe( {
           next: (response) => {
             console.log(response);
+            
             var action = "CREATE";
             var title = "CREATE SUCCESSFUL";
             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.Onboard_Request.onboard_Request_Id  + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
@@ -338,9 +345,14 @@ export class RequestCreateComponent implements OnInit {
               data: { action, title, message }
             });
   
-            const duration = 1750;
+            const duration = 5750;
             setTimeout(() => {
-              this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+              this.dialog.afterAllClosed.subscribe({
+                next: (response) => {
+                  this.ngOnInit();
+                }
+              })
+              this.router.navigate(['/request-view']);
               dialogRef.close();
             }, duration);
           }}
@@ -357,9 +369,11 @@ export class RequestCreateComponent implements OnInit {
         console.log(this.Onboard_Request)
         this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe( response => {
           this.Onboard_Request = response[0]
+          this.dataService.ChangeOnboardStatus(4,this.Onboard_Request.onboard_Request_Id,this.Onboard_Request.vendor_ID).subscribe(res => console.log(res))
           this.dataService.AddSoleSupplierDetails(this.Onboard_Request.vendor_ID,this.SoleSupply).subscribe( {
            next: (response) => {
              console.log(response);
+             this.dataService.ChangeOnboardStatus(4,this.Onboard_Request.onboard_Request_Id,this.Onboard_Request.vendor_ID)
              var action = "CREATE";
              var title = "CREATE SUCCESSFUL";
              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.Onboard_Request.onboard_Request_Id  + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
@@ -369,9 +383,14 @@ export class RequestCreateComponent implements OnInit {
                data: { action, title, message }
              });
    
-             const duration = 1750;
+             const duration = 5750;
              setTimeout(() => {
-               this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+               this.router.navigate(['/request-view']);
+               this.dialog.afterAllClosed.subscribe({
+                next: (response) => {
+                  this.ngOnInit();
+                }
+              })
                dialogRef.close();
              }, duration);
            }}
@@ -387,7 +406,7 @@ export class RequestCreateComponent implements OnInit {
 
  
 
-  }//addrequest 
+}//addrequest 
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {

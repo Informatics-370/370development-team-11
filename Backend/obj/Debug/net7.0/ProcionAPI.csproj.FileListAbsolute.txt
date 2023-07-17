@@ -282,3 +282,5 @@ C:\Users\User\Documents\GitHub\370development-team-11\Backend\obj\Debug\net7.0\r
 C:\Users\User\Documents\GitHub\370development-team-11\Backend\obj\Debug\net7.0\ProcionAPI.pdb
 C:\Users\User\Documents\GitHub\370development-team-11\Backend\obj\Debug\net7.0\ProcionAPI.genruntimeconfig.cache
 C:\Users\User\Documents\GitHub\370development-team-11\Backend\obj\Debug\net7.0\ref\ProcionAPI.dll
+C:\Users\User\Documents\GitHub\370development-team-11\Backend\bin\Debug\net7.0\BCrypt.Net-Next.dll
+C:\Users\User\Documents\GitHub\370development-team-11\Backend\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
