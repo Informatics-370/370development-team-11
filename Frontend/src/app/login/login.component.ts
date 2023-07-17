@@ -68,6 +68,7 @@ export class LoginComponent implements OnInit {
         if (response != null) {
           console.log(response)
           const stringToken = JSON.stringify(response)
+          console.log(stringToken)
           const expirationDate = new Date();
           expirationDate.setTime(expirationDate.getTime() + 3 * 60 * 60 * 1000); // Expires in 3 hours
 
@@ -80,7 +81,6 @@ export class LoginComponent implements OnInit {
           this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
           this.myForm.reset();
           this.router.navigate(['/Home']);
-          location.reload();
         }
 
 

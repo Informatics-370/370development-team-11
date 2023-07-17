@@ -16,6 +16,7 @@ export class AuthService {
 
     setUserRole(role: string) {
         this.userRoleSubject.next(role);
+        console.log(this.userRole$)
     }
 
     canActivate(

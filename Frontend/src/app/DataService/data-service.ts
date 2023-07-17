@@ -688,6 +688,7 @@ export class DataService {
       const tokenParts = token.split('.');
       const tokenPayload = tokenParts[1];
       const decodedPayload = JSON.parse(atob(tokenPayload));
+      console.log(decodedPayload)
 
       return decodedPayload.role;
 
