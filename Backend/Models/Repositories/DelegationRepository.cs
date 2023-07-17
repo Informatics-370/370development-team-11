@@ -33,9 +33,19 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Delegation_Of_Authority[]> AddDelegationAsync(Delegation_Of_Authority DelegationAdd)
         {
-            Delegation_Status existingStatus = await _dbContext.Delegation_Status.FirstOrDefaultAsync(s => s.Status_ID == DelegationAdd.DelegationStatus_ID);
-            User existingUser = await _dbContext.User.FirstOrDefaultAsync(u => u.User_Id == DelegationAdd.User_Id);
-            Admin existingAdmin = await _dbContext.Admin.FirstOrDefaultAsync(a => a.Admin_ID == DelegationAdd.Admin_ID);
+
+            Delegation_Status existingStatus = await _dbContext.Delegation_Status.FirstOrDefaultAsync(s => s.Name == "Awaiting Approval");
+            User existingUser = await _dbContext.User.FirstOrDefaultAsync(u => u.Username == DelegationAdd.User.Username);
+            Admin existingAdmin = await _dbContext.Admin.FirstOrDefaultAsync(a => a.User.Username == DelegationAdd.Admin.User.Username);
+            
+
+            //Role acceptingRole = await _dbContext.Role.FirstOrDefaultAsync(r => r.Name == "MD");
+            //User acceptingUser = await _dbContext.User.FirstOrDefaultAsync(ro => ro.Role_ID == acceptingRole.Role_ID);
+            // Create Notification in notification table
+
+
+
+
 
             if (existingStatus != null)
             {
@@ -74,9 +84,9 @@ namespace ProcionAPI.Models.Repositories
             delegation.Delegation_Status = new Delegation_Status();
             delegation.User = new User();
 
-            Admin existingAdmin = await _dbContext.Admin.FirstOrDefaultAsync(a => a.Admin_ID == DelegationUpdate.Admin_ID);
-            Delegation_Status existingStatus = await _dbContext.Delegation_Status.FirstOrDefaultAsync(s => s.Status_ID == DelegationUpdate.DelegationStatus_ID);
-            User existingUser = await _dbContext.User.FirstOrDefaultAsync(u => u.User_Id == DelegationUpdate.User_Id);
+            Delegation_Status existingStatus = await _dbContext.Delegation_Status.FirstOrDefaultAsync(s => s.Name == "Awaiting Approval");
+            User existingUser = await _dbContext.User.FirstOrDefaultAsync(u => u.Username == DelegationUpdate.User.Username);
+            Admin existingAdmin = await _dbContext.Admin.FirstOrDefaultAsync(a => a.User.Username == DelegationUpdate.Admin.User.Username);
 
             delegation.Admin = existingAdmin;
             delegation.Delegation_Status = existingStatus;
@@ -89,7 +99,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Delegation_Of_Authority> UpdateDelegationStatusAsync(int statusID, int delegationID)
         {
-            var delegation = await _dbContext.Delegation_Of_Authority.FindAsync(delegationID);
+            var delegation = await GetDelegationAsync(delegationID);
 
             
             delegation.DelegationStatus_ID = statusID;
@@ -105,6 +115,19 @@ namespace ProcionAPI.Models.Repositories
 
             return delegation;
         }
+
+        //public async Task<Delegation_Of_Authority> EditDelegationStatusAsync(int delegationID)
+        //{
+        //    var delegation = await GetDelegationAsync(delegationID);
+
+        //    Delegation_Status existingStatus = await _dbContext.Delegation_Status.FirstOrDefaultAsync(s => s.Name == "Active");
+
+        //    delegation.Delegation_Status = existingStatus;
+
+        //    await _dbContext.SaveChangesAsync();
+
+        //    return delegation;
+        //}
 
         public async Task<Delegation_Of_Authority> GetDelegationAsync(int delegationID)
         {
@@ -124,11 +147,35 @@ namespace ProcionAPI.Models.Repositories
             return DelegationToDelete;
         }
 
-        public async Task<Delegation_Status[]> GetAllStatusesAsync()
+        public async Task<Delegation_Status[]> GetAllRejStatusesAsync()
         {
             IQueryable<Delegation_Status> query = _dbContext.Delegation_Status.Where(x => x.Name.Contains("Rejected"));
 
             return await query.ToArrayAsync();
+        }
+
+        public async Task<Delegation_Status[]> GetAllStatusesAsync()
+        {
+            IQueryable<Delegation_Status> query = _dbContext.Delegation_Status;
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Temporary_Access[]> AddTempAccAsync(Temporary_Access TempAccAdd)
+        {
+            Delegation_Of_Authority existingDelegation = await _dbContext.Delegation_Of_Authority.FirstOrDefaultAsync(doa => doa.Delegation_ID == TempAccAdd.Delegation_ID);
+
+
+
+            if (existingDelegation != null)
+            {
+                TempAccAdd.Delegation_Of_Authority = existingDelegation;
+            }
+
+            await _dbContext.Temporary_Access.AddAsync(TempAccAdd);
+            await _dbContext.SaveChangesAsync();
+
+            return new Temporary_Access[] { TempAccAdd };
         }
     }
 }

@@ -99,6 +99,12 @@ export class ViewEmployeeRoleComponent implements OnInit {
             disableClose: true,
             data: { id }
           });
+
+          this.dialog.afterAllClosed.subscribe({
+            next: (response) => {
+              this.ngOnInit();
+            }
+          })
         }
         else {
 
@@ -110,7 +116,7 @@ export class ViewEmployeeRoleComponent implements OnInit {
           });
 
           var action = "ERROR";
-          var title = "ERROR: Category In Use";
+          var title = "ERROR: Role In Use";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + this.RoleToDelete.name + " <strong style='color:red'>IS ASSOCIATED WITH A USER!</strong><br> Please remove the role from the user to continue with deletion.");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {

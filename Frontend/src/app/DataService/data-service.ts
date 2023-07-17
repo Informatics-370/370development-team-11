@@ -33,6 +33,7 @@ import * as moment from 'moment'
 import { Consumable_History } from '../Shared/Consumable_History';
 import { Delegation_Of_Authority } from '../Shared/DelegationOfAuthority';
 import { DelegationStatus } from '../Shared/DelegationStatus';
+import { Temporary_Access } from '../Shared/Temporary_Access';
 
 @Injectable({
   providedIn: 'root'
@@ -767,6 +768,10 @@ export class DataService {
   }
 
   GetStatuses(): Observable<any> {
-    return this.httpClient.get<DelegationStatus[]>(`${this.apiUrl}Delegation/GetStatuses`).pipe(map(result => result))
+    return this.httpClient.get<DelegationStatus[]>(`${this.apiUrl}Delegation/GetRejStatuses`).pipe(map(result => result))
+  }
+
+  AddTempAcc(ta: Temporary_Access) {
+    return this.httpClient.post(`${this.apiUrl}Delegation/AddTempAcc`, ta, this.httpOptions)
   }
 }

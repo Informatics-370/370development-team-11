@@ -180,6 +180,7 @@ export class ViewDelegationComponent implements OnInit{
     this.http.get(url, { responseType: 'blob' }).subscribe(response => {
       const fileURL = URL.createObjectURL(response);
       window.open(fileURL, '_blank');
+      URL.revokeObjectURL(fileURL);
     });
     // window.open(url, '_blank');
   }
@@ -189,6 +190,12 @@ export class ViewDelegationComponent implements OnInit{
       disableClose: true,
       data: { ID }
     });
+
+    this.dialog.afterAllClosed.subscribe({
+      next: (response) => {
+        this.ngOnInit();
+      }
+    })
   }
 
   acceptRequest(id: number) {
@@ -216,21 +223,10 @@ export class ViewDelegationComponent implements OnInit{
       data: { ID }
     })
 
-    //this.dataService.EditDelegationStatus(2, id).subscribe(r => {
-    //  var action = "ACCEPT";
-    //  var title = "ACCEPT SUCCESSFUL";
-    //  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + id + "</strong> has been <strong style='color:green'> ACCEPTED </strong> successfully!");
-
-    //  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-    //    disableClose: true,
-    //    data: { action, title, message }
-    //  });
-
-    //  const duration = 1750;
-    //  setTimeout(() => {
-    //    this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-    //    dialogRef.close();
-    //  }, duration);
-    //})
+    this.dialog.afterAllClosed.subscribe({
+      next: (response) => {
+        this.ngOnInit();
+      }
+    })
   }
 }

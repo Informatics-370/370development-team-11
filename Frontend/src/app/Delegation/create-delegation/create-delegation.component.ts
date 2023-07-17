@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -10,6 +11,7 @@ import { Admin } from '../../Shared/Admin';
 import { Delegation_Of_Authority } from '../../Shared/DelegationOfAuthority';
 import { DelegationStatus } from '../../Shared/DelegationStatus';
 import { Role } from '../../Shared/EmployeeRole';
+import { Temporary_Access } from '../../Shared/Temporary_Access';
 import { User } from '../../Shared/User';
 
 @Component({
@@ -68,13 +70,21 @@ export class CreateDelegationComponent implements OnInit {
     user_Id: 0,
     admin_ID: 0,
     delegationStatus_ID: 0,
-    from_Date: '',
-    to_Date: '',
+    from_Date: new Date(),
+    to_Date: new Date(),
     delegation_Document: '',
     delegatingParty: '',
     user: this.usr,
     admin: this.adm,
     delegation_Status: this.doas
+  }
+
+  ta: Temporary_Access = {
+    temp_Access_ID: 0,
+    delegation_ID: 0,
+    delegation_Of_Authority: this.doa,
+    name: '',
+    description: '',
   }
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
@@ -89,9 +99,11 @@ export class CreateDelegationComponent implements OnInit {
     })
 
     this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
-    this.dataService.GetUserByUsername(this.iName).subscribe(n => {
+    this.dataService.GetAdminByUsername(this.iName).subscribe(n => {
       this.admin = n;
-      this.doa.admin_ID = this.admin.user_Id;
+      this.adm = this.admin;
+      this.doa.admin = this.adm;
+      this.doa.admin_ID = 0;
     })
     this.getUsername();
 
@@ -125,6 +137,8 @@ export class CreateDelegationComponent implements OnInit {
       this.myForm.patchValue({
         DelegatingName: this.user.username
       })
+      this.ta.name = this.user.role.name;
+      this.ta.description = this.user.role.description;
     })
   }
 
@@ -144,7 +158,9 @@ export class CreateDelegationComponent implements OnInit {
   getPosts(username) {
     this.dataService.GetUserByUsername(username).subscribe(r => {
       this.delegateID = r;
-      this.doa.user_Id = this.delegateID.user_Id;
+      this.usr = this.delegateID;
+      this.doa.user = this.usr;
+      this.doa.user_Id = 0;
       //console.log(this.doa.user_Id)
     })
   }
@@ -157,6 +173,7 @@ export class CreateDelegationComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.doa)
     this.doa.delegatingParty = this.myForm.get('DelegatingName')?.value;
     var name = "" + this.doa.delegatingParty;
 
@@ -173,25 +190,40 @@ export class CreateDelegationComponent implements OnInit {
         this.sPath = Path.pathSaved.toString()
         this.doa.delegation_Document = this.sPath;
         this.doa.delegationStatus_ID = 1;
-        this.doa.from_Date = this.myForm.get('start')?.value;
-        this.doa.to_Date = this.myForm.get('end')?.value;
+
+        let startDate: any
+        startDate = new DatePipe('en-ZA');
+        this.doa.from_Date = startDate.transform(this.myForm.get('start')?.value, 'MMM d, y, h:mm:ss a');
+
+        let endDate: any
+        endDate = new DatePipe('en-ZA');
+        this.doa.to_Date = startDate.transform(this.myForm.get('end')?.value, 'MMM d, y, h:mm:ss a');
+
+        //this.doa.from_Date = this.myForm.get('start')?.value;
+        /*this.doa.to_Date = this.myForm.get('end')?.value;*/
 
         this.dataService.AddDelegation(this.doa).subscribe({
           next: (response) => {
-            var action = "CREATE";
-            var title = "CREATE SUCCESSFUL";
-            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].delegation_ID + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-              disableClose: true,
-              data: { action, title, message }
-            });
+            this.ta.delegation_ID = response[0].delegation_ID;
+            this.dataService.AddTempAcc(this.ta).subscribe({
+              next: (r) => {
+                var action = "CREATE";
+                var title = "CREATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].delegation_ID + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-            const duration = 1750;
-            setTimeout(() => {
-              this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-              dialogRef.close();
-            }, duration);
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
+                  dialogRef.close();
+                }, duration);
+              }
+            })
           }
         })
       })
