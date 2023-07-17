@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { Dialog } from '@angular/cdk/dialog';
 import { Chart, registerables } from 'node_modules/chart.js';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { DatePipe } from '@angular/common';
 
 Chart.register(...registerables);
 
@@ -151,6 +152,11 @@ export class UpdateConsumableStockComponent implements OnInit {
             console.log(this.Consumables)
 
             this.History.StockAmt = this.myForm.get('StockLevel')?.value;
+
+            let test: any
+            test = new DatePipe('en-ZA');
+            this.History.DateCaptured = test.transform(this.History.DateCaptured, 'MMM d, y, h:mm:ss a');
+
             this.History.consumable = this.Consumables
 
             console.log(this.History)

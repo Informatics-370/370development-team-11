@@ -57,6 +57,9 @@ import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
 
+import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
+import { UpdatePasswordComponent } from './User/update-password/update-password.component';
+
 
 const routes: Routes = [
   {
@@ -237,7 +240,16 @@ const routes: Routes = [
   {
     path: 'Delegation', canActivate: [AuthService],
     component: ViewDelegationComponent
+  },
+  {
+    path: 'ViewProcurementRequest', canActivate: [AuthService],
+    component: ViewProcurementRequestComponent
+  },
+  {
+    path: 'UpdatePassword', canActivate: [AuthService],
+    component: UpdatePasswordComponent
   }
+
 ];
 
 @NgModule({

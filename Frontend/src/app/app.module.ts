@@ -97,6 +97,8 @@ import { CropperModalComponent } from './User/cropper-modal/cropper-modal.compon
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
 import { UpdateConsumableStockComponent } from './update-consumable-stock/update-consumable-stock.component';
+import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
+import { UpdatePasswordComponent } from './User/update-password/update-password.component';
 
 
 
@@ -167,7 +169,9 @@ import { UpdateConsumableStockComponent } from './update-consumable-stock/update
     CropperModalComponent,
     ViewNotificationHubComponent,
     ViewDelegationComponent,
-    UpdateConsumableStockComponent
+    UpdateConsumableStockComponent,
+    ViewProcurementRequestComponent,
+    UpdatePasswordComponent
   ],
   imports: [
     BrowserModule,
