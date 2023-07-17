@@ -67,11 +67,11 @@ export class ViewConsumableComponent implements OnInit {
             headerRows: 1,
             widths: ['*', 'auto', 'auto', 'auto', 'auto'],
             body: [
-              [{ text: 'Name', fillColor: '#244688' },
-              { text: 'Category', fillColor: '#244688' },
-              { text: 'Minimum Reorder- Quantity', fillColor: '#244688' },
-              { text: 'Maximum Reorder- Quantity', fillColor: '#244688' },
-              { text: 'On-Hand', fillColor: '#244688' }],
+              [{ text: 'Name', fillColor: '#244688', color: "white" },
+              { text: 'Category', fillColor: '#244688', color: "white"},
+              { text: 'Minimum Reorder- Quantity', fillColor: '#244688', color: "white" },
+              { text: 'Maximum Reorder- Quantity', fillColor: '#244688', color: "white" },
+              { text: 'On-Hand', fillColor: '#244688',color: "white" }],
               ...this.Consumables.map(p => ([p.name, p.consumable_Category.name, p.minimum_Reorder_Quantity, p.maximum_Reorder_Quantity, p.on_Hand]))
             ],
             // Add space after the table

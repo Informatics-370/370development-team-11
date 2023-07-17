@@ -80,6 +80,7 @@ export class LoginComponent implements OnInit {
           this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
           this.myForm.reset();
           this.router.navigate(['/Home']);
+          location.reload();
         }
 
 
