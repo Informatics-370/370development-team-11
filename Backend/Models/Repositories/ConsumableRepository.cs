@@ -184,6 +184,7 @@ namespace ProcionAPI.Models.Repositories
                 // Retrieve data from the Consumable_History table for the specified ID
                 var consumablesData = await _dbContext.Consumable_History
                     .Where(consumable => consumable.Consumable_ID == id)
+                    .OrderBy(consumable => consumable.DateCaptured)
                     .Select(consumable => new StockData
                     {
                         DateCaptured = consumable.DateCaptured.Month,
@@ -229,6 +230,8 @@ namespace ProcionAPI.Models.Repositories
                 var StockLevelHist = consumablesData.ToList();
 
                 var adjustedYear = (lastDataPoint.Year);
+
+                Console.WriteLine(adjustedYear.ToString());
 
                 for (int month = 1; month <= 12; month++)
                 {

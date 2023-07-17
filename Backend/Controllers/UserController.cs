@@ -244,7 +244,7 @@ namespace ProcionAPI.Controllers
         }
         [HttpPut]
         [Route("UpdatePassword/{userID}/{NewPassword}")]
-        public async Task<ActionResult> EditUser([FromRoute] int userID, [FromRoute] string NewPassword)
+        public async Task<ActionResult> UpdatePassword([FromRoute] int userID, [FromRoute] string NewPassword)
         {
             try
             {
@@ -468,6 +468,18 @@ namespace ProcionAPI.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex}");
             }
+        }
+
+        [HttpGet("VerifyCredentials/{Username}/{Password}")]
+        public async Task<IActionResult> VerifyUserCredentials([FromRoute] string UserName, [FromRoute] string Password)
+        {
+            bool isCredentialsValid = await _UserRepository.VerifyCredentials(UserName, Password);
+            if (isCredentialsValid == true)
+            {
+                return Ok(isCredentialsValid);
+            }
+
+            return Unauthorized(new { error = "Invalid credentials" });
         }
     }
 }

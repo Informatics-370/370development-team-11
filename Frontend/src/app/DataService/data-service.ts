@@ -450,7 +450,7 @@ export class DataService {
   }
 
   GetUserByUsername(username: string) {
-    return this.httpClient.get(`${this.apiUrl}User/GetUserByUsername` + "/" + username).pipe(map(result => result))
+    return this.httpClient.get<User>(`${this.apiUrl}User/GetUserByUsername` + "/" + username).pipe(map(result => result))
   }
 
   AddUser(user: User) {
@@ -483,6 +483,12 @@ export class DataService {
   UpdatePassword(UserID: Number, NewPassword: String) {
     return this.httpClient.put<User>(`${this.apiUrl}User/UpdatePassword/` + UserID + "/" + NewPassword, this.httpOptions)
   }
+
+  VerifyCredentials(UserName: String, Password: String){
+    return this.httpClient.get(`${this.apiUrl}User/VerifyCredentials/` + UserName + "/" + Password, this.httpOptions)
+  }
+
+
 
   //ProfilePhotoAdd(file: File): Observable<any> {
   //  const formData = new FormData();

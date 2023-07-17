@@ -105,6 +105,8 @@ import { EditDelegationComponent } from './Delegation/edit-delegation/edit-deleg
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
 import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
+import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
+import { UpdatePasswordComponent } from './User/update-password/update-password.component';
 
 
 
@@ -175,11 +177,14 @@ import { RejectDelegationComponent } from './Delegation/reject-delegation/reject
     CropperModalComponent,
     ViewNotificationHubComponent,
     ViewDelegationComponent,
-    UpdateConsumableStockComponent
+    UpdateConsumableStockComponent,
     CreateDelegationComponent,
     DeleteDelegationComponent,
     EditDelegationComponent,
-    RejectDelegationComponent
+    RejectDelegationComponent,
+    UpdateConsumableStockComponent,
+    ViewProcurementRequestComponent,
+    UpdatePasswordComponent
   ],
   imports: [
     BrowserModule,

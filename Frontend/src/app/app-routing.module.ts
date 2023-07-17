@@ -59,6 +59,9 @@ import { ViewDelegationComponent } from './Delegation/view-delegation/view-deleg
 import { CreateDelegationComponent } from './Delegation/create-delegation/create-delegation.component';
 import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
 
+import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
+import { UpdatePasswordComponent } from './User/update-password/update-password.component';
+
 
 const routes: Routes = [
   {
@@ -247,7 +250,16 @@ const routes: Routes = [
   {
     path: "EditDelegation/:did", canActivate: [AuthService],
     component: EditDelegationComponent
+  },
+  {
+    path: 'ViewProcurementRequest', canActivate: [AuthService],
+    component: ViewProcurementRequestComponent
+  },
+  {
+    path: 'UpdatePassword', canActivate: [AuthService],
+    component: UpdatePasswordComponent
   }
+
 ];
 
 @NgModule({
