@@ -112,6 +112,12 @@ export class ViewEmployeeComponent implements OnInit {
             disableClose: true,
             data: { id }
           });
+
+          this.dialog.afterAllClosed.subscribe({
+            next: (response) => {
+              this.ngOnInit();
+            }
+          })
         }
         else {
 

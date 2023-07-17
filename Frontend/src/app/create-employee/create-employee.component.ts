@@ -134,7 +134,6 @@ export class CreateEmployeeComponent implements OnInit {
   GetMandates() {
     this.dataService.GetMandateLimits().subscribe(result => {
       this.mandate_limits = result;
-      console.log(this.mandate_limits);
     });
   }
 

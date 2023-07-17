@@ -200,12 +200,27 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetStatuses")]
-        public async Task<IActionResult> GetAllStatuses()
+        [Route("GetRejStatuses")]
+        public async Task<IActionResult> GetAllRejStatuses()
         {
             try
             {
-                var result = await _DelegationRepository.GetAllStatusesAsync();
+                var result = await _DelegationRepository.GetAllRejStatusesAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPost]
+        [Route("AddTempAcc")]
+        public async Task<IActionResult> AddTempAcc(Temporary_Access TempAccAdd)
+        {
+            try
+            {
+                var result = await _DelegationRepository.AddTempAccAsync(TempAccAdd);
                 return Ok(result);
             }
             catch (Exception)

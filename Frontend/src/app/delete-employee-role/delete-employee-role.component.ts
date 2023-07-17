@@ -44,7 +44,6 @@ export class DeleteEmployeeRoleComponent implements OnInit {
           this.showSuccessDialog = true;
           setTimeout(() => {
             this.dialogRef.close();
-            location.reload();
           }, 2000);
         }
       

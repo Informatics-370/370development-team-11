@@ -7,8 +7,8 @@ export interface Delegation_Of_Authority {
   user_Id: Number;
   admin_ID: Number;
   delegationStatus_ID: Number;
-  from_Date: String;
-  to_Date: String;
+  from_Date: Date;
+  to_Date: Date;
   delegation_Document: String;
   delegatingParty: String;
   user: User;

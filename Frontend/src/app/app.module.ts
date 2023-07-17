@@ -175,7 +175,7 @@ import { RejectDelegationComponent } from './Delegation/reject-delegation/reject
     CropperModalComponent,
     ViewNotificationHubComponent,
     ViewDelegationComponent,
-    UpdateConsumableStockComponent
+    UpdateConsumableStockComponent,
     CreateDelegationComponent,
     DeleteDelegationComponent,
     EditDelegationComponent,
