@@ -127,17 +127,21 @@ namespace ProcionAPI.Data
                 Password = userrep.HashPassword("Admin123"),
                 Profile_Picture = "test",
 
-            },
-            new
-            {
-                User_Id = 2,
-                Role_ID = 2,
-                Username = "Admin",
-                Password = "Admin",
-                Profile_Picture = "test",
             }
             );
+            modelBuilder.Entity<Admin>()
+            .HasData(
+            new
+            {
+                Admin_ID = 1,
+                User_Id = 1,
+                AdminName = "Admin",
+                AdminSurname = "Demo",
+                CellPhone_Num = "079 373 1393",
+                Email = "moyoemailservice@gmail.com"
 
+            }
+            );
             modelBuilder.Entity<Role>()
             .HasData(
             new
