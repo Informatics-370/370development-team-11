@@ -68,7 +68,7 @@
                   </div>
                   <div class="col-5">
                     <mat-form-field appearance="fill">
-                      <input matInput type="number" formControlName="BEELevel" >
+                      <input matInput type="number" formControlName="BEELevel" max="5" min="1" >
                     </mat-form-field> 
                   </div>
                 </div>
@@ -87,9 +87,8 @@
                   <div class="col-5">
                     <mat-form-field appearance="fill">
                       <mat-label>Choose a date</mat-label>
-                      <input matInput [matDatepicker]="picker" formControlName="BEEValidatityDate" >
-                      <mat-hint>MM/DD/YYYY</mat-hint>
-                      <mat-datepicker-toggle matIconSuffix [for]="picker">
+                      <input matInput [matDatepicker]="picker" formControlName="BEEValidatityDate" (dateChange)="DateValidation($event)">
+                      <mat-datepicker-toggle matIconSuffix [for]="picker" (dateChange)="DateValidation($event)">
                       <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                       </mat-datepicker-toggle>
                       <mat-datepicker #picker></mat-datepicker>
@@ -113,7 +112,7 @@
           </tr>
       </table>
       <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
-          <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/vendor-unofficial-vendorlist"> Cancel</button>
+          <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" (click)="CancelAddDetails()"> Cancel</button>
           <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
          </div>
       <!-- <div >

@@ -270,7 +270,8 @@ export class RequestCreateComponent implements OnInit {
         let RequestNo:string = "Request" + this.Onboard_Request.onboard_Request_Id
 
         let file:File = this.fileToUpload
-        //console.log(file)
+        console.log(file)
+        console.log(RequestNo)
         this.dataService.OnboardFileAdd(RequestNo,file).subscribe(response => {
           let Path: any = response
           this.sPath = Path.pathSaved.toString()
@@ -345,7 +346,7 @@ export class RequestCreateComponent implements OnInit {
               data: { action, title, message }
             });
   
-            const duration = 5750;
+            const duration = 1750;
             setTimeout(() => {
               this.dialog.afterAllClosed.subscribe({
                 next: (response) => {
@@ -383,7 +384,7 @@ export class RequestCreateComponent implements OnInit {
                data: { action, title, message }
              });
    
-             const duration = 5750;
+             const duration = 1750;
              setTimeout(() => {
                this.router.navigate(['/request-view']);
                this.dialog.afterAllClosed.subscribe({

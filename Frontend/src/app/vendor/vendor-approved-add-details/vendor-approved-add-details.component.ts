@@ -19,12 +19,16 @@ import { POPI } from 'src/app/Shared/POPI';
 import { Contracted_Partner_Type } from 'src/app/Shared/ContractedPartnerType';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
+
 @Component({
   selector: 'app-vendor-approved-add-details',
   templateUrl: './vendor-approved-add-details.component.html',
   styleUrls: ['./vendor-approved-add-details.component.css']
 })
 export class VendorApprovedAddDetailsComponent implements OnInit{
+
+  
+
 
   matcher = new MyErrorStateMatcher()
   
@@ -198,16 +202,18 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
   };
 
   onboardRequest: OnboardRequest[] = [];
-
+  RequestID = 0;
   ngOnInit(): void {
 
     console.log(this.Vendor)
+    this.FoundationaldocumentsFormGroup.get("BEELevel").setValue(1);
+   
     this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID")?.setValue(1)
     this.route.paramMap.subscribe({
       next: (paramater) => {
         
-        let RequestID = paramater.get("RequestNo");
-        this.VendorService.GetRequestByID(Number(RequestID)).subscribe(result => {
+        this.RequestID = Number(paramater.get("RequestNo"));
+        this.VendorService.GetRequestByID(this.RequestID).subscribe(result => {
           this.onboardRequest = result
           console.log(this.onboardRequest)
         })
@@ -450,10 +456,61 @@ CreateTest(event:any) {
   this.file = event.target.files[0] ;
 }
 
-
-
-
+CancelAddDetails() {
+ if(this.onboardRequest.length > 2) {
+  this.CancelOnboardRequestStatus(this.RequestID)
+ }
+ else {
+  this.router.navigate(['/vendor-unofficial-vendorlist'])
+ }
+  
 }
+
+
+CancelVendorRequestStatus(i:number) {
+  
+  for(let a = 0; a < this.onboardRequest.length;a++) {
+    //console.log(this.onboardRequest[a].vendor_ID)
+    if(this.onboardRequest[a].vendor_ID == i) {
+     // console.log(this.onboardRequest[a].vendor_ID)
+      this.VendorService.ChangeVendorStatus(1,this.onboardRequest[a].vendor_ID).subscribe()
+    }
+    else {
+      this.VendorService.ChangeVendorStatus(1,this.onboardRequest[a].vendor_ID).subscribe()
+    }
+    
+  }
+ // this.router.navigate(['/vendor-approved-add-details/' + i])
+}
+
+CancelOnboardRequestStatus(i:number) {
+  
+  if(this.onboardRequest[0].status_ID == 2) {
+    this.ChangesVendorRequestStatus(i)
+    for (let a = 0;a < this.onboardRequest.length;a++) {
+      
+        
+        this.VendorService.ChangeOnboardStatus(1,this.onboardRequest[a].onboard_Request_Id,this.onboardRequest[a].vendor_ID).subscribe(next => {})
+          console.log(this.onboardRequest[a])
+      }
+     
+    }
+    this.router.navigate(['/vendor-approve/' + this.RequestID])
+    this.ngOnInit();
+   // this.router.navigate(['/vendor-unofficial-vendorlist'])
+    //window.location.reload()
+    //this.router.navigate(['/vendor-approve/' + this.onboardRequest[0].onboard_Request_Id]) routerLink="/vendor-unofficial-vendorlist"
+  }
+  //console.log(Changeable)
+
+  DateValidation(event:any) {
+    console.log(event.value)
+  }
+  
+}
+
+
+
 
 
 

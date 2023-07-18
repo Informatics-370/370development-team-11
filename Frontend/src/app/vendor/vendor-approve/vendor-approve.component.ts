@@ -290,7 +290,7 @@ UpdateOnboardRequestStatus(i:number) {
 
 
 ReturnOnboardRequestStatus() {
-  if(this.onboardRequest.length > 2) {
+  if(this.onboardRequest.length > 1) {
     for (let a = 0;a < this.onboardRequest.length;a++) {
       if(this.onboardRequest[a].status_ID != 1) {
         this.dataService.ChangeOnboardStatus(1,this.onboardRequest[a].onboard_Request_Id,this.onboardRequest[a].vendor_ID).subscribe()

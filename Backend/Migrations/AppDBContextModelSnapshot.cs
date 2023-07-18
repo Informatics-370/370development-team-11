@@ -820,7 +820,7 @@ namespace ProcionAPI.Migrations
                         {
                             Mandate_ID = 1,
                             Ammount = 10000.0,
-                            Date = new DateTime(2023, 7, 16, 11, 3, 24, 611, DateTimeKind.Local).AddTicks(2369)
+                            Date = new DateTime(2023, 7, 18, 9, 5, 22, 757, DateTimeKind.Local).AddTicks(9675)
                         });
                 });
 
@@ -1450,7 +1450,7 @@ namespace ProcionAPI.Migrations
                         new
                         {
                             User_Id = 1,
-                            Password = "$2a$11$f.WKPMPEis9kJA00qfHQlupbqfICuOvGazrBQnsmwSul5Kf7ZMGaa",
+                            Password = "$2a$11$s0/bmnGC8t1GZqv75lXtMO8dXdhqETKzK8FbvF4VG.xjYOc9T/bEC",
                             Profile_Picture = "test",
                             Role_ID = 2,
                             Username = "Admin"
@@ -1982,8 +1982,8 @@ namespace ProcionAPI.Migrations
                         new
                         {
                             Vendor_Status_ID = 2,
-                            Description = "Vendor is Approved",
-                            Name = "approved"
+                            Description = "Vendor Details being added",
+                            Name = "In Progress"
                         },
                         new
                         {

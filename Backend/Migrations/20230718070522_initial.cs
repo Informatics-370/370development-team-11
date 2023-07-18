@@ -1381,7 +1381,7 @@ namespace ProcionAPI.Migrations
             migrationBuilder.InsertData(
                 table: "Mandate_Limit",
                 columns: new[] { "Mandate_ID", "Ammount", "Date" },
-                values: new object[] { 1, 10000.0, new DateTime(2023, 7, 16, 11, 3, 24, 611, DateTimeKind.Local).AddTicks(2369) });
+                values: new object[] { 1, 10000.0, new DateTime(2023, 7, 18, 9, 5, 22, 757, DateTimeKind.Local).AddTicks(9675) });
 
             migrationBuilder.InsertData(
                 table: "Onboard_Status",
@@ -1415,7 +1415,7 @@ namespace ProcionAPI.Migrations
                 values: new object[,]
                 {
                     { 1, "Pending to be rejected or accepted", "Pending" },
-                    { 2, "Vendor is Approved", "approved" },
+                    { 2, "Vendor Details being added", "In Progress" },
                     { 3, "Completed Vendor Details", "Completed" },
                     { 4, "PendingApprove", "PendingApprove" },
                     { 5, "Rejected", "Rejected" }
@@ -1431,7 +1431,7 @@ namespace ProcionAPI.Migrations
                 columns: new[] { "User_Id", "Password", "Profile_Picture", "Role_ID", "Username" },
                 values: new object[,]
                 {
-                    { 1, "$2a$11$f.WKPMPEis9kJA00qfHQlupbqfICuOvGazrBQnsmwSul5Kf7ZMGaa", "test", 2, "Admin" },
+                    { 1, "$2a$11$s0/bmnGC8t1GZqv75lXtMO8dXdhqETKzK8FbvF4VG.xjYOc9T/bEC", "test", 2, "Admin" },
                     { 2, "Admin", "test", 2, "Admin" }
                 });
 
