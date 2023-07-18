@@ -159,23 +159,6 @@ namespace ProcionAPI.Data
             }
             );
 
-            modelBuilder.Entity<Employee>()
-            .HasData(
-            new
-            {
-                EmployeeID = 1,
-                User_Id = 1,
-                Department_ID = 1,
-                Branch_ID = 1,
-                Mandate_ID = 1,
-                EmployeeName = "John",
-                EmployeeSurname = "Doe",
-                CellPhone_Num = "074 845 2548",
-                Email = "jdoe@gmail.com",
-
-            }
-            );
-
             modelBuilder.Entity<Mandate_Limit>()
             .HasData(
             new
