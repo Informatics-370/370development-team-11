@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component,OnInit, ViewChild, ElementRef } from '@angular/core';
 import {FormBuilder,FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -7,7 +7,7 @@ import { DataService } from 'src/app/DataService/data-service';
 import {ErrorStateMatcher} from '@angular/material/core';
 import { MatStepper } from '@angular/material/stepper';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { Vendor_BEE } from 'src/app/Shared/VendorBEE';
@@ -20,6 +20,8 @@ import { Contracted_Partner_Type } from 'src/app/Shared/ContractedPartnerType';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 
+
+
 @Component({
   selector: 'app-vendor-approved-add-details',
   templateUrl: './vendor-approved-add-details.component.html',
@@ -31,7 +33,7 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
 
 
   matcher = new MyErrorStateMatcher()
-  
+  minDate: Date;
 
   constructor(private _formBuilder: FormBuilder,private VendorService: DataService,private route: ActivatedRoute ,private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) {}
 
@@ -204,8 +206,12 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
   onboardRequest: OnboardRequest[] = [];
   RequestID = 0;
   ngOnInit(): void {
-
-    console.log(this.Vendor)
+   // this.FoundationaldocumentsFormGroup.get("BEEValidatityDate").disable()
+   const currentYear = new Date().getFullYear()
+   const currentmonth = new Date().getMonth();
+   const currentDay = new Date().getDate();
+   this.minDate = new Date(currentYear - 1, currentmonth, currentDay+1);
+    console.log(this.minDate)
     this.FoundationaldocumentsFormGroup.get("BEELevel").setValue(1);
    
     this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID")?.setValue(1)
@@ -501,10 +507,13 @@ CancelOnboardRequestStatus(i:number) {
     //window.location.reload()
     //this.router.navigate(['/vendor-approve/' + this.onboardRequest[0].onboard_Request_Id]) routerLink="/vendor-unofficial-vendorlist"
   }
-  //console.log(Changeable)
+ 
 
   DateValidation(event:any) {
-    console.log(event.value)
+ 
+    
+   // this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.setValue(Number(sdate))
+    
   }
   
 }
