@@ -19,6 +19,8 @@ namespace ProcionAPI.Models.Repositories
         Task<Sole_Supplier> GetSoleSupplierByIDAsync(int VendorID);
 
         Task<Sole_Supplier> UpdateSoleSupplierAsync(int SoleSupplierID, Sole_Supplier UpdatedSoleSupplier);
+        Task<Sole_Supplier> DeleteSoleSupplierAsync(int VendorID);
+        Task<Vendor> DeleteVendorAsync(int VendorID);
     }
 }
 //, int VendorID

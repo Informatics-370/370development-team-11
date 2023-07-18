@@ -77,6 +77,7 @@ OnboardRequestDetails: any[] = [];
 //add loop
   onConfirm(RequestId: number): void {
    // console.log(this.OnboardRequestDetails.length)
+   if(this.OnboardRequestDetails.length > 2) {
     for(let i = 0; i < this.OnboardRequestDetails.length; i++) {
       let VendorID = this.OnboardRequestDetails[i].vendor.vendor_ID
       let sFile = this.OnboardRequestDetails[i].quotes;
@@ -86,18 +87,65 @@ OnboardRequestDetails: any[] = [];
             sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
             let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
             let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-        this.dataService.DeleteFile(RequestNo,filename).subscribe!
+        this.dataService.DeleteFile(RequestNo,filename).subscribe()
         this.dataService.DeleteRequest(RequestId,VendorID).subscribe({
           next: (response) => {
+            if(this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
+              this.dataService.DeleteVendor(VendorID).subscribe()
+            }
             this.showConfirmationDialog = false;
             this.showSuccessDialog = true;
             setTimeout(() => {
               this.dialogRef.close();
-              location.reload();
             }, 1750);
           }
         });
+      }
+   }
+   else {
+    let VendorID = this.OnboardRequestDetails[0].vendor.vendor_ID
+    if(this.OnboardRequestDetails[0].quotes != "None") {
+      let sFile = this.OnboardRequestDetails[0].quotes;
+      let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
+      console.log(RequestNo)
+      let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+      console.log(filename)
+      this.dataService.DeleteFile(RequestNo,filename).subscribe()
+      this.dataService.DeleteSoleSupplier(VendorID).subscribe(response => {
+        this.dataService.DeleteRequest(RequestId,VendorID).subscribe({
+          next: (response) => {
+            if(this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
+              this.dataService.DeleteVendor(VendorID).subscribe()
+            }
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.dialogRef.close();
+            }, 1750);
+          }
+        });
+      })
+      
     }
+    else {
+      this.dataService.DeleteSoleSupplier(VendorID).subscribe(response => {
+        this.dataService.DeleteRequest(RequestId,VendorID).subscribe({
+          next: (response) => {
+            if(this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
+              this.dataService.DeleteVendor(VendorID).subscribe()
+            }
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.dialogRef.close();
+            }, 1750);
+          }
+        });
+      })
+    }
+    
+   }
+   
    
   }
 

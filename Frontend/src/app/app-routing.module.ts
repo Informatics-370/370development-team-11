@@ -31,6 +31,10 @@ import { VendorUpdateComponent } from './vendor/vendor-update/vendor-update.comp
 import { VendorDeleteComponent } from './vendor/vendor-delete/vendor-delete.component';
 import { VendordetailsViewComponent } from './vendor/vendordetails-view/vendordetails-view.component';
 import { VendorCreateChoiceComponent } from './vendor/vendor-create-choice/vendor-create-choice.component'
+import { VendorApproveComponent } from './vendor/vendor-approve/vendor-approve.component';
+import { VendorUnofficialVendorlistComponent } from './vendor/vendor-unofficial-vendorlist/vendor-unofficial-vendorlist.component';
+import { VendorApprovedAddDetailsComponent } from './vendor/vendor-approved-add-details/vendor-approved-add-details.component';
+import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-approve-edit.component';
 
 import { CreateDepartmentComponent } from './create-department/create-department/create-department.component';
 import { DeleteDepartmentComponent } from './delete-department/delete-department/delete-department.component';
@@ -157,16 +161,20 @@ const routes: Routes = [
     path: 'EditMandateLimit/:id', canActivate: [AuthService],
     component: EditMandateLimitComponent
   },
-  { path: 'request-view', canActivate: [AuthService], component: RequestViewComponent },
-  { path: 'request-create/:RequestNo', canActivate: [AuthService], component: RequestCreateComponent },
-  { path: 'request-update/:RequestNo', canActivate: [AuthService], component: RequestUpdateComponent },
-  { path: 'request-delete', canActivate: [AuthService], component: RequestDeleteComponent },
-  { path: 'vendor-view', canActivate: [AuthService], component: VendorViewComponent },
-  { path: 'vendor-create/:VendorID', canActivate: [AuthService], component: VendorCreateComponent },
-  { path: 'vendor-update/:VendorID', canActivate: [AuthService], component: VendorUpdateComponent },
-  { path: 'vendor-delete', canActivate: [AuthService], component: VendorDeleteComponent },
-  { path: 'vendororderdetails-view/:VendorID', canActivate: [AuthService], component: VendordetailsViewComponent },
-  { path: 'vendor-create-choice', canActivate: [AuthService], component: VendorCreateChoiceComponent },
+  { path: 'request-view', component: RequestViewComponent },
+  { path: 'request-create/:RequestNo', component: RequestCreateComponent },
+  { path: 'request-update/:RequestNo', component: RequestUpdateComponent },
+  { path: 'request-delete', component: RequestDeleteComponent },
+  { path: 'vendor-view', component: VendorViewComponent },
+  { path: 'vendor-create/:VendorID', component: VendorCreateComponent },
+  { path: 'vendor-update/:VendorID', component: VendorUpdateComponent },
+  { path: 'vendor-delete', component: VendorDeleteComponent },
+  { path: 'vendororderdetails-view/:VendorID', component: VendordetailsViewComponent },
+  { path: 'vendor-create-choice', component: VendorCreateChoiceComponent },
+  { path: 'vendor-approve/:RequestNo', component: VendorApproveComponent },
+  { path: 'vendor-unofficial-vendorlist', component: VendorUnofficialVendorlistComponent },
+  { path: 'vendor-approved-add-details/:RequestNo/:VendorID', component: VendorApprovedAddDetailsComponent },
+  { path: 'vendor-approve-edit/:VendorID', component: VendorApproveEditComponent },
   {
     path: 'ViewDepartment', canActivate: [AuthService],
     component: ViewDepartmentComponent

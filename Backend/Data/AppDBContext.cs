@@ -46,6 +46,7 @@ namespace ProcionAPI.Data
         public DbSet<Vendor_Fax> Vendor_Fax { get; set; }
         public DbSet<Vendor_Website> Vendor_Website { get; set; }
         public DbSet<Vendor_Vat> Vendor_Vat { get; set; }
+        public DbSet<Vendor_BEE> Vendor_BEE { get; set; }
         public DbSet<Vendor_Registration> Vendor_Registration { get; set; }
         public DbSet<Vendor_Tax> Vendor_Tax { get; set; }
         public DbSet<Sole_Supplier> Sole_Supplier { get; set; }
@@ -208,8 +209,8 @@ namespace ProcionAPI.Data
           new
           {
               Vendor_Status_ID = 2,
-              Name = "approved",
-              Description = "Vendor is Approved",
+              Name = "In Progress",
+              Description = "Vendor Details being added",
 
           },
           new
@@ -217,6 +218,20 @@ namespace ProcionAPI.Data
               Vendor_Status_ID = 3,
               Name = "Completed",
               Description = "Completed Vendor Details",
+
+          },
+          new
+          {
+              Vendor_Status_ID = 4,
+              Name = "PendingApprove",
+              Description = "PendingApprove",
+
+          },
+          new
+          {
+              Vendor_Status_ID = 5,
+              Name = "Rejected",
+              Description = "Rejected",
 
           }
           );
@@ -261,9 +276,60 @@ namespace ProcionAPI.Data
                Name = "Pending",
                Description = "Pending",
 
-           }
-           );
-         
+           },  
+            new
+            {
+                Status_ID = 2,
+                Name = "Rejected",
+                Description = "Rejected",
+            },
+            new
+            {
+                Status_ID = 3,
+                Name = "Approve",
+                Description = "Approve",
+            },
+            new
+            {
+                Status_ID = 4,
+                Name = "MDRequiredApproval",
+                Description = "Requires manging directors approval",
+            },
+            new
+            {
+                Status_ID = 5,
+                Name = "PendingBusy",
+                Description = "Request is busy being view",
+            });
+
+            modelBuilder.Entity<Contracted_Partner_Type>()
+         .HasData(
+         new
+         {
+             Contracted_Partner_Type_ID = 1,
+             Name = "Controller (C)",
+             Description = "Controller (C)",
+
+         },
+          new
+          {
+              Contracted_Partner_Type_ID = 2,
+              Name = "Joint Controller (JC)",
+              Description = "Joint Controller (JC)",
+          },
+          new
+          {
+              Contracted_Partner_Type_ID = 3,
+              Name = "Processor (P)",
+              Description = "Processor (P)",
+          },
+          new
+          {
+              Contracted_Partner_Type_ID = 4,
+              Name = "Sub-Processor (SP)",
+              Description = "Sub-Processor (SP)",
+          });
+
 
         }
     }

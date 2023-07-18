@@ -20,6 +20,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 import { DatePipe } from '@angular/common';
+import { Due_Dillegence } from 'src/app/Shared/DueDillegence';
 @Component({
   selector: 'app-vendor-create',
   templateUrl: './vendor-create.component.html',
@@ -206,6 +207,8 @@ export class VendorCreateComponent implements OnInit{
   PaymentTermsChecker:any;
   LicenseOrAccreditationChecker:any;
 
+  DueDilligenceDetail:Due_Dillegence;
+
   matcher = new MyErrorStateMatcher()
 
   constructor(private _formBuilder: FormBuilder,private VendorService: DataService,private route: ActivatedRoute ,private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) {}
@@ -241,6 +244,35 @@ export class VendorCreateComponent implements OnInit{
             this.VendorDetail.soleSupplierProvided = true;
           }
 
+          this.VendorService.GetDueDiligence(this.Vendor.vendor_ID).subscribe(response => {
+            this.DueDilligenceDetail = response
+            this.VendorDetail.beeRegistered = this.DueDilligenceDetail.b_BBEE_Certificate_Provided;
+            this.VendorDetail.pOPIA_Provided = this.DueDilligenceDetail.popI_Present;
+            this.VendorDetail.dueDIllegenceRequired = true;
+            this.VendorDetail.income_Tax_Num_Provided = this.DueDilligenceDetail.income_Tax_Number_Provided;
+            //construction
+            this.VendorDetail.vatRegistered = this.DueDilligenceDetail.vat_Reg_Certificate_Provided;
+            if(this.VendorDetail.vatRegistered == true) {
+              this.CompanyOverviewFormGroup.get("VatRegistrationCheck")?.setValue(true);
+              this.VatRegistrationChange();
+            }
+
+            this.VendorDetail.registration_Provided = this.DueDilligenceDetail.company_Reg_Doc_Provided;
+            //construction
+            this.VendorDetail.license_Num_Provided = this.DueDilligenceDetail.licenses_Required;
+            if(this.VendorDetail.license_Num_Provided == true) {
+              this.CompanyOverviewFormGroup.get("LicenseOrAccreditationCheck")?.setValue(true);
+              this.LicenseOrAccreditationChange();
+            }
+            //construction
+            this.VendorDetail.insurance_Provided = this.DueDilligenceDetail.general_Liability_Insurance_Present;
+            if(this.VendorDetail.insurance_Provided == true) {
+              this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.setValue(true);
+              this.InsuranceCoverChange();
+            }
+
+
+          })
           
 
         })
@@ -633,7 +665,8 @@ export class VendorCreateComponent implements OnInit{
         
                  const duration = 1750;
                  setTimeout(() => {
-                  this.router.navigate(['/vendor-view'], {queryParams: {refresh: true}});
+                  this.VendorService.ChangeVendorStatus(3,this.Vendor.vendor_ID).subscribe()
+                  this.router.navigate(['/vendor-view']);
                   dialogRef.close();
                  }, duration);
               }
@@ -652,7 +685,15 @@ export class VendorCreateComponent implements OnInit{
 
 
   }//create
-   
+
+
+
+
+  CancelInProgress(){
+    this.VendorService.ChangeVendorStatus(4,this.Vendor.vendor_ID).subscribe(result => {
+      this.router.navigate([`/vendor-view`]);
+    })
+  }
 }
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {

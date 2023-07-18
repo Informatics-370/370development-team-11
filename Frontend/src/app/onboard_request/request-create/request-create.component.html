@@ -19,7 +19,7 @@
       <mat-tab-group style="background-color: white;" #tabGroup [(selectedIndex)]=selectedIndex>
         <form [formGroup]="CompanyContactInfoFormGroup" >
         <mat-tab  formArrayName="RequestData" *ngFor="let data of rows.controls; let i = index;" > 
-         <div [formGroupName]="i">
+         <div [formGroupName]="i" style="width: 690px;">
           <ng-template  mat-tab-label > 
             <label style="color:white">Quotation {{i + 1}}</label>
           </ng-template> 

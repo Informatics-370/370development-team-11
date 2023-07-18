@@ -30,20 +30,6 @@ export class VendorViewComponent implements OnInit  {
     console.log(VendorDetails)
    })
     
-   this.refreshSubscription = this.route.queryParams.subscribe((params: Params) => {
-    // Check if the 'refresh' parameter exists and is truthy
-    if (params.refresh) {
-      // Remove the 'refresh' query parameter
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { refresh: null },
-        queryParamsHandling: 'merge'
-      }).then(() => {
-        // Reload the page after the navigation has completed
-        window.location.reload();
-      });
-    }
-  });
 
   }//ngoninIt
 

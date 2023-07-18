@@ -56,6 +56,9 @@ import { VendorViewComponent } from './vendor/vendor-view/vendor-view.component'
 import { VendorDeleteComponent } from './vendor/vendor-delete/vendor-delete.component';
 import { VendordetailsViewComponent } from './vendor/vendordetails-view/vendordetails-view.component';
 import { VendorCreateChoiceComponent } from './vendor/vendor-create-choice/vendor-create-choice.component';
+import { VendorApproveComponent } from './vendor/vendor-approve/vendor-approve.component';
+import { VendorUnofficialVendorlistComponent } from './vendor/vendor-unofficial-vendorlist/vendor-unofficial-vendorlist.component';
+import { VendorApprovedAddDetailsComponent } from './vendor/vendor-approved-add-details/vendor-approved-add-details.component';
 
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -72,7 +75,6 @@ import { DeleteBranchComponent } from './delete-branch/delete-branch/delete-bran
 import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.component';
 import { LoginComponent } from './login/login.component';
 import { HomePageComponent } from './home-page/home-page.component';
-
 
 import { DeleteMandateLimitComponent } from './delete-mandate-limit/delete-mandate-limit.component';
 import { ViewBudgetCategoryComponent } from './view-budget-category/view-budget-category.component';
@@ -107,6 +109,10 @@ import { DatePipe } from '@angular/common';
 import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
 import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
 import { UpdatePasswordComponent } from './User/update-password/update-password.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-approve-edit.component';
+
+
 
 
 
@@ -171,6 +177,9 @@ import { UpdatePasswordComponent } from './User/update-password/update-password.
     EditBudgetLineComponent,
     DeleteBudgetLineComponent,
     EditBudgetAllocationComponent,
+    VendorApproveComponent,
+    VendorUnofficialVendorlistComponent,
+    VendorApprovedAddDetailsComponent,
     AuthInterceptorComponent,
     UserProfileComponent,
     UserProfileEditComponent,
@@ -184,7 +193,8 @@ import { UpdatePasswordComponent } from './User/update-password/update-password.
     RejectDelegationComponent,
     UpdateConsumableStockComponent,
     ViewProcurementRequestComponent,
-    UpdatePasswordComponent
+    UpdatePasswordComponent,
+    VendorApproveEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -215,6 +225,7 @@ import { UpdatePasswordComponent } from './User/update-password/update-password.
     MatAutocompleteModule,
     MatSortModule,
     MatTooltipModule,
+    MatDatepickerModule
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },

@@ -41,7 +41,10 @@ export class VendorCreateChoiceComponent {
   onConfirm(): void {
    let VendorID = this.mySelect.get('VendorsApproved')?.value;
    this.dialogRef.close();
-   this.router.navigate([`/vendor-create/${VendorID}`]);
+   this.dataService.ChangeVendorStatus(2,VendorID).subscribe(result => {
+    this.router.navigate([`/vendor-create/${VendorID}`]);
+   })
+   
   }
 
   onCancel(): void {

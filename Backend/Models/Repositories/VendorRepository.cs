@@ -5,6 +5,7 @@ using ProcionAPI.Models.Entities;
 using ProcionAPI.Controllers;
 using Azure.Core;
 using Org.BouncyCastle.Asn1.Cmp;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace ProcionAPI.Models.Repositories
 {
@@ -33,7 +34,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Vendor[]> getAllApprovedVendorsAsync()
         {
-            IQueryable<Vendor> query = _dbContext.Vendor.Include(x => x.Vendor_Status).Where(x => x.Vendor_Status_ID == 2);
+            IQueryable<Vendor> query = _dbContext.Vendor.Include(x => x.Vendor_Status).Where(x => (x.Vendor_Status_ID == 4) || x.Vendor_Status_ID == 2);
 
             return await query.ToArrayAsync();
         }
@@ -678,6 +679,296 @@ namespace ProcionAPI.Models.Repositories
                 return null;
             }
         }
+
+
+        //approved vendor 
+
+        public async Task<Vendor_BEE[]> AddBEEDetailsAsync(Vendor_BEE VenBee)
+        {
+            Vendor existingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Vendor_ID == VenBee.Vendor_ID);
+
+            if (existingVendor != null)
+            {
+                VenBee.Vendor = existingVendor;
+            }
+
+           
+
+            await _dbContext.Vendor_BEE.AddAsync(VenBee);
+            await _dbContext.SaveChangesAsync();
+
+            return new Vendor_BEE[] { VenBee };
+        }
+
+
+        public async Task<Due_Dillegence[]> AddDueDiligenceAsync(Due_Dillegence VenDueDiligence)
+        {
+            Vendor existingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Vendor_ID == VenDueDiligence.Vendor_ID);
+
+            if (existingVendor != null)
+            {
+                VenDueDiligence.Vendor = existingVendor;
+            }
+
+            Vendor_Status existingVendorStatus = await _dbContext.Vendor_Status.FirstOrDefaultAsync(x => x.Vendor_Status_ID == VenDueDiligence.Vendor.Vendor_Status_ID);
+
+            if (existingVendorStatus != null)
+            {
+                VenDueDiligence.Vendor.Vendor_Status = existingVendorStatus;
+            }
+
+
+            await _dbContext.Due_Dillegence.AddAsync(VenDueDiligence);
+            await _dbContext.SaveChangesAsync();
+
+            return new Due_Dillegence[] { VenDueDiligence };
+        }
+
+        public async Task<POPI[]> AddPOPIAsync(POPI VenPOPI)
+        {
+            Due_Dillegence existingDueDillegence = await _dbContext.Due_Dillegence.FirstOrDefaultAsync(x => x.Due_Diligence_ID == VenPOPI.Due_Diligence_ID);
+
+            if (existingDueDillegence != null)
+            {
+                VenPOPI.Due_Dillegence = existingDueDillegence;
+            }
+
+            Contracted_Partner_Type existingContractedPartnerTypee = await _dbContext.Contracted_Partner_Type.FirstOrDefaultAsync(x => x.Contracted_Partner_Type_ID == VenPOPI.Contracted_Partner_Type_ID);
+
+            if (existingContractedPartnerTypee != null)
+            {
+                VenPOPI.Contracted_Partner_Type = existingContractedPartnerTypee;
+            }
+
+
+            await _dbContext.POPI.AddAsync(VenPOPI);
+            await _dbContext.SaveChangesAsync();
+
+            return new POPI[] { VenPOPI };
+        }
+
+        //get
+
+
+        public async Task<Vendor_BEE> GetBEEDetailsAsync(int VendorID)
+        {
+            IQueryable<Vendor_BEE> query = _dbContext.Vendor_BEE.Include(x => x.Vendor).Where(x => x.Vendor_ID == VendorID);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+
+        public async Task<Due_Dillegence> GetDueDiligenceAsync(int VendorID)
+        {
+            IQueryable<Due_Dillegence> query = _dbContext.Due_Dillegence.Include(x => x.Vendor).ThenInclude(x => x.Vendor_Status).Where(x => x.Vendor_ID == VendorID);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<POPI> GetPOPIAsync(int DueDiligenceID)
+        {
+            IQueryable<POPI> query = _dbContext.POPI.Include(x => x.Contracted_Partner_Type).Include(x => x.Due_Dillegence).Where(x => x.Due_Diligence_ID == DueDiligenceID);
+
+            return await query.FirstOrDefaultAsync(); ;
+        }
+
+        //put
+
+
+        public async Task<Vendor_BEE> UpdateBEEDetailsAsync(int VendorID, Vendor_BEE VenBee)
+        { 
+            var ExistingVenBEE = await _dbContext.Vendor_BEE.FirstOrDefaultAsync(x => x.Vendor_ID == VendorID);
+
+
+            ExistingVenBEE.Vendor = new Vendor();
+
+            Vendor existingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Vendor_ID == VendorID);
+
+            ExistingVenBEE.Vendor = existingVendor;
+
+            ExistingVenBEE.BEE_Level = VenBee.BEE_Level;
+            ExistingVenBEE.BEE_Certificate = VenBee.BEE_Certificate;
+            ExistingVenBEE.Date = VenBee.Date;
+         
+            await _dbContext.SaveChangesAsync();
+
+            return ExistingVenBEE;
+        }
+
+
+        public async Task<Due_Dillegence> UpdateDueDiligenceAsync(int VendorID, Due_Dillegence VenDueDiligence)
+        { //also see userid
+            var ExistingDueDilligence = await _dbContext.Due_Dillegence.FirstOrDefaultAsync(x => x.Vendor_ID == VendorID);
+
+
+            ExistingDueDilligence.Vendor = new Vendor();
+
+            Vendor existingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Vendor_ID == VendorID);
+
+            ExistingDueDilligence.Vendor = existingVendor;
+
+            ExistingDueDilligence.Vendor.Vendor_Status = new Vendor_Status();
+
+            Vendor_Status existingVendorStatus = await _dbContext.Vendor_Status.FirstOrDefaultAsync(x => x.Vendor_Status_ID == existingVendor.Vendor_Status_ID);
+
+            ExistingDueDilligence.Vendor.Vendor_Status = existingVendorStatus;
+
+            ExistingDueDilligence.Accreditation_Required = VenDueDiligence.Accreditation_Required;
+            ExistingDueDilligence.Anti_Bribery_Corruption_Policy_Present = VenDueDiligence.Anti_Bribery_Corruption_Policy_Present;
+            ExistingDueDilligence.Basic_Company_Info_Provided = VenDueDiligence.Basic_Company_Info_Provided;
+            ExistingDueDilligence.Business_Continuity_Present = VenDueDiligence.Business_Continuity_Present;
+            ExistingDueDilligence.Business_References_Present = VenDueDiligence.Business_References_Present;
+            ExistingDueDilligence.B_BBEE_Certificate_Provided = VenDueDiligence.B_BBEE_Certificate_Provided;
+            ExistingDueDilligence.Cyber_Insurance_Present = VenDueDiligence.Cyber_Insurance_Present;
+            ExistingDueDilligence.Company_Details_Provided = VenDueDiligence.Company_Details_Provided;
+            ExistingDueDilligence.Company_Reg_Doc_Provided = VenDueDiligence.Company_Reg_Doc_Provided;
+            ExistingDueDilligence.Company_Resolution_Agreement_Provided = VenDueDiligence.Company_Resolution_Agreement_Provided;
+            ExistingDueDilligence.Conflict_Of_Interest_Policy_Present = VenDueDiligence.Conflict_Of_Interest_Policy_Present;
+            ExistingDueDilligence.Customer_Complaints_Policy_Present = VenDueDiligence.Customer_Complaints_Policy_Present;
+            ExistingDueDilligence.Mutual_Nda_Signed = VenDueDiligence.Mutual_Nda_Signed;
+            ExistingDueDilligence.Group_Structure_Provided = VenDueDiligence.Group_Structure_Provided;
+            ExistingDueDilligence.Due_Diligence_Doc = VenDueDiligence.Due_Diligence_Doc;
+            ExistingDueDilligence.Income_Tax_Number_Provided = VenDueDiligence.Income_Tax_Number_Provided;
+            ExistingDueDilligence.Vat_Reg_Certificate_Provided = VenDueDiligence.Vat_Reg_Certificate_Provided;
+            ExistingDueDilligence.Letter_Of_Good_Standing_Provided = VenDueDiligence.Letter_Of_Good_Standing_Provided;
+            ExistingDueDilligence.Vat_Number_Provided = VenDueDiligence.Vat_Number_Provided;
+            ExistingDueDilligence.POPI_Present = VenDueDiligence.POPI_Present;
+            ExistingDueDilligence.Privacy_Policy_Present_Present = VenDueDiligence.Privacy_Policy_Present_Present;
+            ExistingDueDilligence.Direcor_Details_Provided = VenDueDiligence.Direcor_Details_Provided;
+            ExistingDueDilligence.DIsaster_Recovery_Plan_Present = VenDueDiligence.DIsaster_Recovery_Plan_Present;
+            ExistingDueDilligence.Data_Retention_Destruction_Policy_Present = VenDueDiligence.Data_Retention_Destruction_Policy_Present;
+            ExistingDueDilligence.Data_Security_Breaches_Present = VenDueDiligence.Data_Security_Breaches_Present;
+            ExistingDueDilligence.Subcontractor_Name_Provided = VenDueDiligence.Subcontractor_Name_Provided;
+            ExistingDueDilligence.Licenses_Required = VenDueDiligence.Licenses_Required;
+            ExistingDueDilligence.General_Liability_Insurance_Present = VenDueDiligence.General_Liability_Insurance_Present;
+            ExistingDueDilligence.Other_Insurance_Required = VenDueDiligence.Other_Insurance_Required;
+            ExistingDueDilligence.Proffesional_Indemnity_Insurance_Present = VenDueDiligence.Proffesional_Indemnity_Insurance_Present;
+            ExistingDueDilligence.Proffesional_Membership_Required = VenDueDiligence.Proffesional_Membership_Required;
+            ExistingDueDilligence.Ethics_Policy_Present = VenDueDiligence.Ethics_Policy_Present;
+            ExistingDueDilligence.Information_Security_Policy_Present = VenDueDiligence.Information_Security_Policy_Present;
+            ExistingDueDilligence.Site_Visits_Present = VenDueDiligence.Site_Visits_Present;
+            ExistingDueDilligence.Tax_Clearance_Certificate_Provided = VenDueDiligence.Tax_Clearance_Certificate_Provided;
+            ExistingDueDilligence.Individual_Details_Provided = VenDueDiligence.Individual_Details_Provided;
+
+            await _dbContext.SaveChangesAsync();
+
+            return ExistingDueDilligence;
+        }
+
+        public async Task<POPI> UpdatePOPIAsync(int DueDiligenceID, POPI VenPOPI)
+        { 
+            var ExistingVenPOPI = await _dbContext.POPI.FirstOrDefaultAsync(x => x.POPI_ID == VenPOPI.POPI_ID);
+
+            Due_Dillegence ExistingDueDilligence = await _dbContext.Due_Dillegence.FirstOrDefaultAsync(x => x.Due_Diligence_ID == DueDiligenceID);
+            if(ExistingDueDilligence != null)
+            {
+                ExistingVenPOPI.Due_Dillegence = ExistingDueDilligence;
+            }
+
+            ExistingVenPOPI.Contracted_Partner_Type = new Contracted_Partner_Type();
+
+            Contracted_Partner_Type ExistingContractedPartnerType = await _dbContext.Contracted_Partner_Type.FirstOrDefaultAsync(x => x.Contracted_Partner_Type_ID == VenPOPI.Contracted_Partner_Type_ID);
+
+           
+            ExistingVenPOPI.Contracted_Partner_Type = ExistingContractedPartnerType;
+         
+            
+
+            ExistingVenPOPI.Personal_Data_Purpose = VenPOPI.Personal_Data_Purpose;
+            ExistingVenPOPI.DataProcessing_JointController_Agreement = VenPOPI.DataProcessing_JointController_Agreement;
+            ExistingVenPOPI.Confidentiality_Importance_Highlighted = VenPOPI.DataProcessing_JointController_Agreement;
+            ExistingVenPOPI.Contract_Audits_Provisions_Provided = VenPOPI.Contract_Audits_Provisions_Provided;
+            ExistingVenPOPI.Activity_Liability_Present = VenPOPI.Activity_Liability_Present;
+            ExistingVenPOPI.Third_Party_Data_Processing_Provisioned = VenPOPI.Third_Party_Data_Processing_Provisioned;
+            ExistingVenPOPI.Contract_End_Data_Management_Provided = VenPOPI.Contract_End_Data_Management_Provided;
+            ExistingVenPOPI.Personal_Data_Processing_Details_Present = VenPOPI.Personal_Data_Processing_Details_Present;
+            ExistingVenPOPI.Processing_Activities_Certification_Held = VenPOPI.Processing_Activities_Certification_Held;
+
+            await _dbContext.SaveChangesAsync();
+
+            return ExistingVenPOPI;
+        }
+
+        ///delete 
+
+        public async Task<Vendor_BEE> DeleteBEEDetailsAsync(int VenBeeID)
+        {
+            var VenBeeToDelete = await _dbContext.Vendor_BEE.FirstOrDefaultAsync(x => x.BEE_ID == VenBeeID);
+            
+            _dbContext.Vendor_BEE.Remove(VenBeeToDelete);
+           
+            await _dbContext.SaveChangesAsync();
+
+            return VenBeeToDelete;
+        }
+
+        public async Task<Due_Dillegence> DeleteDueDiligenceAsync(int DueDiligenceID)
+        {
+            var DueDiligenceToDelete = await _dbContext.Due_Dillegence.FirstOrDefaultAsync(x => x.Due_Diligence_ID == DueDiligenceID);
+
+            _dbContext.Due_Dillegence.Remove(DueDiligenceToDelete);
+
+            await _dbContext.SaveChangesAsync();
+
+            return DueDiligenceToDelete;
+        }
+
+        public async Task<POPI> DeletePOPIAsync(int POPIID)
+        {
+            var POPIToDelete = await _dbContext.POPI.FirstOrDefaultAsync(x => x.POPI_ID == POPIID);
+
+            _dbContext.POPI.Remove(POPIToDelete);
+
+            await _dbContext.SaveChangesAsync();
+
+            return POPIToDelete;
+        }
+
+        //status change
+
+        public async Task<Vendor> ChangeVendorStatusAsync(int statusID, int VendorID)
+        { //also see userid
+            var ExistingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Vendor_ID == VendorID);
+
+
+            ExistingVendor.Vendor_Status = new Vendor_Status();
+
+            Vendor_Status existingVendorStatus = await _dbContext.Vendor_Status.FirstOrDefaultAsync(x => x.Vendor_Status_ID == statusID);
+
+            ExistingVendor.Vendor_Status = existingVendorStatus;
+
+            await _dbContext.SaveChangesAsync();
+
+            return ExistingVendor;
+        }
+
+
+
+        public async Task<Onboard_Request[]> getAllOnboardRequestAsync(int OnboardRequestID)
+        { 
+            IQueryable<Onboard_Request> query = _dbContext.Onboard_Request.Include(x => x.Users).Include(x => x.Onboard_Status).Include(x => x.Vendor).Where(x => x.Onboard_Request_Id == OnboardRequestID);
+
+            return await query.ToArrayAsync();
+
+        }
+
+
+        public async Task<Onboard_Request> ChangeOnboardStatusAsync(int statusID, int onboardRequestId,int VenID)
+        { //also see userid
+           // var ExistingOnboardRequest = await _dbContext.Onboard_Request.FirstOrDefaultAsync(x => (x.Vendor_ID == onboardRequestId) && (x.Vendor_ID == VenID));
+            var ExistingOnboardRequest = await _dbContext.Onboard_Request.FirstOrDefaultAsync(x => (x.Onboard_Request_Id == onboardRequestId) && (x.Vendor_ID == VenID));
+
+            ExistingOnboardRequest.Onboard_Status = new Onboard_Status();
+
+            Onboard_Status existingOnboardStatus = await _dbContext.Onboard_Status.FirstOrDefaultAsync(x => x.Status_ID == statusID);
+
+            ExistingOnboardRequest.Onboard_Status = existingOnboardStatus;
+
+            await _dbContext.SaveChangesAsync();
+
+            return ExistingOnboardRequest;
+        }
+
 
     }
 }

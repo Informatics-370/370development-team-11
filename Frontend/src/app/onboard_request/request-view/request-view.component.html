@@ -9,7 +9,7 @@
           <h2 class="uni-font">Vendor</h2>
         </div>
         <a mat-list-item class="uni-font" routerLink="/request-view">Onboard Request</a>
-        <a mat-list-item class="uni-font">Approve Vendor</a>
+        <a mat-list-item class="uni-font" routerLink="/vendor-unofficial-vendorlist">Approve Vendor</a>
         <a mat-list-item class="uni-font"  routerLink="/vendor-view">Manage Vendor</a>
       </mat-nav-list>
     </mat-sidenav>
@@ -34,7 +34,7 @@
       </div>
       
       <div style="margin-right:1%; margin-left:1%; margin-bottom: 1%;">
-          <table mat-table *ngIf="OnboardRequest.length > 0" [dataSource]="RequestVendors" multiTemplateDataRows >
+          <table mat-table [dataSource]="RequestVendors" multiTemplateDataRows >
 
             <ng-container matColumnDef="ID">
               <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;" > No. </th>
@@ -49,21 +49,28 @@
           
             <ng-container matColumnDef="Status">
               <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> Status </th>
-              <td mat-cell *matCellDef="let element" ><span *ngIf="element.onboard_Request_status_ID === 1" style="color: #22afbe;"> Pending </span><span *ngIf="element.onboard_Request_status_ID === 2" style="color: #94CC5B;"> Approved </span><span *ngIf="element.onboard_Request_status_ID === 3" style="color: #fe4945;"> Rejected </span></td>
+              <td mat-cell *matCellDef="let element" >
+                <container-element [ngSwitch]="getRequestStatus(element.onboard_Request_Id)">
+                  <span *ngSwitchCase="'1'" style="color: #22afbe;"> Pending </span>
+                  <span *ngSwitchCase="'3'" style="color: #94CC5B;"> Approved </span>
+                  <span *ngSwitchCase="'2'" style="color: #fe4945;"> Rejected </span>
+                  <span *ngSwitchDefault style="color: #375623;"> In Progress </span>
+                </container-element>
+              </td>
      
             </ng-container> 
             
             <ng-container matColumnDef="action">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let element" style="width:100px;">
-                <button *ngIf="element.onboard_Request_status_ID == 1" mat-raised-button routerLink="/request-update/{{element.onboard_Request_Id}}" style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;background-color: #94CC5B;"><mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Update</button>
+                <button [disabled]="element.onboard_Request_status_ID != 1 && element.onboard_Request_status_ID != 4" mat-raised-button routerLink="/request-update/{{element.onboard_Request_Id}}" style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;background-color: #94CC5B;"><mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Update</button>
               </td>
             </ng-container>
     
             <ng-container matColumnDef="delete">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let element" style="width:140px;">
-                <button *ngIf="element.onboard_Request_status_ID == 1" mat-raised-button id="btnHover" style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%" (click)="DeleteRequest(element.onboard_Request_Id)"><mat-icon matPrefix style="margin-right:10%;">delete</mat-icon>Delete</button>
+                <button [disabled]="element.onboard_Request_status_ID != 1 && element.onboard_Request_status_ID != 4" mat-raised-button id="btnHover" style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%" (click)="DeleteRequest(element.onboard_Request_Id)"><mat-icon matPrefix style="margin-right:10%;">delete</mat-icon>Delete</button>
               </td>
             </ng-container>
 
@@ -76,6 +83,7 @@
                       <thead style="background-color:#244688; color:white;">
                         <th>Company Name:</th>
                         <th>Company Email:</th>
+                        <th>Status:</th>
                         <th>Company Quotes:</th>
                       </thead>
                       <tbody>
@@ -85,6 +93,7 @@
                               <ng-container *ngIf="Req.onboard_Request_Id === element.onboard_Request_Id && Req.vendor_ID === Ven.vendor_ID">
                               <td *ngIf="i === 0">{{Ven.name}}</td>
                               <td *ngIf="i === 0">{{Ven.email}}</td>
+                              <td *ngIf="i === 0"><span *ngIf="Req.onboard_Request_status_ID === 1 || Req.onboard_Request_status_ID === 4" style="color: #22afbe;"> Pending </span><span *ngIf="Req.onboard_Request_status_ID === 3" style="color: #94CC5B;"> Approved </span><span *ngIf="Req.onboard_Request_status_ID === 2" style="color: #fe4945;"> Rejected </span><span *ngIf="Req.onboard_Request_status_ID === 5" style="color: #375623;"> In Progress </span></td>
                               <td *ngIf="FileDetails[a].FileName !== 'None' && i === 0">
                                 <a href="{{FileDetails[a].FileURL}}" download="{{FileDetails[a].FileName}}">{{FileDetails[a].FileName}}</a>
                               </td>
