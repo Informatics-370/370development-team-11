@@ -6,6 +6,7 @@ namespace ProcionAPI.Models.Repositories
     {
         Task<Delegation_Of_Authority[]> GetAllDelegationsAsync();
         Task<Delegation_Of_Authority[]> GetAllDelegationsByRoleAsync();
+        Task<Delegation_Of_Authority[]> GetAllActiveDelegationsAsync();
         Task<Delegation_Of_Authority[]> AddDelegationAsync(Delegation_Of_Authority DelegationAdd);
         Task<Delegation_Of_Authority> GetDelegationAsync(int delegationID);
         Task<Delegation_Of_Authority> DeleteDelegationAsync(int delegationID);
@@ -15,5 +16,6 @@ namespace ProcionAPI.Models.Repositories
         Task<Delegation_Status[]> GetAllRejStatusesAsync();
         Task<Delegation_Status[]> GetAllStatusesAsync();
         Task<Temporary_Access[]> AddTempAccAsync(Temporary_Access TempAccAdd);
+        Task<Temporary_Access> GetTempAccAsync(int delegationID);
     }
 }

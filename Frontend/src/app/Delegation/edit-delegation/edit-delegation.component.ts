@@ -227,8 +227,8 @@ export class EditDelegationComponent implements OnInit {
 
                 const duration = 1750;
                 setTimeout(() => {
+                  this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
                   dialogRef.close();
-                  location.reload();
                 }, duration);
               }
             })
