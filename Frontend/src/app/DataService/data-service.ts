@@ -732,6 +732,10 @@ export class DataService {
     return this.httpClient.get<Delegation_Of_Authority[]>(`${this.apiUrl}Delegation/GetDelegationsByRole`).pipe(map(result => result))
   }
 
+  GetActiveDelegations(): Observable<any> {
+    return this.httpClient.get<Delegation_Of_Authority[]>(`${this.apiUrl}Delegation/GetActiveDelegations`).pipe(map(result => result))
+  }
+
   DelegateFileAdd(DelegateName: string, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
@@ -773,5 +777,9 @@ export class DataService {
 
   AddTempAcc(ta: Temporary_Access) {
     return this.httpClient.post(`${this.apiUrl}Delegation/AddTempAcc`, ta, this.httpOptions)
+  }
+
+  GetTempAcc(delegationID: Number) {
+    return this.httpClient.get(`${this.apiUrl}Delegation/GetTempAcc` + "/" + delegationID).pipe(map(result => result))
   }
 }

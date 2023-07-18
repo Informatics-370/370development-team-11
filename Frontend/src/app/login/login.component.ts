@@ -10,6 +10,7 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/c
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthService } from '../DataService/AuthService';
 import { MailData } from '../Shared/Mail';
+import { Delegation_Of_Authority } from '../Shared/DelegationOfAuthority';
 
 
 @Component({
@@ -35,6 +36,10 @@ export class LoginComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
 
   fPass: FormGroup = new FormGroup({});
+
+  activeDelegations: Delegation_Of_Authority[] = [];
+
+  tempAccess: any;
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer, private AuthServ: AuthService) { }
 
 
@@ -78,8 +83,25 @@ export class LoginComponent implements OnInit {
 
 
           this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
+
+          this.dataService.GetActiveDelegations().subscribe({
+            next: (r) => {
+              this.activeDelegations = r;
+              this.activeDelegations.forEach((element, i) => {
+                if (element.user.username = this.userName) {
+                  this.dataService.GetTempAcc(element.delegation_ID).subscribe({
+                    next: (ta) => {
+                      this.tempAccess = ta;
+                    }
+                  })
+                }
+              })
+            }
+          })
+
           this.myForm.reset();
           this.router.navigate(['/Home']);
+          location.reload();
         }
 
 

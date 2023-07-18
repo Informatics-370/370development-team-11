@@ -53,6 +53,21 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetActiveDelegations")]
+        public async Task<IActionResult> GetAllActiveDelegations()
+        {
+            try
+            {
+                var result = await _DelegationRepository.GetAllActiveDelegationsAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
         [HttpPost]
         [DisableRequestSizeLimit]
         [Route("uploadDelegationFile")]
@@ -226,6 +241,23 @@ namespace ProcionAPI.Controllers
             catch (Exception)
             {
                 return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetTempAcc/{delegationID}")]
+        public async Task<IActionResult> GetTempAcc(int delegationID)
+        {
+            try
+            {
+                var result = await _DelegationRepository.GetTempAccAsync(delegationID);
+                if (result == null) return NotFound("Delegation does not exist. You need to create it first");
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
             }
         }
     }
