@@ -62,6 +62,7 @@ export class LoginComponent implements OnInit {
   LoginUser() {
     this.loginConfirm = localStorage.getItem("User");
     this.userName = this.myForm.get('UserName')?.value;
+    console.log(this.userName)
     this.password = this.myForm.get('Password')?.value;
     this.dataService.login(this.userName, this.password).subscribe({
       next: (response) => {

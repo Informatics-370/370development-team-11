@@ -40,17 +40,55 @@ namespace ProcionAPI.Controllers
         [HttpPost("login/{UserName}/{Password}")]
         public async Task<IActionResult> Login([FromRoute] string UserName, [FromRoute] string Password)
         {
-            bool isCredentialsValid = await _UserRepository.VerifyCredentials(UserName, Password);
-            if (isCredentialsValid == true)
+            if (await _UserRepository.GetUserByUsername(UserName) != null)
             {
-                User user = await _UserRepository.GetUserByUsername(UserName);
+                bool isCredentialsValid = await _UserRepository.VerifyCredentials(UserName, Password);
+                if (isCredentialsValid == true)
+                {
+                    User user = await _UserRepository.GetUserByUsername(UserName);
 
-                // Generate token
-                var token = GenerateToken(user);
+                    // Generate token
+                    var token = GenerateToken(user);
 
-                // Return the token as a response to the Angular frontend
-                return Ok(new { token });
+                    // Return the token as a response to the Angular frontend
+                    return Ok(new { token });
+                }
             }
+
+            else if (await _UserRepository.GetAdminByEmailAsync(UserName) != null)
+            {
+                Admin AdminLogin = await _UserRepository.GetAdminByEmailAsync(UserName);
+                var MyUsername = AdminLogin.User.Username;
+                bool isCredentialsValid = await _UserRepository.VerifyCredentials(MyUsername, Password);
+                if (isCredentialsValid == true)
+                {
+                    User user = await _UserRepository.GetUserByUsername(MyUsername);
+
+                    // Generate token
+                    var token = GenerateToken(user);
+
+                    // Return the token as a response to the Angular frontend
+                    return Ok(new { token });
+                }
+            }
+
+            else if (await _UserRepository.GetEmployeeByEmailAsync(UserName) != null)
+            {
+                Employee EmpLogin = await _UserRepository.GetEmployeeByEmailAsync(UserName);
+                var MyUsername = EmpLogin.User.Username;
+                bool isCredentialsValid = await _UserRepository.VerifyCredentials(MyUsername, Password);
+                if (isCredentialsValid == true)
+                {
+                    User user = await _UserRepository.GetUserByUsername(MyUsername);
+
+                    // Generate token
+                    var token = GenerateToken(user);
+
+                    // Return the token as a response to the Angular frontend
+                    return Ok(new { token });
+                }
+            }
+            
 
             return Unauthorized(new { error = "Invalid credentials" });
         }
