@@ -74,7 +74,8 @@ export class VendorApproveComponent implements OnInit {
 
   DueDilligenceDetails: Due_Dillegence;
   POPIDetails: POPI;
-  
+  BEEbool = false;
+
   ngOnInit() {
     this.vendorsRequest = []
     this.onboardRequest = [];
@@ -179,7 +180,7 @@ export class VendorApproveComponent implements OnInit {
             this.dataService.GetSoleSupplierByID(RequestList[0].vendor_ID).subscribe(result => {
               this.SoleSupplierFormGroup.get('Reason')?.setValue(result.reason);
             })
-            console.log(this.onboardRequest[0].quotes)
+          //  console.log(this.onboardRequest[0].quotes)
             if (this.onboardRequest[0].quotes != "None") {
               let sFile = this.onboardRequest[0].quotes;
               let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
@@ -190,6 +191,10 @@ export class VendorApproveComponent implements OnInit {
               this.dataService.GetOnboardFiles(RequestNo,filename).subscribe(result => {this.files[0] = result
               })
             }
+            this.dataService.GetDueDiligence(RequestList[0].vendor_ID).subscribe(result => {
+              this.BEEbool = result.B_BBEE_Certificate_Provided
+              
+            })
             
           }
           

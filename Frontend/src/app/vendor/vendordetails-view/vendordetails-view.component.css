@@ -35,7 +35,7 @@ td {
     width: 300px;
 }
 
-::ng-deep .mat-mdc-tab-body-content {
+mat-mdc-tab-body-content {
     height:600px!important;
     display: grid!important;
     align-items: baseline!important;

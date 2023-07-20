@@ -27,7 +27,7 @@ td {
     width: 200px;
 }
 
-::ng-deep .mat-mdc-tab-body-content {
+ .mat-mdc-tab-body-content {
     /* //height:335px!important; */
     inline-size: max-content;
     height:fit-content!important;
