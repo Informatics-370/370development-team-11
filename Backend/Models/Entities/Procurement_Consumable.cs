@@ -12,7 +12,7 @@ namespace ProcionAPI.Models.Entities
         [Required]
         public int Consumable_ID { get;set; }
         [ForeignKey("Procurement_Request_ID")]
-        public Procurement_Request Procurement_Request { get; set; }
+        public Procurement_Details Procurement_Request { get; set; }
         [ForeignKey("Consumable_ID")]
         public Consumable Consumable { get; set; }
         public int Quantity { get; set; }
