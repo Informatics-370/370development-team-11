@@ -61,8 +61,19 @@ namespace ProcionAPI.Controllers
             return "Welcome user in Continuos Job Demo!";
         }
 
+        //[HttpGet]
+        //[Route("RecurringJobNotification")]
+        //public string RecurringJobsNotification()
+        //{
+        //    //Recurring Jobs
+        //    //Recurring jobs fire many times on the specified CRON schedule.
+        //    RecurringJob.AddOrUpdate(() => CheckDelegationRequests(), Cron.Minutely, TimeZoneInfo.Local);
+
+        //    return "Welcome user in Recurring Job Demo!";
+        //}
+
         [HttpGet]
-        [Route("RecurringJob")]
+        [Route("RecurringJobDelegation")]
         public string RecurringJobs()
         {
             //Recurring Jobs
@@ -72,16 +83,17 @@ namespace ProcionAPI.Controllers
             return "Welcome user in Recurring Job Demo!";
         }
 
-        [HttpPost]
-        public async Task CheckDelegationRequests()
+        [HttpPut]
+        [Route("CheckDelegation")]
+        public async Task<IActionResult> CheckDelegationRequests()
         {
             try
             {
                 var doa = await _DelegationRepository.GetAllDelegationsAsync();
                 var doas = await _DelegationRepository.GetAllStatusesAsync();
-                var inactiveID = 0;
-                var activeID = 0;
-                var revokedID = 0;
+                int inactiveID = 0;
+                int activeID = 0;
+                int revokedID = 0;
 
                 foreach (var s in doas)
                 {
@@ -108,7 +120,7 @@ namespace ProcionAPI.Controllers
                     {
                         if (d.From_Date == DateTime.Today)
                         {
-                            await _DelegationRepository.UpdateDelegationStatusAsync(5, d.Delegation_ID);
+                            await _DelegationRepository.UpdateDelegationStatusAsync(activeID, d.Delegation_ID);
                             
                         }
                     }
@@ -121,11 +133,11 @@ namespace ProcionAPI.Controllers
                     }
                 }
 
-                
+                return Ok(doa);
             }
             catch (Exception)
             {
-                
+                return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
 

@@ -208,20 +208,32 @@ export class CreateDelegationComponent implements OnInit {
             this.ta.delegation_ID = response[0].delegation_ID;
             this.dataService.AddTempAcc(this.ta).subscribe({
               next: (r) => {
-                var action = "CREATE";
-                var title = "CREATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].delegation_ID + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
+                this.dataService.InitiatRecurringJobDelegation()
+                this.dataService.CheckDelegation().subscribe({
+                  next: (r) => {
+                    if (r) {
+                      var action = "CREATE";
+                      var title = "CREATE SUCCESSFUL";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].delegation_ID + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-                const duration = 1750;
-                setTimeout(() => {
-                  this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-                  dialogRef.close();
-                }, duration);
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
+
+                      const duration = 1750;
+                      setTimeout(() => {
+                        this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
+                        dialogRef.close();
+                      }, duration);
+                    }
+                  }
+                })
+
+
+                
+ 
               }
             })
           }

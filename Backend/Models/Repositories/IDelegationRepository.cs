@@ -17,5 +17,7 @@ namespace ProcionAPI.Models.Repositories
         Task<Delegation_Status[]> GetAllStatusesAsync();
         Task<Temporary_Access[]> AddTempAccAsync(Temporary_Access TempAccAdd);
         Task<Temporary_Access> GetTempAccAsync(int delegationID);
+        void Delete<T>(T entity) where T : class;
+        Task<bool> SaveChangesAsync();
     }
 }

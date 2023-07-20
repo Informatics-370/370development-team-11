@@ -3,6 +3,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router, Event, NavigationStart, NavigationEnd, } from '@angular/router';
 import { DataService } from '../DataService/data-service';
 import { AuthService } from '../DataService/AuthService';
+import { interval, Observable } from 'rxjs';
+
 
 import { Role } from '../Shared/EmployeeRole';
 import { User } from '../Shared/User';
@@ -17,6 +19,7 @@ import { User } from '../Shared/User';
 
 
 export class MainNavComponent implements OnInit {
+
 
   iName: string;
   user: any;
@@ -41,6 +44,9 @@ export class MainNavComponent implements OnInit {
 
   iRole: string;
   rAdmin: string;
+  notifications: Notification[] = [];
+  numNotifications: number;
+  numNewNotifications: number;
 
   constructor(private router: Router, private dataService: DataService, private AuthServ: AuthService) {
     this.router.events.subscribe((event: Event) => {
@@ -48,6 +54,13 @@ export class MainNavComponent implements OnInit {
         this.reload();
       }
     })
+
+    //interval(100000).subscribe(x => {
+    //  this.dataService.GetNotifications(this.iName).subscribe(r => {
+    //    this.notifications = r;
+    //    this.numNewNotifications = this.notifications.length;
+    //  })
+    //})
   }
   RoleToUse: string = "";
   IsLoggedIn: boolean = false;
@@ -67,6 +80,7 @@ export class MainNavComponent implements OnInit {
     }
 
     this.GetUser()
+    this.GetNotifications()
   }
 
   public reload() {
@@ -76,6 +90,10 @@ export class MainNavComponent implements OnInit {
     })
     this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
     this.GetUser()
+  }
+
+  public resetNotification() {
+
   }
 
   Logout() {
@@ -92,6 +110,12 @@ export class MainNavComponent implements OnInit {
       this.usr.username = this.user.username;
       this.usr.password = this.user.password;
     })
+  }
 
+  GetNotifications() {
+    this.dataService.GetNotifications(this.iName).subscribe(r => {
+      this.notifications = r;
+      this.numNewNotifications = this.notifications.length;
+    })
   }
 }

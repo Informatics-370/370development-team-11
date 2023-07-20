@@ -38,6 +38,8 @@ export class LoginComponent implements OnInit {
   fPass: FormGroup = new FormGroup({});
 
   activeDelegations: Delegation_Of_Authority[] = [];
+  hasActiveDelegation: string = "";
+  delID: any;
 
   tempAccess: any;
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer, private AuthServ: AuthService) { }
@@ -67,67 +69,123 @@ export class LoginComponent implements OnInit {
   LoginUser() {
     this.loginConfirm = localStorage.getItem("User");
     this.userName = this.myForm.get('UserName')?.value;
-    console.log(this.userName)
+    //console.log(this.userName)
     this.password = this.myForm.get('Password')?.value;
-    this.dataService.login(this.userName, this.password).subscribe({
-      next: (response) => {
-        if (response != null) {
-          console.log(response)
-          const stringToken = JSON.stringify(response)
-          console.log(stringToken)
-          const expirationDate = new Date();
-          expirationDate.setTime(expirationDate.getTime() + 3 * 60 * 60 * 1000); // Expires in 3 hours
 
-          sessionStorage.setItem("token", stringToken);
-          sessionStorage.setItem("tokenExpiration", expirationDate.getTime().toString());
+    this.dataService.GetActiveDelegations().subscribe({
+      next: (r) => {
+        this.activeDelegations = r;
+        
+        this.activeDelegations.forEach((element, i) => {
+          if (element.user.username = this.userName) {
+            this.hasActiveDelegation = "true";
+            this.delID = element.delegation_ID
+            console.log(this.delID)
+          }
+        })
 
-          console.log("Login Succeessss");
+        if (this.hasActiveDelegation != "") {
+          this.dataService.GetTempAcc(this.delID).subscribe({
+            next: (ta) => {
+              this.tempAccess = ta;
+
+              this.dataService.loginWithTemp(this.userName, this.password, this.tempAccess.name).subscribe({
+                next: (response) => {
+                  if (response != null) {
+                    console.log(response)
+                    const stringToken = JSON.stringify(response)
+                    console.log(stringToken)
+                    const expirationDate = new Date();
+                    expirationDate.setTime(expirationDate.getTime() + 3 * 60 * 60 * 1000); // Expires in 3 hours
+
+                    sessionStorage.setItem("token", stringToken);
+                    sessionStorage.setItem("tokenExpiration", expirationDate.getTime().toString());
+
+                    console.log("Login Succeessss");
 
 
-          this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
+                    this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
 
-          this.dataService.GetActiveDelegations().subscribe({
-            next: (r) => {
-              this.activeDelegations = r;
-              this.activeDelegations.forEach((element, i) => {
-                if (element.user.username = this.userName) {
-                  this.dataService.GetTempAcc(element.delegation_ID).subscribe({
-                    next: (ta) => {
-                      this.tempAccess = ta;
-                    }
-                  })
+                    this.myForm.reset();
+                    this.router.navigate(['/Home']);
+                    location.reload();
+                  }
+
+
+                },
+                error: (error) => {
+                  console.log(error)
+                  if (error.status === 401) {
+                    // Unauthorized: Invalid credentials
+                    var action = "Error";
+                    var title = "LOGIN FAILED";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The User <strong>" + this.userName + "</strong>  <strong style='color:red'> DOES NOT EXIST! </strong>");
+
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
+
+                    const duration = 1750;
+                    setTimeout(() => {
+                      dialogRef.close();
+                    }, duration);
+                  } else {
+                    // Handle other errors
+                    // ...
+                  }
                 }
               })
             }
           })
-
-          this.myForm.reset();
-          this.router.navigate(['/Home']);
-          location.reload();
-        }
-
-
-      },
-      error: (error) => {
-        console.log(error)
-        if (error.status === 401) {
-          // Unauthorized: Invalid credentials
-          var action = "Error";
-          var title = "LOGIN FAILED";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The User <strong>" + this.userName + "</strong>  <strong style='color:red'> DOES NOT EXIST! </strong>");
-
-          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-            disableClose: true,
-            data: { action, title, message }
-          });
-
-          const duration = 1750;
-          setTimeout(() => {
-            dialogRef.close();
-          }, duration);
         } else {
-          // Handle other errors
-          // ...
+          this.dataService.login(this.userName, this.password).subscribe({
+            next: (response) => {
+              if (response != null) {
+                console.log(response)
+                const stringToken = JSON.stringify(response)
+                console.log(stringToken)
+                const expirationDate = new Date();
+                expirationDate.setTime(expirationDate.getTime() + 3 * 60 * 60 * 1000); // Expires in 3 hours
+
+                sessionStorage.setItem("token", stringToken);
+                sessionStorage.setItem("tokenExpiration", expirationDate.getTime().toString());
+
+                console.log("Login Succeessss");
+
+
+                this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
+
+                this.myForm.reset();
+                this.router.navigate(['/Home']);
+                location.reload();
+              }
+
+
+            },
+            error: (error) => {
+              console.log(error)
+              if (error.status === 401) {
+                // Unauthorized: Invalid credentials
+                var action = "Error";
+                var title = "LOGIN FAILED";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The User <strong>" + this.userName + "</strong>  <strong style='color:red'> DOES NOT EXIST! </strong>");
+
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  dialogRef.close();
+                }, duration);
+              } else {
+                // Handle other errors
+                // ...
+              }
+            }
+          })
         }
       }
     })

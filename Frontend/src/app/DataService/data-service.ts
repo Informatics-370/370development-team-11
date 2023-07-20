@@ -34,6 +34,9 @@ import { Consumable_History } from '../Shared/Consumable_History';
 import { Delegation_Of_Authority } from '../Shared/DelegationOfAuthority';
 import { DelegationStatus } from '../Shared/DelegationStatus';
 import { Temporary_Access } from '../Shared/Temporary_Access';
+import { Notification_Type } from '../Shared/Notification_Type';
+import { Notification } from '../Shared/Notification';
+
 
 @Injectable({
   providedIn: 'root'
@@ -596,6 +599,10 @@ export class DataService {
     return this.httpClient.post(`${this.apiUrl}User/login/` + username + "/" + password, this.httpOptions)
   }
 
+  loginWithTemp(username: string, password: string, tempacc) {
+    return this.httpClient.post(`${this.apiUrl}User/loginWithTemp/` + username + "/" + password + "/" + tempacc, this.httpOptions)
+  }
+
   //--------------------------------------------------------------------------------------Budget Allocations--------------------------------------------------------------------------------------
   GetBudgetCategories(): Observable<any> {
     return this.httpClient.get<BudgetCategory[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetCategories`).pipe(map(result => result))
@@ -764,6 +771,10 @@ export class DataService {
     return this.httpClient.delete<Delegation_Of_Authority>(`${this.apiUrl}Delegation/DeleteDelegation/${delegationID}`, this.httpOptions)
   }
 
+  DeleteTempAcc(delegationID: number): Observable<any> {
+    return this.httpClient.delete<Temporary_Access>(`${this.apiUrl}Delegation/DeleteTempAcc/${delegationID}`, this.httpOptions)
+  }
+
   EditDelegation(DelegationUpdate: Delegation_Of_Authority, delegationID: number) {
     return this.httpClient.put<Delegation_Of_Authority>(`${this.apiUrl}Delegation/EditDelegation/` + delegationID, DelegationUpdate, this.httpOptions)
   }
@@ -783,4 +794,33 @@ export class DataService {
   GetTempAcc(delegationID: Number) {
     return this.httpClient.get(`${this.apiUrl}Delegation/GetTempAcc` + "/" + delegationID).pipe(map(result => result))
   }
+
+  InitiatRecurringJobDelegation() {
+    return this.httpClient.get(`${this.apiUrl}Home/RecurringJobDelegation`, this.httpOptions)
+  }
+
+  CheckDelegation() {
+    return this.httpClient.put(`${this.apiUrl}Home/CheckDelegation`, this.httpOptions)
+  }
+
+  //--------------------------------------------------------------------------------------Notifications--------------------------------------------------------------------------------------
+  GetNotifications(username: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetNotifications` + "/" + username).pipe(map(result => result))
+  }
+
+  GetVendorNotifications(username: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetVendorNotifications` + "/" + username).pipe(map(result => result))
+  }
+
+  GetInventoryNotifications(username: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetInventoryNotifications` + "/" + username).pipe(map(result => result))
+  }
+
+  GetProcurementNotifications(username: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetProcurementNotifications` + "/" + username).pipe(map(result => result))
+  }
+
+  //ResetNotif(username: string) {
+  //  return this.httpClient.put<User>(`${this.apiUrl}User/ResetNotif/` + username, this.httpOptions)
+  //}
 }

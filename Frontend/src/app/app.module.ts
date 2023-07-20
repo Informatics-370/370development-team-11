@@ -107,6 +107,7 @@ import { DatePipe } from '@angular/common';
 import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
 import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
 import { UpdatePasswordComponent } from './User/update-password/update-password.component';
+import { MatBadgeModule } from '@angular/material/badge';
 
 
 
@@ -215,6 +216,7 @@ import { UpdatePasswordComponent } from './User/update-password/update-password.
     MatAutocompleteModule,
     MatSortModule,
     MatTooltipModule,
+    MatBadgeModule
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
