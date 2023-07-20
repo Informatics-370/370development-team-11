@@ -9,6 +9,8 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http.Features;
 using Hangfire;
 using Hangfire.SqlServer;
+using ProcionAPI.Models.Repositories.Consumables;
+using ProcionAPI.Models.Repositories.Procurement_Requests;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,6 +77,7 @@ builder.Services.AddScoped<IBackupRepository, BackupRepository>();
 builder.Services.AddScoped<IMandateRepository, MandateRepository>();
 builder.Services.AddScoped<IDelegationRepository, DelegationRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<IProcurement_Request_Repository, Procurement_Request_Repository>();
 
 var app = builder.Build();
 

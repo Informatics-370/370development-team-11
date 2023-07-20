@@ -9,10 +9,7 @@ using Microsoft.ML.Data;
 using Microsoft.ML.Transforms.TimeSeries;
 using Microsoft.ML.TimeSeries;
 
-
-
-
-namespace ProcionAPI.Models.Repositories
+namespace ProcionAPI.Models.Repositories.Consumables
 {
     public class ConsumableRepository : IConsumableRepository
     {
@@ -175,7 +172,7 @@ namespace ProcionAPI.Models.Repositories
 
 
 
-        public async Task<IEnumerable<(int Year,int Month,int ActualAmount, int PredictedAmount)>> PredictStockLevelAsync(int id)
+        public async Task<IEnumerable<(int Year, int Month, int ActualAmount, int PredictedAmount)>> PredictStockLevelAsync(int id)
         {
             try
             {
@@ -223,22 +220,22 @@ namespace ProcionAPI.Models.Repositories
                 var forecastEngine = forecastTransformer.CreateTimeSeriesEngine<StockData, StockPrediction>(mlContext);
 
                 // Predict monthly stock levels for the following year
-                var predictions = new List<(int Year,int Month,int ActualAmount, int PredictedAmount)>();
+                var predictions = new List<(int Year, int Month, int ActualAmount, int PredictedAmount)>();
 
                 // Use the last available data point as input for prediction
                 var lastDataPoint = consumablesData.Last();
                 var StockLevelHist = consumablesData.ToList();
 
-                var adjustedYear = (lastDataPoint.Year);
+                var adjustedYear = lastDataPoint.Year;
 
                 Console.WriteLine(adjustedYear.ToString());
 
                 for (int month = 1; month <= 12; month++)
                 {
                     // Adjust the month based on the last available data point
-                    var adjustedMonth = (lastDataPoint.DateCaptured + month);
+                    var adjustedMonth = lastDataPoint.DateCaptured + month;
 
-                    
+
 
                     if (adjustedMonth >= 13)
                     {
@@ -255,7 +252,7 @@ namespace ProcionAPI.Models.Repositories
                     var Actuals = new List<float>();
                     foreach (var Data in StockLevelHist)
                     {
-                        
+
 
                         if (Data.DateCaptured == adjustedMonth)
                         {
@@ -278,7 +275,7 @@ namespace ProcionAPI.Models.Repositories
                     Console.WriteLine(MonthAverage);
                     var Accuracy = (ActualsMonthAverage - MonthAverage) / ActualsMonthAverage;
                     Console.WriteLine("Accuracy: " + Accuracy);
-                    predictions.Add((Year: (int)adjustedYear, Month: (int)adjustedMonth,ActualAmount: (int)Math.Round(ActualsMonthAverage), PredictedAmount: (int)Math.Round(MonthAverage))); ;
+                    predictions.Add((Year: (int)adjustedYear, Month: (int)adjustedMonth, ActualAmount: (int)Math.Round(ActualsMonthAverage), PredictedAmount: (int)Math.Round(MonthAverage))); ;
 
 
 
@@ -289,7 +286,7 @@ namespace ProcionAPI.Models.Repositories
             catch (Exception ex)
             {
 
-                 Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
                 throw;
             }
         }

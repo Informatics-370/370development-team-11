@@ -1,12 +1,9 @@
-﻿    using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using ProcionAPI.Models.Entities;
-using ProcionAPI.Models.Repositories;
+using ProcionAPI.Models.Repositories.Consumables;
 
-
-
-
-namespace ProcionAPI.Controllers
+namespace ProcionAPI.Controllers.Consumables
 {
     [Route("api/[controller]")]
     [ApiController]

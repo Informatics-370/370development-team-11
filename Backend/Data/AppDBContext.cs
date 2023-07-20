@@ -513,6 +513,42 @@ namespace ProcionAPI.Data
                    Description = "Help related to Inventory activities.",
             }
             );
+            modelBuilder.Entity<Procurement_Request_Quote>()
+            .HasData(
+            new
+            {
+                Quote_ID = 1,
+                Procurement_Request_ID = 1,
+                Path = "Test"
+            }
+            );
+
+            modelBuilder.Entity<Requisition_Status>()
+            .HasData(
+            new
+            {
+                Requisition_Status_ID = 1,
+                Name = "Accepted",
+                Description = "Accepted",
+
+            },
+            new
+            {
+                Requisition_Status_ID = 2,
+                Name = "Rejected",
+                Description = "Rejected",
+
+            },
+            new
+            {
+                Requisition_Status_ID = 3,
+                Name = "Approval Required",
+                Description = "Approval Required",
+
+            }
+
+            );
+
 
         }
     }
