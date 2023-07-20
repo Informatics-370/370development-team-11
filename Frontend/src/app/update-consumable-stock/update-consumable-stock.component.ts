@@ -8,13 +8,21 @@ import { Router } from '@angular/router';
 import { Dialog } from '@angular/cdk/dialog';
 import { Chart, registerables } from 'node_modules/chart.js';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 Chart.register(...registerables);
 
 @Component({
   selector: 'app-update-consumable-stock',
   templateUrl: './update-consumable-stock.component.html',
-  styleUrls: ['./update-consumable-stock.component.css']
+  styleUrls: ['./update-consumable-stock.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class UpdateConsumableStockComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});

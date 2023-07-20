@@ -16,7 +16,7 @@ export class DeleteHelpComponent  implements OnInit{
   showConfirmationDialog: boolean = true;
   showSuccessDialog: boolean = false;
 
-  constructor(public dialogRef: MatDialogRef<DeleteHelpComponent>, private ActRoute: ActivatedRoute, private route: Router, private dataService: DataService,
+  constructor(public dialogRef: MatDialogRef<DeleteHelpComponent>, private ActRoute: ActivatedRoute, private router: Router, private dataService: DataService,
     @Inject(MAT_DIALOG_DATA) public data: { help_ID: number }) { }
 
   ngOnInit(): void {
@@ -36,31 +36,56 @@ export class DeleteHelpComponent  implements OnInit{
 
   }
 
+/*
+  onConfirm(id: number): void {
+    let sFile = this.Help.user_Manual + this.Help.video;
+    // let vFile = this.Help.video;
+    let HelpName = sFile.substring(0, sFile.indexOf("\\"))
+    let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
 
-  HelpRequestDetails: any[] = [];
-  onConfirm(ID: number): void {
-     for(let i = 0; i < this.HelpRequestDetails.length; i++) {
-       let sFile = this.HelpRequestDetails[i].quotes;
-             let sFi = sFile.substring(0,sFile.indexOf("\\"))
-              sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-             let sOR = sFile.substring(0,sFile.indexOf("\\"))
-             sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-             let HelpName = sFile.substring(0,sFile.indexOf("\\"))
-             let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-         this.dataService.DeleteHelpFile(HelpName,filename).subscribe!
-         this.dataService.DeleteHelp(ID).subscribe({
-           next: (response) => {
-             this.showConfirmationDialog = false;
-             this.showSuccessDialog = true;
-             setTimeout(() => {
-               this.dialogRef.close();
-               location.reload();
-             }, 1750);
-           }
-         });
-     }
+    this.dataService.DeleteHelpFile(HelpName, filename).subscribe(r => {
+      this.dataService.DeleteHelp(id).subscribe({
+        next: (response) => {
+          this.showConfirmationDialog = false;
+          this.showSuccessDialog = true;
+          setTimeout(() => {
+            this.dialogRef.close();
+            location.reload();
+          }, 1750);
+        }
+      })
+    })
     
-   }
+    
+  }
+*/
+
+  onConfirm(id: number): void {
+    let sFile = this.Help.user_Manual;
+    let vFile = this.Help.video;
+    let HelpName = sFile.substring(0, sFile.indexOf("\\"))
+    let vHelpName = vFile.substring(0, vFile.indexOf("\\"))
+    let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+    let vfilename = vFile.substring(vFile.indexOf("\\") + 1, vFile.length)
+
+    this.dataService.DeleteHelpFile(HelpName, filename).subscribe(r => {
+    this.dataService.DeleteHelpFile(vHelpName, vfilename).subscribe(d =>{
+      this.dataService.DeleteHelp(id).subscribe({
+        next: (response) => {
+          this.showConfirmationDialog = false;
+          this.showSuccessDialog = true;
+          setTimeout(() => {
+            this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
+            this.dialogRef.close();
+            
+          }, 1750);
+        }
+      })
+    })
+    })
+    
+    
+  }
 
 
 

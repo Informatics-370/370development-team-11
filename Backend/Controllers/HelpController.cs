@@ -57,6 +57,9 @@ namespace ProcionAPI.Controllers
         {
             try
             {
+                Console.WriteLine("poes");
+                Console.WriteLine(AddHelp.Video);
+                Console.WriteLine(AddHelp.User_Manual);
                 var result = await _helpRepository.AddHelpAsync(AddHelp);
                 return Ok(result);
             }
@@ -69,29 +72,18 @@ namespace ProcionAPI.Controllers
 
         [HttpPut]
         [Route("EditHelp/{Help_ID}")]
-        public async Task<ActionResult<HELP>> EditHelp(int Help_ID, HELP EditHelpRequest)
+        public async Task<ActionResult<HELP>> EditHelp(HELP EditHelpRequest, [FromRoute] int Help_ID)
         {
             try
             {
-                var existingHelp = await _helpRepository.GetHelpAsync(Help_ID);
-                if (existingHelp == null) return NotFound($"The role does not exist");
-
-                existingHelp.Name = EditHelpRequest.Name;
-                existingHelp.Description = EditHelpRequest.Description;
-                existingHelp.Video = EditHelpRequest.Video;
-                existingHelp.User_Manual = EditHelpRequest.User_Manual;
-                existingHelp.Help_Category_ID = EditHelpRequest.Help_Category_ID;
-
-                if (await _helpRepository.SaveChangesAsync())
-                {
-                    return Ok(existingHelp);
-                }
+                var result = await _helpRepository.UpdateHelpAsync(EditHelpRequest, Help_ID);
+                return Ok(result);
             }
             catch (Exception)
             {
                 return StatusCode(500, "Internal Server Error. Please contact support");
             }
-            return BadRequest("Your request is invalid");
+            
         }
 
         [HttpDelete]
@@ -198,7 +190,7 @@ namespace ProcionAPI.Controllers
         {
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "Help", HelpName, filename);
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            var contentType = "application/video";
+            var contentType = "video/mp4";
             return File(fileBytes, contentType, filename);
         }
 

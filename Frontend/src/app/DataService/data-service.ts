@@ -6,7 +6,7 @@ import { Role } from '../Shared/EmployeeRole';
 import { Employee } from '../Shared/Employee';
 import { ConsumableCategory } from '../Shared/ConsumableCategory';
 import { Help } from '../Shared/Help';
-import { HelpCategory } from '../Shared/HelpCategory';
+import { Help_Category } from '../Shared/HelpCategory';
 import { Branch } from '../Shared/Branch';
 import { Department } from '../Shared/Department';
 import { User } from '../Shared/User';
@@ -154,7 +154,7 @@ export class DataService {
       return this.httpClient.get<Help[]>(`${this.apiUrl}Help/GetHelps`).pipe(map(result => result))
     }
     GetHelpCategorys(): Observable<any> {
-      return this.httpClient.get<HelpCategory[]>(`${this.apiUrl}Help/GetHelpCategorys`).pipe(map(result => result))
+      return this.httpClient.get<Help_Category[]>(`${this.apiUrl}Help/GetHelpCategorys`).pipe(map(result => result))
     }
   
     GetHelp(Help_ID: number) {
@@ -169,7 +169,7 @@ export class DataService {
       return this.httpClient.delete<Help>(`${this.apiUrl}Help/DeleteHelp` + '/' + Help_ID, this.httpOptions)
     }
   
-    EditHelp(help_ID: Number, UpdateHelpRequest: Help): Observable<Help> {
+    EditHelp(UpdateHelpRequest: Help , help_ID: number ): Observable<Help> {
       return this.httpClient.put<Help>(`${this.apiUrl}Help/EditHelp/` + help_ID, UpdateHelpRequest, this.httpOptions)
     }
   
@@ -811,5 +811,11 @@ export class DataService {
 
   GetStatuses(): Observable<any> {
     return this.httpClient.get<DelegationStatus[]>(`${this.apiUrl}Delegation/GetStatuses`).pipe(map(result => result))
+  }
+
+  //----------------------------------------------------------------------Backup&Restore-----------------------------------------------------------------------------
+  private backupUrl = 'Backup/CreateBackup';
+  createBackup(): Observable<any> {
+    return this.httpClient.post(this.backupUrl, {});
   }
 }

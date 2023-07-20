@@ -124,6 +124,7 @@ export class EditDelegationComponent implements OnInit {
         DelegationFile: this.delegation.delegation_Document
       });
       
+      
       this.delID = this.delegation.delegation_ID;
       this.doa.user_Id = this.delegation.user_Id;
       this.doa.admin_ID = this.delegation.admin_ID;

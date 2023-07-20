@@ -113,7 +113,7 @@
     <tr>
       <td><label for="file" style="margin-right: 1%;" *ngIf="VendorDetail.registration_Provided == true">Company Registration Document: </label></td>
       <td >  
-        <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}">{{FileDetails[0].FileName}}</a>  
+        <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}" matTooltip="This will download the Company Registration Document on your device">{{FileDetails[0].FileName}}</a>  
       </td>
   </tr>
   <br>
@@ -128,7 +128,7 @@
   <tr >
     <td><label for="file" style="margin-right: 1%;" >Vat Registration document: </label></td> 
     <td *ngIf="VendorDetail.vatRegistered == true">  
-      <a href="{{FileDetails[1].FileURL}}" download="{{FileDetails[1].FileName}}">{{FileDetails[1].FileName}}</a>   
+      <a href="{{FileDetails[1].FileURL}}" download="{{FileDetails[1].FileName}}" matTooltip="This will download the Vat Registration document on your device">{{FileDetails[1].FileName}}</a>   
     </td>
     <td *ngIf="VendorDetail.vatRegistered == false">None provided</td>
   </tr>
@@ -144,7 +144,7 @@
   <tr >
     <td><label for="file" style="margin-right: 1%;" >Income Tax Number Document: </label></td>
     <td *ngIf="VendorDetail.income_Tax_Num_Provided == true">  
-      <a href="{{FileDetails[2].FileURL}}" download="{{FileDetails[2].FileName}}">{{FileDetails[2].FileName}}</a>  
+      <a href="{{FileDetails[2].FileURL}}" download="{{FileDetails[2].FileName}}" matTooltip="This will download the Income Tax Number Document on your device">{{FileDetails[2].FileName}}</a>  
     </td>
     <td *ngIf="VendorDetail.income_Tax_Num_Provided == false">None provided</td>
   </tr>
@@ -152,7 +152,7 @@
   <tr >
     <td><label for="file" style="margin-right: 1%;" >Signed Agreement Document:</label></td>
     <td *ngIf="VendorDetail.signed_Agreement_Provided == true">  
-      <a href="{{FileDetails[3].FileURL}}" download="{{FileDetails[3].FileName}}">{{FileDetails[3].FileName}}</a> 
+      <a href="{{FileDetails[3].FileURL}}" download="{{FileDetails[3].FileName}}" matTooltip="This will download the Signed Agreement Document on your device">{{FileDetails[3].FileName}}</a> 
     </td>
     <td *ngIf="VendorDetail.signed_Agreement_Provided == false">None provided</td>
   </tr>
@@ -160,7 +160,7 @@
   <tr >
     <td><label for="file" style="margin-right: 1%;">Insurance Cover document:</label></td>
     <td  *ngIf="VendorDetail.insurance_Provided == true">  
-      <a href="{{FileDetails[4].FileURL}}" download="{{FileDetails[4].FileName}}">{{FileDetails[4].FileName}}</a>  
+      <a href="{{FileDetails[4].FileURL}}" download="{{FileDetails[4].FileName}}" matTooltip="This will download the Insurance Cover document on your device">{{FileDetails[4].FileName}}</a>  
     </td>
     <td  *ngIf="VendorDetail.insurance_Provided == false">None provided</td>
   </tr>
@@ -184,7 +184,7 @@
   <tr>
      <td><label for="file" style="margin-right: 1%;" >License Or Accreditation document: </label></td>
      <td *ngIf="VendorDetail.license_Num_Provided == true">  
-      <a href="{{FileDetails[5].FileURL}}" download="{{FileDetails[5].FileName}}">{{FileDetails[5].FileName}}</a> 
+      <a href="{{FileDetails[5].FileURL}}" download="{{FileDetails[5].FileName}}" matTooltip="This will download the License Or Accreditation document on your device">{{FileDetails[5].FileName}}</a> 
      </td>
      <td *ngIf="VendorDetail.license_Num_Provided == false">None provided</td>
   </tr>
@@ -250,7 +250,7 @@
   <tr>
     <td><label for="file" style="margin-right: 1%;">Bank Stamped Confirmation Letter: </label></td>
     <td >  
-      <a href="{{FileDetails[6].FileURL}}" download="{{FileDetails[6].FileName}}">{{FileDetails[6].FileName}}</a> 
+      <a href="{{FileDetails[6].FileURL}}" download="{{FileDetails[6].FileName}}" matTooltip="This will download the Bank Stamped Confirmation Letter on your device">{{FileDetails[6].FileName}}</a> 
     </td>
   </tr>
   <br>

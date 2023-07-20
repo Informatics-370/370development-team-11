@@ -29,7 +29,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<HELP> GetHelpAsync(int Help_ID)
         {
-            IQueryable<HELP> query = _dbContext.HELP.Where(c => c.Help_ID == Help_ID);
+            IQueryable<HELP> query = _dbContext.HELP.Include(s => s.Help_Category).Where(c => c.Help_ID == Help_ID);
             return await query.FirstOrDefaultAsync();
         }
 
@@ -37,6 +37,8 @@ namespace ProcionAPI.Models.Repositories
         public async Task<HELP[]> AddHelpAsync(HELP AddHelp)
         {
             Help_Category existingHelp_Category = await _dbContext.Help_Category.FirstOrDefaultAsync(d => d.Name == AddHelp.Help_Category.Name);
+            
+
 
             if (existingHelp_Category != null)
             {
@@ -73,6 +75,27 @@ namespace ProcionAPI.Models.Repositories
         public async Task<bool> SaveChangesAsync()
         {
             return await _dbContext.SaveChangesAsync() > 0;
+        }
+
+        public async Task<HELP> UpdateHelpAsync(HELP HelpEdit, int helpID)
+        {
+            var help = await _dbContext.HELP.FindAsync(helpID);
+
+            help.Name = HelpEdit.Name;
+            help.Description = HelpEdit.Description;
+            help.Video = HelpEdit.Video;
+            help.User_Manual = HelpEdit.User_Manual;
+            help.Help_Category_ID = HelpEdit.Help_Category_ID;
+
+            help.Help_Category = new Help_Category();
+
+            Help_Category existingCat = await _dbContext.Help_Category.FirstOrDefaultAsync(c => c.Name == HelpEdit.Help_Category.Name);
+
+            help.Help_Category = existingCat;
+
+            await _dbContext.SaveChangesAsync();
+
+            return help;
         }
     }
 }

@@ -6,11 +6,19 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BudgetLine } from '../Shared/BudgetLine';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { DeleteBudgetLineComponent } from '../delete-budget-line/delete-budget-line.component';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-view-budget-lines',
   templateUrl: './view-budget-lines.component.html',
-  styleUrls: ['./view-budget-lines.component.css']
+  styleUrls: ['./view-budget-lines.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewBudgetLinesComponent {
 

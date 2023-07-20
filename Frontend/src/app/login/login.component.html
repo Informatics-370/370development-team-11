@@ -92,7 +92,7 @@
 
       <mat-form-field appearance="outline" style="margin-top:10px;">
         <mat-label>Username</mat-label>
-        <input matInput type="text" placeholder="" formControlName="UserName" id="Name" required [(ngModel)]="userName">
+        <input matInput type="text" placeholder="" formControlName="UserName" id="Name" required [(ngModel)]="userName" >
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -101,7 +101,7 @@
           [(ngModel)]="password">
       </mat-form-field>
 
-      <button type="submit" [disabled]="!myForm.valid">
+      <button type="submit" [disabled]="!myForm.valid" matTooltip="Login with Username or Email">
         Login
       </button>
 

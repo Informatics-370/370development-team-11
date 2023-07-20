@@ -51,6 +51,7 @@ builder.Services.AddScoped<IBudgetAllocationRepository, BudgetAllocationReposito
 builder.Services.AddScoped<IHelpRepository, HelpRepository>();
 builder.Services.AddScoped<IOnboardRequestRepository, OnboardRequestRepository>();
 builder.Services.AddScoped<IVendorRepository, VendorRepository>();
+builder.Services.AddScoped<IBackupRepository, BackupRepository>();
 
 builder.Services.AddScoped<IMandateRepository, MandateRepository>();
 builder.Services.AddScoped<IDelegationRepository, DelegationRepository>();

@@ -62,7 +62,7 @@ import { EditHelpComponent } from './edit-help/edit-help/edit-help.component';
 import { DeleteHelpComponent} from './delete-help/delete-help/delete-help.component';
 import { CreateDelegationComponent } from './Delegation/create-delegation/create-delegation.component';
 import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
-
+import { BackupComponent } from './Settings/backup/backup.component';
 
 const routes: Routes = [
   {
@@ -267,7 +267,12 @@ const routes: Routes = [
   {
     path: "EditDelegation/:did", canActivate: [AuthService],
     component: EditDelegationComponent
+  },
+  {
+    path: "ViewSettings" , canActivate: [AuthService],
+    component: BackupComponent
   }
+  
 ];
 
 @NgModule({

@@ -4,7 +4,7 @@
       (ngSubmit)="onSubmit()">
       <mat-card-header>
         <mat-card-title
-          style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">Create
+          style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">Edit
           Help</mat-card-title>
         <mat-card-subtitle>
 
@@ -50,10 +50,10 @@
             <tr>
               <td style="width:100%;">
                 <mat-card-content>
-                  <label style=" color:black;">Video:</label>
+                  <label style=" color:black;">Help Video:</label>
                   <br />
 
-                  <input type="file" id="file" placeholder="" formControlName="video" style="border: solid #244688; border-radius: 5px; "
+                  <input type="file" id="file" placeholder=""  style="border: solid #244688; border-radius: 5px; "
                          accept="video/*" (change)="onVideoFileUpload($event)" required>
 
                 </mat-card-content>
@@ -63,7 +63,7 @@
                       <label style=" color:black;">User Manual:</label>
                       <br />
     
-                      <input type="file" id="file" placeholder="" formControlName="user_Manual" style="border: solid #244688; border-radius: 5px; "
+                      <input type="file" id="file" placeholder=""  style="border: solid #244688; border-radius: 5px; "
                              accept=".pdf" (change)="onPDFFileUpload($event)" required>
     
                     </mat-card-content>
@@ -78,7 +78,7 @@
                     <mat-label>Choose one</mat-label>
                     <mat-select formControlName="help_Category_ID" required>
                       <mat-option>---</mat-option>
-                      <mat-option *ngFor="let hc of helpCategoryArray" [value]="hc.name">{{hc.name}}</mat-option>
+                      <mat-option *ngFor="let hc of help_Categorys" [value]="hc.help_Category_ID">{{hc.name}}</mat-option>
                     </mat-select>
                     <mat-error *ngIf="myError('help_Category_ID', 'required')">Please choose a Categpry</mat-error>
                   </mat-form-field>

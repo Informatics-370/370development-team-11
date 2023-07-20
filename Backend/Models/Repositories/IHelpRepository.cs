@@ -11,5 +11,6 @@ namespace ProcionAPI.Models.Repositories
         void Delete<T>(T entity) where T : class;
         Task<HELP> HelpValidationAsync(string name, string category);
         Task<bool> SaveChangesAsync();
+        Task<HELP> UpdateHelpAsync(HELP HelpEdit, int helpID);
     }
 }

@@ -8,11 +8,19 @@ import { BudgetLine } from '../Shared/BudgetLine';
 import { DeleteBudgetCategoryComponent } from '../delete-budget-category/delete-budget-category.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-view-budget-category',
   templateUrl: './view-budget-category.component.html',
-  styleUrls: ['./view-budget-category.component.css']
+  styleUrls: ['./view-budget-category.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewBudgetCategoryComponent implements OnInit {
   displayedColumns: string[] = ['id', 'account_Name', 'description', 'action', 'delete'];

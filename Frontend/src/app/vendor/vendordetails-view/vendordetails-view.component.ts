@@ -17,10 +17,19 @@ import { Vendor_Registration } from 'src/app/Shared/VendorDetailsRegistration';
 import { VendorDeleteComponent } from '../vendor-delete/vendor-delete.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
+
 @Component({
   selector: 'app-vendordetails-view',
   templateUrl: './vendordetails-view.component.html',
-  styleUrls: ['./vendordetails-view.component.css']
+  styleUrls: ['./vendordetails-view.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 
 

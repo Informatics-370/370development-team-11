@@ -109,7 +109,9 @@ import { EditDelegationComponent } from './Delegation/edit-delegation/edit-deleg
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe } from '@angular/common';
 import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
-
+import { VideoDialogComponent } from './VideoDialog/video-dialog/video-dialog.component';
+import { BackupComponent } from './Settings/backup/backup.component';
+import { RestoreComponent } from './Settings/backupDialog/restore.component';
 
 
 @NgModule({
@@ -188,6 +190,9 @@ import { RejectDelegationComponent } from './Delegation/reject-delegation/reject
     DeleteDelegationComponent,
     EditDelegationComponent,
     RejectDelegationComponent,
+    VideoDialogComponent,
+    BackupComponent,
+    RestoreComponent,
   ],
   imports: [
     BrowserModule,

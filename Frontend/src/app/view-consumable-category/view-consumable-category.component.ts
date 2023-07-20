@@ -12,12 +12,19 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { count } from 'rxjs';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-view-consumable-category',
   templateUrl: './view-consumable-category.component.html',
-  styleUrls: ['./view-consumable-category.component.css']
+  styleUrls: ['./view-consumable-category.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewConsumableCategoryComponent implements OnInit {
   ConsumableCategories: ConsumableCategory[] = [];
