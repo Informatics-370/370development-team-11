@@ -12,12 +12,20 @@ import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notifi
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
 import { count, elementAt } from 'rxjs';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
 
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-view-department',
   templateUrl: './view-department.component.html',
-  styleUrls: ['./view-department.component.css']
+  styleUrls: ['./view-department.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewDepartmentComponent implements OnInit{
   Departments: Department[] = [];
@@ -148,6 +156,12 @@ DeleteDepartment(department_ID: number) {
 }
 
 
+openDialog() {
+  const dialogRef = this.dialog.open(RestoreComponent);
 
+  dialogRef.afterClosed().subscribe(result => {
+    console.log(`Dialog result: ${result}`);
+  });
+}
 
 }

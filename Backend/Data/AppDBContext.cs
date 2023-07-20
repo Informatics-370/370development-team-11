@@ -61,6 +61,7 @@ namespace ProcionAPI.Data
         public DbSet<Contracted_Partner_Type> Contracted_Partner_Type { get; set; }
         public DbSet<VAT> VAT { get; set; }
         public DbSet<HELP> HELP { get; set; }
+
         public DbSet<Help_Category> Help_Category { get; set; }
         public DbSet<Consumable> Consumable { get; set; }
         public DbSet<Consumable_Category> Consumable_Category { get; set; }
@@ -470,6 +471,46 @@ namespace ProcionAPI.Data
                 Name = "Procurement Request Has Been Finalised",
                 Description = "Please ensure all items are registered on the system.",
 
+            }
+            );
+
+            modelBuilder.Entity<Help_Category>()
+            .HasData(
+            new
+            {
+                Help_Category_ID = 1,
+                Name = "Vendor",
+                Description = "Help related to Vendor activities.",
+            },
+            new
+            {
+                Help_Category_ID = 2,
+                Name = "Finance",
+                Description = "Help related to Finiance activities.",
+            },
+            new
+            {
+                Help_Category_ID = 3,
+                Name = "Reports",
+                Description = "Help related to Reporting activities.",
+            },
+            new
+            {
+                Help_Category_ID = 4,
+                Name = "Procurment",
+                Description = "Help related to Procurement activities.",
+            },
+            new
+            {
+                  Help_Category_ID = 5,
+                  Name = "Administration",
+                  Description = "Help related to Administration activities.",
+            },
+            new
+            {
+                   Help_Category_ID = 6,
+                   Name = "Inventory",
+                   Description = "Help related to Inventory activities.",
             }
             );
 

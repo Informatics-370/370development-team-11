@@ -7,12 +7,20 @@ import { VendorCreateChoiceComponent } from '../vendor-create-choice/vendor-crea
 import { MatDialog } from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import { Subscription, buffer, elementAt, groupBy } from 'rxjs';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-vendor-view',
   templateUrl: './vendor-view.component.html',
   styleUrls: ['./vendor-view.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  
 })
 export class VendorViewComponent implements OnInit  {
   

@@ -5,7 +5,8 @@ import { Consumable } from '../Shared/Consumable';
 import { Role } from '../Shared/EmployeeRole';
 import { Employee } from '../Shared/Employee';
 import { ConsumableCategory } from '../Shared/ConsumableCategory';
-
+import { Help } from '../Shared/Help';
+import { Help_Category } from '../Shared/HelpCategory';
 import { Branch } from '../Shared/Branch';
 import { Department } from '../Shared/Department';
 import { User } from '../Shared/User';
@@ -154,6 +155,54 @@ export class DataService {
   DepartmentValidation(name: String): Observable<Department> {
     return this.httpClient.get<Department>(`${this.apiUrl}Department/DepartmentValidation/` + name, this.httpOptions)
   }
+
+    //--------------------------------------------------------------------------------------Help And Help Files--------------------------------------------------------------------------------------
+    GetHelps(): Observable<any> {
+      return this.httpClient.get<Help[]>(`${this.apiUrl}Help/GetHelps`).pipe(map(result => result))
+    }
+    GetHelpCategorys(): Observable<any> {
+      return this.httpClient.get<Help_Category[]>(`${this.apiUrl}Help/GetHelpCategorys`).pipe(map(result => result))
+    }
+  
+    GetHelp(Help_ID: number) {
+      return this.httpClient.get(`${this.apiUrl}Help/GetHelp` + '/' + Help_ID).pipe(map(result => result))
+    }
+  
+    AddHelps(AddHelp: Help) {
+      return this.httpClient.post(`${this.apiUrl}Help/CreateHelp`, AddHelp, this.httpOptions)
+    }
+  
+    DeleteHelp(Help_ID: Number): Observable<Help> {
+      return this.httpClient.delete<Help>(`${this.apiUrl}Help/DeleteHelp` + '/' + Help_ID, this.httpOptions)
+    }
+  
+    EditHelp(UpdateHelpRequest: Help , help_ID: number ): Observable<Help> {
+      return this.httpClient.put<Help>(`${this.apiUrl}Help/EditHelp/` + help_ID, UpdateHelpRequest, this.httpOptions)
+    }
+  
+    HelpValidation(name: String, category: String): Observable<Help> {
+      return this.httpClient.get<Help>(`${this.apiUrl}Help/HelpValidation/` + name + "/" + category, this.httpOptions)
+    }
+
+    DeleteHelpFile(HelpName: string, fileName: string): Observable<any> {
+      return this.httpClient.delete<any>(`${this.apiUrl}Help/DeleteHelpFile/${HelpName}/${fileName}`, this.httpOptions)
+    }
+  
+    HelpFileAdd(HelpName: string, file: File): Observable<any> {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('HelpName', HelpName)
+      return this.httpClient.post<any>(`${this.apiUrl}Help/uploadHelpFile`, formData, this.httpOptions)
+    }
+  
+  
+    GetHelpPDFFiles(HelpName: string, filename: string): Observable<any> {
+      return this.httpClient.post<any>(`${this.apiUrl}Help/GetHelpPDFFiles/${HelpName}/${filename}`, this.httpOptions)
+    }
+
+    GetHelpVideoFiles(HelpName: string, filename: string): Observable<any> {
+      return this.httpClient.post<any>(`${this.apiUrl}Help/GetHelpVideoFiles/${HelpName}/${filename}`, this.httpOptions)
+    }
 
   //--------------------------------------------------------------------------------------Requests--------------------------------------------------------------------------------------
 
@@ -895,4 +944,9 @@ export class DataService {
   //ResetNotif(username: string) {
   //  return this.httpClient.put<User>(`${this.apiUrl}User/ResetNotif/` + username, this.httpOptions)
   //}
+  //----------------------------------------------------------------------Backup&Restore-----------------------------------------------------------------------------
+  private backupUrl = 'Backup/CreateBackup';
+  createBackup(): Observable<any> {
+    return this.httpClient.post(this.backupUrl, {});
+  }
 }

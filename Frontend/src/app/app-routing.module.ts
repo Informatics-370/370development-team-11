@@ -60,12 +60,17 @@ import { UserProfileComponent } from './User/user-profile/user-profile.component
 import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
+import { ViewHelpComponent } from './view-help/view-help/view-help.component';
+import { CreateHelpComponent } from './create-help/create-help/create-help.component';
+import { EditHelpComponent } from './edit-help/edit-help/edit-help.component';
+import { DeleteHelpComponent} from './delete-help/delete-help/delete-help.component';
 import { CreateDelegationComponent } from './Delegation/create-delegation/create-delegation.component';
 import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
 
 import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
 import { UpdatePasswordComponent } from './User/update-password/update-password.component';
 
+import { BackupComponent } from './Settings/backup/backup.component';
 
 const routes: Routes = [
   {
@@ -192,6 +197,22 @@ const routes: Routes = [
     component: EditDepartmentComponent
   },
   {
+    path: 'ViewHelp' , canActivate: [AuthService],
+    component: ViewHelpComponent
+  },
+  {
+    path: 'CreateHelp' , canActivate: [AuthService],
+    component: CreateHelpComponent
+  },
+  {
+    path: 'DeleteHelp' , canActivate: [AuthService],
+    component: DeleteHelpComponent
+  },
+  {
+    path: 'EditHelp/:help_ID' , canActivate: [AuthService],
+    component: EditHelpComponent
+  },
+  {
     path: 'ViewBranch', canActivate: [AuthService],
     component: ViewBranchComponent
   },
@@ -266,8 +287,12 @@ const routes: Routes = [
   {
     path: 'UpdatePassword', canActivate: [AuthService],
     component: UpdatePasswordComponent
+  },
+  {
+    path: "ViewSettings" , canActivate: [AuthService],
+    component: BackupComponent
   }
-
+  
 ];
 
 @NgModule({

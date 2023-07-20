@@ -11,12 +11,19 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthService } from '../DataService/AuthService';
 import { MailData } from '../Shared/Mail';
 import { Delegation_Of_Authority } from '../Shared/DelegationOfAuthority';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class LoginComponent implements OnInit {
 

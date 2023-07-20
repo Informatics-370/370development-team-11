@@ -11,12 +11,20 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { OnboardRequest } from '../Shared/OnboardRequest';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-view-employee',
   templateUrl: './view-employee.component.html',
-  styleUrls: ['./view-employee.component.css']
+  styleUrls: ['./view-employee.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewEmployeeComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete', 'delegation'];
@@ -147,5 +155,14 @@ export class ViewEmployeeComponent implements OnInit {
         }
       }
     })
+  }
+
+
+  openDialog() {
+    const dialogRef = this.dialog.open(RestoreComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 }

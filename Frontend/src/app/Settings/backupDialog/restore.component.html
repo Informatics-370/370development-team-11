@@ -1,0 +1,19 @@
+<h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;"
+    *ngIf="showConfirmationDialog == true">
+  BACKUP SYSTEM DATA
+</h1>
+<div mat-dialog-content *ngIf="showConfirmationDialog == true">
+  <p>You are about to create a Backup of the systems current data!</p>
+  <p>Are you sure you want to continue?</p>
+</div>
+<div mat-dialog-actions align="end" *ngIf="showConfirmationDialog == true">
+  <button mat-raised-button (click)="onConfirm()" style="color: white; background-color: #94CC5B;"  >Yes</button>
+  <button mat-raised-button (click)="onCancel()" style="color: white; background-color: #244688;">Cancel</button>
+</div>
+
+<ng-container *ngIf="showSuccessDialog == true">
+  <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;">Delete Successful</h1>
+  <div mat-dialog-content>
+    <p>The Backup  has been <strong style="color:#94CC5B">CREATED</strong> successfully.</p>
+  </div>
+</ng-container>

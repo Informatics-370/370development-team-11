@@ -16,8 +16,14 @@
       <a mat-list-item *ngIf="rAdmin" mat-list-item class="uni-font" routerLink="/ViewBranch">Branch</a>
       <a mat-list-item class="uni-font" routerLink="/Delegation">Delegation of Authority</a>
       <a mat-list-item class="uni-font" routerLink="/ViewMandateLimit">Mandate Limits</a>
-      <a mat-list-item class="uni-font">Manage Help</a>
-      <a mat-list-item class="uni-font">Settings</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewHelp">Manage Help</a>
+      <a mat-list-item class="uni-font" [matMenuTriggerFor]="menu">Settings</a>
+        <mat-menu #afterMenu="matMenu" xPosition="after" #menu="matMenu">
+          <button class="MenuButton" mat-menu-item (click)="openDialog()" >
+            Backup System</button>
+          <button class="MenuButton" mat-menu-item >
+            Restore System</button>
+        </mat-menu>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content class="Main-content">
@@ -37,7 +43,7 @@
 
       <mat-form-field appearance="fill"
         style=" float:right; font-size: 12px; width: 300px; margin-top:0.5%; margin-right:1%;">
-        <mat-label>Search</mat-label>
+        <mat-label>Search by Name</mat-label>
         <input matInput (keyup)="search()" [(ngModel)]="searchWord" />
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>

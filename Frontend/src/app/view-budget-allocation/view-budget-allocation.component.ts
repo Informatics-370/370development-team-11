@@ -9,10 +9,19 @@ import { Department } from '../Shared/Department';
 import { DeleteBudgetAllocationComponent } from '../delete-budget-allocation/delete-budget-allocation.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
+
 @Component({
   selector: 'app-view-budget-allocation',
   templateUrl: './view-budget-allocation.component.html',
-  styleUrls: ['./view-budget-allocation.component.css']
+  styleUrls: ['./view-budget-allocation.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewBudgetAllocationComponent {
 

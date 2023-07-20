@@ -25,11 +25,19 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-vendordetails-view',
   templateUrl: './vendordetails-view.component.html',
-  styleUrls: ['./vendordetails-view.component.css']
+  styleUrls: ['./vendordetails-view.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 
 

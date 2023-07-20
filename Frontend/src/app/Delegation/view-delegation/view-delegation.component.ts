@@ -19,13 +19,20 @@ import { DeleteDelegationComponent } from '../delete-delegation/delete-delegatio
 import { MatSort } from '@angular/material/sort';
 import { DatePipe } from '@angular/common';
 import { RejectDelegationComponent } from '../reject-delegation/reject-delegation.component';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
 
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-view-delegation',
   templateUrl: './view-delegation.component.html',
   styleUrls: ['./view-delegation.component.css'],
-
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewDelegationComponent implements OnInit{
 
@@ -168,5 +175,40 @@ export class ViewDelegationComponent implements OnInit{
         this.ngOnInit();
       }
     })
+  }
+
+  rejectRequest(ID: number) {
+    const select = this.dialog.open(RejectDelegationComponent, {
+      disableClose: true,
+      data: { ID }
+    })
+
+    //this.dataService.EditDelegationStatus(2, id).subscribe(r => {
+    //  var action = "ACCEPT";
+    //  var title = "ACCEPT SUCCESSFUL";
+    //  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + id + "</strong> has been <strong style='color:green'> ACCEPTED </strong> successfully!");
+
+    //  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+    //    disableClose: true,
+    //    data: { action, title, message }
+    //  });
+
+    //  const duration = 1750;
+    //  setTimeout(() => {
+    //    this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
+    //    dialogRef.close();
+    //  }, duration);
+    //})
+  }
+
+
+
+
+  openDialog() {
+    const dialogRef = this.dialog.open(RestoreComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 }
