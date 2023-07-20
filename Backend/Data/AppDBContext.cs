@@ -30,6 +30,8 @@ namespace ProcionAPI.Data
         public DbSet<Notification> Notification { get; set; }
         public DbSet<Notification_Type> Notification_Type { get; set; }
         public DbSet<Procurement_Request> Procurement_Request { get; set; }
+        public DbSet<Procurement_Request_Quote> Procurement_Request_Quote { get; set; }
+        public DbSet<Procurement_Details> Procurement_Details { get; set; }
         public DbSet<Requisition_Status> Requisition_Status { get; set; }
         public DbSet<Payment_Made> Payment_Made { get; set; }
         public DbSet<Sign_Off_Status> Sign_Off_Status { get; set; }
@@ -513,15 +515,7 @@ namespace ProcionAPI.Data
                    Description = "Help related to Inventory activities.",
             }
             );
-            modelBuilder.Entity<Procurement_Request_Quote>()
-            .HasData(
-            new
-            {
-                Quote_ID = 1,
-                Procurement_Request_ID = 1,
-                Path = "Test"
-            }
-            );
+
 
             modelBuilder.Entity<Requisition_Status>()
             .HasData(
@@ -548,6 +542,32 @@ namespace ProcionAPI.Data
             }
 
             );
+
+            modelBuilder.Entity<Procurement_Request>()
+            .HasData(
+            new
+            {
+                Procurement_Request_ID = 1,
+                Vendor_ID = 1,
+                Requisition_Status_ID = 3,
+                User_ID = 1,
+                Name = "Procurement Request for x",
+                Description = "A new company procurement request"
+
+            }
+            );
+
+            modelBuilder.Entity<Procurement_Request_Quote>()
+            .HasData(
+            new
+            {
+                Quote_ID = 1,
+                Procurement_Request_ID = 1,
+                Path = "Test"
+            }
+            );
+
+
 
 
         }

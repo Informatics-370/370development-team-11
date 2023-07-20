@@ -34,7 +34,8 @@ export class CreateProcurementRequestComponent implements OnInit{
       name: "",
       email: "",
       number_Of_Times_Used: 0,
-      sole_Supplier_Provided: false
+      sole_Supplier_Provided: false,
+      preferedVendor: true
     },
     requisition_Status_ID: 0,
     requisition_Status: {
