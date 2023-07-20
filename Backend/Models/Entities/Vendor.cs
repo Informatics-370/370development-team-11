@@ -22,5 +22,7 @@ namespace ProcionAPI.Models.Entities
 
         public int Number_Of_Times_Used { get; set; }
         public bool Sole_Supplier_Provided { get; set; }
+
+        public bool PreferedVendor { get; set; }
     }
 }

@@ -28,7 +28,9 @@ td {
 }
 
 ::ng-deep .mat-mdc-tab-body-content {
-    height:335px!important;
+    /* //height:335px!important; */
+    inline-size: max-content;
+    height:fit-content!important;
 }
 
 mat-error {

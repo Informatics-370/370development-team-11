@@ -43,6 +43,7 @@ export class RequestUpdateComponent {
     email: '',
     number_Of_Times_Used: 0,
     sole_Supplier_Provided:false,
+    preferedVendor:false,
   }
 
   rl: Role = {
@@ -71,7 +72,7 @@ export class RequestUpdateComponent {
     user_Id: 1,
     vendor_ID: 0,
     status_ID:1,
-    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0,sole_Supplier_Provided:false },
+    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0,sole_Supplier_Provided:false,preferedVendor:false},
     onboard_Status: this.OnboardStatus,
     users: { user_Id: 0, role_ID: 0, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', role: this.rl },
     quotes: '',
@@ -109,6 +110,7 @@ export class RequestUpdateComponent {
       CompanyName: ['', [Validators.required, Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
       CompanyEmail: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
       CompanyQuote: ['',[Validators.required]],
+      PrefferedVendor: [false],
     });
     this.rows.push(row);
     this.files.push('');
@@ -135,6 +137,7 @@ export class RequestUpdateComponent {
       CompanyName: ['',[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
       CompanyEmail: ['',[Validators.required,Validators.maxLength(32), Validators.email]],
       CompanyQuote: '',
+      PrefferedVendor: [false],
     });
     this.rows.push(row);
     this.fileToUpload = this.files[0]
@@ -155,6 +158,7 @@ export class RequestUpdateComponent {
               CompanyName: ['',[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
               CompanyEmail: ['',[Validators.required,Validators.maxLength(32), Validators.email]],
               CompanyQuote: '',
+              PrefferedVendor: [false],
             });
             this.rows.push(row);
             this.files.push('');
@@ -168,6 +172,7 @@ export class RequestUpdateComponent {
             this.FileDetails.push({FileURL:"",FileName:""})
             this.rows.controls[i].get('CompanyName')?.setValue(this.onboardRequest[i].vendor.name);
             this.rows.controls[i].get('CompanyEmail')?.setValue(this.onboardRequest[i].vendor.email);
+            this.rows.controls[i].get('PrefferedVendor')?.setValue(this.onboardRequest[i].vendor.preferedVendor);
             let sFile = this.onboardRequest[i].quotes;
             let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
             let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
@@ -313,6 +318,7 @@ export class RequestUpdateComponent {
           this.Vendor = this.onboardRequest[i].vendor
           this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
           this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
+          this.Vendor.preferedVendor = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].PreferedVendor;
           this.Vendor.vendor_Status_ID = 1;
           this.Vendor.number_Of_Times_Used = 0;
           this.Onboard_Request.vendor = this.Vendor
@@ -347,6 +353,7 @@ export class RequestUpdateComponent {
           this.Vendor = this.onboardRequest[i].vendor
           this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
           this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
+          this.Vendor.preferedVendor = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].PreferedVendor;
           this.Vendor.vendor_Status_ID = 1;
           this.Vendor.number_Of_Times_Used = 0;
           this.Onboard_Request.vendor = this.Vendor;
@@ -544,6 +551,24 @@ export class RequestUpdateComponent {
   
 
   }//function
+
+
+PreferredChecked = false;
+CheckPrev:any;
+onPreferredChecked(i:number) {
+  
+  if(this.CheckPrev != undefined) {
+    this.rows.controls[this.CheckPrev].get('PrefferedVendor')?.setValue(false);
+  }
+
+  this.CheckPrev = i
+  if(this.PreferredChecked == false) {
+    this.PreferredChecked = true;
+    this.rows.controls[i].get('PrefferedVendor')?.setValue(this.PreferredChecked);
+  }
+
+}
+
 
 }
 

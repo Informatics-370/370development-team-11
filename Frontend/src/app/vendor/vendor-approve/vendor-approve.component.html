@@ -44,6 +44,10 @@
         </td>
         </tr>
         <tr>
+          <td><label>Preferred vendor:</label></td>
+          <td><mat-checkbox formControlName="PrefferedVendor" ></mat-checkbox></td>
+        </tr>
+        <tr>
           <td></td>
           <td></td>
         </tr>
@@ -76,7 +80,7 @@
     </div>  
   </div>
   </div>
-  <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="onboardRequest.length == 1 && onboardRequest[0].status_ID == 5;General" #Sole>
+  <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="onboardRequest.length == 1 && onboardRequest[0].status_ID == 4;General" #Sole>
     <h1 *ngIf="onboardRequest[0] != undefined" style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;" >
       Onboard Request #{{onboardRequest[0].onboard_Request_Id}}
     </h1>
@@ -171,7 +175,7 @@
 
 </div>
 <!--  -->
-<div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="onboardRequestSelectedData != undefined && onboardRequest[0].vendor.vendor_Status_ID != 1" >
+<div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="onboardRequestSelectedData != undefined && (onboardRequest[0].vendor.vendor_Status_ID != 1 && onboardRequest[0].status_ID != 4)" >
   <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;" >
     <button  mat-raised-button routerLink="/vendor-unofficial-vendorlist" style="float:left; background-color:#244688; color:white;margin-right: 1%;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
     Onboard Request #{{onboardRequestSelectedData.onboard_Request_Id}}

@@ -18,6 +18,8 @@ import { VendorOnboardRequest } from 'src/app/Shared/VendorOnboardRequest';
 import { POPI } from 'src/app/Shared/POPI';
 import { Contracted_Partner_Type } from 'src/app/Shared/ContractedPartnerType';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
+import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
+import { Vendor_Insurance } from 'src/app/Shared/VendorDetailsInsurance';
 
 @Component({
   selector: 'app-vendor-approve-edit',
@@ -27,7 +29,7 @@ import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notifi
 export class VendorApproveEditComponent implements OnInit{
 
   matcher = new MyErrorStateMatcher()
-  
+  minDate: Date;
 
   constructor(private _formBuilder: FormBuilder,private VendorService: DataService,private route: ActivatedRoute ,private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) {}
 
@@ -45,6 +47,22 @@ export class VendorApproveEditComponent implements OnInit{
     email: '',
     number_Of_Times_Used: 0,
     sole_Supplier_Provided: false,
+    preferedVendor:false,
+  }
+
+  VendorInsuranceType:Vendor_Insurance_Type = {
+    vendor_Insurance_Type_ID : 4,
+    name: "",
+    description: "",
+  }
+
+  VendorInsurance: Vendor_Insurance = {
+    insurance_ID: 0,
+    vendor_ID: 0,
+    vendor : this.Vendor,
+    vendor_Insurance_Type_ID:0,
+    vendor_Insurance_Type: this.VendorInsuranceType,
+    confirmation_Doc:"",
   }
 
   VenBEEDetails:Vendor_BEE = {
@@ -158,6 +176,10 @@ export class VendorApproveEditComponent implements OnInit{
     CyberInsurance: false,
     ProfessionalIndemnityInsurance: false,
     OtherInsurance: false,
+    GeneralLiabilityInsuranceDoc: "",
+    CyberInsuranceDoc:"",
+    ProfessionalIndemnityInsuranceDoc:"",
+    OtherInsuranceDoc:"",
   });
 
   LicensesOrProfessionalAccreditationFormGroup = this._formBuilder.group({
@@ -205,8 +227,18 @@ export class VendorApproveEditComponent implements OnInit{
   FileDetails:any = [];
   DueDilligenceData:any;
   ngOnInit() {
-   // console.log(this.Vendor)
-   // console.log(this.file)
+    const currentYear = new Date().getFullYear()
+   const currentmonth = new Date().getMonth();
+   const currentDay = new Date().getDate();
+   this.minDate = new Date(currentYear - 1, currentmonth, currentDay+1);
+    console.log(this.minDate)
+    this.FoundationaldocumentsFormGroup.get("BEELevel").setValue(1);
+    this.FoundationaldocumentsFormGroup.get("BEELevel")?.disable();
+    this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.disable();
+    this.FoundationaldocumentsFormGroup.get("BEECertificateDoc")?.disable();
+    for(let i = 0;i < 5;i++) {
+      this.FileDetails.push({FileURL:"",FileName:""})
+    }
     this.route.paramMap.subscribe({
       next: (paramater) => {
         
@@ -224,7 +256,7 @@ export class VendorApproveEditComponent implements OnInit{
           this.FoundationaldocumentsFormGroup.get("VatNumber")?.setValue(element.vat_Number_Provided)
           this.FoundationaldocumentsFormGroup.get("CIPC")?.setValue(element.company_Reg_Doc_Provided)
           this.FoundationaldocumentsFormGroup.get("LetterofGoodStanding")?.setValue(element.letter_Of_Good_Standing_Provided)
-          //this.FoundationaldocumentsFormGroup.get("BBBEECertificate")?.setValue(element.b_BBEE_Certificate_Provided)
+          this.FoundationaldocumentsFormGroup.get("BBBEECertificate")?.setValue(element.b_BBEE_Certificate_Provided)
           //this.DueDilligenceDetails.b_BBEE_Certificate_Provided = element.b_BBEE_Certificate_Provided
           this.BEEChecked = element.b_BBEE_Certificate_Provided
           this.FoundationaldocumentsFormGroup.get("DirectorsInfo")?.setValue(element.direcor_Details_Provided )
@@ -243,6 +275,52 @@ export class VendorApproveEditComponent implements OnInit{
       this.InsuranceFormGroup.get("CyberInsurance")?.setValue(element.cyber_Insurance_Present)
       this.InsuranceFormGroup.get("ProfessionalIndemnityInsurance")?.setValue(element.proffesional_Indemnity_Insurance_Present)
       this.InsuranceFormGroup.get("OtherInsurance")?.setValue(element.other_Insurance_Required)
+
+      this.VendorService.GetInsuranceByID(Number(VendorID)).subscribe(result => {
+       let requestlist:any = result;
+       requestlist.forEach(e => {
+          console.log(e)
+          if(e.vendor_Insurance_Type_ID == 1) {
+            let sFile = e.confirmation_Doc;
+            let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
+            sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
+            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            this.FileDetails[1].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
+            this.FileDetails[1].FileName = filename
+            console.log(this.FileDetails)
+          }
+          else if(e.vendor_Insurance_Type_ID == 2) {
+            let sFile = e.confirmation_Doc;
+            let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
+            sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
+            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            this.FileDetails[2].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
+            this.FileDetails[2].FileName = filename
+          }
+          else if(e.vendor_Insurance_Type_ID == 3) {
+            let sFile = e.confirmation_Doc;
+            let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
+            sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
+            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            this.FileDetails[3].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
+            this.FileDetails[3].FileName = filename
+          }
+          else if(e.vendor_Insurance_Type_ID == 4) {
+            let sFile = e.confirmation_Doc;
+            let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
+            sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
+            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            this.FileDetails[4].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
+            this.FileDetails[4].FileName = filename
+          }
+        })
+        console.log(this.FileDetails[1])
+
+      })
 
       //licensesorprofessional
       this.LicensesOrProfessionalAccreditationFormGroup.get("LicensesRequired")?.setValue(element.licenses_Required )
@@ -269,7 +347,7 @@ export class VendorApproveEditComponent implements OnInit{
       //business references
       this.BusinessReferencesFormGroup.get("BusinessReferencesPresent")?.setValue(element.business_References_Present)
 
-          if(element.popI_Present = true) {
+          if(element.popI_Present == true) {
             this.VendorService.GetPOPI(element.due_Diligence_ID).subscribe(response => {
               this.POPIDetails = response
               console.log(response)
@@ -289,9 +367,14 @@ export class VendorApproveEditComponent implements OnInit{
             })
           }
           if(element.b_BBEE_Certificate_Provided == true) {
+            console.log("works")
             this.VendorService.GetBEEDetails(Number(VendorID)).subscribe(response => {
               this.VenBEEDetails = response //Number(VendorID)
               if(this.BEEChecked == true) {
+                this.FoundationaldocumentsFormGroup.get("BEELevel")?.enable();
+                this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.enable();
+                this.FoundationaldocumentsFormGroup.get("BEECertificateDoc")?.enable();
+                console.log(response)
                 this.FoundationaldocumentsFormGroup.get("BEELevel")?.setValue(response.beE_Level);
                 this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.setValue(response.date);
                 console.log(response)
@@ -300,26 +383,14 @@ export class VendorApproveEditComponent implements OnInit{
                 sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
                 let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
                 let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-                this.FileDetails.push({FileURL:`https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`,FileName:filename})
-                console.log(this.FileDetails)
+                this.FileDetails[0].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
+                this.FileDetails[0].FileName = filename
+                console.log(this.FileDetails[0])
               }
             })
           }
 
-        var action = "UPDATE";
-        var title = "UPDATE SUCCESSFUL";
-        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully updated Due Dilligence Checklist for <strong>" + this.DueDilligenceData.vendor.name  +  "</strong>.");
-    
-        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-          disableClose: true,
-          data: { action, title, message }
-        });
-    
-        const duration = 2000;
-        setTimeout(() => {
-          //this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
-          dialogRef.close();
-        }, duration);
+       
 
         })
       }
@@ -364,17 +435,20 @@ onPOPIChecked(stepper: MatStepper) {
 BEEChecked = false;
 
 onBEEChecked() {
-  console.log("you")
+  
   if(this.BEEChecked == false) {
     this.BEEChecked = true;
-    //this.setFocus(stepper)
+    this.FoundationaldocumentsFormGroup.get("BEELevel")?.enable();
+    this.FoundationaldocumentsFormGroup.get("BEECertificateDoc").enable();
+    this.FoundationaldocumentsFormGroup.get("BEEValidatityDate").enable();
   }
   else if(this.BEEChecked == true) 
   {
     this.BEEChecked = false;
+    this.FoundationaldocumentsFormGroup.get("BEELevel")?.disable();
+    this.FoundationaldocumentsFormGroup.get("BEECertificateDoc").disable();
+    this.FoundationaldocumentsFormGroup.get("BEEValidatityDate").disable();
   }
-
-
 }
 
 
@@ -389,9 +463,9 @@ Create() {
       
       let VendorID = paramater.get("VendorID");
       
-      if(this.BEEChecked == true) {
+      if(this.FoundationaldocumentsFormGroup.get("BBBEECertificate")?.value == true && this.DueDilligenceData.b_BBEE_Certificate_Provided == true) {
        // this.VenBEEDetails.vendor = this.Vendor;
-       if(this.DueDilligenceData.b_BBEE_Certificate_Provided == true) {
+       
         this.VenBEEDetails.beE_ID = 0;
         this.VenBEEDetails.vendor_ID = Number(VendorID);
         this.VenBEEDetails.beE_Level = this.FoundationaldocumentsFormGroup.get("BEELevel")?.value;
@@ -401,9 +475,9 @@ Create() {
         this.VenBEEDetails.date = test.transform(this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.value, 'MMM d, y, h:mm:ss a');
         let FolderCategory = "BEE";
         let VendorNo = "Vendor" + Number(VendorID);
-        if(this.file != undefined) {
+        if(this.file[0] != null) {
           this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails.FileName)
-          this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file).subscribe(response => {
+          this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[0]).subscribe(response => {
             let Path: any = response
             this.VenBEEDetails.beE_Certificate  = Path.returnedPath.toString();
             this.VendorService.UpdateBEEDetails(this.VenBEEDetails.vendor_ID,this.VenBEEDetails).subscribe(response => {console.log(response)})
@@ -411,37 +485,37 @@ Create() {
         }
         else {
           this.VendorService.UpdateBEEDetails(this.VenBEEDetails.vendor_ID,this.VenBEEDetails).subscribe(response => {console.log(response)})
-        }
-       }
-       else {
-          this.VendorService.GetBEEDetails(Number(VendorID)).subscribe(response => 
-          {
-            
-            let sFile = response.beE_Certificate;
-            let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
-            sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,filename).subscribe()
-            this.VendorService.DeleteBEEDetails(response.beE_ID).subscribe(result => {
-              this.VenBEEDetails.beE_ID = 0;
-              this.VenBEEDetails.vendor_ID = Number(VendorID);
-              this.VenBEEDetails.beE_Level = this.FoundationaldocumentsFormGroup.get("BEELevel")?.value;
-              let test: any
-              test = new DatePipe('en-ZA');
-              this.VenBEEDetails.date = test.transform(this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.value, 'MMM d, y, h:mm:ss a');
-              FolderCategory = "BEE";
-              VendorNo = "Vendor" + Number(VendorID);
+        }  
+      }
+      else if (this.DueDilligenceData.b_BBEE_Certificate_Provided == true && this.FoundationaldocumentsFormGroup.get("BBBEECertificate")?.value == false)
+      {
+         this.VendorService.GetBEEDetails(Number(VendorID)).subscribe(response => 
+         {
+           
+           let sFile = response.beE_Certificate;
+           let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
+           sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+           let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
+           let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+           this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,filename).subscribe()
+           this.VendorService.DeleteBEEDetails(response.beE_ID).subscribe()
+         })
+      }
+      else if(this.FoundationaldocumentsFormGroup.get("BBBEECertificate")?.value == true && this.DueDilligenceData.b_BBEE_Certificate_Provided == false) {
+        this.VenBEEDetails.beE_ID = 0;
+        this.VenBEEDetails.vendor_ID = Number(VendorID);
+        this.VenBEEDetails.beE_Level = this.FoundationaldocumentsFormGroup.get("BEELevel")?.value;
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.VenBEEDetails.date = test.transform(this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.value, 'MMM d, y, h:mm:ss a');
+        let FolderCategory = "BEE";
+        let VendorNo = "Vendor" + Number(VendorID);
         
-              this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file).subscribe(response => {
-              let Path: any = response
-              this.VenBEEDetails.beE_Certificate  = Path.returnedPath.toString();
-              this.VendorService.AddBEEDetails(this.VenBEEDetails).subscribe(response => {console.log(response)})
-              })
-            })
-          })
-       }
-        
+        this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[0]).subscribe(response => {
+         let Path: any = response
+         this.VenBEEDetails.beE_Certificate  = Path.returnedPath.toString();
+         this.VendorService.AddBEEDetails(this.VenBEEDetails).subscribe(response => {console.log(response)})
+        })
       }
 
       //this.DueDilligenceDetails.due_Diligence_ID = 0
@@ -473,6 +547,148 @@ Create() {
       this.DueDilligenceDetails.cyber_Insurance_Present = this.InsuranceFormGroup.get("CyberInsurance")?.value
       this.DueDilligenceDetails.proffesional_Indemnity_Insurance_Present = this.InsuranceFormGroup.get("ProfessionalIndemnityInsurance")?.value
       this.DueDilligenceDetails.other_Insurance_Required = this.InsuranceFormGroup.get("OtherInsurance")?.value
+
+      if(this.InsuranceFormGroup.get("GeneralLiabilityInsurance")?.value == true && this.file[1] != null) {
+
+        if(this.DueDilligenceData.general_Liability_Insurance_Present == true) {
+          let FolderCategory = "Insurance";
+          let VendorNo = "Vendor" + Number(VendorID);
+          this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[1].FileName).subscribe(response => {
+            this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[1]).subscribe(response => {
+              let Path: any = response
+              this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+              this.VendorInsurance.vendor_ID = Number(VendorID);
+              this.VendorInsurance.vendor_Insurance_Type_ID = 1;
+              this.VendorService.UpdateInsurance(this.VendorInsurance.vendor_ID,this.VendorInsurance).subscribe()
+            })
+          })
+        }
+        else {
+          let FolderCategory = "Insurance";
+          let VendorNo = "Vendor" + Number(VendorID);
+          this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[1]).subscribe(response => {
+         let Path: any = response
+         this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+         this.VendorInsurance.vendor_ID = Number(VendorID);
+         this.VendorInsurance.vendor_Insurance_Type_ID = 1;
+         this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
+          })
+        }
+
+        
+      }
+      else if(this.DueDilligenceData.general_Liability_Insurance_Present == true && this.InsuranceFormGroup.get("GeneralLiabilityInsurance")?.value == false) {
+          let FolderCategory = "Insurance";
+          let VendorNo = "Vendor" + Number(VendorID);
+          this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[1].FileName).subscribe(response => {
+            this.VendorService.DeleteInsuranceByID(Number(VendorID),1).subscribe()
+          })
+      }
+
+      if(this.InsuranceFormGroup.get("CyberInsurance")?.value == true && this.file[2] != null) {
+        if(this.DueDilligenceData.cyber_Insurance_Present == true) {
+          let FolderCategory = "Insurance";
+          let VendorNo = "Vendor" + Number(VendorID);
+          this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[2].FileName).subscribe(response => {
+            this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[2]).subscribe(response => {
+              let Path: any = response
+              this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+              this.VendorInsurance.vendor_ID = Number(VendorID);
+              this.VendorInsurance.vendor_Insurance_Type_ID = 2;
+              this.VendorService.UpdateInsurance(this.VendorInsurance.vendor_ID,this.VendorInsurance).subscribe()
+            })
+          })
+        }
+        else {
+          let FolderCategory = "Insurance";
+          let VendorNo = "Vendor" + Number(VendorID);
+          this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[2]).subscribe(response => {
+         let Path: any = response
+         this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+         this.VendorInsurance.vendor_ID = Number(VendorID);
+         this.VendorInsurance.vendor_Insurance_Type_ID = 2;
+         this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
+          })
+        }
+      }
+      else if(this.DueDilligenceData.cyber_Insurance_Present == true && this.InsuranceFormGroup.get("CyberInsurance")?.value == false) {
+        let FolderCategory = "Insurance";
+        let VendorNo = "Vendor" + Number(VendorID);
+        this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[2].FileName).subscribe(response => {
+          this.VendorService.DeleteInsuranceByID(Number(VendorID),2).subscribe()
+        })
+      }
+
+
+      if(this.InsuranceFormGroup.get("ProfessionalIndemnityInsurance")?.value == true && this.file[3] != null) {
+        if(this.DueDilligenceData.proffesional_Indemnity_Insurance_Present == true) {
+          let FolderCategory = "Insurance";
+          let VendorNo = "Vendor" + Number(VendorID);
+          this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[3].FileName).subscribe(response => {
+            this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[3]).subscribe(response => {
+              let Path: any = response
+              this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+              this.VendorInsurance.vendor_ID = Number(VendorID);
+              this.VendorInsurance.vendor_Insurance_Type_ID = 3;
+              this.VendorService.UpdateInsurance(this.VendorInsurance.vendor_ID,this.VendorInsurance).subscribe()
+            })
+          })
+        }
+        else {
+          let FolderCategory = "Insurance";
+          let VendorNo = "Vendor" + Number(VendorID);
+          this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[3]).subscribe(response => {
+         let Path: any = response
+         this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+         this.VendorInsurance.vendor_ID = Number(VendorID);
+         this.VendorInsurance.vendor_Insurance_Type_ID = 3;
+         this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
+          })
+        }
+      }
+      else if(this.DueDilligenceData.proffesional_Indemnity_Insurance_Present == true && this.InsuranceFormGroup.get("ProfessionalIndemnityInsurance")?.value == false) {
+        let FolderCategory = "Insurance";
+        let VendorNo = "Vendor" + Number(VendorID);
+        console.log("here")
+        this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[3].FileName).subscribe(response => {
+          console.log(response)
+          this.VendorService.DeleteInsuranceByID(Number(VendorID),3).subscribe()
+        })
+      }
+
+      if(this.InsuranceFormGroup.get("OtherInsurance")?.value == true && this.file[4] != null) {
+        if(this.DueDilligenceData.other_Insurance_Required == true) {
+          let FolderCategory = "Insurance";
+          let VendorNo = "Vendor" + Number(VendorID);
+          this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[4].FileName).subscribe(response => {
+            this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[4]).subscribe(response => {
+              let Path: any = response
+              this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+              this.VendorInsurance.vendor_ID = Number(VendorID);
+              this.VendorInsurance.vendor_Insurance_Type_ID = 4;
+              this.VendorService.UpdateInsurance(this.VendorInsurance.vendor_ID,this.VendorInsurance).subscribe()
+            })
+          })
+        }
+        else {
+          let FolderCategory = "Insurance";
+          let VendorNo = "Vendor" + Number(VendorID);
+          this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[4]).subscribe(response => {
+         let Path: any = response
+         this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+         this.VendorInsurance.vendor_ID = Number(VendorID);
+         this.VendorInsurance.vendor_Insurance_Type_ID = 4;
+         this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
+          })
+        }
+      }
+      else if(this.DueDilligenceData.other_Insurance_Required == true && this.InsuranceFormGroup.get("OtherInsurance")?.value == false) {
+        let FolderCategory = "Insurance";
+        let VendorNo = "Vendor" + Number(VendorID);
+        this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[4].FileName).subscribe(response => {
+          this.VendorService.DeleteInsuranceByID(Number(VendorID),4).subscribe()
+        })
+      }
 
       //licensesorprofessional
       this.DueDilligenceDetails.licenses_Required= this.LicensesOrProfessionalAccreditationFormGroup.get("LicensesRequired")?.value
@@ -537,15 +753,29 @@ Create() {
     
   })
   
-  this.router.navigate(['/vendor-unofficial-vendorlist'])
+  var action = "UPDATE";
+  var title = "UPDATE SUCCESSFUL";
+  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully updated Due Dilligence Checklist for <strong>" + this.DueDilligenceData.vendor.name  +  "</strong>.");
+
+  const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+    disableClose: true,
+    data: { action, title, message }
+  });
+
+  const duration = 2000;
+  setTimeout(() => {
+    this.router.navigate(['/vendor-unofficial-vendorlist'])
+    dialogRef.close();
+  }, duration);
+ 
 
 
 }
 
-file:File
+file:File[] = [null,null,null,null,null]
 
-CreateTest(event:any) {
-  this.file = event.target.files[0] ;
+FileAdd(i:number,event:any) {
+  this.file[i] = event.target.files[0] ;
 }
 
 

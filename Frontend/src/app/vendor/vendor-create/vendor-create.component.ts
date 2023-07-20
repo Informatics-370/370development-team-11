@@ -21,6 +21,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 import { DatePipe } from '@angular/common';
 import { Due_Dillegence } from 'src/app/Shared/DueDillegence';
+import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 @Component({
   selector: 'app-vendor-create',
   templateUrl: './vendor-create.component.html',
@@ -51,6 +52,7 @@ export class VendorCreateComponent implements OnInit{
     email: '',
     number_Of_Times_Used: 0,
     sole_Supplier_Provided: false,
+    preferedVendor:false,
   }
   VendorDetail: VendorDetails = {
     vendor_Detail_ID:0,
@@ -126,12 +128,20 @@ export class VendorCreateComponent implements OnInit{
     signed_Agreement_Doc:"",
   }
 
+  VendorInsuranceType:Vendor_Insurance_Type = {
+    vendor_Insurance_Type_ID : 4,
+    name: "",
+    description: "",
+  }
+
   VendorInsurance: Vendor_Insurance = {
     insurance_ID: 0,
-    vendor_Detail_ID: 0,
-    vendor_Detail: this.VendorDetail,
+    vendor_ID: 0,
+    vendor : this.Vendor,
+    vendor_Insurance_Type_ID:0,
+    vendor_Insurance_Type: this.VendorInsuranceType,
     confirmation_Doc:"",
-  }
+  } 
 
   VendorPaymentTerms: Vendor_Payment_Terms = {
     payment_Terms_ID: 0,
@@ -613,7 +623,7 @@ export class VendorCreateComponent implements OnInit{
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
               let Path: any = response
               this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
-              this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
+             // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
               this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
             })
             

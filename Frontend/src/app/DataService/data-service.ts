@@ -276,8 +276,8 @@ export class DataService {
     return this.httpClient.get<Vendor_Agreement>(`${this.apiUrl}Vendor/GetAgreementByID/${AgreementID}`, this.httpOptions).pipe(map(result => result))
   }
 
-  GetInsuranceByID(InsuranceID: number): Observable<any> {
-    return this.httpClient.get<Vendor_Insurance>(`${this.apiUrl}Vendor/GetInsuranceByID/${InsuranceID}`, this.httpOptions).pipe(map(result => result))
+  GetInsuranceByID(VendorID: number): Observable<any> {
+    return this.httpClient.get<Vendor_Insurance[]>(`${this.apiUrl}Vendor/GetInsuranceByID/${VendorID}`, this.httpOptions).pipe(map(result => result))
   }
 
   GetPaymentTerms(PaymentTermsID: number): Observable<any> {
@@ -339,8 +339,8 @@ export class DataService {
     return this.httpClient.put<Vendor_Agreement>(`${this.apiUrl}Vendor/UpdateAgreement/${AgreementID}`, Agreement, this.httpOptions).pipe(map(result => result))
   }
 
-  UpdateInsurance(InsuranceID: number, Insurance: Vendor_Insurance): Observable<any> {
-    return this.httpClient.put<Vendor_Insurance>(`${this.apiUrl}Vendor/UpdateInsurance/${InsuranceID}`, Insurance, this.httpOptions).pipe(map(result => result))
+  UpdateInsurance(VendorID: number, Insurance: Vendor_Insurance): Observable<any> {
+    return this.httpClient.put<Vendor_Insurance>(`${this.apiUrl}Vendor/UpdateInsurance/${VendorID}`, Insurance, this.httpOptions).pipe(map(result => result))
   }
 
   UpdatePayTerms(PaymentTermsID: number, PayTerms: Vendor_Payment_Terms): Observable<any> {
@@ -371,8 +371,8 @@ export class DataService {
   DeleteAgreementByID(AgreementID: number): Observable<any> {
     return this.httpClient.delete<Vendor_Agreement>(`${this.apiUrl}Vendor/DeleteAgreementByID/${AgreementID}`, this.httpOptions).pipe(map(result => result))
   }
-  DeleteInsuranceByID(InsuranceID: number): Observable<any> {
-    return this.httpClient.delete<Vendor_Insurance>(`${this.apiUrl}Vendor/DeleteInsuranceByID/${InsuranceID}`, this.httpOptions).pipe(map(result => result))
+  DeleteInsuranceByID(VendorID: number,InsuranceTypeID:number): Observable<any> {
+    return this.httpClient.delete<Vendor_Insurance>(`${this.apiUrl}Vendor/DeleteInsuranceByID/${VendorID}/${InsuranceTypeID}`, this.httpOptions).pipe(map(result => result))
   }
   DeletePaymentTerms(PaymentTermsID: number): Observable<any> {
     return this.httpClient.delete<Vendor_Payment_Terms>(`${this.apiUrl}Vendor/DeletePaymentTerms/${PaymentTermsID}`, this.httpOptions).pipe(map(result => result))

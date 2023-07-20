@@ -21,7 +21,7 @@ namespace ProcionAPI.Models.Repositories
         Task<Vendor_Website> GetWebsiteByIDAsync(int WebsiteID);
         Task<Vendor_License> GetLicenseByIDAsync(int LicenseID);
         Task<Vendor_Agreement> GetAgreementByIDAsync(int AgreementID);
-        Task<Vendor_Insurance> GetInsuranceByIDAsync(int InsuranceID);
+        Task<Vendor_Insurance[]> GetInsuranceByIDAsync(int VendorID);
         Task<Vendor_Payment_Terms> GetPaymentTermsAsync(int PaymentTermsID);
         Task<Vendor_Registration> GetRegistrationByIDAsync(int RegistrationID);
         Task<Vendor_Tax> GetIncomeTaxByIDAsync(int IncomeTaxID);
@@ -40,7 +40,7 @@ namespace ProcionAPI.Models.Repositories
         Task<Vendor_Fax> UpdateFaxAsync(int FaxID, Vendor_Fax Fax);
         Task<Vendor_Website> UpdateWebsiteAsync(int WebsiteID, Vendor_Website Website);
         Task<Vendor_License> UpdateLicenseAsync(int LicenseID, Vendor_License License);
-        Task<Vendor_Insurance> UpdateInsuranceAsync(int InsuranceID, Vendor_Insurance Insurance);
+        Task<Vendor_Insurance> UpdateInsuranceAsync(int VendorID, Vendor_Insurance Insurance);
         Task<Vendor_Payment_Terms> UpdatePayTermsAsync(int PaymentTermsID, Vendor_Payment_Terms PayTerms);
         Task<Vendor_Agreement> UpdateAgreementAsync(int AgreementID, Vendor_Agreement Agreement);
         Task<Vendor_Registration> UpdateRegisteredAsync(int RegistrationID, Vendor_Registration Registered);
@@ -54,7 +54,7 @@ namespace ProcionAPI.Models.Repositories
         Task<Vendor_Website> DeleteWebsiteByIDAsync(int WebsiteID);
         Task<Vendor_License> DeleteLicenseByIDAsync(int LicenseID);
         Task<Vendor_Agreement> DeleteAgreementByIDAsync(int AgreementID);
-        Task<Vendor_Insurance> DeleteInsuranceByIDAsync(int InsuranceID);
+        Task<Vendor_Insurance> DeleteInsuranceByIDAsync(int VendorID, int InsuranceTypeID);
         Task<Vendor_Payment_Terms> DeletePaymentTermsAsync(int PaymentTermsID);
         Task<Vendor_Registration> DeleteRegistrationByIDAsync(int RegistrationID);
         Task<Vendor_Tax> DeleteIncomeTaxByIDDAsync(int IncomeTaxID);

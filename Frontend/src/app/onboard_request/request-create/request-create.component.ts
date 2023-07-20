@@ -36,6 +36,7 @@ export class RequestCreateComponent implements OnInit {
     email: '',
     number_Of_Times_Used: 0,
     sole_Supplier_Provided: false,
+    preferedVendor:false,
   }
 
   rl: Role = {
@@ -64,7 +65,7 @@ export class RequestCreateComponent implements OnInit {
     user_Id: 1,
     vendor_ID: 0,
     status_ID:1,
-    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0,sole_Supplier_Provided:false },
+    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0,sole_Supplier_Provided:false,preferedVendor:false},
     onboard_Status: this.OnboardStatus,
     users: { user_Id: 0, role_ID: 0, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', role: this.rl },
     quotes: '',
@@ -100,6 +101,7 @@ export class RequestCreateComponent implements OnInit {
       CompanyName: ['', [Validators.required, Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
       CompanyEmail: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
       CompanyQuote: ['', Validators.required],
+      PrefferedVendor: [false],
     });
     this.rows.push(row);
     this.files.push('');
@@ -118,7 +120,7 @@ export class RequestCreateComponent implements OnInit {
         CompanyName: ['', [Validators.required, Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
         CompanyEmail: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
         CompanyQuote: ['', Validators.required],
-        
+        PrefferedVendor: [false],
       });
       this.rows.push(row);
 
@@ -278,6 +280,7 @@ export class RequestCreateComponent implements OnInit {
           this.Onboard_Request.quotes = this.sPath
           this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
           this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
+          this.Vendor.preferedVendor = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].PrefferedVendor;
           this.Vendor.vendor_Status_ID = 1;
           this.Vendor.number_Of_Times_Used = 0;
           this.Onboard_Request.vendor = this.Vendor;
@@ -403,7 +406,23 @@ export class RequestCreateComponent implements OnInit {
     console.log("why")
   }
 }
- 
+
+
+PreferredChecked = false;
+CheckPrev:any;
+onPreferredChecked(i:number) {
+  
+  if(this.CheckPrev != undefined) {
+    this.rows.controls[this.CheckPrev].get('PrefferedVendor')?.setValue(false);
+  }
+
+  this.CheckPrev = i
+  if(this.PreferredChecked == false) {
+    this.PreferredChecked = true;
+    this.rows.controls[i].get('PrefferedVendor')?.setValue(this.PreferredChecked);
+  }
+
+}
 
  
 

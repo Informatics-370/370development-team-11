@@ -14,6 +14,7 @@ import { Vendor_Registration } from 'src/app/Shared/VendorDetailsRegistration';
 import { Vendor_Agreement } from 'src/app/Shared/VendorDetailsSignedAgreement';
 import { Vendor_Vat } from 'src/app/Shared/VendorDetailsVatRegistered';
 import { Vendor_Website } from 'src/app/Shared/VendorDetailsWebsite';
+import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 import { VendorOnboardRequest } from 'src/app/Shared/VendorOnboardRequest';
 import { VendorStatus } from 'src/app/Shared/VendorStatus';
 
@@ -44,6 +45,7 @@ export class VendorDeleteComponent {
     email: '',
     number_Of_Times_Used: 0,
     sole_Supplier_Provided:false,
+    preferedVendor:false,
   }
   VendorDetail: VendorDetails = {
     vendor_Detail_ID:0,
@@ -119,12 +121,20 @@ export class VendorDeleteComponent {
     signed_Agreement_Doc:"",
   }
 
+  VendorInsuranceType: Vendor_Insurance_Type = {
+    vendor_Insurance_Type_ID : 4,
+    name: "",
+    description: "",
+  }
+
   VendorInsurance: Vendor_Insurance = {
     insurance_ID: 0,
-    vendor_Detail_ID: 0,
-    vendor_Detail: this.VendorDetail,
+    vendor_ID: 0,
+    vendor : this.Vendor,
+    vendor_Insurance_Type_ID:0,
+    vendor_Insurance_Type: this.VendorInsuranceType,
     confirmation_Doc:"",
-  }
+  } 
 
   VendorPaymentTerms: Vendor_Payment_Terms = {
     payment_Terms_ID: 0,
@@ -256,7 +266,7 @@ OnboardRequestDetails: any[] = [];
       VendorNo = "Vendor" + this.Vendor.vendor_ID
       fileName =  this.FileDetails[4].FileName
       this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
-      this.VendorService.DeleteInsuranceByID(this.VendorInsurance.insurance_ID).subscribe(response => {console.log(response)})
+     // this.VendorService.DeleteInsuranceByID(this.VendorInsurance.insurance_ID).subscribe(response => {console.log(response)})
     }
     if(this.VendorDetail.payment_Terms_Provided == true) {
       this.VendorService.DeletePaymentTerms(this.VendorPaymentTerms.payment_Terms_ID).subscribe(response => {console.log(response)})

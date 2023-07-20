@@ -110,6 +110,7 @@ export class VendorApproveComponent implements OnInit {
       CompanyName: ['',[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
       CompanyEmail: ['',[Validators.required,Validators.maxLength(32), Validators.email]],
       CompanyQuote: '',
+      PrefferedVendor: [false],
     });
     this.rows.push(row);
    // this.fileToUpload = this.files[0]
@@ -134,6 +135,7 @@ export class VendorApproveComponent implements OnInit {
               CompanyName: ['',[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
               CompanyEmail: ['',[Validators.required,Validators.maxLength(32), Validators.email]],
               CompanyQuote: '',
+              PrefferedVendor: [false],
             });
             this.rows.push(row);
             console.log(this.rows)
@@ -148,6 +150,8 @@ export class VendorApproveComponent implements OnInit {
               this.rows.controls[i].get('VendorID')?.setValue(this.onboardRequest[i].vendor_ID)
               this.rows.controls[i].get('CompanyName')?.setValue(this.onboardRequest[i].vendor.name);
               this.rows.controls[i].get('CompanyEmail')?.setValue(this.onboardRequest[i].vendor.email);
+              this.rows.controls[i].get('PrefferedVendor')?.setValue(this.onboardRequest[i].vendor.preferedVendor);
+              this.rows.controls[i].get('PrefferedVendor')?.disable()
               let sFile = this.onboardRequest[i].quotes;
               let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
               let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
@@ -1157,6 +1161,7 @@ convertImageToBase64(filePath: string) {
 
 SoleSupplierApproved() {
   this.dataService.ChangeVendorStatus(2,this.onboardRequest[0].vendor_ID).subscribe();
+  this.dataService.ChangeOnboardStatus(5,this.onboardRequest[0].onboard_Request_Id,this.onboardRequest[0].vendor_ID).subscribe()
   this.router.navigate(['/vendor-unofficial-vendorlist'])
 
 }

@@ -19,6 +19,9 @@ import { POPI } from 'src/app/Shared/POPI';
 import { Contracted_Partner_Type } from 'src/app/Shared/ContractedPartnerType';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
+import { invalid } from 'moment';
+import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
+import { Vendor_Insurance } from 'src/app/Shared/VendorDetailsInsurance';
 
 
 
@@ -39,9 +42,9 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
 
   FoundationaldocumentsFormGroup = this._formBuilder.group({
     MutualNDA: false,
-    BasicCompanyInfo: false,
+    BasicCompanyInfo: [false,[Validators.requiredTrue]],
     GroupStructure: false,
-    IncomeTaxNumber: false,
+    IncomeTaxNumber: [false,[Validators.requiredTrue]],
     VatNumber:false,
     CIPC: false,
     LetterofGoodStanding: false,
@@ -49,8 +52,8 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
     DirectorsInfo: false,
     CompanyResolutionAgreement: false,
     BEELevel: 0,
-    BEECertificateDoc:'',
-    BEEValidatityDate:Date.now(),
+    BEECertificateDoc:['',[Validators.required]],
+    BEEValidatityDate:[Date.now(),[Validators.required]],
   });
 
 
@@ -70,6 +73,10 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
     CyberInsurance: false,
     ProfessionalIndemnityInsurance: false,
     OtherInsurance: false,
+    GeneralLiabilityInsuranceDoc: "",
+    CyberInsuranceDoc:"",
+    ProfessionalIndemnityInsuranceDoc:"",
+    OtherInsuranceDoc:"",
   });
 
   LicensesOrProfessionalAccreditationFormGroup = this._formBuilder.group({
@@ -84,16 +91,16 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
     POPI: false,
     DataSecurityBreachesPresent:false,
     SiteVisitsPresent:false,
-    Personal_Data_Purpose: false,
+    Personal_Data_Purpose: [false,[Validators.requiredTrue]],
     Contracted_Partner_Type_ID:0,
-    DataProcessing_JointController_Agreement: false,
-    Confidentiality_Importance_Highlighted:false,
-    Contract_Audits_Provisions_Provided:false,
-    Activity_Liability_Present:false,
-    Third_Party_Data_Processing_Provisioned:false,
-    Contract_End_Data_Management_Provided:false,
-    Personal_Data_Processing_Details_Present:false,
-    Processing_Activities_Certification_Held:false,
+    DataProcessing_JointController_Agreement: [false,[Validators.requiredTrue]],
+    Confidentiality_Importance_Highlighted:[false,[Validators.requiredTrue]],
+    Contract_Audits_Provisions_Provided:[false,[Validators.requiredTrue]],
+    Activity_Liability_Present:[false,[Validators.requiredTrue]],
+    Third_Party_Data_Processing_Provisioned:[false,[Validators.requiredTrue]],
+    Contract_End_Data_Management_Provided:[false,[Validators.requiredTrue]],
+    Personal_Data_Processing_Details_Present:[false,[Validators.requiredTrue]],
+    Processing_Activities_Certification_Held:[false,[Validators.requiredTrue]],
   });
 
  
@@ -127,6 +134,22 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
     email: '',
     number_Of_Times_Used: 0,
     sole_Supplier_Provided: false,
+    preferedVendor:false,
+  }
+
+  VendorInsuranceType:Vendor_Insurance_Type = {
+    vendor_Insurance_Type_ID : 4,
+    name: "",
+    description: "",
+  }
+
+  VendorInsurance: Vendor_Insurance = {
+    insurance_ID: 0,
+    vendor_ID: 0,
+    vendor : this.Vendor,
+    vendor_Insurance_Type_ID:0,
+    vendor_Insurance_Type: this.VendorInsuranceType,
+    confirmation_Doc:"",
   }
 
   VenBEEDetails:Vendor_BEE = {
@@ -206,7 +229,19 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
   onboardRequest: OnboardRequest[] = [];
   RequestID = 0;
   ngOnInit(): void {
-   // this.FoundationaldocumentsFormGroup.get("BEEValidatityDate").disable()
+    this.FoundationaldocumentsFormGroup.get("BEECertificateDoc").disable();
+    this.FoundationaldocumentsFormGroup.get("BEEValidatityDate").disable();
+    this.InformationSecurityFormGroup.get("Personal_Data_Purpose").disable();
+    this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID").disable();
+    this.InformationSecurityFormGroup.get("DataProcessing_JointController_Agreement").disable();
+    this.InformationSecurityFormGroup.get("Confidentiality_Importance_Highlighted").disable();
+    this.InformationSecurityFormGroup.get("Contract_Audits_Provisions_Provided").disable();
+    this.InformationSecurityFormGroup.get("Activity_Liability_Present").disable();
+    this.InformationSecurityFormGroup.get("Third_Party_Data_Processing_Provisioned").disable();
+    this.InformationSecurityFormGroup.get("Contract_End_Data_Management_Provided").disable();
+    this.InformationSecurityFormGroup.get("Personal_Data_Processing_Details_Present").disable();
+    this.InformationSecurityFormGroup.get("Processing_Activities_Certification_Held").disable();
+
    const currentYear = new Date().getFullYear()
    const currentmonth = new Date().getMonth();
    const currentDay = new Date().getDate();
@@ -252,10 +287,32 @@ onPOPIChecked(stepper: MatStepper) {
   if(this.POPIChecked == false) {
     this.POPIChecked = true;
     this.setFocus(stepper)
+    this.InformationSecurityFormGroup.get("Personal_Data_Purpose").enable();
+    this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID").enable();
+    this.InformationSecurityFormGroup.get("DataProcessing_JointController_Agreement").enable();
+    this.InformationSecurityFormGroup.get("Confidentiality_Importance_Highlighted").enable();
+    this.InformationSecurityFormGroup.get("Contract_Audits_Provisions_Provided").enable();
+    this.InformationSecurityFormGroup.get("Activity_Liability_Present").enable();
+    this.InformationSecurityFormGroup.get("Third_Party_Data_Processing_Provisioned").enable();
+    this.InformationSecurityFormGroup.get("Contract_End_Data_Management_Provided").enable();
+    this.InformationSecurityFormGroup.get("Personal_Data_Processing_Details_Present").enable();
+    this.InformationSecurityFormGroup.get("Processing_Activities_Certification_Held").enable();
+
+    this.InformationSecurityFormGroup.get("Personal_Data_Purpose").invalid
   }
   else if(this.POPIChecked == true) 
   {
     this.POPIChecked = false;
+    this.InformationSecurityFormGroup.get("Personal_Data_Purpose").disable();
+    this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID").disable();
+    this.InformationSecurityFormGroup.get("DataProcessing_JointController_Agreement").disable();
+    this.InformationSecurityFormGroup.get("Confidentiality_Importance_Highlighted").disable();
+    this.InformationSecurityFormGroup.get("Contract_Audits_Provisions_Provided").disable();
+    this.InformationSecurityFormGroup.get("Activity_Liability_Present").disable();
+    this.InformationSecurityFormGroup.get("Third_Party_Data_Processing_Provisioned").disable();
+    this.InformationSecurityFormGroup.get("Contract_End_Data_Management_Provided").disable();
+    this.InformationSecurityFormGroup.get("Personal_Data_Processing_Details_Present").disable();
+    this.InformationSecurityFormGroup.get("Processing_Activities_Certification_Held").disable();
   }
 
 
@@ -268,11 +325,14 @@ onBEEChecked() {
   
   if(this.BEEChecked == false) {
     this.BEEChecked = true;
-    //this.setFocus(stepper)
+    this.FoundationaldocumentsFormGroup.get("BEECertificateDoc").enable();
+    this.FoundationaldocumentsFormGroup.get("BEEValidatityDate").enable();
   }
   else if(this.BEEChecked == true) 
   {
     this.BEEChecked = false;
+    this.FoundationaldocumentsFormGroup.get("BEECertificateDoc").disable();
+    this.FoundationaldocumentsFormGroup.get("BEEValidatityDate").disable();
   }
 
 
@@ -300,7 +360,7 @@ Create() {
         let FolderCategory = "BEE";
         let VendorNo = "Vendor" + Number(VendorID);
         
-        this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file).subscribe(response => {
+        this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[0]).subscribe(response => {
          let Path: any = response
          this.VenBEEDetails.beE_Certificate  = Path.returnedPath.toString();
          this.VendorService.AddBEEDetails(this.VenBEEDetails).subscribe(response => {console.log(response)})
@@ -336,6 +396,55 @@ Create() {
       this.DueDilligenceDetails.cyber_Insurance_Present = this.InsuranceFormGroup.get("CyberInsurance")?.value
       this.DueDilligenceDetails.proffesional_Indemnity_Insurance_Present = this.InsuranceFormGroup.get("ProfessionalIndemnityInsurance")?.value
       this.DueDilligenceDetails.other_Insurance_Required = this.InsuranceFormGroup.get("OtherInsurance")?.value
+
+      if(this.InsuranceFormGroup.get("GeneralLiabilityInsurance")?.value == true) {
+        let FolderCategory = "Insurance";
+        let VendorNo = "Vendor" + Number(VendorID);
+        
+        this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[1]).subscribe(response => {
+         let Path: any = response
+         this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+         this.VendorInsurance.vendor_ID = Number(VendorID);
+         this.VendorInsurance.vendor_Insurance_Type_ID = 1;
+         this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
+        })
+      }
+      if(this.InsuranceFormGroup.get("CyberInsurance")?.value == true) {
+        let FolderCategory = "Insurance";
+        let VendorNo = "Vendor" + Number(VendorID);
+        
+        this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[2]).subscribe(response => {
+         let Path: any = response
+         this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+         this.VendorInsurance.vendor_ID = Number(VendorID);
+         this.VendorInsurance.vendor_Insurance_Type_ID = 2;
+         this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
+        })
+      }
+      if(this.InsuranceFormGroup.get("ProfessionalIndemnityInsurance")?.value == true) {
+        let FolderCategory = "Insurance";
+        let VendorNo = "Vendor" + Number(VendorID);
+        
+        this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[3]).subscribe(response => {
+         let Path: any = response
+         this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+         this.VendorInsurance.vendor_ID = Number(VendorID);
+         this.VendorInsurance.vendor_Insurance_Type_ID = 3;
+         this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
+        })
+      }
+      if(this.InsuranceFormGroup.get("OtherInsurance")?.value == true) {
+        let FolderCategory = "Insurance";
+        let VendorNo = "Vendor" + Number(VendorID);
+        
+        this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[4]).subscribe(response => {
+         let Path: any = response
+         this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+         this.VendorInsurance.vendor_ID = Number(VendorID);
+         this.VendorInsurance.vendor_Insurance_Type_ID = 4;
+         this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
+        })
+      }
 
       //licensesorprofessional
       this.DueDilligenceDetails.licenses_Required= this.LicensesOrProfessionalAccreditationFormGroup.get("LicensesRequired")?.value
@@ -456,10 +565,10 @@ UpdateOnboardRequestStatus(i:number) {
   
 }
 
-file:File
+file:File[] = [null,null,null,null,null]
 
-CreateTest(event:any) {
-  this.file = event.target.files[0] ;
+FileAdd(i:number,event:any) {
+  this.file[i] = event.target.files[0] ;
 }
 
 CancelAddDetails() {
@@ -508,13 +617,6 @@ CancelOnboardRequestStatus(i:number) {
     //this.router.navigate(['/vendor-approve/' + this.onboardRequest[0].onboard_Request_Id]) routerLink="/vendor-unofficial-vendorlist"
   }
  
-
-  DateValidation(event:any) {
- 
-    
-   // this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.setValue(Number(sdate))
-    
-  }
   
 }
 

@@ -1,3 +1,4 @@
+
 <div class="content">
     <div style="text-align: left;position: relative;width: 500px;">
   <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
@@ -6,7 +7,7 @@
   <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;width: 330px;">Please fill in the following details:</label>
   </div>
   <mat-stepper [linear]="false"  #stepper style="background-color: #eee;" orientation="vertical" (selectionChange)="setFocus(stepper)" >
-    <mat-step [stepControl]="FoundationaldocumentsFormGroup" >
+    <mat-step [stepControl]="FoundationaldocumentsFormGroup" *ngIf="DueDilligenceData != undefined">
       <form [formGroup]="FoundationaldocumentsFormGroup" style="text-align: -webkit-center;" class="table-responsive">
         <ng-template  matStepLabel>FOUNDATIONAL DOCUMENTS</ng-template>
         <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="0">
@@ -63,36 +64,35 @@
                     <mat-checkbox formControlName="BBBEECertificate"  (click)="onBEEChecked()" checked="{{BEEChecked}}"></mat-checkbox>
                 </td>
             </tr>
-              <mat-expansion-panel *ngIf="DueDilligenceData != undefined" hideToggle disabled expanded="{{DueDilligenceData.b_BBEE_Certificate_Provided}}" style="margin-left: 10px" >
+              <mat-expansion-panel *ngIf="DueDilligenceData != undefined" hideToggle disabled expanded="{{FoundationaldocumentsFormGroup.get('BBBEECertificate').value}}" style="margin-left: 10px" >
                 <div>
                   <div class="row">
                     <div class="col-7">
                       <label style="width: 450px;">BEE level:</label>
                     </div>
                     <div class="col-5">
-                      <mat-form-field appearance="fill">
-                        <input matInput type="number" formControlName="BEELevel" >
+                      <mat-form-field appearance="outline">
+                        <input matInput type="number" formControlName="BEELevel" max="5" min="1" >
                       </mat-form-field> 
                     </div>
                   </div>
+                  <div class="row" *ngIf="DueDilligenceData != undefined && DueDilligenceData.b_BBEE_Certificate_Provided == true && FileDetails[0] != undefined" style="margin-bottom: 15px;">
+                    <div class="col-7">
+                        <label style="margin-right: 1%;" style="width: 450px;">Current BEE Document: </label>
+                    </div>
+                    <div class="col-5">
+                        <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}">{{FileDetails[0].FileName}}</a> 
+                    </div>
+                </div>
                   <div class="row">
                     <div class="col-7">
                       <label style="width: 450px;">BEE Certificate:</label>
                     </div>
                     <div class="col-5">
 
-                        <input  id="file"  type="file" class="file-upload" (change)="CreateTest($event)" formControlName="BEECertificateDoc" > 
+                        <input  id="file"  type="file" class="file-upload" (change)="FileAdd(0,$event)" formControlName="BEECertificateDoc" > 
                     </div>
                 </div>
-                    <div class="row" *ngIf="DueDilligenceData != undefined && DueDilligenceData.b_BBEE_Certificate_Provided == true && FileDetails[0] != undefined" style="margin-bottom: 15px;">
-                        <div class="col-7">
-                            <label style="margin-right: 1%;" style="width: 450px;">Current BEE Document: </label>
-                        </div>
-                        <div class="col-5">
-                            <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}">{{FileDetails[0].FileName}}</a> 
-                        </div>
-                    </div>
-                  
                   <div class="row">
                     <div class="col-7">
                       <label style="width: 450px;">Date of BEE validity:</label>
@@ -100,12 +100,12 @@
                     <div class="col-5">
                       <mat-form-field appearance="fill">
                         <mat-label>Choose a date</mat-label>
-                        <input matInput [matDatepicker]="picker" formControlName="BEEValidatityDate" >
+                        <input matInput [matDatepicker]="picker" readonly formControlName="BEEValidatityDate" [min]="minDate"  (click)="picker.open()"  #dateInput>
                         <mat-hint>MM/DD/YYYY</mat-hint>
                         <mat-datepicker-toggle matIconSuffix [for]="picker">
                         <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                         </mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-datepicker #picker startView="year" [startAt]="2023/18/18" [disabled]="false"></mat-datepicker>
                       </mat-form-field> 
                     </div>
                   </div>
@@ -187,34 +187,114 @@
              </div>      
           </form>
         </mat-step>
-        <mat-step [stepControl]="InsuranceFormGroup" >
+        <mat-step [stepControl]="InsuranceFormGroup" *ngIf="DueDilligenceData != undefined">
           <form [formGroup]="InsuranceFormGroup" style="text-align: -webkit-center;" class="table-responsive">
             <ng-template matStepLabel >INSURANCE</ng-template>
             <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="3">
               <tr>
-                  <td><label >General liability insurance:</label></td>
-                  <td> 
-                        <mat-checkbox formControlName="GeneralLiabilityInsurance"></mat-checkbox>
-                  </td>
-              </tr>
-              <tr>
-                  <td> <label>Cyber insurance:</label></td>
-                  <td>
-                        <mat-checkbox formControlName="CyberInsurance"></mat-checkbox>    
-                  </td>
-              </tr>
-              <tr>
-                  <td><label>Professional indemnity insurance (if applicable):</label></td>
-                  <td>              
-                      <mat-checkbox formControlName="ProfessionalIndemnityInsurance"></mat-checkbox> 
-                  </td>
-              </tr>
-              <tr>
-                <td><label>Other specific insurance required per service/industry:</label></td>
-                <td>              
-                    <mat-checkbox formControlName="OtherInsurance"></mat-checkbox> 
+                <td><label >General liability insurance:</label></td>
+                <td> 
+                      <mat-checkbox formControlName="GeneralLiabilityInsurance"></mat-checkbox>
                 </td>
             </tr>
+            <tr>
+              <mat-expansion-panel hideToggle disabled expanded="{{InsuranceFormGroup.get('GeneralLiabilityInsurance').value}}" style="margin-left: 10px" >
+                <div class="row" style="margin-bottom: 15px;" *ngIf="DueDilligenceData.general_Liability_Insurance_Present == true">
+                  <div class="col-7">
+                    <label style="width: 450px;">Current General liability Insurance Document:</label>
+                  </div>
+                  <div class="col-5">
+                    <a href="{{FileDetails[1].FileURL}}" download="{{FileDetails[1].FileName}}">{{FileDetails[1].FileName}}</a> 
+                  </div>
+                </div>  
+                  <div class="row">
+                    <div class="col-7">
+                      <label style="width: 450px;">Add new General liability Insurance Document?</label>
+                    </div>
+                    <div class="col-5">
+                        <input  id="file"  type="file" class="file-upload" (change)="FileAdd(1,$event)" formControlName="GeneralLiabilityInsuranceDoc" > 
+                    </div>
+                  </div>    
+              </mat-expansion-panel>
+            </tr>
+            <tr>
+                <td> <label>Cyber insurance:</label></td>
+                <td>
+                      <mat-checkbox formControlName="CyberInsurance"></mat-checkbox>    
+                </td>
+            </tr>
+            <tr>
+              <mat-expansion-panel hideToggle disabled expanded="{{InsuranceFormGroup.get('CyberInsurance').value}}" style="margin-left: 10px" >
+                <div class="row" style="margin-bottom: 15px;" *ngIf="DueDilligenceData.cyber_Insurance_Present == true">
+                  <div class="col-7" >
+                    <label style="width: 450px;">Current Cyber Insurance Document:</label>
+                  </div>
+                  <div class="col-5">
+                    <a href="{{FileDetails[2].FileURL}}" download="{{FileDetails[2].FileName}}">{{FileDetails[2].FileName}}</a> 
+                  </div>
+                </div>
+                  <div class="row">
+                    <div class="col-7">
+                      <label style="width: 450px;">Add a new Cyber Insurance Document?</label>
+                    </div>
+                    <div class="col-5">
+                        <input  id="file"  type="file" class="file-upload" (change)="FileAdd(2,$event)" formControlName="CyberInsuranceDoc" > 
+                    </div>
+                  </div>    
+              </mat-expansion-panel>
+            </tr>
+            <tr>
+                <td><label>Professional indemnity insurance (if applicable):</label></td>
+                <td>              
+                    <mat-checkbox formControlName="ProfessionalIndemnityInsurance"></mat-checkbox> 
+                </td>
+            </tr>
+            <tr>
+              <mat-expansion-panel hideToggle disabled expanded="{{InsuranceFormGroup.get('ProfessionalIndemnityInsurance').value}}" style="margin-left: 10px" >
+                <div class="row" style="margin-bottom: 15px;" *ngIf="DueDilligenceData.proffesional_Indemnity_Insurance_Present == true">
+                  <div class="col-7">
+                    <label style="width: 450px;">Current Professional Indemnity Insurance Document:</label>
+                  </div>
+                  <div class="col-5">
+                    <a href="{{FileDetails[3].FileURL}}" download="{{FileDetails[3].FileName}}">{{FileDetails[3].FileName}}</a> 
+                  </div>
+                </div>
+                  <div class="row">
+                    <div class="col-7">
+                      <label style="width: 450px;">Add a new Professional Indemnity Insurance Document?</label>
+                    </div>
+                    <div class="col-5">
+                        <input  id="file"  type="file" class="file-upload" (change)="FileAdd(3,$event)" formControlName="ProfessionalIndemnityInsuranceDoc" > 
+                    </div>
+                  </div>    
+              </mat-expansion-panel>
+            </tr>
+            <tr>
+              <td><label>Other specific insurance required per service/industry:</label></td>
+              <td>              
+                  <mat-checkbox formControlName="OtherInsurance"></mat-checkbox> 
+              </td>
+          </tr>
+          <tr>
+            <mat-expansion-panel hideToggle disabled expanded="{{InsuranceFormGroup.get('OtherInsurance').value}}" style="margin-left: 10px" >
+              <div class="row" style="margin-bottom: 15px;" *ngIf="DueDilligenceData.other_Insurance_Required == true">
+                <div class="col-7">
+                  <label style="width: 450px;">Current Other specific insurance Document:</label>
+                </div>
+                <div class="col-5">
+                  <a href="{{FileDetails[4].FileURL}}" download="{{FileDetails[4].FileName}}">{{FileDetails[4].FileName}}</a> 
+                </div>
+              </div>
+                <div class="row">
+                  <div class="col-7">
+                    <label style="width: 450px;">Add new Other specific insurance Document?</label>
+                  </div>
+                  <div class="col-5">
+                      <input  id="file"  type="file" class="file-upload" (change)="FileAdd(4,$event)" formControlName="OtherInsuranceDoc" > 
+                  </div>
+                </div>    
+            </mat-expansion-panel>
+          </tr>
           </table>  
           <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
               <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
