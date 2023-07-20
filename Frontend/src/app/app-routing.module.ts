@@ -69,6 +69,7 @@ import { EditDelegationComponent } from './Delegation/edit-delegation/edit-deleg
 
 import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
 import { UpdatePasswordComponent } from './User/update-password/update-password.component';
+import { CreateProcurementRequestComponent } from './create-procurement-request/create-procurement-request.component';
 
 import { BackupComponent } from './Settings/backup/backup.component';
 
@@ -291,8 +292,13 @@ const routes: Routes = [
   {
     path: "ViewSettings" , canActivate: [AuthService],
     component: BackupComponent
+  },
+  {
+    path: 'CreateProcurementRequest', canActivate: [AuthService],
+    component: CreateProcurementRequestComponent
   }
-  
+
+
 ];
 
 @NgModule({

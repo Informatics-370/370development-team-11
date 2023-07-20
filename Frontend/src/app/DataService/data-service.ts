@@ -41,6 +41,8 @@ import { POPI } from '../Shared/POPI';
 import { Notification_Type } from '../Shared/Notification_Type';
 import { Notification } from '../Shared/Notification';
 
+import { Procurement_Request } from '../Shared/Procurement_Request';
+import { Procurement_Request_Quote } from '../Shared/Procurement_Request_Quote';
 
 @Injectable({
   providedIn: 'root'
@@ -949,4 +951,23 @@ export class DataService {
   createBackup(): Observable<any> {
     return this.httpClient.post(this.backupUrl, {});
   }
+  GetProcurementRequests(): Observable<any> {
+    return this.httpClient.get<Procurement_Request[]>(`${this.apiUrl}ProcurementRequest/GetProcurementRequests`).pipe(map(result => result))
+  }
+
+  AddProcurementRequest(AddProcurementRequest: Procurement_Request) {
+    return this.httpClient.post<Procurement_Request>(`${this.apiUrl}ProcurementRequest/CreateProcurementRequest`, AddProcurementRequest).pipe(map(result => result))
+  }
+
+  ProcurementRequestFileAdd(VendorName: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('VendorName', VendorName)
+    return this.httpClient.post<any>(`${this.apiUrl}ProcurementRequest/uploadProcurementQuote`, formData, this.httpOptions)
+  }
+
+  AddProcurementRequestQuote(AddProcurementRequestQuote: Procurement_Request_Quote) {
+    return this.httpClient.post<Procurement_Request_Quote>(`${this.apiUrl}ProcurementRequest/CreateProcurementQuote`, AddProcurementRequestQuote).pipe(map(result => result))
+  }
+
 }

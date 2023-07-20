@@ -30,6 +30,8 @@ namespace ProcionAPI.Data
         public DbSet<Notification> Notification { get; set; }
         public DbSet<Notification_Type> Notification_Type { get; set; }
         public DbSet<Procurement_Request> Procurement_Request { get; set; }
+        public DbSet<Procurement_Request_Quote> Procurement_Request_Quote { get; set; }
+        public DbSet<Procurement_Details> Procurement_Details { get; set; }
         public DbSet<Requisition_Status> Requisition_Status { get; set; }
         public DbSet<Payment_Made> Payment_Made { get; set; }
         public DbSet<Sign_Off_Status> Sign_Off_Status { get; set; }
@@ -361,6 +363,211 @@ namespace ProcionAPI.Data
               Name = "Other specific insurance",
               Description = "Other specific insurance",
           });
+
+          modelBuilder.Entity<Delegation_Status>()
+            .HasData(
+            new
+            {
+                Status_ID = 1,
+                Name = "Inactive",
+                Description = "Request is created but not active",
+
+            },
+            new
+            {
+                Status_ID = 2,
+                Name = "Active",
+                Description = "Request period is active and access is given",
+            },
+            new
+            {
+                Status_ID = 3,
+                Name = "Revoked",
+                Description = "Request period has passed and access revoked",
+            }
+            );
+
+            modelBuilder.Entity<Notification_Type>()
+            .HasData(
+            new
+            {
+                Notification_Type_ID = 1,
+                Name = "New Vendor Onboard Request",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 2,
+                Name = "Vendor BEE renewal",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 3,
+                Name = "Vendor Review",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 4,
+                Name = "Low Inventory Stock Level Detected",
+                Description = "Please review the product and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 5,
+                Name = "Vendor Onboard Request Has Been Accepted",
+                Description = "Please complete the create vendor process to add them to the system.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 6,
+                Name = "Vendor Onboard Request Has Been Rejected",
+                Description = "Please contact the relevant person to find rejection reason.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 7,
+                Name = "New Procurement Request Has Exceeded Budget Allocation",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 8,
+                Name = "Procurement Request Has Been Accepted",
+                Description = "Please ensure all submitted information is correct.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 9,
+                Name = "Procurement Request Has Been Rejected",
+                Description = "Please review the request for the relevant reason and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 10,
+                Name = "New Procurement Request Quote Approval Required.",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 11,
+                Name = "Procurement Request Has Been Approved",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 12,
+                Name = "Procurement Request Has Been Finalised",
+                Description = "Please ensure all items are registered on the system.",
+
+            }
+            );
+
+            modelBuilder.Entity<Help_Category>()
+            .HasData(
+            new
+            {
+                Help_Category_ID = 1,
+                Name = "Vendor",
+                Description = "Help related to Vendor activities.",
+            },
+            new
+            {
+                Help_Category_ID = 2,
+                Name = "Finance",
+                Description = "Help related to Finiance activities.",
+            },
+            new
+            {
+                Help_Category_ID = 3,
+                Name = "Reports",
+                Description = "Help related to Reporting activities.",
+            },
+            new
+            {
+                Help_Category_ID = 4,
+                Name = "Procurment",
+                Description = "Help related to Procurement activities.",
+            },
+            new
+            {
+                  Help_Category_ID = 5,
+                  Name = "Administration",
+                  Description = "Help related to Administration activities.",
+            },
+            new
+            {
+                   Help_Category_ID = 6,
+                   Name = "Inventory",
+                   Description = "Help related to Inventory activities.",
+            }
+            );
+
+
+            modelBuilder.Entity<Requisition_Status>()
+            .HasData(
+            new
+            {
+                Requisition_Status_ID = 1,
+                Name = "Accepted",
+                Description = "Accepted",
+
+            },
+            new
+            {
+                Requisition_Status_ID = 2,
+                Name = "Rejected",
+                Description = "Rejected",
+
+            },
+            new
+            {
+                Requisition_Status_ID = 3,
+                Name = "Approval Required",
+                Description = "Approval Required",
+
+            }
+
+            );
+
+            modelBuilder.Entity<Procurement_Request>()
+            .HasData(
+            new
+            {
+                Procurement_Request_ID = 1,
+                Vendor_ID = 1,
+                Requisition_Status_ID = 3,
+                User_ID = 1,
+                Name = "Procurement Request for x",
+                Description = "A new company procurement request"
+
+            }
+            );
+
+            modelBuilder.Entity<Procurement_Request_Quote>()
+            .HasData(
+            new
+            {
+                Quote_ID = 1,
+                Procurement_Request_ID = 1,
+                Path = "Test"
+            }
+            );
+
+
+
 
         }
     }

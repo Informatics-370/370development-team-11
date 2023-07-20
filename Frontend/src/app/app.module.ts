@@ -115,6 +115,7 @@ import { ViewProcurementRequestComponent } from './view-procurement-request/view
 import { UpdatePasswordComponent } from './User/update-password/update-password.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-approve-edit.component';
+import { CreateProcurementRequestComponent } from './create-procurement-request/create-procurement-request.component';
 
 
 import { MatBadgeModule } from '@angular/material/badge';
@@ -210,6 +211,7 @@ import { RestoreComponent } from './Settings/backupDialog/restore.component';
     VideoDialogComponent,
     BackupComponent,
     RestoreComponent,
+    CreateProcurementRequestComponent
   ],
   imports: [
     BrowserModule,
