@@ -107,6 +107,7 @@ import { DatePipe } from '@angular/common';
 import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
 import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
 import { UpdatePasswordComponent } from './User/update-password/update-password.component';
+import { CreateProcurementRequestComponent } from './create-procurement-request/create-procurement-request.component';
 
 
 
@@ -184,7 +185,8 @@ import { UpdatePasswordComponent } from './User/update-password/update-password.
     RejectDelegationComponent,
     UpdateConsumableStockComponent,
     ViewProcurementRequestComponent,
-    UpdatePasswordComponent
+    UpdatePasswordComponent,
+    CreateProcurementRequestComponent
   ],
   imports: [
     BrowserModule,

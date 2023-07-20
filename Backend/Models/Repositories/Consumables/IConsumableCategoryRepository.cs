@@ -1,6 +1,6 @@
 ﻿using ProcionAPI.Models.Entities;
 
-namespace ProcionAPI.Models.Repositories
+namespace ProcionAPI.Models.Repositories.Consumables
 {
     public interface IConsumableCategoryRepository
     {

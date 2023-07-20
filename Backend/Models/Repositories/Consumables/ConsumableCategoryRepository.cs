@@ -4,9 +4,9 @@ using ProcionAPI.Data;
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Controllers;
 
-namespace ProcionAPI.Models.Repositories
+namespace ProcionAPI.Models.Repositories.Consumables
 {
-    public class ConsumableCategoryRepository: IConsumableCategoryRepository
+    public class ConsumableCategoryRepository : IConsumableCategoryRepository
     {
         private readonly AppDBContext _dbContext;
 
@@ -22,7 +22,7 @@ namespace ProcionAPI.Models.Repositories
         }
 
         public async Task<Consumable_Category[]> AddCategoryAsync(Consumable_Category CategoryAdd)
-        { 
+        {
 
             // Add the consumable to the database and save changes
             await _dbContext.AddAsync(CategoryAdd);

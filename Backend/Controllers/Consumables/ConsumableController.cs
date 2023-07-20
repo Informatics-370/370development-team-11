@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using ProcionAPI.Models.Entities;
-using ProcionAPI.Models.Repositories;
 using ProcionAPI.Data;
 using Microsoft.AspNetCore.Cors;
+using ProcionAPI.Models.Repositories.Consumables;
 
-namespace ProcionAPI.Controllers
+namespace ProcionAPI.Controllers.Consumables
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -52,7 +52,7 @@ namespace ProcionAPI.Controllers
 
         [HttpGet]
         [Route("GetConsumableByID/{id}")]
-        public async Task<IActionResult> GetConsumableByID([FromRoute]int id)
+        public async Task<IActionResult> GetConsumableByID([FromRoute] int id)
         {
             try
             {
