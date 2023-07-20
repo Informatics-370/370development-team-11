@@ -28,5 +28,7 @@ namespace ProcionAPI.Models.Repositories {
         Task<User> UpdateUserPassword(int userID, string NewPassword);
 
         Task<Admin> GetAdminByEmailAsync(string Email);
+
+        //Task<User> ResetNumNotifications(string username);
     }
 }

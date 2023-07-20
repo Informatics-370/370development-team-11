@@ -31,9 +31,7 @@ export class ViewDelegationComponent implements OnInit{
 
   
   displayedColumnsAdmin: string[] = ['id', 'delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete'];
-  displayedColumnsMD: string[] = ['id', 'delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'accept', 'reject'];
   dataSource = new MatTableDataSource<Delegation_Of_Authority>;
-  dataSourceMD = new MatTableDataSource<Delegation_Of_Authority>;
 
   userDelete: any
   rl: Role = {
@@ -62,19 +60,28 @@ export class ViewDelegationComponent implements OnInit{
   searchWord: string = "";
 
   ngOnInit() {
-    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin" ) {
-      this.rAdmin = "true";
-    } else if (this.iRole == "MD") {
-      this.rMD = "true";
-    }
+    this.dataService.CheckDelegation().subscribe({
+      next: (r) => {
+        if (r) {
+          this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
-    this.RoleToUse = this.dataService.decodeUserRole(sessionStorage.getItem("token"))
-    //console.log(this.RoleToUse)
-    //console.log(this.RoleToUse === "Admin")
+          if (this.iRole == "Admin") {
+            this.rAdmin = "true";
+          }
 
-    this.GetDelegations();
+          this.RoleToUse = this.dataService.decodeUserRole(sessionStorage.getItem("token"))
+          //console.log(this.RoleToUse)
+          //console.log(this.RoleToUse === "Admin")
+
+          this.GetDelegations();
+        }
+      }
+    })
+
+    
+
+    
   }
 
   
@@ -89,14 +96,7 @@ export class ViewDelegationComponent implements OnInit{
       else if (searchTerm == "") {
         this.dataSource = new MatTableDataSource([...this.Delegations])
       }
-    } else if (this.iRole == "MD") {
-      if (searchTerm) {
-        this.dataSourceMD = new MatTableDataSource(this.Delegations.filter(r => r.delegatingParty.toLocaleLowerCase().includes(searchTerm)))
-      }
-      else if (searchTerm == "") {
-        this.dataSourceMD = new MatTableDataSource([...this.Delegations])
-      }
-    }
+    } 
 
     
   }
@@ -131,35 +131,7 @@ export class ViewDelegationComponent implements OnInit{
         }
         /*this.SearchedEmployee = this.Employees;*/
       })
-    } else if (this.iRole == "MD") {
-      this.dataService.GetDelegationsByRole().subscribe(result => {
-        if (result) {
-          hideloader();
-        }
-
-        this.Delegations = result;
-        this.dataSourceMD = new MatTableDataSource(result);
-
-        for (let i = 0; i < this.Delegations.length; i++) {
-          this.FileDetails.push({ FileURL: "", FileName: "" })
-          let sFile = this.Delegations[i].delegation_Document;
-
-          if (sFile != "None") {
-            let DelegateName = sFile.substring(0, sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-
-            this.FileDetails[i].FileURL = `https://localhost:7186/api/Delegation/GetDelegationFiles/${DelegateName}/${filename}`
-            this.FileDetails[i].FileName = filename
-          }
-          else {
-            this.FileDetails[i].FileURL = ""
-            this.FileDetails[i].FileName = sFile;
-          }
-        }
-        /*this.SearchedEmployee = this.Employees;*/
-      })
-      
-    }
+    } 
 
     
     function hideloader() {
@@ -190,38 +162,6 @@ export class ViewDelegationComponent implements OnInit{
       disableClose: true,
       data: { ID }
     });
-
-    this.dialog.afterAllClosed.subscribe({
-      next: (response) => {
-        this.ngOnInit();
-      }
-    })
-  }
-
-  acceptRequest(id: number) {
-    this.dataService.EditDelegationStatus(2, id).subscribe(r => {
-      var action = "ACCEPT";
-      var title = "ACCEPT SUCCESSFUL";
-      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + id + "</strong> has been <strong style='color:green'> ACCEPTED </strong> successfully!");
-
-      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-        disableClose: true,
-        data: { action, title, message }
-      });
-
-      const duration = 1750;
-      setTimeout(() => {
-        this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-        dialogRef.close();
-      }, duration);
-    })
-  }
-
-  rejectRequest(ID: number) {
-    const select = this.dialog.open(RejectDelegationComponent, {
-      disableClose: true,
-      data: { ID }
-    })
 
     this.dialog.afterAllClosed.subscribe({
       next: (response) => {

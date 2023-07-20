@@ -362,6 +362,117 @@ namespace ProcionAPI.Data
               Description = "Other specific insurance",
           });
 
+          modelBuilder.Entity<Delegation_Status>()
+            .HasData(
+            new
+            {
+                Status_ID = 1,
+                Name = "Inactive",
+                Description = "Request is created but not active",
+
+            },
+            new
+            {
+                Status_ID = 2,
+                Name = "Active",
+                Description = "Request period is active and access is given",
+            },
+            new
+            {
+                Status_ID = 3,
+                Name = "Revoked",
+                Description = "Request period has passed and access revoked",
+            }
+            );
+
+            modelBuilder.Entity<Notification_Type>()
+            .HasData(
+            new
+            {
+                Notification_Type_ID = 1,
+                Name = "New Vendor Onboard Request",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 2,
+                Name = "Vendor BEE renewal",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 3,
+                Name = "Vendor Review",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 4,
+                Name = "Low Inventory Stock Level Detected",
+                Description = "Please review the product and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 5,
+                Name = "Vendor Onboard Request Has Been Accepted",
+                Description = "Please complete the create vendor process to add them to the system.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 6,
+                Name = "Vendor Onboard Request Has Been Rejected",
+                Description = "Please contact the relevant person to find rejection reason.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 7,
+                Name = "New Procurement Request Has Exceeded Budget Allocation",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 8,
+                Name = "Procurement Request Has Been Accepted",
+                Description = "Please ensure all submitted information is correct.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 9,
+                Name = "Procurement Request Has Been Rejected",
+                Description = "Please review the request for the relevant reason and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 10,
+                Name = "New Procurement Request Quote Approval Required.",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 11,
+                Name = "Procurement Request Has Been Approved",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 12,
+                Name = "Procurement Request Has Been Finalised",
+                Description = "Please ensure all items are registered on the system.",
+
+            }
+            );
+
         }
     }
 }

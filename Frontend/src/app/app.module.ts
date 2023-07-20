@@ -113,6 +113,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-approve-edit.component';
 
 
+import { MatBadgeModule } from '@angular/material/badge';
 
 
 
@@ -225,7 +226,8 @@ import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-
     MatAutocompleteModule,
     MatSortModule,
     MatTooltipModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatBadgeModule
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },

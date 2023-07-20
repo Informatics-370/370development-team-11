@@ -37,6 +37,8 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
+//----------------------------------------------------------------------------------------------------- NORMAL LOGIN -------------------------------------------------------------------------------------
         [HttpPost("login/{UserName}/{Password}")]
         public async Task<IActionResult> Login([FromRoute] string UserName, [FromRoute] string Password)
         {
@@ -111,6 +113,92 @@ namespace ProcionAPI.Controllers
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, user.Role.Name),
             new Claim("TemAccess", "Yes")
+                }),
+                Expires = DateTime.UtcNow.AddHours(3), // Set token expiration time
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
+
+        //-------------------------------------------------------------------------------------------------TEMP ACCESS LOGIN-------------------------------------------------------------------------------
+
+        [HttpPost("loginWithTemp/{UserName}/{Password}/{TempAcc}")]
+        public async Task<IActionResult> LoginWithTemp([FromRoute] string UserName, [FromRoute] string Password, [FromRoute] string TempAcc)
+        {
+            if (await _UserRepository.GetUserByUsername(UserName) != null)
+            {
+                bool isCredentialsValid = await _UserRepository.VerifyCredentials(UserName, Password);
+                if (isCredentialsValid == true)
+                {
+                    User user = await _UserRepository.GetUserByUsername(UserName);
+
+                    // Generate token
+                    var token = GenerateTokenWithTemp(user, TempAcc);
+
+                    // Return the token as a response to the Angular frontend
+                    return Ok(new { token });
+                }
+            }
+
+            else if (await _UserRepository.GetAdminByEmailAsync(UserName) != null)
+            {
+                Admin AdminLogin = await _UserRepository.GetAdminByEmailAsync(UserName);
+                var MyUsername = AdminLogin.User.Username;
+                bool isCredentialsValid = await _UserRepository.VerifyCredentials(MyUsername, Password);
+                if (isCredentialsValid == true)
+                {
+                    User user = await _UserRepository.GetUserByUsername(MyUsername);
+
+                    // Generate token
+                    var token = GenerateTokenWithTemp(user, TempAcc);
+
+                    // Return the token as a response to the Angular frontend
+                    return Ok(new { token });
+                }
+            }
+
+            else if (await _UserRepository.GetEmployeeByEmailAsync(UserName) != null)
+            {
+                Employee EmpLogin = await _UserRepository.GetEmployeeByEmailAsync(UserName);
+                var MyUsername = EmpLogin.User.Username;
+                bool isCredentialsValid = await _UserRepository.VerifyCredentials(MyUsername, Password);
+                if (isCredentialsValid == true)
+                {
+                    User user = await _UserRepository.GetUserByUsername(MyUsername);
+
+                    // Generate token
+                    var token = GenerateTokenWithTemp(user, TempAcc);
+
+                    // Return the token as a response to the Angular frontend
+                    return Ok(new { token });
+                }
+            }
+
+
+            return Unauthorized(new { error = "Invalid credentials" });
+        }
+
+        private string GenerateTokenWithTemp(User user, string TempAcc)
+        {
+            byte[] key;
+            using (var randomNumberGenerator = new RNGCryptoServiceProvider())
+            {
+                key = new byte[32]; // 256 bits
+                randomNumberGenerator.GetBytes(key);
+            }
+            string encodedKey = Convert.ToBase64String(key);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, user.Role.Name),
+            new Claim("TemAccess", TempAcc)
                 }),
                 Expires = DateTime.UtcNow.AddHours(3), // Set token expiration time
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -520,5 +608,21 @@ namespace ProcionAPI.Controllers
 
             return Unauthorized(new { error = "Invalid credentials" });
         }
+
+        //[HttpPut]
+        //[Route("ResetNotif/{username}")]
+        //public async Task<ActionResult> ResetNumNotifications([FromRoute] string username)
+        //{
+        //    try
+        //    {
+        //        var result = await _UserRepository.ResetNumNotifications(username);
+        //        return Ok(result);
+
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return StatusCode(500, "Internal Server Error. Please contact support");
+        //    }
+        //}
     }
 }

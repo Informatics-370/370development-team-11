@@ -196,6 +196,7 @@ export class CreateEmployeeComponent implements OnInit {
     this.mail.Password = newPassword;
     this.mail.Email = this.myForm.get('Email')?.value;
     document.getElementById('loading').style.display = 'block';
+    document.querySelector('button').disabled;
 
     //console.log(cel.substring(7,3));
     //console.log(username);

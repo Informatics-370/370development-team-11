@@ -42,7 +42,7 @@ namespace ProcionAPI.Models.Repositories
         public async Task<Delegation_Of_Authority[]> AddDelegationAsync(Delegation_Of_Authority DelegationAdd)
         {
 
-            Delegation_Status existingStatus = await _dbContext.Delegation_Status.FirstOrDefaultAsync(s => s.Name == "Awaiting Approval");
+            Delegation_Status existingStatus = await _dbContext.Delegation_Status.FirstOrDefaultAsync(s => s.Name == "Inactive");
             User existingUser = await _dbContext.User.FirstOrDefaultAsync(u => u.Username == DelegationAdd.User.Username);
             Admin existingAdmin = await _dbContext.Admin.FirstOrDefaultAsync(a => a.User.Username == DelegationAdd.Admin.User.Username);
             
@@ -92,7 +92,7 @@ namespace ProcionAPI.Models.Repositories
             delegation.Delegation_Status = new Delegation_Status();
             delegation.User = new User();
 
-            Delegation_Status existingStatus = await _dbContext.Delegation_Status.FirstOrDefaultAsync(s => s.Name == "Awaiting Approval");
+            Delegation_Status existingStatus = await _dbContext.Delegation_Status.FirstOrDefaultAsync(s => s.Name == DelegationUpdate.Delegation_Status.Name);
             User existingUser = await _dbContext.User.FirstOrDefaultAsync(u => u.Username == DelegationUpdate.User.Username);
             Admin existingAdmin = await _dbContext.Admin.FirstOrDefaultAsync(a => a.User.Username == DelegationUpdate.Admin.User.Username);
 
@@ -153,6 +153,16 @@ namespace ProcionAPI.Models.Repositories
             await _dbContext.SaveChangesAsync();
 
             return DelegationToDelete;
+        }
+
+        public void Delete<T>(T entity) where T : class
+        {
+            _dbContext.Remove(entity);
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return await _dbContext.SaveChangesAsync() > 0;
         }
 
         public async Task<Delegation_Status[]> GetAllRejStatusesAsync()

@@ -174,14 +174,40 @@ namespace ProcionAPI.Controllers
         {
             try
             {
-                var result = await _DelegationRepository.DeleteDelegationAsync(delegationID);
-                return Ok(result);
+                var existingDOA = await _DelegationRepository.GetDelegationAsync(delegationID);
+                if (existingDOA == null) return NotFound($"The delegation request does not exist");
+                Console.WriteLine("poes");
+                Console.WriteLine(existingDOA);
+
+                _DelegationRepository.Delete(existingDOA);
+                if (await _DelegationRepository.SaveChangesAsync()) return Ok(existingDOA);
             }
             catch (Exception)
             {
 
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
+            return BadRequest("Your request is invalid");
+        }
+
+        [HttpDelete]
+        [Route("DeleteTempAcc/{delegationID}")]
+        public async Task<IActionResult> DeleteTempAcc(int delegationID)
+        {
+            try
+            {
+                var existingTempAcc = await _DelegationRepository.GetTempAccAsync(delegationID);
+                if (existingTempAcc == null) return NotFound($"The temporary access does not exist");
+
+                _DelegationRepository.Delete(existingTempAcc);
+                if (await _DelegationRepository.SaveChangesAsync()) return Ok(existingTempAcc);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+            return BadRequest("Your request is invalid");
         }
 
         [HttpPut]

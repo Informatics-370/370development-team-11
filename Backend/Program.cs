@@ -73,6 +73,7 @@ builder.Services.AddScoped<IVendorRepository, VendorRepository>();
 
 builder.Services.AddScoped<IMandateRepository, MandateRepository>();
 builder.Services.AddScoped<IDelegationRepository, DelegationRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
 var app = builder.Build();
 

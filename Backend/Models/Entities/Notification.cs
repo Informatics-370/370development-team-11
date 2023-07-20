@@ -8,22 +8,22 @@ namespace ProcionAPI.Models.Entities
     {
         [Key]
         public int Notification_ID { get; set; }
-        [Required]
-        public int Calender_Item_ID { get; set; }
+
         [Required]
         public int Notification_Type_ID { get; set; }
 
-        [ForeignKey("Calender_Item_ID")]
-        public Calender_Item Calender_Item { get; set; }
         [ForeignKey("Notification_Type_ID")]
         public Notification_Type Notification_Type { get; set; }
 
-        [MaxLength(32)]
+        [Required]
+        public int User_Id { get; set; }
+
+        [ForeignKey("User_Id")]
+        public User User { get; set; }
+
+        [MaxLength(100)]
         public string Name { get; set; }
 
-        [MaxLength(50)]
-        public string Description { get; set; }
-
-        public DateTime Due_Date { get; set; }
+        public DateTime Send_Date { get; set; }
     }
 }

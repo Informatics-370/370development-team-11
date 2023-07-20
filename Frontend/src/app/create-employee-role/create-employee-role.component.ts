@@ -21,7 +21,7 @@ export class CreateEmployeeRoleComponent implements OnInit {
 
   ngOnInit() {
     this.myForm = new FormGroup({
-      Name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+"),]),
+      Name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 -]+"),]),
       Description: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 ]+")])
     });
   }
