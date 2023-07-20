@@ -55,6 +55,7 @@ export class RequestViewComponent implements OnInit {
 
     this.RequestService.GetAllOnboardRequest().subscribe(result => {let RequestList:any[] = result
       RequestList.forEach((element) => this.OnboardRequest.push(element));
+      console.log(result)
       RequestList.forEach((element) => this.vendor.push(element.vendors));
       this.RequestVendors =  new MatTableDataSource(this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
       this.ReqVenLen = this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)

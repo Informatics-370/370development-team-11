@@ -212,12 +212,12 @@ namespace ProcionAPI.Controllers
             }
         }
         [HttpGet]
-        [Route("GetInsuranceByID/{InsuranceID}")]
-        public async Task<IActionResult> GetInsuranceByID(int InsuranceID)
+        [Route("GetInsuranceByID/{VendorID}")]
+        public async Task<IActionResult> GetInsurancesByID(int VendorID)
         {
             try
             {
-                var result = await _VendorRepository.GetInsuranceByIDAsync(InsuranceID);
+                var result = await _VendorRepository.GetInsuranceByIDAsync(VendorID);
                 return Ok(result);
             }
             catch (Exception)
@@ -460,12 +460,12 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateInsurance/{InsuranceID}")]
-        public async Task<IActionResult> UpdateInsurance(int InsuranceID,Vendor_Insurance Insurance)
+        [Route("UpdateInsurance/{VendorID}")]
+        public async Task<IActionResult> UpdateInsurance(int VendorID, Vendor_Insurance Insurance)
         {
             try
             {
-                var result = await _VendorRepository.UpdateInsuranceAsync(InsuranceID,Insurance);
+                var result = await _VendorRepository.UpdateInsuranceAsync(VendorID, Insurance);
                 return Ok(result);
             }
             catch (Exception)
@@ -629,12 +629,12 @@ namespace ProcionAPI.Controllers
             }
         }
         [HttpDelete]
-        [Route("DeleteInsuranceByID/{InsuranceID}")]
-        public async Task<IActionResult> DeleteInsuranceByID(int InsuranceID)
+        [Route("DeleteInsuranceByID/{VendorID}/{InsuranceTypeID}")]
+        public async Task<IActionResult> DeleteInsuranceByID(int VendorID,int InsuranceTypeID)
         {
             try
             {
-                var result = await _VendorRepository.DeleteInsuranceByIDAsync(InsuranceID);
+                var result = await _VendorRepository.DeleteInsuranceByIDAsync(VendorID, InsuranceTypeID);
                 return Ok(result);
             }
             catch (Exception)

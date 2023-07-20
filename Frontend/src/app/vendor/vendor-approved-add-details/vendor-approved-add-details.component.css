@@ -90,3 +90,8 @@ mat-error:first-child {
 .mat-mdc-select {
     width: 80%!important;
 }
+
+::ng-deep .MandatorySelect .mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background {
+    border-color: #f44336!important;
+}
+

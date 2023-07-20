@@ -46,12 +46,13 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
 
 
   ngOnInit() {
-    
+    console.log("reset")
     this.PendingOnboardDetails = [];
     this.PendingOnboardRequests = [];
     this.PendingOnboardDetailSummary  = [];
     this.onboardRequestData = [];
-
+    this.iRole = ""
+    this.rAdmin = ""
 
     this.iRole = this.VendorService.decodeUserRole(sessionStorage.getItem("token"));
 
@@ -62,14 +63,16 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
     }
 
    this.VendorService.GetAllOnboardRequest().subscribe((result) => {
-      let RequestList:any[] = result
-      this.onboardRequestData = result
+      let RequestList:any[] = []
+      RequestList = result 
+      this.onboardRequestData = RequestList
       RequestList.forEach((element) => this.PendingOnboardDetails.push(element));
       //RequestList.forEach((element) => this.vendor.push(element.vendors));
       this.PendingOnboardRequests =  new MatTableDataSource(this.PendingOnboardDetails.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
       console.log(this.PendingOnboardRequests.data)
       console.log(this.PendingOnboardDetails)
-      const countsByPart = this.PendingOnboardDetails.reduce((accumulator, currentValue) => {
+      let countsByPart = undefined
+      countsByPart = this.PendingOnboardDetails.reduce((accumulator, currentValue) => {
         const partId = currentValue.onboard_Request_Id;
         
         if (!accumulator.hasOwnProperty(partId)) {
@@ -94,7 +97,7 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
           quoteTotal: countsByPart[element.onboard_Request_Id],
           employeeName:element.employeeName,
           vendorId:element.vendor_ID,
-          VendorStatusId:element.vendors.vendor_Status_ID,
+          VendorStatusId:this.getVendorStatusID(element.onboard_Request_Id),
           onboardRequestStatusID: element.onboard_Request_status_ID
         }
         console.log(result.SelectedRequestVendorName)
@@ -160,6 +163,26 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
       return result
   }
 
+  getVendorStatusID(i:number) {
+    let result = 5
+    
+    for (let a = 0;a < this.onboardRequestData.length;a++) {
+        if(this.onboardRequestData[a].onboard_Request_Id == i) {
+          console.log(this.onboardRequestData[a].vendors.vendor_Status_ID)
+          if(this.onboardRequestData[a].vendors.vendor_Status_ID == 4) {
+            
+            result = this.onboardRequestData[a].vendors.vendor_Status_ID
+            return result
+          }
+          else if(this.onboardRequestData[a].vendors.vendor_Status_ID == 2) {
+            result = this.onboardRequestData[a].vendors.vendor_Status_ID
+            return result
+          }
+        }
+    }
+      return result
+  }
+
   UpdateOnboardRequestStatus(i:number) {
 
     for (let a = 0;a < this.onboardRequestData.length;a++) {
@@ -177,7 +200,7 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
     for (let a = 0;a < this.onboardRequestData.length;a++) {
       if(this.onboardRequestData[a].onboard_Request_Id == i) {
         if(this.onboardRequestData[a].onboard_Request_status_ID == 4) {
-          this.VendorService.ChangeOnboardStatus(5,i,this.onboardRequestData[a].vendor_ID).subscribe()
+         //this.VendorService.ChangeOnboardStatus(4,i,this.onboardRequestData[a].vendor_ID).subscribe()
           this.router.navigate(['/vendor-approve/' + i])
         }
         else if(this.onboardRequestData[a].vendors.vendor_Status_ID == 5 || this.onboardRequestData[a].onboard_Request_status_ID == 3) {

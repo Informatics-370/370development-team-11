@@ -19,6 +19,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
+import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 
 @Component({
   selector: 'app-vendor-update',
@@ -47,6 +48,7 @@ export class VendorUpdateComponent {
     email: '',
     number_Of_Times_Used: 0,
     sole_Supplier_Provided: false,
+    preferedVendor:false,
   }
   VendorDetail: VendorDetails = {
     vendor_Detail_ID:0,
@@ -122,12 +124,20 @@ export class VendorUpdateComponent {
     signed_Agreement_Doc:"",
   }
 
+  VendorInsuranceType:Vendor_Insurance_Type = {
+    vendor_Insurance_Type_ID : 4,
+    name: "",
+    description: "",
+  }
+
   VendorInsurance: Vendor_Insurance = {
     insurance_ID: 0,
-    vendor_Detail_ID: 0,
-    vendor_Detail: this.VendorDetail,
+    vendor_ID: 0,
+    vendor : this.Vendor,
+    vendor_Insurance_Type_ID:0,
+    vendor_Insurance_Type: this.VendorInsuranceType,
     confirmation_Doc:"",
-  }
+  } 
 
   VendorPaymentTerms: Vendor_Payment_Terms = {
     payment_Terms_ID: 0,
@@ -246,7 +256,7 @@ export class VendorUpdateComponent {
           this.VendorWebsite.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
           this.VendorLicense.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
           this.VendorAgreement.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
-          this.VendorInsurance.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
+          //this.VendorInsurance.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
           this.VendorRegistration.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
           this.VendorTax.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
           this.getFileDetails(sFilePath,6)
@@ -866,7 +876,7 @@ CreateContinue(VenDetailsID:number) {
            
           }//signedagreement
 
-          this.VendorInsurance.vendor_Detail = this.VendorDetail
+         // this.VendorInsurance.vendor_Detail = this.VendorDetail
           if(this.InsuranceCoverChecker == true && this.VendorInsurance.insurance_ID == 0 ) {
             FolderCategory = "InsuranceCover";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
@@ -874,7 +884,7 @@ CreateContinue(VenDetailsID:number) {
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
               let Path: any = response
               this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
-              this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
+           //   this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
               this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
             })
             
@@ -889,7 +899,7 @@ CreateContinue(VenDetailsID:number) {
               this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
               let Path: any = response
               this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString(); 
-              this.VendorInsurance.vendor_Detail_ID = this.VD_ID
+             // this.VendorInsurance.vendor_Detail_ID = this.VD_ID
               this.VendorService.UpdateInsurance(this.VendorInsurance.insurance_ID,this.VendorInsurance).subscribe(response => 
                 {
                   console.log("success")
@@ -902,7 +912,7 @@ CreateContinue(VenDetailsID:number) {
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let fileName =  this.FileDetails[4].FileName
             this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe({next: (Response) => {
-              this.VendorService.DeleteInsuranceByID(this.VendorInsurance.insurance_ID).subscribe(response => {console.log(response)})
+             // this.VendorService.DeleteInsuranceByID(this.VendorInsurance.insurance_ID).subscribe(response => {console.log(response)})
             }})
           }//insurance
           

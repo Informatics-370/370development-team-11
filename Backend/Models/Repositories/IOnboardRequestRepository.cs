@@ -7,6 +7,8 @@ namespace ProcionAPI.Models.Repositories
     public interface IOnboardRequestRepository
     {
         Task<VendorOnboardRequestVM[]> GetAllOnBoardRequestAsync();
+
+       // Task<Onboard_Request[]> GetAllOnBoardRequestTestingAsync();
         Task<Onboard_Request[]> AddRequestAsync(Onboard_Request RequestAdd);
         Task<Vendor[]> GetAllVendorRequestsAsync();
         Task<Vendor> GetVendorValidationAsync(string sVendorName);

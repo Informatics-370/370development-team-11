@@ -188,11 +188,11 @@ namespace ProcionAPI.Models.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<Vendor_Insurance> GetInsuranceByIDAsync(int InsuranceID)
+        public async Task<Vendor_Insurance[]> GetInsuranceByIDAsync(int VendorID)
         {
-            IQueryable<Vendor_Insurance> query = _dbContext.Vendor_Insurance.Where(x => x.Vendor_Detail_ID == InsuranceID).Include(x => x.Vendor_Detail);
+            IQueryable<Vendor_Insurance> query = _dbContext.Vendor_Insurance.Where(x => x.Vendor_ID == VendorID).Include(x => x.Vendor).ThenInclude(x=> x.Vendor_Status).Include(x=> x.Vendor_Insurance_Type);
 
-            return await query.FirstOrDefaultAsync();
+            return await query.ToArrayAsync();
         }
 
         public async Task<Vendor_Payment_Terms> GetPaymentTermsAsync(int PaymentTermsID)
@@ -300,16 +300,21 @@ namespace ProcionAPI.Models.Repositories
             return new Vendor_Agreement[] { Agreement };
         }
 
-    public async Task<Vendor_Insurance[]> AddInsuranceAsync(Vendor_Insurance Insurance)
-    {
-            Vendor_Detail existingVendorDetails = await _dbContext.Vendor_Detail.FirstOrDefaultAsync(x => x.Vendor_Detail_ID == Insurance.Vendor_Detail_ID); ;
+        public async Task<Vendor_Insurance[]> AddInsuranceAsync(Vendor_Insurance Insurance)
+        {
+            Vendor existingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Vendor_ID == Insurance.Vendor_ID); 
 
-            if (existingVendorDetails != null)
+            if (existingVendor != null)
             {
-                Insurance.Vendor_Detail = existingVendorDetails;
+                Insurance.Vendor = existingVendor;
             }
 
+            Vendor_Insurance_Type existingVendorInsuranceType = await _dbContext.Vendor_Insurance_Type.FirstOrDefaultAsync(x => x.Vendor_Insurance_Type_ID == Insurance.Vendor_Insurance_Type_ID);
 
+            if (existingVendorInsuranceType != null)
+            {
+                Insurance.Vendor_Insurance_Type = existingVendorInsuranceType;
+            }
 
             await _dbContext.Vendor_Insurance.AddAsync(Insurance);
             await _dbContext.SaveChangesAsync();
@@ -317,7 +322,7 @@ namespace ProcionAPI.Models.Repositories
             return new Vendor_Insurance[] { Insurance };
         }
 
-    public async Task<Vendor_Payment_Terms[]> AddPayTermsAsync(Vendor_Payment_Terms PayTerms)
+        public async Task<Vendor_Payment_Terms[]> AddPayTermsAsync(Vendor_Payment_Terms PayTerms)
     {
             Vendor_Detail existingVendorDetails = await _dbContext.Vendor_Detail.FirstOrDefaultAsync(x => x.Vendor_Detail_ID == PayTerms.Vendor_Detail_ID); ;
 
@@ -424,16 +429,23 @@ namespace ProcionAPI.Models.Repositories
             return VenLicense;
         }
 
-        public async Task<Vendor_Insurance> UpdateInsuranceAsync(int InsuranceID, Vendor_Insurance Insurance)
+        public async Task<Vendor_Insurance> UpdateInsuranceAsync(int VendorID, Vendor_Insurance Insurance)
         {
-            var VenInsurance = await _dbContext.Vendor_Insurance.FirstOrDefaultAsync(x => x.Insurance_ID == InsuranceID);
+            var VenInsurance = await _dbContext.Vendor_Insurance.FirstOrDefaultAsync(x => (x.Vendor_ID == VendorID && x.Vendor_Insurance_Type_ID == Insurance.Vendor_Insurance_Type_ID) );
 
 
-            VenInsurance.Vendor_Detail = new Vendor_Detail();
+            VenInsurance.Vendor = new Vendor();
 
-            Vendor_Detail existingVenDetail = await _dbContext.Vendor_Detail.FirstOrDefaultAsync(x => x.Vendor_Detail_ID == Insurance.Vendor_Detail_ID);
+            Vendor existingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Vendor_ID == VendorID);
 
-            VenInsurance.Vendor_Detail = existingVenDetail;
+            VenInsurance.Vendor = existingVendor;
+
+            VenInsurance.Vendor_Insurance_Type = new Vendor_Insurance_Type();
+
+            Vendor_Insurance_Type existingVendorInsuranceType = await _dbContext.Vendor_Insurance_Type.FirstOrDefaultAsync(x => x.Vendor_Insurance_Type_ID == Insurance.Vendor_Insurance_Type_ID);
+
+            VenInsurance.Vendor_Insurance_Type = existingVendorInsuranceType;
+
 
             VenInsurance.Confirmation_Doc = Insurance.Confirmation_Doc;
 
@@ -584,9 +596,9 @@ namespace ProcionAPI.Models.Repositories
             return RequestToDelete;
         }
 
-        public async Task<Vendor_Insurance> DeleteInsuranceByIDAsync(int InsuranceID)
+        public async Task<Vendor_Insurance> DeleteInsuranceByIDAsync(int VendorID, int InsuranceTypeID)
         {
-            var RequestToDelete = await _dbContext.Vendor_Insurance.FirstOrDefaultAsync(x => x.Insurance_ID == InsuranceID);
+            var RequestToDelete = await _dbContext.Vendor_Insurance.FirstOrDefaultAsync(x => (x.Vendor_ID == VendorID && x.Vendor_Insurance_Type_ID == InsuranceTypeID));
             _dbContext.Vendor_Insurance.Remove(RequestToDelete);
             await _dbContext.SaveChangesAsync();
 
@@ -781,6 +793,8 @@ namespace ProcionAPI.Models.Repositories
 
 
             ExistingVenBEE.Vendor = new Vendor();
+
+            
 
             Vendor existingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Vendor_ID == VendorID);
 

@@ -16,7 +16,7 @@
  
   <div>
       <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="selectedOption == 'true' ;Sole" #General>
-      <mat-tab-group style="background-color: white;" #tabGroup [(selectedIndex)]=selectedIndex>
+      <mat-tab-group style="background-color: white;" #tabGroup [(selectedIndex)]=selectedIndex >
         <form [formGroup]="CompanyContactInfoFormGroup" >
         <mat-tab  formArrayName="RequestData" *ngFor="let data of rows.controls; let i = index;" > 
          <div [formGroupName]="i" style="width: 690px;">
@@ -54,6 +54,10 @@
           </td>
       </tr>
       <br>
+      <tr>
+        <td><label>Select as preferred vendor:</label></td>
+        <td><mat-checkbox formControlName="PrefferedVendor" (click)="onPreferredChecked(i)" ></mat-checkbox></td>
+      </tr>
       <tr>
         <td></td>
         <td>  

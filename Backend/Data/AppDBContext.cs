@@ -53,6 +53,7 @@ namespace ProcionAPI.Data
         public DbSet<Vendor_Popia> Vendor_Popia { get; set; }
         public DbSet<Vendor_Payment_Terms> Vendor_Payment_Terms { get; set; }
         public DbSet<Vendor_Insurance> Vendor_Insurance { get; set; }
+        public DbSet<Vendor_Insurance_Type> Vendor_Insurance_Type { get; set; }
         public DbSet<Vendor_Agreement> Vendor_Agreement { get; set; }
         public DbSet<Vendor_License> Vendor_License { get; set; }
         public DbSet<Due_Dillegence> Due_Dillegence { get; set; }
@@ -245,7 +246,8 @@ namespace ProcionAPI.Data
                 Name = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
                 Email = "xxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxx",
                 Number_Of_Times_Used = 0,
-                Sole_Supplier_Provided = false
+                Sole_Supplier_Provided = false,
+                PreferedVendor = true,
             },
             new
             {
@@ -254,8 +256,9 @@ namespace ProcionAPI.Data
                 Name = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2",
                 Email = "xxxxxxxxxxxxxxxxxxxxxxxxxxx@xxxx",
                 Number_Of_Times_Used = 0,
-                Sole_Supplier_Provided = false
-            }); ;
+                Sole_Supplier_Provided = false,
+                PreferedVendor = true,
+            }); 
 
             modelBuilder.Entity<Vendor_Category>()
             .HasData(
@@ -330,6 +333,34 @@ namespace ProcionAPI.Data
               Description = "Sub-Processor (SP)",
           });
 
+
+               modelBuilder.Entity<Vendor_Insurance_Type>()
+         .HasData(
+         new
+         {
+             Vendor_Insurance_Type_ID = 1,
+             Name = "General liability insurance",
+             Description = "General liability insurance",
+
+         },
+          new
+          {
+              Vendor_Insurance_Type_ID = 2,
+              Name = "Cyber insurance",
+              Description = "Cyber insurance",
+          },
+          new
+          {
+              Vendor_Insurance_Type_ID = 3,
+              Name = "Professional indemnity insurance",
+              Description = "Professional indemnity insurance",
+          },
+          new
+          {
+              Vendor_Insurance_Type_ID = 4,
+              Name = "Other specific insurance",
+              Description = "Other specific insurance",
+          });
 
         }
     }

@@ -23,6 +23,7 @@ import { Vendor_BEE } from 'src/app/Shared/VendorBEE';
 
 import pdfMake from 'pdfmake/build/pdfmake';  
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -59,6 +60,7 @@ export class VendordetailsViewComponent implements OnInit {
     email: '',
     number_Of_Times_Used: 0,
     sole_Supplier_Provided: false,
+    preferedVendor :false,
   }
   VendorDetail: VendorDetails = {
     vendor_Detail_ID:0,
@@ -134,12 +136,20 @@ export class VendordetailsViewComponent implements OnInit {
     signed_Agreement_Doc:"",
   }
 
+  VendorInsuranceType:Vendor_Insurance_Type = {
+    vendor_Insurance_Type_ID : 4,
+    name: "",
+    description: "",
+  }
+
   VendorInsurance: Vendor_Insurance = {
     insurance_ID: 0,
-    vendor_Detail_ID: 0,
-    vendor_Detail: this.VendorDetail,
+    vendor_ID: 0,
+    vendor : this.Vendor,
+    vendor_Insurance_Type_ID:0,
+    vendor_Insurance_Type: this.VendorInsuranceType,
     confirmation_Doc:"",
-  }
+  } 
 
   VendorPaymentTerms: Vendor_Payment_Terms = {
     payment_Terms_ID: 0,
