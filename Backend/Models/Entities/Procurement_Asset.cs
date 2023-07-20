@@ -15,7 +15,7 @@ namespace ProcionAPI.Models.Entities
         [Required]
         public int Asset_ID { get; set; }
         [ForeignKey("Procurement_Request_ID")]
-        public Procurement_Request Procurement_Request { get; set; }
+        public Procurement_Details Procurement_Request { get; set; }
         [ForeignKey("Asset_ID")]
         public Asset Asset { get; set; }
         public string Invoice_Document { get; set; }
