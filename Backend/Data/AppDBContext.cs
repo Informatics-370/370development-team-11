@@ -29,9 +29,7 @@ namespace ProcionAPI.Data
         public DbSet<Importance_Level> Importance_Level { get; set; }
         public DbSet<Notification> Notification { get; set; }
         public DbSet<Notification_Type> Notification_Type { get; set; }
-        public DbSet<Procurement_Details> Procurement_Details { get; set; }
         public DbSet<Procurement_Request> Procurement_Request { get; set; }
-        public DbSet<Procurement_Request_Quote> Procurement_Request_Quote { get; set; }
         public DbSet<Requisition_Status> Requisition_Status { get; set; }
         public DbSet<Payment_Made> Payment_Made { get; set; }
         public DbSet<Sign_Off_Status> Sign_Off_Status { get; set; }
