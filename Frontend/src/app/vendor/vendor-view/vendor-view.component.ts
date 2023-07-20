@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from 'src/app/DataService/data-service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -15,7 +15,7 @@ import { Subscription, buffer, elementAt, groupBy } from 'rxjs';
   styleUrls: ['./vendor-view.component.css'],
 })
 export class VendorViewComponent implements OnInit  {
-  
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 //,'Category'
   constructor(private VendorService: DataService, private dialog: MatDialog, private route: ActivatedRoute,private router: Router,) { }
   private refreshSubscription:Subscription;
@@ -27,6 +27,7 @@ export class VendorViewComponent implements OnInit  {
     let VendorDetails:any[] = result 
     VendorDetails.forEach(element => this.VenDetails.push(element))
     this.VendorSearch =  new MatTableDataSource(result)
+    this.VendorSearch.paginator = this.paginator;
     console.log(VendorDetails)
    })
     

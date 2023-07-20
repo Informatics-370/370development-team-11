@@ -97,7 +97,7 @@
           <ng-template  mat-tab-label > 
             <label style="color:white" >Sole Supplier Request</label>
           </ng-template> 
-          <table style="margin-left: 1%;">
+          <table style="margin-left: 1%;margin-bottom: 15px;">
             <br>
           <tr>
             <td><label  for="name" style="margin-right: 1%;">Company Name:</label></td>
@@ -254,6 +254,7 @@
     </form>      
     </mat-tab-group>
     <div  style="background-color: white;display: flex;border-left:1px solid #244688;border-right:1px solid #244688;border-bottom:1px solid #244688;">
+      <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 170px;background-color: #94CC5B;" *ngIf="BEEbool == true" > Update BEE</button>
       <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 170px;background-color: #94CC5B;" *ngIf="onboardRequest.length > 1 && onboardRequestSelectedData.vendor.vendor_Status_ID == 4 && onboardRequestSelectedData.vendor_ID != undefined" (click)="UpdateOnboardRequestStatus(onboardRequestSelectedData.vendor_ID)"> Reselect Quote </button>
       <button mat-raised-button id="btnHover" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 170px;" *ngIf="onboardRequestSelectedData.vendor.vendor_Status_ID == 4" (click)="Delete(onboardRequestSelectedData.vendor_ID)"> Delete Request </button>
    </div>

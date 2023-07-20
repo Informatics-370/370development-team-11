@@ -222,7 +222,7 @@ export class VendorCreateComponent implements OnInit{
   matcher = new MyErrorStateMatcher()
 
   constructor(private _formBuilder: FormBuilder,private VendorService: DataService,private route: ActivatedRoute ,private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) {}
-
+  VendorID;
   fileName:any[] = ['','','','','','','']
   
      FileStorage(id:number, event: any) {
@@ -237,8 +237,8 @@ export class VendorCreateComponent implements OnInit{
     this.route.paramMap.subscribe({
       next: (paramater) => {
         
-        let VendorID = paramater.get("VendorID");
-        this.VendorService.GetVendorByID(Number(VendorID)).subscribe(result => {
+       this.VendorID = paramater.get("VendorID");
+        this.VendorService.GetVendorByID(Number(this.VendorID)).subscribe(result => {
           this.Vendor = result
           this.VendorDetail.vendor_ID == this.Vendor.vendor_ID
           this.CompanyContactInfoFormGroup.get('CompanyName')?.setValue(this.Vendor.name);
@@ -277,8 +277,9 @@ export class VendorCreateComponent implements OnInit{
             //construction
             this.VendorDetail.insurance_Provided = this.DueDilligenceDetail.general_Liability_Insurance_Present;
             if(this.VendorDetail.insurance_Provided == true) {
-              this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.setValue(true);
-              this.InsuranceCoverChange();
+             this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.setValue(true);
+             this.InsuranceCoverChecker = this.VendorDetail.insurance_Provided
+            this.getInsuranceDetails(Number(this.VendorID));
             }
 
 
@@ -616,16 +617,36 @@ export class VendorCreateComponent implements OnInit{
             })
             
           }
-          if(this.InsuranceCoverChecker == true) {
-            FolderCategory = "InsuranceCover";
+          if(this.InsuranceCoverChecker == true && this.VendorDetail.insurance_Provided == false) {
+            FolderCategory = "Insurance";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let file:File = this.fileName[4]
-            this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
-              let Path: any = response
-              this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
-             // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
-              this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
-            })
+            if(this.FileDetails == undefined) {
+              this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
+                let Path: any = response
+                this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+                this.VendorInsurance.vendor_Insurance_Type_ID = 4;
+                this.VendorInsurance.vendor_ID =  Number(this.VendorID)
+               // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
+                this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
+              })
+            }
+            else {
+              FolderCategory = "Insurance";
+              VendorNo = "Vendor" + Number(this.VendorID)
+
+              this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(result => {
+                this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
+                  let Path: any = response
+                  this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+                  this.VendorInsurance.vendor_Insurance_Type_ID = 4;
+                  this.VendorInsurance.vendor_ID =  Number(this.VendorID)
+                 // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
+                  this.VendorService.UpdateInsurance(Number(this.VendorID),this.VendorInsurance).subscribe()
+                })
+              })
+            }
+            
             
           }
           if(this.PaymentTermsChecker == true) {
@@ -696,6 +717,26 @@ export class VendorCreateComponent implements OnInit{
 
   }//create
 
+  FileDetails:any[] = []
+
+  getInsuranceDetails(ID:number) {
+    this.FileDetails.push({FileURL:"",FileName:""})
+    this.VendorService.GetInsuranceByID(ID).subscribe(response => {
+      response.forEach(e => { 
+        if(e.vendor_Insurance_Type_ID == 4) {
+          let sFile = e.confirmation_Doc;
+          let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
+          sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+          let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
+          let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+          this.FileDetails[0].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
+          this.FileDetails[0].FileName = filename
+        }
+      })
+     
+    })
+  
+}
 
 
 
