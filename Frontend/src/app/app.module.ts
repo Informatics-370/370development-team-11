@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -89,7 +89,7 @@ import { CreateBudgetLineComponent } from './create-budget-line/create-budget-li
 import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
 import { DeleteBudgetLineComponent } from './delete-budget-line/delete-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatCommonModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { AuthInterceptorComponent } from './auth-interceptor/auth-interceptor.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UserProfileComponent } from './User/user-profile/user-profile.component';
@@ -109,11 +109,11 @@ import { DeleteDelegationComponent } from './Delegation/delete-delegation/delete
 import { MatSortModule } from '@angular/material/sort';
 import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
 import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
 import { UpdatePasswordComponent } from './User/update-password/update-password.component';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-approve-edit.component';
 import { CreateProcurementRequestComponent } from './create-procurement-request/create-procurement-request.component';
 
@@ -123,6 +123,20 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { VideoDialogComponent } from './VideoDialog/video-dialog/video-dialog.component';
 import { BackupComponent } from './Settings/backup/backup.component';
 import { RestoreComponent } from './Settings/backupDialog/restore.component';
+/*import { ViewCalendarComponent } from './Calendar/view-calendar/view-calendar.component';*/
+
+
+//import { CalendarCommonModule, CalendarModule, DateAdapter, MOMENT } from 'angular-calendar';
+//import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+//import { SchedulerModule } from 'angular-calendar-scheduler';
+//import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+//import { AppService } from './DataService/appService';
+//import * as moment from 'moment';
+
+
+
+
+/*import { DayPilotModule } from '@daypilot/daypilot-lite-angular';*/
 
 
 @NgModule({
@@ -211,7 +225,8 @@ import { RestoreComponent } from './Settings/backupDialog/restore.component';
     VideoDialogComponent,
     BackupComponent,
     RestoreComponent,
-    CreateProcurementRequestComponent
+    CreateProcurementRequestComponent,
+/*    ViewCalendarComponent*/
   ],
   imports: [
     BrowserModule,
@@ -243,9 +258,21 @@ import { RestoreComponent } from './Settings/backupDialog/restore.component';
     MatSortModule,
     MatTooltipModule,
     MatDatepickerModule,
-    MatBadgeModule
+    MatBadgeModule,
+    //CalendarModule.forRoot({
+    //  provide: DateAdapter,
+    //  useFactory: adapterFactory,
+    //}),
+    //SchedulerModule.forRoot({ locale: 'en', headerDateFormat: 'daysRange', logEnabled: true }),
+    //MatProgressSpinnerModule,
+    
+    CommonModule,
+    MatCommonModule,
   ],
   providers: [
+    //AppService,
+    //{ provide: LOCALE_ID, useValue: 'en-US' },
+    //{ provide: MOMENT, useValue: moment },
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     MatExpansionModule,
@@ -260,3 +287,4 @@ import { RestoreComponent } from './Settings/backupDialog/restore.component';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

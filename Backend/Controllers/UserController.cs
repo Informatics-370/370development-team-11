@@ -112,7 +112,8 @@ namespace ProcionAPI.Controllers
                 {
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, user.Role.Name),
-            new Claim("TemAccess", "Yes")
+            new Claim("TemAccess", "No"),
+            new Claim("TempAccessUsername", "None")
                 }),
                 Expires = DateTime.UtcNow.AddHours(3), // Set token expiration time
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -124,8 +125,8 @@ namespace ProcionAPI.Controllers
 
         //-------------------------------------------------------------------------------------------------TEMP ACCESS LOGIN-------------------------------------------------------------------------------
 
-        [HttpPost("loginWithTemp/{UserName}/{Password}/{TempAcc}")]
-        public async Task<IActionResult> LoginWithTemp([FromRoute] string UserName, [FromRoute] string Password, [FromRoute] string TempAcc)
+        [HttpPost("loginWithTemp/{UserName}/{Password}/{TempAcc}/{TempUsername}")]
+        public async Task<IActionResult> LoginWithTemp([FromRoute] string UserName, [FromRoute] string Password, [FromRoute] string TempAcc, [FromRoute] string TempUsername)
         {
             if (await _UserRepository.GetUserByUsername(UserName) != null)
             {
@@ -135,7 +136,7 @@ namespace ProcionAPI.Controllers
                     User user = await _UserRepository.GetUserByUsername(UserName);
 
                     // Generate token
-                    var token = GenerateTokenWithTemp(user, TempAcc);
+                    var token = GenerateTokenWithTemp(user, TempAcc, TempUsername);
 
                     // Return the token as a response to the Angular frontend
                     return Ok(new { token });
@@ -152,7 +153,7 @@ namespace ProcionAPI.Controllers
                     User user = await _UserRepository.GetUserByUsername(MyUsername);
 
                     // Generate token
-                    var token = GenerateTokenWithTemp(user, TempAcc);
+                    var token = GenerateTokenWithTemp(user, TempAcc, TempUsername);
 
                     // Return the token as a response to the Angular frontend
                     return Ok(new { token });
@@ -169,7 +170,7 @@ namespace ProcionAPI.Controllers
                     User user = await _UserRepository.GetUserByUsername(MyUsername);
 
                     // Generate token
-                    var token = GenerateTokenWithTemp(user, TempAcc);
+                    var token = GenerateTokenWithTemp(user, TempAcc, TempUsername);
 
                     // Return the token as a response to the Angular frontend
                     return Ok(new { token });
@@ -180,7 +181,7 @@ namespace ProcionAPI.Controllers
             return Unauthorized(new { error = "Invalid credentials" });
         }
 
-        private string GenerateTokenWithTemp(User user, string TempAcc)
+        private string GenerateTokenWithTemp(User user, string TempAcc, string TempUsername)
         {
             byte[] key;
             using (var randomNumberGenerator = new RNGCryptoServiceProvider())
@@ -198,7 +199,8 @@ namespace ProcionAPI.Controllers
                 {
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Role, user.Role.Name),
-            new Claim("TemAccess", TempAcc)
+            new Claim("TemAccess", TempAcc),
+            new Claim("TempAccessUsername", TempUsername)
                 }),
                 Expires = DateTime.UtcNow.AddHours(3), // Set token expiration time
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

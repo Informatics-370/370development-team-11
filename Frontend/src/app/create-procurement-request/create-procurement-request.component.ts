@@ -50,6 +50,7 @@ export class CreateProcurementRequestComponent implements OnInit{
       username: "",
       password: "",
       profile_Picture: "",
+      no_Notifications: 0,
       role: {
         role_ID: 0,
         name: "",

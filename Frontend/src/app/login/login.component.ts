@@ -49,6 +49,7 @@ export class LoginComponent implements OnInit {
   delID: any;
 
   tempAccess: any;
+  tempUsername: any;
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer, private AuthServ: AuthService) { }
 
 
@@ -82,21 +83,24 @@ export class LoginComponent implements OnInit {
     this.dataService.GetActiveDelegations().subscribe({
       next: (r) => {
         this.activeDelegations = r;
-        
-        this.activeDelegations.forEach((element, i) => {
-          if (element.user.username = this.userName) {
+
+        for (let i = 0; i < this.activeDelegations.length; i++) {
+          let un = this.activeDelegations[i].user.username;
+          console.log(un)
+          console.log(this.userName)
+          if (un == this.userName) {
             this.hasActiveDelegation = "true";
-            this.delID = element.delegation_ID
-            console.log(this.delID)
+            this.delID = this.activeDelegations[i].delegation_ID;
+            this.tempUsername = this.activeDelegations[i].delegatingParty;;
           }
-        })
+        }
 
         if (this.hasActiveDelegation != "") {
           this.dataService.GetTempAcc(this.delID).subscribe({
             next: (ta) => {
               this.tempAccess = ta;
 
-              this.dataService.loginWithTemp(this.userName, this.password, this.tempAccess.name).subscribe({
+              this.dataService.loginWithTemp(this.userName, this.password, this.tempAccess.name, this.tempUsername).subscribe({
                 next: (response) => {
                   if (response != null) {
                     console.log(response)

@@ -55,12 +55,42 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
+        [Route("GetTempVendorNotifications/{tempUsername}")]
+        public async Task<IActionResult> GetTempVendorNotifications(string tempUsername)
+        {
+            try
+            {
+                var result = await _NotificationRepository.GetTempVendorNotificationsAsync(tempUsername);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
         [Route("GetInventoryNotifications/{username}")]
         public async Task<IActionResult> GetInventoryNotifications(string username)
         {
             try
             {
                 var result = await _NotificationRepository.GetInventoryNotificationsAsync(username);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetTempInventoryNotifications/{tempUsername}")]
+        public async Task<IActionResult> GetTempInventoryNotifications(string tempUsername)
+        {
+            try
+            {
+                var result = await _NotificationRepository.GetTempInventoryNotificationsAsync(tempUsername);
                 return Ok(result);
             }
             catch (Exception)
@@ -84,6 +114,19 @@ namespace ProcionAPI.Controllers
             }
         }
 
-
+        [HttpGet]
+        [Route("GetTempProcurementNotifications/{tempUsername}")]
+        public async Task<IActionResult> GetTempProcurementNotifications(string tempUsername)
+        {
+            try
+            {
+                var result = await _NotificationRepository.GetTempProcurementNotificationsAsync(tempUsername);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
 }

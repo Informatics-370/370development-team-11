@@ -34,11 +34,31 @@ namespace ProcionAPI.Models.Repositories
             return await query.ToArrayAsync();
         }
 
+        public async Task<Notification[]> GetTempVendorNotificationsAsync(string tempUsername)
+        {
+            IQueryable<Notification> query = _dbContext.Notification
+                .Include(nt => nt.Notification_Type).Include(u => u.User)
+                .Where(ui => ui.User.Username == tempUsername)
+                .Where(x => x.Notification_Type.Name.Contains("Vendor"));
+
+            return await query.ToArrayAsync();
+        }
+
         public async Task<Notification[]> GetInventoryNotificationsAsync(string username)
         {
             IQueryable<Notification> query = _dbContext.Notification
                 .Include(nt => nt.Notification_Type).Include(u => u.User)
                 .Where(ui => ui.User.Username == username)
+                .Where(x => x.Notification_Type.Name.Contains("Inventory"));
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Notification[]> GetTempInventoryNotificationsAsync(string tempUsername)
+        {
+            IQueryable<Notification> query = _dbContext.Notification
+                .Include(nt => nt.Notification_Type).Include(u => u.User)
+                .Where(ui => ui.User.Username == tempUsername)
                 .Where(x => x.Notification_Type.Name.Contains("Inventory"));
 
             return await query.ToArrayAsync();
@@ -54,5 +74,14 @@ namespace ProcionAPI.Models.Repositories
             return await query.ToArrayAsync();
         }
 
+        public async Task<Notification[]> GetTempProcurementNotificationsAsync(string tempUsername)
+        {
+            IQueryable<Notification> query = _dbContext.Notification
+                .Include(nt => nt.Notification_Type).Include(u => u.User)
+                .Where(ui => ui.User.Username == tempUsername)
+                .Where(x => x.Notification_Type.Name.Contains("Procurement"));
+
+            return await query.ToArrayAsync();
+        }
     }
 }

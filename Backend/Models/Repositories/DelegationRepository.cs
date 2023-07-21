@@ -34,7 +34,7 @@ namespace ProcionAPI.Models.Repositories
         public async Task<Delegation_Of_Authority[]> GetAllActiveDelegationsAsync()
         {
             IQueryable<Delegation_Of_Authority> query = _dbContext.Delegation_Of_Authority
-            .Include(u => u.User).Include(s => s.Delegation_Status).Include(a => a.Admin).Where(d => d.Delegation_Status.Name == "Active");
+            .Include(u => u.User).Include(s => s.Delegation_Status).Where(d => d.Delegation_Status.Name == "Active");
 
             return await query.ToArrayAsync();
         }
