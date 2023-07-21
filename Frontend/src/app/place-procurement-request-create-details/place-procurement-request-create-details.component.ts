@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Consumable } from '../Shared/Consumable';
+import { BudgetAllocation } from '../Shared/BudgetAllocation';
 
 @Component({
   selector: 'app-place-procurement-request-create-details',
@@ -18,10 +19,11 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   ProcurementFormGroup = this._formBuilder.group({
     BuyerName: ['',[Validators.required,Validators.pattern]],
     BuyerEmail: ['',[Validators.required,Validators.email]],
-    ItemType: [0,[Validators.required]],
+    ItemType: ["",[Validators.required]],
     ConsumableItem:['',[Validators.required,Validators.pattern]],
     ConsumableQuantity: [0,[Validators.required]],
     AssetName:['',[Validators.required,Validators.pattern]],
+    AccountCode:[0,[Validators.required]],
     PaymentType: [0,[Validators.required]],
     HasDeposit:[false],
     DepositAmount: [0,[Validators.required]],
@@ -37,14 +39,31 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   });
 
   ConsumableItems:Consumable[] = [];
+  BudgetAllocationCode:BudgetAllocation[] = [];
+  ConsumableChecked =true;
+  AssetChecked=false;
 
   ngOnInit() { 
     this.ProcureService.GetConsumables().subscribe(response => {
       this.ConsumableItems = response
       console.log(this.ConsumableItems)
     })
-    
+    this.ProcureService.GetBudgetAllocations().subscribe(response => {
+      this.BudgetAllocationCode = response;
+      console.log(this.BudgetAllocationCode)
+    })
+  }
 
+  CheckChange() {
+    if(this.ProcurementFormGroup.get("ItemType")?.value == "Consumable") {
+      this.ConsumableChecked = true;
+      this.AssetChecked = false;
+      
+    }
+    else {
+      this.AssetChecked = true;
+      this.ConsumableChecked = false;
+    }
   }
 
   

@@ -6,7 +6,7 @@
   <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;width: 330px;">Please fill in the following details:</label>
 </div>
       <form [formGroup]="ProcurementFormGroup"  style="text-align: -webkit-center;" >
-        <div style="background-color: white;border:1px solid #244688;border-bottom: white;width: 800px;">
+        <div style="background-color: white;border:1px solid #244688;width: 800px;height: 1100;">
         <div class="row">
             <div class="col-5">
               <label style="width: 450px;">Buyer Name:</label>
@@ -33,14 +33,14 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <mat-select formControlName="ItemType" placeholder="Consumable" style="display: contents;">
-                        <mat-option value=true>Consumable</mat-option>
-                        <mat-option value=false>Assets</mat-option>
+                    <mat-select formControlName="ItemType" placeholder="Consumable" style="display: contents;" (selectionChange)="CheckChange()">
+                        <mat-option value="Consumable">Consumable</mat-option>
+                        <mat-option value="Assets">Assets</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
         </div>
-        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('ItemType').value}}" style="margin-left: 10px" >
+        <mat-expansion-panel hideToggle disabled expanded="{{ConsumableChecked}}" style="margin-left: 10px" >
           <div>
             <div class="row">
               <div class="col-5">
@@ -48,12 +48,12 @@
               </div>
               <div class="col-7">
                   <mat-form-field appearance="fill" *ngIf="ConsumableItems.length > 0">
-                      <mat-select formControlName="ItemType" placeholder="{{ConsumableItems[0].name}}" style="display: contents;" [value]="ConsumableItems[0].consumable_ID">
+                      <mat-select formControlName="ConsumableItem" placeholder="{{ConsumableItems[0].name}}" style="display: contents;" [value]="ConsumableItems[0].consumable_ID">
                         <mat-option *ngFor="let Consumable of ConsumableItems" [value]="Consumable.consumable_ID">{{Consumable.name}}</mat-option>
                       </mat-select>
                   </mat-form-field>
                   <mat-form-field appearance="fill" *ngIf="ConsumableItems.length == 0">
-                    <mat-select formControlName="ItemType" placeholder="No consumable exist on the system" style="display: contents;">
+                    <mat-select formControlName="ConsumableItem" placeholder="No consumable exist on the system" style="display: contents;">
                       <mat-option>Please Add consumables to the system</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -71,8 +71,7 @@
             </div>
           </div>        
         </mat-expansion-panel>
-
-        <mat-expansion-panel hideToggle disabled expanded="!{{ProcurementFormGroup.get('ItemType').value}}" style="margin-left: 10px" >
+        <mat-expansion-panel hideToggle disabled expanded="{{AssetChecked}}" style="margin-left: 10px" >
           <div>
             <div class="row">
               <div class="col-5">
@@ -87,12 +86,29 @@
           </div>
         </mat-expansion-panel>
         <div class="row">
+          <div class="col-5">
+            <label style="width: 450px;">Account Code:</label>
+          </div>
+          <div class="col-7">
+            <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length > 0">
+              <mat-select formControlName="AccountCode" placeholder="{{BudgetAllocationCode[0]}}" style="display: contents;" [value]="BudgetAllocationCode[0]">
+                <mat-option *ngFor="let codes of BudgetAllocationCode" [value]="codes">{{codes}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length == 0">
+              <mat-select formControlName="AccountCode" placeholder="No Account code exist on the system" style="display: contents;">
+                <mat-option>Please Add account code to the system</mat-option>
+              </mat-select>
+          </mat-form-field>
+          </div>
+      </div>
+        <div class="row">
             <div class="col-5">
               <label style="width: 450px;">Payment Type:</label>
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <mat-select formControlName="PaymentType" placeholder="credit" style="display: contents;">
+                    <mat-select formControlName="PaymentType" placeholder="Credit" style="display: contents;">
                         <mat-option value="1">Credit</mat-option>
                         <mat-option value="2">Cash</mat-option>
                         <mat-option value="2">EFT</mat-option>
@@ -167,7 +183,7 @@
                   <label style="width: 450px;">Upload Receipt:</label>
                 </div>
                 <div class="col-7">
-                    <input  id="file"  type="file" class="file-upload" formControlName="UploadReceiptDoc"> 
+                    <input  id="file"  type="file" class="file-upload" formControlName="UploadReceiptDoc" style="border: solid #244688; border-radius: 5px;height: fit-content; "> 
                 </div>
               </div>     
           </mat-expansion-panel>
@@ -187,7 +203,7 @@
                   <label style="width: 450px;">Upload Proof of payment document:</label>
                 </div>
                 <div class="col-7">
-                    <input  id="file"  type="file" class="file-upload" formControlName="ProofOfPaymentDoc"> 
+                    <input  type="file" class="file-upload" formControlName="ProofOfPaymentDoc" style="border: solid #244688; border-radius: 5px;height: fit-content; "> 
                 </div>
               </div>     
           </mat-expansion-panel>
@@ -227,6 +243,27 @@
                   </mat-form-field>
             </div>
         </div>
+        <br>
+        <div  style="background-color: white;display: flex;align-items: center;margin: 1%;place-content: center;">
+          <div class="wrapper">
+            <button class="" type="submit" [disabled]="!ProcurementFormGroup.valid">
+              <span>Create</span>
+              <div class="success">
+                <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
+                <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+            </svg>
+              </div>
+            </button>
+          </div>
+
+          <button mat-raised-button id="cBtn"
+                  style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;"
+                  >
+            Cancel
+          </button>
         </div>
+        </div>
+      
+
       </form>
 </div>
