@@ -153,12 +153,26 @@
                                         </mat-form-field>
                                     </mat-card-content>
                                 </td>
+                                <td style="width:100%;">
+                                    <mat-card-content>
+                                        <label style=" color: black;">Email:</label>
+                                        <br />
+                                        <mat-form-field>
+                                            <input matInput type="text" placeholder="" formControlName="Email"
+                                                id="Surname" required>
+                                                <mat-error *ngIf="myError('Email', 'required')">Email is required</mat-error>
+                                                <mat-error *ngIf="myError('Email', 'maxlength')">Limit exceed</mat-error>
+                                                <mat-error *ngIf="myError('Email', 'email')">Enter a valid email</mat-error>
+    
+                                        </mat-form-field>
+                                    </mat-card-content>
+                                </td>
                             </tr>
     
                             <tr>
                                 <td style="width:100%;">
                                   <mat-card-content>
-                                    <label style=" color:black;">Quote 1:</label>
+                                    <label style=" color:black;">Preferred Quote:</label>
                                     <br />
                   
                                     <input type="file" id="file1" placeholder="" formControlName="OtherQuote1" style="border: solid #244688; border-radius: 5px; "
@@ -169,7 +183,7 @@
     
                                 <td style="width:100%;">
                                     <mat-card-content>
-                                      <label style=" color:black;">Quote 2:</label>
+                                      <label style=" color:black;">Comparative Quote 1:</label>
                                       <br />
                     
                                       <input type="file" id="file2" placeholder="" formControlName="OtherQuote2" style="border: solid #244688; border-radius: 5px; "
@@ -180,7 +194,7 @@
     
                                   <td style="width:100%;">
                                     <mat-card-content>
-                                      <label style=" color:black;">Quote 3:</label>
+                                      <label style=" color:black;">Comparative Quote 2:</label>
                                       <br />
                     
                                       <input type="file" id="file3" placeholder="" formControlName="OtherQuote3" style="border: solid #244688; border-radius: 5px; "

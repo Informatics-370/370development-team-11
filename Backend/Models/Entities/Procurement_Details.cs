@@ -10,6 +10,8 @@ namespace ProcionAPI.Models.Entities
         [Required]
         public int EmployeeID { get; set; }
         [Required]
+        public int Procurement_Request_ID { get; set; }
+        [Required]
         public int Sign_Off_Status_ID { get; set; }
         [Required]
         public int Procurement_Payment_Status_ID { get; set; }
@@ -21,6 +23,8 @@ namespace ProcionAPI.Models.Entities
         public int Payment_Method_ID { get; set; }
         [ForeignKey("EmployeeID")]
         public Employee Employee { get; set; }
+        [ForeignKey("Procurement_Request_ID")]
+        public Procurement_Request Procurement_Request { get; set; }
         [ForeignKey("Sign_Off_Status_ID")]
         public Sign_Off_Status Sign_Off_Status { get; set; }
         [ForeignKey("Procurement_Payment_Status_ID")]
