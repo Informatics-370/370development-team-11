@@ -9,13 +9,13 @@ namespace ProcionAPI.Models.Entities
         public int Vendor_Asset_ID { get; set; }
 
         [Required]
-        public int Vendor_ID { get; set; }
+        public int Asset_ID { get; set; }
         [Required]
-        public int Vendor_Detail_ID { get; set; }
+        public int Vendor_ID { get; set; }
+        [ForeignKey("Asset_ID")]
+        public Asset Asset { get; set; }
         [ForeignKey("Vendor_ID")]
         public Vendor Vendor { get; set; }
-        [ForeignKey("Vendor_Detail_ID")]
-        public Vendor_Detail Vendor_Detail { get; set; }
         public string Quotes { get; set; }
     }
 }

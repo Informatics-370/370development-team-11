@@ -108,14 +108,14 @@ export class CreateProcurementRequestComponent implements OnInit{
   onFile2Upload(event: any) {
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
-      this.files[0] = this.fileToUpload;
+      this.files[1] = this.fileToUpload;
     }
   }
 
   onFile3Upload(event: any) {
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
-      this.files[0] = this.fileToUpload;
+      this.files[2] = this.fileToUpload;
     }
   }
 
@@ -146,6 +146,55 @@ export class CreateProcurementRequestComponent implements OnInit{
     console.log(this.vendors)
   }
 
+  AddProcurementRequestB(){
+    this.Procurement_Request.name = this.myForm.get("Name").value;
+    this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
+    this.Procurement_Request.vendor.name = this.myForm.get("Name").value;
+    this.Procurement_Request.user.username = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+
+
+    this.dataService.AddProcurementRequest(this.Procurement_Request).subscribe({
+      next: (response) => {
+        if(response != null){
+          this.files.forEach(element => {
+            let file: File = element;
+            console.log(file);
+            console.log(this.Procurement_Request.vendor.name)
+           this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file ).subscribe({
+            next: (Response) => {
+  
+              let qPath = Response
+              this.Procurement_Request = response[0]
+              this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+              this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+  
+              this.dataService.AddProcurementRequestQuote(this.Procurement_Request_Quote).subscribe({
+                next: (result) => {
+                              // console.log(Response)
+              var action = "CREATE";
+              var title = "CREATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
+  
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+  
+              const duration = 1750;
+              setTimeout(() => {
+                dialogRef.close();
+                this.router.navigate(['/ViewProcurementRequest']);
+              }, duration);
+                }
+              })
+            }
+           })
+          }); 
+        }
+      }
+    })
+  }
+
   AddProcurementRequestA(){
     this.Procurement_Request.name = this.myForm.get("Vendor").value;
     this.Procurement_Request.description = this.myForm.get("Description").value;
@@ -157,8 +206,6 @@ export class CreateProcurementRequestComponent implements OnInit{
       next: (response) => {
         if(response != null){
           let file: File = this.fileToUpload;
-          console.log(file);
-          console.log(this.Procurement_Request.vendor.name)
          this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file ).subscribe({
           next: (Response) => {
 
