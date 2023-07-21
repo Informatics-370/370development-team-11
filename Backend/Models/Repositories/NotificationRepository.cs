@@ -29,7 +29,7 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Notification> query = _dbContext.Notification
                 .Include(nt => nt.Notification_Type).Include(u => u.User)
                 .Where(ui => ui.User.Username == username)
-                .Where(x => x.Name.Contains("Vendor"));
+                .Where(x => x.Notification_Type.Name.Contains("Vendor"));
 
             return await query.ToArrayAsync();
         }
@@ -39,7 +39,7 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Notification> query = _dbContext.Notification
                 .Include(nt => nt.Notification_Type).Include(u => u.User)
                 .Where(ui => ui.User.Username == username)
-                .Where(x => x.Name.Contains("Inventory"));
+                .Where(x => x.Notification_Type.Name.Contains("Inventory"));
 
             return await query.ToArrayAsync();
         }
@@ -49,7 +49,7 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Notification> query = _dbContext.Notification
                 .Include(nt => nt.Notification_Type).Include(u => u.User)
                 .Where(ui => ui.User.Username == username)
-                .Where(x => x.Name.Contains("Procurement"));
+                .Where(x => x.Notification_Type.Name.Contains("Procurement"));
 
             return await query.ToArrayAsync();
         }

@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using Hangfire;
 using System.Reflection;
 using System.CodeDom;
+using ProcionAPI.Models.Entities;
 
 namespace ProcionAPI.Controllers
 {
@@ -23,6 +24,11 @@ namespace ProcionAPI.Controllers
             _DelegationRepository = delegatorRepository;
         }
 
+        public readonly IVendorRepository _VendorRepository;
+        public HomeController(IVendorRepository VendorRepository)
+        {
+            _VendorRepository = VendorRepository;
+        }
 
         [HttpGet]
         [Route("FireAndForgetJob")]
@@ -37,14 +43,22 @@ namespace ProcionAPI.Controllers
 
         [HttpGet]
         [Route("DelayedJob")]
-        public string DelayedJob()
+        public string DelayedJob( )
         {
-            //Delayed Jobs
-            //Delayed jobs are executed only once too, but not immediately, after a certain time interval.
-            var jobId = BackgroundJob.Schedule(() => Console.WriteLine("Welcome user in Delayed Job Demo!"), TimeSpan.FromSeconds(60));
+            //var selectedDate = new DateTimeOffset(date, TimeSpan.Zero);
 
-            return $"Job ID: {jobId}. Welcome user in Delayed Job Demo!";
+            //BackgroundJob.Schedule(() => getBEE(VendorID, date, 1), selectedDate.AddYears(1).AddDays(-21));
+
+            //BackgroundJob.Schedule(() => getBEE(VendorID, date, 2), selectedDate.AddYears(1).AddDays(-7));
+
+            //BackgroundJob.Schedule(() => getBEE(VendorID, date, 3), selectedDate.AddYears(1));
+
+
+            return "Added new delayed jobs!";
+
         }
+
+        
 
         [HttpGet]
         [Route("ContinuousJob")]

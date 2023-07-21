@@ -983,6 +983,36 @@ namespace ProcionAPI.Models.Repositories
             return ExistingOnboardRequest;
         }
 
+        public async Task<Notification[]> AddVendorBEENotificationAsync(DateTime beeDate,int VendorID, string Description)
+        {
+
+            Notification newNotification = new Notification();
+
+            newNotification.Send_Date = beeDate;
+            newNotification.User_Id = 1;
+            newNotification.Name = Description;
+            newNotification.Notification_Type_ID = 2;
+            var existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == newNotification.User_Id);
+
+            if (existingUser != null)
+            {
+                newNotification.User = existingUser;
+            }
+
+            var existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 2);
+
+            if (existingNotificationType != null)
+            {
+                newNotification.Notification_Type = existingNotificationType;
+            }
+
+
+            await _dbContext.Notification.AddAsync(newNotification);
+            await _dbContext.SaveChangesAsync();
+
+            return new Notification[] { newNotification };
+        }
+
 
     }
 }

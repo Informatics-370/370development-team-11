@@ -1,0 +1,232 @@
+<div class="content">
+    <div style="text-align: left;position: relative;">
+<h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
+    Create Procurement Requests Details
+  </h1>
+  <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;width: 330px;">Please fill in the following details:</label>
+</div>
+      <form [formGroup]="ProcurementFormGroup"  style="text-align: -webkit-center;" >
+        <div style="background-color: white;border:1px solid #244688;border-bottom: white;width: 800px;">
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Buyer Name:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                    <input matInput placeholder="Buyer Name" formControlName="BuyerName" >
+                  </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Buyer Email:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                    <input matInput placeholder="Buyer Email" formControlName="BuyerEmail">
+                   </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Item Type:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                    <mat-select formControlName="ItemType" placeholder="Consumable" style="display: contents;">
+                        <mat-option value=true>Consumable</mat-option>
+                        <mat-option value=false>Assets</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('ItemType').value}}" style="margin-left: 10px" >
+          <div>
+            <div class="row">
+              <div class="col-5">
+                <label style="width: 450px;">Select Consumable Item:</label>
+              </div>
+              <div class="col-7">
+                  <mat-form-field appearance="fill" *ngIf="ConsumableItems.length > 0">
+                      <mat-select formControlName="ItemType" placeholder="{{ConsumableItems[0].name}}" style="display: contents;" [value]="ConsumableItems[0].consumable_ID">
+                        <mat-option *ngFor="let Consumable of ConsumableItems" [value]="Consumable.consumable_ID">{{Consumable.name}}</mat-option>
+                      </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" *ngIf="ConsumableItems.length == 0">
+                    <mat-select formControlName="ItemType" placeholder="No consumable exist on the system" style="display: contents;">
+                      <mat-option>Please Add consumables to the system</mat-option>
+                    </mat-select>
+                </mat-form-field>
+              </div>
+          </div>
+            <div class="row">
+              <div class="col-5">
+                <label style="width: 450px;">Quantity:</label>
+              </div>
+              <div class="col-7">
+                <mat-form-field appearance="outline">
+                  <input matInput type="number" formControlName="ConsumableQuantity">
+                </mat-form-field> 
+              </div>
+            </div>
+          </div>        
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle disabled expanded="!{{ProcurementFormGroup.get('ItemType').value}}" style="margin-left: 10px" >
+          <div>
+            <div class="row">
+              <div class="col-5">
+                <label style="width: 450px;">Asset Name:</label>
+              </div>
+              <div class="col-7">
+                  <mat-form-field appearance="fill">
+                    <input matInput formControlName="AssetName">
+                  </mat-form-field>
+              </div>
+          </div>    
+          </div>
+        </mat-expansion-panel>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Payment Type:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                    <mat-select formControlName="PaymentType" placeholder="credit" style="display: contents;">
+                        <mat-option value="1">Credit</mat-option>
+                        <mat-option value="2">Cash</mat-option>
+                        <mat-option value="2">EFT</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Has Reposit?</label>
+            </div>
+            <div class="col-7">
+                <mat-checkbox formControlName="HasDeposit"></mat-checkbox>
+            </div>
+        </div>
+        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('HasDeposit').value}}" style="margin-left: 10px" >
+            <div>
+              <div class="row">
+                <div class="col-5">
+                  <label style="width: 450px;">Deposit Amount:</label>
+                </div>
+                <div class="col-7">
+                  <mat-form-field appearance="outline">
+                    <input matInput type="number" formControlName="DepositAmount">
+                  </mat-form-field> 
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-5">
+                  <label style="width: 450px;">Deposit Due Date:</label>
+                </div>
+                <div class="col-7">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput  [matDatepicker]="picker" #dateInput formControlName="DepositDueDate">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker" >
+                    <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker startView="year" [startAt]="2023/18/18"></mat-datepicker>
+                  </mat-form-field> 
+                </div>
+              </div>
+            </div>        
+          </mat-expansion-panel>
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Full Payment Made?</label>
+            </div>
+            <div class="col-7">
+                <mat-checkbox formControlName="FullPaymentMade"></mat-checkbox>
+            </div>
+        </div>
+        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('FullPaymentMade').value}}" style="margin-left: 10px" >
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Paid On Date:</label>
+            </div>
+            <div class="col-7">
+              <mat-form-field appearance="outline">
+                <mat-label>Choose a date</mat-label>
+                <input matInput  [matDatepicker]="picker" #dateInput formControlName="PaidOnDate">
+                <mat-datepicker-toggle matIconSuffix [for]="picker" >
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #picker startView="year" [startAt]="2023/18/18"></mat-datepicker>
+              </mat-form-field> 
+            </div>
+          </div>
+          
+          <div class="row">
+                <div class="col-5">
+                  <label style="width: 450px;">Upload Receipt:</label>
+                </div>
+                <div class="col-7">
+                    <input  id="file"  type="file" class="file-upload" formControlName="UploadReceiptDoc"> 
+                </div>
+              </div>     
+          </mat-expansion-panel>
+
+        
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Proof of payment?</label>
+            </div>
+            <div class="col-7">
+                <mat-checkbox formControlName="ProofOfPayment"></mat-checkbox>
+            </div>
+        </div>  
+        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('ProofOfPayment').value}}" style="margin-left: 10px" >
+          <div class="row">
+                <div class="col-5">
+                  <label style="width: 450px;">Upload Proof of payment document:</label>
+                </div>
+                <div class="col-7">
+                    <input  id="file"  type="file" class="file-upload" formControlName="ProofOfPaymentDoc"> 
+                </div>
+              </div>     
+          </mat-expansion-panel>
+        
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Total Amount:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                    <input matInput type="number" formControlName="TotalAmount">
+                  </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Total Amount Due Date:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="outline">
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput  [matDatepicker]="picker" #dateInput formControlName="TotalAmountDueDate" >
+                    <mat-datepicker-toggle matIconSuffix [for]="picker" >
+                    <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker startView="year" [startAt]="2023/18/18"></mat-datepicker>
+                </mat-form-field> 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Comments:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill" >
+                    <textarea matInput placeholder="Details Of Service Or Goods" formControlName="Comments"></textarea>
+                  </mat-form-field>
+            </div>
+        </div>
+        </div>
+      </form>
+</div>

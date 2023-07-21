@@ -6,6 +6,16 @@ using ProcionAPI.Models.Entities;
 using ProcionAPI.Models.Repositories;
 using System.Data.SqlTypes;
 using System.Net.Mime;
+using ProcionAPI.Data;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Net.Http.Headers;
+using Hangfire;
+using System.Reflection;
+using System.CodeDom;
 
 namespace ProcionAPI.Controllers
 {
@@ -1092,6 +1102,53 @@ namespace ProcionAPI.Controllers
             }
         }
 
+
+
+
+        [HttpGet]
+        [Route("DelayedJob")]
+        public string DelayedJob(int VendorID, DateTime date)
+        {
+            var selectedDate = new DateTimeOffset(date, TimeSpan.Zero);
+
+            BackgroundJob.Schedule(() => getBEE(VendorID, date, 1), selectedDate.AddYears(1).AddDays(-21));
+
+            BackgroundJob.Schedule(() => getBEE(VendorID, date, 2), selectedDate.AddYears(1).AddDays(-7));
+
+            BackgroundJob.Schedule(() => getBEE(VendorID, date, 3), selectedDate.AddYears(1));
+
+
+            return "Added new delayed jobs!";
+
+        }
+
+        [HttpPost]
+        [Route("getBEE")]
+        public async Task<IActionResult> getBEE(int VendorID, DateTime date, int NotifyWhenNumber)
+        {
+
+            var VenBee = await _VendorRepository.GetBEEDetailsAsync(VendorID);
+
+
+            if (NotifyWhenNumber == 1)
+            {
+
+                var Description = "3 Weeks before " + VenBee.Vendor.Name + " BEE expires!";
+                var result = await _VendorRepository.AddVendorBEENotificationAsync(date, VendorID, Description);
+            }
+            else if (NotifyWhenNumber == 2)
+            {
+                var Description = "1 Week before " + VenBee.Vendor.Name + " BEE expires!";
+                var result = await _VendorRepository.AddVendorBEENotificationAsync(date, VendorID, Description);
+            }
+            else if (NotifyWhenNumber == 3)
+            {
+                var Description = VenBee.Vendor.Name + " BEE expires has expired!";
+                var result = await _VendorRepository.AddVendorBEENotificationAsync(date, VendorID, Description);
+            }
+            return Ok();
+
+        }
     }
 }
 
