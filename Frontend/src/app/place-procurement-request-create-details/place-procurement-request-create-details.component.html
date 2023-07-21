@@ -91,8 +91,8 @@
           </div>
           <div class="col-7">
             <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length > 0">
-              <mat-select formControlName="AccountCode" placeholder="{{BudgetAllocationCode[0]}}" style="display: contents;" [value]="BudgetAllocationCode[0]">
-                <mat-option *ngFor="let codes of BudgetAllocationCode" [value]="codes">{{codes}}</mat-option>
+              <mat-select formControlName="AccountCode" placeholder="{{BudgetAllocationCode[0].account_Code}}" style="display: contents;" [value]="BudgetAllocationCode[0].account_Code">
+                <mat-option *ngFor="let codes of BudgetAllocationCode" [value]="codes.account_Code">{{codes.account_Code}}</mat-option>
               </mat-select>
             </mat-form-field>
             <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length == 0">
@@ -143,11 +143,11 @@
                 <div class="col-7">
                   <mat-form-field appearance="outline">
                     <mat-label>Choose a date</mat-label>
-                    <input matInput  [matDatepicker]="picker" #dateInput formControlName="DepositDueDate">
-                    <mat-datepicker-toggle matIconSuffix [for]="picker" >
+                    <input matInput  [matDatepicker]="dp1" formControlName="DepositDueDate">
+                    <mat-datepicker-toggle matIconSuffix [for]="dp1" >
                     <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                     </mat-datepicker-toggle>
-                    <mat-datepicker #picker startView="year" [startAt]="2023/18/18"></mat-datepicker>
+                    <mat-datepicker #dp1 startView="year" [startAt]="2023/18/18"></mat-datepicker>
                   </mat-form-field> 
                 </div>
               </div>
@@ -169,11 +169,11 @@
             <div class="col-7">
               <mat-form-field appearance="outline">
                 <mat-label>Choose a date</mat-label>
-                <input matInput  [matDatepicker]="picker" #dateInput formControlName="PaidOnDate">
-                <mat-datepicker-toggle matIconSuffix [for]="picker" >
+                <input matInput  [matDatepicker]="dp2" formControlName="PaidOnDate">
+                <mat-datepicker-toggle matIconSuffix [for]="dp2" >
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                 </mat-datepicker-toggle>
-                <mat-datepicker #picker startView="year" [startAt]="2023/18/18"></mat-datepicker>
+                <mat-datepicker #dp2 startView="year" [startAt]="2023/18/18"></mat-datepicker>
               </mat-form-field> 
             </div>
           </div>
@@ -225,11 +225,11 @@
             <div class="col-7">
                 <mat-form-field appearance="outline">
                     <mat-label>Choose a date</mat-label>
-                    <input matInput  [matDatepicker]="picker" #dateInput formControlName="TotalAmountDueDate" >
-                    <mat-datepicker-toggle matIconSuffix [for]="picker" >
+                    <input matInput  [matDatepicker]="dp3" formControlName="TotalAmountDueDate" >
+                    <mat-datepicker-toggle matIconSuffix [for]="dp3" >
                     <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                     </mat-datepicker-toggle>
-                    <mat-datepicker #picker startView="year" [startAt]="2023/18/18"></mat-datepicker>
+                    <mat-datepicker #dp3 startView="year" [startAt]="2023/18/18"></mat-datepicker>
                 </mat-form-field> 
             </div>
         </div>
@@ -246,7 +246,7 @@
         <br>
         <div  style="background-color: white;display: flex;align-items: center;margin: 1%;place-content: center;">
           <div class="wrapper">
-            <button class="" type="submit" [disabled]="!ProcurementFormGroup.valid">
+            <button class="" (click)="Create()" >
               <span>Create</span>
               <div class="success">
                 <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">

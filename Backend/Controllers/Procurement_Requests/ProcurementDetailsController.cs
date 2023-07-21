@@ -16,7 +16,37 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             _ProcurementDetailsRepository = ProcurementDetailsRepository;
         }
 
+        [HttpGet]
+        [Route("GetProcurementRequestByID/{ProcurementRequestID}")]
+        public async Task<IActionResult> GetProcurementRequestByID(int ProcurementRequestID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementRequestByIDAsync(ProcurementRequestID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
 
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPost]
+        [Route("AddProcurementDetails")]
+        public async Task<IActionResult> CreateProcurementDetails(Procurement_Details ProcurementDetails)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.CreateProcurementDetailsAsync(ProcurementDetails);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
 
 
     }

@@ -43,6 +43,7 @@ import { Notification } from '../Shared/Notification';
 
 import { Procurement_Request } from '../Shared/Procurement_Request';
 import { Procurement_Request_Quote } from '../Shared/Procurement_Request_Quote';
+import { Procurement_Details } from '../Shared/ProcurementDetails';
 
 @Injectable({
   providedIn: 'root'
@@ -966,8 +967,20 @@ export class DataService {
     return this.httpClient.post<any>(`${this.apiUrl}ProcurementRequest/uploadProcurementQuote`, formData, this.httpOptions)
   }
 
-  AddProcurementRequestQuote(AddProcurementRequestQuote: Procurement_Request_Quote) {
+   AddProcurementRequestQuote(AddProcurementRequestQuote: Procurement_Request_Quote) {
     return this.httpClient.post<Procurement_Request_Quote>(`${this.apiUrl}ProcurementRequest/CreateProcurementQuote`, AddProcurementRequestQuote).pipe(map(result => result))
-  }
+   }
 
+
+   //----------------------------------------------------------------------PlaceProcurement-----------------------------------------------------------------------------
+
+   AddProcurementDetails(ProcurementDetails: Procurement_Details): Observable<any> {
+    return this.httpClient.post<Procurement_Details>(`${this.apiUrl}ProcurementDetails/AddProcurementDetails`, ProcurementDetails, this.httpOptions).pipe(map(result => result))
+    }
+
+    GetProcurementRequestByID(ProcurementRequestID:number): Observable<any> {
+      return this.httpClient.get<Procurement_Request>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestByID/${ProcurementRequestID}`).pipe(map(result => result))
+    }  
+    
+  
 }
