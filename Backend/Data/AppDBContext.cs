@@ -572,8 +572,73 @@ namespace ProcionAPI.Data
             }
             );
 
+            modelBuilder.Entity<Payment_Method>()
+           .HasData(
+           new
+           {
+               Payment_Method_ID = 1,
+               Name = "Credit",
+               Description = "Credit Card Payment",
+
+           },
+           new
+           {
+               Payment_Method_ID = 2,
+               Name = "Cash",
+               Description = "Paying with cash",
+
+           },
+           new
+           {
+               Payment_Method_ID = 3,
+               Name = "EFT",
+               Description = "Paying with EFT",
+
+           }
+
+           );
 
 
+            modelBuilder.Entity<Procurement_Status>()
+           .HasData(
+           new
+           {
+               Procurement_Status_ID = 1,
+               Name = "Placed",
+               Description = "Procurement Details are placed",
+
+           },
+           new
+           {
+               Procurement_Status_ID = 2,
+               Name = "Finished",
+               Description = "Procurement has been finialized",
+
+           },
+           new
+           {
+               Procurement_Status_ID = 3,
+               Name = "Flagged",
+               Description = "Employee is over allowed mandate limit",
+
+           });
+
+            modelBuilder.Entity<Procurement_Payment_Status>()
+            .HasData(
+            new
+            {
+                Procurement_Payment_Status_ID = 1,
+                Name = "Payed",
+                Description = "Procurement has been paid",
+
+            },
+            new
+            {
+                Procurement_Payment_Status_ID = 2,
+                Name = "Awaiting payment",
+                Description = "Payment must still be made",
+
+            });
 
         }
     }
