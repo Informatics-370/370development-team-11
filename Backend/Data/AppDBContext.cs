@@ -93,7 +93,7 @@ namespace ProcionAPI.Data
                 .HasKey(ua => new { ua.Role_ID, ua.Access_ID });
 
             modelBuilder.Entity<Vendor_Consumable>()
-                .HasKey(vc => new { vc.Vendor_Consumbale_ID, vc.Consumable_ID, vc.Vendor_Detail_ID });
+                .HasKey(vc => new { vc.Vendor_Consumbale_ID, vc.Consumable_ID, vc.Vendor_ID });
 
 
             modelBuilder.Entity<Consumable>()
@@ -237,6 +237,12 @@ namespace ProcionAPI.Data
               Name = "Rejected",
               Description = "Rejected",
 
+          },
+          new
+          {
+              Vendor_Status_ID = 6,
+              Name = "Other",
+              Description = "Other",
           }
           );
 
