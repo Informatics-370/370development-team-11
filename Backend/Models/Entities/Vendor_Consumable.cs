@@ -20,6 +20,5 @@ namespace ProcionAPI.Models.Entities
         public Consumable Consumable_IDs { get; set; }
         [ForeignKey("Vendor_ID")]
         public Vendor Vendor { get; set; }
-        public string Quotes { get; set; }
     }
 }

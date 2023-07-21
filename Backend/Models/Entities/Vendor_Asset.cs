@@ -16,6 +16,5 @@ namespace ProcionAPI.Models.Entities
         public Asset Asset { get; set; }
         [ForeignKey("Vendor_ID")]
         public Vendor Vendor { get; set; }
-        public string Quotes { get; set; }
     }
 }
