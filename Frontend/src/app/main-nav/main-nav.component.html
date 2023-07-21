@@ -16,8 +16,8 @@
        mat-button (click)="reload()">Vendor</a>
     <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()">Reports</a>
     <mat-icon aria-hidden="false" aria-label="notification icon" fontIcon="notifications" class="sub-spacer"
-              style="font-size:19pt;" matBadge="{{numNewNotifications}}" matBadgeColor="warn" routerLink="/NotificationHub" matTooltip="Notifications"></mat-icon>
-    <img *ngIf="this.isLoggedIn === true" class="image-container" src="{{usr.profile_Picture}}" style="object-fit: cover;" [matMenuTriggerFor]="beforeMenu" matTooltip="Account"/>
+              style="font-size:19pt;" matBadge="{{numNotifications}}" matBadgeColor="warn" [matBadgeHidden]="hidden" routerLink="/NotificationHub"></mat-icon>
+    <img *ngIf="this.isLoggedIn === true" class="image-container" src="{{usr.profile_Picture}}" style="object-fit: cover;" [matMenuTriggerFor]="beforeMenu" />
     <mat-menu #beforeMenu="matMenu" xPosition="before">
       <button mat-menu-item routerLink="/Profile" (click)="reload()"><mat-icon matPrefix>pageview</mat-icon>Profile</button>
       <button mat-menu-item (click)="reload()"><mat-icon matPrefix>calendar_today</mat-icon>Calendar</button>

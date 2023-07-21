@@ -374,16 +374,16 @@ namespace ProcionAPI.Models.Repositories
             return hashedPassword;
         }
 
-        //public async Task<User> ResetNumNotifications(string username)
-        //{
-        //    var user = await GetUserByUsername(username);
+        public async Task<User> ResetNumNotifications(string username)
+        {
+            var user = await GetUserByUsername(username);
 
-        //    user.No_Notifications = 0;
+            user.No_Notifications = 0;
 
-        //    await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
-        //    return user;
-        //}
+            return user;
+        }
 
     }
 

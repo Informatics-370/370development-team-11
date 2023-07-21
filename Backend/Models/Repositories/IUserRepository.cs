@@ -29,6 +29,6 @@ namespace ProcionAPI.Models.Repositories {
 
         Task<Admin> GetAdminByEmailAsync(string Email);
 
-        //Task<User> ResetNumNotifications(string username);
+        Task<User> ResetNumNotifications(string username);
     }
 }

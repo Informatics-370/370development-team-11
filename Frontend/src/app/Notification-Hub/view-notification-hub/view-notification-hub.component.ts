@@ -32,6 +32,8 @@ export class ViewNotificationHubComponent implements OnInit {
   ngOnInit() {
     this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
 
+    this.dataService.ResetNotif(this.iName).subscribe();
+
     this.GetVendorNotifications();
     this.GetInventoryNotifications();
     this.GetProcurementNotifications();
@@ -56,5 +58,23 @@ export class ViewNotificationHubComponent implements OnInit {
       this.ProcurementNotifications = r;
       this.dataSourceProcurement = new MatTableDataSource(r);
     })
+  }
+
+  VendorRoute(name: string) {
+    if (name.includes("Onboard")) {
+      this.router.navigate(['/request-view']);
+    }
+    else {
+      this.router.navigate(['/vendor-view']);
+    }
+  }
+
+  ProcurementRoute(name: string) {
+    //if (name.includes("")) {
+    //  this.router.navigate(['/']);
+    //}
+    //else {
+    //  this.router.navigate(['/']);
+    //}
   }
 }
