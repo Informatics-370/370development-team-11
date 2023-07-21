@@ -98,6 +98,10 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { CropperModalComponent } from './User/cropper-modal/cropper-modal.component';
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
+import { CreateHelpComponent } from './create-help/create-help/create-help.component';
+import { ViewHelpComponent } from './view-help/view-help/view-help.component';
+import { EditHelpComponent } from './edit-help/edit-help/edit-help.component';
+import { DeleteHelpComponent } from './delete-help/delete-help/delete-help.component';
 import { UpdateConsumableStockComponent } from './update-consumable-stock/update-consumable-stock.component';
 import { CreateDelegationComponent } from './Delegation/create-delegation/create-delegation.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -111,10 +115,14 @@ import { ViewProcurementRequestComponent } from './view-procurement-request/view
 import { UpdatePasswordComponent } from './User/update-password/update-password.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-approve-edit.component';
+import { CreateProcurementRequestComponent } from './create-procurement-request/create-procurement-request.component';
 
 
 import { MatBadgeModule } from '@angular/material/badge';
 
+import { VideoDialogComponent } from './VideoDialog/video-dialog/video-dialog.component';
+import { BackupComponent } from './Settings/backup/backup.component';
+import { RestoreComponent } from './Settings/backupDialog/restore.component';
 
 
 @NgModule({
@@ -187,6 +195,10 @@ import { MatBadgeModule } from '@angular/material/badge';
     CropperModalComponent,
     ViewNotificationHubComponent,
     ViewDelegationComponent,
+    CreateHelpComponent,
+    ViewHelpComponent,
+    EditHelpComponent,
+    DeleteHelpComponent,
     UpdateConsumableStockComponent,
     CreateDelegationComponent,
     DeleteDelegationComponent,
@@ -196,6 +208,10 @@ import { MatBadgeModule } from '@angular/material/badge';
     ViewProcurementRequestComponent,
     UpdatePasswordComponent,
     VendorApproveEditComponent,
+    VideoDialogComponent,
+    BackupComponent,
+    RestoreComponent,
+    CreateProcurementRequestComponent
   ],
   imports: [
     BrowserModule,

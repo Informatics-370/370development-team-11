@@ -10,11 +10,20 @@ import { DataService } from '../DataService/data-service';
 import { User } from '../Shared/User';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { RestoreComponent } from '../Settings/backupDialog/restore.component';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-view-employee-role',
   templateUrl: './view-employee-role.component.html',
-  styleUrls: ['./view-employee-role.component.css']
+  styleUrls: ['./view-employee-role.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewEmployeeRoleComponent implements OnInit {
 
@@ -132,5 +141,14 @@ export class ViewEmployeeRoleComponent implements OnInit {
       }
     })
 
+  }
+
+
+  openDialog() {
+    const dialogRef = this.dialog.open(RestoreComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 }

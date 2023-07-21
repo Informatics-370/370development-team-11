@@ -24,11 +24,11 @@
 
         <div mat-list-item style="margin-left: 0.5%; display: flex;  align-items: center; ">
 
-            <button mat-raised-button
+            <button mat-raised-button 
                 style="width: 200px; font-size: 14px; height: 42px; margin: 10px; background-color:#244688; color:white;"
                 routerLink="/CreateConsumable">Create Consumable</button>
 
-            <button mat-raised-button
+            <button mat-raised-button matTooltip="This will create a new PDF with all the current Consumable Details on the system"
                 style="width: 200px; font-size: 14px; height: 42px; margin: 10px; background-color:#244688; color:white;"
                 (click)="ExportInventoryDetails()">Export Details</button>
 
@@ -90,7 +90,7 @@
                     <td mat-cell *matCellDef="let Consumable" style="width:100px;">
 
                         <button class="noselect" routerLink="/EditConsumable/{{Consumable.consumable_ID}}" type="button"
-                            style="background-color: #94CC5B;">
+                            style="background-color: #94CC5B;" >
                             <span class='text'>Edit</span>
                             <span class="icon" style="border-left: 1px solid #94CC5B; ">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="1em"
@@ -114,7 +114,7 @@
                     <td mat-cell *matCellDef="let Consumable" style="width:100px;">
 
                         <button class="noselect" (click)="openDialog(Consumable.name, Consumable.consumable_ID)"
-                            type="button" style="background-color: #94CC5B;">
+                            type="button" style="background-color: #94CC5B;" matTooltip="This will take you to the stock pop-up page where you can update stock levels and view predictions for this specific Consumable">
                             <span class='text'>Stock</span>
                             <span class="icon" style="border-left: 1px solid #94CC5B; ">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="1em"

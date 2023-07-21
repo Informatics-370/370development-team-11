@@ -3,7 +3,7 @@
     <img src="./assets/Images/image 3.jpg" />
     <span class="main-spacer"></span>
     <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home" class="sub-spacer"
-              routerLink="/Home" (click)="reload()"></mat-icon>
+              routerLink="/Home" (click)="reload()" matTooltip="Home Page"></mat-icon>
     <a *ngIf="rAdmin" class="sub-spacer"
        style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/ViewEmployee"
        mat-button (click)="reload()">Administration</a>
@@ -11,7 +11,7 @@
        mat-button (click)="reload()">Inventory</a>
     <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;"
        routerLink="/ViewBudgetAllocation" mat-button (click)="reload()">Finance</a>
-    <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()">Procurement</a>
+    <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/ViewProcurementRequest" mat-button (click)="reload()">Procurement</a>
     <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/request-view"
        mat-button (click)="reload()">Vendor</a>
     <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()">Reports</a>

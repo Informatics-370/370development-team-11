@@ -101,7 +101,7 @@
           [(ngModel)]="password">
       </mat-form-field>
 
-      <button type="submit" [disabled]="!myForm.valid">
+      <button type="submit" [disabled]="!myForm.valid" matTooltip="Login with Username or Email">
         Login
       </button>
 

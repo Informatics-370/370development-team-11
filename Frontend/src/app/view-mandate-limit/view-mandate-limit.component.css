@@ -98,3 +98,9 @@ button {
     button:focus {
       outline: none;
     }
+
+    .MenuButton{
+      background-color:#fff;
+      color: #000; 
+      width: 200px;
+    }

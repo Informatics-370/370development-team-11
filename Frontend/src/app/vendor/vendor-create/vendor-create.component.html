@@ -206,13 +206,20 @@
                 </td>
             </tr>
             <br>
-            <tr>
+            <tr style="margin-bottom: 15px;">
                 <td><label>Insurance Cover Document:</label></td>
                 <td>
                     <mat-checkbox formControlName="InsuranceCoverCheck" (click)="InsuranceCoverChange()">Add Insurance Cover Document?</mat-checkbox> <br>  
                     <input  id="file" formControlName="InsuranceCoverDoc" type="file" class="file-upload" *ngIf="InsuranceCoverChecker === true;" (change)="FileStorage(4,$event)">            
                 </td>
             </tr>
+            <tr *ngIf="InsuranceCoverChecker == true && FileDetails[0] != undefined">
+                <td><label for="file" style="margin-right: 1%;" >Current Insurance Cover Document: </label></td> 
+                <td >  
+                    <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}">{{FileDetails[0].FileName}}</a>    
+                </td>
+              </tr>
+            <tr>
             <br>
             <tr>
                 <td> <label>Payment Terms:</label></td>

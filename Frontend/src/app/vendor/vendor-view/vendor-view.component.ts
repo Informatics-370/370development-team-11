@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from 'src/app/DataService/data-service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -7,15 +7,23 @@ import { VendorCreateChoiceComponent } from '../vendor-create-choice/vendor-crea
 import { MatDialog } from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import { Subscription, buffer, elementAt, groupBy } from 'rxjs';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-vendor-view',
   templateUrl: './vendor-view.component.html',
   styleUrls: ['./vendor-view.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  
 })
 export class VendorViewComponent implements OnInit  {
-  
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 //,'Category'
   constructor(private VendorService: DataService, private dialog: MatDialog, private route: ActivatedRoute,private router: Router,) { }
   private refreshSubscription:Subscription;
@@ -27,6 +35,7 @@ export class VendorViewComponent implements OnInit  {
     let VendorDetails:any[] = result 
     VendorDetails.forEach(element => this.VenDetails.push(element))
     this.VendorSearch =  new MatTableDataSource(result)
+    this.VendorSearch.paginator = this.paginator;
     console.log(VendorDetails)
    })
     

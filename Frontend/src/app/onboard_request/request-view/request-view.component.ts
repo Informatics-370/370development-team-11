@@ -13,11 +13,19 @@ import { RequestDeleteComponent } from '../request-delete/request-delete.compone
 import { MatDialog } from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-request-view',
   templateUrl: './request-view.component.html',
   styleUrls: ['./request-view.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -58,6 +66,7 @@ export class RequestViewComponent implements OnInit {
       console.log(result)
       RequestList.forEach((element) => this.vendor.push(element.vendors));
       this.RequestVendors =  new MatTableDataSource(this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
+      this.RequestVendors.paginator = this.paginator;
       this.ReqVenLen = this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)
       console.log(this.RequestVendors)
       
@@ -159,9 +168,6 @@ export class RequestViewComponent implements OnInit {
       let test = ""
       return test
     } 
-    
- 
-  
   }
 
   

@@ -25,11 +25,19 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-vendordetails-view',
   templateUrl: './vendordetails-view.component.html',
-  styleUrls: ['./vendordetails-view.component.css']
+  styleUrls: ['./vendordetails-view.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 
 
@@ -175,7 +183,7 @@ export class VendordetailsViewComponent implements OnInit {
   DueDilligenceDetails: Due_Dillegence;
   POPIDetails: POPI;
   BeeDetails: Vendor_BEE;
-
+  VendorID:any;
   VenDetails: VendorDetails[] = [];
   FileDetails:any[] = [];
   ngOnInit(): void {
@@ -191,10 +199,12 @@ export class VendordetailsViewComponent implements OnInit {
         
         let VendorDetailID = paramater.get("VendorID");
         this.VendorService.GetVendorDetailByID(Number(VendorDetailID)).subscribe(result => {
+          
           if(result == null) {
             
           }
           this.VendorDetail = result
+          this.VendorID = this.VendorDetail.vendor_ID
           let test: any
           test = new DatePipe('en-ZA');
           this.VendorDetail.dateAccepted = test.transform(this.VendorDetail.dateAccepted, 'MMM d, y, h:mm:ss a');
@@ -218,7 +228,7 @@ export class VendordetailsViewComponent implements OnInit {
             this.getAgreement(this.VendorDetail.vendor_Detail_ID)
           }
           if(this.VendorDetail.insurance_Provided == true) {
-            this.getInsurance(this.VendorDetail.vendor_Detail_ID)
+            this.getInsurance(this.VendorID)
           }
           if(this.VendorDetail.payment_Terms_Provided == true) {
             this.getPaymentTerms(this.VendorDetail.vendor_Detail_ID)
@@ -304,11 +314,16 @@ export class VendordetailsViewComponent implements OnInit {
     })
   }
 
-  getInsurance(InsuranceID:number) {
-    this.VendorService.GetInsuranceByID(InsuranceID).subscribe(result => {
-      this.VendorInsurance = result
-      let sFilePath = this.VendorInsurance.confirmation_Doc
-      this.getFileDetails(sFilePath,4)
+  getInsurance(VendorID:number) {
+    this.VendorService.GetInsuranceByID(VendorID).subscribe(result => {
+      result.forEach(e=> {
+        if(e.vendor_Insurance_Type_ID == 4) {
+          this.VendorInsurance = e
+          let sFilePath = this.VendorInsurance.confirmation_Doc
+          this.getFileDetails(sFilePath,4)
+        }
+      })
+      
     })
   }
 

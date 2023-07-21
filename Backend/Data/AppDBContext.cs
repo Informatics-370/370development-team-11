@@ -30,6 +30,8 @@ namespace ProcionAPI.Data
         public DbSet<Notification> Notification { get; set; }
         public DbSet<Notification_Type> Notification_Type { get; set; }
         public DbSet<Procurement_Request> Procurement_Request { get; set; }
+        public DbSet<Procurement_Request_Quote> Procurement_Request_Quote { get; set; }
+        public DbSet<Procurement_Details> Procurement_Details { get; set; }
         public DbSet<Requisition_Status> Requisition_Status { get; set; }
         public DbSet<Payment_Made> Payment_Made { get; set; }
         public DbSet<Sign_Off_Status> Sign_Off_Status { get; set; }
@@ -61,6 +63,7 @@ namespace ProcionAPI.Data
         public DbSet<Contracted_Partner_Type> Contracted_Partner_Type { get; set; }
         public DbSet<VAT> VAT { get; set; }
         public DbSet<HELP> HELP { get; set; }
+
         public DbSet<Help_Category> Help_Category { get; set; }
         public DbSet<Consumable> Consumable { get; set; }
         public DbSet<Consumable_Category> Consumable_Category { get; set; }
@@ -472,6 +475,100 @@ namespace ProcionAPI.Data
 
             }
             );
+
+            modelBuilder.Entity<Help_Category>()
+            .HasData(
+            new
+            {
+                Help_Category_ID = 1,
+                Name = "Vendor",
+                Description = "Help related to Vendor activities.",
+            },
+            new
+            {
+                Help_Category_ID = 2,
+                Name = "Finance",
+                Description = "Help related to Finiance activities.",
+            },
+            new
+            {
+                Help_Category_ID = 3,
+                Name = "Reports",
+                Description = "Help related to Reporting activities.",
+            },
+            new
+            {
+                Help_Category_ID = 4,
+                Name = "Procurment",
+                Description = "Help related to Procurement activities.",
+            },
+            new
+            {
+                  Help_Category_ID = 5,
+                  Name = "Administration",
+                  Description = "Help related to Administration activities.",
+            },
+            new
+            {
+                   Help_Category_ID = 6,
+                   Name = "Inventory",
+                   Description = "Help related to Inventory activities.",
+            }
+            );
+
+
+            modelBuilder.Entity<Requisition_Status>()
+            .HasData(
+            new
+            {
+                Requisition_Status_ID = 1,
+                Name = "Accepted",
+                Description = "Accepted",
+
+            },
+            new
+            {
+                Requisition_Status_ID = 2,
+                Name = "Rejected",
+                Description = "Rejected",
+
+            },
+            new
+            {
+                Requisition_Status_ID = 3,
+                Name = "Approval Required",
+                Description = "Approval Required",
+
+            }
+
+            );
+
+            modelBuilder.Entity<Procurement_Request>()
+            .HasData(
+            new
+            {
+                Procurement_Request_ID = 1,
+                Vendor_ID = 1,
+                Requisition_Status_ID = 3,
+                User_ID = 1,
+                Name = "Procurement Request for x",
+                Description = "A new company procurement request"
+
+            }
+            );
+
+            modelBuilder.Entity<Procurement_Request_Quote>()
+            .HasData(
+            new
+            {
+                Quote_ID = 1,
+                Procurement_Request_ID = 1,
+                Path = "Test"
+            }
+            );
+
+
+
 
         }
     }
