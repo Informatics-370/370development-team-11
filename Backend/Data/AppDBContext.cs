@@ -63,7 +63,6 @@ namespace ProcionAPI.Data
         public DbSet<Contracted_Partner_Type> Contracted_Partner_Type { get; set; }
         public DbSet<VAT> VAT { get; set; }
         public DbSet<HELP> HELP { get; set; }
-
         public DbSet<Help_Category> Help_Category { get; set; }
         public DbSet<Consumable> Consumable { get; set; }
         public DbSet<Consumable_Category> Consumable_Category { get; set; }

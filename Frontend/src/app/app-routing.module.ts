@@ -68,8 +68,11 @@ import { CreateDelegationComponent } from './Delegation/create-delegation/create
 import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
 
 import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
+import { ViewPendingProcurementRequestComponent } from './view-pending-procurement-request/view-pending-procurement-request.component';
 import { UpdatePasswordComponent } from './User/update-password/update-password.component';
 import { CreateProcurementRequestComponent } from './create-procurement-request/create-procurement-request.component';
+import { PlaceProcurementRequestComponent } from './place-procurement-request/place-procurement-request.component';
+import { PlaceProcurementRequestCreateDetailsComponent } from './place-procurement-request-create-details/place-procurement-request-create-details.component';
 
 import { BackupComponent } from './Settings/backup/backup.component';
 
@@ -296,8 +299,20 @@ const routes: Routes = [
   {
     path: 'CreateProcurementRequest', canActivate: [AuthService],
     component: CreateProcurementRequestComponent
+  },
+  {
+    path: 'ViewPendingProcurementRequest', canActivate: [AuthService],
+    component: ViewPendingProcurementRequestComponent
+  },
+  {
+    path: 'PlaceProcurementRequest', canActivate: [AuthService],
+    component: PlaceProcurementRequestComponent
+  },
+  {
+    path: 'PlaceProcurementRequestCreateDetails', canActivate: [AuthService],
+    component: PlaceProcurementRequestCreateDetailsComponent
   }
-
+ 
 
 ];
 

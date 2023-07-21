@@ -64,11 +64,6 @@ mat-error:first-child {
 
 }
 
-/* .mat-expansion-panel-header {
-    padding: 0;
-    width: 750px;
-    margin-left: 1%;
-} */
 ::ng-deep .mat-expansion-panel-body {
     padding:0!important;
     

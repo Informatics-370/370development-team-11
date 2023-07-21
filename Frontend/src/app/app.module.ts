@@ -123,6 +123,9 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { VideoDialogComponent } from './VideoDialog/video-dialog/video-dialog.component';
 import { BackupComponent } from './Settings/backup/backup.component';
 import { RestoreComponent } from './Settings/backupDialog/restore.component';
+import { ViewPendingProcurementRequestComponent } from './view-pending-procurement-request/view-pending-procurement-request.component';
+import { PlaceProcurementRequestComponent } from './place-procurement-request/place-procurement-request.component';
+import { PlaceProcurementRequestCreateDetailsComponent } from './place-procurement-request-create-details/place-procurement-request-create-details.component';
 
 
 @NgModule({
@@ -211,7 +214,10 @@ import { RestoreComponent } from './Settings/backupDialog/restore.component';
     VideoDialogComponent,
     BackupComponent,
     RestoreComponent,
-    CreateProcurementRequestComponent
+    CreateProcurementRequestComponent,
+    ViewPendingProcurementRequestComponent,
+    PlaceProcurementRequestComponent,
+    PlaceProcurementRequestCreateDetailsComponent
   ],
   imports: [
     BrowserModule,
