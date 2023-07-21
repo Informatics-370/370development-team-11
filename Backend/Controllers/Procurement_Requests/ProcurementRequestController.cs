@@ -39,9 +39,9 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 var result = await _Procurement_Request_Repository.AddProcurementRequestAsync(RequestAdd);
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
