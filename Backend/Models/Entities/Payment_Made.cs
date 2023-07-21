@@ -8,10 +8,10 @@ namespace ProcionAPI.Models.Entities
         [Key]
         public int Payment_Made_ID { get; set; }
         [Required]
-        public int Procurement_Request_ID { get; set; }
+        public int Procurement_Details_ID { get; set; }
 
-        [ForeignKey("Procurement_Request_ID")]
-        public Procurement_Request Procurement_Request { get; set; }
+        [ForeignKey("Procurement_Details_ID")]
+        public Procurement_Details Procurement_Details { get; set; }
         public DateTime Paid_On_Date { get; set; }
         public string Receipt_Upload { get; set; }
     }
