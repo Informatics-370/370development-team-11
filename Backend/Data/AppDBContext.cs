@@ -87,7 +87,7 @@ namespace ProcionAPI.Data
                .HasKey(or => new {or.Onboard_Request_Id, or.User_Id, or.Vendor_ID });
 
             modelBuilder.Entity<Procurement_Asset>()
-               .HasKey(pa => new { pa.Procurement_Asset_ID, pa.Procurement_Request_ID, pa.Asset_ID });
+               .HasKey(pa => new { pa.Procurement_Asset_ID, pa.Procurement_Details_ID, pa.Asset_ID });
 
             modelBuilder.Entity<User_Access>()
                 .HasKey(ua => new { ua.Role_ID, ua.Access_ID });
