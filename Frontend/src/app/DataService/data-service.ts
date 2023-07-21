@@ -892,7 +892,7 @@ export class DataService {
     return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetProcurementNotifications` + "/" + username).pipe(map(result => result))
   }
 
-  //ResetNotif(username: string) {
-  //  return this.httpClient.put<User>(`${this.apiUrl}User/ResetNotif/` + username, this.httpOptions)
-  //}
+  ResetNotif(username: string) {
+    return this.httpClient.put<User>(`${this.apiUrl}User/ResetNotif/` + username, this.httpOptions)
+  }
 }

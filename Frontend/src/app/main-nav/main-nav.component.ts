@@ -37,6 +37,7 @@ export class MainNavComponent implements OnInit {
     username: '',
     password: '',
     profile_Picture: '',
+    no_Notifications: 0,
     role: this.rl
   }
 
@@ -44,9 +45,10 @@ export class MainNavComponent implements OnInit {
 
   iRole: string;
   rAdmin: string;
-  notifications: Notification[] = [];
+  usernotifications: any;
   numNotifications: number;
-  numNewNotifications: number;
+
+  hidden = false;
 
   constructor(private router: Router, private dataService: DataService, private AuthServ: AuthService) {
     this.router.events.subscribe((event: Event) => {
@@ -55,12 +57,19 @@ export class MainNavComponent implements OnInit {
       }
     })
 
-    //interval(100000).subscribe(x => {
-    //  this.dataService.GetNotifications(this.iName).subscribe(r => {
-    //    this.notifications = r;
-    //    this.numNewNotifications = this.notifications.length;
-    //  })
-    //})
+    interval(10000).subscribe(x => {
+      this.dataService.GetUserByUsername(this.iName).subscribe(r => {
+        this.usernotifications = r;
+        this.numNotifications = this.usernotifications.no_Notifications;
+
+        if (this.numNotifications == 0) {
+          this.hidden = true;
+        }
+        else {
+          this.hidden = false;
+        }
+      })
+    })
   }
   RoleToUse: string = "";
   IsLoggedIn: boolean = false;
@@ -80,7 +89,6 @@ export class MainNavComponent implements OnInit {
     }
 
     this.GetUser()
-    this.GetNotifications()
   }
 
   public reload() {
@@ -112,10 +120,5 @@ export class MainNavComponent implements OnInit {
     })
   }
 
-  GetNotifications() {
-    this.dataService.GetNotifications(this.iName).subscribe(r => {
-      this.notifications = r;
-      this.numNewNotifications = this.notifications.length;
-    })
-  }
+  
 }

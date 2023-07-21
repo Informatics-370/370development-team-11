@@ -27,7 +27,7 @@
             </mat-card-content>
             <mat-card-actions style="display: flex; justify-content: end; align-items: end; margin-top: 5%;">
               <button mat-raised-button
-                      style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688; ">
+                      style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" (click)="VendorRoute(row.notification_Type.name)">
                 <mat-icon matPrefix style="margin-right:10%;">visibility</mat-icon>View
               </button>
             </mat-card-actions>
@@ -67,7 +67,7 @@
             </mat-card-content>
             <mat-card-actions style="display: flex; justify-content: end; align-items: end; margin-top: 5%;">
               <button mat-raised-button
-                      style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688; ">
+                      style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" routerLink="/ViewConsumable">
                 <mat-icon matPrefix style="margin-right:10%;">visibility</mat-icon>View
               </button>
             </mat-card-actions>
@@ -107,7 +107,7 @@
             </mat-card-content>
             <mat-card-actions style="display: flex; justify-content: end; align-items: end; margin-top: 5%;">
               <button mat-raised-button
-                      style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688; ">
+                      style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" (click)="ProcurementRoute(row.notification_Type.name)">
                 <mat-icon matPrefix style="margin-right:10%;">visibility</mat-icon>View
               </button>
             </mat-card-actions>
@@ -119,6 +119,6 @@
 
   </mat-tab>
 
-  <mat-tab label="Finance"> Finance </mat-tab>
+  
 </mat-tab-group>
 

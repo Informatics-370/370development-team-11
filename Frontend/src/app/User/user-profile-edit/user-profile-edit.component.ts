@@ -57,6 +57,7 @@ export class UserProfileEditComponent {
     username: '',
     password: '',
     profile_Picture: '',
+    no_Notifications: 0,
     role: this.rl
   }
 

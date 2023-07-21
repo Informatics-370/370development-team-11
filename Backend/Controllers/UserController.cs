@@ -609,20 +609,20 @@ namespace ProcionAPI.Controllers
             return Unauthorized(new { error = "Invalid credentials" });
         }
 
-        //[HttpPut]
-        //[Route("ResetNotif/{username}")]
-        //public async Task<ActionResult> ResetNumNotifications([FromRoute] string username)
-        //{
-        //    try
-        //    {
-        //        var result = await _UserRepository.ResetNumNotifications(username);
-        //        return Ok(result);
+        [HttpPut]
+        [Route("ResetNotif/{username}")]
+        public async Task<ActionResult> ResetNumNotifications([FromRoute] string username)
+        {
+            try
+            {
+                var result = await _UserRepository.ResetNumNotifications(username);
+                return Ok(result);
 
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return StatusCode(500, "Internal Server Error. Please contact support");
-        //    }
-        //}
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
     }
 }
