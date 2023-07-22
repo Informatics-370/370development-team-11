@@ -26,7 +26,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   vendors: any[] = [];
   VendorType: String = 'Approved';
 
-  NameControl = new FormControl('');
+  VendorNameControl = new FormControl('');
   filteredVendors: Observable<VendorOnboardRequest[]>
 
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
@@ -77,7 +77,8 @@ export class CreateProcurementRequestComponent implements OnInit {
     procurement_Request_ID: 0,
     procurement_Request: this.Procurement_Request,
     path: "",
-    upload_Date: new Date()
+    upload_Date: new Date(),
+    prefferedQuote: false
   }
 
   fileToUpload: File | null = null;
@@ -88,6 +89,7 @@ export class CreateProcurementRequestComponent implements OnInit {
     if (this.VendorType == "Approved") {
       this.myForm = this.formBuilder.group({
         Selection: ["Approved", [Validators.required]],
+        Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
         Vendor: [0, [Validators.required]],
         Description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
         Quote1: ['', [Validators.required]]
@@ -98,7 +100,8 @@ export class CreateProcurementRequestComponent implements OnInit {
     else {
       this.myForm = this.formBuilder.group({
         OtherSelection: ["Other", [Validators.required]],
-        Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
+        RequestName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
+        VendorName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
         OtherDescription: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
         Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
         OtherQuote1: ['', [Validators.required]],
@@ -107,7 +110,7 @@ export class CreateProcurementRequestComponent implements OnInit {
       })
       this.GetVendors();
 
-      this.filteredVendors = this.NameControl.valueChanges.pipe(
+      this.filteredVendors = this.VendorNameControl.valueChanges.pipe(
         startWith(''),
         map(value => this._filter(value)),
       )
@@ -122,11 +125,12 @@ export class CreateProcurementRequestComponent implements OnInit {
 
     this.setVal(value)
     // If no vendors match the filter, return an array with a single element containing the entered value
+    console.log(value)
     return this.vendors.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
   setVal(Name: String) {
-    this.myForm.get("Name").setValue(Name)
+    this.myForm.get("VendorName").setValue(Name)
   }
 
   onFile1Upload(event: any) {
@@ -179,35 +183,45 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   AddProcurementRequestB() {
-    console.log(this.myForm.get("Name").value)
-    this.Procurement_Request.name = this.myForm.get("Name").value;
+    this.Procurement_Request.name = this.myForm.get("RequestName").value;
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
-    this.Procurement_Request.vendor.name = this.myForm.get("Name").value;
+    this.Procurement_Request.vendor.name = this.myForm.get("VendorName").value;
     this.Procurement_Request.vendor.email = this.myForm.get("Email").value;
     this.Procurement_Request.user.username = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
-
+    console.log(this.Procurement_Request)
 
     this.dataService.AddProcurementRequest(this.Procurement_Request).subscribe({
+
       next: (response) => {
         console.log(response)
+        var Counter = 0
         if (response != null) {
           this.files.forEach(element => {
             let file: File = element;
-            console.log(file);
-            console.log(this.Procurement_Request.vendor.name)
             this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file).subscribe({
               next: (Response) => {
+                console.log(Counter)
+                if (Counter > 0) {
+                  let qPath = Response
+                  this.Procurement_Request = response[0]
+                  this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+                  this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+                  this.Procurement_Request_Quote.prefferedQuote = false
+                  console.log(false)
+                }
 
-                let qPath = Response
-                this.Procurement_Request = response[0]
-                this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-                this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
-
+                else {
+                  let qPath = Response
+                  this.Procurement_Request = response[0]
+                  this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+                  this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+                  this.Procurement_Request_Quote.prefferedQuote = true
+                  console.log(true)
+                }
                 let test: any
                 test = new DatePipe('en-ZA');
                 this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
-
-
+                Counter = Counter + 1;
                 this.dataService.AddProcurementRequestQuote(this.Procurement_Request_Quote).subscribe({
                   next: (result) => {
                     this.DisplayNotif();
@@ -256,7 +270,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   AddProcurementRequestA() {
-    this.Procurement_Request.name = this.myForm.get("Vendor").value;
+    this.Procurement_Request.name = this.myForm.get("Name").value;
     this.Procurement_Request.description = this.myForm.get("Description").value;
     this.Procurement_Request.vendor.name = this.myForm.get("Vendor").value;
     this.Procurement_Request.user.username = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
@@ -273,6 +287,7 @@ export class CreateProcurementRequestComponent implements OnInit {
               this.Procurement_Request = response[0]
               this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
               this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+              this.Procurement_Request_Quote.prefferedQuote = true;
 
               console.log(this.Procurement_Request_Quote)
 

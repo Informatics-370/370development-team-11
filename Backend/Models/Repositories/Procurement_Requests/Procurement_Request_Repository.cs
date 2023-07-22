@@ -64,7 +64,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                     Vendor_ID = 0,
                     Vendor_Status_ID = 6,
                     Vendor_Status = Otherstatus,
-                    Name = RequestAdd.Name,
+                    Name = RequestAdd.Vendor.Name,
                     Email = RequestAdd.Vendor.Email,
                     Number_Of_Times_Used = 1,
                     Sole_Supplier_Provided = false,

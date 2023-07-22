@@ -6,4 +6,5 @@ export interface Procurement_Request_Quote {
     procurement_Request: Procurement_Request;
     path: String;
     upload_Date: Date;
+    prefferedQuote: Boolean
 }
