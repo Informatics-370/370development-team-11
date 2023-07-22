@@ -58,7 +58,8 @@ export class DeleteProcurementRequestComponent implements OnInit {
     procurement_Request_ID: 0,
     procurement_Request: this.Procurement_Request,
     path: "",
-    upload_Date: new Date()
+    upload_Date: new Date(),
+    prefferedQuote: false
   }
 
   ProcurementQuotes: Procurement_Request_Quote[] = []
