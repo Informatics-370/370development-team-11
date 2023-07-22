@@ -43,19 +43,19 @@
           <tr *ngIf="FileDetails[0] != undefined">
             <td><label for="file" style="margin-right: 1%;">Preffered Quote: </label></td>
             <td>
-                  <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" style="color: black;font-weight: 600;">{{FileDetails[0].FileName}}</a> 
+                  <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank">{{FileDetails[0].FileName}}</a> 
             </td>
            <tr>
             <tr *ngIf="FileDetails[0] != undefined">
                 <td><label for="file" style="margin-right: 1%;">Comparative  Quote 1: </label></td>
                 <td>
-                      <a id="btnLink" (click)="openPDFInNewTab(1)" target="_blank" style="color: black;font-weight: 600;">{{FileDetails[0].FileName}}</a> 
+                      <a id="btnLink" (click)="openPDFInNewTab(1)" target="_blank">{{FileDetails[0].FileName}}</a> 
                 </td>
             <tr>
                 <tr *ngIf="FileDetails[0] != undefined">
                     <td><label for="file" style="margin-right: 1%;">Comparative Quote 2: </label></td>
                     <td>
-                          <a id="btnLink" (click)="openPDFInNewTab(2)" target="_blank" style="color: black;font-weight: 600;">{{FileDetails[0].FileName}}</a> 
+                          <a id="btnLink" (click)="openPDFInNewTab(2)" target="_blank" >{{FileDetails[0].FileName}}</a> 
                     </td>
                 </tr>
           </table> 
@@ -125,7 +125,7 @@
       <tr *ngIf="FileDetails[0] != undefined">
         <td><label for="file" style="margin-right: 1%;">Procurement Quote: </label></td>
         <td>
-              <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" style="color: black;font-weight: 600;">{{FileDetails[0].FileName}}</a> 
+              <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" >{{FileDetails[0].FileName}}</a> 
         </td>
        </tr>
     </table>

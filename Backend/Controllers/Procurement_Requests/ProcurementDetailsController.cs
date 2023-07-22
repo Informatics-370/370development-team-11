@@ -264,12 +264,12 @@ namespace ProcionAPI.Controllers.Procurement_Requests
 
 
         [HttpPut]
-        [Route("UpdateProcurementRequestStatus")]
-        public async Task<IActionResult> UpdateProcurementRequestStatus(int StatusID, Procurement_Request ProcurementRequestDetails)
+        [Route("UpdateProcurementRequestStatus/{requisition_Status_ID}")]
+        public async Task<IActionResult> UpdateProcurementRequestStatus(int requisition_Status_ID, Procurement_Request ProcurementRequestDetails)
         {
             try
             {
-                var results = await _ProcurementDetailsRepository.UpdateProcurementRequestStatusAsync(StatusID, ProcurementRequestDetails);
+                var results = await _ProcurementDetailsRepository.UpdateProcurementRequestStatusAsync(requisition_Status_ID, ProcurementRequestDetails);
                 return Ok(results);
             }
             catch (Exception)
@@ -441,7 +441,7 @@ namespace ProcionAPI.Controllers.Procurement_Requests
         }
 
         [HttpPut]
-        [Route("UpdateProcurementDetailsStatus")]
+        [Route("UpdateProcurementDetailsStatus{StatusID}")]
         public async Task<IActionResult> UpdateProcurementDetailsStatus(int StatusID, Procurement_Details ProcurementDetails)
         {
             try
