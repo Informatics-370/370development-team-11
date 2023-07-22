@@ -15,5 +15,8 @@ namespace ProcionAPI.Models.Entities
         public string Path { get; set; }
         [Required]
         public DateTime Upload_Date { get; set; }
+
+        [Required]
+        public bool PrefferedQuote { get; set; }
     }
 }

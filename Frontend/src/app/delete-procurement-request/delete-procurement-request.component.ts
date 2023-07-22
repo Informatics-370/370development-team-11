@@ -116,7 +116,6 @@ export class DeleteProcurementRequestComponent implements OnInit {
               }
             })
           }
-
         });
       }
 

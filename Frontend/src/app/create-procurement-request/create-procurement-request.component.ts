@@ -130,7 +130,6 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   onFile1Upload(event: any) {
-    console.log(this.myForm.get("Name").value)
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[0] = this.fileToUpload;
@@ -154,12 +153,14 @@ export class CreateProcurementRequestComponent implements OnInit {
   SetValueA() {
     this.vendors.splice(0, this.vendors.length);
     this.VendorType = this.myForm.get("Selection").value;
+    this.myForm.reset()
     this.ngOnInit();
   }
 
   SetValueB() {
     this.vendors.splice(0, this.vendors.length);
     this.VendorType = this.myForm.get("OtherSelection").value;
+    this.myForm.reset()
     this.ngOnInit();
   }
 
