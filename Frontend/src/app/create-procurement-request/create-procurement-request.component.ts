@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, ReactiveFormsModule, FormBuilder, AbstractControlOptions } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, ReactiveFormsModule, FormBuilder, AbstractControlOptions, FormsModule } from '@angular/forms';
 import { DataService } from '../DataService/data-service';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -7,16 +7,27 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Procurement_Request } from '../Shared/Procurement_Request';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { Procurement_Request_Quote } from '../Shared/Procurement_Request_Quote';
+import { DatePipe, NgFor } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
+import { map, startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { VendorOnboardRequest } from '../Shared/VendorOnboardRequest';
 
 @Component({
   selector: 'app-create-procurement-request',
   templateUrl: './create-procurement-request.component.html',
   styleUrls: ['./create-procurement-request.component.css']
 })
-export class CreateProcurementRequestComponent implements OnInit{
+export class CreateProcurementRequestComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
-  vendors: any [] =[];
-  VendorType : String = 'Approved';
+  vendors: any[] = [];
+  VendorType: String = 'Approved';
+
+  NameControl = new FormControl('');
+  filteredVendors: Observable<VendorOnboardRequest[]>
 
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
@@ -65,7 +76,8 @@ export class CreateProcurementRequestComponent implements OnInit{
     quote_ID: 0,
     procurement_Request_ID: 0,
     procurement_Request: this.Procurement_Request,
-    path: ""
+    path: "",
+    upload_Date: new Date()
   }
 
   fileToUpload: File | null = null;
@@ -73,10 +85,9 @@ export class CreateProcurementRequestComponent implements OnInit{
   sPath = "";
 
   ngOnInit(): void {
-    console.log(this.VendorType)
-    if(this.VendorType == "Approved"){
+    if (this.VendorType == "Approved") {
       this.myForm = this.formBuilder.group({
-        Selection: ["Approved",[Validators.required]],
+        Selection: ["Approved", [Validators.required]],
         Vendor: [0, [Validators.required]],
         Description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
         Quote1: ['', [Validators.required]]
@@ -84,9 +95,9 @@ export class CreateProcurementRequestComponent implements OnInit{
       this.GetVendors();
     }
 
-    else{
+    else {
       this.myForm = this.formBuilder.group({
-        OtherSelection: ["Other",[Validators.required]],
+        OtherSelection: ["Other", [Validators.required]],
         Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
         OtherDescription: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
         Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
@@ -95,12 +106,31 @@ export class CreateProcurementRequestComponent implements OnInit{
         OtherQuote3: ['', [Validators.required]]
       })
       this.GetVendors();
+
+      this.filteredVendors = this.NameControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value)),
+      )
     }
 
-    
+
+  }
+
+  private _filter(value: string): VendorOnboardRequest[] {
+    const filterValue = value.toLowerCase();
+    const filteredVendors = this.vendors.filter(option => option.name.toLowerCase().includes(filterValue));
+
+    this.setVal(value)
+    // If no vendors match the filter, return an array with a single element containing the entered value
+    return this.vendors.filter(option => option.name.toLowerCase().includes(filterValue));
+  }
+
+  setVal(Name: String) {
+    this.myForm.get("Name").setValue(Name)
   }
 
   onFile1Upload(event: any) {
+    console.log(this.myForm.get("Name").value)
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[0] = this.fileToUpload;
@@ -121,25 +151,24 @@ export class CreateProcurementRequestComponent implements OnInit{
     }
   }
 
-  SetValueA(){
+  SetValueA() {
     this.vendors.splice(0, this.vendors.length);
     this.VendorType = this.myForm.get("Selection").value;
     this.ngOnInit();
   }
 
-  SetValueB(){
+  SetValueB() {
     this.vendors.splice(0, this.vendors.length);
     this.VendorType = this.myForm.get("OtherSelection").value;
     this.ngOnInit();
   }
 
-  GetVendors(){
+  GetVendors() {
     this.dataService.GetVendorsRequest().subscribe({
       next: (response) => {
         console.log(response)
-        let VendorList : any[] = response
-        VendorList.forEach((element) =>
-        {
+        let VendorList: any[] = response
+        VendorList.forEach((element) => {
           this.vendors.push(element)
         })
       }
@@ -148,7 +177,8 @@ export class CreateProcurementRequestComponent implements OnInit{
     console.log(this.vendors)
   }
 
-  AddProcurementRequestB(){
+  AddProcurementRequestB() {
+    console.log(this.myForm.get("Name").value)
     this.Procurement_Request.name = this.myForm.get("Name").value;
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
     this.Procurement_Request.vendor.name = this.myForm.get("Name").value;
@@ -159,30 +189,35 @@ export class CreateProcurementRequestComponent implements OnInit{
     this.dataService.AddProcurementRequest(this.Procurement_Request).subscribe({
       next: (response) => {
         console.log(response)
-        if(response != null){
+        if (response != null) {
           this.files.forEach(element => {
             let file: File = element;
             console.log(file);
             console.log(this.Procurement_Request.vendor.name)
-           this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file ).subscribe({
-            next: (Response) => {
-  
-              let qPath = Response
-              this.Procurement_Request = response[0]
-              this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-              this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
-  
-              this.dataService.AddProcurementRequestQuote(this.Procurement_Request_Quote).subscribe({
-                next: (result) => {
-                  this.DisplayNotif();
-                }
-              })
-            }
-           })
-          }); 
+            this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file).subscribe({
+              next: (Response) => {
+
+                let qPath = Response
+                this.Procurement_Request = response[0]
+                this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+                this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+
+
+                this.dataService.AddProcurementRequestQuote(this.Procurement_Request_Quote).subscribe({
+                  next: (result) => {
+                    this.DisplayNotif();
+                  }
+                })
+              }
+            })
+          });
         }
 
-        else{
+        else {
           var action = "CREATE";
           var title = "CREATE UNSUCCESSFUL";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:red'> REJECTED </strong> Due to being used more than 2 times! </br> Please Onboard The vendor!");
@@ -202,7 +237,7 @@ export class CreateProcurementRequestComponent implements OnInit{
     })
   }
 
-  DisplayNotif(){
+  DisplayNotif() {
     var action = "CREATE";
     var title = "CREATE SUCCESSFUL";
     var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
@@ -219,7 +254,7 @@ export class CreateProcurementRequestComponent implements OnInit{
     }, duration);
   }
 
-  AddProcurementRequestA(){
+  AddProcurementRequestA() {
     this.Procurement_Request.name = this.myForm.get("Vendor").value;
     this.Procurement_Request.description = this.myForm.get("Description").value;
     this.Procurement_Request.vendor.name = this.myForm.get("Vendor").value;
@@ -228,39 +263,38 @@ export class CreateProcurementRequestComponent implements OnInit{
 
     this.dataService.AddProcurementRequest(this.Procurement_Request).subscribe({
       next: (response) => {
-        if(response != null){
+        if (response != null) {
           let file: File = this.fileToUpload;
-         this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file ).subscribe({
-          next: (Response) => {
+          this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file).subscribe({
+            next: (Response) => {
 
-            let qPath = Response
-            this.Procurement_Request = response[0]
-            this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-            this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+              let qPath = Response
+              this.Procurement_Request = response[0]
+              this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+              this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
 
-            console.log(this.Procurement_Request_Quote)
+              console.log(this.Procurement_Request_Quote)
 
-            this.dataService.AddProcurementRequestQuote(this.Procurement_Request_Quote).subscribe({
-              next: (result) => {
-                            // console.log(Response)
-            var action = "CREATE";
-            var title = "CREATE SUCCESSFUL";
-            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
+              this.dataService.AddProcurementRequestQuote(this.Procurement_Request_Quote).subscribe({
+                next: (result) => {
+                  var action = "CREATE";
+                  var title = "CREATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
 
-            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-              disableClose: true,
-              data: { action, title, message }
-            });
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
 
-            const duration = 1750;
-            setTimeout(() => {
-              dialogRef.close();
-              this.router.navigate(['/ViewProcurementRequest']);
-            }, duration);
-              }
-            })
-          }
-         }) 
+                  const duration = 1750;
+                  setTimeout(() => {
+                    dialogRef.close();
+                    this.router.navigate(['/ViewProcurementRequest']);
+                  }, duration);
+                }
+              })
+            }
+          })
         }
       }
     })

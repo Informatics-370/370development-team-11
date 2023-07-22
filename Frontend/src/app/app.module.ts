@@ -109,11 +109,11 @@ import { DeleteDelegationComponent } from './Delegation/delete-delegation/delete
 import { MatSortModule } from '@angular/material/sort';
 import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, NgFor } from '@angular/common';
 import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
 import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
 import { UpdatePasswordComponent } from './User/update-password/update-password.component';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-approve-edit.component';
 import { CreateProcurementRequestComponent } from './create-procurement-request/create-procurement-request.component';
 
@@ -127,6 +127,7 @@ import { ViewPendingProcurementRequestComponent } from './view-pending-procureme
 import { PlaceProcurementRequestComponent } from './place-procurement-request/place-procurement-request.component';
 import { PlaceProcurementRequestCreateDetailsComponent } from './place-procurement-request-create-details/place-procurement-request-create-details.component';
 import { ViewProcurementRequestApprovalComponent } from './view-procurement-request-approval/view-procurement-request-approval.component';
+import { DeleteProcurementRequestComponent } from './delete-procurement-request/delete-procurement-request.component';
 
 
 @NgModule({
@@ -219,7 +220,8 @@ import { ViewProcurementRequestApprovalComponent } from './view-procurement-requ
     ViewPendingProcurementRequestComponent,
     PlaceProcurementRequestComponent,
     PlaceProcurementRequestCreateDetailsComponent,
-    ViewProcurementRequestApprovalComponent
+    ViewProcurementRequestApprovalComponent,
+    DeleteProcurementRequestComponent
   ],
   imports: [
     BrowserModule,
@@ -251,7 +253,14 @@ import { ViewProcurementRequestApprovalComponent } from './view-procurement-requ
     MatSortModule,
     MatTooltipModule,
     MatDatepickerModule,
-    MatBadgeModule
+    MatBadgeModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    AsyncPipe,
+    NgFor
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },

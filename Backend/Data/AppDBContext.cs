@@ -569,7 +569,8 @@ namespace ProcionAPI.Data
             {
                 Quote_ID = 1,
                 Procurement_Request_ID = 1,
-                Path = "Test"
+                Path = "Test",
+                Upload_Date = DateTime.Now,
             }
             );
 

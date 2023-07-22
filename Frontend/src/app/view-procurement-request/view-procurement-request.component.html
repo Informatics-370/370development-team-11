@@ -42,7 +42,7 @@
                 <span class="loader" id="loading"></span>
             </div>
 
-            <table mat-table [dataSource]="SearchedPRequests" class="mat-elevation-z8" id="table">
+            <table mat-table [dataSource]="SearchedPRequests" class="mat-elevation-z8" id="table" multiTemplateDataRows>
 
                 <ng-container matColumnDef="Name">
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Name </th>
@@ -70,7 +70,7 @@
                     </th>
                     <td mat-cell *matCellDef="let Consumable">
                         <span [style.color]="getStatusColor(Consumable.requisition_Status.name)">
-                            {{Consumable.requisition_Status.name}} 
+                            {{Consumable.requisition_Status.name}}
                         </span>
                     </td>
                 </ng-container>
@@ -79,12 +79,10 @@
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let Consumable" style="width:100px;">
 
-                        <button class="noselect" type="button"
-                            style="background-color: #94CC5B;">
+                        <button class="noselect" type="button" style="background-color: #94CC5B;">
                             <span class='text'>Edit</span>
                             <span class="icon" style="border-left: 1px solid #94CC5B; ">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="1em"
-                                    viewBox="0 0 512 512">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
                                     <path
                                         d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
                                 </svg>
@@ -97,11 +95,10 @@
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let Consumable" style="width:140px;">
 
-                        <button class="noselect">
+                        <button class="noselect" (click)="DeleteRequest(Consumable.procurement_Request_ID)">
                             <span class='text'>Delete</span>
                             <span class="icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="1em"
-                                    viewBox="0 0 448 512">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
                                     <style>
                                         svg {
                                             fill: #000000
@@ -113,11 +110,66 @@
                             </span>
                         </button>
                     </td>
+                </ng-container>
 
+                <ng-container matColumnDef="expandedDetail">
+                    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+                        <div class="example-element-detail"
+                            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                            <div class="example-element-diagram">
+                                <div style="margin-right:1%; margin-left:1%;">
+
+                                    <table class="table">
+                                        <thead>
+                                            <tr style="background-color: lightgray;">
+                                                <th>
+                                                    Quote ID
+                                                </th>
+                                                <th>
+                                                    Date Uploaded
+                                                </th>
+                                                <th>
+                                                    Vendor Status
+                                                </th>
+                                                <th>
+                                                    Vendor Quote
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of ProcurementQuotes; let i = index">
+                                                <td
+                                                    *ngIf="item.procurement_Request_ID == element.procurement_Request_ID">
+                                                    {{item.quote_ID}}
+                                                </td>
+                                                <td
+                                                    *ngIf="item.procurement_Request_ID == element.procurement_Request_ID">
+                                                    {{item.upload_Date | date: "yyyy/MM/dd"}}
+                                                </td>
+                                                <td
+                                                    *ngIf="item.procurement_Request_ID == element.procurement_Request_ID">
+                                                    {{element.vendor.vendor_Status.name}}
+                                                </td>
+                                                <td
+                                                    *ngIf="item.procurement_Request_ID == element.procurement_Request_ID">
+                                                    <a target="_blank" style="color: rgb(65, 143, 227);"
+                                                        (click)="openPDFInNewTab(i)">{{FileDetails[i].FileName}}</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns" style="background-color:#244688;"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+                    [class.example-expanded-row]="expandedElement === element"
+                    (click)="expandedElement = expandedElement === element ? null : element"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
             </table>
         </div>
     </mat-sidenav-content>

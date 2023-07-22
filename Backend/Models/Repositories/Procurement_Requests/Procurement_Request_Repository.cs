@@ -15,7 +15,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
         public async Task<Procurement_Request[]> GetProcurementRequestsAsync()
         {
-            IQueryable<Procurement_Request> query = _dbContext.Procurement_Request.Include(r => r.Requisition_Status).Include(u => u.User).Include(v => v.Vendor);
+            IQueryable<Procurement_Request> query = _dbContext.Procurement_Request.Include(r => r.Requisition_Status).Include(u => u.User).Include(v => v.Vendor).ThenInclude(s => s.Vendor_Status); ;
             return await query.ToArrayAsync();
         }
         public async Task<Procurement_Request[]> AddProcurementRequestAsync(Procurement_Request RequestAdd)
@@ -110,6 +110,45 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             await _dbContext.SaveChangesAsync();
 
             return new Procurement_Request_Quote[] { RequestAdd };
+        }
+        public async Task<Procurement_Request_Quote[]> GetProcurementQuotesAsync()
+        {
+            IQueryable<Procurement_Request_Quote> query = _dbContext.Procurement_Request_Quote.Include(r => r.Procurement_Request).ThenInclude(v => v.Vendor).ThenInclude(s => s.Vendor_Status);
+            return await query.ToArrayAsync();
+        }
+        public async Task<Procurement_Request_Quote[]> GetProcurementQuotesbyIDAsync(int id)
+        {
+            IQueryable<Procurement_Request_Quote> query = _dbContext.Procurement_Request_Quote.Where(x => x.Procurement_Request_ID == id);
+            return await query.ToArrayAsync();
+        }
+
+        
+
+        public async Task<Procurement_Request> DeleteProcurementRequestAsync(int id)
+        {
+            var hasDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Request_ID == id);
+            var hasQuotes = await _dbContext.Procurement_Request_Quote.FirstOrDefaultAsync(x => x.Procurement_Request_ID == id);
+
+            if (hasDetails != null || hasQuotes != null)
+            {
+                var detailsRemove = _dbContext.Procurement_Details.Where(x => x.Procurement_Request_ID == id);
+                _dbContext.Procurement_Details.RemoveRange(detailsRemove);
+
+                var quotesRemove = _dbContext.Procurement_Request_Quote.Where(x => x.Procurement_Request_ID == id);
+
+                _dbContext.Procurement_Request_Quote.RemoveRange(quotesRemove);
+            }
+            var RequestToDelete = await _dbContext.Procurement_Request.FindAsync(id);
+            _dbContext.Procurement_Request.Remove(RequestToDelete);
+            await _dbContext.SaveChangesAsync();
+
+            return RequestToDelete;
+        }
+
+        public async Task<Procurement_Request> GetRequestByIDAsync(int id)
+        {
+            Procurement_Request ChosenRequest = await _dbContext.Procurement_Request.FirstOrDefaultAsync(x => x.Procurement_Request_ID == id);
+            return ChosenRequest;
         }
     }
 }
