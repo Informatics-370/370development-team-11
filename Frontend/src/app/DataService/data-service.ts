@@ -938,6 +938,10 @@ export class DataService {
     return this.httpClient.get<DelegationStatus[]>(`${this.apiUrl}Delegation/GetRejStatuses`).pipe(map(result => result))
   }
 
+  GetRevokeStatus(): Observable<any> {
+    return this.httpClient.get<DelegationStatus[]>(`${this.apiUrl}Delegation/GetRevokeStatus`).pipe(map(result => result))
+  }
+
   AddTempAcc(ta: Temporary_Access) {
     return this.httpClient.post(`${this.apiUrl}Delegation/AddTempAcc`, ta, this.httpOptions)
   }

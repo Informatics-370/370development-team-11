@@ -10,7 +10,7 @@ import { DataService } from '../../DataService/data-service';
   styleUrls: ['./reject-delegation.component.css']
 })
 export class RejectDelegationComponent implements OnInit {
-  statuses: any[] = []
+  Delegation: any;
   delID: any
 
   myForm: FormGroup = new FormGroup({});
@@ -24,35 +24,41 @@ export class RejectDelegationComponent implements OnInit {
     this.ActRoute.paramMap.subscribe({
       next: (params) => {
         this.delID = this.data.ID;
-        console.log(this.delID)
-        console.log(this.data.ID)
 
       }
     });
 
-    this.myForm = this.formBuilder.group({
-      Status_ID: ['', [Validators.required]]
-    })
-
-    this.GetStatuses();
+    this.GetDelegation();
   }
 
-  GetStatuses() {
-    this.dataService.GetStatuses().subscribe(r => {
-      this.statuses = r;
+  GetDelegation() {
+    this.dataService.GetDelegation(this.delID).subscribe(r => {
+      this.Delegation = r;
     })
   }
 
-  onSubmit(id: number): void {
-    let statusID = this.myForm.get('Status_ID')?.value;
+  status: any;
 
-    this.dataService.EditDelegationStatus(statusID, this.delID).subscribe(r => {
-      this.showConfirmationDialog = false;
-      this.showSuccessDialog = true;
-      setTimeout(() => {
-        this.dialogRef.close();
-      }, 1750);
+  onConfirm(id: number): void {
+    this.dataService.GetRevokeStatus().subscribe(r => {
+      this.status = r;
+      console.log(r)
+      let statusID = this.status.status_ID;
+      console.log(statusID)
+
+      this.dataService.EditDelegationStatus(statusID, this.delID).subscribe(r => {
+        this.dataService.DeleteTempAcc(this.delID).subscribe(x => {
+          this.showConfirmationDialog = false;
+          this.showSuccessDialog = true;
+          setTimeout(() => {
+            this.dialogRef.close();
+          }, 1750);
+        })
+      })
     })
+
+
+    
   }
 
   onCancel(): void {

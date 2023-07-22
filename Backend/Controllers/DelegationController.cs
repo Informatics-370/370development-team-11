@@ -255,6 +255,21 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetRevokeStatus")]
+        public async Task<IActionResult> GetRevokeStatus()
+        {
+            try
+            {
+                var result = await _DelegationRepository.GetRevokeStatusAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
         [HttpPost]
         [Route("AddTempAcc")]
         public async Task<IActionResult> AddTempAcc(Temporary_Access TempAccAdd)

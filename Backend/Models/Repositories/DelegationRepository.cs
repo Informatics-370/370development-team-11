@@ -181,6 +181,13 @@ namespace ProcionAPI.Models.Repositories
             return await query.ToArrayAsync();
         }
 
+        public async Task<Delegation_Status> GetRevokeStatusAsync()
+        {
+            IQueryable<Delegation_Status> query = _dbContext.Delegation_Status.Where(x => x.Name == "Revoked");
+
+            return await query.FirstOrDefaultAsync();
+        }
+
         public async Task<Temporary_Access[]> AddTempAccAsync(Temporary_Access TempAccAdd)
         {
             Delegation_Of_Authority existingDelegation = await _dbContext.Delegation_Of_Authority.FirstOrDefaultAsync(doa => doa.Delegation_ID == TempAccAdd.Delegation_ID);
