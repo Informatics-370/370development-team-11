@@ -1104,8 +1104,8 @@ export class DataService {
   GetProcurementQuotesbyID(id: Number): Observable<any> {
     return this.httpClient.get<Procurement_Request_Quote[]>(`${this.apiUrl}ProcurementRequest/GetProcurementQuotesbyID/` + id).pipe(map(result => result))
   }
-    UpdateProcurementRequestStatus(StatusID: number, ProcurementRequestDetails: Procurement_Request): Observable<any> {
-      return this.httpClient.put<Procurement_Request>(`${this.apiUrl}ProcurementDetails/UpdateProcurementRequestStatus/${StatusID}`, ProcurementRequestDetails, this.httpOptions).pipe(map(result => result))
+    UpdateProcurementRequestStatus(requisition_Status_ID: number, ProcurementRequestDetails: Procurement_Request): Observable<any> {
+      return this.httpClient.put<Procurement_Request>(`${this.apiUrl}ProcurementDetails/UpdateProcurementRequestStatus/${requisition_Status_ID}`, ProcurementRequestDetails, this.httpOptions).pipe(map(result => result))
     }
 
     GetProcurementRequestDetails(): Observable<any> {

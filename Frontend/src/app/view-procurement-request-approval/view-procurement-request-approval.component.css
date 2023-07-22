@@ -90,3 +90,9 @@ mat-error:first-child {
     border-right: 1px solid #244688;
     
 }
+
+a:not([href]):not([class]), a:not([href]):not([class]):hover {
+    text-decoration:underline;
+    cursor: pointer!important;
+    
+}

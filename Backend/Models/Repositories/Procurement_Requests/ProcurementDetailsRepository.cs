@@ -267,13 +267,13 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             return new Vendor_Asset[] { AddVendorAsset };
         }
 
-        public async Task<Procurement_Request> UpdateProcurementRequestStatusAsync(int StatusID, Procurement_Request ProcurementRequestDetails)
+        public async Task<Procurement_Request> UpdateProcurementRequestStatusAsync(int requisition_Status_ID, Procurement_Request ProcurementRequestDetails)
         {
             var ExistingProcurementRequest = await _dbContext.Procurement_Request.FirstOrDefaultAsync(x => x.Procurement_Request_ID == ProcurementRequestDetails.Procurement_Request_ID);
 
             ExistingProcurementRequest.Requisition_Status = new Requisition_Status();
 
-            Requisition_Status existingRequisitionStatus = await _dbContext.Requisition_Status.FirstOrDefaultAsync(x => x.Requisition_Status_ID == StatusID);
+            Requisition_Status existingRequisitionStatus = await _dbContext.Requisition_Status.FirstOrDefaultAsync(x => x.Requisition_Status_ID == requisition_Status_ID);
 
             ExistingProcurementRequest.Requisition_Status = existingRequisitionStatus;
 

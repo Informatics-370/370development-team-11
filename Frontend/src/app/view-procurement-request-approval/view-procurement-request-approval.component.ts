@@ -72,20 +72,19 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
 
   GetFiles(sfilepath:string,i:number) {
     let sFile = sfilepath;
-    let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
-    sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-    let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
+    let VendorName = sFile.substring(0,sFile.indexOf("\\"))
     let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-    this.FileDetails[i].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
+    this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${filename}`
     this.FileDetails[i].FileName = filename
   }
 
   AcceptRequest() {
-    this.dataService.UpdateProcurementRequestStatus(1,this.ProcurementRequestDetails).subscribe()
+    console.log(this.ProcurementRequestDetails)
+    this.dataService.UpdateProcurementRequestStatus(1,this.ProcurementRequestDetails).subscribe(r => {console.log(r)})
   }
 
   RejectRequest() {
-    this.dataService.UpdateProcurementRequestStatus(1,this.ProcurementRequestDetails).subscribe()
+    this.dataService.UpdateProcurementRequestStatus(2,this.ProcurementRequestDetails).subscribe()
   }
 
   openPDFInNewTab(i:number): void {
