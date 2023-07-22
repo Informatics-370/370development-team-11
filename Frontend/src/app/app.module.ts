@@ -124,6 +124,7 @@ import { VideoDialogComponent } from './VideoDialog/video-dialog/video-dialog.co
 import { BackupComponent } from './Settings/backup/backup.component';
 import { RestoreComponent } from './Settings/backupDialog/restore.component';
 import { DeleteProcurementRequestComponent } from './delete-procurement-request/delete-procurement-request.component';
+import { EditProcurementRequestComponent } from './edit-procurement-request/edit-procurement-request.component';
 
 
 @NgModule({
@@ -213,7 +214,8 @@ import { DeleteProcurementRequestComponent } from './delete-procurement-request/
     BackupComponent,
     RestoreComponent,
     CreateProcurementRequestComponent,
-    DeleteProcurementRequestComponent
+    DeleteProcurementRequestComponent,
+    EditProcurementRequestComponent
   ],
   imports: [
     BrowserModule,
