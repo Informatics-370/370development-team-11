@@ -1,0 +1,92 @@
+
+label {
+    font-weight: 500;
+    margin-left: 1%;
+}
+
+mat-form-field{
+    margin-top: 1%;
+    width:270px
+}
+
+.content {
+    top: 63px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #eee;
+    border-top:1px solid;
+    text-align: center;
+   
+}
+
+
+.table {
+    margin-bottom: 0px;
+    width: 810px;
+}
+
+td {
+    width: 600px;
+}
+
+mat-error {
+    display: none !important;
+}
+
+mat-error:first-child {
+    display: block !important;
+}
+
+#btnHover:hover {
+    background-color: #fe4945;
+  }
+  
+  #btnHover {
+    background-color: #22afbe;
+  }
+
+
+
+
+::ng-deep .mat-expansion-panel:not([class*=mat-elevation-z]) {
+    box-shadow:none!important;
+
+}
+
+/* .mat-expansion-panel-header {
+    padding: 0;
+    width: 750px;
+    margin-left: 1%;
+} */
+::ng-deep .mat-expansion-panel-body {
+    padding:0!important;
+    
+}
+
+
+.col-9{
+    display: inline-flex;
+}
+
+.col-3{
+    text-align: right;
+}
+
+.mat-expansion-panel-body[_ngcontent-xds-c113], .ng-tns-c109-28[_ngcontent-xds-c113] {
+    width: 740px;
+}
+
+.mat-mdc-select {
+    width: 80%!important;
+}
+
+::ng-deep mat-tab-header {
+    background-color: #244688;
+  }
+
+  mat-tab-group {
+    border-left: 1px solid #244688;
+    border-right: 1px solid #244688;
+    
+}

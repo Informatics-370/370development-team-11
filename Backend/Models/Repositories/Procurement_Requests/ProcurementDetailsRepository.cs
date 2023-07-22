@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto.Agreement;
 using ProcionAPI.Data;
 using ProcionAPI.Models.Entities;
 
@@ -15,9 +16,16 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
         public async Task<Procurement_Request> GetProcurementRequestByIDAsync(int ProcurementRequestID)
         {
-            IQueryable<Procurement_Request> query = _dbContext.Procurement_Request.Include(x => x.Vendor).ThenInclude(x => x.Vendor_Status).Include(x => x.User).ThenInclude(x=> x.Role).Include(x => x.Requisition_Status).Where(x=> x.Procurement_Request_ID == ProcurementRequestID);
+            IQueryable<Procurement_Request> query = _dbContext.Procurement_Request.Include(x => x.Vendor).ThenInclude(x => x.Vendor_Status).Include(x => x.User).ThenInclude(x => x.Role).Include(x => x.Requisition_Status).Where(x => x.Procurement_Request_ID == ProcurementRequestID);
 
             return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Procurement_Request_Quote[]> GetProcurementRequestQuoteByIDAsync(int ProcurementRequestID)
+        {
+            IQueryable<Procurement_Request_Quote> query = _dbContext.Procurement_Request_Quote.Include(x => x.Procurement_Request).ThenInclude(x => x.Requisition_Status).Where(x => x.Procurement_Request_ID == ProcurementRequestID);
+
+            return await query.ToArrayAsync();
         }
 
         public async Task<Procurement_Details[]> CreateProcurementDetailsAsync(Procurement_Details ProcurementDetails)
@@ -190,7 +198,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
             if (existingConsumable != null)
             {
-                AddVendorConsumable.Consumables = existingConsumable;
+                AddVendorConsumable.Consumable = existingConsumable;
             }
 
 
@@ -257,6 +265,105 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             await _dbContext.SaveChangesAsync();
 
             return new Vendor_Asset[] { AddVendorAsset };
+        }
+
+        public async Task<Procurement_Request> UpdateProcurementRequestStatusAsync(int StatusID, Procurement_Request ProcurementRequestDetails)
+        {
+            var ExistingProcurementRequest = await _dbContext.Procurement_Request.FirstOrDefaultAsync(x => x.Procurement_Request_ID == ProcurementRequestDetails.Procurement_Request_ID);
+
+            ExistingProcurementRequest.Requisition_Status = new Requisition_Status();
+
+            Requisition_Status existingRequisitionStatus = await _dbContext.Requisition_Status.FirstOrDefaultAsync(x => x.Requisition_Status_ID == StatusID);
+
+            ExistingProcurementRequest.Requisition_Status = existingRequisitionStatus;
+
+            await _dbContext.SaveChangesAsync();
+
+            return ExistingProcurementRequest;
+        }
+
+        public async Task<Procurement_Details[]> GetProcurementRequestDetailsAsync()
+        {
+            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit).Include(x => x.Procurement_Request).ThenInclude(x=> x.Vendor).Include(x => x.Sign_Off_Status).Include(x => x.Procurement_Payment_Status).Include(x=> x.Procurement_Status).Include(x=> x.Payment_Method).Include(x => x.Budget_Line);
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Procurement_Details> GetProcurementDetailsByIDAsync(int ProcurementDetailsID)
+        {
+            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit).Include(x => x.Procurement_Request).ThenInclude(x => x.Vendor).Include(x => x.Sign_Off_Status).Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line).Where(x=> x.Procurement_Details_ID == ProcurementDetailsID);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Deposit> GetDepositByIDAsync(int ProcurementRequestID)
+        {
+            IQueryable<Deposit> query = _dbContext.Deposit.Include(x => x.Procurement_Details).Where(x => x.Procurement_Details_ID == ProcurementRequestID);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Payment_Made> GetFullPaymentMadeByIDAsync(int ProcurementRequestID)
+        {
+            IQueryable<Payment_Made> query = _dbContext.Payment_Made.Include(x => x.Procurement_Details).Where(x => x.Procurement_Details_ID == ProcurementRequestID);
+
+            return await query.FirstOrDefaultAsync();
+        }
+        public async Task<Proof_Of_Payment> GetProofOfPaymentByIDAsync(int ProcurementRequestID)
+        {
+            IQueryable<Proof_Of_Payment> query = _dbContext.Proof_Of_Payment.Include(x => x.Procurement_Details).Where(x => x.Procurement_Details_ID == ProcurementRequestID);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Vendor_Consumable[]> GetVendorConsumableAsync()
+        {
+            IQueryable<Vendor_Consumable> query = _dbContext.Vendor_Consumable.Include(x => x.Consumable).Include(x => x.Vendor);
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Vendor_Asset[]> GetVendorAssetAsync()
+        {
+            IQueryable<Vendor_Asset> query = _dbContext.Vendor_Asset.Include(x => x.Asset).Include(x => x.Vendor);
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Procurement_Consumable[]> GetProcurementConsumableAsync()
+        {
+            IQueryable<Procurement_Consumable> query = _dbContext.Procurement_Consumable.Include(x => x.Consumable).Include(x => x.Procurement_Details);
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Procurement_Asset[]> GetProcurementAssetAsync()
+        {
+            IQueryable<Procurement_Asset> query = _dbContext.Procurement_Asset.Include(x => x.Asset).Include(x => x.Procurement_Details);
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Asset> GetAssetByIDAsync(int AssetID)
+        {
+            IQueryable<Asset> query = _dbContext.Asset.Where(x=> x.Asset_ID == AssetID);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Procurement_Details> UpdateProcurementDetailsStatusAsync(int StatusID, Procurement_Details ProcurementDetails)
+        {
+            var ExistingProcurementDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Details_ID == ProcurementDetails.Procurement_Details_ID);
+
+            ExistingProcurementDetails.Procurement_Status = new Procurement_Status();
+
+            Procurement_Status existingProcurementStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == StatusID);
+
+            ExistingProcurementDetails.Procurement_Status = existingProcurementStatus;
+
+            await _dbContext.SaveChangesAsync();
+
+            return ExistingProcurementDetails;
         }
     }
 }

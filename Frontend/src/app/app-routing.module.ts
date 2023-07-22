@@ -74,6 +74,9 @@ import { CreateProcurementRequestComponent } from './create-procurement-request/
 import { PlaceProcurementRequestComponent } from './place-procurement-request/place-procurement-request.component';
 import { PlaceProcurementRequestCreateDetailsComponent } from './place-procurement-request-create-details/place-procurement-request-create-details.component';
 import { ViewProcurementRequestApprovalComponent } from './view-procurement-request-approval/view-procurement-request-approval.component';
+import { ViewFlaggedProcurementRequestComponent } from './view-flagged-procurement-request/view-flagged-procurement-request.component';
+import { ViewFlaggedProcurementDetailsComponent } from './view-flagged-procurement-details/view-flagged-procurement-details.component';
+
 import { BackupComponent } from './Settings/backup/backup.component';
 
 const routes: Routes = [
@@ -309,15 +312,23 @@ const routes: Routes = [
     component: PlaceProcurementRequestComponent
   },
   {
-    path: 'PlaceProcurementRequestCreateDetails', canActivate: [AuthService],
+    path: 'PlaceProcurementRequestCreateDetails/:ProcurementRequestID', canActivate: [AuthService],
     component: PlaceProcurementRequestCreateDetailsComponent
   },
   {
     path: 'ViewProcurementRequestApproval/:ProcurementRequestID', canActivate: [AuthService],
     component: ViewProcurementRequestApprovalComponent
+  },
+  {
+    path: 'ViewFlaggedProcurementRequest', canActivate: [AuthService],
+    component: ViewFlaggedProcurementRequestComponent
+  },
+  {
+    path: 'ViewFlaggedProcurementDetails/:ProcurementDetailsID', canActivate: [AuthService],
+    component: ViewFlaggedProcurementDetailsComponent
   }
  
-
+  
 ];
 
 @NgModule({

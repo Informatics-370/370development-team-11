@@ -241,7 +241,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     proof_Of_Payment_ID:0,
     procurement_Details_ID:0,
     procurement_Details:this.ProcurementDetails,
-    Proof_Of_Payment_Doc:"",
+    proof_Of_Payment_Doc:"",
   }
 
   Consumables: Consumable = {
@@ -331,28 +331,39 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   ConsumableChecked =true;
   AssetChecked=false;
   ProcurementRequest_ID = 0;
+  MandateLimitAmount:0;
   ngOnInit() { 
+
     var User = this.ProcureService.decodeUser(sessionStorage.getItem('token'))
     console.log(User)
-    this.ProcureService.GetConsumables().subscribe(response => {
-      this.ConsumableItems = response
-      console.log(this.ConsumableItems)
-    })
-    this.ProcureService.GetBudgetLines().subscribe(response => {
-      this.BudgetAllocationCode = response;
-      console.log(this.BudgetAllocationCode)
-    })
-
-    this.ProcureService.GetEmployeeByUsername("WeSc746").subscribe(result => {
-      let employeeInfo:any = result;
-      this.EmployeeDetails = employeeInfo;
-      console.log(this.EmployeeDetails);
-    })
-    this.ProcureService.GetProcurementRequestByID(1).subscribe(result => {
-      console.log(result)
-      this.Procurement_Request = result
-      console.log(this.Procurement_Request)
-    })
+    this.route.paramMap.subscribe({
+      next: (paramater) => {
+        
+       this.ProcurementRequest_ID = Number(paramater.get("ProcurementRequestID"));
+       this.ProcureService.GetConsumables().subscribe(response => {
+        this.ConsumableItems = response
+        console.log(this.ConsumableItems)
+      })
+      this.ProcureService.GetBudgetLines().subscribe(response => {
+        this.BudgetAllocationCode = response;
+        console.log(this.BudgetAllocationCode)
+      })
+      //User
+      this.ProcureService.GetEmployeeByUsername("WeSc746").subscribe(result => {
+        let employeeInfo:any = result;
+        this.EmployeeDetails = employeeInfo;
+        this.MandateLimitAmount = employeeInfo.mandate_Limit.ammount
+        console.log(this.EmployeeDetails);
+        console.log(this.MandateLimitAmount)
+      })
+      this.ProcureService.GetProcurementRequestByID(this.ProcurementRequest_ID).subscribe(result => {
+        console.log(result)
+        this.Procurement_Request = result
+        console.log(this.Procurement_Request)
+      })
+      }})
+    
+    
   }
 
   CheckChange() {
@@ -393,8 +404,19 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
    // this.ProcurementDetails.procurement_Request_ID = this.ProcurementRequest_ID;
     this.ProcurementDetails.sign_Off_Status_ID = 1;
     //if statement
-    this.ProcurementDetails.procurement_Payment_Status_ID = 1;
-    this.ProcurementDetails.procurement_Status_ID = 1;
+    if(this.ProcurementDetails.payment_Made == true) {
+      this.ProcurementDetails.procurement_Payment_Status_ID = 1;
+    }
+    else {
+      this.ProcurementDetails.procurement_Payment_Status_ID = 2;
+    }
+    if(this.MandateLimitAmount < Number(this.ProcurementDetails.total_Amount)) {
+      this.ProcurementDetails.procurement_Status_ID = 3;
+    } 
+    else {
+      this.ProcurementDetails.procurement_Status_ID = 1;
+    }
+    
 
     this.ProcurementDetails.account_Code = this.ProcurementFormGroup.get("AccountCode")?.value;
     this.ProcurementDetails.payment_Method_ID = this.ProcurementFormGroup.get("PaymentType")?.value;
@@ -419,13 +441,13 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
       }
       if(this.ProcurementDetails.proof_Of_Payment_Required == true) {
         let FolderCategory = "ProofOfPayment"
-        let ProcurementRequest = "ProcurementDetail" + result[0].procurement_Details_ID;
-
+        let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`
+        console.log(ProcurementRequest)
         this.ProcureService.uploadProcureFile(FolderCategory,ProcurementRequest,this.file[1]).subscribe(response => {
           this.ProofOfPayment.procurement_Details = result[0];
           this.ProofOfPayment.procurement_Details_ID = result[0].procurement_Details_ID;
           let Path: any = response
-          this.ProofOfPayment.Proof_Of_Payment_Doc = Path.returnedPath.toString()
+          this.ProofOfPayment.proof_Of_Payment_Doc = Path.returnedPath.toString()
           this.ProofOfPayment.procurement_Details.procurement_Request.user = this.Procurement_Request.user;
           this.ProofOfPayment.procurement_Details.procurement_Request.vendor = this.Procurement_Request.vendor;
           this.ProofOfPayment.procurement_Details.procurement_Request.requisition_Status = this.Procurement_Request.requisition_Status;
@@ -436,7 +458,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
       }
       if(this.ProcurementDetails.payment_Made == true) {
         let FolderCategory = "PaymentMade";
-        let ProcurementRequest = "ProcurementDetail" + result[0].procurement_Details_ID;
+        let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}` ;
 
         this.ProcureService.uploadProcureFile(FolderCategory,ProcurementRequest,this.file[0]).subscribe(response => {
           let Path: any = response
@@ -469,16 +491,19 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           }
         })
         this.ProcureService.AddProcurementConsumable(this.Procurement_Consumable).subscribe(r => {console.log(r)})
-       
-        this.Vendor_Consumable.consumable_ID = Number(this.ProcurementFormGroup.get("ConsumableQuantity")?.value)
-        this.ConsumableItems.forEach(e=> {
+        this.ProcureService.GetVendorConsumable().subscribe(b => {
+          this.Vendor_Consumable.consumable_ID = Number(this.ProcurementFormGroup.get("ConsumableQuantity")?.value)
+          this.ConsumableItems.forEach(e=> {
           if(e.consumable_Category_ID == Number(this.ProcurementFormGroup.get("ConsumableItem")?.value) ){
             this.Vendor_Consumable.consumables = e
           }
+          })
+          this.Vendor_Consumable.vendor = this.Procurement_Request.vendor;
+          this.Vendor_Consumable.vendor_ID = Number(this.Procurement_Request.vendor_ID);
+          this.Vendor_Consumable.vendor_Consumbale_ID = (b.length + 1);
+         this.ProcureService.AddVendorConsumable(this.Vendor_Consumable).subscribe();
         })
-        this.Vendor_Consumable.vendor = this.Procurement_Request.vendor;
-        this.Vendor_Consumable.vendor_ID = Number(this.Procurement_Request.vendor_ID);
-        this.ProcureService.AddVendorConsumable(this.Vendor_Consumable);
+        
       }
       else {
         this.assets.description = this.ProcurementFormGroup.get("AssetDescription")?.value;
@@ -497,11 +522,15 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.procurment_assets.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category
           this.ProcureService.AddProcurementAsset(this.procurment_assets).subscribe(r => console.log(r));
 
-          this.vendor_asset.asset= data[0]
-          this.vendor_asset.asset_ID = data[0].asset_ID;
-          this.vendor_asset.vendor = this.Procurement_Request.vendor;
-          this.vendor_asset.vendor_ID = Number(this.Procurement_Request.vendor_ID);
-          this.ProcureService.AddVendorAsset(this.vendor_asset).subscribe(r => console.log(r))
+          this.ProcureService.GetVendorAsset().subscribe(a => {
+           this.vendor_asset.asset= data[0]
+           this.vendor_asset.asset_ID = data[0].asset_ID;
+           this.vendor_asset.vendor = this.Procurement_Request.vendor;
+           this.vendor_asset.vendor_ID = Number(this.Procurement_Request.vendor_ID);
+           this.vendor_asset.asset_ID = (a.length + 1);
+           this.ProcureService.AddVendorAsset(this.vendor_asset).subscribe(r => console.log(r))
+          })
+          
         })
       }
     })
