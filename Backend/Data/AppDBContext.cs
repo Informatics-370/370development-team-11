@@ -571,6 +571,7 @@ namespace ProcionAPI.Data
                 Procurement_Request_ID = 1,
                 Path = "Test",
                 Upload_Date = DateTime.Now,
+                PrefferedQuote = true
             }
             );
 
