@@ -121,6 +121,17 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="revoke">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row" style="width:140px;">
+            <button mat-raised-button class="noselect" (click)="RevokeAccess(row.delegation_ID)" style="margin-right: 5%; display: flex; align-items: center; font-weight: bold; width: 180px; margin-top: 0.5%;" id="DeleteButton">
+              Revoke Access
+            </button>
+          </td>
+        </ng-container>
+
+ 
+
         <tr mat-header-row *matHeaderRowDef="displayedColumnsAdmin" style="background-color:#244688;"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsAdmin;"></tr>
       </table>

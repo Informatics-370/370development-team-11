@@ -18,19 +18,51 @@ export class ViewNotificationHubComponent implements OnInit {
   dataSourceVendor = new MatTableDataSource<Notification>;
   dataSourceProcurement = new MatTableDataSource<Notification>;
 
+  dataSourceTempInventory = new MatTableDataSource<Notification>;
+  dataSourceTempVendor = new MatTableDataSource<Notification>;
+  dataSourceTempProcurement = new MatTableDataSource<Notification>;
+
   iName: string;
+  iTempUsername: string;
+  hasTempAcc: string;
 
 
 
   todayDate: Date = new Date();
   VendorNotifications: Notification[] = [];
+  TempVendorNotifications: Notification[] = [];
   InventoryNotifications: Notification[] = [];
+  TempInventoryNotifications: Notification[] = [];
   ProcurementNotifications: Notification[] = [];
+  TempProcurementNotifications: Notification[] = [];
 
   constructor(private router: Router, private dataService: DataService, private sanitizer: DomSanitizer, private http: HttpClient, private datePipe: DatePipe) { }
 
   ngOnInit() {
     this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    this.iTempUsername = this.dataService.decodeTempUsername(sessionStorage.getItem("token"));
+    console.log(this.iTempUsername);
+
+    if (this.iTempUsername == "None") {
+
+    } else {
+      this.hasTempAcc = "true";
+     
+      this.dataService.GetTempVendorNotifications(this.iTempUsername).subscribe(v => {
+        this.TempVendorNotifications = v;
+        this.dataSourceTempVendor = new MatTableDataSource(v);
+
+        this.dataService.GetTempInventoryNotifications(this.iTempUsername).subscribe(i => {
+          this.TempInventoryNotifications = i;
+          this.dataSourceTempInventory = new MatTableDataSource(i);
+
+          this.dataService.GetTempProcurementNotifications(this.iTempUsername).subscribe(p => {
+            this.TempProcurementNotifications = p;
+            this.dataSourceTempProcurement = new MatTableDataSource(p);
+          })
+        })
+      })
+    }
 
     this.dataService.ResetNotif(this.iName).subscribe();
 

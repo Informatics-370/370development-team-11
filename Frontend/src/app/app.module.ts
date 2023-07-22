@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -89,7 +89,7 @@ import { CreateBudgetLineComponent } from './create-budget-line/create-budget-li
 import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
 import { DeleteBudgetLineComponent } from './delete-budget-line/delete-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatCommonModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { AuthInterceptorComponent } from './auth-interceptor/auth-interceptor.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UserProfileComponent } from './User/user-profile/user-profile.component';
@@ -263,6 +263,9 @@ import { DeleteProcurementRequestComponent } from './delete-procurement-request/
     NgFor
   ],
   providers: [
+    //AppService,
+    //{ provide: LOCALE_ID, useValue: 'en-US' },
+    //{ provide: MOMENT, useValue: moment },
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     MatExpansionModule,
@@ -277,3 +280,4 @@ import { DeleteProcurementRequestComponent } from './delete-procurement-request/
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

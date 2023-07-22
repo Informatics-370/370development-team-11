@@ -37,7 +37,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 export class ViewDelegationComponent implements OnInit{
 
   
-  displayedColumnsAdmin: string[] = ['id', 'delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete'];
+  displayedColumnsAdmin: string[] = ['id', 'delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete', 'revoke'];
   dataSource = new MatTableDataSource<Delegation_Of_Authority>;
 
   userDelete: any
@@ -177,28 +177,17 @@ export class ViewDelegationComponent implements OnInit{
     })
   }
 
-  rejectRequest(ID: number) {
+  RevokeAccess(ID: number) {
     const select = this.dialog.open(RejectDelegationComponent, {
       disableClose: true,
       data: { ID }
     })
 
-    //this.dataService.EditDelegationStatus(2, id).subscribe(r => {
-    //  var action = "ACCEPT";
-    //  var title = "ACCEPT SUCCESSFUL";
-    //  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + id + "</strong> has been <strong style='color:green'> ACCEPTED </strong> successfully!");
-
-    //  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-    //    disableClose: true,
-    //    data: { action, title, message }
-    //  });
-
-    //  const duration = 1750;
-    //  setTimeout(() => {
-    //    this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-    //    dialogRef.close();
-    //  }, duration);
-    //})
+    this.dialog.afterAllClosed.subscribe({
+      next: (response) => {
+        this.ngOnInit();
+      }
+    })
   }
 
 

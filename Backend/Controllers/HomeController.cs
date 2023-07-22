@@ -132,17 +132,37 @@ namespace ProcionAPI.Controllers
 
                     if (d.DelegationStatus_ID == inactiveID)
                     {
-                        if (d.From_Date == DateTime.Today)
+                        if (d.From_Date < DateTime.Today)
                         {
                             await _DelegationRepository.UpdateDelegationStatusAsync(activeID, d.Delegation_ID);
                             
                         }
+                        else if (d.From_Date == DateTime.Today)
+                        {
+                            await _DelegationRepository.UpdateDelegationStatusAsync(activeID, d.Delegation_ID);
+                        }
+                        else if(d.To_Date < DateTime.Today)
+                        {
+                            await _DelegationRepository.UpdateDelegationStatusAsync(revokedID, d.Delegation_ID);
+
+                            var existingTempAcc = await _DelegationRepository.GetTempAccAsync(d.Delegation_ID);
+                            if (existingTempAcc == null) return NotFound($"The temporary access does not exist");
+
+                            _DelegationRepository.Delete(existingTempAcc);
+                            await _DelegationRepository.SaveChangesAsync();
+                        }
                     }
                     else if(d.DelegationStatus_ID == activeID)
                     {
-                        if(d.To_Date == DateTime.Today)
+                        if(d.To_Date < DateTime.Today)
                         {
                            await _DelegationRepository.UpdateDelegationStatusAsync(revokedID, d.Delegation_ID);
+
+                            var existingTempAcc = await _DelegationRepository.GetTempAccAsync(d.Delegation_ID);
+                            if (existingTempAcc == null) return NotFound($"The temporary access does not exist");
+
+                            _DelegationRepository.Delete(existingTempAcc);
+                            await _DelegationRepository.SaveChangesAsync();
                         }
                     }
                 }

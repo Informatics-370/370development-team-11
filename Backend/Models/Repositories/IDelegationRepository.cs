@@ -15,6 +15,7 @@ namespace ProcionAPI.Models.Repositories
         //Task<Delegation_Of_Authority> EditDelegationStatusAsync(int delegationID);
         Task<Delegation_Status[]> GetAllRejStatusesAsync();
         Task<Delegation_Status[]> GetAllStatusesAsync();
+        Task<Delegation_Status> GetRevokeStatusAsync();
         Task<Temporary_Access[]> AddTempAccAsync(Temporary_Access TempAccAdd);
         Task<Temporary_Access> GetTempAccAsync(int delegationID);
         void Delete<T>(T entity) where T : class;

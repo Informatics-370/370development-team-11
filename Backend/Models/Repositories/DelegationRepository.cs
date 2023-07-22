@@ -34,7 +34,7 @@ namespace ProcionAPI.Models.Repositories
         public async Task<Delegation_Of_Authority[]> GetAllActiveDelegationsAsync()
         {
             IQueryable<Delegation_Of_Authority> query = _dbContext.Delegation_Of_Authority
-            .Include(u => u.User).Include(s => s.Delegation_Status).Include(a => a.Admin).Where(d => d.Delegation_Status.Name == "Active");
+            .Include(u => u.User).Include(s => s.Delegation_Status).Where(d => d.Delegation_Status.Name == "Active");
 
             return await query.ToArrayAsync();
         }
@@ -179,6 +179,13 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Delegation_Status> query = _dbContext.Delegation_Status;
 
             return await query.ToArrayAsync();
+        }
+
+        public async Task<Delegation_Status> GetRevokeStatusAsync()
+        {
+            IQueryable<Delegation_Status> query = _dbContext.Delegation_Status.Where(x => x.Name == "Revoked");
+
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<Temporary_Access[]> AddTempAccAsync(Temporary_Access TempAccAdd)

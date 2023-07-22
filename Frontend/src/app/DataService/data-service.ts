@@ -731,8 +731,8 @@ export class DataService {
     return this.httpClient.post(`${this.apiUrl}User/login/` + username + "/" + password, this.httpOptions)
   }
 
-  loginWithTemp(username: string, password: string, tempacc) {
-    return this.httpClient.post(`${this.apiUrl}User/loginWithTemp/` + username + "/" + password + "/" + tempacc, this.httpOptions)
+  loginWithTemp(username: string, password: string, tempacc: string, tempUsername: string) {
+    return this.httpClient.post(`${this.apiUrl}User/loginWithTemp/` + username + "/" + password + "/" + tempacc + "/" + tempUsername, this.httpOptions)
   }
 
   //--------------------------------------------------------------------------------------Budget Allocations--------------------------------------------------------------------------------------
@@ -851,6 +851,34 @@ export class DataService {
     }
   }
 
+  decodeTempAcc(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.TemAccess;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  decodeTempUsername(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.TempAccessUsername;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
   UpdateStock(HistoryAdd: Consumable_History) {
     return this.httpClient.post<Consumable_History>(`${this.apiUrl}Consumable/UpdateStock`, HistoryAdd).pipe(map(result => result))
   }
@@ -919,6 +947,10 @@ export class DataService {
     return this.httpClient.get<DelegationStatus[]>(`${this.apiUrl}Delegation/GetRejStatuses`).pipe(map(result => result))
   }
 
+  GetRevokeStatus(): Observable<any> {
+    return this.httpClient.get<DelegationStatus[]>(`${this.apiUrl}Delegation/GetRevokeStatus`).pipe(map(result => result))
+  }
+
   AddTempAcc(ta: Temporary_Access) {
     return this.httpClient.post(`${this.apiUrl}Delegation/AddTempAcc`, ta, this.httpOptions)
   }
@@ -944,12 +976,24 @@ export class DataService {
     return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetVendorNotifications` + "/" + username).pipe(map(result => result))
   }
 
+  GetTempVendorNotifications(tempUsername: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetTempVendorNotifications` + "/" + tempUsername).pipe(map(result => result))
+  }
+
   GetInventoryNotifications(username: string): Observable<any> {
     return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetInventoryNotifications` + "/" + username).pipe(map(result => result))
   }
 
+  GetTempInventoryNotifications(tempUsername: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetTempInventoryNotifications` + "/" + tempUsername).pipe(map(result => result))
+  }
+
   GetProcurementNotifications(username: string): Observable<any> {
     return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetProcurementNotifications` + "/" + username).pipe(map(result => result))
+  }
+
+  GetTempProcurementNotifications(tempUsername: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetTempProcurementNotifications` + "/" + tempUsername).pipe(map(result => result))
   }
 
   ResetNotif(username: string) {
