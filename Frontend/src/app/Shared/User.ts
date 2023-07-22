@@ -6,5 +6,6 @@ export interface User {
   username: String;
   password: String;
   profile_Picture: String;
+  no_Notifications: Number;
   role: Role;
 }

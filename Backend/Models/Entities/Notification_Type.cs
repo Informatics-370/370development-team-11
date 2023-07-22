@@ -7,10 +7,10 @@ namespace ProcionAPI.Models.Entities
         [Key]
         public int Notification_Type_ID { get; set; }
 
-        [MaxLength(32)]
+        [MaxLength(100)]
         public string Name { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string Description { get; set; }
     }
 }

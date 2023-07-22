@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -56,6 +56,9 @@ import { VendorViewComponent } from './vendor/vendor-view/vendor-view.component'
 import { VendorDeleteComponent } from './vendor/vendor-delete/vendor-delete.component';
 import { VendordetailsViewComponent } from './vendor/vendordetails-view/vendordetails-view.component';
 import { VendorCreateChoiceComponent } from './vendor/vendor-create-choice/vendor-create-choice.component';
+import { VendorApproveComponent } from './vendor/vendor-approve/vendor-approve.component';
+import { VendorUnofficialVendorlistComponent } from './vendor/vendor-unofficial-vendorlist/vendor-unofficial-vendorlist.component';
+import { VendorApprovedAddDetailsComponent } from './vendor/vendor-approved-add-details/vendor-approved-add-details.component';
 
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -73,7 +76,6 @@ import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.compo
 import { LoginComponent } from './login/login.component';
 import { HomePageComponent } from './home-page/home-page.component';
 
-
 import { DeleteMandateLimitComponent } from './delete-mandate-limit/delete-mandate-limit.component';
 import { ViewBudgetCategoryComponent } from './view-budget-category/view-budget-category.component';
 import { CreateBudgetCategoryComponent } from './create-budget-category/create-budget-category.component';
@@ -87,17 +89,45 @@ import { CreateBudgetLineComponent } from './create-budget-line/create-budget-li
 import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
 import { DeleteBudgetLineComponent } from './delete-budget-line/delete-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatCommonModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { AuthInterceptorComponent } from './auth-interceptor/auth-interceptor.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dialog.component';
 import { UserProfileComponent } from './User/user-profile/user-profile.component';
 import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { CropperModalComponent } from './User/cropper-modal/cropper-modal.component';
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
+import { CreateHelpComponent } from './create-help/create-help/create-help.component';
+import { ViewHelpComponent } from './view-help/view-help/view-help.component';
+import { EditHelpComponent } from './edit-help/edit-help/edit-help.component';
+import { DeleteHelpComponent } from './delete-help/delete-help/delete-help.component';
+import { UpdateConsumableStockComponent } from './update-consumable-stock/update-consumable-stock.component';
+import { CreateDelegationComponent } from './Delegation/create-delegation/create-delegation.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { DeleteDelegationComponent } from './Delegation/delete-delegation/delete-delegation.component';
+import { MatSortModule } from '@angular/material/sort';
+import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AsyncPipe, DatePipe, NgFor } from '@angular/common';
+import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
+import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
+import { UpdatePasswordComponent } from './User/update-password/update-password.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-approve-edit.component';
+import { CreateProcurementRequestComponent } from './create-procurement-request/create-procurement-request.component';
 
+
+import { MatBadgeModule } from '@angular/material/badge';
+
+import { VideoDialogComponent } from './VideoDialog/video-dialog/video-dialog.component';
+import { BackupComponent } from './Settings/backup/backup.component';
+import { RestoreComponent } from './Settings/backupDialog/restore.component';
+import { ViewPendingProcurementRequestComponent } from './view-pending-procurement-request/view-pending-procurement-request.component';
+import { PlaceProcurementRequestComponent } from './place-procurement-request/place-procurement-request.component';
+import { PlaceProcurementRequestCreateDetailsComponent } from './place-procurement-request-create-details/place-procurement-request-create-details.component';
+import { ViewProcurementRequestApprovalComponent } from './view-procurement-request-approval/view-procurement-request-approval.component';
+import { DeleteProcurementRequestComponent } from './delete-procurement-request/delete-procurement-request.component';
 
 
 @NgModule({
@@ -161,13 +191,37 @@ import { ViewDelegationComponent } from './Delegation/view-delegation/view-deleg
     EditBudgetLineComponent,
     DeleteBudgetLineComponent,
     EditBudgetAllocationComponent,
+    VendorApproveComponent,
+    VendorUnofficialVendorlistComponent,
+    VendorApprovedAddDetailsComponent,
     AuthInterceptorComponent,
-    ForgotPassDialogComponent,
     UserProfileComponent,
     UserProfileEditComponent,
     CropperModalComponent,
     ViewNotificationHubComponent,
-    ViewDelegationComponent
+    ViewDelegationComponent,
+    CreateHelpComponent,
+    ViewHelpComponent,
+    EditHelpComponent,
+    DeleteHelpComponent,
+    UpdateConsumableStockComponent,
+    CreateDelegationComponent,
+    DeleteDelegationComponent,
+    EditDelegationComponent,
+    RejectDelegationComponent,
+    UpdateConsumableStockComponent,
+    ViewProcurementRequestComponent,
+    UpdatePasswordComponent,
+    VendorApproveEditComponent,
+    VideoDialogComponent,
+    BackupComponent,
+    RestoreComponent,
+    CreateProcurementRequestComponent,
+    ViewPendingProcurementRequestComponent,
+    PlaceProcurementRequestComponent,
+    PlaceProcurementRequestCreateDetailsComponent,
+    ViewProcurementRequestApprovalComponent,
+    DeleteProcurementRequestComponent
   ],
   imports: [
     BrowserModule,
@@ -194,9 +248,24 @@ import { ViewDelegationComponent } from './Delegation/view-delegation/view-deleg
     MatStepperModule,
     MatCheckboxModule,
     MatPaginatorModule,
-    ImageCropperModule
+    ImageCropperModule,
+    MatAutocompleteModule,
+    MatSortModule,
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatBadgeModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    AsyncPipe,
+    NgFor
   ],
   providers: [
+    //AppService,
+    //{ provide: LOCALE_ID, useValue: 'en-US' },
+    //{ provide: MOMENT, useValue: moment },
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     MatExpansionModule,
@@ -205,8 +274,10 @@ import { ViewDelegationComponent } from './Delegation/view-delegation/view-deleg
       useClass: AuthInterceptorComponent, // Add the AuthInterceptor as a provider
       multi: true
     },
+    DatePipe
 
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

@@ -93,8 +93,8 @@ export class CreateConsumableComponent implements OnInit {
 
               const duration = 1750;
               setTimeout(() => {
-                this.router.navigate(['/ViewConsumable']);
                 dialogRef.close();
+                this.router.navigate(['/ViewConsumable']);
               }, duration);
             }
           );

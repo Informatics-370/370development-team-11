@@ -5,7 +5,8 @@ import { Consumable } from '../Shared/Consumable';
 import { Role } from '../Shared/EmployeeRole';
 import { Employee } from '../Shared/Employee';
 import { ConsumableCategory } from '../Shared/ConsumableCategory';
-
+import { Help } from '../Shared/Help';
+import { Help_Category } from '../Shared/HelpCategory';
 import { Branch } from '../Shared/Branch';
 import { Department } from '../Shared/Department';
 import { User } from '../Shared/User';
@@ -30,6 +31,27 @@ import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { BudgetLine } from '../Shared/BudgetLine';
 import { SoleSupplier } from '../Shared/Sole_Supplier';
 import * as moment from 'moment'
+import { Consumable_History } from '../Shared/Consumable_History';
+import { Delegation_Of_Authority } from '../Shared/DelegationOfAuthority';
+import { DelegationStatus } from '../Shared/DelegationStatus';
+import { Temporary_Access } from '../Shared/Temporary_Access';
+import { Due_Dillegence } from '../Shared/DueDillegence';
+import { Vendor_BEE } from '../Shared/VendorBEE';
+import { POPI } from '../Shared/POPI';
+import { Notification_Type } from '../Shared/Notification_Type';
+import { Notification } from '../Shared/Notification';
+
+import { Procurement_Request } from '../Shared/Procurement_Request';
+import { Procurement_Request_Quote } from '../Shared/Procurement_Request_Quote';
+import { Procurement_Details } from '../Shared/ProcurementDetails';
+import { Deposit } from '../Shared/Deposit';
+import { Payment_Made } from '../Shared/PaymentMade';
+import { Proof_Of_Payment } from '../Shared/ProofOfPayment';
+import { Procurement_Consumable } from '../Shared/Procurement_Consumable';
+import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
+import { Asset } from '../Shared/Asset';
+import { Procurement_Asset } from '../Shared/Procurement_Asset';
+import { Vendor_Asset } from '../Shared/Vendor_Asset';
 
 @Injectable({
   providedIn: 'root'
@@ -145,6 +167,54 @@ export class DataService {
     return this.httpClient.get<Department>(`${this.apiUrl}Department/DepartmentValidation/` + name, this.httpOptions)
   }
 
+  //--------------------------------------------------------------------------------------Help And Help Files--------------------------------------------------------------------------------------
+  GetHelps(): Observable<any> {
+    return this.httpClient.get<Help[]>(`${this.apiUrl}Help/GetHelps`).pipe(map(result => result))
+  }
+  GetHelpCategorys(): Observable<any> {
+    return this.httpClient.get<Help_Category[]>(`${this.apiUrl}Help/GetHelpCategorys`).pipe(map(result => result))
+  }
+
+  GetHelp(Help_ID: number) {
+    return this.httpClient.get(`${this.apiUrl}Help/GetHelp` + '/' + Help_ID).pipe(map(result => result))
+  }
+
+  AddHelps(AddHelp: Help) {
+    return this.httpClient.post(`${this.apiUrl}Help/CreateHelp`, AddHelp, this.httpOptions)
+  }
+
+  DeleteHelp(Help_ID: Number): Observable<Help> {
+    return this.httpClient.delete<Help>(`${this.apiUrl}Help/DeleteHelp` + '/' + Help_ID, this.httpOptions)
+  }
+
+  EditHelp(UpdateHelpRequest: Help, help_ID: number): Observable<Help> {
+    return this.httpClient.put<Help>(`${this.apiUrl}Help/EditHelp/` + help_ID, UpdateHelpRequest, this.httpOptions)
+  }
+
+  HelpValidation(name: String, category: String): Observable<Help> {
+    return this.httpClient.get<Help>(`${this.apiUrl}Help/HelpValidation/` + name + "/" + category, this.httpOptions)
+  }
+
+  DeleteHelpFile(HelpName: string, fileName: string): Observable<any> {
+    return this.httpClient.delete<any>(`${this.apiUrl}Help/DeleteHelpFile/${HelpName}/${fileName}`, this.httpOptions)
+  }
+
+  HelpFileAdd(HelpName: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('HelpName', HelpName)
+    return this.httpClient.post<any>(`${this.apiUrl}Help/uploadHelpFile`, formData, this.httpOptions)
+  }
+
+
+  GetHelpPDFFiles(HelpName: string, filename: string): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}Help/GetHelpPDFFiles/${HelpName}/${filename}`, this.httpOptions)
+  }
+
+  GetHelpVideoFiles(HelpName: string, filename: string): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}Help/GetHelpVideoFiles/${HelpName}/${filename}`, this.httpOptions)
+  }
+
   //--------------------------------------------------------------------------------------Requests--------------------------------------------------------------------------------------
 
   GetAllOnboardRequest(): Observable<any> {
@@ -187,6 +257,14 @@ export class DataService {
     return this.httpClient.get<OnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetVendorValidation/${sVendorName}`, this.httpOptions).pipe(map(result => result))
   }
 
+  DeleteSoleSupplier(VendorID: number): Observable<any> {
+    return this.httpClient.delete<SoleSupplier>(`${this.apiUrl}OnboardRequest/DeleteSoleSupplier/${VendorID}`, this.httpOptions)
+  }
+
+  DeleteVendor(VendorID: number): Observable<any> {
+    return this.httpClient.delete<VendorOnboardRequest>(`${this.apiUrl}OnboardRequest/DeleteVendor/${VendorID}`, this.httpOptions)
+  }
+
   //--------------------------------------------------------------------------------------Request Files--------------------------------------------------------------------------------------
 
   DeleteFile(RequestNo: string, fileName: string): Observable<any> {
@@ -200,10 +278,10 @@ export class DataService {
     return this.httpClient.post<any>(`${this.apiUrl}OnboardRequest/uploadOnboardFile`, formData, this.httpOptions)
   }
 
-
   GetOnboardFiles(RequestNo: string, filename: string): Observable<any> {
-    return this.httpClient.post<any>(`${this.apiUrl}OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`, this.httpOptions)
+    return this.httpClient.get(`${this.apiUrl}OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`, { headers: new HttpHeaders({ ContentType: 'application/octet-stream' }), responseType: "blob" })
   }
+
 
   //--------------------------------------------------------------------------------------Vendor Details--------------------------------------------------------------------------------------
   GetAllVendorDetails(): Observable<any> {
@@ -261,8 +339,8 @@ export class DataService {
     return this.httpClient.get<Vendor_Agreement>(`${this.apiUrl}Vendor/GetAgreementByID/${AgreementID}`, this.httpOptions).pipe(map(result => result))
   }
 
-  GetInsuranceByID(InsuranceID: number): Observable<any> {
-    return this.httpClient.get<Vendor_Insurance>(`${this.apiUrl}Vendor/GetInsuranceByID/${InsuranceID}`, this.httpOptions).pipe(map(result => result))
+  GetInsuranceByID(VendorID: number): Observable<any> {
+    return this.httpClient.get<Vendor_Insurance[]>(`${this.apiUrl}Vendor/GetInsuranceByID/${VendorID}`, this.httpOptions).pipe(map(result => result))
   }
 
   GetPaymentTerms(PaymentTermsID: number): Observable<any> {
@@ -324,8 +402,8 @@ export class DataService {
     return this.httpClient.put<Vendor_Agreement>(`${this.apiUrl}Vendor/UpdateAgreement/${AgreementID}`, Agreement, this.httpOptions).pipe(map(result => result))
   }
 
-  UpdateInsurance(InsuranceID: number, Insurance: Vendor_Insurance): Observable<any> {
-    return this.httpClient.put<Vendor_Insurance>(`${this.apiUrl}Vendor/UpdateInsurance/${InsuranceID}`, Insurance, this.httpOptions).pipe(map(result => result))
+  UpdateInsurance(VendorID: number, Insurance: Vendor_Insurance): Observable<any> {
+    return this.httpClient.put<Vendor_Insurance>(`${this.apiUrl}Vendor/UpdateInsurance/${VendorID}`, Insurance, this.httpOptions).pipe(map(result => result))
   }
 
   UpdatePayTerms(PaymentTermsID: number, PayTerms: Vendor_Payment_Terms): Observable<any> {
@@ -356,8 +434,8 @@ export class DataService {
   DeleteAgreementByID(AgreementID: number): Observable<any> {
     return this.httpClient.delete<Vendor_Agreement>(`${this.apiUrl}Vendor/DeleteAgreementByID/${AgreementID}`, this.httpOptions).pipe(map(result => result))
   }
-  DeleteInsuranceByID(InsuranceID: number): Observable<any> {
-    return this.httpClient.delete<Vendor_Insurance>(`${this.apiUrl}Vendor/DeleteInsuranceByID/${InsuranceID}`, this.httpOptions).pipe(map(result => result))
+  DeleteInsuranceByID(VendorID: number, InsuranceTypeID: number): Observable<any> {
+    return this.httpClient.delete<Vendor_Insurance>(`${this.apiUrl}Vendor/DeleteInsuranceByID/${VendorID}/${InsuranceTypeID}`, this.httpOptions).pipe(map(result => result))
   }
   DeletePaymentTerms(PaymentTermsID: number): Observable<any> {
     return this.httpClient.delete<Vendor_Payment_Terms>(`${this.apiUrl}Vendor/DeletePaymentTerms/${PaymentTermsID}`, this.httpOptions).pipe(map(result => result))
@@ -403,6 +481,67 @@ export class DataService {
   IncomeTaxRegNumberVal(IncomeTaxNumber: string): Observable<any> {
     return this.httpClient.get<Vendor_Tax>(`${this.apiUrl}Vendor/IncomeTaxRegNumberVal/${IncomeTaxNumber}`, this.httpOptions).pipe(map(result => result))
   }
+
+  //--------------------------------------------------------------------------------------Vendor Approved--------------------------------------------------------------------------------------
+
+  AddBEEDetails(VenBEE: Vendor_BEE): Observable<any> {
+    return this.httpClient.post<Vendor_BEE>(`${this.apiUrl}Vendor/AddBEEDetails`, VenBEE, this.httpOptions).pipe(map(result => result))
+  }
+
+  AddDueDiligence(VenDueDillegence: Due_Dillegence): Observable<any> {
+    return this.httpClient.post<Due_Dillegence>(`${this.apiUrl}Vendor/AddDueDiligence`, VenDueDillegence, this.httpOptions).pipe(map(result => result))
+  }
+
+  AddPOPI(VenPOPI: POPI): Observable<any> {
+    return this.httpClient.post<POPI>(`${this.apiUrl}Vendor/AddPOPI`, VenPOPI, this.httpOptions).pipe(map(result => result))
+  }
+
+  GetBEEDetails(VendorID: Number): Observable<any> {
+    return this.httpClient.get<Vendor_BEE>(`${this.apiUrl}Vendor/GetBEEDetails/${VendorID}`).pipe(map(result => result))
+  }
+
+  GetDueDiligence(VendorID: Number): Observable<any> {
+    return this.httpClient.get<Due_Dillegence>(`${this.apiUrl}Vendor/GetDueDiligence/${VendorID}`).pipe(map(result => result))
+  }
+
+  GetPOPI(DueDiligenceID: Number): Observable<any> {
+    return this.httpClient.get<POPI>(`${this.apiUrl}Vendor/GetPOPI/${DueDiligenceID}`).pipe(map(result => result))
+  }
+
+  UpdateBEEDetails(VendorID: number, VenBEE: Vendor_BEE): Observable<any> {
+    return this.httpClient.put<Vendor_BEE>(`${this.apiUrl}Vendor/UpdateBEEDetails/${VendorID}`, VenBEE, this.httpOptions).pipe(map(result => result))
+  }
+
+  UpdateDueDiligence(VendorID: number, VenDueDillegence: Due_Dillegence): Observable<any> {
+    return this.httpClient.put<Due_Dillegence>(`${this.apiUrl}Vendor/UpdateDueDiligence/${VendorID}`, VenDueDillegence, this.httpOptions).pipe(map(result => result))
+  }
+
+  UpdatePOPI(DueDiligenceID: number, VenPOPI: POPI): Observable<any> {
+    return this.httpClient.put<POPI>(`${this.apiUrl}Vendor/UpdatePOPI/${DueDiligenceID}`, VenPOPI, this.httpOptions).pipe(map(result => result))
+  }
+
+  DeleteBEEDetails(VenBeeID: number): Observable<any> {
+    return this.httpClient.delete<Vendor_BEE>(`${this.apiUrl}Vendor/DeleteBEEDetails/${VenBeeID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  DeleteDueDiligence(DueDiligenceID: number): Observable<any> {
+    return this.httpClient.delete<Due_Dillegence>(`${this.apiUrl}Vendor/DeleteDueDiligence/${DueDiligenceID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  DeletePOPI(POPIID: number): Observable<any> {
+    return this.httpClient.delete<POPI>(`${this.apiUrl}Vendor/DeletePOPI/${POPIID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  //--------------------------------------------------------------------------------------Vendor Status Change--------------------------------------------------------------------------------------
+
+  ChangeVendorStatus(statusID: number, VenID: number): Observable<any> {
+    return this.httpClient.put(`${this.apiUrl}Vendor/ChangeVendorStatus/${statusID}/${VenID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  ChangeOnboardStatus(statusID: number, onboardRequestId: number, VenID: number): Observable<any> {
+    return this.httpClient.put(`${this.apiUrl}Vendor/ChangeOnboardStatus/${statusID}/${onboardRequestId}/${VenID}`, this.httpOptions).pipe(map(result => result))
+  }
+
   //--------------------------------------------------------------------------------------Mandate Limit--------------------------------------------------------------------------------------
   GetMandateLimits(): Observable<any> {
     return this.httpClient.get<Mandate_Limit[]>(`${this.apiUrl}Mandate/GetAllMandateLimits`).pipe(
@@ -447,7 +586,7 @@ export class DataService {
   }
 
   GetUserByUsername(username: string) {
-    return this.httpClient.get(`${this.apiUrl}User/GetUserByUsername` + "/" + username).pipe(map(result => result))
+    return this.httpClient.get<User>(`${this.apiUrl}User/GetUserByUsername` + "/" + username).pipe(map(result => result))
   }
 
   AddUser(user: User) {
@@ -462,7 +601,7 @@ export class DataService {
     return this.httpClient.delete<string>(`${this.apiUrl}User/DeleteUser` + "/" + userID, this.httpOptions)
   }
 
-  EditUserValidation(name: String, id: Number): Observable<User> {
+  EditUserValidation(name: string, id: Number): Observable<User> {
     return this.httpClient.get<User>(`${this.apiUrl}User/EditUserValidation/` + name + '/' + id, this.httpOptions)
   }
 
@@ -480,6 +619,12 @@ export class DataService {
   UpdatePassword(UserID: Number, NewPassword: String) {
     return this.httpClient.put<User>(`${this.apiUrl}User/UpdatePassword/` + UserID + "/" + NewPassword, this.httpOptions)
   }
+
+  VerifyCredentials(UserName: String, Password: String) {
+    return this.httpClient.get(`${this.apiUrl}User/VerifyCredentials/` + UserName + "/" + Password, this.httpOptions)
+  }
+
+
 
   //ProfilePhotoAdd(file: File): Observable<any> {
   //  const formData = new FormData();
@@ -501,6 +646,10 @@ export class DataService {
   }
   getEmployeebyEmail(Email: String) {
     return this.httpClient.get<Employee>(`${this.apiUrl}User/GetEmployeeByEmail/` + Email).pipe(map(result => result))
+  }
+
+  getAdminbyEmail(Email: String) {
+    return this.httpClient.get<Admin>(`${this.apiUrl}User/GetAdminByEmail/` + Email).pipe(map(result => result))
   }
 
   GetEmployeeID(userID: Number) {
@@ -580,6 +729,10 @@ export class DataService {
   //--------------------------------------------------------------------------------------Login--------------------------------------------------------------------------------------
   login(username: string, password: string) {
     return this.httpClient.post(`${this.apiUrl}User/login/` + username + "/" + password, this.httpOptions)
+  }
+
+  loginWithTemp(username: string, password: string, tempacc: string, tempUsername: string) {
+    return this.httpClient.post(`${this.apiUrl}User/loginWithTemp/` + username + "/" + password + "/" + tempacc + "/" + tempUsername, this.httpOptions)
   }
 
   //--------------------------------------------------------------------------------------Budget Allocations--------------------------------------------------------------------------------------
@@ -674,6 +827,7 @@ export class DataService {
       const tokenParts = token.split('.');
       const tokenPayload = tokenParts[1];
       const decodedPayload = JSON.parse(atob(tokenPayload));
+      console.log(decodedPayload)
 
       return decodedPayload.role;
 
@@ -696,4 +850,255 @@ export class DataService {
       return null;
     }
   }
+
+  decodeTempAcc(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.TemAccess;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  decodeTempUsername(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.TempAccessUsername;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  UpdateStock(HistoryAdd: Consumable_History) {
+    return this.httpClient.post<Consumable_History>(`${this.apiUrl}Consumable/UpdateStock`, HistoryAdd).pipe(map(result => result))
+  }
+
+  GetConsumablePredictions(id: Number): Observable<{ Year: Number, Month: Number, ActualAmount: Number, PredictedAmount: Number }[]> {
+    return this.httpClient.get<any[]>(`${this.apiUrl}Consumable/PredictConsumable/` + id).pipe(
+      map(result => {
+        console.log(result); // Log the returned result
+        return result.map(item => ({ Year: item.item1, Month: item.item2, ActualAmount: item.item3, PredictedAmount: item.item4 }));
+      })
+    );
+  }
+  //--------------------------------------------------------------------------------------Delegation--------------------------------------------------------------------------------------
+  GetDelegations(): Observable<any> {
+    return this.httpClient.get<Delegation_Of_Authority[]>(`${this.apiUrl}Delegation/GetDelegations`).pipe(map(result => result))
+  }
+
+  GetDelegationsByRole(): Observable<any> {
+    return this.httpClient.get<Delegation_Of_Authority[]>(`${this.apiUrl}Delegation/GetDelegationsByRole`).pipe(map(result => result))
+  }
+
+  GetActiveDelegations(): Observable<any> {
+    return this.httpClient.get<Delegation_Of_Authority[]>(`${this.apiUrl}Delegation/GetActiveDelegations`).pipe(map(result => result))
+  }
+
+  DelegateFileAdd(DelegateName: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('DelegateName', DelegateName)
+    return this.httpClient.post<any>(`${this.apiUrl}Delegation/uploadDelegationFile`, formData, this.httpOptions)
+  }
+
+  AddDelegation(doa: Delegation_Of_Authority) {
+    return this.httpClient.post(`${this.apiUrl}Delegation/CreateDelegation`, doa, this.httpOptions)
+  }
+
+  GetDelegateionFiles(DelegateName: string, filename: string): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}Delegation/GetDelegateionFiles/${DelegateName}/${filename}`, this.httpOptions)
+  }
+
+  GetDelegation(delegationID: Number) {
+    return this.httpClient.get(`${this.apiUrl}Delegation/GetDelegation` + "/" + delegationID).pipe(map(result => result))
+  }
+
+  DeleteDelegationFile(DelegateName: string, fileName: string): Observable<any> {
+    return this.httpClient.delete<any>(`${this.apiUrl}Delegation/DeleteFile/${DelegateName}/${fileName}`, this.httpOptions)
+  }
+
+  DeleteDelegation(delegationID: number): Observable<any> {
+    return this.httpClient.delete<Delegation_Of_Authority>(`${this.apiUrl}Delegation/DeleteDelegation/${delegationID}`, this.httpOptions)
+  }
+
+  DeleteTempAcc(delegationID: number): Observable<any> {
+    return this.httpClient.delete<Temporary_Access>(`${this.apiUrl}Delegation/DeleteTempAcc/${delegationID}`, this.httpOptions)
+  }
+
+  EditDelegation(DelegationUpdate: Delegation_Of_Authority, delegationID: number) {
+    return this.httpClient.put<Delegation_Of_Authority>(`${this.apiUrl}Delegation/EditDelegation/` + delegationID, DelegationUpdate, this.httpOptions)
+  }
+
+  EditDelegationStatus(statusID: number, delegationID: number) {
+    return this.httpClient.put<Delegation_Of_Authority>(`${this.apiUrl}Delegation/EditDelegationStatus/` + statusID + `/` + delegationID, this.httpOptions)
+  }
+
+  GetStatuses(): Observable<any> {
+    return this.httpClient.get<DelegationStatus[]>(`${this.apiUrl}Delegation/GetRejStatuses`).pipe(map(result => result))
+  }
+
+  GetRevokeStatus(): Observable<any> {
+    return this.httpClient.get<DelegationStatus[]>(`${this.apiUrl}Delegation/GetRevokeStatus`).pipe(map(result => result))
+  }
+
+  AddTempAcc(ta: Temporary_Access) {
+    return this.httpClient.post(`${this.apiUrl}Delegation/AddTempAcc`, ta, this.httpOptions)
+  }
+
+  GetTempAcc(delegationID: Number) {
+    return this.httpClient.get(`${this.apiUrl}Delegation/GetTempAcc` + "/" + delegationID).pipe(map(result => result))
+  }
+
+  InitiatRecurringJobDelegation() {
+    return this.httpClient.get(`${this.apiUrl}Home/RecurringJobDelegation`, this.httpOptions)
+  }
+
+  CheckDelegation() {
+    return this.httpClient.put(`${this.apiUrl}Home/CheckDelegation`, this.httpOptions)
+  }
+
+  //--------------------------------------------------------------------------------------Notifications--------------------------------------------------------------------------------------
+  GetNotifications(username: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetNotifications` + "/" + username).pipe(map(result => result))
+  }
+
+  GetVendorNotifications(username: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetVendorNotifications` + "/" + username).pipe(map(result => result))
+  }
+
+  GetTempVendorNotifications(tempUsername: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetTempVendorNotifications` + "/" + tempUsername).pipe(map(result => result))
+  }
+
+  GetInventoryNotifications(username: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetInventoryNotifications` + "/" + username).pipe(map(result => result))
+  }
+
+  GetTempInventoryNotifications(tempUsername: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetTempInventoryNotifications` + "/" + tempUsername).pipe(map(result => result))
+  }
+
+  GetProcurementNotifications(username: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetProcurementNotifications` + "/" + username).pipe(map(result => result))
+  }
+
+  GetTempProcurementNotifications(tempUsername: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetTempProcurementNotifications` + "/" + tempUsername).pipe(map(result => result))
+  }
+
+  ResetNotif(username: string) {
+    return this.httpClient.put<User>(`${this.apiUrl}User/ResetNotif/` + username, this.httpOptions)
+  }
+  //----------------------------------------------------------------------Backup&Restore-----------------------------------------------------------------------------
+  private backupUrl = 'Backup/CreateBackup';
+  createBackup(): Observable<any> {
+    return this.httpClient.post(this.backupUrl, {});
+  }
+  GetProcurementRequests(): Observable<any> {
+    return this.httpClient.get<Procurement_Request[]>(`${this.apiUrl}ProcurementRequest/GetProcurementRequests`).pipe(map(result => result))
+  }
+
+  AddProcurementRequest(AddProcurementRequest: Procurement_Request) {
+    return this.httpClient.post<Procurement_Request>(`${this.apiUrl}ProcurementRequest/CreateProcurementRequest`, AddProcurementRequest).pipe(map(result => result))
+  }
+
+  ProcurementRequestFileAdd(VendorName: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('VendorName', VendorName)
+    return this.httpClient.post<any>(`${this.apiUrl}ProcurementRequest/uploadProcurementQuote`, formData, this.httpOptions)
+  }
+
+  AddProcurementRequestQuote(AddProcurementRequestQuote: Procurement_Request_Quote) {
+    return this.httpClient.post<Procurement_Request_Quote>(`${this.apiUrl}ProcurementRequest/CreateProcurementQuote`, AddProcurementRequestQuote).pipe(map(result => result))
+  }
+
+
+  //----------------------------------------------------------------------PlaceProcurement-----------------------------------------------------------------------------
+
+  AddProcurementDetails(ProcurementDetails: Procurement_Details): Observable<any> {
+    return this.httpClient.post<Procurement_Details>(`${this.apiUrl}ProcurementDetails/AddProcurementDetails`, ProcurementDetails, this.httpOptions).pipe(map(result => result))
+  }
+
+  GetProcurementRequestByID(ProcurementRequestID: number): Observable<any> {
+    return this.httpClient.get<Procurement_Request>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestByID/${ProcurementRequestID}`).pipe(map(result => result))
+  }
+
+  AddDeposit(DepositDetails: Deposit): Observable<any> {
+    return this.httpClient.post<Deposit>(`${this.apiUrl}ProcurementDetails/AddDeposit`, DepositDetails, this.httpOptions).pipe(map(result => result))
+  }
+  AddPaymentMade(AddPaymentMade: Payment_Made): Observable<any> {
+    return this.httpClient.post<Payment_Made>(`${this.apiUrl}ProcurementDetails/AddPaymentMade`, AddPaymentMade, this.httpOptions).pipe(map(result => result))
+  }
+
+  AddProofOfPayment(AddPOP: Proof_Of_Payment): Observable<any> {
+    return this.httpClient.post<Proof_Of_Payment>(`${this.apiUrl}ProcurementDetails/AddProofOfPayment`, AddPOP, this.httpOptions).pipe(map(result => result))
+  }
+
+  AddProcurementConsumable(AddProcurementConsumable: Procurement_Consumable): Observable<any> {
+    return this.httpClient.post<Procurement_Consumable>(`${this.apiUrl}ProcurementDetails/AddProcurementConsumable`, AddProcurementConsumable, this.httpOptions).pipe(map(result => result))
+  }
+
+  AddVendorConsumable(AddVendorConsumable: Vendor_Consumable): Observable<any> {
+    return this.httpClient.post<Vendor_Consumable>(`${this.apiUrl}ProcurementDetails/AddVendorConsumable`, AddVendorConsumable, this.httpOptions).pipe(map(result => result))
+  }
+
+  AddAsset(AddAsset: Asset): Observable<any> {
+    return this.httpClient.post<Asset>(`${this.apiUrl}ProcurementDetails/AddAsset`, AddAsset, this.httpOptions).pipe(map(result => result))
+  }
+
+  AddProcurementAsset(AddProcurementAsset: Procurement_Asset): Observable<any> {
+    return this.httpClient.post<Procurement_Asset>(`${this.apiUrl}ProcurementDetails/AddProcurementAsset`, AddProcurementAsset, this.httpOptions).pipe(map(result => result))
+  }
+
+  AddVendorAsset(AddVendorAsset: Vendor_Asset): Observable<any> {
+    return this.httpClient.post<Vendor_Asset>(`${this.apiUrl}ProcurementDetails/AddVendorAsset`, AddVendorAsset, this.httpOptions).pipe(map(result => result))
+  }
+
+  uploadProcureFile(FolderCategory: string, ProcurementID: string, fileName: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', fileName);
+    formData.append('FolderCategory', FolderCategory)
+    formData.append('ProcurementRequest', ProcurementID)
+    return this.httpClient.post<any>(`${this.apiUrl}ProcurementDetails/uploadProcureFile`, formData, this.httpOptions)
+  }
+
+  GetProcureFiles(FolderCategory: string, ProcurementID: string, fileName: string): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}ProcurementDetails/GetProcureFiles/${FolderCategory}/${ProcurementID}/${fileName}`, this.httpOptions)
+  }
+
+  DeleteProcurementFile(FolderCategory: string, ProcurementID: string, fileName: string): Observable<any> {
+    return this.httpClient.delete<any>(`${this.apiUrl}ProcurementDetails/DeleteProcurementFile/${FolderCategory}/${ProcurementID}/${fileName}`, this.httpOptions)
+  }
+  GetProcurementQuotes(): Observable<any> {
+    return this.httpClient.get<Procurement_Request_Quote[]>(`${this.apiUrl}ProcurementRequest/GetProcurementQuotes`).pipe(map(result => result))
+  }
+
+  GetPRRequestByID(RequestID: Number): Observable<Procurement_Request> {
+    return this.httpClient.get<Procurement_Request>(`${this.apiUrl}ProcurementRequest/GetRequestByID/` + RequestID, this.httpOptions)
+  }
+
+  DeletePRRequest(RequestID: Number): Observable<Procurement_Request> {
+    return this.httpClient.delete<Procurement_Request>(`${this.apiUrl}ProcurementRequest/DeleteRequest/` + RequestID, this.httpOptions)
+  }
+
+
+  DeleteProcurementRequestFiles(VendorName: string, fileName: string): Observable<any> {
+    return this.httpClient.delete<any>(`${this.apiUrl}ProcurementRequest/DeleteFile/${VendorName}/${fileName}`, this.httpOptions)
+  }
+
+  GetProcurementQuotesbyID(id: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Request_Quote[]>(`${this.apiUrl}ProcurementRequest/GetProcurementQuotesbyID/` + id).pipe(map(result => result))
+  }
+
 }

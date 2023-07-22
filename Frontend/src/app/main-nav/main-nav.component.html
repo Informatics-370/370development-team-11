@@ -3,7 +3,7 @@
     <img src="./assets/Images/image 3.jpg" />
     <span class="main-spacer"></span>
     <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home" class="sub-spacer"
-              routerLink="/Home" (click)="reload()"></mat-icon>
+              routerLink="/Home" (click)="reload()" matTooltip="Home Page"></mat-icon>
     <a *ngIf="rAdmin" class="sub-spacer"
        style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/ViewEmployee"
        mat-button (click)="reload()">Administration</a>
@@ -11,16 +11,16 @@
        mat-button (click)="reload()">Inventory</a>
     <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;"
        routerLink="/ViewBudgetAllocation" mat-button (click)="reload()">Finance</a>
-    <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()">Procurement</a>
+    <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/ViewProcurementRequest" mat-button (click)="reload()">Procurement</a>
     <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/request-view"
        mat-button (click)="reload()">Vendor</a>
     <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()">Reports</a>
     <mat-icon aria-hidden="false" aria-label="notification icon" fontIcon="notifications" class="sub-spacer"
-              style="font-size:19pt;" routerLink="/NotificationHub"></mat-icon>
+              style="font-size:19pt;" matBadge="{{numNotifications}}" matBadgeColor="warn" [matBadgeHidden]="hidden" routerLink="/NotificationHub"></mat-icon>
     <img *ngIf="this.isLoggedIn === true" class="image-container" src="{{usr.profile_Picture}}" style="object-fit: cover;" [matMenuTriggerFor]="beforeMenu" />
     <mat-menu #beforeMenu="matMenu" xPosition="before">
       <button mat-menu-item routerLink="/Profile" (click)="reload()"><mat-icon matPrefix>pageview</mat-icon>Profile</button>
-      <button mat-menu-item (click)="reload()"><mat-icon matPrefix>calendar_today</mat-icon>Calendar</button>
+      <button mat-menu-item routerLink="/ViewCalendar" (click)="reload()"><mat-icon matPrefix>calendar_today</mat-icon>Calendar</button>
       <button mat-menu-item (click)="Logout()"><mat-icon matPrefix>logout</mat-icon>Logout</button>
     </mat-menu>
   </mat-toolbar>

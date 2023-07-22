@@ -11,15 +11,23 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { OnboardRequest } from '../Shared/OnboardRequest';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-view-employee',
   templateUrl: './view-employee.component.html',
-  styleUrls: ['./view-employee.component.css']
+  styleUrls: ['./view-employee.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewEmployeeComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete'];
+  displayedColumns: string[] = ['id', 'name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete', 'delegation'];
   dataSource = new MatTableDataSource<Employee>();
 
   userDelete: any
@@ -35,6 +43,7 @@ export class ViewEmployeeComponent implements OnInit {
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
+    no_Notifications: 0,
     role: this.rl
   }
 
@@ -56,7 +65,7 @@ export class ViewEmployeeComponent implements OnInit {
 
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin") {
+    if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
 
@@ -112,6 +121,12 @@ export class ViewEmployeeComponent implements OnInit {
             disableClose: true,
             data: { id }
           });
+
+          this.dialog.afterAllClosed.subscribe({
+            next: (response) => {
+              this.ngOnInit();
+            }
+          })
         }
         else {
 
@@ -126,7 +141,7 @@ export class ViewEmployeeComponent implements OnInit {
           });
 
           var action = "ERROR";
-          var title = "ERROR: Category In Use";
+          var title = "ERROR: Role In Use";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A USER!</strong><br> Please remove the user from associated tables to continue with deletion.");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
@@ -141,5 +156,14 @@ export class ViewEmployeeComponent implements OnInit {
         }
       }
     })
+  }
+
+
+  openDialog() {
+    const dialogRef = this.dialog.open(RestoreComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 }

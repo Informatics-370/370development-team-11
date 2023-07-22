@@ -3,20 +3,30 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Router, Event, NavigationStart, NavigationEnd, } from '@angular/router';
 import { DataService } from '../DataService/data-service';
 import { AuthService } from '../DataService/AuthService';
+import { interval, Observable } from 'rxjs';
+
 
 import { Role } from '../Shared/EmployeeRole';
 import { User } from '../Shared/User';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-main-nav',
   templateUrl: './main-nav.component.html',
-  styleUrls: ['./main-nav.component.css']
+  styleUrls: ['./main-nav.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 
 
 
 export class MainNavComponent implements OnInit {
+
 
   iName: string;
   user: any;
@@ -34,6 +44,7 @@ export class MainNavComponent implements OnInit {
     username: '',
     password: '',
     profile_Picture: '',
+    no_Notifications: 0,
     role: this.rl
   }
 
@@ -41,12 +52,30 @@ export class MainNavComponent implements OnInit {
 
   iRole: string;
   rAdmin: string;
+  usernotifications: any;
+  numNotifications: number;
+
+  hidden = false;
 
   constructor(private router: Router, private dataService: DataService, private AuthServ: AuthService) {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.reload();
       }
+    })
+
+    interval(10000).subscribe(x => {
+      this.dataService.GetUserByUsername(this.iName).subscribe(r => {
+        this.usernotifications = r;
+        this.numNotifications = this.usernotifications.no_Notifications;
+
+        if (this.numNotifications == 0) {
+          this.hidden = true;
+        }
+        else {
+          this.hidden = false;
+        }
+      })
     })
   }
   RoleToUse: string = "";
@@ -55,13 +84,14 @@ export class MainNavComponent implements OnInit {
   ngOnInit() {
     this.AuthServ.userRole$.subscribe(role => {
       this.RoleToUse = role
+      console.log(role)
       this.isLoggedIn = true;
     })
 
     this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin") {
+    if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
 
@@ -75,6 +105,10 @@ export class MainNavComponent implements OnInit {
     })
     this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
     this.GetUser()
+  }
+
+  public resetNotification() {
+
   }
 
   Logout() {
@@ -91,6 +125,7 @@ export class MainNavComponent implements OnInit {
       this.usr.username = this.user.username;
       this.usr.password = this.user.password;
     })
-
   }
+
+  
 }

@@ -15,8 +15,14 @@
       <a mat-list-item class="uni-font" routerLink="/ViewBranch">Branch</a>
       <a mat-list-item class="uni-font" routerLink="/Delegation">Delegation of Authority</a>
       <a mat-list-item class="uni-font" routerLink="/ViewMandateLimit">Mandate Limits</a>
-      <a mat-list-item class="uni-font">Manage Help</a>
-      <a mat-list-item class="uni-font">Settings</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewHelp">Manage Help</a>
+      <a mat-list-item class="uni-font" [matMenuTriggerFor]="menu">Settings</a>
+        <mat-menu #afterMenu="matMenu" xPosition="after" #menu="matMenu">
+          <button class="MenuButton" mat-menu-item (click)="openDialog()" >
+            Backup System</button>
+          <button class="MenuButton" mat-menu-item >
+            Restore System</button>
+        </mat-menu>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content class="Main-content">

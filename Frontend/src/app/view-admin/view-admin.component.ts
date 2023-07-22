@@ -6,11 +6,20 @@ import { DeleteAdminComponent } from '../delete-admin/delete-admin.component';
 import { Admin } from '../Shared/Admin';
 import { DataService } from '../DataService/data-service';
 import { MatTableDataSource } from '@angular/material/table';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { RestoreComponent } from '../Settings/backupDialog/restore.component';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-view-admin',
   templateUrl: './view-admin.component.html',
-  styleUrls: ['./view-admin.component.css']
+  styleUrls: ['./view-admin.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewAdminComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'surname', 'email', 'phone', 'role', 'action', 'delete'];
@@ -29,7 +38,7 @@ export class ViewAdminComponent implements OnInit {
   ngOnInit() {
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin") {
+    if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
 
@@ -70,6 +79,21 @@ export class ViewAdminComponent implements OnInit {
     const confirm = this.dialog.open(DeleteAdminComponent, {
       disableClose: true,
       data: { id }
+    });
+
+    this.dialog.afterAllClosed.subscribe({
+      next: (response) => {
+        this.ngOnInit();
+      }
+    })
+  }
+
+
+  openDialog() {
+    const dialogRef = this.dialog.open(RestoreComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
     });
   }
 }

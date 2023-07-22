@@ -28,7 +28,9 @@ export class VendorCreateChoiceComponent {
       this.dataService.getAllApprovedVendors().subscribe(result => {
       let requestlist:any[] = result
       requestlist.forEach((element) => {
-      this.VendorDetails.push(element)
+        if(element.vendor_Status_ID == 4) {
+          this.VendorDetails.push(element)
+        }
       });//result      
     })//dataservice
         
@@ -42,6 +44,10 @@ export class VendorCreateChoiceComponent {
    let VendorID = this.mySelect.get('VendorsApproved')?.value;
    this.dialogRef.close();
    this.router.navigate([`/vendor-create/${VendorID}`]);
+  // this.dataService.ChangeVendorStatus(2,VendorID).subscribe(result => {
+    
+   //})
+   
   }
 
   onCancel(): void {

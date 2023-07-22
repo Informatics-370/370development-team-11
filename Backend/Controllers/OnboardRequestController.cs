@@ -1,9 +1,12 @@
-﻿using Azure.Core;
+﻿using Azure;
+using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using MimeKit;
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Models.Repositories;
 using System.Data.SqlTypes;
+using System.Net;
 using System.Net.Mime;
 
 namespace ProcionAPI.Controllers
@@ -32,6 +35,7 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
 
 
         [HttpPost]
@@ -143,8 +147,17 @@ namespace ProcionAPI.Controllers
             var filePath = Path.Combine(Directory.GetCurrentDirectory(),"Files","OnboardRequests", RequestNo, filename);
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
             var contentType = "application/octet-stream";
+
+            if(filename.Contains(".pdf"))
+            {
+                contentType = "application/pdf";
+            }
+            // var contentType = "application/pdf";
+            //var contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
             return File(fileBytes, contentType, filename);
         }
+
 
 
         [HttpPut]
@@ -192,7 +205,7 @@ namespace ProcionAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteRequest/{RequestId}/{VendorID}")]
-        public async Task<IActionResult> DeleteConsumable(int RequestId,int VendorID)
+        public async Task<IActionResult> DeleteRequest(int RequestId,int VendorID)
         {
             try
             {
@@ -246,6 +259,21 @@ namespace ProcionAPI.Controllers
             return Ok(results);
         }
 
+        [HttpDelete]
+        [Route("DeleteSoleSupplier/{VendorID}")]
+        public async Task<ActionResult> DeleteSoleSupplier(int VendorID)
+        {
+            var results = await _OnboardRequestRepository.DeleteSoleSupplierAsync(VendorID);
+            return Ok(results);
+        }
+
+        [HttpDelete]
+        [Route("DeleteVendor/{VendorID}")]
+        public async Task<ActionResult> DeleteVendor(int VendorID)
+        {
+            var results = await _OnboardRequestRepository.DeleteVendorAsync(VendorID);
+            return Ok(results);
+        }
     }
     
 }

@@ -43,7 +43,6 @@ export class DeleteAdminComponent implements OnInit {
           this.showSuccessDialog = true;
           setTimeout(() => {
             this.dialogRef.close();
-            location.reload();
           }, 1750);
         }
       })

@@ -19,6 +19,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
+import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 
 @Component({
   selector: 'app-vendor-update',
@@ -47,6 +48,7 @@ export class VendorUpdateComponent {
     email: '',
     number_Of_Times_Used: 0,
     sole_Supplier_Provided: false,
+    preferedVendor:false,
   }
   VendorDetail: VendorDetails = {
     vendor_Detail_ID:0,
@@ -122,12 +124,20 @@ export class VendorUpdateComponent {
     signed_Agreement_Doc:"",
   }
 
+  VendorInsuranceType:Vendor_Insurance_Type = {
+    vendor_Insurance_Type_ID : 4,
+    name: "",
+    description: "",
+  }
+
   VendorInsurance: Vendor_Insurance = {
     insurance_ID: 0,
-    vendor_Detail_ID: 0,
-    vendor_Detail: this.VendorDetail,
+    vendor_ID: 0,
+    vendor : this.Vendor,
+    vendor_Insurance_Type_ID:0,
+    vendor_Insurance_Type: this.VendorInsuranceType,
     confirmation_Doc:"",
-  }
+  } 
 
   VendorPaymentTerms: Vendor_Payment_Terms = {
     payment_Terms_ID: 0,
@@ -218,6 +228,7 @@ export class VendorUpdateComponent {
 
   FileDetails:any[] = [];
   VD_ID:any;
+  VendorID:any;
   ngOnInit(): void {
 
     for(let i = 0;i < 7;i++) {
@@ -231,6 +242,7 @@ export class VendorUpdateComponent {
         
         this.VendorService.GetVendorDetailByID(Number(VendorDetailID)).subscribe(result => {
           this.VendorDetail = result
+          this.VendorID = this.VendorDetail.vendor_ID
           let sFilePath = this.VendorDetail.bankStampedConfirtmation
           this.VendorService.GetVendorByID(Number(this.VendorDetail.vendor_ID)).subscribe(result => {
             this.Vendor = result
@@ -246,7 +258,7 @@ export class VendorUpdateComponent {
           this.VendorWebsite.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
           this.VendorLicense.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
           this.VendorAgreement.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
-          this.VendorInsurance.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
+          this.VendorInsurance.vendor_ID = this.VendorID
           this.VendorRegistration.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
           this.VendorTax.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
           this.getFileDetails(sFilePath,6)
@@ -269,7 +281,7 @@ export class VendorUpdateComponent {
             this.getAgreement(this.VendorDetail.vendor_Detail_ID)
           }
           if(this.VendorDetail.insurance_Provided == true) {
-            this.getInsurance(this.VendorDetail.vendor_Detail_ID)
+            this.getInsurance(this.VendorID)
           }
           if(this.VendorDetail.payment_Terms_Provided == true) {
             this.getPaymentTerms(this.VendorDetail.vendor_Detail_ID)
@@ -866,7 +878,7 @@ CreateContinue(VenDetailsID:number) {
            
           }//signedagreement
 
-          this.VendorInsurance.vendor_Detail = this.VendorDetail
+         // this.VendorInsurance.vendor_Detail = this.VendorDetail
           if(this.InsuranceCoverChecker == true && this.VendorInsurance.insurance_ID == 0 ) {
             FolderCategory = "InsuranceCover";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
@@ -874,8 +886,9 @@ CreateContinue(VenDetailsID:number) {
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
               let Path: any = response
               this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
-              this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
-              this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
+              this.VendorInsurance.vendor_ID = this.VendorID 
+              this.VendorInsurance.vendor_Insurance_Type_ID = 4
+              this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
             })
             
           }
@@ -889,7 +902,7 @@ CreateContinue(VenDetailsID:number) {
               this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
               let Path: any = response
               this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString(); 
-              this.VendorInsurance.vendor_Detail_ID = this.VD_ID
+             // this.VendorInsurance.vendor_Detail_ID = this.VD_ID
               this.VendorService.UpdateInsurance(this.VendorInsurance.insurance_ID,this.VendorInsurance).subscribe(response => 
                 {
                   console.log("success")
@@ -902,7 +915,7 @@ CreateContinue(VenDetailsID:number) {
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let fileName =  this.FileDetails[4].FileName
             this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe({next: (Response) => {
-              this.VendorService.DeleteInsuranceByID(this.VendorInsurance.insurance_ID).subscribe(response => {console.log(response)})
+            this.VendorService.DeleteInsuranceByID(this.VendorID,this.VendorInsurance.insurance_ID).subscribe()
             }})
           }//insurance
           
@@ -1020,7 +1033,7 @@ CreateContinue(VenDetailsID:number) {
         
                  const duration = 1750;
                  setTimeout(() => {
-                  this.router.navigate(['/vendor-view'], {queryParams: {refresh: true}});
+                  this.router.navigate(['/vendor-view']);
                   dialogRef.close();
                  }, duration);
               }
@@ -1081,11 +1094,16 @@ this.getFileDetails(sFilePath,3)
 })
 }
 
-getInsurance(InsuranceID:number) {
-this.VendorService.GetInsuranceByID(InsuranceID).subscribe(result => {
-this.VendorInsurance = result
-let sFilePath = this.VendorInsurance.confirmation_Doc
-this.getFileDetails(sFilePath,4)
+getInsurance(VendorID:number) {
+this.VendorService.GetInsuranceByID(VendorID).subscribe(result => {
+  result.forEach(e => {
+    if(e.vendor_Insurance_Type_ID == 4) {
+      this.VendorInsurance = e
+      let sFilePath = e.confirmation_Doc
+      this.getFileDetails(sFilePath,4)
+    }
+  })
+
 })
 }
 

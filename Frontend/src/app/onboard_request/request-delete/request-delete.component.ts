@@ -39,9 +39,9 @@ export class RequestDeleteComponent {
     user_Id: 1,
     vendor_ID: 0,
     status_ID:0,
-    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0,sole_Supplier_Provided:false },
+    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0,sole_Supplier_Provided:false,preferedVendor:false },
     onboard_Status: this.OnboardStatus,
-    users: { user_Id: 0, role_ID: 0, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', role: this.rl },
+    users: { user_Id: 0, role_ID: 0, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', no_Notifications:0, role: this.rl },
     quotes: '',
   }
 
@@ -77,6 +77,7 @@ OnboardRequestDetails: any[] = [];
 //add loop
   onConfirm(RequestId: number): void {
    // console.log(this.OnboardRequestDetails.length)
+   if(this.OnboardRequestDetails.length > 2) {
     for(let i = 0; i < this.OnboardRequestDetails.length; i++) {
       let VendorID = this.OnboardRequestDetails[i].vendor.vendor_ID
       let sFile = this.OnboardRequestDetails[i].quotes;
@@ -86,18 +87,65 @@ OnboardRequestDetails: any[] = [];
             sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
             let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
             let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-        this.dataService.DeleteFile(RequestNo,filename).subscribe!
+        this.dataService.DeleteFile(RequestNo,filename).subscribe()
         this.dataService.DeleteRequest(RequestId,VendorID).subscribe({
           next: (response) => {
+            if(this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
+              this.dataService.DeleteVendor(VendorID).subscribe()
+            }
             this.showConfirmationDialog = false;
             this.showSuccessDialog = true;
             setTimeout(() => {
               this.dialogRef.close();
-              location.reload();
             }, 1750);
           }
         });
+      }
+   }
+   else {
+    let VendorID = this.OnboardRequestDetails[0].vendor.vendor_ID
+    if(this.OnboardRequestDetails[0].quotes != "None") {
+      let sFile = this.OnboardRequestDetails[0].quotes;
+      let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
+      console.log(RequestNo)
+      let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+      console.log(filename)
+      this.dataService.DeleteFile(RequestNo,filename).subscribe()
+      this.dataService.DeleteSoleSupplier(VendorID).subscribe(response => {
+        this.dataService.DeleteRequest(RequestId,VendorID).subscribe({
+          next: (response) => {
+            if(this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
+              this.dataService.DeleteVendor(VendorID).subscribe()
+            }
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.dialogRef.close();
+            }, 1750);
+          }
+        });
+      })
+      
     }
+    else {
+      this.dataService.DeleteSoleSupplier(VendorID).subscribe(response => {
+        this.dataService.DeleteRequest(RequestId,VendorID).subscribe({
+          next: (response) => {
+            if(this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
+              this.dataService.DeleteVendor(VendorID).subscribe()
+            }
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.dialogRef.close();
+            }, 1750);
+          }
+        });
+      })
+    }
+    
+   }
+   
    
   }
 

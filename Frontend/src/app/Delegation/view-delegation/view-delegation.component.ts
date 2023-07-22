@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,15 +11,34 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../../notificationdisplay/notificationdisplay.component';
 import { OnboardRequest } from '../../Shared/OnboardRequest';
+import { Delegation_Of_Authority } from '../../Shared/DelegationOfAuthority';
+import { DelegationStatus } from '../../Shared/DelegationStatus';
+import { MatPaginator } from '@angular/material/paginator';
+import { HttpClient } from '@angular/common/http';
+import { DeleteDelegationComponent } from '../delete-delegation/delete-delegation.component';
+import { MatSort } from '@angular/material/sort';
+import { DatePipe } from '@angular/common';
+import { RejectDelegationComponent } from '../reject-delegation/reject-delegation.component';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-view-delegation',
   templateUrl: './view-delegation.component.html',
-  styleUrls: ['./view-delegation.component.css']
+  styleUrls: ['./view-delegation.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewDelegationComponent implements OnInit{
-  displayedColumns: string[] = ['id', 'username', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete'];
-  dataSource = new MatTableDataSource<Employee>();
+
+  
+  displayedColumnsAdmin: string[] = ['id', 'delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete', 'revoke'];
+  dataSource = new MatTableDataSource<Delegation_Of_Authority>;
 
   userDelete: any
   rl: Role = {
@@ -28,120 +47,157 @@ export class ViewDelegationComponent implements OnInit{
     description: '',
   }
 
-  UserToDelete: User = {
-    user_Id: 0,
-    role_ID: 0,
-    username: '',
-    password: '',
-    profile_Picture: './assets/Images/Default_Profile.jpg',
-    role: this.rl
-  }
-
   RoleToUse: string = "";
 
   iRole: string;
   rAdmin: string;
+  rMD: string;
 
-  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer) { }
+  FileDetails: any[] = [];
+  
 
-  DeleteEmployees: Employee[] = [];
-  Employees: Employee[] = [];
-  SearchedEmployee: Employee[] = [];
+
+  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer, private http: HttpClient, private datePipe: DatePipe) { }
+
+  DeleteDelegationss: Delegation_Of_Authority[] = [];
+  Delegations: Delegation_Of_Authority[] = [];
+  SearchedDelegation: Delegation_Of_Authority[] = [];
   Users: User[] = [];
-  OnboardRequests: OnboardRequest[] = [];
+  /*OnboardRequests: OnboardRequest[] = [];*/
   searchWord: string = "";
 
   ngOnInit() {
-    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin") {
-      this.rAdmin = "true";
-    }
+    this.dataService.CheckDelegation().subscribe({
+      next: (r) => {
+        if (r) {
+          this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
-    this.RoleToUse = this.dataService.decodeUserRole(sessionStorage.getItem("token"))
-    console.log(this.RoleToUse)
-    console.log(this.RoleToUse === "Admin")
+          if (this.iRole == "Admin") {
+            this.rAdmin = "true";
+          }
 
-    //this.GetEmployees();
+          this.RoleToUse = this.dataService.decodeUserRole(sessionStorage.getItem("token"))
+          //console.log(this.RoleToUse)
+          //console.log(this.RoleToUse === "Admin")
+
+          this.GetDelegations();
+        }
+      }
+    })
+
+    
+
+    
   }
+
+  
 
   search() {
     const searchTerm = this.searchWord.toLocaleLowerCase();
     
+    if (this.iRole == "Admin") {
+      if (searchTerm) {
+        this.dataSource = new MatTableDataSource(this.Delegations.filter(r => r.delegatingParty.toLocaleLowerCase().includes(searchTerm)))
+      }
+      else if (searchTerm == "") {
+        this.dataSource = new MatTableDataSource([...this.Delegations])
+      }
+    } 
 
+    
+  }
 
-    if (searchTerm) {
-      this.SearchedEmployee = this.Employees.filter(r => r.employeeName.toLocaleLowerCase().includes(searchTerm))
-    }
-    else if (searchTerm == "") {
-      this.SearchedEmployee = [...this.Employees]
+  GetDelegations() {
+
+    if (this.iRole == "Admin") {
+
+      this.dataService.GetDelegations().subscribe(result => {
+        if (result) {
+          hideloader();
+        }
+
+        this.Delegations = result;
+        this.dataSource = new MatTableDataSource(result);
+
+        for (let i = 0; i < this.Delegations.length; i++) {
+          this.FileDetails.push({ FileURL: "", FileName: "" })
+          let sFile = this.Delegations[i].delegation_Document;
+
+          if (sFile != "None") {
+            let DelegateName = sFile.substring(0, sFile.indexOf("\\"))
+            let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+
+            this.FileDetails[i].FileURL = `https://localhost:7186/api/Delegation/GetDelegationFiles/${DelegateName}/${filename}`
+            this.FileDetails[i].FileName = filename
+          }
+          else {
+            this.FileDetails[i].FileURL = ""
+            this.FileDetails[i].FileName = sFile;
+          }
+        }
+        /*this.SearchedEmployee = this.Employees;*/
+      })
+    } 
+
+    
+    function hideloader() {
+      document.getElementById('loading')
+        .style.display = 'none';
+      document.getElementById('table').style.visibility = "visible";
     }
   }
 
-  //GetEmployees() {
-  //  this.dataService.GetEmployees().subscribe(result => {
-  //    if (result) {
-  //      hideloader();
-  //    }
-  //    this.Employees = result;
-  //    this.SearchedEmployee = this.Employees;
-  //    //console.log(result)
-  //  });
-  //  function hideloader() {
-  //    document.getElementById('loading')
-  //      .style.display = 'none';
-  //    document.getElementById('table').style.visibility = "visible";
-  //  }
-  //}
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+
+  
+
+  openPDFInNewTab(i: number): void {
+    const url = this.FileDetails[i].FileURL;
+    this.http.get(url, { responseType: 'blob' }).subscribe(response => {
+      const fileURL = URL.createObjectURL(response);
+      window.open(fileURL, '_blank');
+      URL.revokeObjectURL(fileURL);
+    });
+    // window.open(url, '_blank');
+  }
+
+  DeleteDelegation(ID: Number) {
+    const confirm = this.dialog.open(DeleteDelegationComponent, {
+      disableClose: true,
+      data: { ID }
+    });
+
+    this.dialog.afterAllClosed.subscribe({
+      next: (response) => {
+        this.ngOnInit();
+      }
+    })
+  }
+
+  RevokeAccess(ID: number) {
+    const select = this.dialog.open(RejectDelegationComponent, {
+      disableClose: true,
+      data: { ID }
+    })
+
+    this.dialog.afterAllClosed.subscribe({
+      next: (response) => {
+        this.ngOnInit();
+      }
+    })
+  }
 
 
 
-  //DeleteEmployee(id: Number) {
-  //  this.dataService.GetAllOnboardRequest().subscribe({
-  //    next: (result) => {
-  //      let UserList: any[] = result
-  //      UserList.forEach((element) => {
-  //        this.OnboardRequests.push(element)
-  //      });
-  //      var Count: number = 0;
-  //      this.OnboardRequests.forEach(element => {
-  //        if (element.user_Id == id) {
-  //          Count = Count + 1;
-  //        }
-  //      });
-  //      if (Count == 0) {
-  //        const confirm = this.dialog.open(DeleteEmployeeComponent, {
-  //          disableClose: true,
-  //          data: { id }
-  //        });
-  //      }
-  //      else {
 
-  //        this.dataService.GetUser(id).subscribe(UserRecieved => {
-  //          this.userDelete = UserRecieved
-  //          this.UserToDelete.role_ID = this.userDelete.role_ID;
-  //          this.UserToDelete.username = this.userDelete.username;
-  //          this.UserToDelete.password = this.userDelete.password;
-  //          this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
-  //          this.UserToDelete.user_Id = this.userDelete.user_Id;
-  //          this.UserToDelete.role = this.userDelete.role;
-  //        });
+  openDialog() {
+    const dialogRef = this.dialog.open(RestoreComponent);
 
-  //        var action = "ERROR";
-  //        var title = "ERROR: Category In Use";
-  //        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A USER!</strong><br> Please remove the user from associated tables to continue with deletion.");
-
-  //        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-  //          disableClose: true,
-  //          data: { action, title, message }
-  //        });
-
-  //        const duration = 4000;
-  //        setTimeout(() => {
-  //          dialogRef.close();
-  //        }, duration);
-  //      }
-  //    }
-  //  })
-  //}
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 }

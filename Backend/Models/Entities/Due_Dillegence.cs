@@ -8,9 +8,9 @@ namespace ProcionAPI.Models.Entities
         [Key]
         public int Due_Diligence_ID { get; set; }
         [Required]
-        public int Vendor_Detail_ID { get; set; }
-        [ForeignKey("Vendor_Detail_ID")]
-        public Vendor_Detail Vendor_Detail { get; set; }
+        public int Vendor_ID { get; set; }
+        [ForeignKey("Vendor_ID")]
+        public Vendor Vendor { get; set; }
         public bool Due_Diligence_Doc { get; set; }
         public bool Mutual_Nda_Signed { get; set; }
         public bool Basic_Company_Info_Provided { get; set; }

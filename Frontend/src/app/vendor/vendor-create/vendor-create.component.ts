@@ -20,6 +20,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 import { DatePipe } from '@angular/common';
+import { Due_Dillegence } from 'src/app/Shared/DueDillegence';
+import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 @Component({
   selector: 'app-vendor-create',
   templateUrl: './vendor-create.component.html',
@@ -50,6 +52,7 @@ export class VendorCreateComponent implements OnInit{
     email: '',
     number_Of_Times_Used: 0,
     sole_Supplier_Provided: false,
+    preferedVendor:false,
   }
   VendorDetail: VendorDetails = {
     vendor_Detail_ID:0,
@@ -125,12 +128,20 @@ export class VendorCreateComponent implements OnInit{
     signed_Agreement_Doc:"",
   }
 
+  VendorInsuranceType:Vendor_Insurance_Type = {
+    vendor_Insurance_Type_ID : 4,
+    name: "",
+    description: "",
+  }
+
   VendorInsurance: Vendor_Insurance = {
     insurance_ID: 0,
-    vendor_Detail_ID: 0,
-    vendor_Detail: this.VendorDetail,
+    vendor_ID: 0,
+    vendor : this.Vendor,
+    vendor_Insurance_Type_ID:0,
+    vendor_Insurance_Type: this.VendorInsuranceType,
     confirmation_Doc:"",
-  }
+  } 
 
   VendorPaymentTerms: Vendor_Payment_Terms = {
     payment_Terms_ID: 0,
@@ -206,10 +217,12 @@ export class VendorCreateComponent implements OnInit{
   PaymentTermsChecker:any;
   LicenseOrAccreditationChecker:any;
 
+  DueDilligenceDetail:Due_Dillegence;
+
   matcher = new MyErrorStateMatcher()
 
   constructor(private _formBuilder: FormBuilder,private VendorService: DataService,private route: ActivatedRoute ,private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) {}
-
+  VendorID;
   fileName:any[] = ['','','','','','','']
   
      FileStorage(id:number, event: any) {
@@ -224,8 +237,8 @@ export class VendorCreateComponent implements OnInit{
     this.route.paramMap.subscribe({
       next: (paramater) => {
         
-        let VendorID = paramater.get("VendorID");
-        this.VendorService.GetVendorByID(Number(VendorID)).subscribe(result => {
+       this.VendorID = paramater.get("VendorID");
+        this.VendorService.GetVendorByID(Number(this.VendorID)).subscribe(result => {
           this.Vendor = result
           this.VendorDetail.vendor_ID == this.Vendor.vendor_ID
           this.CompanyContactInfoFormGroup.get('CompanyName')?.setValue(this.Vendor.name);
@@ -241,6 +254,36 @@ export class VendorCreateComponent implements OnInit{
             this.VendorDetail.soleSupplierProvided = true;
           }
 
+          this.VendorService.GetDueDiligence(this.Vendor.vendor_ID).subscribe(response => {
+            this.DueDilligenceDetail = response
+            this.VendorDetail.beeRegistered = this.DueDilligenceDetail.b_BBEE_Certificate_Provided;
+            this.VendorDetail.pOPIA_Provided = this.DueDilligenceDetail.popI_Present;
+            this.VendorDetail.dueDIllegenceRequired = true;
+            this.VendorDetail.income_Tax_Num_Provided = this.DueDilligenceDetail.income_Tax_Number_Provided;
+            //construction
+            this.VendorDetail.vatRegistered = this.DueDilligenceDetail.vat_Reg_Certificate_Provided;
+            if(this.VendorDetail.vatRegistered == true) {
+              this.CompanyOverviewFormGroup.get("VatRegistrationCheck")?.setValue(true);
+              this.VatRegistrationChange();
+            }
+
+            this.VendorDetail.registration_Provided = this.DueDilligenceDetail.company_Reg_Doc_Provided;
+            //construction
+            this.VendorDetail.license_Num_Provided = this.DueDilligenceDetail.licenses_Required;
+            if(this.VendorDetail.license_Num_Provided == true) {
+              this.CompanyOverviewFormGroup.get("LicenseOrAccreditationCheck")?.setValue(true);
+              this.LicenseOrAccreditationChange();
+            }
+            //construction
+            this.VendorDetail.insurance_Provided = this.DueDilligenceDetail.general_Liability_Insurance_Present;
+            if(this.VendorDetail.insurance_Provided == true) {
+             this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.setValue(true);
+             this.InsuranceCoverChecker = this.VendorDetail.insurance_Provided
+            this.getInsuranceDetails(Number(this.VendorID));
+            }
+
+
+          })
           
 
         })
@@ -574,16 +617,36 @@ export class VendorCreateComponent implements OnInit{
             })
             
           }
-          if(this.InsuranceCoverChecker == true) {
-            FolderCategory = "InsuranceCover";
+          if(this.InsuranceCoverChecker == true && this.VendorDetail.insurance_Provided == false) {
+            FolderCategory = "Insurance";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let file:File = this.fileName[4]
-            this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
-              let Path: any = response
-              this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
-              this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
-              this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
-            })
+            if(this.FileDetails == undefined) {
+              this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
+                let Path: any = response
+                this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+                this.VendorInsurance.vendor_Insurance_Type_ID = 4;
+                this.VendorInsurance.vendor_ID =  Number(this.VendorID)
+               // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
+                this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
+              })
+            }
+            else {
+              FolderCategory = "Insurance";
+              VendorNo = "Vendor" + Number(this.VendorID)
+
+              this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(result => {
+                this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
+                  let Path: any = response
+                  this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+                  this.VendorInsurance.vendor_Insurance_Type_ID = 4;
+                  this.VendorInsurance.vendor_ID =  Number(this.VendorID)
+                 // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
+                  this.VendorService.UpdateInsurance(Number(this.VendorID),this.VendorInsurance).subscribe()
+                })
+              })
+            }
+            
             
           }
           if(this.PaymentTermsChecker == true) {
@@ -633,7 +696,8 @@ export class VendorCreateComponent implements OnInit{
         
                  const duration = 1750;
                  setTimeout(() => {
-                  this.router.navigate(['/vendor-view'], {queryParams: {refresh: true}});
+                  this.VendorService.ChangeVendorStatus(3,this.Vendor.vendor_ID).subscribe()
+                  this.router.navigate(['/vendor-view']);
                   dialogRef.close();
                  }, duration);
               }
@@ -652,7 +716,35 @@ export class VendorCreateComponent implements OnInit{
 
 
   }//create
-   
+
+  FileDetails:any[] = []
+
+  getInsuranceDetails(ID:number) {
+    this.FileDetails.push({FileURL:"",FileName:""})
+    this.VendorService.GetInsuranceByID(ID).subscribe(response => {
+      response.forEach(e => { 
+        if(e.vendor_Insurance_Type_ID == 4) {
+          let sFile = e.confirmation_Doc;
+          let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
+          sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+          let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
+          let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+          this.FileDetails[0].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
+          this.FileDetails[0].FileName = filename
+        }
+      })
+     
+    })
+  
+}
+
+
+
+  CancelInProgress(){
+    this.VendorService.ChangeVendorStatus(4,this.Vendor.vendor_ID).subscribe(result => {
+      this.router.navigate([`/vendor-view`]);
+    })
+  }
 }
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {

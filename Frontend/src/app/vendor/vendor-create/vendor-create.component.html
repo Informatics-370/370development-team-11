@@ -118,7 +118,7 @@
             </tr>
         </table>
         <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
-            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/vendor-view"> Cancel</button>
+            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" (click)="CancelInProgress()"> Cancel</button>
             <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
            </div>
         <!-- <div >
@@ -206,13 +206,20 @@
                 </td>
             </tr>
             <br>
-            <tr>
+            <tr style="margin-bottom: 15px;">
                 <td><label>Insurance Cover Document:</label></td>
                 <td>
                     <mat-checkbox formControlName="InsuranceCoverCheck" (click)="InsuranceCoverChange()">Add Insurance Cover Document?</mat-checkbox> <br>  
                     <input  id="file" formControlName="InsuranceCoverDoc" type="file" class="file-upload" *ngIf="InsuranceCoverChecker === true;" (change)="FileStorage(4,$event)">            
                 </td>
             </tr>
+            <tr *ngIf="InsuranceCoverChecker == true && FileDetails[0] != undefined">
+                <td><label for="file" style="margin-right: 1%;" >Current Insurance Cover Document: </label></td> 
+                <td >  
+                    <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}">{{FileDetails[0].FileName}}</a>    
+                </td>
+              </tr>
+            <tr>
             <br>
             <tr>
                 <td> <label>Payment Terms:</label></td>
@@ -250,7 +257,7 @@
         <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
             <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
             <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
-           </div>
+        </div>
         <!-- <div >
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>

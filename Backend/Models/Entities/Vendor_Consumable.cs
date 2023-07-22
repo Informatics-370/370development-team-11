@@ -14,12 +14,11 @@ namespace ProcionAPI.Models.Entities
 
         [Key]
         [Required]
-        public int Vendor_Detail_ID { get; set; }
+        public int Vendor_ID { get; set; }
 
         [ForeignKey("Consumable_ID")]
-        public Consumable Consumable_IDs { get; set; }
-        [ForeignKey("Vendor_Detail_ID")]
-        public Vendor_Detail Vendor_Detail { get; set; }
-        public string Quotes { get; set; }
+        public Consumable Consumables { get; set; }
+        [ForeignKey("Vendor_ID")]
+        public Vendor Vendor { get; set; }
     }
 }

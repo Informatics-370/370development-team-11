@@ -43,6 +43,7 @@ export class RequestUpdateComponent {
     email: '',
     number_Of_Times_Used: 0,
     sole_Supplier_Provided:false,
+    preferedVendor:false,
   }
 
   rl: Role = {
@@ -57,6 +58,7 @@ export class RequestUpdateComponent {
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
+    no_Notifications: 0,
     role: this.rl
   }
 
@@ -71,9 +73,9 @@ export class RequestUpdateComponent {
     user_Id: 1,
     vendor_ID: 0,
     status_ID:1,
-    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0,sole_Supplier_Provided:false },
+    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0,sole_Supplier_Provided:false,preferedVendor:false},
     onboard_Status: this.OnboardStatus,
-    users: { user_Id: 0, role_ID: 0, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', role: this.rl },
+    users: { user_Id: 0, role_ID: 0, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', no_Notifications:0, role: this.rl },
     quotes: '',
   }
 
@@ -109,6 +111,7 @@ export class RequestUpdateComponent {
       CompanyName: ['', [Validators.required, Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
       CompanyEmail: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
       CompanyQuote: ['',[Validators.required]],
+      PrefferedVendor: [false],
     });
     this.rows.push(row);
     this.files.push('');
@@ -135,6 +138,7 @@ export class RequestUpdateComponent {
       CompanyName: ['',[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
       CompanyEmail: ['',[Validators.required,Validators.maxLength(32), Validators.email]],
       CompanyQuote: '',
+      PrefferedVendor: [false],
     });
     this.rows.push(row);
     this.fileToUpload = this.files[0]
@@ -155,6 +159,7 @@ export class RequestUpdateComponent {
               CompanyName: ['',[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
               CompanyEmail: ['',[Validators.required,Validators.maxLength(32), Validators.email]],
               CompanyQuote: '',
+              PrefferedVendor: [false],
             });
             this.rows.push(row);
             this.files.push('');
@@ -168,6 +173,7 @@ export class RequestUpdateComponent {
             this.FileDetails.push({FileURL:"",FileName:""})
             this.rows.controls[i].get('CompanyName')?.setValue(this.onboardRequest[i].vendor.name);
             this.rows.controls[i].get('CompanyEmail')?.setValue(this.onboardRequest[i].vendor.email);
+            this.rows.controls[i].get('PrefferedVendor')?.setValue(this.onboardRequest[i].vendor.preferedVendor);
             let sFile = this.onboardRequest[i].quotes;
             let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
             let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
@@ -313,6 +319,7 @@ export class RequestUpdateComponent {
           this.Vendor = this.onboardRequest[i].vendor
           this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
           this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
+          this.Vendor.preferedVendor = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].PreferedVendor;
           this.Vendor.vendor_Status_ID = 1;
           this.Vendor.number_Of_Times_Used = 0;
           this.Onboard_Request.vendor = this.Vendor
@@ -332,6 +339,7 @@ export class RequestUpdateComponent {
               const duration = 1750;
               setTimeout(() => {
                 this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+                
                 dialogRef.close();
               }, duration);
             }}
@@ -346,6 +354,7 @@ export class RequestUpdateComponent {
           this.Vendor = this.onboardRequest[i].vendor
           this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
           this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
+          this.Vendor.preferedVendor = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].PreferedVendor;
           this.Vendor.vendor_Status_ID = 1;
           this.Vendor.number_Of_Times_Used = 0;
           this.Onboard_Request.vendor = this.Vendor;
@@ -365,6 +374,7 @@ export class RequestUpdateComponent {
               const duration = 1750;
               setTimeout(() => {
                 this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+                
                 dialogRef.close();
               }, duration);
             }});//dataservice
@@ -398,7 +408,8 @@ export class RequestUpdateComponent {
     
               const duration = 1750;
               setTimeout(() => {
-                this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+                this.router.navigate(['/request-view']);
+                
                 dialogRef.close();
               }, duration);
             }});//dataservice
@@ -430,7 +441,7 @@ export class RequestUpdateComponent {
   
             const duration = 1750;
             setTimeout(() => {
-              this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+              this.router.navigate(['/request-view']);
               dialogRef.close();
             }, duration);
           }})
@@ -444,32 +455,39 @@ export class RequestUpdateComponent {
     //this.onboardRequest[0].users.role = this.rl;
     this.onboardRequest[0].vendor.vendor_Status = this.VStatus
     this.onboardRequest[0].user_Id = 1
-    console.log(this.onboardRequest)
-    console.log(this.Onboard_Request)
+   // console.log(this.onboardRequest)
+    //console.log(this.files[0])
     this.fileToUpload = this.files[0]
     this.Vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value 
     this.Vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value 
     this.Vendor.vendor_Status_ID = 1;
     this.Vendor.number_Of_Times_Used = 0;
-    this.Onboard_Request.vendor = this.Vendor;
+   // this.Onboard_Request.vendor = this.Vendor;
+    this.Onboard_Request.vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value ;
+    this.Onboard_Request.vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value;
     this.Onboard_Request.vendor.sole_Supplier_Provided = true;
     this.Onboard_Request.onboard_Status = this.OnboardStatus;
+    
     this.SoleSupply.reason = this.SoleSupplierFormGroup.get("Reason")?.value
     this.Onboard_Request = this.onboardRequest[0]
     if (this.files[0] != '') {
-      let sFile = this.onboardRequest[0].quotes;
-      let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-      let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-      this.dataService.DeleteFile(RequestNo,filename).subscribe!
+      if(this.Onboard_Request.quotes != "None") {
+        let sFile = this.onboardRequest[0].quotes;
+        let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
+        let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+        this.dataService.DeleteFile(RequestNo,filename).subscribe();
 
-      RequestNo = "Request" + this.Onboard_Request.onboard_Request_Id 
+      }
+   
+  
+      let RequestNo = "Request" + this.Onboard_Request.onboard_Request_Id 
       this.dataService.OnboardFileAdd(RequestNo,this.fileToUpload).subscribe(response => {
         let Path: any = response
         console.log(Path)
         this.sPath = Path.pathSaved.toString()
         this.Onboard_Request.quotes = this.sPath
         this.Onboard_Request.vendor.sole_Supplier_Provided = true;
-        this.dataService.UpdateOnboardRequest(response.onboard_Request_Id,this.Onboard_Request).subscribe(
+        this.dataService.UpdateOnboardRequest(this.Onboard_Request.onboard_Request_Id ,this.Onboard_Request).subscribe(
           (RequestAdded) => {
             this.SoleSupply.vendor_ID = RequestAdded.vendor_ID
             this.dataService.UpdateSoleSupplier(RequestAdded.vendor_ID,this.SoleSupply).subscribe({
@@ -486,24 +504,28 @@ export class RequestUpdateComponent {
       
                 const duration = 1750;
                 setTimeout(() => {
-                  this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+                  this.router.navigate(['/request-view']);
                   dialogRef.close();
                 }, duration);
               }});
           }//response
         );//dataservice
-//this.onboardRequest[0].vendor_ID, this.onboardRequest[0].vendor.vendor_ID,
       });//post
     }//if
     else {
-      
+     this.Onboard_Request.vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value ;
+     this.Onboard_Request.vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value;
+      console.log(this.Onboard_Request)
      // this.SoleSupply.vendor = this.Onboard_Request.vendor  
       console.log(this.SoleSupply)  
       this.Onboard_Request.quotes = this.onboardRequest[0].quotes 
         console.log(this.Onboard_Request.vendor_ID)
+        console.log(this.Onboard_Request)
         this.dataService.UpdateOnboardRequest(this.onboardRequest[0].onboard_Request_Id, this.Onboard_Request).subscribe(
           (RequestAdded) => {
+            console.log(RequestAdded)
             this.SoleSupply.vendor_ID = this.Onboard_Request.vendor_ID
+            this.SoleSupply.vendor = RequestAdded.vendor
             this.dataService.UpdateSoleSupplier(RequestAdded.vendor_ID,this.SoleSupply).subscribe({
               next: (response) => {
                 console.log(response);
@@ -518,7 +540,8 @@ export class RequestUpdateComponent {
       
                 const duration = 1750;
                 setTimeout(() => {
-                  this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+                  this.router.navigate(['/request-view']);
+                  
                   dialogRef.close();
                 }, duration);
               }});
@@ -529,6 +552,24 @@ export class RequestUpdateComponent {
   
 
   }//function
+
+
+PreferredChecked = false;
+CheckPrev:any;
+onPreferredChecked(i:number) {
+  
+  if(this.CheckPrev != undefined) {
+    this.rows.controls[this.CheckPrev].get('PrefferedVendor')?.setValue(false);
+  }
+
+  this.CheckPrev = i
+  if(this.PreferredChecked == false) {
+    this.PreferredChecked = true;
+    this.rows.controls[i].get('PrefferedVendor')?.setValue(this.PreferredChecked);
+  }
+
+}
+
 
 }
 

@@ -9,9 +9,9 @@ namespace ProcionAPI.Models.Entities
         public int Proof_Of_Payment_ID { get; set; }
 
         [Required]
-        public int Procurement_Request_ID { get; set; }
-        [ForeignKey("Procurement_Request_ID")]
-        public Procurement_Request Procurement_Request { get; set; }
+        public int Procurement_Details_ID { get; set; }
+        [ForeignKey("Procurement_Details_ID")]
+        public Procurement_Details Procurement_Details { get; set; }
         public string Proof_Of_Payment_Doc { get; set; }
     }
 }

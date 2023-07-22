@@ -4,7 +4,7 @@
 <div mat-dialog-content *ngIf="showConfirmationDialog == true">
     <h1>Please choose a available vendor:</h1>
     
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" style="width: 400px;">
         <mat-label>Select</mat-label>
         <mat-select formControlName="VendorsApproved" [errorStateMatcher]="matcher">
             <mat-option *ngFor="let Ven of VendorDetails" [value]="Ven.vendor_ID">

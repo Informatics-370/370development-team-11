@@ -64,6 +64,7 @@ export class EditEmployeeComponent implements OnInit {
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
+    no_Notifications: 0,
     role: this.rl
   }
 

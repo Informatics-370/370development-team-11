@@ -13,11 +13,19 @@ import { RequestDeleteComponent } from '../request-delete/request-delete.compone
 import { MatDialog } from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-request-view',
   templateUrl: './request-view.component.html',
   styleUrls: ['./request-view.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -39,44 +47,28 @@ export class RequestViewComponent implements OnInit {
   FileDetails:any[] = [];
   vendorIds:any[] = [];
   
+ 
+
   private refreshSubscription: Subscription;
   constructor(private RequestService: DataService,private http: HttpClient, private route: ActivatedRoute,private router: Router, private dialog: MatDialog) { }
 
-  ngOnInit(): void {
-    this.DisplayAllRequests();
-    //this.dataSource = new MatTableDataSource(this.RequestVendors);
-   // console.log(this.dataSource)
-    this.refreshSubscription = this.route.queryParams.subscribe((params: Params) => {
-      // Check if the 'refresh' parameter exists and is truthy
-      if (params.refresh) {
-        // Remove the 'refresh' query parameter
-        this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: { refresh: null },
-          queryParamsHandling: 'merge'
-        }).then(() => {
-          // Reload the page after the navigation has completed
-          window.location.reload();
-        });
-      }
-    });
+  ngOnInit() {
     
-  }
 
-  ngOnDestroy() {
-    // Unsubscribe from the query parameters subscription to prevent memory leaks
-    if (this.refreshSubscription) {
-      this.refreshSubscription.unsubscribe();
-    }
-  }
+    //console.log()
 
-  DisplayAllRequests() {
+    this.OnboardRequest = []
+    this.vendor = []
+    this.FileDetails = []
+
     this.RequestService.GetAllOnboardRequest().subscribe(result => {let RequestList:any[] = result
       RequestList.forEach((element) => this.OnboardRequest.push(element));
+      console.log(result)
       RequestList.forEach((element) => this.vendor.push(element.vendors));
       this.RequestVendors =  new MatTableDataSource(this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
+      this.RequestVendors.paginator = this.paginator;
       this.ReqVenLen = this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)
-      console.log(RequestList)
+      console.log(this.RequestVendors)
       
       for(let i = 0; i < RequestList.length; i++) {
         this.FileDetails.push({FileURL:"",FileName:""})
@@ -103,13 +95,13 @@ export class RequestViewComponent implements OnInit {
      
         
       this.vendorIds = [...new Set(this.OnboardRequest.map(req => req.vendor_ID))]
-      console.log(this.OnboardRequest)
-      console.log(RequestList)
       })
+   
   }
 
   getVendorByVendorId(vendorId: number) {
     // Filter the vendor array based on the vendor ID
+    //console.log(this.vendor)
     return this.vendor.filter(ven => ven.vendor_ID === vendorId);
   }
 
@@ -129,6 +121,25 @@ export class RequestViewComponent implements OnInit {
     
   }
 
+  getRequestStatus(i:number) {
+    let result = "1"
+    for (let a = 0;a < this.OnboardRequest.length;a++) {
+        if(this.OnboardRequest[a].onboard_Request_Id == i) {
+          if(this.OnboardRequest[a].onboard_Request_status_ID == 3) {
+            result = "3"
+            return result
+          }
+          else if(this.OnboardRequest[a].onboard_Request_status_ID == 2 && result != ""){
+            result = "2"
+          }
+          else if(this.OnboardRequest[a].onboard_Request_status_ID == 5) {
+            result = "5"
+            return result
+          }
+        }
+    }
+      return result
+  }
 
   applyFilter(event: Event) {
 
@@ -157,9 +168,6 @@ export class RequestViewComponent implements OnInit {
       let test = ""
       return test
     } 
-    
- 
-  
   }
 
   
@@ -178,11 +186,21 @@ export class RequestViewComponent implements OnInit {
   }
 
   DeleteRequest(ID: Number) {
+    
     const confirm = this.dialog.open(RequestDeleteComponent, {
       disableClose: true,
       data: { ID }
+      
     });
+    this.dialog.afterAllClosed.subscribe({
+      next: (response) => {
+        this.ngOnInit();
+      }
+    })
   }
+
+ 
+
 
   displayedColumns : string[] = ['ID','name','Status','action','delete'];
   //dataSource = this.OnboardRequest;

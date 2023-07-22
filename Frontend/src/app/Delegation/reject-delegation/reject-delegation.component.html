@@ -1,0 +1,25 @@
+<h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;"
+    *ngIf="showConfirmationDialog == true">
+  REVOKE TEMPORARY ACCESS
+</h1>
+
+<div mat-dialog-content *ngIf="showConfirmationDialog == true">
+  <p>
+    You are about to revoke temporary access from user <strong>{{Delegation.user.username}}</strong>.
+  </p>
+
+  <p>Are you sure you want to continue?</p>
+</div>
+<div mat-dialog-actions align="end" *ngIf="showConfirmationDialog == true">
+  <button mat-raised-button (click)="onConfirm(data.ID)" style="color: white; background-color: #94CC5B;">Yes</button>
+  <button mat-raised-button (click)="onCancel()" style="color: white; background-color: #244688;">Cancel</button>
+</div>
+
+<ng-container *ngIf="showSuccessDialog == true">
+  <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;">REVOKE SUCCESSFUL</h1>
+  <div mat-dialog-content>
+    <p>
+      Temporary Access has been successfully revoked from user <strong>{{Delegation.user.username}}</strong>.
+    </p>
+  </div>
+</ng-container>

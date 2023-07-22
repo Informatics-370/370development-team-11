@@ -20,6 +20,7 @@ namespace ProcionAPI.Models.Entities
         public string? Password { get; set; }
 
         public string? Profile_Picture { get; set; }
+        public int? No_Notifications { get; set; }
         //public ICollection<Delegation_Of_Authority>? Delegation_Of_Authority { get; set; }
 
         //public virtual ICollection<Employee> Employees { get; set; }

@@ -1,10 +1,21 @@
 ﻿using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using Org.BouncyCastle.Asn1.Cmp;
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Models.Repositories;
 using System.Data.SqlTypes;
 using System.Net.Mime;
+using ProcionAPI.Data;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Net.Http.Headers;
+using Hangfire;
+using System.Reflection;
+using System.CodeDom;
 
 namespace ProcionAPI.Controllers
 {
@@ -211,12 +222,12 @@ namespace ProcionAPI.Controllers
             }
         }
         [HttpGet]
-        [Route("GetInsuranceByID/{InsuranceID}")]
-        public async Task<IActionResult> GetInsuranceByID(int InsuranceID)
+        [Route("GetInsuranceByID/{VendorID}")]
+        public async Task<IActionResult> GetInsurancesByID(int VendorID)
         {
             try
             {
-                var result = await _VendorRepository.GetInsuranceByIDAsync(InsuranceID);
+                var result = await _VendorRepository.GetInsuranceByIDAsync(VendorID);
                 return Ok(result);
             }
             catch (Exception)
@@ -459,12 +470,12 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateInsurance/{InsuranceID}")]
-        public async Task<IActionResult> UpdateInsurance(int InsuranceID,Vendor_Insurance Insurance)
+        [Route("UpdateInsurance/{VendorID}")]
+        public async Task<IActionResult> UpdateInsurance(int VendorID, Vendor_Insurance Insurance)
         {
             try
             {
-                var result = await _VendorRepository.UpdateInsuranceAsync(InsuranceID,Insurance);
+                var result = await _VendorRepository.UpdateInsuranceAsync(VendorID, Insurance);
                 return Ok(result);
             }
             catch (Exception)
@@ -628,12 +639,12 @@ namespace ProcionAPI.Controllers
             }
         }
         [HttpDelete]
-        [Route("DeleteInsuranceByID/{InsuranceID}")]
-        public async Task<IActionResult> DeleteInsuranceByID(int InsuranceID)
+        [Route("DeleteInsuranceByID/{VendorID}/{InsuranceTypeID}")]
+        public async Task<IActionResult> DeleteInsuranceByID(int VendorID,int InsuranceTypeID)
         {
             try
             {
-                var result = await _VendorRepository.DeleteInsuranceByIDAsync(InsuranceID);
+                var result = await _VendorRepository.DeleteInsuranceByIDAsync(VendorID, InsuranceTypeID);
                 return Ok(result);
             }
             catch (Exception)
@@ -843,6 +854,300 @@ namespace ProcionAPI.Controllers
 
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
+        }
+
+        ///Approved vendor things
+        //Post
+        [HttpPost]
+        [Route("AddBEEDetails")]
+        public async Task<IActionResult> CreateBEEDetails(Vendor_BEE VenBee)
+        {
+            try
+            {
+                var result = await _VendorRepository.AddBEEDetailsAsync(VenBee);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPost]
+        [Route("AddDueDiligence")]
+        public async Task<IActionResult> CreateDueDiligence(Due_Dillegence VenDueDiligence)
+        {
+            try
+            {
+                var result = await _VendorRepository.AddDueDiligenceAsync(VenDueDiligence);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPost]
+        [Route("AddPOPI")]
+        public async Task<IActionResult> CreatePOPI(POPI VenPOPI)
+        {
+            try
+            {
+                var result = await _VendorRepository.AddPOPIAsync(VenPOPI);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+        //get
+        [HttpGet]
+        [Route("GetBEEDetails/{VendorID}")]
+        public async Task<IActionResult> GetBEEDetails(int VendorID)
+        {
+            try
+            {
+                var result = await _VendorRepository.GetBEEDetailsAsync(VendorID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetDueDiligence/{VendorID}")]
+        public async Task<IActionResult> GetDueDiligence(int VendorID)
+        {
+            try
+            {
+                var result = await _VendorRepository.GetDueDiligenceAsync(VendorID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetPOPI/{DueDiligenceID}")]
+        public async Task<IActionResult> GetPOPI(int DueDiligenceID)
+        {
+            try
+            {
+                var result = await _VendorRepository.GetPOPIAsync(DueDiligenceID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateBEEDetails/{VendorID}")]
+        public async Task<IActionResult> UpdateBEEDetails(int VendorID, Vendor_BEE VenBee)
+        {
+            try
+            {
+                var result = await _VendorRepository.UpdateBEEDetailsAsync(VendorID, VenBee);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateDueDiligence/{VendorID}")]
+        public async Task<IActionResult> UpdateDueDiligence(int VendorID, Due_Dillegence VenDueDiligence)
+        {
+            try
+            {
+                var result = await _VendorRepository.UpdateDueDiligenceAsync(VendorID, VenDueDiligence);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdatePOPI/{VendorID}")]
+        public async Task<IActionResult> UpdatePOPI(int DueDiligenceID, POPI VenPOPI)
+        {
+            try
+            {
+                var result = await _VendorRepository.UpdatePOPIAsync(DueDiligenceID, VenPOPI);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+        //delete 
+
+        [HttpDelete]
+        [Route("DeleteBEEDetails/{VenBeeID}")]
+        public async Task<IActionResult> DeleteBEEDetails(int VenBeeID)
+        {
+            try
+            {
+                var result = await _VendorRepository.DeleteBEEDetailsAsync(VenBeeID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpDelete]
+        [Route("DeleteDueDiligence/{DueDiligenceID}")]
+        public async Task<IActionResult> DeleteDueDiligence(int DueDiligenceID)
+        {
+            try
+            {
+                var result = await _VendorRepository.DeleteDueDiligenceAsync(DueDiligenceID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpDelete]
+        [Route("DeletePOPI/{POPIID}")]
+        public async Task<IActionResult> DeletePOPI(int POPIID)
+        {
+            try
+            {
+                var result = await _VendorRepository.DeletePOPIAsync(POPIID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        //status 
+
+
+        [HttpPut]
+        [Route("ChangeVendorStatus/{statusID}/{VendorID}")]
+        public async Task<IActionResult> ChangeVendorStatus(int statusID, int VendorID)
+        {
+            try
+            {
+                var result = await _VendorRepository.ChangeVendorStatusAsync(statusID, VendorID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("getAllOnboardRequest/{OnboardRequestID}")]
+        public async Task<IActionResult> getAllOnboardRequest(int OnboardRequestID)
+        {
+            try
+            {
+                var result = await _VendorRepository.getAllOnboardRequestAsync(OnboardRequestID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("ChangeOnboardStatus/{statusID}/{onboardRequestId}/{VenID}")]
+        public async Task<IActionResult> ChangeOnboardStatus(int statusID, int onboardRequestId,int VenID)
+        {
+            try
+            {
+                var result = await _VendorRepository.ChangeOnboardStatusAsync(statusID, onboardRequestId, VenID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+
+
+
+        [HttpGet]
+        [Route("DelayedJob")]
+        public string DelayedJob(int VendorID, DateTime date)
+        {
+            var selectedDate = new DateTimeOffset(date, TimeSpan.Zero);
+
+            BackgroundJob.Schedule(() => getBEE(VendorID, date, 1), selectedDate.AddYears(1).AddDays(-21));
+
+            BackgroundJob.Schedule(() => getBEE(VendorID, date, 2), selectedDate.AddYears(1).AddDays(-7));
+
+            BackgroundJob.Schedule(() => getBEE(VendorID, date, 3), selectedDate.AddYears(1));
+
+
+            return "Added new delayed jobs!";
+
+        }
+
+        [HttpPost]
+        [Route("getBEE")]
+        public async Task<IActionResult> getBEE(int VendorID, DateTime date, int NotifyWhenNumber)
+        {
+
+            var VenBee = await _VendorRepository.GetBEEDetailsAsync(VendorID);
+
+
+            if (NotifyWhenNumber == 1)
+            {
+
+                var Description = "3 Weeks before " + VenBee.Vendor.Name + " BEE expires!";
+                var result = await _VendorRepository.AddVendorBEENotificationAsync(date, VendorID, Description);
+            }
+            else if (NotifyWhenNumber == 2)
+            {
+                var Description = "1 Week before " + VenBee.Vendor.Name + " BEE expires!";
+                var result = await _VendorRepository.AddVendorBEENotificationAsync(date, VendorID, Description);
+            }
+            else if (NotifyWhenNumber == 3)
+            {
+                var Description = VenBee.Vendor.Name + " BEE expires has expired!";
+                var result = await _VendorRepository.AddVendorBEENotificationAsync(date, VendorID, Description);
+            }
+            return Ok();
+
         }
     }
 }

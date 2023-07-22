@@ -31,6 +31,10 @@ import { VendorUpdateComponent } from './vendor/vendor-update/vendor-update.comp
 import { VendorDeleteComponent } from './vendor/vendor-delete/vendor-delete.component';
 import { VendordetailsViewComponent } from './vendor/vendordetails-view/vendordetails-view.component';
 import { VendorCreateChoiceComponent } from './vendor/vendor-create-choice/vendor-create-choice.component'
+import { VendorApproveComponent } from './vendor/vendor-approve/vendor-approve.component';
+import { VendorUnofficialVendorlistComponent } from './vendor/vendor-unofficial-vendorlist/vendor-unofficial-vendorlist.component';
+import { VendorApprovedAddDetailsComponent } from './vendor/vendor-approved-add-details/vendor-approved-add-details.component';
+import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-approve-edit.component';
 
 import { CreateDepartmentComponent } from './create-department/create-department/create-department.component';
 import { DeleteDepartmentComponent } from './delete-department/delete-department/delete-department.component';
@@ -52,12 +56,25 @@ import { CreateBudgetLineComponent } from './create-budget-line/create-budget-li
 import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
 import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
 import { AuthService } from './DataService/AuthService';
-import { ForgotPassDialogComponent } from './forgot-pass-dialog/forgot-pass-dialog.component';
 import { UserProfileComponent } from './User/user-profile/user-profile.component';
 import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
+import { ViewHelpComponent } from './view-help/view-help/view-help.component';
+import { CreateHelpComponent } from './create-help/create-help/create-help.component';
+import { EditHelpComponent } from './edit-help/edit-help/edit-help.component';
+import { DeleteHelpComponent} from './delete-help/delete-help/delete-help.component';
+import { CreateDelegationComponent } from './Delegation/create-delegation/create-delegation.component';
+import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
 
+import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
+import { ViewPendingProcurementRequestComponent } from './view-pending-procurement-request/view-pending-procurement-request.component';
+import { UpdatePasswordComponent } from './User/update-password/update-password.component';
+import { CreateProcurementRequestComponent } from './create-procurement-request/create-procurement-request.component';
+import { PlaceProcurementRequestComponent } from './place-procurement-request/place-procurement-request.component';
+import { PlaceProcurementRequestCreateDetailsComponent } from './place-procurement-request-create-details/place-procurement-request-create-details.component';
+import { ViewProcurementRequestApprovalComponent } from './view-procurement-request-approval/view-procurement-request-approval.component';
+import { BackupComponent } from './Settings/backup/backup.component';
 
 const routes: Routes = [
   {
@@ -69,7 +86,7 @@ const routes: Routes = [
     component: HomePageComponent
   },
   {
-    
+
     path: "Profile", canActivate: [AuthService],
     component: UserProfileComponent
   },
@@ -153,16 +170,20 @@ const routes: Routes = [
     path: 'EditMandateLimit/:id', canActivate: [AuthService],
     component: EditMandateLimitComponent
   },
-  { path: 'request-view', canActivate: [AuthService], component: RequestViewComponent },
-  { path: 'request-create/:RequestNo', canActivate: [AuthService], component: RequestCreateComponent },
-  { path: 'request-update/:RequestNo', canActivate: [AuthService], component: RequestUpdateComponent },
-  { path: 'request-delete', canActivate: [AuthService], component: RequestDeleteComponent },
-  { path: 'vendor-view', canActivate: [AuthService], component: VendorViewComponent },
-  { path: 'vendor-create/:VendorID', canActivate: [AuthService], component: VendorCreateComponent },
-  { path: 'vendor-update/:VendorID', canActivate: [AuthService], component: VendorUpdateComponent },
-  { path: 'vendor-delete', canActivate: [AuthService], component: VendorDeleteComponent },
-  { path: 'vendororderdetails-view/:VendorID', canActivate: [AuthService], component: VendordetailsViewComponent },
-  { path: 'vendor-create-choice', canActivate: [AuthService], component: VendorCreateChoiceComponent },
+  { path: 'request-view', component: RequestViewComponent },
+  { path: 'request-create/:RequestNo', component: RequestCreateComponent },
+  { path: 'request-update/:RequestNo', component: RequestUpdateComponent },
+  { path: 'request-delete', component: RequestDeleteComponent },
+  { path: 'vendor-view', component: VendorViewComponent },
+  { path: 'vendor-create/:VendorID', component: VendorCreateComponent },
+  { path: 'vendor-update/:VendorID', component: VendorUpdateComponent },
+  { path: 'vendor-delete', component: VendorDeleteComponent },
+  { path: 'vendororderdetails-view/:VendorID', component: VendordetailsViewComponent },
+  { path: 'vendor-create-choice', component: VendorCreateChoiceComponent },
+  { path: 'vendor-approve/:RequestNo', component: VendorApproveComponent },
+  { path: 'vendor-unofficial-vendorlist', component: VendorUnofficialVendorlistComponent },
+  { path: 'vendor-approved-add-details/:RequestNo/:VendorID', component: VendorApprovedAddDetailsComponent },
+  { path: 'vendor-approve-edit/:VendorID', component: VendorApproveEditComponent },
   {
     path: 'ViewDepartment', canActivate: [AuthService],
     component: ViewDepartmentComponent
@@ -178,6 +199,22 @@ const routes: Routes = [
   {
     path: 'EditDepartment/:department_ID', canActivate: [AuthService],
     component: EditDepartmentComponent
+  },
+  {
+    path: 'ViewHelp' , canActivate: [AuthService],
+    component: ViewHelpComponent
+  },
+  {
+    path: 'CreateHelp' , canActivate: [AuthService],
+    component: CreateHelpComponent
+  },
+  {
+    path: 'DeleteHelp' , canActivate: [AuthService],
+    component: DeleteHelpComponent
+  },
+  {
+    path: 'EditHelp/:help_ID' , canActivate: [AuthService],
+    component: EditHelpComponent
   },
   {
     path: 'ViewBranch', canActivate: [AuthService],
@@ -232,17 +269,55 @@ const routes: Routes = [
     component: EditBudgetAllocationComponent
   },
   {
-    path: 'ForgotPass', canActivate: [AuthService],
-    component: ForgotPassDialogComponent
-  },
-  {
     path: 'NotificationHub', canActivate: [AuthService],
     component: ViewNotificationHubComponent
   },
   {
     path: 'Delegation', canActivate: [AuthService],
     component: ViewDelegationComponent
+  },
+  {
+    path: "AssignDelegation/:uid", canActivate: [AuthService],
+    component: CreateDelegationComponent
+  },
+  {
+    path: "EditDelegation/:did", canActivate: [AuthService],
+    component: EditDelegationComponent
+  },
+  {
+    path: 'ViewProcurementRequest', canActivate: [AuthService],
+    component: ViewProcurementRequestComponent
+  },
+  {
+    path: 'UpdatePassword', canActivate: [AuthService],
+    component: UpdatePasswordComponent
+  },
+  {
+    path: "ViewSettings" , canActivate: [AuthService],
+    component: BackupComponent
+  },
+  {
+    path: 'CreateProcurementRequest', canActivate: [AuthService],
+    component: CreateProcurementRequestComponent
+  },
+  {
+    path: 'ViewPendingProcurementRequest', canActivate: [AuthService],
+    component: ViewPendingProcurementRequestComponent
+  },
+  {
+    path: 'PlaceProcurementRequest', canActivate: [AuthService],
+    component: PlaceProcurementRequestComponent
+  },
+  {
+    path: 'PlaceProcurementRequestCreateDetails', canActivate: [AuthService],
+    component: PlaceProcurementRequestCreateDetailsComponent
+  },
+  {
+    path: 'ViewProcurementRequestApproval/:ProcurementRequestID', canActivate: [AuthService],
+    component: ViewProcurementRequestApprovalComponent
   }
+ 
+
 ];
 
 @NgModule({

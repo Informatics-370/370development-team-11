@@ -1,0 +1,100 @@
+::ng-deep mat-tab-header {
+    background-color: #244688;
+  }
+
+::ng-deep .mdc-tab-indicator__content--underline {
+        --mdc-tab-indicator-active-indicator-color: white; 
+}
+
+
+::ng-deep .mdc-tab__text-label {
+    color: white;
+}
+
+.content {
+    top: 63px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #eee;
+    border-top:1px solid;
+    text-align: center;
+   
+}
+
+
+a:not([href]):not([class]), a:not([href]):not([class]):hover {
+    text-decoration:underline;
+    cursor: pointer!important;
+    
+}
+
+
+
+td {
+    width: 200px;
+}
+
+mat-mdc-tab-body-content {
+    inline-size: max-content;
+    height:fit-content!important;
+}
+
+::ng-deep .mat-expansion-panel:not([class*=mat-elevation-z]) {
+    box-shadow:none!important;
+
+}
+
+.mat-expansion-panel-header {
+    padding: 0;
+ 
+    margin-left: 1%;
+} 
+
+::ng-deep .mat-expansion-panel-body {
+    padding:0!important;
+}
+
+mat-error {
+    display: none !important;
+}
+
+mat-error:first-child {
+    display: block !important;
+}
+
+mat-form-field{
+    width:350px
+}
+
+
+.file-upload {
+    background-color: #244688;
+    color: white;
+    
+}
+
+label {
+    margin-right: 20px;
+    font-weight: 500;
+    
+}
+
+#btnHover:hover {
+    background-color: #fe4945;
+  }
+  
+  #btnHover {
+    background-color: #22afbe;
+  }
+
+
+mat-tab-group {
+    border-left: 1px solid #244688;
+    border-right: 1px solid #244688;
+    
+}
+
+.mat-expansion-panel-header[aria-disabled=true] {
+    color: black;
+}

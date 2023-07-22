@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
 using ProcionAPI.Data;
 using ProcionAPI.Models.Entities;
 using ProcionAPI.ViewModel;
@@ -18,23 +19,90 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<VendorOnboardRequestVM[]> GetAllOnBoardRequestAsync()
         {
-            var result = await (from OR in _dbContext.Onboard_Request
-                                join V in _dbContext.Vendor
-                                on OR.Vendor_ID equals V.Vendor_ID
-                                join U in _dbContext.User
-                                on OR.User_Id equals U.User_Id
-                                join E in _dbContext.Employee 
-                                on U.User_Id equals E.User_Id
-                                select new VendorOnboardRequestVM
-                                { Onboard_Request_Id = OR.Onboard_Request_Id,
-                                  Vendor_ID = V.Vendor_ID,
-                                  Onboard_Request_status_ID = OR.Status_ID,
-                                  EmployeeName = E.EmployeeName,
-                                  Vendors = V,
-                                  Quotes = OR.Quotes}).ToArrayAsync();
-            
-            return result;
+
+            //var query = _dbContext.Onboard_Request
+            //            .Include(OR => OR.Vendor)
+            //            .ThenInclude(V => V.Vendor_Status)
+            //            .Include(OR => OR.Users)
+            //            .ThenInclude(U => U.Role)
+            //            .Include(OR => OR.Onboard_Status)
+            //            .Select(async OR => new VendorOnboardRequestVM
+            //            {
+            //                Onboard_Request_Id = OR.Onboard_Request_Id,
+            //                Vendor_ID = OR.Vendor.Vendor_ID,
+            //                Onboard_Request_status_ID = OR.Status_ID,
+            //                EmployeeName = await getEmployeeNameAsync(OR.User_Id),
+            //                Vendors = OR.Vendor,
+            //                Quotes = OR.Quotes
+            //            });
+
+
+            //var results = await Task.WhenAll(query);
+            //return results;
+
+            //        var onboardRequests = await _dbContext.Onboard_Request
+            //.Include(OR => OR.Vendor)
+            //    .ThenInclude(V => V.Vendor_Status)
+            //.Include(OR => OR.Users)
+            //    .ThenInclude(U => U.Role)
+            //.Include(OR => OR.Onboard_Status)
+            //.ToListAsync();
+
+            //        var query = onboardRequests.Select(OR => new VendorOnboardRequestVM
+            //        {
+            //            Onboard_Request_Id = OR.Onboard_Request_Id,
+            //            Vendor_ID = OR.Vendor.Vendor_ID,
+            //            Onboard_Request_status_ID = OR.Status_ID,
+            //            EmployeeName = GetEmployeeName(OR.User_Id),
+            //            Vendors = OR.Vendor,
+            //            Quotes = OR.Quotes
+            //        });
+
+            //        return query.ToArray();
+
+
+            var onboardRequests = await _dbContext.Onboard_Request
+    .Include(OR => OR.Vendor)
+        .ThenInclude(V => V.Vendor_Status)
+    .Include(OR => OR.Users)
+        .ThenInclude(U => U.Role)
+    .Include(OR => OR.Onboard_Status)
+    .ToListAsync();
+
+            var userIds = onboardRequests.Select(OR => OR.User_Id).ToList();
+
+            var employeeTasks = userIds.Select(GetEmployeeNameAsync);
+            var employeeNames = await Task.WhenAll(employeeTasks);
+
+            var query = onboardRequests.Select((OR, index) => new VendorOnboardRequestVM
+            {
+                Onboard_Request_Id = OR.Onboard_Request_Id,
+                Vendor_ID = OR.Vendor.Vendor_ID,
+                Onboard_Request_status_ID = OR.Status_ID,
+                EmployeeName = employeeNames[index],
+                Vendors = OR.Vendor,
+                Quotes = OR.Quotes
+            });
+
+            return query.ToArray();
+
         }
+
+        private async Task<string> GetEmployeeNameAsync(int userId)
+        {
+            var employee = _dbContext.Employee.FirstOrDefault(E => E.User_Id == userId);
+            if (employee != null)
+            {
+                return employee.EmployeeName;
+            }
+            else
+            {
+                var admin = _dbContext.Admin.FirstOrDefault(A => A.User_Id == userId);
+                return admin?.AdminName; // Return null if admin is not found or AdminName if it exists.
+            }
+        }
+
+
 
         public async Task<Onboard_Request[]> AddRequestAsync(Onboard_Request RequestAdd)
         {
@@ -157,17 +225,17 @@ namespace ProcionAPI.Models.Repositories
 
             if (existingVendor != null)
             {
-                existingVendor.Sole_Supplier_Provided = UpdatedRequest.Vendor.Sole_Supplier_Provided;
+                //existingVendor.Sole_Supplier_Provided = UpdatedRequest.Vendor.Sole_Supplier_Provided;
                 existingVendor.Email = UpdatedRequest.Vendor.Email;
                 ReqUpdt.Vendor = existingVendor;
             }
             else
             {
                 existingVendor = await _dbContext.Vendor.FindAsync(UpdatedRequest.Vendor.Vendor_ID);
-                existingVendor.Sole_Supplier_Provided = UpdatedRequest.Vendor.Sole_Supplier_Provided;
+               // existingVendor.Sole_Supplier_Provided = UpdatedRequest.Vendor.Sole_Supplier_Provided;
                 existingVendor.Name = UpdatedRequest.Vendor.Name;
-                    existingVendor.Email = UpdatedRequest.Vendor.Email;
-                     ReqUpdt.Vendor = existingVendor;
+                existingVendor.Email = UpdatedRequest.Vendor.Email;
+                ReqUpdt.Vendor = existingVendor;
                
                
             }
@@ -187,7 +255,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Onboard_Request> DeleteRequestAsync(int RequestId,int VendorID)
         {
-            var RequestToDelete = await _dbContext.Onboard_Request.FirstOrDefaultAsync(x => x.Onboard_Request_Id == RequestId && x.Vendor_ID == VendorID);
+            var RequestToDelete = await _dbContext.Onboard_Request.FirstOrDefaultAsync(x => (x.Onboard_Request_Id == RequestId) && (x.Vendor_ID == VendorID));
             _dbContext.Onboard_Request.Remove(RequestToDelete);
             await _dbContext.SaveChangesAsync();
 
@@ -257,6 +325,24 @@ namespace ProcionAPI.Models.Repositories
 
                 return SoleSupplierRequest;
            
+        }
+
+        public async Task<Sole_Supplier> DeleteSoleSupplierAsync(int VendorID)
+        {
+            var SoleSupplierToDelete = await _dbContext.Sole_Supplier.FirstOrDefaultAsync(x=> x.Vendor_ID == VendorID);
+            _dbContext.Sole_Supplier.Remove(SoleSupplierToDelete);
+            await _dbContext.SaveChangesAsync();
+
+            return SoleSupplierToDelete;
+        }
+
+        public async Task<Vendor> DeleteVendorAsync(int VendorID)
+        {
+            var VendorToDelete = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Vendor_ID == VendorID);
+            _dbContext.Vendor.Remove(VendorToDelete);
+            await _dbContext.SaveChangesAsync();
+
+            return VendorToDelete;
         }
 
 

@@ -72,6 +72,7 @@ export class CreateEmployeeComponent implements OnInit {
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
+    no_Notifications: 0,
     role: this.rl
   }
 
@@ -134,7 +135,6 @@ export class CreateEmployeeComponent implements OnInit {
   GetMandates() {
     this.dataService.GetMandateLimits().subscribe(result => {
       this.mandate_limits = result;
-      console.log(this.mandate_limits);
     });
   }
 
@@ -197,6 +197,7 @@ export class CreateEmployeeComponent implements OnInit {
     this.mail.Password = newPassword;
     this.mail.Email = this.myForm.get('Email')?.value;
     document.getElementById('loading').style.display = 'block';
+    document.querySelector('button').disabled;
 
     //console.log(cel.substring(7,3));
     //console.log(username);

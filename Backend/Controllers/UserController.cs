@@ -37,20 +37,60 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
+//----------------------------------------------------------------------------------------------------- NORMAL LOGIN -------------------------------------------------------------------------------------
         [HttpPost("login/{UserName}/{Password}")]
         public async Task<IActionResult> Login([FromRoute] string UserName, [FromRoute] string Password)
         {
-            bool isCredentialsValid = await _UserRepository.VerifyCredentials(UserName, Password);
-            if (isCredentialsValid == true)
+            if (await _UserRepository.GetUserByUsername(UserName) != null)
             {
-                User user = await _UserRepository.GetUserByUsername(UserName);
+                bool isCredentialsValid = await _UserRepository.VerifyCredentials(UserName, Password);
+                if (isCredentialsValid == true)
+                {
+                    User user = await _UserRepository.GetUserByUsername(UserName);
 
-                // Generate token
-                var token = GenerateToken(user);
+                    // Generate token
+                    var token = GenerateToken(user);
 
-                // Return the token as a response to the Angular frontend
-                return Ok(new { token });
+                    // Return the token as a response to the Angular frontend
+                    return Ok(new { token });
+                }
             }
+
+            else if (await _UserRepository.GetAdminByEmailAsync(UserName) != null)
+            {
+                Admin AdminLogin = await _UserRepository.GetAdminByEmailAsync(UserName);
+                var MyUsername = AdminLogin.User.Username;
+                bool isCredentialsValid = await _UserRepository.VerifyCredentials(MyUsername, Password);
+                if (isCredentialsValid == true)
+                {
+                    User user = await _UserRepository.GetUserByUsername(MyUsername);
+
+                    // Generate token
+                    var token = GenerateToken(user);
+
+                    // Return the token as a response to the Angular frontend
+                    return Ok(new { token });
+                }
+            }
+
+            else if (await _UserRepository.GetEmployeeByEmailAsync(UserName) != null)
+            {
+                Employee EmpLogin = await _UserRepository.GetEmployeeByEmailAsync(UserName);
+                var MyUsername = EmpLogin.User.Username;
+                bool isCredentialsValid = await _UserRepository.VerifyCredentials(MyUsername, Password);
+                if (isCredentialsValid == true)
+                {
+                    User user = await _UserRepository.GetUserByUsername(MyUsername);
+
+                    // Generate token
+                    var token = GenerateToken(user);
+
+                    // Return the token as a response to the Angular frontend
+                    return Ok(new { token });
+                }
+            }
+            
 
             return Unauthorized(new { error = "Invalid credentials" });
         }
@@ -71,7 +111,96 @@ namespace ProcionAPI.Controllers
                 Subject = new ClaimsIdentity(new Claim[]
                 {
             new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, user.Role.Name)
+            new Claim(ClaimTypes.Role, user.Role.Name),
+            new Claim("TemAccess", "No"),
+            new Claim("TempAccessUsername", "None")
+                }),
+                Expires = DateTime.UtcNow.AddHours(3), // Set token expiration time
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
+
+        //-------------------------------------------------------------------------------------------------TEMP ACCESS LOGIN-------------------------------------------------------------------------------
+
+        [HttpPost("loginWithTemp/{UserName}/{Password}/{TempAcc}/{TempUsername}")]
+        public async Task<IActionResult> LoginWithTemp([FromRoute] string UserName, [FromRoute] string Password, [FromRoute] string TempAcc, [FromRoute] string TempUsername)
+        {
+            if (await _UserRepository.GetUserByUsername(UserName) != null)
+            {
+                bool isCredentialsValid = await _UserRepository.VerifyCredentials(UserName, Password);
+                if (isCredentialsValid == true)
+                {
+                    User user = await _UserRepository.GetUserByUsername(UserName);
+
+                    // Generate token
+                    var token = GenerateTokenWithTemp(user, TempAcc, TempUsername);
+
+                    // Return the token as a response to the Angular frontend
+                    return Ok(new { token });
+                }
+            }
+
+            else if (await _UserRepository.GetAdminByEmailAsync(UserName) != null)
+            {
+                Admin AdminLogin = await _UserRepository.GetAdminByEmailAsync(UserName);
+                var MyUsername = AdminLogin.User.Username;
+                bool isCredentialsValid = await _UserRepository.VerifyCredentials(MyUsername, Password);
+                if (isCredentialsValid == true)
+                {
+                    User user = await _UserRepository.GetUserByUsername(MyUsername);
+
+                    // Generate token
+                    var token = GenerateTokenWithTemp(user, TempAcc, TempUsername);
+
+                    // Return the token as a response to the Angular frontend
+                    return Ok(new { token });
+                }
+            }
+
+            else if (await _UserRepository.GetEmployeeByEmailAsync(UserName) != null)
+            {
+                Employee EmpLogin = await _UserRepository.GetEmployeeByEmailAsync(UserName);
+                var MyUsername = EmpLogin.User.Username;
+                bool isCredentialsValid = await _UserRepository.VerifyCredentials(MyUsername, Password);
+                if (isCredentialsValid == true)
+                {
+                    User user = await _UserRepository.GetUserByUsername(MyUsername);
+
+                    // Generate token
+                    var token = GenerateTokenWithTemp(user, TempAcc, TempUsername);
+
+                    // Return the token as a response to the Angular frontend
+                    return Ok(new { token });
+                }
+            }
+
+
+            return Unauthorized(new { error = "Invalid credentials" });
+        }
+
+        private string GenerateTokenWithTemp(User user, string TempAcc, string TempUsername)
+        {
+            byte[] key;
+            using (var randomNumberGenerator = new RNGCryptoServiceProvider())
+            {
+                key = new byte[32]; // 256 bits
+                randomNumberGenerator.GetBytes(key);
+            }
+            string encodedKey = Convert.ToBase64String(key);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, user.Role.Name),
+            new Claim("TemAccess", TempAcc),
+            new Claim("TempAccessUsername", TempUsername)
                 }),
                 Expires = DateTime.UtcNow.AddHours(3), // Set token expiration time
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -120,6 +249,22 @@ namespace ProcionAPI.Controllers
             try
             {
                 var result = await _UserRepository.GetEmployeeByEmailAsync(Email);
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetAdminByEmail/{Email}")]
+        public async Task<IActionResult> GetAdminByEmail(string Email)
+        {
+            try
+            {
+                var result = await _UserRepository.GetAdminByEmailAsync(Email);
 
                 return Ok(result);
             }
@@ -228,7 +373,7 @@ namespace ProcionAPI.Controllers
         }
         [HttpPut]
         [Route("UpdatePassword/{userID}/{NewPassword}")]
-        public async Task<ActionResult> EditUser([FromRoute] int userID, [FromRoute] string NewPassword)
+        public async Task<ActionResult> UpdatePassword([FromRoute] int userID, [FromRoute] string NewPassword)
         {
             try
             {
@@ -451,6 +596,34 @@ namespace ProcionAPI.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+
+        [HttpGet("VerifyCredentials/{Username}/{Password}")]
+        public async Task<IActionResult> VerifyUserCredentials([FromRoute] string UserName, [FromRoute] string Password)
+        {
+            bool isCredentialsValid = await _UserRepository.VerifyCredentials(UserName, Password);
+            if (isCredentialsValid == true)
+            {
+                return Ok(isCredentialsValid);
+            }
+
+            return Unauthorized(new { error = "Invalid credentials" });
+        }
+
+        [HttpPut]
+        [Route("ResetNotif/{username}")]
+        public async Task<ActionResult> ResetNumNotifications([FromRoute] string username)
+        {
+            try
+            {
+                var result = await _UserRepository.ResetNumNotifications(username);
+                return Ok(result);
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
             }
         }
     }

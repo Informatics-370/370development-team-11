@@ -7,6 +7,8 @@ namespace ProcionAPI.Models.Repositories
     public interface IOnboardRequestRepository
     {
         Task<VendorOnboardRequestVM[]> GetAllOnBoardRequestAsync();
+
+       // Task<Onboard_Request[]> GetAllOnBoardRequestTestingAsync();
         Task<Onboard_Request[]> AddRequestAsync(Onboard_Request RequestAdd);
         Task<Vendor[]> GetAllVendorRequestsAsync();
         Task<Vendor> GetVendorValidationAsync(string sVendorName);
@@ -19,6 +21,8 @@ namespace ProcionAPI.Models.Repositories
         Task<Sole_Supplier> GetSoleSupplierByIDAsync(int VendorID);
 
         Task<Sole_Supplier> UpdateSoleSupplierAsync(int SoleSupplierID, Sole_Supplier UpdatedSoleSupplier);
+        Task<Sole_Supplier> DeleteSoleSupplierAsync(int VendorID);
+        Task<Vendor> DeleteVendorAsync(int VendorID);
     }
 }
 //, int VendorID

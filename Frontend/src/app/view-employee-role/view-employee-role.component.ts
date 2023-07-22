@@ -10,11 +10,20 @@ import { DataService } from '../DataService/data-service';
 import { User } from '../Shared/User';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { RestoreComponent } from '../Settings/backupDialog/restore.component';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-view-employee-role',
   templateUrl: './view-employee-role.component.html',
-  styleUrls: ['./view-employee-role.component.css']
+  styleUrls: ['./view-employee-role.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewEmployeeRoleComponent implements OnInit {
 
@@ -42,7 +51,7 @@ export class ViewEmployeeRoleComponent implements OnInit {
 
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin") {
+    if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
 
@@ -99,6 +108,12 @@ export class ViewEmployeeRoleComponent implements OnInit {
             disableClose: true,
             data: { id }
           });
+
+          this.dialog.afterAllClosed.subscribe({
+            next: (response) => {
+              this.ngOnInit();
+            }
+          })
         }
         else {
 
@@ -110,7 +125,7 @@ export class ViewEmployeeRoleComponent implements OnInit {
           });
 
           var action = "ERROR";
-          var title = "ERROR: Category In Use";
+          var title = "ERROR: Role In Use";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + this.RoleToDelete.name + " <strong style='color:red'>IS ASSOCIATED WITH A USER!</strong><br> Please remove the role from the user to continue with deletion.");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
@@ -126,5 +141,14 @@ export class ViewEmployeeRoleComponent implements OnInit {
       }
     })
 
+  }
+
+
+  openDialog() {
+    const dialogRef = this.dialog.open(RestoreComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 }
