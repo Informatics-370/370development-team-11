@@ -109,11 +109,11 @@ import { DeleteDelegationComponent } from './Delegation/delete-delegation/delete
 import { MatSortModule } from '@angular/material/sort';
 import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, NgFor } from '@angular/common';
 import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
 import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
 import { UpdatePasswordComponent } from './User/update-password/update-password.component';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-approve-edit.component';
 import { CreateProcurementRequestComponent } from './create-procurement-request/create-procurement-request.component';
 
@@ -123,6 +123,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { VideoDialogComponent } from './VideoDialog/video-dialog/video-dialog.component';
 import { BackupComponent } from './Settings/backup/backup.component';
 import { RestoreComponent } from './Settings/backupDialog/restore.component';
+import { DeleteProcurementRequestComponent } from './delete-procurement-request/delete-procurement-request.component';
 
 
 @NgModule({
@@ -211,7 +212,8 @@ import { RestoreComponent } from './Settings/backupDialog/restore.component';
     VideoDialogComponent,
     BackupComponent,
     RestoreComponent,
-    CreateProcurementRequestComponent
+    CreateProcurementRequestComponent,
+    DeleteProcurementRequestComponent
   ],
   imports: [
     BrowserModule,
@@ -243,7 +245,14 @@ import { RestoreComponent } from './Settings/backupDialog/restore.component';
     MatSortModule,
     MatTooltipModule,
     MatDatepickerModule,
-    MatBadgeModule
+    MatBadgeModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    AsyncPipe,
+    NgFor
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },

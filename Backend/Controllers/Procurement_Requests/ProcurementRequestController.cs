@@ -30,6 +30,38 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
         }
 
+        [HttpGet]
+        [Route("GetProcurementQuotes")]
+        public async Task<IActionResult> GetProcurementQuotes()
+        {
+            try
+            {
+                var result = await _Procurement_Request_Repository.GetProcurementQuotesAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetProcurementQuotesbyID/{id}")]
+        public async Task<IActionResult> GetProcurementQuotesbyID([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _Procurement_Request_Repository.GetProcurementQuotesbyIDAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
         [HttpPost]
         [Route("CreateProcurementRequest")]
         public async Task<IActionResult> CreateProcurementRequest([FromBody] Procurement_Request RequestAdd)
@@ -96,5 +128,73 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             var PathSaved = Path.Combine(VendorName, file.FileName);
             return Ok(new { PathSaved });
         }
+
+        [HttpGet]
+        [Route("GetProcurementQuote/{VendorName}/{filename}")]
+        public IActionResult GetFile(string VendorName, string filename)
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "ProcurementQuotes", VendorName, filename);
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            var contentType = "application/pdf";
+            return File(fileBytes, contentType, filename);
+        }
+
+        [HttpDelete]
+        [Route("DeleteRequest/{id}")]
+        public async Task<IActionResult> DeleteRequest([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _Procurement_Request_Repository.DeleteProcurementRequestAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetRequestByID/{id}")]
+        public async Task<IActionResult> GetRequestByID([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _Procurement_Request_Repository.GetRequestByIDAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpDelete]
+        [Route("DeleteFile/{VendorName}/{fileName}")]
+        public IActionResult DeleteFile(string VendorName, string filename)
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "ProcurementQuotes", VendorName, filename);
+
+            try
+            {
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                    return Ok(new { filename });
+                }
+                else
+                {
+                    return NotFound($"File {filename} not found");
+                }
+            }
+            catch (IOException ex)
+            {
+                return StatusCode(500, $"Error deleting file: {ex.Message}");
+            }
+        }
+
+
     }
 }

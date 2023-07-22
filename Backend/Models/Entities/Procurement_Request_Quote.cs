@@ -13,5 +13,7 @@ namespace ProcionAPI.Models.Entities
         public Procurement_Request Procurement_Request { get; set; }
         [Required]
         public string Path { get; set; }
+        [Required]
+        public DateTime Upload_Date { get; set; }
     }
 }
