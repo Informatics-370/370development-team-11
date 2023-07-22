@@ -102,10 +102,11 @@ export class ViewNotificationHubComponent implements OnInit {
   }
 
   ProcurementRoute(name: string) {
-    //if (name.includes("")) {
-    //  this.router.navigate(['/']);
-    //}
-    //else {
+    if (name.includes("Exceeded Mandate Limit")) {
+      this.router.navigate(['/ViewFlaggedProcurementRequest']);
+    }
+    //else if (name.includes("Exceeded Mandate Limit"))
+    //{
     //  this.router.navigate(['/']);
     //}
   }
