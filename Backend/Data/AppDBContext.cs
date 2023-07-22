@@ -622,6 +622,13 @@ namespace ProcionAPI.Data
                Name = "Flagged",
                Description = "Employee is over allowed mandate limit",
 
+           },
+           new
+           {
+               Procurement_Status_ID = 4,
+               Name = "Rejected",
+               Description = "Request was Rejected",
+
            });
 
             modelBuilder.Entity<Procurement_Payment_Status>()

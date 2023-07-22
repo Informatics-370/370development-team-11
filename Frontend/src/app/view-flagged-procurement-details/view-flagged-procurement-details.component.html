@@ -1,9 +1,10 @@
-<div class="content">
+<div class="content" *ngIf="ProcurementDetails != undefined">
+<div style="display: inline-block;">
     <div style="text-align: left;position: relative;">
-<h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
-    Create Procurement Requests Details
+<h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:20pt;">
+    Procurement Details for {{ProcurementDetails.procurement_Request.vendor.name}}
   </h1>
-  <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;width: 330px;">Please fill in the following details:</label>
+  <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:14pt;">Please Accept Or Reject the following request:</label>
 </div>
       <form [formGroup]="ProcurementFormGroup"  style="text-align: -webkit-center;" >
         <div style="background-color: white;border:1px solid #244688;width: 800px;height: 1100;">
@@ -13,7 +14,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <input matInput placeholder="Buyer Name" formControlName="BuyerName" >
+                    <input matInput readonly formControlName="BuyerName" >
                   </mat-form-field>
             </div>
         </div>
@@ -23,7 +24,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <input matInput placeholder="Buyer Email" formControlName="BuyerEmail">
+                    <input matInput readonly formControlName="BuyerEmail">
                    </mat-form-field>
             </div>
         </div>
@@ -33,10 +34,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <mat-select formControlName="ItemType" placeholder="Consumable" style="display: contents;" (selectionChange)="CheckChange()">
-                        <mat-option value="Consumable">Consumable</mat-option>
-                        <mat-option value="Assets">Assets</mat-option>
-                    </mat-select>
+                        <input matInput readonly formControlName="ItemType">
                 </mat-form-field>
             </div>
         </div>
@@ -47,16 +45,9 @@
                 <label style="width: 450px;">Select Consumable Item:</label>
               </div>
               <div class="col-7">
-                  <mat-form-field appearance="fill" *ngIf="ConsumableItems.length > 0">
-                      <mat-select formControlName="ConsumableItem" placeholder="{{ConsumableItems[0].name}}" style="display: contents;" [value]="ConsumableItems[0].consumable_ID">
-                        <mat-option *ngFor="let Consumable of ConsumableItems" [value]="Consumable.consumable_ID">{{Consumable.name}}</mat-option>
-                      </mat-select>
+                  <mat-form-field appearance="fill">
+                    <input matInput readonly formControlName="ConsumableItem">
                   </mat-form-field>
-                  <mat-form-field appearance="fill" *ngIf="ConsumableItems.length == 0">
-                    <mat-select formControlName="ConsumableItem" placeholder="No consumable exist on the system" style="display: contents;">
-                      <mat-option>Please Add consumables to the system</mat-option>
-                    </mat-select>
-                </mat-form-field>
               </div>
           </div>
             <div class="row">
@@ -65,7 +56,7 @@
               </div>
               <div class="col-7">
                 <mat-form-field appearance="outline">
-                  <input matInput type="number" formControlName="ConsumableQuantity">
+                  <input matInput type="number" readonly formControlName="ConsumableQuantity">
                 </mat-form-field> 
               </div>
             </div>
@@ -79,7 +70,7 @@
               </div>
               <div class="col-7">
                   <mat-form-field appearance="fill">
-                    <input matInput formControlName="AssetName">
+                    <input matInput readonly formControlName="AssetName">
                   </mat-form-field>
               </div>
           </div>
@@ -89,7 +80,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill" >
-                    <textarea matInput placeholder="Details Of Service Or Goods" formControlName="AssetDescription"></textarea>
+                    <textarea matInput readonly formControlName="AssetDescription"></textarea>
                   </mat-form-field>
             </div>
           </div>    
@@ -100,16 +91,9 @@
             <label style="width: 450px;">Account Code:</label>
           </div>
           <div class="col-7">
-            <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length > 0">
-              <mat-select formControlName="AccountCode" placeholder="{{BudgetAllocationCode[0].account_Code}}" style="display: contents;" [value]="BudgetAllocationCode[0].account_Code">
-                <mat-option *ngFor="let codes of BudgetAllocationCode" [value]="codes.account_Code">{{codes.account_Code}}</mat-option>
-              </mat-select>
+            <mat-form-field appearance="fill">
+                <input matInput readonly formControlName="AccountCode">
             </mat-form-field>
-            <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length == 0">
-              <mat-select formControlName="AccountCode" placeholder="No Account code exist on the system" style="display: contents;">
-                <mat-option>Please Add account code to the system</mat-option>
-              </mat-select>
-          </mat-form-field>
           </div>
       </div>
         <div class="row">
@@ -118,11 +102,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <mat-select formControlName="PaymentType" placeholder="Credit" style="display: contents;">
-                        <mat-option value="1">Credit</mat-option>
-                        <mat-option value="2">Cash</mat-option>
-                        <mat-option value="2">EFT</mat-option>
-                    </mat-select>
+                        <input matInput readonly formControlName="PaymentType">
                 </mat-form-field>
             </div>
         </div>
@@ -142,7 +122,7 @@
                 </div>
                 <div class="col-7">
                   <mat-form-field appearance="outline">
-                    <input matInput type="number" formControlName="DepositAmount">
+                    <input matInput readonly formControlName="DepositAmount" value="{{this.ProcurementFormGroup.get('DepositAmount')?.value | currency:'R'}}">
                   </mat-form-field> 
                 </div>
               </div>
@@ -152,12 +132,7 @@
                 </div>
                 <div class="col-7">
                   <mat-form-field appearance="outline">
-                    <mat-label>Choose a date</mat-label>
-                    <input matInput  [matDatepicker]="dp1" formControlName="DepositDueDate">
-                    <mat-datepicker-toggle matIconSuffix [for]="dp1" >
-                    <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #dp1 startView="year" [startAt]="2023/18/18"></mat-datepicker>
+                    <input matInput readonly formControlName="DepositDueDate" >
                   </mat-form-field> 
                 </div>
               </div>
@@ -171,31 +146,34 @@
                 <mat-checkbox formControlName="FullPaymentMade"></mat-checkbox>
             </div>
         </div>
-        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('FullPaymentMade').value}}" style="margin-left: 10px" >
+        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('FullPaymentMade').value}}" style="margin-left: 10px" *ngIf="files[0] != null">
           <div class="row">
             <div class="col-5">
               <label style="width: 450px;">Paid On Date:</label>
             </div>
             <div class="col-7">
               <mat-form-field appearance="outline">
-                <mat-label>Choose a date</mat-label>
-                <input matInput  [matDatepicker]="dp2" formControlName="PaidOnDate">
-                <mat-datepicker-toggle matIconSuffix [for]="dp2" >
-                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-                </mat-datepicker-toggle>
-                <mat-datepicker #dp2 startView="year" [startAt]="2023/18/18"></mat-datepicker>
+                <input matInput readonly formControlName="PaidOnDate">
               </mat-form-field> 
             </div>
           </div>
           
-          <div class="row">
+          <div class="row" *ngIf="files[0].type == 'application/pdf'">
                 <div class="col-5">
-                  <label style="width: 450px;">Upload Receipt:</label>
+                  <label style="width: 450px;">Receipt:</label>
                 </div>
                 <div class="col-7">
-                    <input  id="file"  type="file" class="file-upload" formControlName="UploadReceiptDoc" (change)="uploadFile(0,$event)" style="border: solid #244688; border-radius: 5px;height: fit-content; "> 
+                    <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" style="color: black;font-weight: 600;">{{FileDetails[0].FileName}}</a>
                 </div>
-              </div>     
+            </div>     
+            <div class="row" *ngIf="files[0].type != 'application/pdf'">
+                <div class="col-5">
+                  <label style="width: 450px;">Receipt:</label>
+                </div>
+                <div class="col-7">
+                    <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}" target="_blank" style="color: black;">{{FileDetails[0].FileName}}</a>   
+                </div>
+            </div> 
           </mat-expansion-panel>
 
         
@@ -207,15 +185,23 @@
                 <mat-checkbox formControlName="ProofOfPayment"></mat-checkbox>
             </div>
         </div>  
-        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('ProofOfPayment').value}}" style="margin-left: 10px" >
-          <div class="row">
+        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('ProofOfPayment').value}}" style="margin-left: 10px" *ngIf="files[1] != null">
+          <div class="row" *ngIf="files[1].type == 'application/pdf'">
                 <div class="col-5">
-                  <label style="width: 450px;">Upload Proof of payment document:</label>
+                  <label style="width: 450px;">Proof of payment document:</label>
                 </div>
                 <div class="col-7">
-                    <input  type="file" class="file-upload" formControlName="ProofOfPaymentDoc" (change)="uploadFile(1,$event)" style="border: solid #244688; border-radius: 5px;height: fit-content; "> 
+                    <a id="btnLink" (click)="openPDFInNewTab(1)" target="_blank">{{FileDetails[1].FileName}}</a>   
                 </div>
-              </div>     
+            </div>   
+            <div class="row" *ngIf="files[1].type != 'application/pdf'">
+                <div class="col-5">
+                  <label style="width: 450px;">Proof of payment document:</label>
+                </div>
+                <div class="col-7">
+                    <a href="{{FileDetails[1].FileURL}}" download="{{FileDetails[1].FileName}}" target="_blank" style="color: black;">{{FileDetails[1].FileName}}</a>   
+                </div>
+            </div>    
           </mat-expansion-panel>
         
           <div class="row">
@@ -224,7 +210,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <input matInput type="number" formControlName="TotalAmount">
+                    <input matInput readonly type="number" formControlName="TotalAmount" value="{{this.ProcurementFormGroup.get('TotalAmount')?.value | currency:'R'}}">
                   </mat-form-field>
             </div>
         </div>
@@ -234,12 +220,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="outline">
-                    <mat-label>Choose a date</mat-label>
-                    <input matInput  [matDatepicker]="dp3" formControlName="TotalAmountDueDate" >
-                    <mat-datepicker-toggle matIconSuffix [for]="dp3" >
-                    <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-                    </mat-datepicker-toggle>
-                    <mat-datepicker #dp3 startView="year" [startAt]="2023/18/18"></mat-datepicker>
+                    <input matInput readonly formControlName="TotalAmountDueDate">
                 </mat-form-field> 
             </div>
         </div>
@@ -249,15 +230,15 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill" >
-                    <textarea matInput placeholder="Details Of Service Or Goods" formControlName="Comments"></textarea>
+                    <textarea matInput readonly formControlName="Comments"></textarea>
                   </mat-form-field>
             </div>
         </div>
         <br>
         <div  style="background-color: white;display: flex;align-items: center;margin: 1%;place-content: center;">
           <div class="wrapper">
-            <button class="" (click)="Create()" >
-              <span>Create</span>
+            <button class=""  >
+              <span>Accept</span>
               <div class="success">
                 <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
                 <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
@@ -266,14 +247,15 @@
             </button>
           </div>
 
-          <button mat-raised-button id="cBtn" routerLink="/PlaceProcurementRequest"
+          <button mat-raised-button id="cBtn"
                   style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;"
                   >
-            Cancel
+            Reject
           </button>
         </div>
         </div>
       
 
       </form>
+    </div>
 </div>

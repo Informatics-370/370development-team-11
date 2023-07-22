@@ -127,6 +127,8 @@ import { ViewPendingProcurementRequestComponent } from './view-pending-procureme
 import { PlaceProcurementRequestComponent } from './place-procurement-request/place-procurement-request.component';
 import { PlaceProcurementRequestCreateDetailsComponent } from './place-procurement-request-create-details/place-procurement-request-create-details.component';
 import { ViewProcurementRequestApprovalComponent } from './view-procurement-request-approval/view-procurement-request-approval.component';
+import { ViewFlaggedProcurementRequestComponent } from './view-flagged-procurement-request/view-flagged-procurement-request.component';
+import { ViewFlaggedProcurementDetailsComponent } from './view-flagged-procurement-details/view-flagged-procurement-details.component';
 
 
 @NgModule({
@@ -219,7 +221,9 @@ import { ViewProcurementRequestApprovalComponent } from './view-procurement-requ
     ViewPendingProcurementRequestComponent,
     PlaceProcurementRequestComponent,
     PlaceProcurementRequestCreateDetailsComponent,
-    ViewProcurementRequestApprovalComponent
+    ViewProcurementRequestApprovalComponent,
+    ViewFlaggedProcurementRequestComponent,
+    ViewFlaggedProcurementDetailsComponent
   ],
   imports: [
     BrowserModule,

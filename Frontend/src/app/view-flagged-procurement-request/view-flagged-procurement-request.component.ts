@@ -3,45 +3,40 @@ import { DataService } from '../DataService/data-service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
+import { Procurement_Details } from '../Shared/ProcurementDetails';
 
 @Component({
-  selector: 'app-place-procurement-request',
-  templateUrl: './place-procurement-request.component.html',
-  styleUrls: ['./place-procurement-request.component.css']
+  selector: 'app-view-flagged-procurement-request',
+  templateUrl: './view-flagged-procurement-request.component.html',
+  styleUrls: ['./view-flagged-procurement-request.component.css']
 })
-export class PlaceProcurementRequestComponent implements OnInit{
+export class ViewFlaggedProcurementRequestComponent implements OnInit{
   ProcurementRequests: Procurement_Request[] = [];
-  SearchedPRequests: Procurement_Request[] = [];
-  displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'Status', 'View'];
+  SearchedPDetails: Procurement_Details[] = [];
+  displayedColumns: string[] = ['name', 'employee', 'mandateTotal', 'Total', 'PaymentDue', 'View'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
 
   ngOnInit() {
-    this.GetProcurementRequests();
-    console.log(this.ProcurementRequests)
-    console.log(this.SearchedPRequests)
+    this.GetProcurementDetails();
+    console.log(this.ProcurementDetails)
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
     console.log(User)
   }
 
-  GetProcurementRequests() {
-    this.dataService.GetProcurementRequests().subscribe(result => {
-      let procurementRequestList: any[] = result;
-      procurementRequestList.forEach(e => {
-        //console.log(e)
-        if(e.requisition_Status_ID == 3) {
-          this.ProcurementRequests.push(e)
-          //this.SearchedPRequests.push(e)
-        }
+  ProcurementDetails:Procurement_Details[] = [];
+  GetProcurementDetails() {
+    this.dataService.GetProcurementRequestDetails().subscribe(result => {
+      result.forEach(e => {
+        if(e.procurement_Status_ID == 3)
+        this.ProcurementDetails.push(e);
       })
-      //this.ProcurementRequests = [...procurementRequestList];
-      this.SearchedPRequests = [...this.ProcurementRequests];
-      //console.log(this.SearchedPRequests[0].requisition_Status_ID)
+
+      this.SearchedPDetails = [...this.ProcurementDetails];
       if (result) {
         hideloader();
       }
-
-    });
+    })
 
     function hideloader() {
       document.getElementById('loading').style.display = "none";
@@ -53,10 +48,10 @@ export class PlaceProcurementRequestComponent implements OnInit{
     const Searchterm = this.searchWord.toLocaleLowerCase();
 
     if (Searchterm) {
-      this.SearchedPRequests = this.ProcurementRequests.filter(PR => PR.name.toLocaleLowerCase().includes(Searchterm))
+      this.SearchedPDetails = this.ProcurementDetails.filter(PR => PR.procurement_Request.vendor.name.toLocaleLowerCase().includes(Searchterm))
     }
     else if (Searchterm == "") {
-      this.SearchedPRequests = [...this.ProcurementRequests];
+      this.SearchedPDetails = [...this.ProcurementDetails];
     }
   }
 
