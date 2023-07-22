@@ -17,7 +17,52 @@
                             </mat-radio-group>
                         </tr>
                         <tr>
+                            <td style="width:100%;">
+                                <mat-card-content>
+                                    <label style=" color: black;">Request Name:</label>
+                                    <br />
+                                    <mat-form-field>
+                                        <input matInput type="text" placeholder="" formControlName="Name" id="Surname"
+                                            required>
+                                        <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+                                        <mat-error *ngIf="myError('Name', 'required')">Request Name is
+                                            required</mat-error>
+                                        <mat-error *ngIf="myError('Name', 'minlength')">Request Name must
+                                            be 3 to
+                                            50 characters long</mat-error>
+                                        <mat-error *ngIf="myError('Name', 'maxlength')">Limit
+                                            exceed</mat-error>
+                                        <mat-error *ngIf="myError('Name', 'pattern')">Request Name can
+                                            not contain
+                                            symbols</mat-error>
 
+                                    </mat-form-field>
+                                </mat-card-content>
+                            </td>
+
+                            <td style="width:100%;">
+                                <mat-card-content>
+                                    <label style=" color: black;">Request Description:</label>
+                                    <br />
+                                    <mat-form-field>
+                                        <input matInput type="text" placeholder="" formControlName="Description"
+                                            id="Surname" required>
+                                        <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+                                        <mat-error *ngIf="myError('Description', 'required')">Description is
+                                            required</mat-error>
+                                        <mat-error *ngIf="myError('Description', 'minlength')">Description must be 3 to
+                                            50 characters long</mat-error>
+                                        <mat-error *ngIf="myError('Description', 'maxlength')">Limit exceed</mat-error>
+                                        <mat-error *ngIf="myError('Description', 'pattern')">Description can not contain
+                                            symbols</mat-error>
+
+                                    </mat-form-field>
+                                </mat-card-content>
+                            </td>
+
+                        </tr>
+
+                        <tr>
                             <td style="width:100%;">
                                 <mat-card-content>
                                     <label style=" color: black;">Vendor:</label>
@@ -35,28 +80,7 @@
 
                                 </mat-card-content>
                             </td>
-                            <td style="width:100%;">
-                                <mat-card-content>
-                                    <label style=" color: black;">Description:</label>
-                                    <br />
-                                    <mat-form-field>
-                                        <input matInput type="text" placeholder="" formControlName="Description"
-                                            id="Surname" required>
-                                        <mat-hint align="end">Not more then 50 characters long.</mat-hint>
-                                        <mat-error *ngIf="myError('Description', 'required')">Description is
-                                            required</mat-error>
-                                        <mat-error *ngIf="myError('Description', 'minlength')">Description must be 3 to
-                                            50 characters long</mat-error>
-                                        <mat-error *ngIf="myError('Description', 'maxlength')">Limit exceed</mat-error>
-                                        <mat-error *ngIf="myError('Description', 'pattern')">Description can not contain
-                                            symbols</mat-error>
 
-                                    </mat-form-field>
-                                </mat-card-content>
-                            </td>
-                        </tr>
-
-                        <tr>
                             <td style="width:100%;">
                                 <mat-card-content>
                                     <label style=" color:black;">The Procurement Quote:</label>
@@ -126,33 +150,29 @@
                             <tr>
                                 <td style="width:100%;">
                                     <mat-card-content>
-                                        <label style=" color:black;">Name:</label>
+                                        <label style=" color: black;">Request Name:</label>
                                         <br />
                                         <mat-form-field>
-                                            <input matInput type="text" placeholder="" formControlName="Name" id="Name"
-                                                [formControl]="NameControl" [matAutocomplete]="auto" required>
-                                            <mat-autocomplete #auto="matAutocomplete">
-                                                <mat-option *ngFor="let option of filteredVendors | async"
-                                                    [value]="option.name" (click)="setVal(option.name)">
-                                                    {{option.name}}
-                                                </mat-option>
-                                            </mat-autocomplete>
-                                            <mat-hint align="end">Not more then 32 characters long.</mat-hint>
-                                            <mat-error *ngIf="myError('Name', 'required')">Name is
+                                            <input matInput type="text" placeholder="" formControlName="RequestName"
+                                                id="RequestName" required>
+                                            <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+                                            <mat-error *ngIf="myError('RequestName', 'required')">Request Name is
                                                 required</mat-error>
-                                            <mat-error *ngIf="myError('Name', 'minlength')">Name must be 3 to 32
-                                                characters
-                                                long</mat-error>
-                                            <mat-error *ngIf="myError('Name', 'maxlength')">Limit
+                                            <mat-error *ngIf="myError('RequestName', 'minlength')">Request Name must
+                                                be 3 to
+                                                50 characters long</mat-error>
+                                            <mat-error *ngIf="myError('RequestName', 'maxlength')">Limit
                                                 exceed</mat-error>
-                                            <mat-error *ngIf="myError('Name', 'pattern')">Name can not contain
-                                                numbers</mat-error>
+                                            <mat-error *ngIf="myError('RequestName', 'pattern')">Request Name can
+                                                not contain
+                                                symbols</mat-error>
+
                                         </mat-form-field>
                                     </mat-card-content>
                                 </td>
                                 <td style="width:100%;">
                                     <mat-card-content>
-                                        <label style=" color: black;">Description:</label>
+                                        <label style=" color: black;">Request Description:</label>
                                         <br />
                                         <mat-form-field>
                                             <input matInput type="text" placeholder=""
@@ -172,9 +192,40 @@
                                         </mat-form-field>
                                     </mat-card-content>
                                 </td>
+                            </tr>
+
+                            <tr>
                                 <td style="width:100%;">
                                     <mat-card-content>
-                                        <label style=" color: black;">Email:</label>
+                                        <label style=" color:black;">Vendor Name:</label>
+                                        <br />
+                                        <mat-form-field>
+                                            <input matInput type="text" placeholder="" formControlName="VendorName"
+                                                id="VendorName" [formControl]="VendorNameControl"
+                                                [matAutocomplete]="auto" required>
+                                            <mat-autocomplete #auto="matAutocomplete">
+                                                <mat-option *ngFor="let option of filteredVendors | async"
+                                                    [value]="option.name" (click)="setVal(option.name)">
+                                                    {{option.name}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                            <mat-hint align="end">Not more then 32 characters long.</mat-hint>
+                                            <mat-error *ngIf="myError('VendorName', 'required')">Name is
+                                                required</mat-error>
+                                            <mat-error *ngIf="myError('VendorName', 'minlength')">Name must be 3 to 32
+                                                characters
+                                                long</mat-error>
+                                            <mat-error *ngIf="myError('VendorName', 'maxlength')">Limit
+                                                exceed</mat-error>
+                                            <mat-error *ngIf="myError('VendorName', 'pattern')">Name can not contain
+                                                numbers</mat-error>
+                                        </mat-form-field>
+                                    </mat-card-content>
+                                </td>
+
+                                <td style="width:100%;">
+                                    <mat-card-content>
+                                        <label style=" color: black;">Vendor Email:</label>
                                         <br />
                                         <mat-form-field>
                                             <input matInput type="text" placeholder="" formControlName="Email"
@@ -214,6 +265,9 @@
                                     </mat-card-content>
                                 </td>
 
+
+                            </tr>
+                            <tr>
                                 <td style="width:100%;">
                                     <mat-card-content>
                                         <label style=" color:black;">Comparative Quote 2:</label>
