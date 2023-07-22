@@ -117,6 +117,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       this.emp.employeeSurname = this.employee.employeeSurname;
       this.emp.cellPhone_Num = this.employee.cellPhone_Num;
       this.emp.email = this.employee.email;
+      this.rl.name = this.employee.user.role.name;
       this.rl.description = this.employee.user.role.description;
       this.usr.profile_Picture = this.employee.user.profile_Picture;
       this.usr.username = this.employee.user.username;
@@ -134,6 +135,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       this.adm.adminSurname = this.admin.adminSurname;
       this.adm.cellPhone_Num = this.admin.cellPhone_Num;
       this.adm.email = this.admin.email;
+      this.rl.name = this.admin.user.role.name;
       this.rl.description = this.admin.user.role.description;
       this.usr.profile_Picture = this.admin.user.profile_Picture;
       this.usr.username = this.admin.user.username;
