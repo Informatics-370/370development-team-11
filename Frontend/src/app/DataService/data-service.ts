@@ -44,6 +44,14 @@ import { Notification } from '../Shared/Notification';
 import { Procurement_Request } from '../Shared/Procurement_Request';
 import { Procurement_Request_Quote } from '../Shared/Procurement_Request_Quote';
 import { Procurement_Details } from '../Shared/ProcurementDetails';
+import { Deposit } from '../Shared/Deposit';
+import { Payment_Made } from '../Shared/PaymentMade';
+import { Proof_Of_Payment } from '../Shared/ProofOfPayment';
+import { Procurement_Consumable } from '../Shared/Procurement_Consumable';
+import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
+import { Asset } from '../Shared/Asset';
+import { Procurement_Asset } from '../Shared/Procurement_Asset';
+import { Vendor_Asset } from '../Shared/Vendor_Asset';
 
 @Injectable({
   providedIn: 'root'
@@ -982,5 +990,50 @@ export class DataService {
       return this.httpClient.get<Procurement_Request>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestByID/${ProcurementRequestID}`).pipe(map(result => result))
     }  
     
-  
+    AddDeposit(DepositDetails: Deposit): Observable<any> {
+      return this.httpClient.post<Deposit>(`${this.apiUrl}ProcurementDetails/AddDeposit`, DepositDetails, this.httpOptions).pipe(map(result => result))
+    }
+    AddPaymentMade(AddPaymentMade: Payment_Made): Observable<any> {
+      return this.httpClient.post<Payment_Made>(`${this.apiUrl}ProcurementDetails/AddPaymentMade`, AddPaymentMade, this.httpOptions).pipe(map(result => result))
+    }
+
+    AddProofOfPayment(AddPOP: Proof_Of_Payment): Observable<any> {
+      return this.httpClient.post<Proof_Of_Payment>(`${this.apiUrl}ProcurementDetails/AddProofOfPayment`, AddPOP, this.httpOptions).pipe(map(result => result))
+    }
+
+    AddProcurementConsumable(AddProcurementConsumable: Procurement_Consumable): Observable<any> {
+      return this.httpClient.post<Procurement_Consumable>(`${this.apiUrl}ProcurementDetails/AddProcurementConsumable`, AddProcurementConsumable, this.httpOptions).pipe(map(result => result))
+    }
+
+    AddVendorConsumable(AddVendorConsumable: Vendor_Consumable): Observable<any> {
+      return this.httpClient.post<Vendor_Consumable>(`${this.apiUrl}ProcurementDetails/AddVendorConsumable`, AddVendorConsumable, this.httpOptions).pipe(map(result => result))
+    }
+
+    AddAsset(AddAsset: Asset): Observable<any> {
+      return this.httpClient.post<Asset>(`${this.apiUrl}ProcurementDetails/AddAsset`, AddAsset, this.httpOptions).pipe(map(result => result))
+    }
+
+    AddProcurementAsset(AddProcurementAsset: Procurement_Asset): Observable<any> {
+      return this.httpClient.post<Procurement_Asset>(`${this.apiUrl}ProcurementDetails/AddProcurementAsset`, AddProcurementAsset, this.httpOptions).pipe(map(result => result))
+    }
+
+    AddVendorAsset(AddVendorAsset: Vendor_Asset): Observable<any> {
+      return this.httpClient.post<Vendor_Asset>(`${this.apiUrl}ProcurementDetails/AddVendorAsset`, AddVendorAsset, this.httpOptions).pipe(map(result => result))
+    }
+    
+    uploadProcureFile(FolderCategory: string, ProcurementID: string, fileName: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', fileName);
+    formData.append('FolderCategory', FolderCategory)
+    formData.append('ProcurementRequest', ProcurementID)
+    return this.httpClient.post<any>(`${this.apiUrl}ProcurementDetails/uploadProcureFile`, formData, this.httpOptions)
+    }
+
+    GetProcureFiles(FolderCategory: string, ProcurementID: string, fileName: string): Observable<any> {
+      return this.httpClient.post<any>(`${this.apiUrl}ProcurementDetails/GetProcureFiles/${FolderCategory}/${ProcurementID}/${fileName}`, this.httpOptions)
+    }
+
+    DeleteProcurementFile(FolderCategory: string, ProcurementID: string, fileName: string): Observable<any> {
+      return this.httpClient.delete<any>(`${this.apiUrl}ProcurementDetails/DeleteProcurementFile/${FolderCategory}/${ProcurementID}/${fileName}`, this.httpOptions)
+    }
 }

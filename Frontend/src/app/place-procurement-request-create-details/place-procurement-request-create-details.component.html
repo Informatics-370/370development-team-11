@@ -82,6 +82,16 @@
                     <input matInput formControlName="AssetName">
                   </mat-form-field>
               </div>
+          </div>
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Description of Asset:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill" >
+                    <textarea matInput placeholder="Details Of Service Or Goods" formControlName="AssetDescription"></textarea>
+                  </mat-form-field>
+            </div>
           </div>    
           </div>
         </mat-expansion-panel>
@@ -183,7 +193,7 @@
                   <label style="width: 450px;">Upload Receipt:</label>
                 </div>
                 <div class="col-7">
-                    <input  id="file"  type="file" class="file-upload" formControlName="UploadReceiptDoc" style="border: solid #244688; border-radius: 5px;height: fit-content; "> 
+                    <input  id="file"  type="file" class="file-upload" formControlName="UploadReceiptDoc" (change)="uploadFile(0,$event)" style="border: solid #244688; border-radius: 5px;height: fit-content; "> 
                 </div>
               </div>     
           </mat-expansion-panel>
@@ -203,7 +213,7 @@
                   <label style="width: 450px;">Upload Proof of payment document:</label>
                 </div>
                 <div class="col-7">
-                    <input  type="file" class="file-upload" formControlName="ProofOfPaymentDoc" style="border: solid #244688; border-radius: 5px;height: fit-content; "> 
+                    <input  type="file" class="file-upload" formControlName="ProofOfPaymentDoc" (change)="uploadFile(1,$event)" style="border: solid #244688; border-radius: 5px;height: fit-content; "> 
                 </div>
               </div>     
           </mat-expansion-panel>

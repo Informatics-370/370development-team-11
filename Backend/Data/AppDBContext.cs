@@ -35,6 +35,7 @@ namespace ProcionAPI.Data
         public DbSet<Requisition_Status> Requisition_Status { get; set; }
         public DbSet<Payment_Made> Payment_Made { get; set; }
         public DbSet<Sign_Off_Status> Sign_Off_Status { get; set; }
+        public DbSet<Deposit> Deposit { get; set; }
         public DbSet<Payment_Method> Payment_Method { get; set; }
         public DbSet<Proof_Of_Payment> Proof_Of_Payment { get; set; }
         public DbSet<Procurement_Payment_Status> Procurement_Payment_Status { get; set; }
@@ -637,6 +638,16 @@ namespace ProcionAPI.Data
                 Procurement_Payment_Status_ID = 2,
                 Name = "Awaiting payment",
                 Description = "Payment must still be made",
+
+            });
+
+            modelBuilder.Entity<Sign_Off_Status>()
+            .HasData(
+            new
+            {
+                Sign_Off_Status_ID = 1,
+                Name = "No",
+                Description = "Has not been signed off",
 
             });
 

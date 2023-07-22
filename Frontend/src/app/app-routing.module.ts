@@ -73,7 +73,7 @@ import { UpdatePasswordComponent } from './User/update-password/update-password.
 import { CreateProcurementRequestComponent } from './create-procurement-request/create-procurement-request.component';
 import { PlaceProcurementRequestComponent } from './place-procurement-request/place-procurement-request.component';
 import { PlaceProcurementRequestCreateDetailsComponent } from './place-procurement-request-create-details/place-procurement-request-create-details.component';
-
+import { ViewProcurementRequestApprovalComponent } from './view-procurement-request-approval/view-procurement-request-approval.component';
 import { BackupComponent } from './Settings/backup/backup.component';
 
 const routes: Routes = [
@@ -311,6 +311,10 @@ const routes: Routes = [
   {
     path: 'PlaceProcurementRequestCreateDetails', canActivate: [AuthService],
     component: PlaceProcurementRequestCreateDetailsComponent
+  },
+  {
+    path: 'ViewProcurementRequestApproval/:ProcurementRequestID', canActivate: [AuthService],
+    component: ViewProcurementRequestApprovalComponent
   }
  
 

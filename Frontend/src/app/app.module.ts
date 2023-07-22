@@ -126,6 +126,7 @@ import { RestoreComponent } from './Settings/backupDialog/restore.component';
 import { ViewPendingProcurementRequestComponent } from './view-pending-procurement-request/view-pending-procurement-request.component';
 import { PlaceProcurementRequestComponent } from './place-procurement-request/place-procurement-request.component';
 import { PlaceProcurementRequestCreateDetailsComponent } from './place-procurement-request-create-details/place-procurement-request-create-details.component';
+import { ViewProcurementRequestApprovalComponent } from './view-procurement-request-approval/view-procurement-request-approval.component';
 
 
 @NgModule({
@@ -217,7 +218,8 @@ import { PlaceProcurementRequestCreateDetailsComponent } from './place-procureme
     CreateProcurementRequestComponent,
     ViewPendingProcurementRequestComponent,
     PlaceProcurementRequestComponent,
-    PlaceProcurementRequestCreateDetailsComponent
+    PlaceProcurementRequestCreateDetailsComponent,
+    ViewProcurementRequestApprovalComponent
   ],
   imports: [
     BrowserModule,
