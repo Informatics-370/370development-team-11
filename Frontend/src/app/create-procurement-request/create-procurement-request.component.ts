@@ -289,6 +289,10 @@ export class CreateProcurementRequestComponent implements OnInit {
               this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
               this.Procurement_Request_Quote.prefferedQuote = true;
 
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+
               console.log(this.Procurement_Request_Quote)
 
               this.dataService.AddProcurementRequestQuote(this.Procurement_Request_Quote).subscribe({

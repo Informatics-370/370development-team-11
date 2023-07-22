@@ -79,7 +79,8 @@
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let Consumable" style="width:100px;">
 
-                        <button class="noselect" type="button" style="background-color: #94CC5B;">
+                        <button class="noselect" type="button" style="background-color: #94CC5B;"
+                            routerLink="/EditProcurementRequest/{{Consumable.procurement_Request_ID}}/{{Consumable.vendor.vendor_Status.name}}">
                             <span class='text'>Edit</span>
                             <span class="icon" style="border-left: 1px solid #94CC5B; ">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">

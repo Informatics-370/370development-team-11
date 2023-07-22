@@ -991,4 +991,12 @@ export class DataService {
     return this.httpClient.get<Procurement_Request_Quote[]>(`${this.apiUrl}ProcurementRequest/GetProcurementQuotesbyID/` + id).pipe(map(result => result))
   }
 
+  UpdatPRRequest(RequestID: Number, UpdatePRRequest: Procurement_Request): Observable<Procurement_Request> {
+    return this.httpClient.put<Procurement_Request>(`${this.apiUrl}ProcurementRequest/UpdatePRRequest/` + RequestID, UpdatePRRequest, this.httpOptions)
+  }
+
+  UpdateProcurementQuotes(RequestID: Number, UpdateQuoteRequest: Procurement_Request_Quote): Observable<Procurement_Request_Quote> {
+    return this.httpClient.put<Procurement_Request_Quote>(`${this.apiUrl}ProcurementRequest/UpdateProcurementQuotes/` + RequestID, UpdateQuoteRequest, this.httpOptions)
+  }
+
 }
