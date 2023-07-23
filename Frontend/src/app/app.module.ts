@@ -129,6 +129,8 @@ import { PlaceProcurementRequestCreateDetailsComponent } from './place-procureme
 import { ViewProcurementRequestApprovalComponent } from './view-procurement-request-approval/view-procurement-request-approval.component';
 import { DeleteProcurementRequestComponent } from './delete-procurement-request/delete-procurement-request.component';
 import { EditProcurementRequestComponent } from './edit-procurement-request/edit-procurement-request.component';
+import { ViewFlaggedProcurementRequestComponent } from './view-flagged-procurement-request/view-flagged-procurement-request.component';
+import { ViewFlaggedProcurementDetailsComponent } from './view-flagged-procurement-details/view-flagged-procurement-details.component';
 
 
 @NgModule({
@@ -223,7 +225,9 @@ import { EditProcurementRequestComponent } from './edit-procurement-request/edit
     PlaceProcurementRequestCreateDetailsComponent,
     ViewProcurementRequestApprovalComponent,
     DeleteProcurementRequestComponent,
-    EditProcurementRequestComponent
+    EditProcurementRequestComponent,
+    ViewFlaggedProcurementRequestComponent,
+    ViewFlaggedProcurementDetailsComponent
   ],
   imports: [
     BrowserModule,

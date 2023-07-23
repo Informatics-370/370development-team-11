@@ -32,6 +32,22 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
         }
 
+        [HttpGet]
+        [Route("GetProcurementRequestQuoteByID/{ProcurementRequestID}")]
+        public async Task<IActionResult> GetProcurementRequestQuoteByID(int ProcurementRequestID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementRequestQuoteByIDAsync(ProcurementRequestID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
         [HttpPost]
         [Route("AddProcurementDetails")]
         public async Task<IActionResult> CreateProcurementDetails(Procurement_Details ProcurementDetails)
@@ -168,13 +184,18 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetProcureFiles/{FolderCategory}/{ProcurementID}/{fileName}")]
-        public IActionResult GetFile(string FolderCategory, string ProcurementID, string fileName)
+        public IActionResult GetProcureFiles(string FolderCategory, string ProcurementID, string fileName)
         {
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "Procurement", FolderCategory, ProcurementID, fileName);
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
             var contentType = "application/octet-stream";
+            if (fileName.Contains(".pdf"))
+            {
+                contentType = "application/pdf";
+            }
+
             return File(fileBytes, contentType, fileName);
         }
 
@@ -188,7 +209,7 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             var file = formCollection.Files.First();
 
             var FolderCategory = Request.Form["FolderCategory"].ToString();
-            var ProcurementID = Request.Form["ProcurementID"].ToString();
+            var ProcurementID = Request.Form["ProcurementRequest"].ToString();
             // 
             if (file == null || file.Length == 0)
             {
@@ -241,6 +262,198 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
         }
 
+
+        [HttpPut]
+        [Route("UpdateProcurementRequestStatus/{requisition_Status_ID}")]
+        public async Task<IActionResult> UpdateProcurementRequestStatus(int requisition_Status_ID, Procurement_Request ProcurementRequestDetails)
+        {
+            try
+            {
+                var results = await _ProcurementDetailsRepository.UpdateProcurementRequestStatusAsync(requisition_Status_ID, ProcurementRequestDetails);
+                return Ok(results);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+
+        [HttpGet]
+        [Route("GetProcurementRequestDetails")]
+        public async Task<IActionResult> GetProcurementRequestDetails()
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementRequestDetailsAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+
+        [HttpGet]
+        [Route("GetProcurementDetailsByID/{ProcurementDetailsID}")]
+        public async Task<IActionResult> GetProcurementDetailsByID(int ProcurementDetailsID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementDetailsByIDAsync(ProcurementDetailsID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetDepositByID/{ProcurementDetailsID}")]
+        public async Task<IActionResult> GetDepositByID(int ProcurementDetailsID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetDepositByIDAsync(ProcurementDetailsID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetFullPaymentMadeByID/{ProcurementDetailsID}")]
+        public async Task<IActionResult> GetFullPaymentMadeByID(int ProcurementDetailsID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetFullPaymentMadeByIDAsync(ProcurementDetailsID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetProofOfPaymentByID/{ProcurementDetailsID}")]
+        public async Task<IActionResult> GetProofOfPaymentByID(int ProcurementDetailsID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProofOfPaymentByIDAsync(ProcurementDetailsID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetVendorConsumable")]
+        public async Task<IActionResult> GetVendorConsumable()
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetVendorConsumableAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetVendorAsset")]
+        public async Task<IActionResult> GetVendorAsset()
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetVendorAssetAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetProcurementConsumable")]
+        public async Task<IActionResult> GetProcurementConsumable()
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementConsumableAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetProcurementAsset")]
+        public async Task<IActionResult> GetProcurementAsset()
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementAssetAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetAssetByID/{AssetID}")]
+        public async Task<IActionResult> GetAssetByID(int AssetID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetAssetByIDAsync(AssetID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateProcurementDetailsStatus{StatusID}")]
+        public async Task<IActionResult> UpdateProcurementDetailsStatus(int StatusID, Procurement_Details ProcurementDetails)
+        {
+            try
+            {
+                var results = await _ProcurementDetailsRepository.UpdateProcurementDetailsStatusAsync(StatusID, ProcurementDetails);
+                return Ok(results);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
 
     }
 }

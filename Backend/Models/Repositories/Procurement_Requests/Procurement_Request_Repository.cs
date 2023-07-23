@@ -147,8 +147,32 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
         public async Task<Procurement_Request> GetRequestByIDAsync(int id)
         {
-            Procurement_Request ChosenRequest = await _dbContext.Procurement_Request.FirstOrDefaultAsync(x => x.Procurement_Request_ID == id);
+            Procurement_Request ChosenRequest = await _dbContext.Procurement_Request.Include(u => u.User).ThenInclude(r => r.Role).Include(v => v.Vendor).ThenInclude(s => s.Vendor_Status).Include(r => r.Requisition_Status).FirstOrDefaultAsync(i => i.Procurement_Request_ID == id);
             return ChosenRequest;
+        }
+
+        public async Task<Procurement_Request> UpdateProcurementRequestAsync(int id, Procurement_Request Request)
+        {
+            var PRRequest = await _dbContext.Procurement_Request.FindAsync(id);
+
+            PRRequest.Name = Request.Name;
+            PRRequest.Description = Request.Description;
+
+            await _dbContext.SaveChangesAsync();
+
+            return PRRequest;
+        }
+        public async Task<Procurement_Request_Quote> UpdateProcurementRequestQuouteAsync(int id, Procurement_Request_Quote Request)
+        {
+            var PRRequest = await _dbContext.Procurement_Request_Quote.FindAsync(id);
+
+            PRRequest.Path = Request.Path;
+            PRRequest.Upload_Date = Request.Upload_Date;
+            PRRequest.PrefferedQuote = Request.PrefferedQuote;
+
+            await _dbContext.SaveChangesAsync();
+
+            return PRRequest;
         }
     }
 }

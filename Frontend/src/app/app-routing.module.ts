@@ -63,7 +63,7 @@ import { ViewDelegationComponent } from './Delegation/view-delegation/view-deleg
 import { ViewHelpComponent } from './view-help/view-help/view-help.component';
 import { CreateHelpComponent } from './create-help/create-help/create-help.component';
 import { EditHelpComponent } from './edit-help/edit-help/edit-help.component';
-import { DeleteHelpComponent} from './delete-help/delete-help/delete-help.component';
+import { DeleteHelpComponent } from './delete-help/delete-help/delete-help.component';
 import { CreateDelegationComponent } from './Delegation/create-delegation/create-delegation.component';
 import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
 
@@ -74,7 +74,11 @@ import { CreateProcurementRequestComponent } from './create-procurement-request/
 import { PlaceProcurementRequestComponent } from './place-procurement-request/place-procurement-request.component';
 import { PlaceProcurementRequestCreateDetailsComponent } from './place-procurement-request-create-details/place-procurement-request-create-details.component';
 import { ViewProcurementRequestApprovalComponent } from './view-procurement-request-approval/view-procurement-request-approval.component';
+import { ViewFlaggedProcurementRequestComponent } from './view-flagged-procurement-request/view-flagged-procurement-request.component';
+import { ViewFlaggedProcurementDetailsComponent } from './view-flagged-procurement-details/view-flagged-procurement-details.component';
+
 import { BackupComponent } from './Settings/backup/backup.component';
+import { EditProcurementRequestComponent } from './edit-procurement-request/edit-procurement-request.component';
 
 const routes: Routes = [
   {
@@ -201,19 +205,19 @@ const routes: Routes = [
     component: EditDepartmentComponent
   },
   {
-    path: 'ViewHelp' , canActivate: [AuthService],
+    path: 'ViewHelp', canActivate: [AuthService],
     component: ViewHelpComponent
   },
   {
-    path: 'CreateHelp' , canActivate: [AuthService],
+    path: 'CreateHelp', canActivate: [AuthService],
     component: CreateHelpComponent
   },
   {
-    path: 'DeleteHelp' , canActivate: [AuthService],
+    path: 'DeleteHelp', canActivate: [AuthService],
     component: DeleteHelpComponent
   },
   {
-    path: 'EditHelp/:help_ID' , canActivate: [AuthService],
+    path: 'EditHelp/:help_ID', canActivate: [AuthService],
     component: EditHelpComponent
   },
   {
@@ -293,7 +297,7 @@ const routes: Routes = [
     component: UpdatePasswordComponent
   },
   {
-    path: "ViewSettings" , canActivate: [AuthService],
+    path: "ViewSettings", canActivate: [AuthService],
     component: BackupComponent
   },
   {
@@ -309,14 +313,29 @@ const routes: Routes = [
     component: PlaceProcurementRequestComponent
   },
   {
-    path: 'PlaceProcurementRequestCreateDetails', canActivate: [AuthService],
+    path: 'PlaceProcurementRequestCreateDetails/:ProcurementRequestID', canActivate: [AuthService],
     component: PlaceProcurementRequestCreateDetailsComponent
   },
   {
     path: 'ViewProcurementRequestApproval/:ProcurementRequestID', canActivate: [AuthService],
     component: ViewProcurementRequestApprovalComponent
+  },
+  {
+    path: 'ViewFlaggedProcurementRequest', canActivate: [AuthService],
+    component: ViewFlaggedProcurementRequestComponent
+  },
+  {
+    path: 'ViewFlaggedProcurementDetails/:ProcurementDetailsID', canActivate: [AuthService],
+    component: ViewFlaggedProcurementDetailsComponent
   }
- 
+  {
+
+
+    path: 'EditProcurementRequest/:procurement_Request_ID/:name',
+    component: EditProcurementRequestComponent
+  }
+
+
 
 ];
 

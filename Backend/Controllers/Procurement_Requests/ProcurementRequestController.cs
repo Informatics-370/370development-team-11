@@ -195,6 +195,38 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
         }
 
+        [HttpPut]
+        [Route("UpdatePRRequest/{id}")]
+        public async Task<IActionResult> UpdateConsumable([FromRoute] int id, Procurement_Request Request)
+        {
+            try
+            {
+                var result = await _Procurement_Request_Repository.UpdateProcurementRequestAsync(id, Request);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateProcurementQuotes/{id}")]
+        public async Task<IActionResult> UpdateProcurementQuotes([FromRoute] int id, Procurement_Request_Quote Request)
+        {
+            try
+            {
+                var result = await _Procurement_Request_Repository.UpdateProcurementRequestQuouteAsync(id, Request);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
 
     }
 }
