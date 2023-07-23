@@ -1030,20 +1030,20 @@ export class DataService {
     return this.httpClient.post<Procurement_Details>(`${this.apiUrl}ProcurementDetails/AddProcurementDetails`, ProcurementDetails, this.httpOptions).pipe(map(result => result))
   }
 
-    GetProcurementRequestByID(ProcurementRequestID:Number): Observable<any> {
-      return this.httpClient.get<Procurement_Request>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestByID/${ProcurementRequestID}`).pipe(map(result => result))
-    }  
+  GetProcurementRequestByID(ProcurementRequestID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Request>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestByID/${ProcurementRequestID}`).pipe(map(result => result))
+  }
 
-    GetProcurementRequestQuoteByID(ProcurementRequestID:number): Observable<any> {
-      return this.httpClient.get<Procurement_Request_Quote[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestQuoteByID/${ProcurementRequestID}`).pipe(map(result => result))
-    } 
-    
-    AddDeposit(DepositDetails: Deposit): Observable<any> {
-      return this.httpClient.post<Deposit>(`${this.apiUrl}ProcurementDetails/AddDeposit`, DepositDetails, this.httpOptions).pipe(map(result => result))
-    }
-    AddPaymentMade(AddPaymentMade: Payment_Made): Observable<any> {
-      return this.httpClient.post<Payment_Made>(`${this.apiUrl}ProcurementDetails/AddPaymentMade`, AddPaymentMade, this.httpOptions).pipe(map(result => result))
-    }
+  GetProcurementRequestQuoteByID(ProcurementRequestID: number): Observable<any> {
+    return this.httpClient.get<Procurement_Request_Quote[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestQuoteByID/${ProcurementRequestID}`).pipe(map(result => result))
+  }
+
+  AddDeposit(DepositDetails: Deposit): Observable<any> {
+    return this.httpClient.post<Deposit>(`${this.apiUrl}ProcurementDetails/AddDeposit`, DepositDetails, this.httpOptions).pipe(map(result => result))
+  }
+  AddPaymentMade(AddPaymentMade: Payment_Made): Observable<any> {
+    return this.httpClient.post<Payment_Made>(`${this.apiUrl}ProcurementDetails/AddPaymentMade`, AddPaymentMade, this.httpOptions).pipe(map(result => result))
+  }
 
   AddProofOfPayment(AddPOP: Proof_Of_Payment): Observable<any> {
     return this.httpClient.post<Proof_Of_Payment>(`${this.apiUrl}ProcurementDetails/AddProofOfPayment`, AddPOP, this.httpOptions).pipe(map(result => result))
@@ -1078,7 +1078,7 @@ export class DataService {
   }
 
   GetProcureFiles(FolderCategory: string, ProcurementID: string, fileName: string): Observable<any> {
-    return this.httpClient.get(`${this.apiUrl}ProcurementDetails/GetProcureFiles/${FolderCategory}/${ProcurementID}/${fileName}`,{headers: new HttpHeaders({ContentType: 'application/octet-stream'}),responseType:"blob"} )
+    return this.httpClient.get(`${this.apiUrl}ProcurementDetails/GetProcureFiles/${FolderCategory}/${ProcurementID}/${fileName}`, { headers: new HttpHeaders({ ContentType: 'application/octet-stream' }), responseType: "blob" })
   }
 
   DeleteProcurementFile(FolderCategory: string, ProcurementID: string, fileName: string): Observable<any> {
@@ -1104,43 +1104,51 @@ export class DataService {
   GetProcurementQuotesbyID(id: Number): Observable<any> {
     return this.httpClient.get<Procurement_Request_Quote[]>(`${this.apiUrl}ProcurementRequest/GetProcurementQuotesbyID/` + id).pipe(map(result => result))
   }
-    UpdateProcurementRequestStatus(requisition_Status_ID: number, ProcurementRequestDetails: Procurement_Request): Observable<any> {
-      return this.httpClient.put<Procurement_Request>(`${this.apiUrl}ProcurementDetails/UpdateProcurementRequestStatus/${requisition_Status_ID}`, ProcurementRequestDetails, this.httpOptions).pipe(map(result => result))
-    }
+  UpdateProcurementRequestStatus(requisition_Status_ID: number, ProcurementRequestDetails: Procurement_Request): Observable<any> {
+    return this.httpClient.put<Procurement_Request>(`${this.apiUrl}ProcurementDetails/UpdateProcurementRequestStatus/${requisition_Status_ID}`, ProcurementRequestDetails, this.httpOptions).pipe(map(result => result))
+  }
 
-    GetProcurementRequestDetails(): Observable<any> {
-      return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetails`).pipe(map(result => result))
-    } 
+  GetProcurementRequestDetails(): Observable<any> {
+    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetails`).pipe(map(result => result))
+  }
 
-    GetProcurementDetailsByID(ProcurementDetailsID:Number): Observable<any> {
-      return this.httpClient.get<Procurement_Request>(`${this.apiUrl}ProcurementDetails/GetProcurementDetailsByID/${ProcurementDetailsID}`).pipe(map(result => result))
-    }
-    
-    GetDepositByID(ProcurementDetailsID:Number): Observable<any> {
-      return this.httpClient.get<Deposit>(`${this.apiUrl}ProcurementDetails/GetDepositByID/${ProcurementDetailsID}`).pipe(map(result => result))
-    }
-    GetFullPaymentMadeByID(ProcurementDetailsID:Number): Observable<any> {
-      return this.httpClient.get<Payment_Made>(`${this.apiUrl}ProcurementDetails/GetFullPaymentMadeByID/${ProcurementDetailsID}`).pipe(map(result => result))
-    }
-    GetProofOfPaymentByID(ProcurementDetailsID:Number): Observable<any> {
-      return this.httpClient.get<Proof_Of_Payment>(`${this.apiUrl}ProcurementDetails/GetProofOfPaymentByID/${ProcurementDetailsID}`).pipe(map(result => result))
-    }
-    GetVendorConsumable(): Observable<any> {
-      return this.httpClient.get<Vendor_Consumable[]>(`${this.apiUrl}ProcurementDetails/GetVendorConsumable`).pipe(map(result => result))
-    }
-    GetVendorAsset(): Observable<any> {
-      return this.httpClient.get<Vendor_Asset[]>(`${this.apiUrl}ProcurementDetails/GetVendorAsset`).pipe(map(result => result))
-    }
-    GetProcurementConsumable(): Observable<any> {
-      return this.httpClient.get<Procurement_Consumable[]>(`${this.apiUrl}ProcurementDetails/GetProcurementConsumable`).pipe(map(result => result))
-    }
-    GetProcurementAsset(): Observable<any> {
-      return this.httpClient.get<Procurement_Asset[]>(`${this.apiUrl}ProcurementDetails/GetProcurementAsset`).pipe(map(result => result))
-    }
-    GetAssetByID(AssetID:Number): Observable<any> {
-      return this.httpClient.get<Asset>(`${this.apiUrl}ProcurementDetails/GetAssetByID/${AssetID}`).pipe(map(result => result))
-    }
-    UpdateProcurementDetailsStatus(StatusID: number, ProcurementDetails: Procurement_Details): Observable<any> {
-      return this.httpClient.put<Procurement_Details>(`${this.apiUrl}ProcurementDetails/UpdateProcurementDetailsStatus/${StatusID}`, ProcurementDetails, this.httpOptions).pipe(map(result => result))
-    }
+  GetProcurementDetailsByID(ProcurementDetailsID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Request>(`${this.apiUrl}ProcurementDetails/GetProcurementDetailsByID/${ProcurementDetailsID}`).pipe(map(result => result))
+  }
+
+  GetDepositByID(ProcurementDetailsID: Number): Observable<any> {
+    return this.httpClient.get<Deposit>(`${this.apiUrl}ProcurementDetails/GetDepositByID/${ProcurementDetailsID}`).pipe(map(result => result))
+  }
+  GetFullPaymentMadeByID(ProcurementDetailsID: Number): Observable<any> {
+    return this.httpClient.get<Payment_Made>(`${this.apiUrl}ProcurementDetails/GetFullPaymentMadeByID/${ProcurementDetailsID}`).pipe(map(result => result))
+  }
+  GetProofOfPaymentByID(ProcurementDetailsID: Number): Observable<any> {
+    return this.httpClient.get<Proof_Of_Payment>(`${this.apiUrl}ProcurementDetails/GetProofOfPaymentByID/${ProcurementDetailsID}`).pipe(map(result => result))
+  }
+  GetVendorConsumable(): Observable<any> {
+    return this.httpClient.get<Vendor_Consumable[]>(`${this.apiUrl}ProcurementDetails/GetVendorConsumable`).pipe(map(result => result))
+  }
+  GetVendorAsset(): Observable<any> {
+    return this.httpClient.get<Vendor_Asset[]>(`${this.apiUrl}ProcurementDetails/GetVendorAsset`).pipe(map(result => result))
+  }
+  GetProcurementConsumable(): Observable<any> {
+    return this.httpClient.get<Procurement_Consumable[]>(`${this.apiUrl}ProcurementDetails/GetProcurementConsumable`).pipe(map(result => result))
+  }
+  GetProcurementAsset(): Observable<any> {
+    return this.httpClient.get<Procurement_Asset[]>(`${this.apiUrl}ProcurementDetails/GetProcurementAsset`).pipe(map(result => result))
+  }
+  GetAssetByID(AssetID: Number): Observable<any> {
+    return this.httpClient.get<Asset>(`${this.apiUrl}ProcurementDetails/GetAssetByID/${AssetID}`).pipe(map(result => result))
+  }
+  UpdateProcurementDetailsStatus(StatusID: number, ProcurementDetails: Procurement_Details): Observable<any> {
+    return this.httpClient.put<Procurement_Details>(`${this.apiUrl}ProcurementDetails/UpdateProcurementDetailsStatus/${StatusID}`, ProcurementDetails, this.httpOptions).pipe(map(result => result))
+  }
+  UpdatPRRequest(RequestID: Number, UpdatePRRequest: Procurement_Request): Observable<Procurement_Request> {
+    return this.httpClient.put<Procurement_Request>(`${this.apiUrl}ProcurementRequest/UpdatePRRequest/` + RequestID, UpdatePRRequest, this.httpOptions)
+  }
+
+  UpdateProcurementQuotes(RequestID: Number, UpdateQuoteRequest: Procurement_Request_Quote): Observable<Procurement_Request_Quote> {
+    return this.httpClient.put<Procurement_Request_Quote>(`${this.apiUrl}ProcurementRequest/UpdateProcurementQuotes/` + RequestID, UpdateQuoteRequest, this.httpOptions)
+  }
+
 }

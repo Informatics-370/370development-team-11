@@ -80,7 +80,8 @@
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let Consumable" style="width:100px;">
 
-                        <button class="noselect" type="button" style="background-color: #94CC5B;">
+                        <button class="noselect" type="button" style="background-color: #94CC5B;"
+                            routerLink="/EditProcurementRequest/{{Consumable.procurement_Request_ID}}/{{Consumable.vendor.vendor_Status.name}}">
                             <span class='text'>Edit</span>
                             <span class="icon" style="border-left: 1px solid #94CC5B; ">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
@@ -135,6 +136,9 @@
                                                 <th>
                                                     Vendor Quote
                                                 </th>
+                                                <th>
+                                                    Preffered Quote
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -155,6 +159,10 @@
                                                     *ngIf="item.procurement_Request_ID == element.procurement_Request_ID">
                                                     <a target="_blank" style="color: rgb(65, 143, 227);"
                                                         (click)="openPDFInNewTab(i)">{{FileDetails[i].FileName}}</a>
+                                                </td>
+                                                <td
+                                                    *ngIf="item.procurement_Request_ID == element.procurement_Request_ID">
+                                                    {{item.prefferedQuote}}
                                                 </td>
                                             </tr>
                                         </tbody>
