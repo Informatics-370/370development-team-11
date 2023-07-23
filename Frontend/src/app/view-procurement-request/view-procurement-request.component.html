@@ -135,6 +135,9 @@
                                                 <th>
                                                     Vendor Quote
                                                 </th>
+                                                <th>
+                                                    Preffered Quote
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -155,6 +158,10 @@
                                                     *ngIf="item.procurement_Request_ID == element.procurement_Request_ID">
                                                     <a target="_blank" style="color: rgb(65, 143, 227);"
                                                         (click)="openPDFInNewTab(i)">{{FileDetails[i].FileName}}</a>
+                                                </td>
+                                                <td
+                                                    *ngIf="item.procurement_Request_ID == element.procurement_Request_ID">
+                                                    {{item.prefferedQuote}}
                                                 </td>
                                             </tr>
                                         </tbody>

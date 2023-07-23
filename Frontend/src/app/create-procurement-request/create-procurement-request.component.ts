@@ -82,7 +82,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   fileToUpload: File | null = null;
-  files: any[] = [''];
+  files: any[] = [];
   sPath = "";
 
   ngOnInit(): void {
@@ -136,7 +136,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   onFile1Upload(event: any) {
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
-      this.files[0] = this.fileToUpload;
+      this.files.push(this.fileToUpload);
     }
   }
 
@@ -198,12 +198,14 @@ export class CreateProcurementRequestComponent implements OnInit {
         console.log(response)
         if (response != null) {
           for (let i = 0; i <= this.files.length - 1; i++) {
-            let file: File = this.files[i];
-            this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file).subscribe({
+            console.log(i)
+            console.log(this.files.length)
+            console.log(this.files)
+            this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, this.files[i]).subscribe({
               next: (Response) => {
                 if (Response) {
                   console.log(Counter)
-                  if (Counter > 0) {
+                  if (i > 0) {
                     let qPath = Response
                     this.Procurement_Request = response[0]
                     this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request

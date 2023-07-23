@@ -127,9 +127,9 @@ export class EditProcurementRequestComponent implements OnInit {
       VendorName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
       OtherDescription: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
       Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
-      OtherQuote1: ['', []],
-      OtherQuote2: ['', []],
-      OtherQuote3: ['', []]
+      // OtherQuote1: ['', []],
+      // OtherQuote2: ['', []],
+      // OtherQuote3: ['', []]
     })
   }
 
@@ -138,7 +138,7 @@ export class EditProcurementRequestComponent implements OnInit {
       Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
       Vendor: ["", [Validators.required]],
       Description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
-      Quote1: ['', []]
+      // Quote1: ['', []]
     })
   }
 
@@ -205,72 +205,73 @@ export class EditProcurementRequestComponent implements OnInit {
         console.log(this.Procurement_Request)
         console.log(response)
 
-        this.ProcurementQuotes.forEach(element => {
+        this.DisplayNotif();
+        // this.ProcurementQuotes.forEach(element => {
 
-          if (this.files[Counter] != null) {
+        //   if (this.files[Counter] != null) {
 
-            console.log(this.files[Counter])
+        //     console.log(this.files[Counter])
 
-            let sFile = this.ProcurementQuotes[Counter].path;
-            console.log(sFile)
-            let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-            this.dataService.DeleteProcurementRequestFiles(VendorName, filename).subscribe({
-              next: (Result) => {
-                let file: File = this.files[Counter]
-                this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file).subscribe({
-                  next: (Response) => {
-                    this.dataService.GetProcurementQuotesbyID(this.Procurement_Request.procurement_Request_ID).subscribe({
-                      next: (PRResult) => {
+        //     let sFile = this.ProcurementQuotes[Counter].path;
+        //     console.log(sFile)
+        //     let VendorName = sFile.substring(0, sFile.indexOf("\\"))
+        //     let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+        //     this.dataService.DeleteProcurementRequestFiles(VendorName, filename).subscribe({
+        //       next: (Result) => {
+        //         let file: File = this.files[Counter]
+        //         this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file).subscribe({
+        //           next: (Response) => {
+        //             this.dataService.GetProcurementQuotesbyID(this.Procurement_Request.procurement_Request_ID).subscribe({
+        //               next: (PRResult) => {
 
-                        if (CounterForNewFiles > 0) {
-                          this.Procurement_Request_Quote = PRResult[Counter]
-                          let qPath = Response
-                          this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-                          this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
-                          this.Procurement_Request_Quote.prefferedQuote = false;
+        //                 if (CounterForNewFiles > 0) {
+        //                   this.Procurement_Request_Quote = PRResult[Counter]
+        //                   let qPath = Response
+        //                   this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+        //                   this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+        //                   this.Procurement_Request_Quote.prefferedQuote = false;
 
-                          let test: any
-                          test = new DatePipe('en-ZA');
-                          this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
-                          CounterForNewFiles = CounterForNewFiles + 1;
-                        }
+        //                   let test: any
+        //                   test = new DatePipe('en-ZA');
+        //                   this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+        //                   CounterForNewFiles = CounterForNewFiles + 1;
+        //                 }
 
-                        else {
-                          this.Procurement_Request_Quote = PRResult[Counter]
-                          let qPath = Response
-                          this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-                          this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
-                          this.Procurement_Request_Quote.prefferedQuote = true;
+        //                 else {
+        //                   this.Procurement_Request_Quote = PRResult[Counter]
+        //                   let qPath = Response
+        //                   this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+        //                   this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+        //                   this.Procurement_Request_Quote.prefferedQuote = true;
 
-                          let test: any
-                          test = new DatePipe('en-ZA');
-                          this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
-                          CounterForNewFiles = CounterForNewFiles + 1;
-                        }
+        //                   let test: any
+        //                   test = new DatePipe('en-ZA');
+        //                   this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+        //                   CounterForNewFiles = CounterForNewFiles + 1;
+        //                 }
 
 
 
-                        this.dataService.UpdateProcurementQuotes(this.Procurement_Request_Quote.quote_ID, this.Procurement_Request_Quote).subscribe({
-                          next: (result) => {
-                            console.log(result)
-                            this.DisplayNotif();
-                            Counter = Counter + 1;
-                          }
-                        })
-                      }
-                    })
-                  }
-                })
-              }
-            })
-          }
+        //                 this.dataService.UpdateProcurementQuotes(this.Procurement_Request_Quote.quote_ID, this.Procurement_Request_Quote).subscribe({
+        //                   next: (result) => {
+        //                     console.log(result)
+        //                     this.DisplayNotif();
+        //                     Counter = Counter + 1;
+        //                   }
+        //                 })
+        //               }
+        //             })
+        //           }
+        //         })
+        //       }
+        //     })
+        //   }
 
-          else {
-            Counter = Counter + 1;
-            this.DisplayNotif();
-          }
-        });
+        //   else {
+        //     Counter = Counter + 1;
+        //     this.DisplayNotif();
+        //   }
+        // });
       }
     })
 
@@ -304,44 +305,45 @@ export class EditProcurementRequestComponent implements OnInit {
         console.log(this.Procurement_Request)
         console.log(response)
 
-        this.ProcurementQuotes.forEach(element => {
-          let sFile = element.path;
-          console.log(sFile)
-          let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-          let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-          let file: File = this.fileToUpload;
-          this.dataService.DeleteProcurementRequestFiles(VendorName, filename).subscribe({
-            next: (Result) => {
-              this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file).subscribe({
-                next: (Response) => {
-                  console.log(Response)
+        this.DisplayNotif();
+        // this.ProcurementQuotes.forEach(element => {
+        //   let sFile = element.path;
+        //   console.log(sFile)
+        //   let VendorName = sFile.substring(0, sFile.indexOf("\\"))
+        //   let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+        //   let file: File = this.fileToUpload;
+        //   this.dataService.DeleteProcurementRequestFiles(VendorName, filename).subscribe({
+        //     next: (Result) => {
+        //       this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file).subscribe({
+        //         next: (Response) => {
+        //           console.log(Response)
 
-                  this.dataService.GetProcurementQuotesbyID(this.Procurement_Request.procurement_Request_ID).subscribe({
-                    next: (PRResult) => {
-                      console.log(PRResult)
-                      this.Procurement_Request_Quote = PRResult[0]
-                      let qPath = Response
-                      this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-                      this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
-                      this.Procurement_Request_Quote.prefferedQuote = true;
+        //           this.dataService.GetProcurementQuotesbyID(this.Procurement_Request.procurement_Request_ID).subscribe({
+        //             next: (PRResult) => {
+        //               console.log(PRResult)
+        //               this.Procurement_Request_Quote = PRResult[0]
+        //               let qPath = Response
+        //               this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+        //               this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+        //               this.Procurement_Request_Quote.prefferedQuote = true;
 
-                      let test: any
-                      test = new DatePipe('en-ZA');
-                      this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+        //               let test: any
+        //               test = new DatePipe('en-ZA');
+        //               this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
 
-                      this.dataService.UpdateProcurementQuotes(this.Procurement_Request_Quote.quote_ID, this.Procurement_Request_Quote).subscribe({
-                        next: (result) => {
-                          console.log(result)
-                          this.DisplayNotif()
-                        }
-                      })
-                    }
-                  })
-                }
-              })
-            }
-          })
-        });
+        //               this.dataService.UpdateProcurementQuotes(this.Procurement_Request_Quote.quote_ID, this.Procurement_Request_Quote).subscribe({
+        //                 next: (result) => {
+        //                   console.log(result)
+        //                   this.DisplayNotif()
+        //                 }
+        //               })
+        //             }
+        //           })
+        //         }
+        //       })
+        //     }
+        //   })
+        // });
       }
     })
   }
