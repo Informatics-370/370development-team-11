@@ -963,7 +963,7 @@ export class DataService {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('VendorName', VendorName)
-    return this.httpClient.post<any>(`${this.apiUrl}ProcurementRequest/uploadProcurementQuote`, formData, this.httpOptions)
+    return this.httpClient.post<any>(`${this.apiUrl}ProcurementRequest/uploadProcurementQuote`, formData, this.httpOptions).pipe(map(result => result))
   }
 
   AddProcurementRequestQuote(AddProcurementRequestQuote: Procurement_Request_Quote) {
