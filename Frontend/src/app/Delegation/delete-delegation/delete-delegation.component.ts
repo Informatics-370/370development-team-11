@@ -36,24 +36,35 @@ export class DeleteDelegationComponent implements OnInit{
     let DelegateName = sFile.substring(0, sFile.indexOf("\\"))
     let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
 
-    this.dataService.DeleteTempAcc(id).subscribe({
-      next: (d) => {
-        this.dataService.DeleteDelegation(id).subscribe({
-          next: (response) => {
-            this.dataService.DeleteDelegationFile(DelegateName, filename).subscribe(r => {
-              this.showConfirmationDialog = false;
-              this.showSuccessDialog = true;
-              setTimeout(() => {
-                this.dialogRef.close();
-              }, 1750);
-            })
-          }
-        })
-      }
-    })
-    
-    
-    
+    if (this.Delegation.delegation_Status.name == "Revoked") {
+      this.dataService.DeleteDelegation(id).subscribe({
+        next: (response) => {
+          this.dataService.DeleteDelegationFile(DelegateName, filename).subscribe(r => {
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.dialogRef.close();
+            }, 1750);
+          })
+        }
+      })
+    } else {
+      this.dataService.DeleteTempAcc(id).subscribe({
+        next: (d) => {
+          this.dataService.DeleteDelegation(id).subscribe({
+            next: (response) => {
+              this.dataService.DeleteDelegationFile(DelegateName, filename).subscribe(r => {
+                this.showConfirmationDialog = false;
+                this.showSuccessDialog = true;
+                setTimeout(() => {
+                  this.dialogRef.close();
+                }, 1750);
+              })
+            }
+          })
+        }
+      })
+    }
   }
 
   onCancel(): void {
