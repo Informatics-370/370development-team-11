@@ -27,7 +27,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 })
 export class ViewEmployeeRoleComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'name', 'description', 'action', 'delete'];
+  displayedColumns: string[] = ['name', 'description', 'action', 'delete'];
   roleDelete: any
   RoleToUse: string = "";
 
