@@ -126,7 +126,6 @@ export class CreateProcurementRequestComponent implements OnInit {
 
     this.setVal(value)
     // If no vendors match the filter, return an array with a single element containing the entered value
-    console.log(value)
     return this.vendors.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
@@ -172,15 +171,12 @@ export class CreateProcurementRequestComponent implements OnInit {
   GetVendors() {
     this.dataService.GetVendorsRequest().subscribe({
       next: (response) => {
-        console.log(response)
         let VendorList: any[] = response
         VendorList.forEach((element) => {
           this.vendors.push(element)
         })
       }
     })
-
-    console.log(this.vendors)
   }
 
   AddProcurementRequestB() {
@@ -189,116 +185,98 @@ export class CreateProcurementRequestComponent implements OnInit {
     this.Procurement_Request.vendor.name = this.myForm.get("VendorName").value;
     this.Procurement_Request.vendor.email = this.myForm.get("Email").value;
     this.Procurement_Request.user.username = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
-    console.log(this.Procurement_Request)
+
 
     var Counter = 0
 
     this.dataService.AddProcurementRequest(this.Procurement_Request).subscribe({
 
       next: (response) => {
-        console.log(response)
-        if (response != null) {
+        if (response) {
           for (let i = 0; i <= this.files.length - 1; i++) {
-            console.log(i)
-            console.log(this.files.length)
-            console.log(this.files)
-            if (Counter <= 2) {
-              this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, this.files[i]).subscribe({
-                next: (Response) => {
-                  if (Response) {
+            if (this.files[i] != null) {
+              if (Counter <= 2) {
+                console.log(this.files[i])
+                console.log(i)
+                let file: File = this.files[i]
+                console.log(file)
+                this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file).subscribe({
+                  next: (Response) => {
+                    console.log(Response)
+                    if (Response) {
 
-                    console.log(Counter)
+                      if (i == 0) {
+                        let qPath = Response
+                        this.Procurement_Request = response[0]
+                        this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+                        this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+                        this.Procurement_Request_Quote.prefferedQuote = true
 
-                    if (i == 0) {
-                      let qPath = Response
-                      this.Procurement_Request = response[0]
-                      this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-                      this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
-                      this.Procurement_Request_Quote.prefferedQuote = true
+                        let test: any
+                        test = new DatePipe('en-ZA');
+                        this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+                        this.ProcurementQuotes[0] = this.Procurement_Request_Quote
 
-                      let test: any
-                      test = new DatePipe('en-ZA');
-                      this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
-                      this.ProcurementQuotes[0] = this.Procurement_Request_Quote
+                        // this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[0]).subscribe({
+                        //   next: (result) => {
+                        //     // this.DisplayNotif();
+                        //     Counter++;
+                        //   }
+                        // })
+                        // // if (this.ProcurementQuotes.length == this.files.length) {
+                        // //   this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[i]).subscribe({
+                        // //     next: (result) => {
+                        // //       // this.DisplayNotif();
+                        // //     }
+                        // //   })
+                        // // }
+                      }
 
-                      console.log(true)
-                      console.log(this.ProcurementQuotes)
-                      console.log(this.ProcurementQuotes[i])
-                      this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[0]).subscribe({
-                        next: (result) => {
-                          // this.DisplayNotif();
-                          Counter++;
-                        }
-                      })
-                      // if (this.ProcurementQuotes.length == this.files.length) {
-                      //   this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[i]).subscribe({
-                      //     next: (result) => {
-                      //       // this.DisplayNotif();
-                      //     }
-                      //   })
-                      // }
-                    }
+                      else if (i == 1) {
+                        let qPath = Response
+                        this.Procurement_Request = response[0]
+                        this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+                        this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+                        this.Procurement_Request_Quote.prefferedQuote = false
 
-                    if (i == 1) {
-                      let qPath = Response
-                      this.Procurement_Request = response[0]
-                      this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-                      this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
-                      this.Procurement_Request_Quote.prefferedQuote = false
-
-                      let test: any
-                      test = new DatePipe('en-ZA');
-                      this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
-                      this.ProcurementQuotes[1] = this.Procurement_Request_Quote
-                      console.log(false)
-                      console.log(this.ProcurementQuotes)
-                      console.log(this.ProcurementQuotes[i])
-                      this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[1]).subscribe({
-                        next: (result) => {
-                          Counter++;
-                          // this.DisplayNotif();
-                        }
-                      })
+                        let test: any
+                        test = new DatePipe('en-ZA');
+                        this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+                        this.ProcurementQuotes[1] = this.Procurement_Request_Quote
+                        // this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[1]).subscribe({
+                        //   next: (result) => {
+                        //     Counter++;
+                        //     // this.DisplayNotif();
+                        //   }
+                        // })
 
 
-                    }
-                    if (i == 2) {
-                      let qPath = Response
-                      this.Procurement_Request = response[0]
-                      this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-                      this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
-                      this.Procurement_Request_Quote.prefferedQuote = false
+                      }
+                      else if (i == 2) {
+                        let qPath = Response
+                        this.Procurement_Request = response[0]
+                        this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+                        this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+                        this.Procurement_Request_Quote.prefferedQuote = false
 
-                      let test: any
-                      test = new DatePipe('en-ZA');
-                      this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
-                      this.ProcurementQuotes[2] = this.Procurement_Request_Quote
-                      console.log(false)
-                      console.log(this.ProcurementQuotes)
-                      console.log(this.ProcurementQuotes[i])
-                      this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[2]).subscribe({
-                        next: (result) => {
-                          Counter++;
-                          // this.DisplayNotif();
-                        }
-                      })
+                        let test: any
+                        test = new DatePipe('en-ZA');
+                        this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+                        this.ProcurementQuotes[2] = this.Procurement_Request_Quote
+                        // this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[2]).subscribe({
+                        //   next: (result) => {
+                        //     Counter++;
+                        //     // this.DisplayNotif();
+                        //   }
+                        // })
 
+
+                      }
 
                     }
-
-
-
-
-
-
-                    console.log(this.files.length)
-                    console.log(this.ProcurementQuotes.length)
-
-
-
                   }
-                }
-              })
+                })
+              }
             }
           }
 
@@ -365,7 +343,6 @@ export class CreateProcurementRequestComponent implements OnInit {
               test = new DatePipe('en-ZA');
               this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
 
-              console.log(this.Procurement_Request_Quote)
 
               this.dataService.AddProcurementRequestQuote(this.Procurement_Request_Quote).subscribe({
                 next: (result) => {

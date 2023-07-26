@@ -123,6 +123,7 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
+                
             }
 
             var PathSaved = Path.Combine(VendorName, file.FileName);
