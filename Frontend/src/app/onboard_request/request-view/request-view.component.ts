@@ -62,17 +62,40 @@ export class RequestViewComponent implements OnInit {
     this.FileDetails = []
 
     this.RequestService.GetAllOnboardRequest().subscribe(result => {let RequestList:any[] = result
-      RequestList.forEach((element) => this.OnboardRequest.push(element));
-      console.log(result)
+      RequestList.forEach((element) => {
+        this.OnboardRequest.push(element)
+      });
+      this.OnboardRequest = result
+     for(let i = 0; i < this.OnboardRequest.length; i++) {
+       this.FileDetails.push({FileURL:"",FileName:""})
+      }
+      console.log(this.FileDetails)
       RequestList.forEach((element) => this.vendor.push(element.vendors));
       this.RequestVendors =  new MatTableDataSource(this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
       this.RequestVendors.paginator = this.paginator;
       this.ReqVenLen = this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)
-      console.log(this.RequestVendors)
+      console.log(this.OnboardRequest)
+      let test = [...this.OnboardRequest].sort((a, b) => {
+        // First, compare based on onboard_Request_Id in ascending order
+        if (a.onboard_Request_Id !== b.onboard_Request_Id) {
+          return a.onboard_Request_Id - b.onboard_Request_Id;
+        }
       
-      for(let i = 0; i < RequestList.length; i++) {
-        this.FileDetails.push({FileURL:"",FileName:""})
-        let sFile = RequestList[i].quotes;
+        // If onboard_Request_Id is the same, then compare based on anotherId in descending order
+        return b.vendor_ID - a.vendor_ID;
+      });
+      
+      //let test = this.OnboardRequest.sort((a, b) => a.onboard_Request_Id - b.onboard_Request_Id); let i = 0; i < this.OnboardRequest.length; i++
+      console.log(test)
+      test.forEach(e => {
+        console.log(e)
+      })
+      
+
+      for(let i = 0; i < this.OnboardRequest.length; i++) {
+       // if(this.OnboardRequest)
+        let sFile = this.OnboardRequest[i].quotes;
+       // console.log(test[i].quotes)
         if(sFile != "None") {
           
           
@@ -89,12 +112,12 @@ export class RequestViewComponent implements OnInit {
             this.FileDetails[i].FileName = sFile; 
         }
             
-       
+       console.log(this.FileDetails)
       }
       
      
-        
       this.vendorIds = [...new Set(this.OnboardRequest.map(req => req.vendor_ID))]
+      //this.vendorIds = [...new Set(this.OnboardRequest.sort((a,b) => a.vendor_ID - b.vendor_ID).map(req => req.vendor_ID))]
       })
    
   }
@@ -102,6 +125,7 @@ export class RequestViewComponent implements OnInit {
   getVendorByVendorId(vendorId: number) {
     // Filter the vendor array based on the vendor ID
     //console.log(this.vendor)
+    //console.log(this.vendor.sort((a,b) => b.vendor_ID - a.vendor_ID).filter(ven => ven.vendor_ID === vendorId))
     return this.vendor.filter(ven => ven.vendor_ID === vendorId);
   }
 

@@ -5,7 +5,24 @@
 </h1>
 <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;width: 330px;">Please fill in the following details:</label>
 </div>
-<mat-stepper [linear]="true"  #stepper style="background-color: #eee;" orientation="vertical" (selectionChange)="setFocus(stepper)" >
+<mat-stepper [linear]="true"  #stepper style="background-color: #eee;" orientation="vertical" (selectionChange)="setFocus(stepper)">
+  <mat-step [stepControl]="DueDiligenceChecklistDetailsFormGroup" >
+    <form [formGroup]="DueDiligenceChecklistDetailsFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+      <ng-template matStepLabel>DUE DILIGENCE CHECKLIST DETAILS</ng-template>
+      <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="8">
+        <tr>
+            <td><label >Do you have a physical copy of the Due Diligence Checklist?</label></td>
+            <td> 
+                  <mat-checkbox></mat-checkbox>
+            </td>
+        </tr>
+    </table>  
+    <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
+        <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
+        <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
+       </div>      
+    </form>
+  </mat-step>
   <mat-step [stepControl]="FoundationaldocumentsFormGroup" >
     <form [formGroup]="FoundationaldocumentsFormGroup" style="text-align: -webkit-center;" class="table-responsive">
       <ng-template  matStepLabel>FOUNDATIONAL DOCUMENTS</ng-template>
@@ -126,17 +143,23 @@
       <ng-template matStepLabel >FINANCIALS</ng-template>
       <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="1">
           <tr>
-              <td><label >Details Of Service Or Goods:</label></td>
+              <td><label >VAT Registration Certificate:</label></td>
               <td> 
                   <mat-checkbox formControlName="VATRegistrationCertificate"></mat-checkbox>
               </td>
           </tr>
           <tr>
-              <td> <label>Company Registration Number:</label></td>
+              <td> <label>Tax Clearance Certificate:</label></td>
               <td>
                     <mat-checkbox formControlName="TaxClearanceCertificate"></mat-checkbox>
               </td>
-          </tr>     
+          </tr>  
+          <tr>
+            <td> <label>Bank Stamped confirmation letter:</label></td>
+            <td>
+                  <mat-checkbox></mat-checkbox>
+            </td>
+        </tr>    
       </table>
       
       <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">

@@ -135,14 +135,26 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
           }
           
         }
+        if (result) {
+          hideloader();
+        }
         //result.onboardRequestStatusID == 5 || result.onboardRequestStatusID == 3
       })
+      
+
       this.PendingOnboardRequests = new MatTableDataSource(this.PendingOnboardDetailSummary)
       this.PendingOnboardRequests.paginator = this.paginator;
+
+      function hideloader() {
+        document.getElementById('loading').style.display = "none";
+        document.getElementById('table').style.visibility = "visible";
+      }
       //console.log(this.PendingOnboardRequests)
    })
 
   }//ngoninIt
+
+  
 
   ngOnDestroy() {
     // Unsubscribe from the query parameters subscription to prevent memory leaks

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../DataService/data-service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 @Component({
   selector: 'app-view-pending-procurement-request',
   templateUrl: './view-pending-procurement-request.component.html',
@@ -11,8 +13,8 @@ import { Procurement_Request } from '../Shared/Procurement_Request';
 export class ViewPendingProcurementRequestComponent implements OnInit {
   ProcurementRequests: Procurement_Request[] = [];
   SearchedPRequests: Procurement_Request[] = [];
-  displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'Status', 'View'];
-  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
+  displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'View'];
+  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) { }
   searchWord: string = '';
 
   ngOnInit() {
@@ -59,6 +61,8 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
       this.SearchedPRequests = [...this.ProcurementRequests];
     }
   }
+
+
 
   getStatusColor(status: string): string {
     switch (status.toLowerCase()) {

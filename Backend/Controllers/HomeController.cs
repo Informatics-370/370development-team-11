@@ -24,12 +24,6 @@ namespace ProcionAPI.Controllers
             _DelegationRepository = delegatorRepository;
         }
 
-        public readonly IVendorRepository _VendorRepository;
-        public HomeController(IVendorRepository VendorRepository)
-        {
-            _VendorRepository = VendorRepository;
-        }
-
         [HttpGet]
         [Route("FireAndForgetJob")]
         public string FireAndForgetJob()

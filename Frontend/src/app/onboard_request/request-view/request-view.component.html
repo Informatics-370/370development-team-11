@@ -90,7 +90,7 @@
                         <ng-container *ngFor="let Req of OnboardRequest; let a = index">
                           <ng-container *ngIf="vendorIds.includes(Req.vendor_ID)">
                             <tr *ngFor="let Ven of getVendorByVendorId(Req.vendor_ID); let i = index">
-                              <ng-container *ngIf="Req.onboard_Request_Id === element.onboard_Request_Id && Req.vendor_ID === Ven.vendor_ID">
+                              <ng-container *ngIf="Req.onboard_Request_Id === element.onboard_Request_Id && Req.vendor_ID === Ven.vendor_ID && i === 0">
                               <td *ngIf="i === 0">{{Ven.name}}</td>
                               <td *ngIf="i === 0">{{Ven.email}}</td>
                               <td *ngIf="i === 0"><span *ngIf="Req.onboard_Request_status_ID === 1 || Req.onboard_Request_status_ID === 4" style="color: #22afbe;"> Pending </span><span *ngIf="Req.onboard_Request_status_ID === 3" style="color: #94CC5B;"> Approved </span><span *ngIf="Req.onboard_Request_status_ID === 2" style="color: #fe4945;"> Rejected </span><span *ngIf="Req.onboard_Request_status_ID === 5" style="color: #375623;"> In Progress </span></td>

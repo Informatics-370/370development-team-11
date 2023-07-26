@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../DataService/data-service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
 import { FormBuilder, FormControl, FormGroupDirective, NgForm, FormArray, FormGroup, Validators } from '@angular/forms';
@@ -10,6 +10,8 @@ import { DatePipe } from '@angular/common';
 import { Deposit } from '../Shared/Deposit';
 import { Payment_Made } from '../Shared/PaymentMade';
 import { Proof_Of_Payment } from '../Shared/ProofOfPayment';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
 @Component({
   selector: 'app-view-flagged-procurement-details',
@@ -43,7 +45,7 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit{
 
 
   
-  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router,private route: ActivatedRoute,private _formBuilder: FormBuilder, private http: HttpClient) { }
+  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router,private route: ActivatedRoute,private _formBuilder: FormBuilder, private http: HttpClient,private dialog: MatDialog, private sanitizer:DomSanitizer) { }
   ProcurementDetailsID= 0;
   ProcurementDetails: Procurement_Details;
   ConsumableChecked =true;
@@ -182,11 +184,47 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit{
   }
 
   AcceptRequest() {
-    this.dataService.UpdateProcurementDetailsStatus(1,this.ProcurementDetails).subscribe()
+    this.dataService.UpdateProcurementDetailsStatus(1,this.ProcurementDetails).subscribe({
+      next: (response) => {
+        console.log(response);
+        var action = "APPROVE";
+        var title = "APPROVE SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement Details has been <strong style='color:green'> APPROVED </strong> successfully!");
+
+        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 1750;
+        setTimeout(() => {
+          this.router.navigate(['/ViewFlaggedProcurementRequest']);
+          dialogRef.close();
+        }, duration);
+      }
+    })
   }
 
   RejectRequest() {
-    this.dataService.UpdateProcurementDetailsStatus(2,this.ProcurementDetails).subscribe()
+    this.dataService.UpdateProcurementDetailsStatus(2,this.ProcurementDetails).subscribe({
+      next: (response) => {
+        console.log(response);
+        var action = "REJECTED";
+        var title = "REJECTION SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement Details has been <strong style='color:red'> Rejected </strong> successfully!");
+
+        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 1750;
+        setTimeout(() => {
+          this.router.navigate(['/ViewFlaggedProcurementRequest']);
+          dialogRef.close();
+        }, duration);
+      }
+    })
   }
 
   openPDFInNewTab(i:number): void {
