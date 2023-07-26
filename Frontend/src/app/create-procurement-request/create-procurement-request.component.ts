@@ -202,7 +202,7 @@ export class CreateProcurementRequestComponent implements OnInit {
             console.log(i)
             console.log(this.files.length)
             console.log(this.files)
-            if (Counter <= 3) {
+            if (Counter <= 2) {
               this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, this.files[i]).subscribe({
                 next: (Response) => {
                   if (Response) {

@@ -306,8 +306,6 @@ export class EditProcurementRequestComponent implements OnInit {
       next: (response) => {
         console.log(this.Procurement_Request)
         console.log(response)
-
-        this.DisplayNotif();
         this.ProcurementQuotes.forEach(element => {
           let sFile = element.path;
           console.log(sFile)
