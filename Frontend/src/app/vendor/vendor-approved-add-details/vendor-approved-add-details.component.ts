@@ -40,6 +40,11 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
 
   constructor(private _formBuilder: FormBuilder,private VendorService: DataService,private route: ActivatedRoute ,private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) {}
 
+  DueDiligenceChecklistDetailsFormGroup = this._formBuilder.group({
+    HasDDC:false,
+  });
+
+
   FoundationaldocumentsFormGroup = this._formBuilder.group({
     MutualNDA: false,
     BasicCompanyInfo: [false,[Validators.requiredTrue]],

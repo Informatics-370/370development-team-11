@@ -2,8 +2,8 @@ import { Component,OnInit } from '@angular/core';
 import {FormBuilder,FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import { DataService } from '../DataService/data-service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { DomSanitizer } from '@angular/platform-browser';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Consumable } from '../Shared/Consumable';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import {Procurement_Details} from "../Shared/ProcurementDetails";
@@ -31,6 +31,9 @@ import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import {ErrorStateMatcher} from '@angular/material/core';
+
 @Component({
   selector: 'app-place-procurement-request-create-details',
   templateUrl: './place-procurement-request-create-details.component.html',
@@ -38,7 +41,7 @@ import { Vendor_Asset } from '../Shared/Vendor_Asset';
 })
 export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
-  
+  matcher = new MyErrorStateMatcher()
 
   mail: MailData = {
     Name: '',
@@ -274,7 +277,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     vendor_Consumbale_ID:0,
     consumable_ID:0,
     vendor_ID:0,
-    consumables:this.Consumables,
+    consumable:this.Consumables,
     vendor:this.Procurement_Request.vendor,
   }
 
@@ -303,26 +306,26 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder,private ProcureService: DataService,private route: ActivatedRoute ,private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) {}
 
   ProcurementFormGroup = this._formBuilder.group({
-    BuyerName: ["",[Validators.required]],
-    BuyerEmail: ["",[Validators.required,Validators.email]],
-    ItemType: ["",[Validators.required]],
+    BuyerName: ["",[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    BuyerEmail: ["",[Validators.required,Validators.maxLength(32), Validators.email]],
+    ItemType: ["Consumable"],
     ConsumableItem:["",[Validators.required]],
-    ConsumableQuantity: [0,[Validators.required]],
-    AssetName:["",[Validators.required]],
-    AssetDescription:[""],
-    AccountCode:[0,[Validators.required]],
-    PaymentType: [0,[Validators.required]],
+    ConsumableQuantity: [null,[Validators.required, Validators.pattern(/^[0-9]*$/)]],
+    AssetName:["",[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    AssetDescription:["",[Validators.required,Validators.maxLength(50)]],
+    AccountCode:[null,[Validators.required]],
+    PaymentType: [null,[Validators.required]],
     HasDeposit:[false],
-    DepositAmount: [0,[Validators.required]],
+    DepositAmount: [null,[Validators.required, Validators.pattern(/^[0-9]*$/)]],
     DepositDueDate: [Date.now(),[Validators.required]],
     FullPaymentMade: false,
     PaidOnDate:[Date.now(),[Validators.required]],
     UploadReceiptDoc: ["",[Validators.required]],
     ProofOfPayment:false,
     ProofOfPaymentDoc: ["",[Validators.required]],
-    TotalAmount: [0,[Validators.required]],
+    TotalAmount: [null,[Validators.required, Validators.pattern(/^[0-9]*$/)]],
     TotalAmountDueDate:[Date.now(),[Validators.required]],
-    Comments:["",[Validators.required]],
+    Comments:["",[Validators.maxLength(50)]],
   });
 
 
@@ -332,7 +335,17 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   AssetChecked=false;
   ProcurementRequest_ID = 0;
   MandateLimitAmount:0;
+
+  currentDate = Date.now()
+
   ngOnInit() { 
+    this.ProcurementFormGroup.get("AssetName")?.disable();
+    this.ProcurementFormGroup.get("AssetDescription")?.disable();
+    this.ProcurementFormGroup.get("DepositAmount")?.disable();
+    this.ProcurementFormGroup.get("DepositDueDate")?.disable()
+    this.ProcurementFormGroup.get("PaidOnDate")?.disable();
+    this.ProcurementFormGroup.get("UploadReceiptDoc")?.disable();
+    this.ProcurementFormGroup.get("ProofOfPaymentDoc")?.disable();
 
     var User = this.ProcureService.decodeUser(sessionStorage.getItem('token'))
     console.log(User)
@@ -366,15 +379,54 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     
   }
 
-  CheckChange() {
+  ConsumableCheckChange() {
     if(this.ProcurementFormGroup.get("ItemType")?.value == "Consumable") {
+      this.ProcurementFormGroup.get("ConsumableItem")?.enable();
+      this.ProcurementFormGroup.get("ConsumableQuantity")?.enable();
       this.ConsumableChecked = true;
       this.AssetChecked = false;
+      this.ProcurementFormGroup.get("AssetName")?.disable();
+      this.ProcurementFormGroup.get("AssetDescription")?.disable();
       
     }
     else {
+      this.ProcurementFormGroup.get("AssetName")?.enable();
+      this.ProcurementFormGroup.get("AssetDescription")?.enable();
       this.AssetChecked = true;
       this.ConsumableChecked = false;
+      this.ProcurementFormGroup.get("ConsumableItem")?.disable();
+      this.ProcurementFormGroup.get("ConsumableQuantity")?.disable();
+    }
+  }
+
+  DepositChange() {
+    if(this.ProcurementFormGroup.get("HasDeposit")?.value == true) {
+      this.ProcurementFormGroup.get("DepositAmount")?.enable();
+      this.ProcurementFormGroup.get("DepositDueDate")?.enable();
+    }
+    else {
+      this.ProcurementFormGroup.get("DepositAmount")?.disable();
+      this.ProcurementFormGroup.get("DepositDueDate")?.disable();
+    }
+  }
+
+  ProofOfPaymentChange() {
+    if(this.ProcurementFormGroup.get("ProofOfPayment")?.value == true) {
+      this.ProcurementFormGroup.get("ProofOfPaymentDoc")?.enable();
+    }
+    else {
+      this.ProcurementFormGroup.get("ProofOfPaymentDoc")?.disable();
+    }
+  }
+
+  PaymentMadeChange() {
+    if(this.ProcurementFormGroup.get("FullPaymentMade")?.value == true) {
+      this.ProcurementFormGroup.get("PaidOnDate")?.enable();
+      this.ProcurementFormGroup.get("UploadReceiptDoc")?.enable();
+    }
+    else {
+      this.ProcurementFormGroup.get("PaidOnDate")?.disable();
+      this.ProcurementFormGroup.get("UploadReceiptDoc")?.disable();
     }
   }
   file:File[] = [null,null];
@@ -427,7 +479,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
       console.log(result[0])
       if(this.ProcurementDetails.deposit_Required == true) {
         this.Deposit.deposit_Amount = this.ProcurementFormGroup.get("DepositAmount")?.value;
-        this.Deposit.amount_Outstanding = (this.ProcurementFormGroup.get("TotalAmount")?.value - this.ProcurementFormGroup.get("DepositAmount")?.value)
+        this.Deposit.amount_Outstanding = (Number(this.ProcurementFormGroup.get("TotalAmount")?.value) - Number(this.ProcurementFormGroup.get("DepositAmount")?.value))
         this.Deposit.procurement_Details = result[0];
         this.Deposit.procurement_Details.procurement_Request.user = this.Procurement_Request.user;
         this.Deposit.procurement_Details.procurement_Request.vendor = this.Procurement_Request.vendor;
@@ -493,15 +545,19 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.ProcureService.AddProcurementConsumable(this.Procurement_Consumable).subscribe(r => {console.log(r)})
         this.ProcureService.GetVendorConsumable().subscribe(b => {
           this.Vendor_Consumable.consumable_ID = Number(this.ProcurementFormGroup.get("ConsumableQuantity")?.value)
+          console.log(b.length + 1)
           this.ConsumableItems.forEach(e=> {
           if(e.consumable_Category_ID == Number(this.ProcurementFormGroup.get("ConsumableItem")?.value) ){
-            this.Vendor_Consumable.consumables = e
+            console.log(e)
+            this.Vendor_Consumable.consumable = e
+            this.Vendor_Consumable.vendor = this.Procurement_Request.vendor;
+            this.Vendor_Consumable.vendor_ID = Number(this.Procurement_Request.vendor_ID);
+            this.Vendor_Consumable.vendor_Consumbale_ID = 0
+            console.log(this.Vendor_Consumable)
+            //(b.length + 1);
+            this.ProcureService.AddVendorConsumable(this.Vendor_Consumable).subscribe();
           }
           })
-          this.Vendor_Consumable.vendor = this.Procurement_Request.vendor;
-          this.Vendor_Consumable.vendor_ID = Number(this.Procurement_Request.vendor_ID);
-          this.Vendor_Consumable.vendor_Consumbale_ID = (b.length + 1);
-         this.ProcureService.AddVendorConsumable(this.Vendor_Consumable).subscribe();
         })
         
       }
@@ -533,9 +589,32 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           
         })
       }
+
+      var action = "PLACED";
+      var title = "PLACED PROCUREMENT REQUEST";
+      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement details for procurement <strong>" + result[0].procurement_Request.name + "</strong> has been <strong style='color:green'> PLACED </strong> successfully!");
+
+      const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+        disableClose: true,
+        data: { action, title, message }
+      });
+
+      const duration = 1750;
+      setTimeout(() => {
+        this.router.navigate(['/PlaceProcurementRequest']);
+        dialogRef.close();
+      }, duration);
+
     })
   }
   
 
 }
 
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  }
+}

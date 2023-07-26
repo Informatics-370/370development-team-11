@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../DataService/data-service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog,MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
 import { FormBuilder, FormControl, FormGroupDirective, NgForm, FormArray, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
 @Component({
   selector: 'app-view-procurement-request-approval',
@@ -21,7 +23,7 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
 
 
   
-  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router,private route: ActivatedRoute,private _formBuilder: FormBuilder, private http: HttpClient) { }
+  constructor(private dataService: DataService, private router: Router,private route: ActivatedRoute,private _formBuilder: FormBuilder, private http: HttpClient,private dialog: MatDialog, private sanitizer:DomSanitizer) { }
   ProcurementRequestID= 0;
   ProcurementRequestDetails: Procurement_Request;
  // file:File[] = [null,null,null]
@@ -43,9 +45,11 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
           this.VendorFormGroup.get("Description")?.setValue(this.ProcurementRequestDetails.description.toString())
           this.dataService.GetProcurementRequestQuoteByID(this.ProcurementRequestID).subscribe(result => {
             let b = 0;
+            console.log(result)
             result.forEach(a => {
               this.GetFiles(a.path,b)
               b += 1
+              console.log(a.path)
             })
           })
         }
@@ -59,6 +63,7 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
             result.forEach(a => {
               this.GetFiles(a.path,b)
               b += 1
+              
             })
           })
         }
@@ -80,11 +85,47 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
 
   AcceptRequest() {
     console.log(this.ProcurementRequestDetails)
-    this.dataService.UpdateProcurementRequestStatus(1,this.ProcurementRequestDetails).subscribe(r => {console.log(r)})
+    this.dataService.UpdateProcurementRequestStatus(1,this.ProcurementRequestDetails).subscribe({
+      next: (response) => {
+        console.log(response);
+        var action = "APPROVE";
+        var title = "APPROVE SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement Request <strong>" + response.name + "</strong> has been <strong style='color:green'> APPROVED </strong> successfully!");
+
+        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 1750;
+        setTimeout(() => {
+          this.router.navigate(['/ViewPendingProcurementRequest']);
+          dialogRef.close();
+        }, duration);
+      }
+    })
   }
 
   RejectRequest() {
-    this.dataService.UpdateProcurementRequestStatus(2,this.ProcurementRequestDetails).subscribe()
+    this.dataService.UpdateProcurementRequestStatus(2,this.ProcurementRequestDetails).subscribe({
+      next: (response) => {
+        console.log(response);
+        var action = "REJECTED";
+        var title = "REJECTION SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement Request <strong>" + response.name + "</strong> has been <strong style='color:red'> Rejected </strong> successfully!");
+
+        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 1750;
+        setTimeout(() => {
+          this.router.navigate(['/ViewPendingProcurementRequest']);
+          dialogRef.close();
+        }, duration);
+      }
+    })
   }
 
   openPDFInNewTab(i:number): void {

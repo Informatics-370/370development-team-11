@@ -5,6 +5,6 @@ export interface Vendor_Consumable{
     vendor_Consumbale_ID:number;
     consumable_ID:number;
     vendor_ID:number;
-    consumables:Consumable;
+    consumable:Consumable;
     vendor:VendorOnboardRequest;
 }

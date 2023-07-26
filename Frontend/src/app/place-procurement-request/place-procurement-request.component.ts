@@ -12,7 +12,7 @@ import { Procurement_Request } from '../Shared/Procurement_Request';
 export class PlaceProcurementRequestComponent implements OnInit{
   ProcurementRequests: Procurement_Request[] = [];
   SearchedPRequests: Procurement_Request[] = [];
-  displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'Status', 'View'];
+  displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'View'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
 
@@ -29,7 +29,7 @@ export class PlaceProcurementRequestComponent implements OnInit{
       let procurementRequestList: any[] = result;
       procurementRequestList.forEach(e => {
         //console.log(e)
-        if(e.requisition_Status_ID == 3) {
+        if(e.requisition_Status_ID == 1) {
           this.ProcurementRequests.push(e)
           //this.SearchedPRequests.push(e)
         }

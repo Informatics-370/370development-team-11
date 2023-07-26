@@ -15,6 +15,7 @@ import { Onboard_Status } from 'src/app/Shared/OnboardStatus';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
+import { interval, take } from 'rxjs';
 @Component({
   selector: 'app-request-create',
   templateUrl: './request-create.component.html',
@@ -276,44 +277,45 @@ export class RequestCreateComponent implements OnInit {
         let file:File = this.fileToUpload
         console.log(file)
         console.log(RequestNo)
-        this.dataService.OnboardFileAdd(RequestNo,file).subscribe(response => {
-          let Path: any = response
-          this.sPath = Path.pathSaved.toString()
-          this.Onboard_Request.quotes = this.sPath
-          this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
-          this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
-          this.Vendor.preferedVendor = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].PrefferedVendor;
-          this.Vendor.vendor_Status_ID = 1;
-          this.Vendor.number_Of_Times_Used = 0;
-          this.Onboard_Request.vendor = this.Vendor;
-          this.Onboard_Request.onboard_Status = this.OnboardStatus;
-          console.log(this.Onboard_Request)
-          this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
-            next: (response) => {
-              console.log(response);
-              var action = "CREATE";
-              var title = "CREATE SUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id  + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
-    
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
-    
-              const duration = 1750;
-              setTimeout(() => {
-                this.router.navigate(['/request-view']);
-                this.dialog.afterAllClosed.subscribe({
-                  next: (response) => {
-                    this.ngOnInit();
-                  }
-                })
-                dialogRef.close();
-              }, duration);
-            }}
-          );//dataservice
-
-        });//post
+          this.dataService.OnboardFileAdd(RequestNo,file).subscribe(response => {
+            let Path: any = response
+            this.sPath = Path.pathSaved.toString()
+            this.Onboard_Request.quotes = this.sPath
+            this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
+            this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
+            this.Vendor.preferedVendor = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].PrefferedVendor;
+            this.Vendor.vendor_Status_ID = 1;
+            this.Vendor.number_Of_Times_Used = 0;
+            this.Onboard_Request.vendor = this.Vendor;
+            this.Onboard_Request.onboard_Status = this.OnboardStatus;
+            console.log(this.Onboard_Request)
+            this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
+              next: (response) => {
+                console.log(response);
+                var action = "CREATE";
+                var title = "CREATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id  + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+      
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+      
+                const duration = 1750;
+                setTimeout(() => {
+                  this.router.navigate(['/request-view']);
+                  this.dialog.afterAllClosed.subscribe({
+                    next: (response) => {
+                      this.ngOnInit();
+                    }
+                  })
+                  dialogRef.close();
+                }, duration);
+              }}
+            );//dataservice
+  
+          });//post
+       
       }//if
     }//for loop
   }
