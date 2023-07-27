@@ -104,9 +104,10 @@ export class DeleteProcurementRequestComponent implements OnInit {
             console.log(element.procurement_Request_ID == id)
             console.log(sFile)
             let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+            let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
+            let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
 
-            this.dataService.DeleteProcurementRequestFiles(VendorName, filename).subscribe({
+            this.dataService.DeleteProcurementRequestFiles(VendorName, RequestID, filename).subscribe({
               next: (Result) => {
                 this.showConfirmationDialog = false;
                 this.showSuccessDialog = true;

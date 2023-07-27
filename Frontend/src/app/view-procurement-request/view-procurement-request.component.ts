@@ -98,9 +98,10 @@ export class ViewProcurementRequestComponent implements OnInit {
 
           if (sFile != "None") {
             let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+            let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
+            let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
 
-            this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${filename}`
+            this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${RequestID}/${filename}`
             this.FileDetails[i].FileName = filename
           }
           else {

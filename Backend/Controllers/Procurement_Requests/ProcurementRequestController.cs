@@ -62,6 +62,30 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
         }
 
+        [HttpGet]
+        [Route("GetFileByName/{VendorName}/{FileName}")]
+        public async Task<IActionResult> GetFileByName([FromRoute] string VendorName, [FromRoute] string FileName)
+        {
+            try
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "ProcurementQuotes", VendorName, FileName);
+                if (System.IO.File.Exists(filePath))
+                {
+                    return Ok(true);
+                }
+
+                else
+                {
+                    return Ok(false);
+                }
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
         [HttpPost]
         [Route("CreateProcurementRequest")]
         public async Task<IActionResult> CreateProcurementRequest([FromBody] Procurement_Request RequestAdd)
@@ -105,13 +129,14 @@ namespace ProcionAPI.Controllers.Procurement_Requests
 
 
             var VendorName = Request.Form["VendorName"];
+            var RequestID = Request.Form["RequestID"];
 
             if (file == null || file.Length == 0)
             {
                 return BadRequest("No file selected");
             }
 
-            var folderPath = Path.Combine("Files", "ProcurementQuotes", VendorName);
+            var folderPath = Path.Combine("Files", "ProcurementQuotes", VendorName, RequestID);
             var filePath = Path.Combine(folderPath, file.FileName);
             var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
 
@@ -126,15 +151,15 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 
             }
 
-            var PathSaved = Path.Combine(VendorName, file.FileName);
+            var PathSaved = Path.Combine(VendorName,RequestID, file.FileName);
             return Ok(new { PathSaved });
         }
 
         [HttpGet]
-        [Route("GetProcurementQuote/{VendorName}/{filename}")]
-        public IActionResult GetFile(string VendorName, string filename)
+        [Route("GetProcurementQuote/{VendorName}/{RequestID}/{filename}")]
+        public IActionResult GetFile(string VendorName,string RequestID, string filename)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "ProcurementQuotes", VendorName, filename);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "ProcurementQuotes", VendorName, RequestID, filename);
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
             var contentType = "application/pdf";
             return File(fileBytes, contentType, filename);
@@ -173,10 +198,10 @@ namespace ProcionAPI.Controllers.Procurement_Requests
         }
 
         [HttpDelete]
-        [Route("DeleteFile/{VendorName}/{fileName}")]
-        public IActionResult DeleteFile(string VendorName, string filename)
+        [Route("DeleteFile/{VendorName}/{RequestID}/{fileName}")]
+        public IActionResult DeleteFile(string VendorName,string RequestID, string filename)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "ProcurementQuotes", VendorName, filename);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "ProcurementQuotes", VendorName,RequestID, filename);
 
             try
             {
