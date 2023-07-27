@@ -1012,10 +1012,11 @@ export class DataService {
     return this.httpClient.post<Procurement_Request>(`${this.apiUrl}ProcurementRequest/CreateProcurementRequest`, AddProcurementRequest).pipe(map(result => result))
   }
 
-  ProcurementRequestFileAdd(VendorName: string, file: File): Observable<any> {
+  ProcurementRequestFileAdd(VendorName: string, RequestID: string, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('VendorName', VendorName)
+    formData.append('RequestID', RequestID)
     return this.httpClient.post<any>(`${this.apiUrl}ProcurementRequest/uploadProcurementQuote`, formData, this.httpOptions).pipe(map(result => result))
   }
 
@@ -1097,8 +1098,8 @@ export class DataService {
   }
 
 
-  DeleteProcurementRequestFiles(VendorName: string, fileName: string): Observable<any> {
-    return this.httpClient.delete<any>(`${this.apiUrl}ProcurementRequest/DeleteFile/${VendorName}/${fileName}`, this.httpOptions)
+  DeleteProcurementRequestFiles(VendorName: string, RequestID: String, fileName: string): Observable<any> {
+    return this.httpClient.delete<any>(`${this.apiUrl}ProcurementRequest/DeleteFile/${VendorName}/${RequestID}/${fileName}`, this.httpOptions)
   }
 
   GetProcurementQuotesbyID(id: Number): Observable<any> {
@@ -1149,6 +1150,10 @@ export class DataService {
 
   UpdateProcurementQuotes(RequestID: Number, UpdateQuoteRequest: Procurement_Request_Quote): Observable<Procurement_Request_Quote> {
     return this.httpClient.put<Procurement_Request_Quote>(`${this.apiUrl}ProcurementRequest/UpdateProcurementQuotes/` + RequestID, UpdateQuoteRequest, this.httpOptions)
+  }
+
+  FileValidation(Vendorname: String, FileName: String): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}ProcurementRequest/GetFileByName/` + Vendorname + "/" + FileName, this.httpOptions)
   }
 
 }

@@ -82,9 +82,11 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   fileToUpload: File | null = null;
-  files: any[] = [];
-  ProcurementQuotes: Procurement_Request_Quote[] = []
+  files: File[] = [null, null, null];
+  ProcurementQuotes: Procurement_Request_Quote[] = [null, null, null]
+  FinalisedProcurementQuotes: Procurement_Request_Quote[] = []
   sPath = "";
+  uploadedPathArray: any[] = []
 
   ngOnInit(): void {
     if (this.VendorType == "Approved") {
@@ -126,7 +128,6 @@ export class CreateProcurementRequestComponent implements OnInit {
 
     this.setVal(value)
     // If no vendors match the filter, return an array with a single element containing the entered value
-    console.log(value)
     return this.vendors.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
@@ -172,136 +173,41 @@ export class CreateProcurementRequestComponent implements OnInit {
   GetVendors() {
     this.dataService.GetVendorsRequest().subscribe({
       next: (response) => {
-        console.log(response)
         let VendorList: any[] = response
         VendorList.forEach((element) => {
           this.vendors.push(element)
         })
       }
     })
-
-    console.log(this.vendors)
   }
 
   AddProcurementRequestB() {
+
     this.Procurement_Request.name = this.myForm.get("RequestName").value;
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
     this.Procurement_Request.vendor.name = this.myForm.get("VendorName").value;
     this.Procurement_Request.vendor.email = this.myForm.get("Email").value;
     this.Procurement_Request.user.username = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
-    console.log(this.Procurement_Request)
-
-    var Counter = 0
 
     this.dataService.AddProcurementRequest(this.Procurement_Request).subscribe({
-
       next: (response) => {
-        console.log(response)
-        if (response != null) {
+        this.Procurement_Request = response[0]
+        if (response) {
           for (let i = 0; i <= this.files.length - 1; i++) {
-            console.log(i)
-            console.log(this.files.length)
-            console.log(this.files)
-            if (Counter <= 3) {
-              this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, this.files[i]).subscribe({
+            if (this.files[i] != null) {
+              console.log(this.files[i])
+              console.log(i)
+              let file: File = this.files[i]
+              console.log(file)
+              this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, ("RequestID" + this.Procurement_Request.procurement_Request_ID).toString(), file).subscribe({
                 next: (Response) => {
-                  if (Response) {
-
-                    console.log(Counter)
-
-                    if (i == 0) {
-                      let qPath = Response
-                      this.Procurement_Request = response[0]
-                      this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-                      this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
-                      this.Procurement_Request_Quote.prefferedQuote = true
-
-                      let test: any
-                      test = new DatePipe('en-ZA');
-                      this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
-                      this.ProcurementQuotes[0] = this.Procurement_Request_Quote
-
-                      console.log(true)
-                      console.log(this.ProcurementQuotes)
-                      console.log(this.ProcurementQuotes[i])
-                      this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[0]).subscribe({
-                        next: (result) => {
-                          // this.DisplayNotif();
-                          Counter++;
-                        }
-                      })
-                      // if (this.ProcurementQuotes.length == this.files.length) {
-                      //   this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[i]).subscribe({
-                      //     next: (result) => {
-                      //       // this.DisplayNotif();
-                      //     }
-                      //   })
-                      // }
-                    }
-
-                    if (i == 1) {
-                      let qPath = Response
-                      this.Procurement_Request = response[0]
-                      this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-                      this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
-                      this.Procurement_Request_Quote.prefferedQuote = false
-
-                      let test: any
-                      test = new DatePipe('en-ZA');
-                      this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
-                      this.ProcurementQuotes[1] = this.Procurement_Request_Quote
-                      console.log(false)
-                      console.log(this.ProcurementQuotes)
-                      console.log(this.ProcurementQuotes[i])
-                      this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[1]).subscribe({
-                        next: (result) => {
-                          Counter++;
-                          // this.DisplayNotif();
-                        }
-                      })
-
-
-                    }
-                    if (i == 2) {
-                      let qPath = Response
-                      this.Procurement_Request = response[0]
-                      this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-                      this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
-                      this.Procurement_Request_Quote.prefferedQuote = false
-
-                      let test: any
-                      test = new DatePipe('en-ZA');
-                      this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
-                      this.ProcurementQuotes[2] = this.Procurement_Request_Quote
-                      console.log(false)
-                      console.log(this.ProcurementQuotes)
-                      console.log(this.ProcurementQuotes[i])
-                      this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[2]).subscribe({
-                        next: (result) => {
-                          Counter++;
-                          // this.DisplayNotif();
-                        }
-                      })
-
-
-                    }
-
-
-
-
-
-
-                    console.log(this.files.length)
-                    console.log(this.ProcurementQuotes.length)
-
-
-
-                  }
+                  this.uploadedPathArray.push(Response.pathSaved.toString())
+                  console.log(this.uploadedPathArray)
+                  this.GetQuoteDetails()
                 }
               })
             }
           }
-
         }
 
         else {
@@ -319,6 +225,70 @@ export class CreateProcurementRequestComponent implements OnInit {
             dialogRef.close();
             this.router.navigate(['/ViewProcurementRequest']);
           }, duration);
+        }
+      }
+    })
+  }
+
+  GetQuoteDetails() {
+    if (this.uploadedPathArray.length === this.files.length) {
+      console.log(this.files)
+      for (let a = 0; a <= this.files.length - 1; a++) {
+        if (a === 0) {
+          //Get file name
+          let Filename = this.files[a].name.toString()
+          let VendorName = this.Procurement_Request.vendor.name.toString()
+          let RequestID = ("RequestID" + this.Procurement_Request.procurement_Request_ID).toString()
+          let PathName = (VendorName + "\\" + RequestID + "\\" + Filename).toString()
+          //evaluate against path array
+          console.log(PathName)
+          let UploadedPath = this.uploadedPathArray.find(x => x === PathName)
+          //store
+          this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+          this.Procurement_Request_Quote.path = UploadedPath
+          console.log(UploadedPath)
+          let test: any
+          test = new DatePipe('en-ZA');
+          this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+          this.Procurement_Request_Quote.prefferedQuote = true
+          this.AddQuote(this.Procurement_Request_Quote)
+        }
+        else {
+          //Get file name
+          let Filename = this.files[a].name.toString()
+          let VendorName = this.Procurement_Request.vendor.name.toString()
+          let RequestID = ("RequestID" + this.Procurement_Request.procurement_Request_ID).toString()
+          let PathName = (VendorName + "\\" + RequestID + "\\" + Filename).toString()
+          //evaluate against path array
+          console.log(PathName)
+          let UploadedPath = this.uploadedPathArray.find(x => x === PathName)
+          //store
+          this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+          this.Procurement_Request_Quote.path = UploadedPath
+          console.log(UploadedPath)
+          let test: any
+          test = new DatePipe('en-ZA');
+          this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+          this.Procurement_Request_Quote.prefferedQuote = false
+          this.AddQuote(this.Procurement_Request_Quote)
+
+        }
+
+
+      }
+    }
+    else {
+      //Do Nothin
+    }
+  }
+
+
+  AddQuote(Quote: Procurement_Request_Quote) {
+    this.dataService.AddProcurementRequestQuote(Quote).subscribe({
+      next: (result) => {
+        this.FinalisedProcurementQuotes.push(result)
+        if (this.FinalisedProcurementQuotes.length == 3) {
+          this.DisplayNotif()
         }
       }
     })
@@ -352,7 +322,7 @@ export class CreateProcurementRequestComponent implements OnInit {
       next: (response) => {
         if (response != null) {
           let file: File = this.fileToUpload;
-          this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file).subscribe({
+          this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, "RequestID" + this.Procurement_Request.procurement_Request_ID.toString(), file).subscribe({
             next: (Response) => {
 
               let qPath = Response
@@ -365,7 +335,6 @@ export class CreateProcurementRequestComponent implements OnInit {
               test = new DatePipe('en-ZA');
               this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
 
-              console.log(this.Procurement_Request_Quote)
 
               this.dataService.AddProcurementRequestQuote(this.Procurement_Request_Quote).subscribe({
                 next: (result) => {

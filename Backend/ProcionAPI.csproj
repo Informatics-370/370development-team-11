@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Files\Procurement\**" />
+    <Compile Remove="Files\VendorFileDetails\**" />
+    <Content Remove="Files\Procurement\**" />
+    <Content Remove="Files\VendorFileDetails\**" />
+    <EmbeddedResource Remove="Files\Procurement\**" />
+    <EmbeddedResource Remove="Files\VendorFileDetails\**" />
+    <None Remove="Files\Procurement\**" />
+    <None Remove="Files\VendorFileDetails\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.3" />
     <PackageReference Include="Hangfire.SqlServer" Version="1.8.3" />
@@ -34,11 +45,6 @@
     <PackageReference Include="RazorEngineCore" Version="2022.8.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Files\Procurement\" />
-    <Folder Include="Files\VendorFileDetails\" />
   </ItemGroup>
 
   <ItemGroup>

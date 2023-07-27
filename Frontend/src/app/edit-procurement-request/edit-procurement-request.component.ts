@@ -78,7 +78,7 @@ export class EditProcurementRequestComponent implements OnInit {
   }
 
   fileToUpload: File | null = null;
-  files: any[] = [''];
+  files: File[] = [null, null, null];
   sPath = "";
 
   ProcurementQuotes: Procurement_Request_Quote[] = []
@@ -149,9 +149,10 @@ export class EditProcurementRequestComponent implements OnInit {
 
       if (sFile != "None") {
         let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-        let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+        let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
+        let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
 
-        this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${filename}`
+        this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${RequestID}/${filename}`
         this.FileDetails[i].FileName = filename
       }
       else {
@@ -191,6 +192,15 @@ export class EditProcurementRequestComponent implements OnInit {
     }
   }
 
+  functionNames = ['onFile1Upload', 'onFile2Upload', 'onFile3Upload'];
+
+  onFileUpload(index: number, event: any) {
+    const functionName = this.functionNames[index]; // Adjust index for zero-based array
+    if (typeof this[functionName] === 'function') {
+      this[functionName](event); // Call the appropriate function
+    }
+  }
+
   EditProcurementRequestB() {
 
     this.Procurement_Request.name = this.myForm.get("RequestName").value;
@@ -214,11 +224,12 @@ export class EditProcurementRequestComponent implements OnInit {
             let sFile = this.ProcurementQuotes[i].path;
             console.log(sFile)
             let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-            this.dataService.DeleteProcurementRequestFiles(VendorName, filename).subscribe({
+            let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
+            let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
+            this.dataService.DeleteProcurementRequestFiles(VendorName, RequestID, filename).subscribe({
               next: (Result) => {
                 let file: File = this.files[i]
-                this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file).subscribe({
+                this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, "RequestID" + this.Procurement_Request.procurement_Request_ID.toString(), file).subscribe({
                   next: (Response) => {
                     let qPath = Response
                     this.dataService.GetProcurementQuotesbyID(this.Procurement_Request.procurement_Request_ID).subscribe({
@@ -271,7 +282,6 @@ export class EditProcurementRequestComponent implements OnInit {
 
           else {
             Counter = Counter + 1;
-            this.DisplayNotif();
           }
         };
       }
@@ -306,17 +316,16 @@ export class EditProcurementRequestComponent implements OnInit {
       next: (response) => {
         console.log(this.Procurement_Request)
         console.log(response)
-
-        this.DisplayNotif();
         this.ProcurementQuotes.forEach(element => {
           let sFile = element.path;
           console.log(sFile)
           let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-          let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+          let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
+          let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
           let file: File = this.fileToUpload;
-          this.dataService.DeleteProcurementRequestFiles(VendorName, filename).subscribe({
+          this.dataService.DeleteProcurementRequestFiles(VendorName, RequestID, filename).subscribe({
             next: (Result) => {
-              this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, file).subscribe({
+              this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, "RequestID" + this.Procurement_Request.procurement_Request_ID.toString(), file).subscribe({
                 next: (Response) => {
                   console.log(Response)
 
