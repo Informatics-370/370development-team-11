@@ -12,6 +12,10 @@ import { Payment_Made } from '../Shared/PaymentMade';
 import { Proof_Of_Payment } from '../Shared/ProofOfPayment';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { Role } from '../Shared/EmployeeRole';
+import { User } from '../Shared/User';
+import { Notification_Type } from '../Shared/Notification_Type';
+import { Notification } from '../Shared/Notification';
 
 @Component({
   selector: 'app-view-flagged-procurement-details',
@@ -19,6 +23,42 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
   styleUrls: ['./view-flagged-procurement-details.component.css']
 })
 export class ViewFlaggedProcurementDetailsComponent implements OnInit{
+
+  rl: Role = {
+    role_ID: 0,
+    name: '',
+    description: ''
+  }
+
+  usr: User = {
+    user_Id: 0,
+    role_ID: 0,
+    username: '',
+    password: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
+    no_Notifications: 0,
+    role: this.rl
+  }
+
+
+  Notification_Type:Notification_Type = {
+    notification_Type_ID: 0,
+    name: "",
+    description: "",
+  }
+
+  VendorNotification: Notification = {
+    notification_ID: 0,
+    notification_Type_ID: 0,
+    user_ID: 0,
+    name: "",
+    send_Date: new Date(),
+    user: this.usr,
+    notification_Type: this.Notification_Type,
+  };
+
+
+
 
   ProcurementFormGroup = this._formBuilder.group({
     BuyerName: "",
@@ -186,6 +226,13 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit{
   AcceptRequest() {
     this.dataService.UpdateProcurementDetailsStatus(1,this.ProcurementDetails).subscribe({
       next: (response) => {
+        this.VendorNotification.notification_Type_ID = 16;
+        let transVar: any
+        transVar = new DatePipe('en-ZA');
+        this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+        this.VendorNotification.name = response.name + " has been Approved";
+        this.VendorNotification.user_ID = response.user_Id;
+        this.dataService.ProcurementAddNotification(this.VendorNotification).subscribe();
         console.log(response);
         var action = "APPROVE";
         var title = "APPROVE SUCCESSFUL";
@@ -208,6 +255,13 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit{
   RejectRequest() {
     this.dataService.UpdateProcurementDetailsStatus(2,this.ProcurementDetails).subscribe({
       next: (response) => {
+        this.VendorNotification.notification_Type_ID = 17;
+        let transVar: any
+        transVar = new DatePipe('en-ZA');
+        this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+        this.VendorNotification.name = response.name + " has been rejected";
+        this.VendorNotification.user_ID = response.user_Id;
+        this.dataService.ProcurementAddNotification(this.VendorNotification).subscribe();
         console.log(response);
         var action = "REJECTED";
         var title = "REJECTION SUCCESSFUL";

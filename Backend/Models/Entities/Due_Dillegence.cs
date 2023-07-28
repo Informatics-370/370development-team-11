@@ -47,5 +47,6 @@ namespace ProcionAPI.Models.Entities
         public bool Conflict_Of_Interest_Policy_Present { get; set; }
         public bool Customer_Complaints_Policy_Present { get; set; }
         public bool Business_References_Present { get; set; }
+        public bool Bank_Stamped_Confirtmation { get; set; }
     }
 }

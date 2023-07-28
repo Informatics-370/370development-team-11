@@ -33,6 +33,8 @@ import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import {ErrorStateMatcher} from '@angular/material/core';
+import { Notification } from 'src/app/Shared/Notification';
+import { Notification_Type } from '../Shared/Notification_Type';
 
 @Component({
   selector: 'app-place-procurement-request-create-details',
@@ -303,6 +305,22 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     vendor:this.Procurement_Request.vendor,
   }
 
+  Notification_Type: Notification_Type = {
+    notification_Type_ID: 0,
+    name: "",
+    description: "",
+  }
+
+  VendorNotification: Notification = {
+    notification_ID: 0,
+    notification_Type_ID: 0,
+    user_ID: 0,
+    name: "",
+    send_Date: new Date(),
+    user: this.usr,
+    notification_Type: this.Notification_Type,
+  };
+
   constructor(private _formBuilder: FormBuilder,private ProcureService: DataService,private route: ActivatedRoute ,private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) {}
 
   ProcurementFormGroup = this._formBuilder.group({
@@ -335,7 +353,6 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   AssetChecked=false;
   ProcurementRequest_ID = 0;
   MandateLimitAmount:0;
-
   currentDate = Date.now()
 
   ngOnInit() { 
@@ -464,6 +481,14 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     }
     if(this.MandateLimitAmount < Number(this.ProcurementDetails.total_Amount)) {
       this.ProcurementDetails.procurement_Status_ID = 3;
+      this.VendorNotification.notification_Type_ID = 14;
+      let transVar: any
+      transVar = new DatePipe('en-ZA');
+      this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+      this.VendorNotification.name = this.Procurement_Request.name + " has been flagged for exceeded mandate limit";
+      this.VendorNotification.user_ID = 1;
+      this.ProcureService.ProcurementAddNotification(this.VendorNotification).subscribe();
+
     } 
     else {
       this.ProcurementDetails.procurement_Status_ID = 1;
@@ -544,7 +569,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         })
         this.ProcureService.AddProcurementConsumable(this.Procurement_Consumable).subscribe(r => {console.log(r)})
         this.ProcureService.GetVendorConsumable().subscribe(b => {
-          this.Vendor_Consumable.consumable_ID = Number(this.ProcurementFormGroup.get("ConsumableQuantity")?.value)
+          this.Vendor_Consumable.consumable_ID = Number(this.ProcurementFormGroup.get("ConsumableItem")?.value)
           console.log(b.length + 1)
           this.ConsumableItems.forEach(e=> {
           if(e.consumable_Category_ID == Number(this.ProcurementFormGroup.get("ConsumableItem")?.value) ){
@@ -555,7 +580,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
             this.Vendor_Consumable.vendor_Consumbale_ID = 0
             console.log(this.Vendor_Consumable)
             //(b.length + 1);
-            this.ProcureService.AddVendorConsumable(this.Vendor_Consumable).subscribe();
+            this.ProcureService.AddVendorConsumable(this.Vendor_Consumable).subscribe(r => {console.log(r)});
           }
           })
         })
@@ -565,6 +590,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.assets.description = this.ProcurementFormGroup.get("AssetDescription")?.value;
         this.assets.name = this.ProcurementFormGroup.get("AssetName")?.value;
         this.ProcureService.AddAsset(this.assets).subscribe(data => {
+          console.log(data)
           this.assets.asset_ID = data[0].asset_ID;
           
           this.procurment_assets.asset = data[0]
@@ -576,6 +602,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.procurment_assets.procurement_Details.procurement_Request.requisition_Status = this.Procurement_Request.requisition_Status;
           this.procurment_assets.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
           this.procurment_assets.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category
+          console.log(this.procurment_assets)
           this.ProcureService.AddProcurementAsset(this.procurment_assets).subscribe(r => console.log(r));
 
           this.ProcureService.GetVendorAsset().subscribe(a => {

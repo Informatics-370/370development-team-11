@@ -16,11 +16,14 @@ import { SoleSupplier } from 'src/app/Shared/Sole_Supplier';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
+import { Notification } from 'src/app/Shared/Notification';
 
 import pdfMake from 'pdfmake/build/pdfmake';  
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Due_Dillegence } from 'src/app/Shared/DueDillegence';
 import { POPI } from 'src/app/Shared/POPI';
+import { DatePipe } from '@angular/common';
+import { Notification_Type } from 'src/app/Shared/Notification_Type';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -30,6 +33,41 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   styleUrls: ['./vendor-approve.component.css']
 })
 export class VendorApproveComponent implements OnInit {
+
+  rl: Role = {
+    role_ID: 0,
+    name: '',
+    description: ''
+  }
+
+  usr: User = {
+    user_Id: 0,
+    role_ID: 0,
+    username: '',
+    password: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
+    no_Notifications: 0,
+    role: this.rl
+  }
+
+
+  Notification_Type: Notification_Type = {
+    notification_Type_ID: 0,
+    name: "",
+    description: "",
+  }
+
+  VendorNotification: Notification = {
+    notification_ID: 0,
+    notification_Type_ID: 0,
+    user_ID: 0,
+    name: "",
+    send_Date: new Date(),
+    user: this.usr,
+    notification_Type: this.Notification_Type,
+  };
+
+
 
   vendorsRequest: VendorOnboardRequest[] = [];
   onboardRequest: OnboardRequest[] = [];
@@ -66,11 +104,10 @@ export class VendorApproveComponent implements OnInit {
   selectedOption: string = "True";
   matcher = new MyErrorStateMatcher()
   Urls: any[] = [];
-  constructor(private _formBuilder: FormBuilder, private dataService: DataService, private router: Router, private ActRoute: ActivatedRoute, private http: HttpClient,private dialog: MatDialog, private sanitizer:DomSanitizer) { }
+  constructor(private _formBuilder: FormBuilder, private dataService: DataService, private router: Router, private ActRoute: ActivatedRoute, private http: HttpClient,private dialog: MatDialog, private sanitizer:DomSanitizer) {this.router.routeReuseStrategy.shouldReuseRoute = () => false; }
 
   //@ViewChild(MatAccordion) accordion: Matac;
 
-  
 
   DueDilligenceDetails: Due_Dillegence;
   POPIDetails: POPI;
@@ -82,10 +119,11 @@ export class VendorApproveComponent implements OnInit {
     this.FileDetails = [];
     this.files = [];
     this.onboardRequestSelectedData = undefined
-
+    this.rows.reset()
     this.rows = this._formBuilder.array([]);
+    this.CompanyContactInfoFormGroup.reset()
     this.CompanyContactInfoFormGroup= this._formBuilder.group({ 'RequestData': this.rows });
-  
+    
   
     this.SoleSupplierFormGroup = this._formBuilder.group({
       VendorID: 0,
@@ -191,10 +229,10 @@ export class VendorApproveComponent implements OnInit {
               this.dataService.GetOnboardFiles(RequestNo,filename).subscribe(result => {this.files[0] = result
               })
             }
-            this.dataService.GetDueDiligence(RequestList[0].vendor_ID).subscribe(result => {
-              this.BEEbool = result.B_BBEE_Certificate_Provided
+            // this.dataService.GetDueDiligence(RequestList[0].vendor_ID).subscribe(result => {
+            //   this.BEEbool = result.B_BBEE_Certificate_Provided
               
-            })
+            // })
             
           }
           
@@ -318,7 +356,29 @@ RejectRequest() {
     this.dataService.ChangeOnboardStatus(2,this.onboardRequest[a].onboard_Request_Id,this.onboardRequest[a].vendor_ID).subscribe()
     this.dataService.ChangeVendorStatus(5,this.onboardRequest[a].vendor_ID).subscribe()
   }
-  this.router.navigate(['/vendor-unofficial-vendorlist'])
+  this.VendorNotification.notification_Type_ID = 6;
+  let transVar: any
+  transVar = new DatePipe('en-ZA');
+  this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+  this.VendorNotification.name = "Request #" + this.onboardRequest[0].onboard_Request_Id + " Has been Rejected"
+  this.VendorNotification.user_ID = this.onboardRequest[0].user_Id;
+  this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
+  var action = "REJECTED";
+        var title = "REJECTION SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully <strong style='color:red'> REJECTED </strong> onboard request # <strong>" + this.onboardRequest[0].onboard_Request_Id  +  "</strong>.");
+    
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+    
+        const duration = 2000;
+        setTimeout(() => {
+          //this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+          this.router.navigate(['/vendor-unofficial-vendorlist'])
+          dialogRef.close();
+        }, duration);
+  
 }
 
 Delete(i:number) {
@@ -358,7 +418,22 @@ Delete(i:number) {
     }
 
   })
-  this.router.navigate(['/vendor-unofficial-vendorlist'])
+  var action = "REJECTED";
+        var title = "REJECTION SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully <strong style='color:red'> REJECTED </strong> onboard request # <strong>" + this.onboardRequest[0].onboard_Request_Id  +  "</strong>.");
+    
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+    
+        const duration = 2000;
+        setTimeout(() => {
+          //this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+          this.router.navigate(['/vendor-unofficial-vendorlist'])
+          dialogRef.close();
+        }, duration);
+  
 }
 
 ViewOnboardRequest(){
@@ -1164,11 +1239,35 @@ convertImageToBase64(filePath: string) {
 });
 }
 
+
+
 SoleSupplierApproved() {
   this.dataService.ChangeVendorStatus(2,this.onboardRequest[0].vendor_ID).subscribe();
   this.dataService.ChangeOnboardStatus(5,this.onboardRequest[0].onboard_Request_Id,this.onboardRequest[0].vendor_ID).subscribe()
-  this.router.navigate(['/vendor-unofficial-vendorlist'])
+  this.dataService.GenerateSoleSupplierPerformanceNotification().subscribe();
 
+  this.VendorNotification.notification_Type_ID = 13;
+  let transVar: any
+  transVar = new DatePipe('en-ZA');
+  this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+  this.VendorNotification.name = this.onboardRequest[0].vendor.name + " requires due diligence details"
+  this.VendorNotification.user_ID = 1;
+  this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
+  var action = "APPROVED";
+        var title = "APPROVE SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully <strong style='color:green'> APPROVED </strong> <strong>" + this.onboardRequest[0].vendor.name  +  "</strong>.");
+    
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+    
+        const duration = 2000;
+        setTimeout(() => {
+          //this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+          this.router.navigate(['/vendor-unofficial-vendorlist'])
+          dialogRef.close();
+        }, duration);
 }
 
 

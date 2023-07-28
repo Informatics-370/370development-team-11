@@ -5,12 +5,16 @@ import { Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
 import { Procurement_Details } from '../Shared/ProcurementDetails';
 
+
+
+
 @Component({
   selector: 'app-view-flagged-procurement-request',
   templateUrl: './view-flagged-procurement-request.component.html',
   styleUrls: ['./view-flagged-procurement-request.component.css']
 })
 export class ViewFlaggedProcurementRequestComponent implements OnInit{
+
   ProcurementRequests: Procurement_Request[] = [];
   SearchedPDetails: Procurement_Details[] = [];
   displayedColumns: string[] = ['name', 'employee', 'mandateTotal', 'Total', 'PaymentDue', 'View'];

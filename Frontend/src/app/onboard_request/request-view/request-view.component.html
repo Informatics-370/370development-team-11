@@ -95,7 +95,7 @@
                               <td *ngIf="i === 0">{{Ven.email}}</td>
                               <td *ngIf="i === 0"><span *ngIf="Req.onboard_Request_status_ID === 1 || Req.onboard_Request_status_ID === 4" style="color: #22afbe;"> Pending </span><span *ngIf="Req.onboard_Request_status_ID === 3" style="color: #94CC5B;"> Approved </span><span *ngIf="Req.onboard_Request_status_ID === 2" style="color: #fe4945;"> Rejected </span><span *ngIf="Req.onboard_Request_status_ID === 5" style="color: #375623;"> In Progress </span></td>
                               <td *ngIf="FileDetails[a].FileName !== 'None' && i === 0">
-                                <a href="{{FileDetails[a].FileURL}}" download="{{FileDetails[a].FileName}}" matTooltip="This will download the Company Quotes PDF">{{FileDetails[a].FileName}}</a>
+                                <a href="{{FileDetails[a].FileURL}}" download="{{FileDetails[a].FileName}}" matTooltip="This will download the Company Quotes PDF" style="color: black;">{{FileDetails[a].FileName}}</a>
                               </td>
                               <td *ngIf="FileDetails[a].FileName === 'None' && i === 0"><b>{{FileDetails[a].FileName}}</b></td>
                             </ng-container>

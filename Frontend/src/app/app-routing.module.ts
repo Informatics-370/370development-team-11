@@ -327,7 +327,7 @@ const routes: Routes = [
   {
     path: 'ViewFlaggedProcurementDetails/:ProcurementDetailsID', canActivate: [AuthService],
     component: ViewFlaggedProcurementDetailsComponent
-  }
+  },
   {
 
 

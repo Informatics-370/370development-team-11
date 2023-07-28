@@ -7,6 +7,7 @@ namespace ProcionAPI.Models.Entities
     public class Procurement_Asset
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Procurement_Asset_ID { get; set; }
         [Key]
         [Required]

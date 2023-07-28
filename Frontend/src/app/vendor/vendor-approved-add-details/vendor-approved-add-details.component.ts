@@ -22,7 +22,7 @@ import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notifi
 import { invalid } from 'moment';
 import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 import { Vendor_Insurance } from 'src/app/Shared/VendorDetailsInsurance';
-
+import { Notification } from 'src/app/Shared/Notification';
 
 
 @Component({
@@ -65,6 +65,7 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
   FinancialsFormGroup = this._formBuilder.group({
     VATRegistrationCertificate: false,
     TaxClearanceCertificate: false,
+    bank_Stamped_Confirtmation:false,
   });
 
   SubContractingFormGroup = this._formBuilder.group({
@@ -206,6 +207,7 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
     conflict_Of_Interest_Policy_Present: false,
     customer_Complaints_Policy_Present: false,
     business_References_Present: false,
+    bank_Stamped_Confirtmation:false,
   };
 
   ContractedPartnerTypeDetails: Contracted_Partner_Type = {
@@ -233,6 +235,7 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
 
   onboardRequest: OnboardRequest[] = [];
   RequestID = 0;
+  VendorNotification: Notification;
   ngOnInit(): void {
     this.FoundationaldocumentsFormGroup.get("BEECertificateDoc").disable();
     this.FoundationaldocumentsFormGroup.get("BEEValidatityDate").disable();
@@ -275,7 +278,7 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
     
         document.getElementById(stepper.selectedIndex.toString()).scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'})
         //this.setFocus(stepper)
-        }, 100);
+        }, 150);
     }
       
     
@@ -368,13 +371,15 @@ Create() {
         this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[0]).subscribe(response => {
          let Path: any = response
          this.VenBEEDetails.beE_Certificate  = Path.returnedPath.toString();
-         this.VendorService.AddBEEDetails(this.VenBEEDetails).subscribe(response => {console.log(response)})
+         this.VendorService.AddBEEDetails(this.VenBEEDetails).subscribe(response => {
+          this.VendorService.GenerateVendorBEEExpiryNotification(this.VenBEEDetails.vendor_ID,this.VenBEEDetails.date).subscribe();
+         })
         })
       }
 
       this.DueDilligenceDetails.due_Diligence_ID = 0
       this.DueDilligenceDetails.vendor_ID = Number(VendorID);
-      this.DueDilligenceDetails.due_Diligence_Doc = false;
+      this.DueDilligenceDetails.due_Diligence_Doc = this.DueDiligenceChecklistDetailsFormGroup.get("HasDDC")?.value
       //foundational documents
       this.DueDilligenceDetails.mutual_Nda_Signed = this.FoundationaldocumentsFormGroup.get("MutualNDA")?.value
       this.DueDilligenceDetails.basic_Company_Info_Provided = this.FoundationaldocumentsFormGroup.get("BasicCompanyInfo")?.value
@@ -390,7 +395,7 @@ Create() {
       //financials
       this.DueDilligenceDetails.vat_Reg_Certificate_Provided = this.FinancialsFormGroup.get("VATRegistrationCertificate")?.value
       this.DueDilligenceDetails.tax_Clearance_Certificate_Provided = this.FinancialsFormGroup.get("TaxClearanceCertificate")?.value
-
+      this.DueDilligenceDetails.bank_Stamped_Confirtmation = this.FinancialsFormGroup.get("bank_Stamped_Confirtmation")?.value
       //subcontracting
       this.DueDilligenceDetails.subcontractor_Name_Provided = this.SubContractingFormGroup.get("NameSubContractor")?.value
       this.DueDilligenceDetails.company_Details_Provided = this.SubContractingFormGroup.get("CompanyDetails")?.value
@@ -501,10 +506,22 @@ Create() {
             this.VendorService.AddPOPI(this.POPIDetails).subscribe(response => {console.log(response)})
           }  
         }
+        for(let a = 0; a < this.onboardRequest.length; a ++) {
+          if(this.onboardRequest[a].vendor_ID == Number(VendorID)) {
+            this.VendorNotification.notification_Type_ID = 5;
+            let transVar: any
+            transVar = new DatePipe('en-ZA');
+            this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+            this.VendorNotification.name = this.onboardRequest[a].vendor.name + " has been approved";
+            this.VendorNotification.user_ID = this.onboardRequest[a].user_Id;
+            this.VendorService.VendorAddNotification(this.VendorNotification).subscribe();
+          }
+        }
+        
 
         var action = "CREATE";
         var title = "CREATE SUCCESSFUL";
-        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully added Due Dilligence Checklist for <strong>" + result.vendor.name  +  "</strong>.");
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully <strong style='color:green'> ADDED </strong>  Due Dilligence Checklist for <strong>" + result.vendor.name  +  "</strong>.");
     
         const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
           disableClose: true,

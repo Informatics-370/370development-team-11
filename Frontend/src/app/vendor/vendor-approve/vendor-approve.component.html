@@ -37,7 +37,7 @@
           <tr *ngIf="FileDetails[i] != undefined && files[i] != undefined">
             <td><label for="file" style="margin-right: 1%;">Company Quote: </label></td>
             <td *ngIf="files[i].type == 'application/pdf'">
-                  <a id="btnLink" (click)="openPDFInNewTab(i)" target="_blank" style="color: black;font-weight: 600;">{{FileDetails[i].FileName}}</a> 
+                  <a id="btnLink" (click)="openPDFInNewTab(i)" target="_blank" style="color: black;">{{FileDetails[i].FileName}}</a> 
             </td>
             <td *ngIf="files[i].type != 'application/pdf'">
               <a href="{{FileDetails[i].FileURL}}" download="{{FileDetails[i].FileName}}" target="_blank" style="color: black;">{{FileDetails[i].FileName}}</a> 
@@ -134,7 +134,7 @@
         <tr *ngIf="FileDetails[0] != undefined && files[0] != undefined">
           <td><label for="file" style="margin-right: 1%;">Company Quote: </label></td>
           <td *ngIf="files[0].type == 'application/pdf'">
-                <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" style="color: black;font-weight: 600;">{{FileDetails[0].FileName}}</a> 
+                <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" style="color: black;">{{FileDetails[0].FileName}}</a> 
           </td>
           <td *ngIf="files[0].type != 'application/pdf'">
             <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}" target="_blank" style="color: black;">{{FileDetails[0].FileName}}</a> 
@@ -248,7 +248,7 @@
       <tr *ngIf="FileDetails[0] != undefined && files[0] != undefined">
         <td><label for="file" style="margin-right: 1%;">Company Quote: </label></td>
         <td *ngIf="files[0].type == 'application/pdf'">
-              <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" style="color: black;font-weight: 600;">{{FileDetails[0].FileName}}</a> 
+              <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" style="color: black;">{{FileDetails[0].FileName}}</a> 
         </td>
         <td *ngIf="files[0].type != 'application/pdf'">
           <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}" target="_blank" style="color: black;">{{FileDetails[0].FileName}}</a> 

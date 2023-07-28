@@ -42,4 +42,5 @@ export interface Due_Dillegence{
     conflict_Of_Interest_Policy_Present: boolean;
     customer_Complaints_Policy_Present: boolean;
     business_References_Present: boolean;
+    bank_Stamped_Confirtmation:boolean;
 }
