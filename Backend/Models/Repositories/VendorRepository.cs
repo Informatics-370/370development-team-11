@@ -6,6 +6,9 @@ using ProcionAPI.Controllers;
 using Azure.Core;
 using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Microsoft.VisualBasic;
+using Microsoft.IdentityModel.Tokens;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ProcionAPI.Models.Repositories
 {
@@ -1011,6 +1014,68 @@ namespace ProcionAPI.Models.Repositories
             await _dbContext.SaveChangesAsync();
 
             return new Notification[] { newNotification };
+        }
+
+        public async Task<Vendor[]> GetAllSoleSupplierVendorAsync()
+        {
+            var SoleSupplierVendors = _dbContext.Vendor.Where(x => (x.Sole_Supplier_Provided == true) && (x.Vendor_Status_ID == 4) || (x.Vendor_Status_ID == 3));
+
+            return await SoleSupplierVendors.ToArrayAsync();
+        }
+
+            public async Task<Notification[]> GenerateSoleSupplierPerformanceReviewAsync(Vendor ven)
+            {
+            
+                    Notification newNotification = new Notification();
+
+                    newNotification.Send_Date = DateTime.Now.Date;
+                    newNotification.User_Id = 1;
+                    newNotification.Name = "Performance review for " + ven.Name + " is needed.";
+                    newNotification.Notification_Type_ID = 3;
+                    var existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == newNotification.User_Id);
+
+                    if (existingUser != null)
+                    {
+                        newNotification.User = existingUser;
+                    }
+
+                    var existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 3);
+
+                    if (existingNotificationType != null)
+                    {
+                        newNotification.Notification_Type = existingNotificationType;
+                    }
+
+
+                    await _dbContext.Notification.AddAsync(newNotification);
+                    await _dbContext.SaveChangesAsync();
+
+                    return new Notification[] { newNotification };
+            }
+
+
+        public async Task<Notification[]> AddNotificationAsync(Notification VendorNotification)
+        {
+
+            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == VendorNotification.Notification_Type_ID);
+
+            if (existingNotificationType != null)
+            {
+                VendorNotification.Notification_Type = existingNotificationType;
+            }
+
+            var existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == VendorNotification.User_Id);
+
+            if (existingUser != null)
+            {
+                VendorNotification.User = existingUser;
+            }
+
+
+            await _dbContext.Notification.AddAsync(VendorNotification);
+            await _dbContext.SaveChangesAsync();
+
+            return new Notification[] { VendorNotification };
         }
 
 

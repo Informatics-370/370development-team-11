@@ -93,8 +93,24 @@ export class ViewNotificationHubComponent implements OnInit {
   }
 
   VendorRoute(name: string) {
-    if (name.includes("Onboard")) {
+    console.log(name)
+    if (name.includes("New Vendor Onboard Request")) {
+      this.router.navigate(['/vendor-unofficial-vendorlist']);
+    }
+    else if(name.includes("BEE renewal")) {
+      this.router.navigate(['/vendor-unofficial-vendorlist']);
+    } 
+    else if(name.includes("Vendor Onboard Request Has Been Accepted")) {
+      this.router.navigate(['/vendor-view']);
+    } 
+    else if(name.includes("Vendor Onboard Request Has Been Rejected")) {
       this.router.navigate(['/request-view']);
+    } 
+    else if(name.includes("Sole Supplier has been approved by general manager")) {
+      this.router.navigate(['/vendor-unofficial-vendorlist']);
+    }
+    else if(name.includes("Onboard Request Requires Management Approval")) {
+      this.router.navigate(['/vendor-unofficial-vendorlist']);
     }
     else {
       this.router.navigate(['/vendor-view']);
@@ -102,9 +118,24 @@ export class ViewNotificationHubComponent implements OnInit {
   }
 
   ProcurementRoute(name: string) {
-    if (name.includes("Exceeded Mandate Limit")) {
+    if (name.includes("Procurement Details has been flagged")) {
       this.router.navigate(['/ViewFlaggedProcurementRequest']);
     }
+    else if(name.includes("Procurement Request Has Been Accepted")) {
+      this.router.navigate(['/PlaceProcurementRequest']);
+    }
+    else if(name.includes("Procurement Request Has Been Rejected")) {
+      this.router.navigate(['/ViewProcurementRequest']);
+    }
+    else if(name.includes("Flagged Procurement Details Has Been Approved")) {
+      this.router.navigate(['/ViewProcurementRequest']);
+    }
+    else if(name.includes("Flagged Procurement Details Has Been Rejected")) {
+      this.router.navigate(['/ViewProcurementRequest']);
+    }
+    
+
+
     //else if (name.includes("Exceeded Mandate Limit"))
     //{
     //  this.router.navigate(['/']);

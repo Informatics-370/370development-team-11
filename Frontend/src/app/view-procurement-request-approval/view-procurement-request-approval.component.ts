@@ -7,6 +7,11 @@ import { FormBuilder, FormControl, FormGroupDirective, NgForm, FormArray, FormGr
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { Notification } from 'src/app/Shared/Notification';
+import { DatePipe } from '@angular/common';
+import { Notification_Type } from '../Shared/Notification_Type';
+import { Role } from '../Shared/EmployeeRole';
+import { User } from '../Shared/User';
 
 @Component({
   selector: 'app-view-procurement-request-approval',
@@ -14,7 +19,42 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
   styleUrls: ['./view-procurement-request-approval.component.css']
 })
 export class ViewProcurementRequestApprovalComponent implements OnInit{
-  
+
+
+  rl: Role = {
+    role_ID: 0,
+    name: '',
+    description: ''
+  }
+
+  usr: User = {
+    user_Id: 0,
+    role_ID: 0,
+    username: '',
+    password: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
+    no_Notifications: 0,
+    role: this.rl
+  }
+
+
+  Notification_Type: Notification_Type = {
+    notification_Type_ID: 0,
+    name: "",
+    description: "",
+  }
+
+  VendorNotification: Notification = {
+    notification_ID: 0,
+    notification_Type_ID: 0,
+    user_ID: 0,
+    name: "",
+    send_Date: new Date(),
+    user: this.usr,
+    notification_Type: this.Notification_Type,
+  };
+
+
   VendorFormGroup = this._formBuilder.group({
     CompanyName: '',
     CompanyEmail: '',
@@ -87,6 +127,14 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
     console.log(this.ProcurementRequestDetails)
     this.dataService.UpdateProcurementRequestStatus(1,this.ProcurementRequestDetails).subscribe({
       next: (response) => {
+        this.VendorNotification.notification_Type_ID = 8;
+        let transVar: any
+        transVar = new DatePipe('en-ZA');
+        this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+        this.VendorNotification.name = response.name + " has been approved";
+        this.VendorNotification.user_ID = response.user_Id;
+        this.dataService.ProcurementAddNotification(this.VendorNotification).subscribe();
+
         console.log(response);
         var action = "APPROVE";
         var title = "APPROVE SUCCESSFUL";
@@ -109,6 +157,14 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
   RejectRequest() {
     this.dataService.UpdateProcurementRequestStatus(2,this.ProcurementRequestDetails).subscribe({
       next: (response) => {
+        this.VendorNotification.notification_Type_ID = 9;
+        let transVar: any
+        transVar = new DatePipe('en-ZA');
+        this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+        this.VendorNotification.name = response.name + " has been rejected";
+        this.VendorNotification.user_ID = response.user_Id;
+        this.dataService.ProcurementAddNotification(this.VendorNotification).subscribe();
+
         console.log(response);
         var action = "REJECTED";
         var title = "REJECTION SUCCESSFUL";

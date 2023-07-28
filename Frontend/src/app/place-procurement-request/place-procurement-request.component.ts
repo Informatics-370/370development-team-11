@@ -30,19 +30,28 @@ export class PlaceProcurementRequestComponent implements OnInit{
       procurementRequestList.forEach(e => {
         //console.log(e)
         if(e.requisition_Status_ID == 1) {
-          this.ProcurementRequests.push(e)
+          console.log(e)
+          this.dataService.GetProcurementDetailsByRequestID(e.procurement_Request_ID).subscribe(a => {
+            //console.log(result)
+            if(a == null) {
+              this.ProcurementRequests.push(e)
+              this.SearchedPRequests = [...this.ProcurementRequests];
+            }
+           
+          })
+          
           //this.SearchedPRequests.push(e)
         }
       })
       //this.ProcurementRequests = [...procurementRequestList];
-      this.SearchedPRequests = [...this.ProcurementRequests];
+      //this.SearchedPRequests = [...this.ProcurementRequests];
       //console.log(this.SearchedPRequests[0].requisition_Status_ID)
       if (result) {
         hideloader();
       }
 
     });
-
+    
     function hideloader() {
       document.getElementById('loading').style.display = "none";
       document.getElementById('table').style.visibility = "visible";

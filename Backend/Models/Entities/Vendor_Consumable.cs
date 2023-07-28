@@ -6,12 +6,13 @@ namespace ProcionAPI.Models.Entities
     public class Vendor_Consumable
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Vendor_Consumbale_ID { get; set; }
 
         [Key]
         [Required]
         public int Consumable_ID { get; set; }
-
+        
         [Key]
         [Required]
         public int Vendor_ID { get; set; }

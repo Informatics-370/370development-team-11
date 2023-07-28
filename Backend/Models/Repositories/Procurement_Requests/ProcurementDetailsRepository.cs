@@ -201,6 +201,20 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 AddVendorConsumable.Consumable = existingConsumable;
             }
 
+            Consumable_Category existingConsumableCategorye = await _dbContext.Consumable_Category.FirstOrDefaultAsync(x => x.Consumable_Category_ID == AddVendorConsumable.Consumable.Consumable_Category_ID);
+
+            if (existingConsumableCategorye != null)
+            {
+                AddVendorConsumable.Consumable.Consumable_Category = existingConsumableCategorye;
+            }
+
+            Vendor_Status existingVendorStatus = await _dbContext.Vendor_Status.FirstOrDefaultAsync(x => x.Vendor_Status_ID == AddVendorConsumable.Vendor.Vendor_Status_ID);
+
+            if (existingVendorStatus != null)
+            {
+                AddVendorConsumable.Vendor.Vendor_Status = existingVendorStatus;
+            }
+
 
             await _dbContext.Vendor_Consumable.AddAsync(AddVendorConsumable);
             await _dbContext.SaveChangesAsync();
@@ -235,6 +249,56 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 AddProcurementAsset.Asset = existingAssets;
             }
 
+            Employee existingEmployee = await _dbContext.Employee.FirstOrDefaultAsync(x => x.EmployeeID == AddProcurementAsset.Procurement_Details.EmployeeID);
+
+            if (existingEmployee != null)
+            {
+                AddProcurementAsset.Procurement_Details.Employee = existingEmployee;
+            }
+
+            Procurement_Request existingProcurementRequest = await _dbContext.Procurement_Request.FirstOrDefaultAsync(x => x.Procurement_Request_ID == AddProcurementAsset.Procurement_Details.Procurement_Request_ID);
+
+            if (existingProcurementRequest != null)
+            {
+                AddProcurementAsset.Procurement_Details.Procurement_Request = existingProcurementRequest;
+
+
+            }
+
+            Sign_Off_Status existingSignOffStatus = await _dbContext.Sign_Off_Status.FirstOrDefaultAsync(x => x.Sign_Off_Status_ID == AddProcurementAsset.Procurement_Details.Sign_Off_Status_ID);
+
+            if (existingSignOffStatus != null)
+            {
+                AddProcurementAsset.Procurement_Details.Sign_Off_Status = existingSignOffStatus;
+            }
+
+            Procurement_Payment_Status existingProcurementPaymentStatus = await _dbContext.Procurement_Payment_Status.FirstOrDefaultAsync(x => x.Procurement_Payment_Status_ID == AddProcurementAsset.Procurement_Details.Procurement_Payment_Status_ID);
+
+            if (existingProcurementPaymentStatus != null)
+            {
+                AddProcurementAsset.Procurement_Details.Procurement_Payment_Status = existingProcurementPaymentStatus;
+            }
+
+            Budget_Line existingBudgetLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(x => x.Account_Code == AddProcurementAsset.Procurement_Details.Account_Code);
+
+            if (existingBudgetLine != null)
+            {
+                AddProcurementAsset.Procurement_Details.Budget_Line = existingBudgetLine;
+            }
+
+            Procurement_Status existingProcurementStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == AddProcurementAsset.Procurement_Details.Procurement_Status_ID);
+
+            if (existingProcurementStatus != null)
+            {
+                AddProcurementAsset.Procurement_Details.Procurement_Status = existingProcurementStatus;
+            }
+
+            Payment_Method existingPaymentMethod = await _dbContext.Payment_Method.FirstOrDefaultAsync(x => x.Payment_Method_ID == AddProcurementAsset.Procurement_Details.Payment_Method_ID);
+
+            if (existingPaymentMethod != null)
+            {
+                AddProcurementAsset.Procurement_Details.Payment_Method = existingPaymentMethod;
+            }
 
             await _dbContext.Procurement_Asset.AddAsync(AddProcurementAsset);
             await _dbContext.SaveChangesAsync();
@@ -365,5 +429,37 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
             return ExistingProcurementDetails;
         }
+
+        public async Task<Procurement_Details> GetProcurementDetailsByRequestIDAsync(int RequestID)
+        {
+            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Where(x => x.Procurement_Request_ID == RequestID);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Notification[]> AddNotificationAsync(Notification ProcurementNotification)
+        {
+
+            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == ProcurementNotification.Notification_Type_ID);
+
+            if (existingNotificationType != null)
+            {
+                ProcurementNotification.Notification_Type = existingNotificationType;
+            }
+
+            var existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == ProcurementNotification.User_Id);
+
+            if (existingUser != null)
+            {
+                ProcurementNotification.User = existingUser;
+            }
+
+
+            await _dbContext.Notification.AddAsync(ProcurementNotification);
+            await _dbContext.SaveChangesAsync();
+
+            return new Notification[] { ProcurementNotification };
+        }
+
     }
 }

@@ -542,6 +542,22 @@ export class DataService {
     return this.httpClient.put(`${this.apiUrl}Vendor/ChangeOnboardStatus/${statusID}/${onboardRequestId}/${VenID}`, this.httpOptions).pipe(map(result => result))
   }
 
+  //--------------------------------------------------------------------------------------Vendor System Generate Notifications--------------------------------------------------------------------------------------
+
+  GenerateSoleSupplierPerformanceNotification(): Observable<any> {
+    return this.httpClient.get(`${this.apiUrl}Vendor/RecurringJobDelegation`).pipe(map(result => result))
+  }
+
+  GenerateVendorBEEExpiryNotification(VendorID:number,date:Date): Observable<any> {
+    return this.httpClient.get(`${this.apiUrl}Vendor/DelayedJob/${VendorID}/${date}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  VendorAddNotification(VendorNotification: Notification): Observable<any> {
+    return this.httpClient.post<Notification>(`${this.apiUrl}Vendor/VendorAddNotification`, VendorNotification, this.httpOptions).pipe(map(result => result))
+  }
+
+
+
   //--------------------------------------------------------------------------------------Mandate Limit--------------------------------------------------------------------------------------
   GetMandateLimits(): Observable<any> {
     return this.httpClient.get<Mandate_Limit[]>(`${this.apiUrl}Mandate/GetAllMandateLimits`).pipe(
@@ -1055,7 +1071,7 @@ export class DataService {
   }
 
   AddVendorConsumable(AddVendorConsumable: Vendor_Consumable): Observable<any> {
-    return this.httpClient.post<Vendor_Consumable>(`${this.apiUrl}ProcurementDetails/AddVendorConsumable`, AddVendorConsumable, this.httpOptions).pipe(map(result => result))
+    return this.httpClient.post<Vendor_Consumable[]>(`${this.apiUrl}ProcurementDetails/AddVendorConsumable`, AddVendorConsumable, this.httpOptions)
   }
 
   AddAsset(AddAsset: Asset): Observable<any> {
@@ -1156,4 +1172,11 @@ export class DataService {
     return this.httpClient.get<any>(`${this.apiUrl}ProcurementRequest/GetFileByName/` + Vendorname + "/" + FileName, this.httpOptions)
   }
 
+  GetProcurementDetailsByRequestID(RequestID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/GetProcurementDetailsByRequestID/${RequestID}`).pipe(map(result => result))
+  }
+
+  ProcurementAddNotification(ProcurementNotification: Notification): Observable<any> {
+    return this.httpClient.post<Notification>(`${this.apiUrl}ProcurementDetails/ProcurementAddNotification`, ProcurementNotification, this.httpOptions).pipe(map(result => result))
+  }
 }

@@ -89,5 +89,8 @@ namespace ProcionAPI.Models.Repositories
         Task<Onboard_Request> ChangeOnboardStatusAsync(int statusID, int onboardRequestId, int VenID);
 
         Task<Notification[]> AddVendorBEENotificationAsync(DateTime beeDate,int VendorID, string Description);
+        Task<Vendor[]> GetAllSoleSupplierVendorAsync();
+        Task<Notification[]> GenerateSoleSupplierPerformanceReviewAsync(Vendor ven);
+        Task<Notification[]> AddNotificationAsync(Notification VendorNotification);
     }
 }

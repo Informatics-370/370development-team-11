@@ -48,6 +48,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Files\Procurement\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="ProcionAPI.sln" />
   </ItemGroup>
 

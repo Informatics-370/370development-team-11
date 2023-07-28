@@ -16,6 +16,9 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 import { interval, take } from 'rxjs';
+import { Notification } from 'src/app/Shared/Notification';
+import { DatePipe } from '@angular/common';
+import { Notification_Type } from 'src/app/Shared/Notification_Type';
 @Component({
   selector: 'app-request-create',
   templateUrl: './request-create.component.html',
@@ -82,6 +85,22 @@ export class RequestCreateComponent implements OnInit {
     reason : "",
   }
 
+  Notification_Type: Notification_Type = {
+    notification_Type_ID: 0,
+    name: "",
+    description: "",
+  }
+
+  VendorNotification: Notification = {
+    notification_ID: 0,
+    notification_Type_ID: 0,
+    user_ID: 0,
+    name: "",
+    send_Date: new Date(),
+    user: this.usr,
+    notification_Type: this.Notification_Type,
+  };
+
   SoleSupplierFormGroup = this._formBuilder.group({
     CompanyName: ['', [Validators.required, Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
     CompanyEmail: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
@@ -95,7 +114,7 @@ export class RequestCreateComponent implements OnInit {
 
   selectedOption: string = "true";
   matcher = new MyErrorStateMatcher()
-
+  
   constructor(private _formBuilder: FormBuilder, private dataService: DataService, private router: Router, private ActRoute: ActivatedRoute, private http: HttpClient,private dialog: MatDialog, private sanitizer:DomSanitizer) { }
   addTab() {
     const row = this._formBuilder.group({
@@ -116,6 +135,13 @@ export class RequestCreateComponent implements OnInit {
   }
 
   ngOnInit() {
+    var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+    //console.log(User)
+    //console.log(User.unique_name)
+    this.dataService.GetUserByUsername(User).subscribe(response => {
+      this.usr = response;
+    })
+
     for (let i = 1; i < 4; i++) {
       const row = this._formBuilder.group({
         tab: [i],
@@ -288,9 +314,20 @@ export class RequestCreateComponent implements OnInit {
             this.Vendor.number_Of_Times_Used = 0;
             this.Onboard_Request.vendor = this.Vendor;
             this.Onboard_Request.onboard_Status = this.OnboardStatus;
+            this.Onboard_Request.user_Id = Number(this.usr.user_Id);
             console.log(this.Onboard_Request)
             this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
               next: (response) => {
+                if(i = this.CompanyContactInfoFormGroup.controls.RequestData.value.length) {
+                  this.VendorNotification.notification_Type_ID = 1;
+                  let transVar: any
+                  transVar = new DatePipe('en-ZA');
+                  this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+                  this.VendorNotification.name = "Request #" + response[0].onboard_Request_Id + " has been created";
+                  this.VendorNotification.user_ID = 1;
+                  this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
+                }
+
                 console.log(response);
                 var action = "CREATE";
                 var title = "CREATE SUCCESSFUL";
@@ -300,12 +337,15 @@ export class RequestCreateComponent implements OnInit {
                   disableClose: true,
                   data: { action, title, message }
                 });
-      
+                
+                
+
                 const duration = 1750;
                 setTimeout(() => {
                   this.router.navigate(['/request-view']);
                   this.dialog.afterAllClosed.subscribe({
                     next: (response) => {
+                      
                       this.ngOnInit();
                     }
                   })
@@ -337,11 +377,19 @@ export class RequestCreateComponent implements OnInit {
         console.log(Path)
         this.sPath = Path.pathSaved.toString()
         this.Onboard_Request.quotes = this.sPath
+        this.Onboard_Request.user_Id = Number(this.usr.user_Id);
         this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe( response => {
          this.Onboard_Request = response[0]
          this.dataService.ChangeOnboardStatus(4,this.Onboard_Request.onboard_Request_Id,this.Onboard_Request.vendor_ID).subscribe()
          this.dataService.AddSoleSupplierDetails(this.Onboard_Request.vendor_ID,this.SoleSupply).subscribe( {
           next: (response) => {
+            this.VendorNotification.notification_Type_ID = 15;
+              let transVar: any
+              transVar = new DatePipe('en-ZA');
+              this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+              this.VendorNotification.name = "Sole Supplier Addition Request for " + response[0].vendor.name;
+              this.VendorNotification.user_ID = 1;
+              this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
             console.log(response);
             
             var action = "CREATE";
@@ -375,11 +423,21 @@ export class RequestCreateComponent implements OnInit {
         this.Onboard_Request.vendor.sole_Supplier_Provided = true;
         this.Onboard_Request.quotes = "None"   
         console.log(this.Onboard_Request)
+        this.Onboard_Request.user_Id = Number(this.usr.user_Id);
         this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe( response => {
           this.Onboard_Request = response[0]
           this.dataService.ChangeOnboardStatus(4,this.Onboard_Request.onboard_Request_Id,this.Onboard_Request.vendor_ID).subscribe(res => console.log(res))
           this.dataService.AddSoleSupplierDetails(this.Onboard_Request.vendor_ID,this.SoleSupply).subscribe( {
            next: (response) => {
+            this.VendorNotification.notification_Type_ID = 15;
+              let transVar: any
+              transVar = new DatePipe('en-ZA');
+              this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+              this.VendorNotification.name = "Sole Supplier Addition Request for " + response[0].vendor.name;
+              this.VendorNotification.user_ID = 1;
+              this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
+        
+
              console.log(response);
              this.dataService.ChangeOnboardStatus(4,this.Onboard_Request.onboard_Request_Id,this.Onboard_Request.vendor_ID)
              var action = "CREATE";
@@ -416,15 +474,21 @@ PreferredChecked = false;
 CheckPrev:any;
 onPreferredChecked(i:number) {
   
-  if(this.CheckPrev != undefined) {
+  if(this.CheckPrev != undefined && this.CheckPrev != i) {
     this.rows.controls[this.CheckPrev].get('PrefferedVendor')?.setValue(false);
   }
 
   this.CheckPrev = i
+
   if(this.PreferredChecked == false) {
     this.PreferredChecked = true;
     this.rows.controls[i].get('PrefferedVendor')?.setValue(this.PreferredChecked);
   }
+  else {
+    this.PreferredChecked = false;
+  }
+  
+  
 
 }
 
