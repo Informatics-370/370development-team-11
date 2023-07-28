@@ -83,6 +83,7 @@ export class EditProcurementRequestComponent implements OnInit {
 
   ProcurementQuotes: Procurement_Request_Quote[] = []
   FileDetails: any[] = [];
+  originalBorderColor: string = 'solid #244688';
 
 
 
@@ -175,6 +176,16 @@ export class EditProcurementRequestComponent implements OnInit {
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[0] = this.fileToUpload;
+      if (this.files[0].name == this.files[1].name || this.files[0].name == this.files[2].name) {
+        document.getElementById("file1").style.border = "solid red";
+        document.getElementById("Error1").style.visibility = "visible"
+        this.files[0] = null;
+        this.myForm.get("OtherQuote1").reset();
+      }
+      else {
+        document.getElementById("file1").style.border = this.originalBorderColor;
+        document.getElementById("Error1").style.visibility = "hidden"
+      }
     }
   }
 
@@ -182,6 +193,16 @@ export class EditProcurementRequestComponent implements OnInit {
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[1] = this.fileToUpload;
+      if (this.files[1].name == this.files[0].name || this.files[1].name == this.files[2].name) {
+        document.getElementById("file2").style.border = "solid red";
+        document.getElementById("Error2").style.visibility = "visible"
+        this.files[2] = null;
+        this.myForm.get("OtherQuote2").reset();
+      }
+      else {
+        document.getElementById("file2").style.border = this.originalBorderColor;
+        document.getElementById("Error2").style.visibility = "hidden"
+      }
     }
   }
 
@@ -189,6 +210,16 @@ export class EditProcurementRequestComponent implements OnInit {
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[2] = this.fileToUpload;
+      if (this.files[2].name == this.files[0].name || this.files[2].name == this.files[1].name) {
+        document.getElementById("file3").style.border = "solid red";
+        document.getElementById("Error3").style.visibility = "visible"
+        this.files[2] = null;
+        this.myForm.get("OtherQuote3").reset();
+      }
+      else {
+        document.getElementById("file3").style.border = this.originalBorderColor;
+        document.getElementById("Error3").style.visibility = "hidden"
+      }
     }
   }
 

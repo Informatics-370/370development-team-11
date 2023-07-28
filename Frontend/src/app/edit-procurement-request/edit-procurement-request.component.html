@@ -161,9 +161,15 @@
                                             style="color: rgb(65, 143, 227);">{{FileDetails[i].FileName}}</a>
                                     </td>
                                     <td>
-                                        <input type="file" id="file3" placeholder="" formControlName="OtherQuote{{i+1}}"
+                                        <input type="file" id="file{{i+1}}" placeholder=""
+                                            formControlName="OtherQuote{{i+1}}"
                                             style="border: solid #244688; border-radius: 5px; " accept=".pdf"
                                             (change)="onFileUpload(i,$event)">
+                                        <br>
+                                        <mat-hint id="Error{{i+1}}" style="color: red; visibility: hidden;">Duplicate
+                                            files
+                                            not
+                                            allowed!</mat-hint>
                                     </td>
                                 </tr>
                             </tbody>

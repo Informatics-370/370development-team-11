@@ -88,6 +88,8 @@ export class CreateProcurementRequestComponent implements OnInit {
   sPath = "";
   uploadedPathArray: any[] = []
 
+  originalBorderColor: string = 'solid #244688';
+
   ngOnInit(): void {
     if (this.VendorType == "Approved") {
       this.myForm = this.formBuilder.group({
@@ -139,6 +141,16 @@ export class CreateProcurementRequestComponent implements OnInit {
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[0] = this.fileToUpload;
+      if (this.files[0].name == this.files[1].name || this.files[0].name == this.files[2].name) {
+        document.getElementById("file1").style.border = "solid red";
+        document.getElementById("Error1").style.visibility = "visible"
+        this.files[0] = null;
+        this.myForm.get("OtherQuote1").reset();
+      }
+      else {
+        document.getElementById("file1").style.border = this.originalBorderColor;
+        document.getElementById("Error1").style.visibility = "hidden"
+      }
     }
   }
 
@@ -146,6 +158,16 @@ export class CreateProcurementRequestComponent implements OnInit {
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[1] = this.fileToUpload;
+      if (this.files[1].name == this.files[0].name || this.files[1].name == this.files[2].name) {
+        document.getElementById("file2").style.border = "solid red";
+        document.getElementById("Error2").style.visibility = "visible"
+        this.files[2] = null;
+        this.myForm.get("OtherQuote2").reset();
+      }
+      else {
+        document.getElementById("file2").style.border = this.originalBorderColor;
+        document.getElementById("Error2").style.visibility = "hidden"
+      }
     }
   }
 
@@ -153,6 +175,16 @@ export class CreateProcurementRequestComponent implements OnInit {
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[2] = this.fileToUpload;
+      if (this.files[2].name == this.files[0].name || this.files[2].name == this.files[1].name) {
+        document.getElementById("file3").style.border = "solid red";
+        document.getElementById("Error3").style.visibility = "visible"
+        this.files[2] = null;
+        this.myForm.get("OtherQuote3").reset();
+      }
+      else {
+        document.getElementById("file3").style.border = this.originalBorderColor;
+        document.getElementById("Error3").style.visibility = "hidden"
+      }
     }
   }
 
@@ -192,17 +224,13 @@ export class CreateProcurementRequestComponent implements OnInit {
     this.dataService.AddProcurementRequest(this.Procurement_Request).subscribe({
       next: (response) => {
         this.Procurement_Request = response[0]
-        if (response) {
+        if (response != null) {
           for (let i = 0; i <= this.files.length - 1; i++) {
             if (this.files[i] != null) {
-              console.log(this.files[i])
-              console.log(i)
               let file: File = this.files[i]
-              console.log(file)
               this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, ("RequestID" + this.Procurement_Request.procurement_Request_ID).toString(), file).subscribe({
                 next: (Response) => {
                   this.uploadedPathArray.push(Response.pathSaved.toString())
-                  console.log(this.uploadedPathArray)
                   this.GetQuoteDetails()
                 }
               })
@@ -212,15 +240,15 @@ export class CreateProcurementRequestComponent implements OnInit {
 
         else {
           var action = "CREATE";
-          var title = "CREATE UNSUCCESSFUL";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:red'> REJECTED </strong> Due to being used more than 2 times! </br> Please Onboard The vendor!");
+          var title = "CREATE SUCCESSFUL";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,
             data: { action, title, message }
           });
 
-          const duration = 2000;
+          const duration = 1750;
           setTimeout(() => {
             dialogRef.close();
             this.router.navigate(['/ViewProcurementRequest']);
@@ -234,61 +262,72 @@ export class CreateProcurementRequestComponent implements OnInit {
     if (this.uploadedPathArray.length === this.files.length) {
       console.log(this.files)
       for (let a = 0; a <= this.files.length - 1; a++) {
-        if (a === 0) {
-          //Get file name
-          let Filename = this.files[a].name.toString()
-          let VendorName = this.Procurement_Request.vendor.name.toString()
-          let RequestID = ("RequestID" + this.Procurement_Request.procurement_Request_ID).toString()
-          let PathName = (VendorName + "\\" + RequestID + "\\" + Filename).toString()
-          //evaluate against path array
-          console.log(PathName)
-          let UploadedPath = this.uploadedPathArray.find(x => x === PathName)
-          //store
-          this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-          this.Procurement_Request_Quote.path = UploadedPath
-          console.log(UploadedPath)
-          let test: any
-          test = new DatePipe('en-ZA');
-          this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+
+        this.Procurement_Request_Quote = {
+          quote_ID: 0,
+          procurement_Request_ID: 0,
+          procurement_Request: this.Procurement_Request,
+          path: "",
+          upload_Date: new Date(),
+          prefferedQuote: false
+        }
+
+        //Get file name
+        let Filename = this.files[a].name.toString()
+        let VendorName = this.Procurement_Request.vendor.name.toString()
+        let RequestID = ("RequestID" + this.Procurement_Request.procurement_Request_ID).toString()
+        let PathName = (VendorName + "\\" + RequestID + "\\" + Filename).toString()
+        //evaluate against path array
+        let UploadedPath = this.uploadedPathArray.find(x => x === PathName)
+        //store
+        this.Procurement_Request_Quote.procurement_Request.name = this.myForm.get("RequestName").value;
+        this.Procurement_Request_Quote.path = UploadedPath
+        console.log(UploadedPath)
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+
+        if (a == 0) {
+
           this.Procurement_Request_Quote.prefferedQuote = true
-          this.AddQuote(this.Procurement_Request_Quote)
+          this.ProcurementQuotes[a] = this.Procurement_Request_Quote
         }
-        else {
-          //Get file name
-          let Filename = this.files[a].name.toString()
-          let VendorName = this.Procurement_Request.vendor.name.toString()
-          let RequestID = ("RequestID" + this.Procurement_Request.procurement_Request_ID).toString()
-          let PathName = (VendorName + "\\" + RequestID + "\\" + Filename).toString()
-          //evaluate against path array
-          console.log(PathName)
-          let UploadedPath = this.uploadedPathArray.find(x => x === PathName)
-          //store
-          this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-          this.Procurement_Request_Quote.path = UploadedPath
-          console.log(UploadedPath)
-          let test: any
-          test = new DatePipe('en-ZA');
-          this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+        else if (a > 0) {
+
           this.Procurement_Request_Quote.prefferedQuote = false
-          this.AddQuote(this.Procurement_Request_Quote)
+          this.ProcurementQuotes[a] = this.Procurement_Request_Quote
 
         }
 
-
+        console.log(this.ProcurementQuotes)
       }
+      this.AddQuote()
     }
     else {
       //Do Nothin
     }
+
+
   }
 
 
-  AddQuote(Quote: Procurement_Request_Quote) {
-    this.dataService.AddProcurementRequestQuote(Quote).subscribe({
-      next: (result) => {
-        this.FinalisedProcurementQuotes.push(result)
-        if (this.FinalisedProcurementQuotes.length == 3) {
-          this.DisplayNotif()
+  AddQuote() {
+    this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[0]).subscribe({
+      next: (result1) => {
+        if (result1) {
+          this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[1]).subscribe({
+            next: (Result2) => {
+              if (Result2) {
+                this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[2]).subscribe({
+                  next: (Result3) => {
+                    if (Result3) {
+                      this.DisplayNotif()
+                    }
+                  }
+                })
+              }
+            }
+          })
         }
       }
     })
@@ -356,6 +395,24 @@ export class CreateProcurementRequestComponent implements OnInit {
               })
             }
           })
+        }
+        else {
+          var action = "CREATE";
+          var title = "LIMIT EXCEEDED";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Vendor: <strong>" + this.Procurement_Request.name + "</strong> will need to be <strong style='color:red'> ONBOARDED </strong> in order to make this request!");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+            this.myForm.reset();
+            this.ngOnInit()
+
+          }, duration);
         }
       }
     })

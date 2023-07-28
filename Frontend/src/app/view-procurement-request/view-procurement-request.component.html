@@ -7,7 +7,7 @@
                 <h2 class="uni-font">Procurement Request</h2>
             </div>
 
-            <a mat-list-item class="uni-font" routerLink="/ViewConsumable">View Procurement Requests</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewProcurementRequest">View Procurement Requests</a>
             <a mat-list-item class="uni-font" routerLink="/ViewPendingProcurementRequest">View Pending Procurement
                 Request</a>
             <a mat-list-item class="uni-font" routerLink="/PlaceProcurementRequest">Place Procurement Request</a>
@@ -45,7 +45,7 @@
                 <span class="loader" id="loading"></span>
             </div>
 
-            <table mat-table [dataSource]="SearchedPRequests" class="mat-elevation-z8" id="table" multiTemplateDataRows>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" id="table" multiTemplateDataRows>
 
                 <ng-container matColumnDef="Name">
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Name </th>
@@ -182,6 +182,10 @@
                     (click)="expandedElement = expandedElement === element ? null : element"></tr>
                 <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
             </table>
+            <mat-paginator style="background-color: #eee;" [length]="100" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page">
+            </mat-paginator>
+
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>
