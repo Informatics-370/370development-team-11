@@ -137,6 +137,12 @@ namespace ProcionAPI.Models.Repositories
             return await query.ToArrayAsync();
         }
 
+        public async Task<Vendor_Detail[]> GetAllApprovedVendorRequestsAsync()
+        {
+            IQueryable<Vendor_Detail> query = _dbContext.Vendor_Detail.Where(VS => VS.Vendor_Category.Name == "Approve").Include(v => v.Vendor);
+            return await query.ToArrayAsync();
+        }
+
         public async Task<Vendor> GetVendorValidationAsync(string sVendorName)
         {
             var existingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Name.ToLower().Trim() == sVendorName.ToLower().Trim());

@@ -584,32 +584,6 @@ namespace ProcionAPI.Data
 
             );
 
-            modelBuilder.Entity<Procurement_Request>()
-            .HasData(
-            new
-            {
-                Procurement_Request_ID = 1,
-                Vendor_ID = 1,
-                Requisition_Status_ID = 3,
-                User_ID = 1,
-                Name = "Procurement Request for x",
-                Description = "A new company procurement request"
-
-            }
-            );
-
-            modelBuilder.Entity<Procurement_Request_Quote>()
-            .HasData(
-            new
-            {
-                Quote_ID = 1,
-                Procurement_Request_ID = 1,
-                Path = "Test",
-                Upload_Date = DateTime.Now,
-                PrefferedQuote = true
-            }
-            );
-
             modelBuilder.Entity<Payment_Method>()
            .HasData(
            new

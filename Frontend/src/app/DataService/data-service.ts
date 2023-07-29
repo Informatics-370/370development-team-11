@@ -548,7 +548,7 @@ export class DataService {
     return this.httpClient.get(`${this.apiUrl}Vendor/RecurringJobDelegation`).pipe(map(result => result))
   }
 
-  GenerateVendorBEEExpiryNotification(VendorID:number,date:Date): Observable<any> {
+  GenerateVendorBEEExpiryNotification(VendorID: number, date: Date): Observable<any> {
     return this.httpClient.get(`${this.apiUrl}Vendor/DelayedJob/${VendorID}/${date}`, this.httpOptions).pipe(map(result => result))
   }
 
@@ -1179,4 +1179,13 @@ export class DataService {
   ProcurementAddNotification(ProcurementNotification: Notification): Observable<any> {
     return this.httpClient.post<Notification>(`${this.apiUrl}ProcurementDetails/ProcurementAddNotification`, ProcurementNotification, this.httpOptions).pipe(map(result => result))
   }
+
+  //Los Pls baas
+  // GetAppVendorsRequest() {
+  //   return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetAllApprovedVendor`).pipe(map(result => result))
+  // }
+
+
 }
+
+

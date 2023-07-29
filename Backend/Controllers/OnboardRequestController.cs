@@ -274,6 +274,22 @@ namespace ProcionAPI.Controllers
             var results = await _OnboardRequestRepository.DeleteVendorAsync(VendorID);
             return Ok(results);
         }
+
+        [HttpGet]
+        [Route("GetAllApprovedVendor")]
+        public async Task<IActionResult> GetAllApprovedVendor()
+        {
+            try
+            {
+                var result = await _OnboardRequestRepository.GetAllApprovedVendorRequestsAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
     
 }
