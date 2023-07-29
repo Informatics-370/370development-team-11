@@ -160,6 +160,8 @@ export class VendorUpdateComponent {
     proof_Of_Registration_Doc:"",
   }
 
+  
+
 
   CompanyContactInfoFormGroup = this._formBuilder.group({
     CompanyName: '',

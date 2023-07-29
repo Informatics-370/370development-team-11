@@ -23,6 +23,9 @@ import { invalid } from 'moment';
 import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 import { Vendor_Insurance } from 'src/app/Shared/VendorDetailsInsurance';
 import { Notification } from 'src/app/Shared/Notification';
+import { Role } from 'src/app/Shared/EmployeeRole';
+import { User } from 'src/app/Shared/User';
+import { Notification_Type } from 'src/app/Shared/Notification_Type';
 
 
 @Component({
@@ -235,7 +238,41 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
 
   onboardRequest: OnboardRequest[] = [];
   RequestID = 0;
-  VendorNotification: Notification;
+
+  rl: Role = {
+    role_ID: 0,
+    name: '',
+    description: ''
+  }
+
+  usr: User = {
+    user_Id: 0,
+    role_ID: 0,
+    username: '',
+    password: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
+    no_Notifications: 0,
+    role: this.rl
+  }
+
+
+  Notification_Type:Notification_Type = {
+    notification_Type_ID: 0,
+    name: "",
+    description: "",
+  }
+
+  VendorNotification: Notification = {
+    notification_ID: 0,
+    notification_Type_ID: 0,
+    user_ID: 0,
+    name: "",
+    send_Date: new Date(),
+    user: this.usr,
+    notification_Type: this.Notification_Type,
+  };
+
+
   ngOnInit(): void {
     this.FoundationaldocumentsFormGroup.get("BEECertificateDoc").disable();
     this.FoundationaldocumentsFormGroup.get("BEEValidatityDate").disable();
