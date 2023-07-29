@@ -15,6 +15,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { VendorOnboardRequest } from '../Shared/VendorOnboardRequest';
+import { Notification } from '../Shared/Notification';
+import { Notification_Type } from '../Shared/Notification_Type';
+import { User } from '../Shared/User';
+import { Role } from '../Shared/EmployeeRole';
 
 @Component({
   selector: 'app-create-procurement-request',
@@ -79,6 +83,39 @@ export class CreateProcurementRequestComponent implements OnInit {
     path: "",
     upload_Date: new Date(),
     prefferedQuote: false
+  }
+
+  rl: Role = {
+    role_ID: 0,
+    name: '',
+    description: ''
+  }
+
+  usr: User = {
+    user_Id: 0,
+    role_ID: 0,
+    username: '',
+    password: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
+    no_Notifications: 0,
+    role: this.rl
+  }
+
+  Notification_Type: Notification_Type = {
+    notification_Type_ID: 0,
+    name: "",
+    description: "",
+  }
+
+
+  ProcurementNotif: Notification = {
+    notification_ID: 0,
+    notification_Type_ID: 0,
+    user_ID: 0,
+    name: "",
+    send_Date: new Date(),
+    user: this.usr,
+    notification_Type: this.Notification_Type,
   }
 
   fileToUpload: File | null = null;
@@ -157,6 +194,7 @@ export class CreateProcurementRequestComponent implements OnInit {
         this.myForm.get("OtherQuote1").reset();
       }
       else {
+        this.files[0] = this.fileToUpload;
         document.getElementById("file1").style.border = this.originalBorderColor;
         document.getElementById("Error1").style.visibility = "hidden"
       }
@@ -176,6 +214,7 @@ export class CreateProcurementRequestComponent implements OnInit {
         this.myForm.get("OtherQuote2").reset();
       }
       else {
+        this.files[1] = this.fileToUpload;
         document.getElementById("file2").style.border = this.originalBorderColor;
         document.getElementById("Error2").style.visibility = "hidden"
       }
@@ -195,6 +234,7 @@ export class CreateProcurementRequestComponent implements OnInit {
         this.myForm.get("OtherQuote3").reset();
       }
       else {
+        this.files[2] = this.fileToUpload;
         document.getElementById("file3").style.border = this.originalBorderColor;
         document.getElementById("Error3").style.visibility = "hidden"
       }
@@ -233,7 +273,8 @@ export class CreateProcurementRequestComponent implements OnInit {
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
     this.Procurement_Request.vendor.name = this.myForm.get("VendorName").value;
     this.Procurement_Request.vendor.email = this.myForm.get("Email").value;
-    this.Procurement_Request.user.username = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.Procurement_Request.user.username = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    console.log(this.Procurement_Request.user.username)
 
     this.dataService.AddProcurementRequest(this.Procurement_Request).subscribe({
       next: (response) => {
@@ -274,7 +315,6 @@ export class CreateProcurementRequestComponent implements OnInit {
 
   GetQuoteDetails() {
     if (this.uploadedPathArray.length === this.files.length) {
-      console.log(this.files)
       for (let a = 0; a <= this.files.length - 1; a++) {
 
         this.Procurement_Request_Quote = {
@@ -335,7 +375,18 @@ export class CreateProcurementRequestComponent implements OnInit {
                 this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[2]).subscribe({
                   next: (Result3) => {
                     if (Result3) {
-                      this.DisplayNotif()
+                      this.ProcurementNotif.notification_Type_ID = 18;
+                      let transVar: any
+                      transVar = new DatePipe('en-ZA');
+                      this.ProcurementNotif.send_Date = transVar.transform(new Date(), 'MM d, y, h:mm:ss a');
+                      this.ProcurementNotif.name = "A new procurement request for Vendor: " + this.Procurement_Request.vendor.name + " is awaiting your attention!";
+                      this.ProcurementNotif.user_ID = 1;
+                      this.dataService.ProcurementRequestAddNotification(this.ProcurementNotif).subscribe({
+                        next: (LowStock) => {
+                          this.DisplayNotif()
+                        }
+                      })
+
                     }
                   }
                 })

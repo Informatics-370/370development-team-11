@@ -1180,6 +1180,15 @@ export class DataService {
     return this.httpClient.post<Notification>(`${this.apiUrl}ProcurementDetails/ProcurementAddNotification`, ProcurementNotification, this.httpOptions).pipe(map(result => result))
   }
 
+  ConsumableAddNotification(ConsumableNotification: Notification): Observable<any> {
+    return this.httpClient.post<Notification>(`${this.apiUrl}Consumable/ConsumableAddNotification`, ConsumableNotification, this.httpOptions).pipe(map(result => result))
+  }
+
+  ProcurementRequestAddNotification(ProcurementNotif: Notification): Observable<any> {
+    return this.httpClient.post<Notification>(`${this.apiUrl}ProcurementRequest/ProcurementAddNotification`, ProcurementNotif, this.httpOptions).pipe(map(result => result))
+  }
+
+
   //Los Pls baas
   // GetAppVendorsRequest() {
   //   return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetAllApprovedVendor`).pipe(map(result => result))

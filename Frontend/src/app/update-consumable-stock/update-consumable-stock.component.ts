@@ -10,6 +10,10 @@ import { Chart, registerables } from 'node_modules/chart.js';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { DatePipe } from '@angular/common';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { Notification } from '../Shared/Notification';
+import { Notification_Type } from '../Shared/Notification_Type';
+import { User } from '../Shared/User';
+import { Role } from '../Shared/EmployeeRole';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -23,7 +27,7 @@ Chart.register(...registerables);
   selector: 'app-update-consumable-stock',
   templateUrl: './update-consumable-stock.component.html',
   styleUrls: ['./update-consumable-stock.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class UpdateConsumableStockComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
@@ -62,6 +66,38 @@ export class UpdateConsumableStockComponent implements OnInit {
       maximum_Reorder_Quantity: 0,
       consumable_Category: { consumable_Category_ID: 0, name: "", description: "" }
     }
+  }
+  rl: Role = {
+    role_ID: 0,
+    name: '',
+    description: ''
+  }
+
+  usr: User = {
+    user_Id: 0,
+    role_ID: 0,
+    username: '',
+    password: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
+    no_Notifications: 0,
+    role: this.rl
+  }
+
+  Notification_Type: Notification_Type = {
+    notification_Type_ID: 0,
+    name: "",
+    description: "",
+  }
+
+
+  ComsumableNotif: Notification = {
+    notification_ID: 0,
+    notification_Type_ID: 0,
+    user_ID: 0,
+    name: "",
+    send_Date: new Date(),
+    user: this.usr,
+    notification_Type: this.Notification_Type,
   }
 
 
@@ -171,10 +207,28 @@ export class UpdateConsumableStockComponent implements OnInit {
 
             this.dataservice.UpdateStock(this.History).subscribe({
               next: (response) => {
-                console.log(response)
-                document.querySelector('button').classList.toggle("is_active");
-                this.dialogRef.close();
-                this.router.navigate(['/ViewConsumable'])
+                this.ComsumableNotif.notification_Type_ID = 4;
+                let transVar: any
+                transVar = new DatePipe('en-ZA');
+                if (this.Consumables.minimum_Reorder_Quantity >= this.Consumables.on_Hand) {
+                  this.ComsumableNotif.send_Date = transVar.transform(new Date(), 'MM d, y, h:mm:ss a');
+                  this.ComsumableNotif.name = "The stock level for " + this.Consumables.name + " has reached the minimum amount. Please Re-Order!";
+                  this.ComsumableNotif.user_ID = 1;
+
+                  this.dataservice.ConsumableAddNotification(this.ComsumableNotif).subscribe({
+                    next: (LowStock) => {
+                      document.querySelector('button').classList.toggle("is_active");
+                      this.dialogRef.close();
+                      this.router.navigate(['/ViewConsumable'])
+
+                    }
+                  })
+                }
+                else {
+                  document.querySelector('button').classList.toggle("is_active");
+                  this.dialogRef.close();
+                  this.router.navigate(['/ViewConsumable'])
+                }
 
               }
             })

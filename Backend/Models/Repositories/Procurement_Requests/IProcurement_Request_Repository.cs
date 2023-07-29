@@ -15,5 +15,6 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         Task<Procurement_Request> UpdateProcurementRequestAsync(int id, Procurement_Request Request);
 
         Task<Procurement_Request_Quote> UpdateProcurementRequestQuouteAsync(int id, Procurement_Request_Quote Request);
+        Task<Notification[]> AddNotificationAsync(Notification ProcurementNotif);
     }
 }

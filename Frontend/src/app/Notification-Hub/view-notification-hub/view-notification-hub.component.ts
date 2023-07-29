@@ -121,6 +121,9 @@ export class ViewNotificationHubComponent implements OnInit {
     if (name.includes("Procurement Details Has Been Flagged")) {
       this.router.navigate(['/ViewFlaggedProcurementRequest']);
     }
+    else if(name.includes("New Procurement Request")) {
+      this.router.navigate(['/ViewProcurementRequest']);
+    }
     else if(name.includes("Procurement Request Has Been Accepted")) {
       this.router.navigate(['/PlaceProcurementRequest']);
     }
