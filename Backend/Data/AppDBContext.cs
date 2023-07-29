@@ -483,7 +483,7 @@ namespace ProcionAPI.Data
             new
             {
                 Notification_Type_ID = 13,
-                Name = "Sole Supplier Has Been Approved By General Manager",
+                Name = "Vendor Sole Supplier Has Been Approved By General Manager",
                 Description = "Please procced to add required details for vendor.",
 
             },
@@ -497,7 +497,7 @@ namespace ProcionAPI.Data
             new
             {
                 Notification_Type_ID = 15,
-                Name = "Onboard Request Requires Management Approval",
+                Name = "Vendor Onboard Request Requires Management Approval",
                 Description = "Please review the request and respond accordingly.",
 
             },

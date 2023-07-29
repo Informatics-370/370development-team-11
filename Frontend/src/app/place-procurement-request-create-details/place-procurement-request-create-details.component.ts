@@ -379,7 +379,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         console.log(this.BudgetAllocationCode)
       })
       //User
-      this.ProcureService.GetEmployeeByUsername("WeSc746").subscribe(result => {
+      this.ProcureService.GetEmployeeByUsername(User).subscribe(result => {
         let employeeInfo:any = result;
         this.EmployeeDetails = employeeInfo;
         this.MandateLimitAmount = employeeInfo.mandate_Limit.ammount

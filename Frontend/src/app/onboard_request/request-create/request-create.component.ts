@@ -318,7 +318,7 @@ export class RequestCreateComponent implements OnInit {
             console.log(this.Onboard_Request)
             this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
               next: (response) => {
-                if(i = this.CompanyContactInfoFormGroup.controls.RequestData.value.length) {
+                if(i == this.CompanyContactInfoFormGroup.controls.RequestData.value.length-1) {
                   this.VendorNotification.notification_Type_ID = 1;
                   let transVar: any
                   transVar = new DatePipe('en-ZA');
@@ -327,7 +327,6 @@ export class RequestCreateComponent implements OnInit {
                   this.VendorNotification.user_ID = 1;
                   this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
                 }
-
                 console.log(response);
                 var action = "CREATE";
                 var title = "CREATE SUCCESSFUL";
@@ -344,7 +343,7 @@ export class RequestCreateComponent implements OnInit {
                 setTimeout(() => {
                   this.router.navigate(['/request-view']);
                   this.dialog.afterAllClosed.subscribe({
-                    next: (response) => {
+                    next: (r) => {
                       
                       this.ngOnInit();
                     }
@@ -358,6 +357,7 @@ export class RequestCreateComponent implements OnInit {
        
       }//if
     }//for loop
+    
   }
   else if(this.selectedOption == "false")
   {

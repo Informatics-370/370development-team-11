@@ -37,7 +37,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 ProcurementDetails.Employee = existingEmployee;
             }
 
-            Procurement_Request existingProcurementRequest = await _dbContext.Procurement_Request.FirstOrDefaultAsync(x => x.Procurement_Request_ID == ProcurementDetails.Procurement_Request_ID);
+            Procurement_Request existingProcurementRequest = await _dbContext.Procurement_Request.Include(x=> x.User).Include(x=> x.Requisition_Status).Include(x=> x.Vendor).ThenInclude(x => x.Vendor_Status).FirstOrDefaultAsync(x => x.Procurement_Request_ID == ProcurementDetails.Procurement_Request_ID);
 
             if (existingProcurementRequest != null)
             {
@@ -74,7 +74,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 ProcurementDetails.Procurement_Payment_Status = existingProcurementPaymentStatus;
             }
 
-            Budget_Line existingBudgetLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(x => x.Account_Code == ProcurementDetails.Account_Code);
+            Budget_Line existingBudgetLine = await _dbContext.Budget_Line.Include(x=> x.Budget_Category).Include(x=> x.Budget_Allocation).FirstOrDefaultAsync(x => x.Account_Code == ProcurementDetails.Account_Code);
 
             if (existingBudgetLine != null)
             {
@@ -355,7 +355,18 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
         public async Task<Procurement_Details> GetProcurementDetailsByIDAsync(int ProcurementDetailsID)
         {
-            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit).Include(x => x.Procurement_Request).ThenInclude(x => x.Vendor).Include(x => x.Sign_Off_Status).Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line).Where(x=> x.Procurement_Details_ID == ProcurementDetailsID);
+            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details
+                                                    .Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit)
+                                                    .Include(x => x.Procurement_Request).ThenInclude(x => x.Vendor).ThenInclude(x=> x.Vendor_Status)
+                                                    .Include(x => x.Procurement_Request).ThenInclude(x => x.User).ThenInclude(x=> x.Role)
+                                                    .Include(x => x.Procurement_Request).ThenInclude(x => x.Requisition_Status)
+                                                    .Include(x => x.Sign_Off_Status)
+                                                    .Include(x => x.Procurement_Payment_Status)
+                                                    .Include(x => x.Procurement_Status)
+                                                    .Include(x => x.Payment_Method)
+                                                    .Include(x => x.Budget_Line).ThenInclude(x=> x.Budget_Allocation).ThenInclude(x=> x.Department)
+                                                    .Include(x => x.Budget_Line).ThenInclude(x => x.Budget_Category)
+                                                    .Where(x=> x.Procurement_Details_ID == ProcurementDetailsID);
 
             return await query.FirstOrDefaultAsync();
         }
@@ -452,6 +463,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             if (existingUser != null)
             {
                 ProcurementNotification.User = existingUser;
+                ProcurementNotification.User.No_Notifications = existingUser.No_Notifications + 1;
             }
 
 

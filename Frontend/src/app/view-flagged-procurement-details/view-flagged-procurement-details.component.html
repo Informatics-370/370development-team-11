@@ -238,7 +238,7 @@
         <br>
         <div  style="background-color: white;display: flex;align-items: center;margin: 1%;place-content: center;">
           <div class="wrapper">
-            <button class=""  >
+            <button class=""  (click)="AcceptRequest()">
               <span>Accept</span>
               <div class="success">
                 <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
@@ -248,7 +248,7 @@
             </button>
           </div>
 
-          <button mat-raised-button id="cBtn"
+          <button mat-raised-button id="cBtn" (click)="RejectRequest()"
                   style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;"
                   >
             Reject

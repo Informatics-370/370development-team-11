@@ -44,7 +44,7 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
     description: "",
   }
 
-  VendorNotification: Notification = {
+  ProcurementNotification: Notification = {
     notification_ID: 0,
     notification_Type_ID: 0,
     user_ID: 0,
@@ -117,9 +117,12 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
 
   GetFiles(sfilepath:string,i:number) {
     let sFile = sfilepath;
+    //console.log(sfilepath)
     let VendorName = sFile.substring(0,sFile.indexOf("\\"))
+    sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+    let RequestID = sFile.substring(0,sFile.indexOf("\\"))
     let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-    this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${filename}`
+    this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${RequestID}/${filename}`
     this.FileDetails[i].FileName = filename
   }
 
@@ -127,13 +130,15 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
     console.log(this.ProcurementRequestDetails)
     this.dataService.UpdateProcurementRequestStatus(1,this.ProcurementRequestDetails).subscribe({
       next: (response) => {
-        this.VendorNotification.notification_Type_ID = 8;
+        console.log(response)
+        this.ProcurementNotification.notification_Type_ID = 8;
         let transVar: any
         transVar = new DatePipe('en-ZA');
-        this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
-        this.VendorNotification.name = response.name + " has been approved";
-        this.VendorNotification.user_ID = response.user_Id;
-        this.dataService.ProcurementAddNotification(this.VendorNotification).subscribe();
+        this.ProcurementNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+        this.ProcurementNotification.name = response.name + " has been approved";
+        this.ProcurementNotification.user_ID = response.user_ID;
+        console.log(this.ProcurementNotification)
+        this.dataService.ProcurementAddNotification(this.ProcurementNotification).subscribe();
 
         console.log(response);
         var action = "APPROVE";
@@ -157,13 +162,13 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
   RejectRequest() {
     this.dataService.UpdateProcurementRequestStatus(2,this.ProcurementRequestDetails).subscribe({
       next: (response) => {
-        this.VendorNotification.notification_Type_ID = 9;
+        this.ProcurementNotification.notification_Type_ID = 9;
         let transVar: any
         transVar = new DatePipe('en-ZA');
-        this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
-        this.VendorNotification.name = response.name + " has been rejected";
-        this.VendorNotification.user_ID = response.user_Id;
-        this.dataService.ProcurementAddNotification(this.VendorNotification).subscribe();
+        this.ProcurementNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+        this.ProcurementNotification.name = response.name + " has been rejected";
+        this.ProcurementNotification.user_ID = response.user_Id;
+        this.dataService.ProcurementAddNotification(this.ProcurementNotification).subscribe();
 
         console.log(response);
         var action = "REJECTED";

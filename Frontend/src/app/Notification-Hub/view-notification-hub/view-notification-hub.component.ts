@@ -118,7 +118,7 @@ export class ViewNotificationHubComponent implements OnInit {
   }
 
   ProcurementRoute(name: string) {
-    if (name.includes("Procurement Details has been flagged")) {
+    if (name.includes("Procurement Details Has Been Flagged")) {
       this.router.navigate(['/ViewFlaggedProcurementRequest']);
     }
     else if(name.includes("Procurement Request Has Been Accepted")) {

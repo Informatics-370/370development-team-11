@@ -1069,6 +1069,7 @@ namespace ProcionAPI.Models.Repositories
             if (existingUser != null)
             {
                 VendorNotification.User = existingUser;
+                VendorNotification.User.No_Notifications = existingUser.No_Notifications + 1;
             }
 
 
