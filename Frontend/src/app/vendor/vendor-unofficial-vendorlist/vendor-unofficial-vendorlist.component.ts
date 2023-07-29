@@ -151,12 +151,12 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
           }
           
         }
-        if (result) {
-          hideloader();
-        }
+        
         //result.onboardRequestStatusID == 5 || result.onboardRequestStatusID == 3
       })
-      
+      if (result) {
+        hideloader();
+      }
 
       this.PendingOnboardRequests = new MatTableDataSource(this.PendingOnboardDetailSummary)
       this.PendingOnboardRequests.paginator = this.paginator;

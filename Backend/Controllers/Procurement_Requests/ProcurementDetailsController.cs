@@ -441,7 +441,7 @@ namespace ProcionAPI.Controllers.Procurement_Requests
         }
 
         [HttpPut]
-        [Route("UpdateProcurementDetailsStatus{StatusID}")]
+        [Route("UpdateProcurementDetailsStatus/{StatusID}")]
         public async Task<IActionResult> UpdateProcurementDetailsStatus(int StatusID, Procurement_Details ProcurementDetails)
         {
             try
@@ -471,7 +471,7 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("ProcurementAddNotification")]
         public async Task<IActionResult> ProcurementAddNotification(Notification ProcurementNotification)
         {

@@ -47,7 +47,7 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit{
     description: "",
   }
 
-  VendorNotification: Notification = {
+  ProcurementNotification: Notification = {
     notification_ID: 0,
     notification_Type_ID: 0,
     user_ID: 0,
@@ -226,13 +226,13 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit{
   AcceptRequest() {
     this.dataService.UpdateProcurementDetailsStatus(1,this.ProcurementDetails).subscribe({
       next: (response) => {
-        this.VendorNotification.notification_Type_ID = 16;
+        this.ProcurementNotification.notification_Type_ID = 16;
         let transVar: any
         transVar = new DatePipe('en-ZA');
-        this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
-        this.VendorNotification.name = response.name + " has been Approved";
-        this.VendorNotification.user_ID = response.user_Id;
-        this.dataService.ProcurementAddNotification(this.VendorNotification).subscribe();
+        this.ProcurementNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+        this.ProcurementNotification.name = this.ProcurementDetails.procurement_Request.name + " has been Approved";
+        this.ProcurementNotification.user_ID = this.ProcurementDetails.procurement_Request.user_ID
+        this.dataService.ProcurementAddNotification(this.ProcurementNotification).subscribe();
         console.log(response);
         var action = "APPROVE";
         var title = "APPROVE SUCCESSFUL";
@@ -255,13 +255,13 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit{
   RejectRequest() {
     this.dataService.UpdateProcurementDetailsStatus(2,this.ProcurementDetails).subscribe({
       next: (response) => {
-        this.VendorNotification.notification_Type_ID = 17;
+        this.ProcurementNotification.notification_Type_ID = 17;
         let transVar: any
         transVar = new DatePipe('en-ZA');
-        this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
-        this.VendorNotification.name = response.name + " has been rejected";
-        this.VendorNotification.user_ID = response.user_Id;
-        this.dataService.ProcurementAddNotification(this.VendorNotification).subscribe();
+        this.ProcurementNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+        this.ProcurementNotification.name = this.ProcurementDetails.procurement_Request.name + " has been rejected";
+        this.ProcurementNotification.user_ID = this.ProcurementDetails.procurement_Request.user_ID;
+        this.dataService.ProcurementAddNotification(this.ProcurementNotification).subscribe();
         console.log(response);
         var action = "REJECTED";
         var title = "REJECTION SUCCESSFUL";
