@@ -1161,7 +1161,7 @@ namespace ProcionAPI.Controllers
             //Recurring jobs fire many times on the specified CRON schedule.
             RecurringJob.AddOrUpdate(() => SoleSupplierPerformanceReview(), Cron.Monthly, TimeZoneInfo.Local);
 
-            return "Welcome user in Recurring Job Demo!";
+            return null;
         }
 
         [HttpPost]

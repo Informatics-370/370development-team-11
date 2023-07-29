@@ -390,7 +390,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
       },
       (error) => {
         var action = "ERROR";
-        var title = "USER NOT A EMPLOYEE";
+        var title = "USER NOT AN EMPLOYEE";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("User must be an <strong style='color:red'> EMPLOYEE </strong>!");
 
       const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
