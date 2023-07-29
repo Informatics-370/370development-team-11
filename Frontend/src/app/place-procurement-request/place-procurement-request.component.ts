@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-place-procurement-request',
@@ -11,11 +13,11 @@ import { Procurement_Request } from '../Shared/Procurement_Request';
 })
 export class PlaceProcurementRequestComponent implements OnInit{
   ProcurementRequests: Procurement_Request[] = [];
-  SearchedPRequests: Procurement_Request[] = [];
+  SearchedPRequests:any;
   displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'View'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
-
+  @ViewChild(MatPaginator) paginator:MatPaginator;
   ngOnInit() {
     this.GetProcurementRequests();
     console.log(this.ProcurementRequests)
@@ -35,7 +37,8 @@ export class PlaceProcurementRequestComponent implements OnInit{
             //console.log(result)
             if(a == null) {
               this.ProcurementRequests.push(e)
-              this.SearchedPRequests = [...this.ProcurementRequests];
+              this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
+              this.SearchedPRequests.paginator = this.paginator;
             }
            
           })
@@ -66,6 +69,10 @@ export class PlaceProcurementRequestComponent implements OnInit{
     }
     else if (Searchterm == "") {
       this.SearchedPRequests = [...this.ProcurementRequests];
+    }
+
+    if (this.SearchedPRequests.paginator) {
+      this.SearchedPRequests.paginator.firstPage();
     }
   }
 

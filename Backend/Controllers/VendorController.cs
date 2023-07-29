@@ -62,12 +62,12 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
-        [Route("getAllApprovedVendors")]
-        public async Task<IActionResult> getAllApprovedVendors()
+        [Route("getAllApprovedVendors/{VendorStatusID}")]
+        public async Task<IActionResult> getAllApprovedVendors(int VendorStatusID)
         {
             try
             {
-                var result = await _VendorRepository.getAllApprovedVendorsAsync();
+                var result = await _VendorRepository.getAllApprovedVendorsAsync(VendorStatusID);
                 return Ok(result);
             }
             catch (Exception)

@@ -49,13 +49,13 @@
             <tr *ngIf="FileDetails[0] != undefined">
                 <td><label for="file" style="margin-right: 1%;">Comparative  Quote 1: </label></td>
                 <td>
-                      <a id="btnLink" (click)="openPDFInNewTab(1)" target="_blank">{{FileDetails[0].FileName}}</a> 
+                      <a id="btnLink" (click)="openPDFInNewTab(1)" target="_blank">{{FileDetails[1].FileName}}</a> 
                 </td>
             <tr><br>
                 <tr *ngIf="FileDetails[0] != undefined">
                     <td><label for="file" style="margin-right: 1%;">Comparative Quote 2: </label></td>
                     <td>
-                          <a id="btnLink" (click)="openPDFInNewTab(2)" target="_blank" >{{FileDetails[0].FileName}}</a> 
+                          <a id="btnLink" (click)="openPDFInNewTab(2)" target="_blank" >{{FileDetails[2].FileName}}</a> 
                     </td>
                 </tr>
           </table> 

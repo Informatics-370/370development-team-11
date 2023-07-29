@@ -216,7 +216,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   GetVendors() {
-    this.dataService.getAllApprovedVendors().subscribe({
+    this.dataService.getAllApprovedVendors(2).subscribe({
       next: (response) => {
         console.log(response)
         let VendorList: any[] = response

@@ -35,6 +35,7 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import {ErrorStateMatcher} from '@angular/material/core';
 import { Notification } from 'src/app/Shared/Notification';
 import { Notification_Type } from '../Shared/Notification_Type';
+import { catchError } from 'rxjs';
 
 @Component({
   selector: 'app-place-procurement-request-create-details',
@@ -380,12 +381,30 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
       })
       //User
       this.ProcureService.GetEmployeeByUsername(User).subscribe(result => {
+        console.log(result)
         let employeeInfo:any = result;
         this.EmployeeDetails = employeeInfo;
         this.MandateLimitAmount = employeeInfo.mandate_Limit.ammount
         console.log(this.EmployeeDetails);
         console.log(this.MandateLimitAmount)
-      })
+      },
+      (error) => {
+        var action = "ERROR";
+        var title = "USER NOT A EMPLOYEE";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("User must be an <strong style='color:red'> EMPLOYEE </strong>!");
+
+      const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+        disableClose: true,
+        data: { action, title, message }
+      });
+
+      const duration = 1750;
+      setTimeout(() => {
+        this.router.navigate(['/PlaceProcurementRequest']);
+        dialogRef.close();
+      }, duration);
+      }
+      )
       this.ProcureService.GetProcurementRequestByID(this.ProcurementRequest_ID).subscribe(result => {
         console.log(result)
         this.Procurement_Request = result

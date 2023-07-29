@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-view-pending-procurement-request',
   templateUrl: './view-pending-procurement-request.component.html',
@@ -12,10 +14,11 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class ViewPendingProcurementRequestComponent implements OnInit {
   ProcurementRequests: Procurement_Request[] = [];
-  SearchedPRequests: Procurement_Request[] = [];
+  SearchedPRequests:any;
   displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'View'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) { }
   searchWord: string = '';
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
     this.GetProcurementRequests();
@@ -37,7 +40,8 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
       })
 
       //this.ProcurementRequests = [...procurementRequestList];
-      this.SearchedPRequests = [...this.ProcurementRequests];
+      this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
+      this.SearchedPRequests.paginator = this.paginator;
       //console.log(this.SearchedPRequests[0].requisition_Status_ID)
       if (result) {
         hideloader();
@@ -59,6 +63,10 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
     }
     else if (Searchterm == "") {
       this.SearchedPRequests = [...this.ProcurementRequests];
+    }
+
+    if (this.SearchedPRequests.paginator) {
+      this.SearchedPRequests.paginator.firstPage();
     }
   }
 

@@ -35,9 +35,9 @@ namespace ProcionAPI.Models.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<Vendor[]> getAllApprovedVendorsAsync()
+        public async Task<Vendor[]> getAllApprovedVendorsAsync(int VendorStatusID)
         {
-            IQueryable<Vendor> query = _dbContext.Vendor.Include(x => x.Vendor_Status).Where(x => (x.Vendor_Status_ID == 4) || x.Vendor_Status_ID == 2);
+            IQueryable<Vendor> query = _dbContext.Vendor.Include(x => x.Vendor_Status).Where(x => (x.Vendor_Status_ID == VendorStatusID));
 
             return await query.ToArrayAsync();
         }

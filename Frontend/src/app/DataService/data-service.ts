@@ -292,8 +292,8 @@ export class DataService {
     return this.httpClient.get<VendorDetails>(`${this.apiUrl}Vendor/GetVendorDetailByID/${VendorDetailID}`, this.httpOptions).pipe(map(result => result))
   }
 
-  getAllApprovedVendors(): Observable<any> {
-    return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}Vendor/getAllApprovedVendors`).pipe(map(result => result))
+  getAllApprovedVendors(VendorStatusID:number ): Observable<any> {
+    return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}Vendor/getAllApprovedVendors/${VendorStatusID}`).pipe(map(result => result))
   }
 
   GetVendorByID(VendorID: number): Observable<any> {

@@ -8,7 +8,7 @@ namespace ProcionAPI.Models.Repositories
     {
         Task<Vendor_Detail[]> GetAllVendorDetailstAsync();
         Task<Vendor_Detail> GetVendorDetailByIDAsync(int VendorDetailID);
-        Task<Vendor[]> getAllApprovedVendorsAsync();
+        Task<Vendor[]> getAllApprovedVendorsAsync(int VendorStatusID);
         Task<Vendor> GetVendorByIDAsync(int VendorID);
         Task<Vendor_Detail[]> AddVendorDetailsAsync(Vendor_Detail VenDetails);
         Task<Vendor_Detail> UpdateVendorDetailsAsync(int VendorDetailsID, Vendor_Detail VenDetails);

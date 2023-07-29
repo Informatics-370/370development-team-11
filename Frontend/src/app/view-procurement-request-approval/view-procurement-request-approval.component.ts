@@ -13,6 +13,7 @@ import { Notification_Type } from '../Shared/Notification_Type';
 import { Role } from '../Shared/EmployeeRole';
 import { User } from '../Shared/User';
 
+
 @Component({
   selector: 'app-view-procurement-request-approval',
   templateUrl: './view-procurement-request-approval.component.html',
@@ -68,6 +69,9 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
   ProcurementRequestDetails: Procurement_Request;
  // file:File[] = [null,null,null]
   FileDetails:any = [];
+
+  
+  
   ngOnInit() {
     for(let i = 0;i < 3;i++) {
       this.FileDetails.push({FileURL:"",FileName:""})
@@ -90,6 +94,7 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
               this.GetFiles(a.path,b)
               b += 1
               console.log(a.path)
+              console.log(b)
             })
           })
         }
