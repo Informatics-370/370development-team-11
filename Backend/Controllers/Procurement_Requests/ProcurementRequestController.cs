@@ -253,6 +253,21 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
         }
 
+        [HttpPost]
+        [Route("ProcurementAddNotification")]
+        public async Task<IActionResult> ProcurementAddNotification(Notification ProcurementNotif)
+        {
+            try
+            {
+                var result = await _Procurement_Request_Repository.AddNotificationAsync(ProcurementNotif);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
 
     }
 }

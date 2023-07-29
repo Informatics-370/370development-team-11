@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Consumable } from '../Shared/Consumable';
 import { DataService } from '../DataService/data-service';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,6 +13,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { count } from 'rxjs';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { MatPaginator } from '@angular/material/paginator';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -24,13 +25,15 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-consumable-category',
   templateUrl: './view-consumable-category.component.html',
   styleUrls: ['./view-consumable-category.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewConsumableCategoryComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   ConsumableCategories: ConsumableCategory[] = [];
   Consumables: Consumable[] = []
   displayedColumns: string[] = ['Name', 'Description', 'action', 'delete'];
   SearchedConsumableCategories: ConsumableCategory[] = []
+  dataSource: any;
 
   CategoryToDelete: ConsumableCategory = {
     consumable_Category_ID: 0,
@@ -46,10 +49,10 @@ export class ViewConsumableCategoryComponent implements OnInit {
     const Searchterm = this.searchWord.toLocaleLowerCase();
 
     if (Searchterm) {
-      this.SearchedConsumableCategories = this.ConsumableCategories.filter(Category => Category.name.toLocaleLowerCase().includes(Searchterm))
+      this.dataSource = this.ConsumableCategories.filter(Category => Category.name.toLocaleLowerCase().includes(Searchterm))
     }
     else if (Searchterm == "") {
-      this.SearchedConsumableCategories = [...this.ConsumableCategories];
+      this.GetCategories();
     }
   }
   ngOnInit(): void {
@@ -61,6 +64,8 @@ export class ViewConsumableCategoryComponent implements OnInit {
       let categoryList: any[] = result;
       this.ConsumableCategories = [...categoryList];
       this.SearchedConsumableCategories = [...categoryList];
+      this.dataSource = new MatTableDataSource(this.ConsumableCategories.filter((value, index, self) => self.map(x => x.consumable_Category_ID).indexOf(value.consumable_Category_ID) == index));
+      this.dataSource.paginator = this.paginator
 
       if (result) {
         hideloader();

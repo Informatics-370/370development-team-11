@@ -146,5 +146,20 @@ namespace ProcionAPI.Controllers.Consumables
             }
         }
 
+        [HttpPost]
+        [Route("ConsumableAddNotification")]
+        public async Task<IActionResult> ConsumableAddNotification(Notification ConsumableNotif)
+        {
+            try
+            {
+                var result = await _consumableRepository.AddNotificationAsync(ConsumableNotif);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
     }
 }

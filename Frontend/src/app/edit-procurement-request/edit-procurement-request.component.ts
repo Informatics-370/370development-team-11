@@ -185,6 +185,7 @@ export class EditProcurementRequestComponent implements OnInit {
         this.myForm.get("OtherQuote1").reset();
       }
       else {
+        this.files[0] = this.fileToUpload;
         document.getElementById("file1").style.border = this.originalBorderColor;
         document.getElementById("Error1").style.visibility = "hidden"
       }
@@ -204,6 +205,7 @@ export class EditProcurementRequestComponent implements OnInit {
         this.myForm.get("OtherQuote2").reset();
       }
       else {
+        this.files[1] = this.fileToUpload;
         document.getElementById("file2").style.border = this.originalBorderColor;
         document.getElementById("Error2").style.visibility = "hidden"
       }
@@ -223,6 +225,7 @@ export class EditProcurementRequestComponent implements OnInit {
         this.myForm.get("OtherQuote3").reset();
       }
       else {
+        this.files[2] = this.fileToUpload;
         document.getElementById("file3").style.border = this.originalBorderColor;
         document.getElementById("Error3").style.visibility = "hidden"
       }

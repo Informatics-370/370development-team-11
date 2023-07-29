@@ -119,9 +119,6 @@ export class ViewProcurementRequestComponent implements OnInit {
           }
         }
 
-        console.log(this.ProcurementQuotes)
-        console.log(this.FileDetails)
-
       }
     })
   }

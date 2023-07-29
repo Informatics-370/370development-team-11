@@ -514,6 +514,12 @@ namespace ProcionAPI.Data
                 Name = "Flagged Procurement Details Has Been Rejected",
                 Description = "Please review the request and respond accordingly.",
 
+            },
+            new
+            {
+                Notification_Type_ID = 18,
+                Name = "New Procurement Request",
+                Description = "Please review the request and respond accordingly.",
             }
             );
 
@@ -581,7 +587,6 @@ namespace ProcionAPI.Data
                 Description = "Approval Required",
 
             }
-
             );
 
             modelBuilder.Entity<Payment_Method>()

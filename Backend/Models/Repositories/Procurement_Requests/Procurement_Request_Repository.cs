@@ -177,5 +177,30 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
             return PRRequest;
         }
+
+        public async Task<Notification[]> AddNotificationAsync(Notification ProcurementNotif)
+        {
+
+            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == ProcurementNotif.Notification_Type_ID);
+
+            if (existingNotificationType != null)
+            {
+                ProcurementNotif.Notification_Type = existingNotificationType;
+            }
+
+            var existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == ProcurementNotif.User_Id);
+
+            if (existingUser != null)
+            {
+                ProcurementNotif.User = existingUser;
+                ProcurementNotif.User.No_Notifications = existingUser.No_Notifications + 1;
+            }
+
+
+            await _dbContext.Notification.AddAsync(ProcurementNotif);
+            await _dbContext.SaveChangesAsync();
+
+            return new Notification[] { ProcurementNotif };
+        }
     }
 }
