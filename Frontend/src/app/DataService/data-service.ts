@@ -1156,4 +1156,9 @@ export class DataService {
     return this.httpClient.get<any>(`${this.apiUrl}ProcurementRequest/GetFileByName/` + Vendorname + "/" + FileName, this.httpOptions)
   }
 
+  //Los Pls baas
+  // GetAppVendorsRequest() {
+  //   return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetAllApprovedVendor`).pipe(map(result => result))
+  // }
+
 }

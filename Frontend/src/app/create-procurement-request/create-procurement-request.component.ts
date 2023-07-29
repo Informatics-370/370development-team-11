@@ -137,7 +137,16 @@ export class CreateProcurementRequestComponent implements OnInit {
     this.myForm.get("VendorName").setValue(Name)
   }
 
+  onFile1UploadApproved(event: any) {
+    this.fileToUpload = event.target.files[0];
+    if (this.fileToUpload != null) {
+      this.files[0] = this.fileToUpload;
+    }
+  }
+
   onFile1Upload(event: any) {
+    document.getElementById("file1").style.border = this.originalBorderColor;
+    document.getElementById("Error1").style.visibility = "hidden"
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[0] = this.fileToUpload;
@@ -155,13 +164,15 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   onFile2Upload(event: any) {
+    document.getElementById("file2").style.border = this.originalBorderColor;
+    document.getElementById("Error2").style.visibility = "hidden"
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[1] = this.fileToUpload;
       if (this.files[1].name == this.files[0].name || this.files[1].name == this.files[2].name) {
         document.getElementById("file2").style.border = "solid red";
         document.getElementById("Error2").style.visibility = "visible"
-        this.files[2] = null;
+        this.files[1] = null;
         this.myForm.get("OtherQuote2").reset();
       }
       else {
@@ -172,6 +183,8 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   onFile3Upload(event: any) {
+    document.getElementById("file3").style.border = this.originalBorderColor;
+    document.getElementById("Error3").style.visibility = "hidden"
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[2] = this.fileToUpload;
@@ -203,8 +216,9 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   GetVendors() {
-    this.dataService.GetVendorsRequest().subscribe({
+    this.dataService.getAllApprovedVendors().subscribe({
       next: (response) => {
+        console.log(response)
         let VendorList: any[] = response
         VendorList.forEach((element) => {
           this.vendors.push(element)
@@ -399,7 +413,7 @@ export class CreateProcurementRequestComponent implements OnInit {
         else {
           var action = "CREATE";
           var title = "LIMIT EXCEEDED";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Vendor: <strong>" + this.Procurement_Request.name + "</strong> will need to be <strong style='color:red'> ONBOARDED </strong> in order to make this request!");
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Vendor: <strong>" + this.Procurement_Request.vendor.name + "</strong> will need to be <strong style='color:red'> ONBOARDED </strong> in order to make this request!");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,
