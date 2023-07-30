@@ -33,7 +33,7 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
       let procurementRequestList: any[] = result;
       procurementRequestList.forEach(e => {
         //console.log(e)
-        if(e.requisition_Status_ID == 3) {
+        if (e.requisition_Status_ID == 3) {
           this.ProcurementRequests.push(e)
           //this.SearchedPRequests.push(e)
         }
@@ -75,7 +75,7 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
   getStatusColor(status: string): string {
     switch (status.toLowerCase()) {
       case 'approval required':
-        return 'orange'; // Set the color you want for 'Pending'
+        return 'orange'; // Set the color you want for 'approval required'
       case 'accepted':
         return 'green'; // Set the color you want for 'Approved'
       case 'rejected':

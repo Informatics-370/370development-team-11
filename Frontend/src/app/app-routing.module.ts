@@ -76,6 +76,10 @@ import { PlaceProcurementRequestCreateDetailsComponent } from './place-procureme
 import { ViewProcurementRequestApprovalComponent } from './view-procurement-request-approval/view-procurement-request-approval.component';
 import { ViewFlaggedProcurementRequestComponent } from './view-flagged-procurement-request/view-flagged-procurement-request.component';
 import { ViewFlaggedProcurementDetailsComponent } from './view-flagged-procurement-details/view-flagged-procurement-details.component';
+import { FinalizeProcurementRequestComponent } from './finalize-procurement-request/finalize-procurement-request.component';
+import { FinalizeProcurementRequestCreateComponent } from './finalize-procurement-request-create/finalize-procurement-request-create.component';
+import { ViewProcurementDetailsComponent } from './view-procurement-details/view-procurement-details.component';
+import { ReceiveProcurementItemComponent } from './receive-procurement-item/receive-procurement-item.component';
 
 import { BackupComponent } from './Settings/backup/backup.component';
 import { EditProcurementRequestComponent } from './edit-procurement-request/edit-procurement-request.component';
@@ -333,7 +337,24 @@ const routes: Routes = [
 
     path: 'EditProcurementRequest/:procurement_Request_ID/:name',
     component: EditProcurementRequestComponent
+  },
+  {
+    path: 'FinalizeProcurementRequest',
+    component: FinalizeProcurementRequestComponent
+  },
+  {
+    path: 'FinalizeProcurementRequestCreate/:id',
+    component: FinalizeProcurementRequestCreateComponent
+  },
+  {
+    path: 'ViewProcurementDetails',
+    component: ViewProcurementDetailsComponent
+  },
+  {
+    path: 'ReceiveProcurementItem/:id',
+    component: ReceiveProcurementItemComponent
   }
+
 
 
 
