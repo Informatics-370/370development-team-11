@@ -15,6 +15,7 @@
     <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/request-view"
        mat-button (click)="reload()">Vendor</a>
     <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()">Reports</a>
+    <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()" (click)="HelpRoute()">Help</a>
     <mat-icon aria-hidden="false" aria-label="notification icon" fontIcon="notifications" class="sub-spacer"
               style="font-size:19pt;" matBadge="{{numNotifications}}" matBadgeColor="warn" [matBadgeHidden]="hidden" routerLink="/NotificationHub"></mat-icon>
     <img *ngIf="this.isLoggedIn === true" class="image-container" src="{{usr.profile_Picture}}" style="object-fit: cover;" [matMenuTriggerFor]="beforeMenu" />

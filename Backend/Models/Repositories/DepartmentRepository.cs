@@ -58,6 +58,19 @@ namespace ProcionAPI.Models.Repositories
                 return null;
             }
         }
+        public async Task<Department> EditDepartmentValidationAsync(string name, int id)
+        {
+            Department ExistingDepartment = await _dbContext.Department.FirstOrDefaultAsync(x => x.Name == name && x.Department_ID == id);
+            if (ExistingDepartment != null)
+            {
+                return ExistingDepartment;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
         public void Delete<T>(T entity) where T : class
         {
             _dbContext.Remove(entity);

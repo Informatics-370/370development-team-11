@@ -54,7 +54,7 @@
                   <span *ngSwitchCase="'1'" style="color: #22afbe;" matTooltip="Onboarding of this vendor is still awaiting approval"> Pending </span>
                   <span *ngSwitchCase="'3'" style="color: #94CC5B;" matTooltip="Onboarding of this vendor has been approved"> Approved </span>
                   <span *ngSwitchCase="'2'" style="color: #fe4945;" matTooltip="Onboarding of this vendor has been rejected"> Rejected </span>
-                  <span *ngSwitchDefault style="color: #375623;" matTooltip="The Onboarding of this vendor is in progress"> In Progress </span>
+                  <span *ngSwitchDefault style="color: #375623;" matTooltip="The Onboarding of this vendor process is in progress"> In Progress </span>
                 </container-element>
               </td>
      
@@ -93,7 +93,7 @@
                               <ng-container *ngIf="Req.onboard_Request_Id === element.onboard_Request_Id && Req.vendor_ID === Ven.vendor_ID">
                               <td *ngIf="i === 0">{{Ven.name}}</td>
                               <td *ngIf="i === 0">{{Ven.email}}</td>
-                              <td *ngIf="i === 0"><span *ngIf="Req.onboard_Request_status_ID === 1 || Req.onboard_Request_status_ID === 4" style="color: #22afbe;"> Pending </span><span *ngIf="Req.onboard_Request_status_ID === 3" style="color: #94CC5B;"> Approved </span><span *ngIf="Req.onboard_Request_status_ID === 2" style="color: #fe4945;"> Rejected </span><span *ngIf="Req.onboard_Request_status_ID === 5" style="color: #375623;"> In Progress </span></td>
+                              <td *ngIf="i === 0"><span *ngIf="Req.onboard_Request_status_ID === 1 || Req.onboard_Request_status_ID === 4" style="color: #22afbe;" matTooltip="Onboarding of this vendor is still awaiting approval"> Pending </span><span *ngIf="Req.onboard_Request_status_ID === 3" style="color: #94CC5B;" matTooltip="Onboarding of this vendor has been approved"> Approved </span><span *ngIf="Req.onboard_Request_status_ID === 2" style="color: #fe4945;" matTooltip="Onboarding of this vendor has been rejected"> Rejected </span><span *ngIf="Req.onboard_Request_status_ID === 5" style="color: #375623;" matTooltip="The Onboarding of this vendor process is in progress"> In Progress </span></td>
                               <td *ngIf="FileDetails[a].FileName !== 'None' && i === 0">
                                 <a href="{{FileDetails[a].FileURL}}" download="{{FileDetails[a].FileName}}" matTooltip="This will download the Company Quotes PDF">{{FileDetails[a].FileName}}</a>
                               </td>

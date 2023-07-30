@@ -13,6 +13,7 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import { OnboardRequest } from '../Shared/OnboardRequest';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { RestoreComponent } from '../Settings/backupDialog/restore.component';
+import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -27,7 +28,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewEmployeeComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete', 'delegation'];
+  displayedColumns: string[] = [ 'name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete', 'delegation'];
   dataSource = new MatTableDataSource<Employee>();
 
   userDelete: any
@@ -161,6 +162,14 @@ export class ViewEmployeeComponent implements OnInit {
 
   openDialog() {
     const dialogRef = this.dialog.open(RestoreComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  openRestoreDialog() {
+    const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);

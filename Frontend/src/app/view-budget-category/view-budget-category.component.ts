@@ -23,7 +23,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewBudgetCategoryComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'account_Name', 'description', 'action', 'delete'];
+  displayedColumns: string[] = [ 'account_Name', 'description', 'action', 'delete'];
   dataSource = new MatTableDataSource<BudgetCategory>();
 
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService,

@@ -21,6 +21,7 @@ import { DatePipe } from '@angular/common';
 import { RejectDelegationComponent } from '../reject-delegation/reject-delegation.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
+import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -37,7 +38,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 export class ViewDelegationComponent implements OnInit{
 
   
-  displayedColumnsAdmin: string[] = ['id', 'delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete'];
+  displayedColumnsAdmin: string[] = [ 'delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete'];
   dataSource = new MatTableDataSource<Delegation_Of_Authority>;
 
   userDelete: any
@@ -206,6 +207,13 @@ export class ViewDelegationComponent implements OnInit{
 
   openDialog() {
     const dialogRef = this.dialog.open(RestoreComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+  openRestoreDialog() {
+    const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);

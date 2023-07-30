@@ -36,10 +36,7 @@
 
         <div style="margin-right:1%; margin-left:1%;">
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-                <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>
-                    <td mat-cell *matCellDef="let BudgetCategories">{{BudgetCategories.category_ID}}</td>
-                </ng-container>
+                
                 <ng-container matColumnDef="account_Name">
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> Name </th>
                     <td mat-cell *matCellDef="let BudgetCategories">{{BudgetCategories.account_Name}}</td>

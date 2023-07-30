@@ -128,6 +128,8 @@ import { PlaceProcurementRequestComponent } from './place-procurement-request/pl
 import { PlaceProcurementRequestCreateDetailsComponent } from './place-procurement-request-create-details/place-procurement-request-create-details.component';
 import { ViewProcurementRequestApprovalComponent } from './view-procurement-request-approval/view-procurement-request-approval.component';
 import { DeleteProcurementRequestComponent } from './delete-procurement-request/delete-procurement-request.component';
+import { ViewHelpuserComponent } from './view-helpuser/view-helpuser/view-helpuser.component';
+import { RestoreDialogComponent } from './Settings/restore-dialog/restore-dialog.component';
 
 
 @NgModule({
@@ -221,7 +223,9 @@ import { DeleteProcurementRequestComponent } from './delete-procurement-request/
     PlaceProcurementRequestComponent,
     PlaceProcurementRequestCreateDetailsComponent,
     ViewProcurementRequestApprovalComponent,
-    DeleteProcurementRequestComponent
+    DeleteProcurementRequestComponent,
+    ViewHelpuserComponent,
+    RestoreDialogComponent
   ],
   imports: [
     BrowserModule,

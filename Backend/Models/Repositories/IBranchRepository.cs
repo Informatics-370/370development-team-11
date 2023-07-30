@@ -9,6 +9,7 @@ namespace ProcionAPI.Models.Repositories
         Task<Branch> GetBranchAsync(int Branch_ID);
         void Delete<T>(T entity) where T : class;
         Task<Branch> BranchValidationAsync(string street);
+        Task<Branch> EditBranchValidationAsync(string street, int id);
         Task<bool> SaveChangesAsync();
     }
 }

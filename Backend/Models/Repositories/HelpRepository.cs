@@ -53,9 +53,22 @@ namespace ProcionAPI.Models.Repositories
             return new HELP[] { AddHelp };
         }
 
-        public async Task<HELP> HelpValidationAsync(string name, string category)
+        public async Task<HELP> HelpValidationAsync(string name)
         {
-            HELP ExistingHelp = await _dbContext.HELP.Include(x => x.Help_Category).FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower() && x.Help_Category.Name == category);
+            HELP ExistingHelp = await _dbContext.HELP.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
+            if (ExistingHelp != null)
+            {
+                return ExistingHelp;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+        public async Task<HELP> EditHelpValidationAsync(string name, int id)
+        {
+            HELP ExistingHelp = await _dbContext.HELP.FirstOrDefaultAsync(x => x.Name == name && x.Help_ID == id);
             if (ExistingHelp != null)
             {
                 return ExistingHelp;
