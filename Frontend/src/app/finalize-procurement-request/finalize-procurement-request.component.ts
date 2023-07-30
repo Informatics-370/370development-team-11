@@ -3,12 +3,13 @@ import { DataService } from '../DataService/data-service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
+
 @Component({
-  selector: 'app-view-pending-procurement-request',
-  templateUrl: './view-pending-procurement-request.component.html',
-  styleUrls: ['./view-pending-procurement-request.component.css']
+  selector: 'app-finalize-procurement-request',
+  templateUrl: './finalize-procurement-request.component.html',
+  styleUrls: ['./finalize-procurement-request.component.css']
 })
-export class ViewPendingProcurementRequestComponent implements OnInit {
+export class FinalizeProcurementRequestComponent {
   ProcurementRequests: Procurement_Request[] = [];
   SearchedPRequests: Procurement_Request[] = [];
   displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'Status', 'View'];
@@ -16,31 +17,16 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
   searchWord: string = '';
 
   ngOnInit() {
-    this.GetProcurementRequests();
-    console.log(this.ProcurementRequests)
-    console.log(this.SearchedPRequests)
-    var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
-    console.log(User)
+    this.GetUnfinalizedProcurementRequests();
   }
 
-  GetProcurementRequests() {
-    this.dataService.GetProcurementRequests().subscribe(result => {
-      let procurementRequestList: any[] = result;
-      procurementRequestList.forEach(e => {
-        //console.log(e)
-        if (e.requisition_Status_ID == 3) {
-          this.ProcurementRequests.push(e)
-          //this.SearchedPRequests.push(e)
-        }
-      })
-
-      //this.ProcurementRequests = [...procurementRequestList];
-      this.SearchedPRequests = [...this.ProcurementRequests];
-      //console.log(this.SearchedPRequests[0].requisition_Status_ID)
+  GetUnfinalizedProcurementRequests() {
+    this.dataService.GetUnfinalizedProcurements().subscribe(result => {
+      this.ProcurementRequests = result;
+      console.log(result)
       if (result) {
         hideloader();
       }
-
     });
 
     function hideloader() {
@@ -48,7 +34,6 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
       document.getElementById('table').style.visibility = "visible";
     }
   }
-
   OnInPutChange() {
     const Searchterm = this.searchWord.toLocaleLowerCase();
 
@@ -59,16 +44,12 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
       this.SearchedPRequests = [...this.ProcurementRequests];
     }
   }
-
   getStatusColor(status: string): string {
     switch (status.toLowerCase()) {
-      case 'approval required':
-        return 'orange'; // Set the color you want for 'approval required'
-      case 'accepted':
+      case 'awaiting payment':
+        return 'orange'; // Set the color you want for 'Pending'
+      case 'payed':
         return 'green'; // Set the color you want for 'Approved'
-      case 'rejected':
-        return 'red'; // Set the color you want for 'Rejected'
-      // Add more cases for other status values if needed
       default:
         return 'black'; // Default color if the status doesn't match any case
     }

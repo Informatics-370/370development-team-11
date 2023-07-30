@@ -131,6 +131,10 @@ import { DeleteProcurementRequestComponent } from './delete-procurement-request/
 import { EditProcurementRequestComponent } from './edit-procurement-request/edit-procurement-request.component';
 import { ViewFlaggedProcurementRequestComponent } from './view-flagged-procurement-request/view-flagged-procurement-request.component';
 import { ViewFlaggedProcurementDetailsComponent } from './view-flagged-procurement-details/view-flagged-procurement-details.component';
+import { FinalizeProcurementRequestComponent } from './finalize-procurement-request/finalize-procurement-request.component';
+import { FinalizeProcurementRequestCreateComponent } from './finalize-procurement-request-create/finalize-procurement-request-create.component';
+import { ViewProcurementDetailsComponent } from './view-procurement-details/view-procurement-details.component';
+import { ReceiveProcurementItemComponent } from './receive-procurement-item/receive-procurement-item.component';
 
 
 @NgModule({
@@ -227,7 +231,11 @@ import { ViewFlaggedProcurementDetailsComponent } from './view-flagged-procureme
     DeleteProcurementRequestComponent,
     EditProcurementRequestComponent,
     ViewFlaggedProcurementRequestComponent,
-    ViewFlaggedProcurementDetailsComponent
+    ViewFlaggedProcurementDetailsComponent,
+    FinalizeProcurementRequestComponent,
+    FinalizeProcurementRequestCreateComponent,
+    ViewProcurementDetailsComponent,
+    ReceiveProcurementItemComponent
   ],
   imports: [
     BrowserModule,

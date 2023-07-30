@@ -1151,4 +1151,16 @@ export class DataService {
     return this.httpClient.put<Procurement_Request_Quote>(`${this.apiUrl}ProcurementRequest/UpdateProcurementQuotes/` + RequestID, UpdateQuoteRequest, this.httpOptions)
   }
 
+  GetUnfinalizedProcurements(): Observable<any> {
+    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetUnpaidProcurementDetails`).pipe(map(result => result))
+  }
+
+  FinalizeProcurementRequest(DetailsID: number): Observable<any> {
+    return this.httpClient.put<Procurement_Details>(`${this.apiUrl}ProcurementDetails/FinalizeProcurementRequest${DetailsID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  GetConsumablesForRequest(AssetID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Consumable>(`${this.apiUrl}ProcurementDetails/GetConsumablesForRequest${AssetID}`).pipe(map(result => result))
+  }
+
 }

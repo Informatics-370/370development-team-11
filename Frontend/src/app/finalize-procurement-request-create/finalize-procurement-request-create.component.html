@@ -1,0 +1,104 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <mat-card style="width: 600px; margin-top: 1%; align-items: center; ">
+        <form [formGroup]="finalizationForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center"
+            fxLayoutGap="10px" (ngSubmit)="onSubmit()">
+            <mat-card-header>
+                <mat-card-title
+                    style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">Finalize
+                    Procurement Request</mat-card-title>
+                <mat-card-subtitle>
+                    <table style="width:100%;" cellspacing="0">
+                        <tr>
+                            <!-- <td style="width:100%;">
+                                <mat-card-content>
+                                    <label style=" color:black;">Mandate Limit:</label>
+                                    <br />
+                                    <mat-form-field>
+                                        <input matInput type="text" placeholder="" formControlName="mandateLimit"
+                                            id="mandateLimit"
+                                            [(ngModel)]="ProcurementDetails.employee.mandate_limit.ammount" required>
+                                    </mat-form-field>
+                                </mat-card-content>
+                            </td> -->
+                            <td style="width:100%;">
+                                <mat-card-content>
+                                    <label style=" color:black;">Total:</label>
+                                    <br />
+                                    <mat-form-field>
+                                        <input matInput type="text" placeholder="" formControlName="total" id="total"
+                                            [(ngModel)]="ProcurementDetails.total_Amount" required>
+                                    </mat-form-field>
+                                </mat-card-content>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:100%;">
+                                <mat-card-content>
+                                    <label style=" color:black;">Budget Line Total:</label>
+                                    <br />
+                                    <mat-form-field>
+                                        <input matInput type="text" placeholder="" formControlName="budgetLine"
+                                            id="budgetLine" [(ngModel)]="ProcurementDetails.budget_Line.actualAmt"
+                                            required>
+                                    </mat-form-field>
+                                </mat-card-content>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <div>
+                                <div class="col-5">
+                                    <label style="width: 450px;">Proof of payment?</label>
+                                </div>
+                                <div class="col-7">
+                                    <mat-checkbox formControlName="ProofOfPayment"></mat-checkbox>
+                                </div>
+                            </div>
+                            <mat-expansion-panel hideToggle disabled
+                                expanded="{{finalizationForm.get('ProofOfPayment').value}}" style="margin-left: 10px">
+                                <div>
+                                    <div class="col-5">
+                                        <label style="width: 450px;">Upload Proof of payment document:</label>
+                                    </div>
+                                    <div class="col-7">
+                                        <input type="file" class="file-upload" formControlName="ProofOfPaymentDoc"
+                                            (change)="uploadFile(1,$event)"
+                                            style="border: solid #244688; border-radius: 5px;height: fit-content; ">
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </tr>
+
+                    </table>
+                </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
+                <!--<button mat-raised-button type="submit"
+                      style="width: 150px; font-size: 14px; height: 42px; margin: 10px;"
+                      [disabled]="!budgetAllocationForm.valid"
+                      [ngStyle]="{'background-color': !budgetAllocationForm.valid ? 'rgba(148, 204, 91, 0.6)' : '#94CC5B','color': !budgetAllocationForm.valid ? 'rgba(255, 255, 255, 0.6)' : 'white'}">
+                Save
+              </button>-->
+
+                <div class="wrapper">
+                    <button class="">
+                        <span>Create</span>
+                        <div class="success">
+                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756"
+                                style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
+                                <path
+                                    d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+
+                <button mat-raised-button id="cBtn"
+                    style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;"
+                    (click)="onCancel()">
+                    Cancel
+                </button>
+            </mat-card-actions>
+        </form>
+    </mat-card>
+</div>
