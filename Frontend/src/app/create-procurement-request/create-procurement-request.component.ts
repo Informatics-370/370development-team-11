@@ -274,7 +274,6 @@ export class CreateProcurementRequestComponent implements OnInit {
     this.Procurement_Request.vendor.name = this.myForm.get("VendorName").value;
     this.Procurement_Request.vendor.email = this.myForm.get("Email").value;
     this.Procurement_Request.user.username = this.dataService.decodeUser(sessionStorage.getItem("token"));
-    console.log(this.Procurement_Request.user.username)
 
     this.dataService.AddProcurementRequest(this.Procurement_Request).subscribe({
       next: (response) => {
