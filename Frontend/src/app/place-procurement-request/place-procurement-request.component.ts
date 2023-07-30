@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -11,13 +11,13 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './place-procurement-request.component.html',
   styleUrls: ['./place-procurement-request.component.css']
 })
-export class PlaceProcurementRequestComponent implements OnInit{
+export class PlaceProcurementRequestComponent implements OnInit {
   ProcurementRequests: Procurement_Request[] = [];
-  SearchedPRequests:any;
+  SearchedPRequests: any;
   displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'View'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
-  @ViewChild(MatPaginator) paginator:MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   ngOnInit() {
     this.GetProcurementRequests();
     console.log(this.ProcurementRequests)
@@ -31,18 +31,18 @@ export class PlaceProcurementRequestComponent implements OnInit{
       let procurementRequestList: any[] = result;
       procurementRequestList.forEach(e => {
         //console.log(e)
-        if(e.requisition_Status_ID == 1) {
+        if (e.requisition_Status_ID == 1) {
           console.log(e)
           this.dataService.GetProcurementDetailsByRequestID(e.procurement_Request_ID).subscribe(a => {
             //console.log(result)
-            if(a == null) {
+            if (a == null) {
               this.ProcurementRequests.push(e)
               this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
               this.SearchedPRequests.paginator = this.paginator;
             }
-           
+
           })
-          
+
           //this.SearchedPRequests.push(e)
         }
       })
@@ -54,7 +54,7 @@ export class PlaceProcurementRequestComponent implements OnInit{
       }
 
     });
-    
+
     function hideloader() {
       document.getElementById('loading').style.display = "none";
       document.getElementById('table').style.visibility = "visible";
