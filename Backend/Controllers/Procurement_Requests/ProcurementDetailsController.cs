@@ -455,21 +455,22 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
         }
 
-       [HttpGet]
-        [Route("GetProcurementRequestByID/{ProcurementRequestID}")]
-        public async Task<IActionResult> GetProcurementRequestByID(int ProcurementRequestID)
+        [HttpGet]
+        [Route("GetProcurementDetailsByRequestID/{RequestID}")]
+        public async Task<IActionResult> GetProcurementDetailsByRequestID(int RequestID)
         {
             try
             {
-                var result = await _ProcurementDetailsRepository.GetProcurementRequestByIDAsync(ProcurementRequestID);
+                var result = await _ProcurementDetailsRepository.GetProcurementDetailsByRequestIDAsync(RequestID);
                 return Ok(result);
             }
             catch (Exception)
             {
-
-                return StatusCode(500, "Internal Server Error. Please contact support.");
+                return null;
+                // return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+        [HttpGet]
         [Route("GetUnpaidProcurementDetails")]
         public async Task<IActionResult> GetUnpaidProcurementDetails()
         {
@@ -492,7 +493,10 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             try
             {
                 var result = await _ProcurementDetailsRepository.AddNotificationAsync(ProcurementNotification);
-
+                return Ok(result);
+            }
+            catch (Exception)
+            {
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }

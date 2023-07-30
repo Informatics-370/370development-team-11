@@ -270,7 +270,7 @@ export class FinalizeProcurementRequestCreateComponent {
     vendor_Consumbale_ID: 0,
     consumable_ID: 0,
     vendor_ID: 0,
-    consumables: this.Consumables,
+    consumable: this.Consumables,
     vendor: this.Procurement_Request.vendor,
   }
 
