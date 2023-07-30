@@ -424,68 +424,6 @@ export class RequestCreateComponent implements OnInit {
 
         });//post
       }//if
-    }//for loop
-
-    else if (this.selectedOption == "false") {
-      this.fileToUpload = this.files[0]
-      this.Vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value
-      this.Vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value
-      this.Vendor.vendor_Status_ID = 1;
-      this.Vendor.number_Of_Times_Used = 0;
-      this.Onboard_Request.vendor = this.Vendor;
-      this.Onboard_Request.onboard_Status = this.OnboardStatus;
-      this.Onboard_Request.vendor.sole_Supplier_Provided = true;
-      this.SoleSupply.reason = this.SoleSupplierFormGroup.get("Reason")?.value
-      if (this.files[0] != '') {
-        let RequestNo = "Request" + this.Onboard_Request.onboard_Request_Id
-        this.dataService.OnboardFileAdd(RequestNo, this.fileToUpload).subscribe(response => {
-          let Path: any = response
-          console.log(Path)
-          this.sPath = Path.pathSaved.toString()
-          this.Onboard_Request.quotes = this.sPath
-          this.Onboard_Request.user_Id = Number(this.usr.user_Id);
-          this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe(response => {
-            this.Onboard_Request = response[0]
-            this.dataService.ChangeOnboardStatus(4, this.Onboard_Request.onboard_Request_Id, this.Onboard_Request.vendor_ID).subscribe()
-            this.dataService.AddSoleSupplierDetails(this.Onboard_Request.vendor_ID, this.SoleSupply).subscribe({
-              next: (response) => {
-                this.VendorNotification.notification_Type_ID = 15;
-                let transVar: any
-                transVar = new DatePipe('en-ZA');
-                this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
-                this.VendorNotification.name = "Sole Supplier Addition Request for " + response[0].vendor.name;
-                this.VendorNotification.user_ID = 1;
-                this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
-                console.log(response);
-
-                var action = "CREATE";
-                var title = "CREATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.Onboard_Request.onboard_Request_Id + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
-
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
-
-                const duration = 1750;
-                setTimeout(() => {
-                  this.dialog.afterAllClosed.subscribe({
-                    next: (response) => {
-                      this.ngOnInit();
-                    }
-                  })
-                  this.router.navigate(['/request-view']);
-                  dialogRef.close();
-                }, duration);
-              }
-            }
-
-            )
-          }
-          );//dataservice
-
-        });//post
-      }//if
       else {
         this.Onboard_Request.vendor.sole_Supplier_Provided = true;
         this.Onboard_Request.quotes = "None"
