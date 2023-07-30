@@ -29,13 +29,13 @@ import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
-@Component({
-  selector: 'app-finalize-procurement-request-create',
-  templateUrl: './finalize-procurement-request-create.component.html',
-  styleUrls: ['./finalize-procurement-request-create.component.css']
-})
-export class FinalizeProcurementRequestCreateComponent {
 
+@Component({
+  selector: 'app-sign-off-request',
+  templateUrl: './sign-off-request.component.html',
+  styleUrls: ['./sign-off-request.component.css']
+})
+export class SignOffRequestComponent {
   mail: MailData = {
     Name: '',
     Username: '',
@@ -318,34 +318,31 @@ export class FinalizeProcurementRequestCreateComponent {
   }
 
   onSubmit(): void {
-    this.dataService.FinalizeProcurementRequest(this.ProcurementDetails.procurement_Details_ID).subscribe(result => {
-      let FolderCategory = "ProofOfPayment"
-      let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`
-      console.log(ProcurementRequest)
-      this.dataService.uploadProcureFile(FolderCategory, ProcurementRequest, this.file[1]).subscribe(response => {
-        this.ProofOfPayment.procurement_Details = result[0];
-        this.ProofOfPayment.procurement_Details_ID = result[0].procurement_Details_ID;
-        let Path: any = response
-        this.ProofOfPayment.proof_Of_Payment_Doc = Path.returnedPath.toString()
-        this.ProofOfPayment.procurement_Details.procurement_Request.user = this.Procurement_Request.user;
-        this.ProofOfPayment.procurement_Details.procurement_Request.vendor = this.Procurement_Request.vendor;
-        this.ProofOfPayment.procurement_Details.procurement_Request.requisition_Status = this.Procurement_Request.requisition_Status;
-        this.ProofOfPayment.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
-        this.ProofOfPayment.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category;
-        this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe();
-      })
-      this.router.navigate(['/ViewBudgetAllocation']);
+    this.dataService.RequisitionApproval(this.ProcurementDetails.procurement_Details_ID).subscribe(result => {
+      // let FolderCategory = "ProofOfPayment"
+      // let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`
+      // console.log(ProcurementRequest)
+      // this.dataService.uploadProcureFile(FolderCategory, ProcurementRequest, this.file[1]).subscribe(response => {
+      //   this.ProofOfPayment.procurement_Details = result[0];
+      //   this.ProofOfPayment.procurement_Details_ID = result[0].procurement_Details_ID;
+      //   let Path: any = response
+      //   this.ProofOfPayment.proof_Of_Payment_Doc = Path.returnedPath.toString()
+      //   this.ProofOfPayment.procurement_Details.procurement_Request.user = this.Procurement_Request.user;
+      //   this.ProofOfPayment.procurement_Details.procurement_Request.vendor = this.Procurement_Request.vendor;
+      //   this.ProofOfPayment.procurement_Details.procurement_Request.requisition_Status = this.Procurement_Request.requisition_Status;
+      //   this.ProofOfPayment.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
+      //   this.ProofOfPayment.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category;
+      //   this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe();
+      // })
+
+      this.router.navigate(['/ViewProcurementDetails']);
     })
 
   }
-  file: File[] = [null, null];
-  uploadFile(i: number, event: any) {
-    this.file[i] = event.target.files[0];
-    console.log(this.file[i])
-  }
+
   onCancel(): void {
     this.finalizationForm.reset();
-    this.router.navigate(['/FinalizeProcurementRequest']);
+    this.router.navigate(['/ViewProcurementDetails']);
   }
 
   GetProcurementDetails(id: number) {

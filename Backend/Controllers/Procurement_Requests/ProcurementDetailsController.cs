@@ -499,6 +499,10 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             {
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         [HttpGet]
@@ -531,6 +535,104 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+        [HttpPut]
+        [Route("RequisitionApproval{DetailsID}")]
+        public async Task<IActionResult> RequisitionApproval(int DetailsID)
+        {
+            try
+            {
+                var results = await _ProcurementDetailsRepository.RequisitionApproval(DetailsID);
+                return Ok(results);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
 
+        [HttpGet]
+        [Route("GetUnapprovedRequests")]
+        public async Task<IActionResult> GetUnapprovedRequests()
+        {
+              try
+            {
+                var result = await _ProcurementDetailsRepository.GetUnapprovedRequests();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }   
+        
+
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        [Route("uploadProofFile")]
+        public async Task<IActionResult> UploadPOPHandler()
+        {
+            var formCollection = await Request.ReadFormAsync();
+            var file = formCollection.Files.First();
+
+
+            var ProofName = Request.Form["ProofName"];
+
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file selected");
+            }
+
+            var folderPath = Path.Combine("Files", "ProofOfPayment", ProofName);
+            var filePath = Path.Combine(folderPath, file.FileName);
+            var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
+
+            if (!Directory.Exists(absoluteFolderPath))
+            {
+                Directory.CreateDirectory(absoluteFolderPath);
+            }
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var PathSaved = Path.Combine(ProofName, file.FileName);
+            return Ok(new { PathSaved });
+        }
+
+
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        [Route("uploadInvoice")]
+        public async Task<IActionResult> UploadInvoice()
+        {
+            var formCollection = await Request.ReadFormAsync();
+            var file = formCollection.Files.First();
+
+
+            var InvoiceName = Request.Form["InvoiceName"];
+
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file selected");
+            }
+
+            var folderPath = Path.Combine("Files", "Invoices", InvoiceName);
+            var filePath = Path.Combine(folderPath, file.FileName);
+            var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
+
+            if (!Directory.Exists(absoluteFolderPath))
+            {
+                Directory.CreateDirectory(absoluteFolderPath);
+            }
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var PathSaved = Path.Combine(InvoiceName, file.FileName);
+            return Ok(new { PathSaved });
+        }
     }
 }

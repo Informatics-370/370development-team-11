@@ -137,6 +137,10 @@ import { ViewProcurementDetailsComponent } from './view-procurement-details/view
 import { ReceiveProcurementItemComponent } from './receive-procurement-item/receive-procurement-item.component';
 import { ViewHelpuserComponent } from './view-helpuser/view-helpuser/view-helpuser.component';
 import { RestoreDialogComponent } from './Settings/restore-dialog/restore-dialog.component';
+import { UploadPayementFileComponent } from './upload-payement-file/upload-payement-file.component';
+import { UploadInvoiceComponent } from './upload-invoice/upload-invoice.component';
+import { ViewUnapprovedRequestsComponent } from './view-unapproved-requests/view-unapproved-requests.component';
+import { SignOffRequestComponent } from './sign-off-request/sign-off-request.component';
 
 
 @NgModule({
@@ -240,6 +244,10 @@ import { RestoreDialogComponent } from './Settings/restore-dialog/restore-dialog
     ReceiveProcurementItemComponent,
     ViewHelpuserComponent,
     RestoreDialogComponent,
+    UploadPayementFileComponent,
+    UploadInvoiceComponent,
+    ViewUnapprovedRequestsComponent,
+    SignOffRequestComponent
   ],
   imports: [
     BrowserModule,

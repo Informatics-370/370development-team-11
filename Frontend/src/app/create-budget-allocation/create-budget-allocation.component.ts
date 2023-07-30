@@ -57,9 +57,9 @@ export class CreateBudgetAllocationComponent {
       next: (Result) => {
         if (Result == null) {
           this.dataService.AddBudgetAllocation(this.budgetAllocation).subscribe(
-            (CategoryAdded) => {
+            (AllocationAdded) => {
 
-              if (CategoryAdded) {
+              if (AllocationAdded) {
                 document.getElementById('cBtn').style.display = "none";
                 document.querySelector('button').classList.toggle("is_active");
               }
@@ -75,7 +75,7 @@ export class CreateBudgetAllocationComponent {
 
               const duration = 1750;
               setTimeout(() => {
-                this.router.navigate(['/ViewBudgetAllocation']);
+                this.router.navigate(['/ViewBudgetLines/' + AllocationAdded.budget_ID]);
                 dialogRef.close();
               }, duration);
             }

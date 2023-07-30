@@ -1,7 +1,12 @@
-import { Component } from '@angular/core';
-import { DataService } from '../DataService/data-service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, Inject, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DataService } from '../DataService/data-service';
+import { Router } from '@angular/router';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { Notification } from '../Shared/Notification';
+import { Notification_Type } from '../Shared/Notification_Type';
+import { Proof_Of_Payment } from '../Shared/ProofOfPayment';
 import { Consumable } from '../Shared/Consumable';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { Procurement_Details } from "../Shared/ProcurementDetails";
@@ -22,19 +27,23 @@ import { BudgetCategory } from '../Shared/BudgetCategory';
 import { DatePipe } from '@angular/common';
 import { Deposit } from '../Shared/Deposit';
 import { Payment_Made } from '../Shared/PaymentMade';
-import { Proof_Of_Payment } from '../Shared/ProofOfPayment';
 import { Procurement_Consumable } from '../Shared/Procurement_Consumable';
 import { ConsumableCategory } from '../Shared/ConsumableCategory';
 import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
+
 @Component({
-  selector: 'app-finalize-procurement-request-create',
-  templateUrl: './finalize-procurement-request-create.component.html',
-  styleUrls: ['./finalize-procurement-request-create.component.css']
+  selector: 'app-upload-invoice',
+  templateUrl: './upload-invoice.component.html',
+  styleUrls: ['./upload-invoice.component.css']
 })
-export class FinalizeProcurementRequestCreateComponent {
+export class UploadInvoiceComponent {
+  myForm: FormGroup = new FormGroup({});
+  fileToUpload: File | null = null;
+  files: any[] = [''];
+  sPath = "";
 
   mail: MailData = {
     Name: '',
@@ -295,67 +304,73 @@ export class FinalizeProcurementRequestCreateComponent {
     asset: this.assets,
     vendor: this.Procurement_Request.vendor,
   }
-  BudgetAllocationCode: BudgetLine[] = [];
-  finalizationForm: FormGroup = new FormGroup({});
-  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder) { }
+  pop: Proof_Of_Payment = {
+    proof_Of_Payment_ID: 0,
+    procurement_Details_ID: 0,
+    procurement_Details: this.ProcurementDetails,
+    proof_Of_Payment_Doc: "string"
+  }
 
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, ID: Number }, private formBuilder: FormBuilder, private dataservice: DataService, private router: Router, private dialogRef: MatDialogRef<UploadInvoiceComponent>) { }
+
+  File = this.data.name
+  Data: any[];
+  @ViewChild('myTemp')
+  myTempRef!: ElementRef;
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.GetProcurementDetails(id);
-    this.finalizationForm = this.formBuilder.group({
-      mandateLimit: ['', [Validators.required]],
-      total: ['', [Validators.required]],
-      budgetLine: ['', [Validators.required]],
-      ProofOfPayment: false,
-      ProofOfPaymentDoc: ["", [Validators.required]],
-    })
-
-    this.dataService.GetBudgetLines().subscribe(response => {
-      this.BudgetAllocationCode = response;
-      console.log(this.BudgetAllocationCode)
-    })
+    this.myForm = this.formBuilder.group({
+      FileAdded: ["", [Validators.required]],
+    });
   }
 
-  onSubmit(): void {
-    this.dataService.FinalizeProcurementRequest(this.ProcurementDetails.procurement_Details_ID).subscribe(result => {
-      let FolderCategory = "ProofOfPayment"
-      let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`
-      console.log(ProcurementRequest)
-      this.dataService.uploadProcureFile(FolderCategory, ProcurementRequest, this.file[1]).subscribe(response => {
-        this.ProofOfPayment.procurement_Details = result[0];
-        this.ProofOfPayment.procurement_Details_ID = result[0].procurement_Details_ID;
+  onTabChange(event: MatTabChangeEvent): void {
+    if (event.index === 1) {
+      setTimeout(() => {
+
+      });
+    }
+
+    this.ngOnInit()
+  }
+
+  onFileUpload(event: any) {
+    console.log('Event:', event); // Log the entire event object
+    console.log('Event Target:', event.target); // Log the target element
+    console.log('Files:', event.target.files); // Log the FileList object
+    this.fileToUpload = event.target.files[0];
+    if (this.fileToUpload != null) {
+      this.files[0] = this.fileToUpload;
+    }
+  }
+
+  onSubmit() {
+    this.fileToUpload = this.files[0];
+    var name = "" + this.data.name
+    if (this.fileToUpload != null) {
+      let InvoiceName: string = name
+
+      let file: File = this.fileToUpload
+
+      this.dataservice.InvoiceFileAdd(InvoiceName, file).subscribe(response => {
         let Path: any = response
-        this.ProofOfPayment.proof_Of_Payment_Doc = Path.returnedPath.toString()
-        this.ProofOfPayment.procurement_Details.procurement_Request.user = this.Procurement_Request.user;
-        this.ProofOfPayment.procurement_Details.procurement_Request.vendor = this.Procurement_Request.vendor;
-        this.ProofOfPayment.procurement_Details.procurement_Request.requisition_Status = this.Procurement_Request.requisition_Status;
-        this.ProofOfPayment.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
-        this.ProofOfPayment.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category;
-        this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe();
+        this.sPath = Path.pathSaved.toString()
+        this.pop.proof_Of_Payment_Doc = this.sPath;
+        this.pop.procurement_Details_ID = 1;
+        this.dialogRef.close();
+        this.router.navigate(['/ViewProcurementDetails'])
       })
-      this.router.navigate(['/ViewBudgetAllocation']);
-    })
-
-  }
-  file: File[] = [null, null];
-  uploadFile(i: number, event: any) {
-    this.file[i] = event.target.files[0];
-    console.log(this.file[i])
-  }
-  onCancel(): void {
-    this.finalizationForm.reset();
-    this.router.navigate(['/FinalizeProcurementRequest']);
+    }
   }
 
-  GetProcurementDetails(id: number) {
-    this.dataService.GetProcurementDetailsByID(id).subscribe(result => {
-      this.ProcurementDetails = result;
-      console.log(result)
-    })
+
+  Close() {
+    this.dialogRef.close()
+    this.router.navigate(['/ViewProcurementDetails'])
   }
 
   public myError = (controlName: string, errorName: string) => {
-    return this.finalizationForm.controls[controlName].hasError(errorName);
+    return this.myForm.controls[controlName].hasError(errorName);
   }
 }
