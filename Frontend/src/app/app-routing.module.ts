@@ -61,6 +61,7 @@ import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-
 import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
 import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
 import { ViewHelpComponent } from './view-help/view-help/view-help.component';
+import { ViewHelpuserComponent } from './view-helpuser/view-helpuser/view-helpuser.component';
 import { CreateHelpComponent } from './create-help/create-help/create-help.component';
 import { EditHelpComponent } from './edit-help/edit-help/edit-help.component';
 import { DeleteHelpComponent } from './delete-help/delete-help/delete-help.component';
@@ -213,7 +214,11 @@ const routes: Routes = [
     component: ViewHelpComponent
   },
   {
-    path: 'CreateHelp', canActivate: [AuthService],
+    path: 'ViewHelpUser' ,canActivate:[AuthService],
+    component: ViewHelpuserComponent
+  },
+  {
+    path: 'CreateHelp' , canActivate: [AuthService],
     component: CreateHelpComponent
   },
   {

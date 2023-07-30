@@ -29,7 +29,7 @@ export class ViewBudgetAllocationComponent {
   BudgetAllocations: BudgetAllocation[] = [];
   SearchedBudgetAllocations: BudgetAllocation[] = [];
   searchNumber: Number = 0;
-  displayedColumns: string[] = ['id', 'department', 'date', 'year', 'total', 'lines', 'action', 'delete'];
+  displayedColumns: string[] = [ 'department', 'date', 'year', 'total', 'lines', 'action', 'delete'];
   dataSource = new MatTableDataSource<BudgetAllocation>();
 
   dep: Department = {

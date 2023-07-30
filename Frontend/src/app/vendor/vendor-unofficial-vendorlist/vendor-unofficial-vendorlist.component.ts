@@ -9,7 +9,13 @@ import {MatPaginator} from '@angular/material/paginator';
 import { Subscription, buffer, elementAt, groupBy } from 'rxjs';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
 import { TestScheduler } from 'rxjs/testing';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 export interface PendOnboardRequestDetails {
   onboard_Request_Id : number;
@@ -25,7 +31,8 @@ export interface PendOnboardRequestDetails {
 @Component({
   selector: 'app-vendor-unofficial-vendorlist',
   templateUrl: './vendor-unofficial-vendorlist.component.html',
-  styleUrls: ['./vendor-unofficial-vendorlist.component.css']
+  styleUrls: ['./vendor-unofficial-vendorlist.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 
 
@@ -313,6 +320,9 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
   }
 
   displayedColumns : string[] = ["Id","selected","Type", "TotalQuotes","user","Edit","View"];
+
+
+
 
 
 }

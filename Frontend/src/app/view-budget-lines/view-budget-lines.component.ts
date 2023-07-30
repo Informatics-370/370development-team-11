@@ -26,7 +26,7 @@ export class ViewBudgetLinesComponent {
   BudgetLines: BudgetLine[] = [];
   SearchedBudgetLines: BudgetLine[] = [];
   searchTerm: String = '';
-  displayedColumns: string[] = ['id', 'budgetCategory', 'month', 'budget', 'actual', 'variance', 'action', 'delete'];
+  displayedColumns: string[] = [ 'budgetCategory', 'month', 'budget', 'actual', 'variance', 'action', 'delete'];
   dataSource = new MatTableDataSource<BudgetLine>();
 
   constructor(private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private dataService: DataService) { }

@@ -141,9 +141,11 @@ export class EditDepartmentComponent implements OnInit{
   onSubmit(){
     var name = this.myForm.get('name')?.value;
 
-    this.dataService.DepartmentValidation(name).subscribe({
+    this.dataService.EditDepartmentValidation(name, this.Department.department_ID).subscribe({
       next: (Result) => {
-        if (Result == null) {
+        if (Result != null) {
+
+
           this.dataService.EditDepartment(this.Department.department_ID, this.myForm.value).subscribe({
             next: (response) => {
 

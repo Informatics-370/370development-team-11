@@ -14,7 +14,6 @@ import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { VideoDialogComponent } from 'src/app/VideoDialog/video-dialog/video-dialog.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
-import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -23,18 +22,17 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 };
 
 
-
 @Component({
-  selector: 'app-view-help',
-  templateUrl: './view-help.component.html',
-  styleUrls: ['./view-help.component.css'],
+  selector: 'app-view-helpuser',
+  templateUrl: './view-helpuser.component.html',
+  styleUrls: ['./view-helpuser.component.css'],
   providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
-export class ViewHelpComponent implements OnInit {
+export class ViewHelpuserComponent implements OnInit {
   displayedColumnsAdmin: string[] = ['helpCategory', 'name', 'description', 'video', 'user_Manual',  'action', 'delete'];
-                                  //'help_ID',
+                                 // 'help_ID',
   displayedColumnsUser: string[] = [ 'helpCategory', 'name', 'description', 'video', 'user_Manual'];
-                                 //'help_ID',
+                                //'help_ID',
   dataSource = new MatTableDataSource<Help>();
 
   HelpToDelete:any  = {
@@ -136,17 +134,7 @@ export class ViewHelpComponent implements OnInit {
 
  
 
-  DeleteRequest(help_ID: Number) {
-    const confirm = this.dialog.open(DeleteHelpComponent, {
-      disableClose: true,
-      data: { help_ID }
-    });
-    this.dialog.afterAllClosed.subscribe({
-      next: (response) => {
-        this.ngOnInit();
-      }
-    })
-  }
+  
 
 
   openPDFInNewTab(i: number): void {
@@ -164,24 +152,7 @@ export class ViewHelpComponent implements OnInit {
     window.open(userManualUrl, '_blank');
   }
 
-  //openVideoInNewTab(i: number): void {
-  //  const url = this.vFileDetails[i].FileURL;
-  //  this.http.get(url, { responseType: 'blob' }).subscribe(response => {
-  //    const fileURL = URL.createObjectURL(response);  
-  //    window.open(fileURL, '_blank');
-  //    URL.revokeObjectURL(fileURL);
-  //  });
-  //
-  // }
-
- // openVideoInNewTab(i: number): void {
- //   const videoUrl = this.vFileDetails[i].FileURL;
- //   const dialogRef = this.dialog.open(VideoDialogComponent, {
- //     width: '560px',
- //     height: '315px',
- //     data: { videoUrl },
- //   });
- // }
+ 
 
  openVideoInNewTab(videoUrl: string): void {
     const dialogRef = this.dialog.open(VideoDialogComponent, {
@@ -199,13 +170,4 @@ export class ViewHelpComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
     });
   }
-
-  openRestoreDialog() {
-    const dialogRef = this.dialog.open(RestoreDialogComponent);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-  }
-
 }

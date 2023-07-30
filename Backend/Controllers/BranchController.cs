@@ -54,7 +54,7 @@ namespace ProcionAPI.Controllers
 
         [HttpPut]
         [Route("EditBranch/{branch_ID}")]
-        public async Task<ActionResult<Department>> EditBranch(int Branch_ID, Branch EditBranchRequest)
+        public async Task<ActionResult<Branch>> EditBranch(int Branch_ID, Branch EditBranchRequest)
         {
             try
             {
@@ -122,6 +122,21 @@ namespace ProcionAPI.Controllers
             try
             {
                 var result = await _branchRepository.BranchValidationAsync(street);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+        [HttpGet]
+        [Route("EditBranchValidation/{street}/{id}")]
+        public async Task<IActionResult> EditBranchValidation([FromRoute] string street, int id)
+        {
+            try
+            {
+                var result = await _branchRepository.EditBranchValidationAsync(street, id);
                 return Ok(result);
             }
             catch (Exception)

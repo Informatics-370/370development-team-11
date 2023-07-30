@@ -89,7 +89,7 @@
             <ng-container matColumnDef="View">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let element" style="width:100px;">
-                <button class="noselect" type="button"
+                <button class="noselect" type="button" matTooltip="This will direct you to Approve Vendor Onboard page, here you will be able to accept or reject the vendor onboarding"
                 style="background-color: #94CC5B;" *ngIf="element.quoteTotal > 2" (click)="UpdateOnboardRequestStatus(element.onboard_Request_Id)" >
                 <span class='text'>View</span>
                 <span class="icon" style="border-left: 1px solid #94CC5B; ">
@@ -100,7 +100,7 @@
                     </svg>
                 </span>
                 </button>
-                <button class="noselect" type="button"
+                <button class="noselect" type="button" matTooltip="This will direct you to Approve Vendor Onboard page, here you will be able to delete onboard request"
                 style="background-color: #94CC5B;" *ngIf="element.quoteTotal == 1 && (element.VendorStatusId == 4 || element.onboardRequestStatusID == 4 || element.onboard_Request_status_ID == 3) && element.VendorStatusId != 2"  (click)="CorrectRouteChoice(element.onboard_Request_Id)" >
                 <span class='text'>View</span>
                 <span class="icon" style="border-left: 1px solid #94CC5B; ">
@@ -111,7 +111,7 @@
                     </svg>
                 </span>
                 </button>
-                <button class="noselect" type="button"
+                <button class="noselect" type="button" matTooltip="This will direct you to Due Diligence Checklist page, where you will be able to add to the Due Dilligence checklist"
                 style="background-color: #94CC5B;" *ngIf="element.quoteTotal == 1 && element.VendorStatusId == 2"  routerLink="/vendor-approved-add-details/{{element.onboard_Request_Id}}/{{element.vendorId}}" >
                 <span class='text'>Add</span>
                 <span class="icon" style="border-left: 1px solid #94CC5B; ">

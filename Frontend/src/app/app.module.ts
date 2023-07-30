@@ -135,6 +135,8 @@ import { FinalizeProcurementRequestComponent } from './finalize-procurement-requ
 import { FinalizeProcurementRequestCreateComponent } from './finalize-procurement-request-create/finalize-procurement-request-create.component';
 import { ViewProcurementDetailsComponent } from './view-procurement-details/view-procurement-details.component';
 import { ReceiveProcurementItemComponent } from './receive-procurement-item/receive-procurement-item.component';
+import { ViewHelpuserComponent } from './view-helpuser/view-helpuser/view-helpuser.component';
+import { RestoreDialogComponent } from './Settings/restore-dialog/restore-dialog.component';
 
 
 @NgModule({
@@ -235,7 +237,9 @@ import { ReceiveProcurementItemComponent } from './receive-procurement-item/rece
     FinalizeProcurementRequestComponent,
     FinalizeProcurementRequestCreateComponent,
     ViewProcurementDetailsComponent,
-    ReceiveProcurementItemComponent
+    ReceiveProcurementItemComponent,
+    ViewHelpuserComponent,
+    RestoreDialogComponent,
   ],
   imports: [
     BrowserModule,

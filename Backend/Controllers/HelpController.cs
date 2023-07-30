@@ -123,12 +123,12 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
-        [Route("HelpValidation/{name}/{category}")]
-        public async Task<IActionResult> HelpValidation([FromRoute] string name, [FromRoute] string category)
+        [Route("HelpValidation/{name}")]
+        public async Task<IActionResult> HelpValidation([FromRoute] string name)
         {
             try
             {
-                var result = await _helpRepository.HelpValidationAsync(name,category);
+                var result = await _helpRepository.HelpValidationAsync(name);
                 return Ok(result);
             }
             catch (Exception)
@@ -138,7 +138,23 @@ namespace ProcionAPI.Controllers
             }
         }
 
-       
+        [HttpGet]
+        [Route("EditHelpValidation/{name}/{id}")]
+        public async Task<IActionResult> EditHelpValidation([FromRoute] string name, int id)
+        {
+            try
+            {
+                var result = await _helpRepository.EditHelpValidationAsync(name, id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+
 
         [HttpPost]
         [DisableRequestSizeLimit]
