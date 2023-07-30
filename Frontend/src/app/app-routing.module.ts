@@ -80,6 +80,8 @@ import { FinalizeProcurementRequestComponent } from './finalize-procurement-requ
 import { FinalizeProcurementRequestCreateComponent } from './finalize-procurement-request-create/finalize-procurement-request-create.component';
 import { ViewProcurementDetailsComponent } from './view-procurement-details/view-procurement-details.component';
 import { ReceiveProcurementItemComponent } from './receive-procurement-item/receive-procurement-item.component';
+import { ViewUnapprovedRequestsComponent } from './view-unapproved-requests/view-unapproved-requests.component';
+import { SignOffRequestComponent } from './sign-off-request/sign-off-request.component';
 
 import { BackupComponent } from './Settings/backup/backup.component';
 import { EditProcurementRequestComponent } from './edit-procurement-request/edit-procurement-request.component';
@@ -353,6 +355,14 @@ const routes: Routes = [
   {
     path: 'ReceiveProcurementItem/:id',
     component: ReceiveProcurementItemComponent
+  },
+  {
+    path: 'ViewUnapprovedRequests',
+    component: ViewUnapprovedRequestsComponent
+  },
+  {
+    path: 'SignOffRequest/:id',
+    component: SignOffRequestComponent
   }
 
 

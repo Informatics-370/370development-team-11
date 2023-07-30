@@ -14,14 +14,11 @@
             <a mat-list-item class="uni-font" routerLink="/ViewFlaggedProcurementRequest">View Flagged Procurement
                 Request</a>
             <a mat-list-item class="uni-font" routerLink="/ViewProcurementDetails">View Procurement Details</a>
-            <a mat-list-item class="uni-font" routerLink="/ViewUnapprovedRequests">View Unapproved Requests</a>
-
         </mat-nav-list>
-
     </mat-sidenav>
     <mat-sidenav-content class="Main-content">
         <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
-            View Procurement Request Details
+            View Requisition Request Details
         </h1>
 
         <div mat-list-item style="margin-left: 0.5%; display: flex;  align-items: center; ">
@@ -68,43 +65,19 @@
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Status
                     </th>
                     <td mat-cell *matCellDef="let procurement">
-                        <span [style.color]="getStatusColor(procurement.procurement_Status.name)">
-                            {{procurement.procurement_Status.name}}
+                        <span [style.color]="getStatusColor(procurement.sign_Off_Status.sign_Off_Status_ID)">
+                            {{getStatus(procurement.sign_Off_Status.sign_Off_Status_ID)}}
                         </span>
                     </td>
                 </ng-container>
-
-                <ng-container matColumnDef="POP">
-                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Upload Proof of Payment
-                    </th>
-                    <td mat-cell *matCellDef="let procurement" style="width:100px;">
-                        <button (click)="openDialog(procurement.buyer_Name, procurement.procurement_Request_ID)"
-                            class="noselect" type="button" style="background-color: #94CC5B;">
-                            <span class='text'>Proof of Payment</span>
-                        </button>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="Inv">
-                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Upload Invoice
-                    </th>
-                    <td mat-cell *matCellDef="let procurement" style="width:100px;">
-                        <button (click)="openInvDialog(procurement.buyer_Name, procurement.procurement_Request_ID)"
-                            class="noselect" type="button" style="background-color: #94CC5B;">
-                            <span class='text'>Invoice</span>
-                        </button>
-                    </td>
-                </ng-container>
-
                 <ng-container matColumnDef="View">
 
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td *matCellDef="let procurement" style="width:100px;">
 
-                        <button *ngIf="!getFlagged(procurement.procurement_Status.name) " class="noselect" type="button"
-                            style="background-color: #94CC5B;"
-                            routerLink="/ReceiveProcurementItem/{{procurement.procurement_Request.procurement_Request_ID}}">
-                            <span class='text'>Receive</span>
+                        <button class="noselect" type="button" style="background-color: #94CC5B;"
+                            routerLink="/SignOffRequest/{{procurement.sign_Off_Status.sign_Off_Status_ID}}">
+                            <span class='text'>Review</span>
                             <span class="icon" style="border-left: 1px solid #94CC5B; ">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
                                     <path

@@ -1173,7 +1173,7 @@ export class DataService {
   }
 
   GetProcurementDetailsByRequestID(RequestID: Number): Observable<any> {
-    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/GetProcurementDetailsByRequestID/${RequestID}`).pipe(map(result => result))
+    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/GetProcurementDetailsByID/${RequestID}`).pipe(map(result => result))
   }
 
   ProcurementAddNotification(ProcurementNotification: Notification): Observable<any> {
@@ -1207,6 +1207,27 @@ export class DataService {
     return this.httpClient.get<Procurement_Consumable>(`${this.apiUrl}ProcurementDetails/GetConsumablesForRequest${AssetID}`).pipe(map(result => result))
   }
 
+  POPFileAdd(ProofName: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('ProofName', ProofName)
+    return this.httpClient.post<any>(`${this.apiUrl}ProcurementDetails/uploadProofFile`, formData, this.httpOptions)
+  }
+
+  InvoiceFileAdd(InvoiceName: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('InvoiceName', InvoiceName)
+    return this.httpClient.post<any>(`${this.apiUrl}ProcurementDetails/uploadInvoice`, formData, this.httpOptions)
+  }
+
+  RequisitionApproval(DetailsID: number): Observable<any> {
+    return this.httpClient.put<Procurement_Details>(`${this.apiUrl}ProcurementDetails/RequisitionApproval${DetailsID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  GetUnapprovedRequests(): Observable<any> {
+    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/UnapprovedRequests`).pipe(map(result => result))
+  }
 }
 
 
