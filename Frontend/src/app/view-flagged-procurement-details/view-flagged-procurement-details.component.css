@@ -94,7 +94,7 @@ label {
     height: 100%;
   }
   
-  button {
+  .wrapper   button {
     transform: translate(-0%, -0%);
     width: 150px;
     height: 42px;
@@ -109,18 +109,18 @@ label {
     transition: all .35s;
   }
   
-    button:hover {
+  .wrapper  button:hover {
       background: #94CC5B;
       color: #fff;
     }
   
-    button span {
+    .wrapper   button span {
       opacity: 1;
       visibility: visible;
       transition: all .35s;
     }
   
-  .success {
+    .wrapper  .success {
     position: absolute;
     top: 0;
     left: 0;
@@ -134,7 +134,7 @@ label {
     transition: all .35s;
   }
   
-    .success svg {
+  .wrapper  .success svg {
       width: 20px;
       height: 20px;
       fill: yellowgreen;
@@ -143,23 +143,23 @@ label {
       transition: all .35s;
     }
   
-  button.is_active {
+    .wrapper  button.is_active {
     width: 40px;
     height: 40px;
     border-radius: 40px;
   }
   
-    button.is_active .success {
+  .wrapper  button.is_active .success {
       opacity: 1;
       visibility: visible;
     }
   
-      button.is_active .success svg {
+    .wrapper  button.is_active .success svg {
         margin-top: 50%;
         transform: translateY(-50%) rotate(720deg) scale(1);
       }
   
-    button.is_active span {
+      .wrapper  button.is_active span {
       opacity: 0;
       visibility: hidden;
     }

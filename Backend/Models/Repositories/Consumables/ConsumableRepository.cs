@@ -168,7 +168,30 @@ namespace ProcionAPI.Models.Repositories.Consumables
             public float[] PredictedStockAmt;
         }
 
+        public async Task<Notification[]> AddNotificationAsync(Notification ConsumableNotif)
+        {
 
+            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == ConsumableNotif.Notification_Type_ID);
+
+            if (existingNotificationType != null)
+            {
+                ConsumableNotif.Notification_Type = existingNotificationType;
+            }
+
+            var existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == ConsumableNotif.User_Id);
+
+            if (existingUser != null)
+            {
+                ConsumableNotif.User = existingUser;
+                ConsumableNotif.User.No_Notifications = existingUser.No_Notifications + 1;
+            }
+
+
+            await _dbContext.Notification.AddAsync(ConsumableNotif);
+            await _dbContext.SaveChangesAsync();
+
+            return new Notification[] { ConsumableNotif };
+        }
 
 
 

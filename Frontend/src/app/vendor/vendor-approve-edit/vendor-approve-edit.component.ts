@@ -114,6 +114,7 @@ export class VendorApproveEditComponent implements OnInit{
     conflict_Of_Interest_Policy_Present: false,
     customer_Complaints_Policy_Present: false,
     business_References_Present: false,
+    bank_Stamped_Confirtmation:false,
   };
 
   ContractedPartnerTypeDetails: Contracted_Partner_Type = {
@@ -124,7 +125,7 @@ export class VendorApproveEditComponent implements OnInit{
 
   POPIDetails: POPI = {
     pOPI_ID:0,
-    contracted_Partner_Type_ID:0,
+    contracted_Partner_Type_ID:1,
     due_Diligence_ID:0,
     due_Dillegence: this.DueDilligenceDetails,
     contracted_Partner_Type: this.ContractedPartnerTypeDetails,
@@ -140,8 +141,9 @@ export class VendorApproveEditComponent implements OnInit{
   };
 
 
-
-
+  DueDiligenceChecklistDetailsFormGroup = this._formBuilder.group({
+    HasDDC:false,
+  });
 
   FoundationaldocumentsFormGroup = this._formBuilder.group({
     MutualNDA: false,
@@ -163,6 +165,7 @@ export class VendorApproveEditComponent implements OnInit{
   FinancialsFormGroup = this._formBuilder.group({
     VATRegistrationCertificate: false,
     TaxClearanceCertificate: false,
+    bank_Stamped_Confirtmation:false,
   });
 
   SubContractingFormGroup = this._formBuilder.group({
@@ -245,10 +248,12 @@ export class VendorApproveEditComponent implements OnInit{
         let VendorID = paramater.get("VendorID");
         console.log(VendorID)
         this.VendorService.GetDueDiligence(Number(VendorID)).subscribe(element => {
-    
-          console.log(element)
+          
+          console.log(element.b_BBEE_Certificate_Provided)
           this.DueDilligenceData = element
           console.log(this.DueDilligenceData)
+          this.DueDiligenceChecklistDetailsFormGroup.get("HasDDC")?.setValue(element.due_Diligence_Doc)
+
           this.FoundationaldocumentsFormGroup.get("MutualNDA")?.setValue(element.mutual_Nda_Signed)
           this.FoundationaldocumentsFormGroup.get("BasicCompanyInfo")?.setValue(element.basic_Company_Info_Provided)
           this.FoundationaldocumentsFormGroup.get("GroupStructure")?.setValue(element.group_Structure_Provided)
@@ -264,7 +269,7 @@ export class VendorApproveEditComponent implements OnInit{
           //financials
       this.FinancialsFormGroup.get("VATRegistrationCertificate")?.setValue(element.vat_Reg_Certificate_Provided)
       this.FinancialsFormGroup.get("TaxClearanceCertificate")?.setValue(element.tax_Clearance_Certificate_Provided)
-
+      this.FinancialsFormGroup.get("bank_Stamped_Confirtmation")?.setValue(element.bank_Stamped_Confirtmation)
       //subcontracting
       this.SubContractingFormGroup.get("NameSubContractor")?.setValue(element.subcontractor_Name_Provided)
       this.SubContractingFormGroup.get("CompanyDetails")?.setValue(element.company_Details_Provided)
@@ -397,15 +402,16 @@ export class VendorApproveEditComponent implements OnInit{
     }
     )}//ngomt
 
-
+    stepIndex:any;
 
   setFocus(stepper: MatStepper) {
     if(stepper != null) {
+      
       setTimeout(() => {
-    
+        //console.log(stepper.selectedIndex.toString())
         document.getElementById(stepper.selectedIndex.toString()).scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'})
         //this.setFocus(stepper)
-        }, 100);
+        }, 150);
     }
       
     
@@ -472,19 +478,24 @@ Create() {
         this.VenBEEDetails.vendor = this.DueDilligenceDetails.vendor
         let test: any
         test = new DatePipe('en-ZA');
+        if(this.VenBEEDetails.date != test.transform(this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.value, 'MMM d, y, h:mm:ss a')) {
+          this.VendorService.GenerateVendorBEEExpiryNotification(this.VenBEEDetails.vendor_ID,test.transform(this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.value, 'MMM d, y, h:mm:ss a')).subscribe();
+        }
         this.VenBEEDetails.date = test.transform(this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.value, 'MMM d, y, h:mm:ss a');
         let FolderCategory = "BEE";
         let VendorNo = "Vendor" + Number(VendorID);
         if(this.file[0] != null) {
-          this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails.FileName)
-          this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[0]).subscribe(response => {
-            let Path: any = response
-            this.VenBEEDetails.beE_Certificate  = Path.returnedPath.toString();
-            this.VendorService.UpdateBEEDetails(this.VenBEEDetails.vendor_ID,this.VenBEEDetails).subscribe(response => {console.log(response)})
-           })
+          console.log(this.FileDetails[0].FileName)
+          this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(r => {
+            this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[0]).subscribe(response => {
+              let Path: any = response
+              this.VenBEEDetails.beE_Certificate  = Path.returnedPath.toString();
+              this.VendorService.UpdateBEEDetails(this.VenBEEDetails.vendor_ID,this.VenBEEDetails).subscribe()
+             })
+          })
         }
         else {
-          this.VendorService.UpdateBEEDetails(this.VenBEEDetails.vendor_ID,this.VenBEEDetails).subscribe(response => {console.log(response)})
+          this.VendorService.UpdateBEEDetails(this.VenBEEDetails.vendor_ID,this.VenBEEDetails).subscribe()
         }  
       }
       else if (this.DueDilligenceData.b_BBEE_Certificate_Provided == true && this.FoundationaldocumentsFormGroup.get("BBBEECertificate")?.value == false)
@@ -508,6 +519,8 @@ Create() {
         let test: any
         test = new DatePipe('en-ZA');
         this.VenBEEDetails.date = test.transform(this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.value, 'MMM d, y, h:mm:ss a');
+        this.VendorService.GenerateVendorBEEExpiryNotification(this.VenBEEDetails.vendor_ID,this.VenBEEDetails.date).subscribe();
+        
         let FolderCategory = "BEE";
         let VendorNo = "Vendor" + Number(VendorID);
         
@@ -536,7 +549,8 @@ Create() {
       //financials
       this.DueDilligenceDetails.vat_Reg_Certificate_Provided = this.FinancialsFormGroup.get("VATRegistrationCertificate")?.value
       this.DueDilligenceDetails.tax_Clearance_Certificate_Provided = this.FinancialsFormGroup.get("TaxClearanceCertificate")?.value
-
+      this.DueDilligenceDetails.bank_Stamped_Confirtmation = this.FinancialsFormGroup.get("bank_Stamped_Confirtmation")?.value
+      
       //subcontracting
       this.DueDilligenceDetails.subcontractor_Name_Provided = this.SubContractingFormGroup.get("NameSubContractor")?.value
       this.DueDilligenceDetails.company_Details_Provided = this.SubContractingFormGroup.get("CompanyDetails")?.value
@@ -755,7 +769,7 @@ Create() {
   
   var action = "UPDATE";
   var title = "UPDATE SUCCESSFUL";
-  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully updated Due Dilligence Checklist for <strong>" + this.DueDilligenceData.vendor.name  +  "</strong>.");
+  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully <strong style='color:green'> UPDATED </strong> Due Dilligence Checklist for <strong>" + this.DueDilligenceData.vendor.name  +  "</strong>.");
 
   const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
     disableClose: true,

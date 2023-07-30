@@ -101,7 +101,7 @@
                                 </td>
                             </tr>
 
-                            <tr>
+                            <!-- <tr>
                                 <td style="width:100%;">
                                     <mat-card-content>
                                         <label style=" color:black;">Preferred Quote:</label>
@@ -140,7 +140,7 @@
 
                                     </mat-card-content>
                                 </td>
-                            </tr>
+                            </tr> -->
                         </table>
 
                         <table class="table">
@@ -148,6 +148,7 @@
                                 <tr style="background-color: lightgray;">
                                     <th>Your Quotes</th>
                                     <th>Quote</th>
+                                    <th>Edit File</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -158,6 +159,17 @@
                                     <td>
                                         <a (click)="openPDFInNewTab(i)" target="_blank"
                                             style="color: rgb(65, 143, 227);">{{FileDetails[i].FileName}}</a>
+                                    </td>
+                                    <td>
+                                        <input type="file" id="file{{i+1}}" placeholder=""
+                                            formControlName="OtherQuote{{i+1}}"
+                                            style="border: solid #244688; border-radius: 5px; " accept=".pdf"
+                                            (change)="onFileUpload(i,$event)">
+                                        <br>
+                                        <mat-hint id="Error{{i+1}}" style="color: red; visibility: hidden;">Duplicate
+                                            files
+                                            not
+                                            allowed!</mat-hint>
                                     </td>
                                 </tr>
                             </tbody>

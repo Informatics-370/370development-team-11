@@ -7,11 +7,28 @@
   <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;width: 330px;">Please fill in the following details:</label>
   </div>
   <mat-stepper [linear]="false"  #stepper style="background-color: #eee;" orientation="vertical" (selectionChange)="setFocus(stepper)" >
-    <mat-step [stepControl]="FoundationaldocumentsFormGroup" *ngIf="DueDilligenceData != undefined">
-      <form [formGroup]="FoundationaldocumentsFormGroup" style="text-align: -webkit-center;" class="table-responsive">
-        <ng-template  matStepLabel>FOUNDATIONAL DOCUMENTS</ng-template>
+    <mat-step [stepControl]="DueDiligenceChecklistDetailsFormGroup" >
+      <form [formGroup]="DueDiligenceChecklistDetailsFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+        <ng-template matStepLabel>DUE DILIGENCE CHECKLIST DETAILS</ng-template>
         <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="0">
-            <tr>
+          <tr>
+              <td><label >Do you have a physical copy of the Due Diligence Checklist?</label></td>
+              <td> 
+                    <mat-checkbox formControlName="HasDDC"></mat-checkbox>
+              </td>
+          </tr>
+      </table>  
+      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
+        <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/vendor-unofficial-vendorlist"> Cancel</button>
+            <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
+         </div>      
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="FoundationaldocumentsFormGroup" *ngIf="DueDilligenceData != undefined" >
+      <form [formGroup]="FoundationaldocumentsFormGroup" style="text-align: -webkit-center;" class="table-responsive" id="1">
+        <ng-template  matStepLabel>FOUNDATIONAL DOCUMENTS</ng-template>
+        <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" >
+            <tr >
                 <td><label >Mutual Non-Disclosure Agreement or Confidentiality Agreement:</label></td>
                 <td>  
                    <mat-checkbox formControlName="MutualNDA" ></mat-checkbox>
@@ -125,31 +142,37 @@
             </tr>
         </table>
         <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
-            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/vendor-unofficial-vendorlist"> Cancel</button>
+            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
             <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
-           </div>
+          </div>
         <!-- <div >
             <button mat-button routerLink="/vendor-view">Cancel</button>
           <button mat-button matStepperNext>Next</button>
         </div> -->
       </form>
     </mat-step>
-    <mat-step [stepControl]="FinancialsFormGroup" >
-        <form [formGroup]="FinancialsFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+    <mat-step [stepControl]="FinancialsFormGroup">
+        <form [formGroup]="FinancialsFormGroup" style="text-align: -webkit-center;" class="table-responsive" id="2">
           <ng-template matStepLabel >FINANCIALS</ng-template>
-          <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="1">
+          <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" >
               <tr>
-                  <td><label >Details Of Service Or Goods:</label></td>
+                  <td><label >VAT Registration Certificate:</label></td>
                   <td> 
                       <mat-checkbox formControlName="VATRegistrationCertificate"></mat-checkbox>
                   </td>
               </tr>
               <tr>
-                  <td> <label>Company Registration Number:</label></td>
+                  <td> <label>Tax Clearance Certificate:</label></td>
                   <td>
                         <mat-checkbox formControlName="TaxClearanceCertificate"></mat-checkbox>
                   </td>
-              </tr>     
+              </tr> 
+              <tr>
+                <td> <label>Bank Stamped confirmation letter:</label></td>
+                <td>
+                      <mat-checkbox formControlName="bank_Stamped_Confirtmation"></mat-checkbox>
+                </td>
+            </tr>      
           </table>
           
           <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
@@ -161,7 +184,7 @@
       <mat-step [stepControl]="SubContractingFormGroup" >
           <form [formGroup]="SubContractingFormGroup" style="text-align: -webkit-center;" class="table-responsive">
             <ng-template matStepLabel>SUB-CONTRACTING</ng-template>
-            <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="2">
+            <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="3">
               <tr>
                   <td><label >Name of sub-contractor:</label></td>
                   <td> 
@@ -190,7 +213,7 @@
         <mat-step [stepControl]="InsuranceFormGroup" *ngIf="DueDilligenceData != undefined">
           <form [formGroup]="InsuranceFormGroup" style="text-align: -webkit-center;" class="table-responsive">
             <ng-template matStepLabel >INSURANCE</ng-template>
-            <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="3">
+            <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="4">
               <tr>
                 <td><label >General liability insurance:</label></td>
                 <td> 
@@ -305,7 +328,7 @@
         <mat-step [stepControl]="LicensesOrProfessionalAccreditationFormGroup" >
           <form [formGroup]="LicensesOrProfessionalAccreditationFormGroup" style="text-align: -webkit-center;" class="table-responsive">
             <ng-template matStepLabel >LICENSES OR PROFESSIONAL ACCREDITATION</ng-template>
-            <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="4">
+            <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="5">
               <tr>
                   <td><label >Licenses required:</label></td>
                   <td> 
@@ -336,7 +359,7 @@
             <ng-template matStepLabel >INFORMATION SECURITY</ng-template>
             <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;">
               <tr>
-                  <td><label id="5" >Business continuity plan:</label></td>
+                  <td><label id="6" >Business continuity plan:</label></td>
                   <td> 
                         <mat-checkbox formControlName="BusinessContinuityPlan"></mat-checkbox>
                   </td>
@@ -353,7 +376,7 @@
                       <mat-checkbox formControlName="POPI" (click)="onPOPIChecked(stepper)" checked="{{POPIChecked}}"></mat-checkbox> 
                   </td>
               </tr>
-              <tr>
+              
                 <mat-expansion-panel hideToggle disabled expanded="{{POPIChecked}}" style="margin-left: 10px">
                   <div>
                   <div class="row">
@@ -368,9 +391,19 @@
                     <div class="col-9">
                       <label>Is the contracted partner a controller (C), joint controller (JC), processor (P) or sub-processor (SP)?</label>
                     </div>
-                    <div class="col-3">
+                    <div class="col-3" *ngIf="POPIDetails.contracted_Partner_Type.name != ''">
+                      <mat-form-field style="width: 200px;font-size: 12px;font-weight: 400;">
+                        <mat-select formControlName="Contracted_Partner_Type_ID" placeholder="{{POPIDetails.contracted_Partner_Type.name}}" style="font-size: 12px;font-weight: 400;" >
+                          <mat-option value="1">Controller (C)</mat-option>
+                          <mat-option value="2">Joint Controller (JC)</mat-option>
+                          <mat-option value="3">Processor (P)</mat-option>
+                          <mat-option value="4">Sub-Processor (SP)</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div> 
+                    <div class="col-3" *ngIf="POPIDetails.contracted_Partner_Type.name == ''">
                       <mat-form-field style="width: 200px;">
-                        <mat-select formControlName="Contracted_Partner_Type_ID" placeholder="{{POPIDetails.contracted_Partner_Type.name}}">
+                        <mat-select formControlName="Contracted_Partner_Type_ID" placeholder="Controller (C)" style="font-size: 12px;font-weight: 400;" >
                           <mat-option value="1">Controller (C)</mat-option>
                           <mat-option value="2">Joint Controller (JC)</mat-option>
                           <mat-option value="3">Processor (P)</mat-option>
@@ -445,7 +478,7 @@
                   </div>
                 </div>          
                 </mat-expansion-panel>
-              </tr>
+              
               <tr>
                 <td><label>History of data breaches and security incidents:</label></td>
                 <td>              
@@ -470,7 +503,7 @@
             <ng-template matStepLabel>POLICY REVIEW</ng-template>
             <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;">
               <tr>
-                  <td><label id="6">Information security or Data protection policy:</label></td>
+                  <td><label id="7">Information security or Data protection policy:</label></td>
                   <td> 
                         <mat-checkbox formControlName="InformationSecurityPolicyPresent"></mat-checkbox>
                   </td>
@@ -521,7 +554,7 @@
         <mat-step [stepControl]="BusinessReferencesFormGroup" >
           <form [formGroup]="BusinessReferencesFormGroup" style="text-align: -webkit-center;" class="table-responsive">
             <ng-template matStepLabel>BUSINESS REFERENCES</ng-template>
-            <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="7">
+            <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="8">
               <tr>
                   <td><label >Details of at least two business references:</label></td>
                   <td> 
@@ -537,7 +570,7 @@
         </mat-step>
       <mat-step>
         <ng-template matStepLabel>Done</ng-template>
-        <div style="text-align: -webkit-center" id="8">
+        <div style="text-align: -webkit-center" id="9">
           <p style="margin: 0px;background-color: #244688;color: white;width: 700px;"><b>*Please ensure that all details are correct*</b></p> 
           <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 700px;justify-content: center;">
             <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>

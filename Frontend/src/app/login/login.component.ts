@@ -23,7 +23,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class LoginComponent implements OnInit {
 
@@ -130,7 +130,7 @@ export class LoginComponent implements OnInit {
                     // Unauthorized: Invalid credentials
                     var action = "Error";
                     var title = "LOGIN FAILED";
-                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The User <strong>" + this.userName + "</strong>  <strong style='color:red'> DOES NOT EXIST! </strong>");
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your Username/ Password is <strong style='color:red'> INCORRECT! </strong>");
 
                     const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
                       disableClose: true,
@@ -180,7 +180,7 @@ export class LoginComponent implements OnInit {
                 // Unauthorized: Invalid credentials
                 var action = "Error";
                 var title = "LOGIN FAILED";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The User <strong>" + this.userName + "</strong>  <strong style='color:red'> DOES NOT EXIST! </strong>");
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your Username/ Password is <strong style='color:red'> INCORRECT! </strong>");
 
                 const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
                   disableClose: true,

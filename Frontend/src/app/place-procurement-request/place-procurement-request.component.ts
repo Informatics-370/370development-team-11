@@ -1,21 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-place-procurement-request',
   templateUrl: './place-procurement-request.component.html',
   styleUrls: ['./place-procurement-request.component.css']
 })
-export class PlaceProcurementRequestComponent implements OnInit{
+export class PlaceProcurementRequestComponent implements OnInit {
   ProcurementRequests: Procurement_Request[] = [];
-  SearchedPRequests: Procurement_Request[] = [];
-  displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'Status', 'View'];
+  SearchedPRequests: any;
+  displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'View'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
-
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   ngOnInit() {
     this.GetProcurementRequests();
     console.log(this.ProcurementRequests)
@@ -29,13 +31,23 @@ export class PlaceProcurementRequestComponent implements OnInit{
       let procurementRequestList: any[] = result;
       procurementRequestList.forEach(e => {
         //console.log(e)
-        if(e.requisition_Status_ID == 3) {
-          this.ProcurementRequests.push(e)
+        if (e.requisition_Status_ID == 1) {
+          console.log(e)
+          this.dataService.GetProcurementDetailsByRequestID(e.procurement_Request_ID).subscribe(a => {
+            //console.log(result)
+            if (a == null) {
+              this.ProcurementRequests.push(e)
+              this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
+              this.SearchedPRequests.paginator = this.paginator;
+            }
+
+          })
+
           //this.SearchedPRequests.push(e)
         }
       })
       //this.ProcurementRequests = [...procurementRequestList];
-      this.SearchedPRequests = [...this.ProcurementRequests];
+      //this.SearchedPRequests = [...this.ProcurementRequests];
       //console.log(this.SearchedPRequests[0].requisition_Status_ID)
       if (result) {
         hideloader();
@@ -57,6 +69,10 @@ export class PlaceProcurementRequestComponent implements OnInit{
     }
     else if (Searchterm == "") {
       this.SearchedPRequests = [...this.ProcurementRequests];
+    }
+
+    if (this.SearchedPRequests.paginator) {
+      this.SearchedPRequests.paginator.firstPage();
     }
   }
 

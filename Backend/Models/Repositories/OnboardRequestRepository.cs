@@ -20,54 +20,16 @@ namespace ProcionAPI.Models.Repositories
         public async Task<VendorOnboardRequestVM[]> GetAllOnBoardRequestAsync()
         {
 
-            //var query = _dbContext.Onboard_Request
-            //            .Include(OR => OR.Vendor)
-            //            .ThenInclude(V => V.Vendor_Status)
-            //            .Include(OR => OR.Users)
-            //            .ThenInclude(U => U.Role)
-            //            .Include(OR => OR.Onboard_Status)
-            //            .Select(async OR => new VendorOnboardRequestVM
-            //            {
-            //                Onboard_Request_Id = OR.Onboard_Request_Id,
-            //                Vendor_ID = OR.Vendor.Vendor_ID,
-            //                Onboard_Request_status_ID = OR.Status_ID,
-            //                EmployeeName = await getEmployeeNameAsync(OR.User_Id),
-            //                Vendors = OR.Vendor,
-            //                Quotes = OR.Quotes
-            //            });
-
-
-            //var results = await Task.WhenAll(query);
-            //return results;
-
-            //        var onboardRequests = await _dbContext.Onboard_Request
-            //.Include(OR => OR.Vendor)
-            //    .ThenInclude(V => V.Vendor_Status)
-            //.Include(OR => OR.Users)
-            //    .ThenInclude(U => U.Role)
-            //.Include(OR => OR.Onboard_Status)
-            //.ToListAsync();
-
-            //        var query = onboardRequests.Select(OR => new VendorOnboardRequestVM
-            //        {
-            //            Onboard_Request_Id = OR.Onboard_Request_Id,
-            //            Vendor_ID = OR.Vendor.Vendor_ID,
-            //            Onboard_Request_status_ID = OR.Status_ID,
-            //            EmployeeName = GetEmployeeName(OR.User_Id),
-            //            Vendors = OR.Vendor,
-            //            Quotes = OR.Quotes
-            //        });
-
-            //        return query.ToArray();
+         
 
 
             var onboardRequests = await _dbContext.Onboard_Request
-    .Include(OR => OR.Vendor)
-        .ThenInclude(V => V.Vendor_Status)
-    .Include(OR => OR.Users)
-        .ThenInclude(U => U.Role)
-    .Include(OR => OR.Onboard_Status)
-    .ToListAsync();
+            .Include(OR => OR.Vendor)
+            .ThenInclude(V => V.Vendor_Status)
+            .Include(OR => OR.Users)
+            .ThenInclude(U => U.Role)
+            .Include(OR => OR.Onboard_Status)
+            .ToListAsync();
 
             var userIds = onboardRequests.Select(OR => OR.User_Id).ToList();
 
@@ -127,6 +89,8 @@ namespace ProcionAPI.Models.Repositories
             {
                 existingVendor.Name = RequestAdd.Vendor.Name;
                 existingVendor.Email = RequestAdd.Vendor.Email;
+                existingVendor.PreferedVendor = RequestAdd.Vendor.PreferedVendor;
+                existingVendor.Sole_Supplier_Provided = RequestAdd.Vendor.Sole_Supplier_Provided;
                 RequestAdd.Vendor = existingVendor;
             }
             else
@@ -138,6 +102,8 @@ namespace ProcionAPI.Models.Repositories
                 {
                     existingVendor.Name = RequestAdd.Vendor.Name;
                     existingVendor.Email = RequestAdd.Vendor.Email;
+                    existingVendor.PreferedVendor = RequestAdd.Vendor.PreferedVendor;
+                    existingVendor.Sole_Supplier_Provided = RequestAdd.Vendor.Sole_Supplier_Provided;
                     RequestAdd.Vendor = existingVendor;
                 }
 
@@ -163,9 +129,17 @@ namespace ProcionAPI.Models.Repositories
 
             return new Onboard_Request[] { RequestAdd };
         }
+
+
         public async Task<Vendor[]> GetAllVendorRequestsAsync()
         {
             IQueryable<Vendor> query = _dbContext.Vendor;
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Vendor_Detail[]> GetAllApprovedVendorRequestsAsync()
+        {
+            IQueryable<Vendor_Detail> query = _dbContext.Vendor_Detail.Where(VS => VS.Vendor_Category.Name == "Approve").Include(v => v.Vendor);
             return await query.ToArrayAsync();
         }
 

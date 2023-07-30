@@ -449,7 +449,7 @@ namespace ProcionAPI.Data
             {
                 Notification_Type_ID = 8,
                 Name = "Procurement Request Has Been Accepted",
-                Description = "Please ensure all submitted information is correct.",
+                Description = "Please proceed by placing the procurement details.",
 
             },
             new
@@ -479,6 +479,47 @@ namespace ProcionAPI.Data
                 Name = "Procurement Request Has Been Finalised",
                 Description = "Please ensure all items are registered on the system.",
 
+            },
+            new
+            {
+                Notification_Type_ID = 13,
+                Name = "Vendor Sole Supplier Has Been Approved By General Manager",
+                Description = "Please procced to add required details for vendor.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 14,
+                Name = "Procurement Details Has Been Flagged",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 15,
+                Name = "Vendor Onboard Request Requires Management Approval",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 16,
+                Name = "Flagged Procurement Details Has Been Approved",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 17,
+                Name = "Flagged Procurement Details Has Been Rejected",
+                Description = "Please review the request and respond accordingly.",
+
+            },
+            new
+            {
+                Notification_Type_ID = 18,
+                Name = "New Procurement Request",
+                Description = "Please review the request and respond accordingly.",
             }
             );
 
@@ -545,33 +586,6 @@ namespace ProcionAPI.Data
                 Name = "Approval Required",
                 Description = "Approval Required",
 
-            }
-
-            );
-
-            modelBuilder.Entity<Procurement_Request>()
-            .HasData(
-            new
-            {
-                Procurement_Request_ID = 1,
-                Vendor_ID = 1,
-                Requisition_Status_ID = 3,
-                User_ID = 1,
-                Name = "Procurement Request for x",
-                Description = "A new company procurement request"
-
-            }
-            );
-
-            modelBuilder.Entity<Procurement_Request_Quote>()
-            .HasData(
-            new
-            {
-                Quote_ID = 1,
-                Procurement_Request_ID = 1,
-                Path = "Test",
-                Upload_Date = DateTime.Now,
-                PrefferedQuote = true
             }
             );
 

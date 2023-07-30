@@ -1,7 +1,7 @@
 import { Component, OnInit,ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from 'src/app/DataService/data-service';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { VendorDetails } from 'src/app/Shared/VendorDetails';
 import { VendorCreateChoiceComponent } from '../vendor-create-choice/vendor-create-choice.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,26 +35,32 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private VendorService: DataService, private dialog: MatDialog, private route: ActivatedRoute,private router: Router,) { }
+  constructor(private VendorService: DataService, private dialog: MatDialog, private route: ActivatedRoute,private router: Router,) {
+   // this.router.routeReuseStrategy.shouldReuseRoute = () => false; 
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+      };
+      this.mySubscription = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+      // Trick the Router into believing it's last link wasn't previously loaded
+      this.router.navigated = false;
+      }
+      });
+  }
   private refreshSubscription:Subscription;
   PendingOnboardDetails: OnboardRequest[] = [];
   PendingOnboardRequests: any = [];
   PendingOnboardDetailSummary : PendOnboardRequestDetails[] = [];
   onboardRequestData: any[] = [];
- 
+  SearchResults: PendOnboardRequestDetails[] = [];
   iRole: string;
   rAdmin: string;
   sFilter:string;
+  mySubscription: any;
 
   ngOnInit() {
-   // console.log("reset")
-    this.PendingOnboardDetails = [];
-    this.PendingOnboardRequests = [];
-    this.PendingOnboardDetailSummary  = [];
-    this.onboardRequestData = [];
     this.iRole = ""
     this.rAdmin = ""
-
     if(this.sFilter == undefined) {
       this.sFilter = "1";
     }
@@ -68,11 +74,15 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
     }
 
    this.VendorService.GetAllOnboardRequest().subscribe((result) => {
+      this.SearchResults = []
       let RequestList:any[] = []
-      RequestList = result 
+      RequestList = result
+      this.onboardRequestData = [];
       this.onboardRequestData = result 
+      this.PendingOnboardDetails = [];
       RequestList.forEach((element) => this.PendingOnboardDetails.push(element));
       //RequestList.forEach((element) => this.vendor.push(element.vendors));
+      this.PendingOnboardRequests = [];
       this.PendingOnboardRequests =  new MatTableDataSource(this.PendingOnboardDetails.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
      // console.log(this.onboardRequestData)
      // console.log(this.PendingOnboardRequests.data)
@@ -90,7 +100,8 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
         return accumulator;
       }, {});
       
-     // console.log(countsByPart);
+      //console.log(this.onboardRequestData);
+      this.PendingOnboardDetailSummary  = [];
       this.PendingOnboardRequests.data.forEach(element => {
         let sType = "General Suppliers"
         if (countsByPart[element.onboard_Request_Id] == 1) {
@@ -111,67 +122,104 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
           if(this.sFilter == "1") {
             if(this.rAdmin == "true" && result.onboardRequestStatusID == 4) {
               this.PendingOnboardDetailSummary.push(result)
+              this.SearchResults.push(result)
             }
             else if(result.onboardRequestStatusID != 4) {
               this.PendingOnboardDetailSummary.push(result)
+              this.SearchResults.push(result)
             }
           }
           else if(this.sFilter == "2"){
            // console.log(result.VendorStatusId)
             if((result.VendorStatusId == 3 && result.onboardRequestStatusID == 3) || (result.VendorStatusId == 4 && result.onboardRequestStatusID == 3)) {
               this.PendingOnboardDetailSummary.push(result)
+              this.SearchResults.push(result)
             }
           }
           else if(this.sFilter == "3") {
            // console.log(result.VendorStatusId)
             if((result.VendorStatusId == 2 && result.onboardRequestStatusID == 2) || (result.VendorStatusId == 1 && result.onboardRequestStatusID == 1) || (result.VendorStatusId == 5 && result.onboardRequestStatusID == 1) || (result.VendorStatusId == 1 && result.onboardRequestStatusID == 2)) {
               this.PendingOnboardDetailSummary.push(result)
+              this.SearchResults.push(result)
             }
           }
           else if(this.sFilter == "4") {
             if(this.rAdmin == "true" && result.onboardRequestStatusID == 4 && result.VendorStatusId == 1) {
               this.PendingOnboardDetailSummary.push(result)
+              this.SearchResults.push(result)
             }
           }
           
         }
+        
         //result.onboardRequestStatusID == 5 || result.onboardRequestStatusID == 3
       })
+      if (result) {
+        hideloader();
+      }
+
       this.PendingOnboardRequests = new MatTableDataSource(this.PendingOnboardDetailSummary)
       this.PendingOnboardRequests.paginator = this.paginator;
+
+    const Searchterm = this.searchWord.toLocaleLowerCase();
+    
+    if (Searchterm) {
+      this.PendingOnboardRequests.filter = Searchterm.trim().toLowerCase();
+      this.PendingOnboardRequests.paginator = this.paginator;
+    }
+    else if (Searchterm == "") {
+      this.PendingOnboardRequests = [...this.SearchResults];
+      this.PendingOnboardRequests.paginator = this.paginator;
+    }
+
+    if (this.PendingOnboardRequests.paginator) {
+      this.PendingOnboardRequests.paginator.firstPage();
+    }
+
+
+      function hideloader() {
+        document.getElementById('loading').style.display = "none";
+        document.getElementById('table').style.visibility = "visible";
+      }
       //console.log(this.PendingOnboardRequests)
    })
 
   }//ngoninIt
 
+  
+
   ngOnDestroy() {
-    // Unsubscribe from the query parameters subscription to prevent memory leaks
-    if (this.refreshSubscription) {
-      this.refreshSubscription.unsubscribe();
+    if (this.mySubscription) {
+    this.mySubscription.unsubscribe();
     }
   }
 
-  test() {
+  
+
+  ChangeFilter() {
     this.ngOnInit()
     //console.log(this.sFilter)
   }
 
-  applyFilter(event: Event) {
+  searchWord: string = '';
 
-    if (this.PendingOnboardRequests.paginator) {
-      this.PendingOnboardRequests.paginator.firstPage();
-    }
+  applyFilter() {
+    this.ngOnInit()
+    
   }
 
   Edit(i:number) {
-    for (let a = 0; a < this.onboardRequestData.length;a++) {
-      if (this.onboardRequestData[a].onboard_Request_Id == i) {
-        if(this.onboardRequestData[a].vendors.vendor_Status_ID == 4) {
-          this.router.navigate(['/vendor-approve-edit/' + this.onboardRequestData[a].vendor_ID])
-        }
-      }
-    }
     
+    this.VendorService.GetRequestByID(i).subscribe(result => {
+     console.log(result)
+    for (let a = 0; a < result.length;a++) {
+      console.log(i)
+      if(result[a].vendor.vendor_Status_ID == 4) {
+        this.router.navigate(['/vendor-approve-edit/' + result[a].vendor_ID])
+      }
+      
+    }
+  })
       
     
   }

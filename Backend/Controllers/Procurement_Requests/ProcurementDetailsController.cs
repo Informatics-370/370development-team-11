@@ -441,13 +441,44 @@ namespace ProcionAPI.Controllers.Procurement_Requests
         }
 
         [HttpPut]
-        [Route("UpdateProcurementDetailsStatus{StatusID}")]
+        [Route("UpdateProcurementDetailsStatus/{StatusID}")]
         public async Task<IActionResult> UpdateProcurementDetailsStatus(int StatusID, Procurement_Details ProcurementDetails)
         {
             try
             {
                 var results = await _ProcurementDetailsRepository.UpdateProcurementDetailsStatusAsync(StatusID, ProcurementDetails);
                 return Ok(results);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetProcurementDetailsByRequestID/{RequestID}")]
+        public async Task<IActionResult> GetProcurementDetailsByRequestID(int RequestID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementDetailsByRequestIDAsync(RequestID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return null;
+               // return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPost]
+        [Route("ProcurementAddNotification")]
+        public async Task<IActionResult> ProcurementAddNotification(Notification ProcurementNotification)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.AddNotificationAsync(ProcurementNotification);
+                return Ok(result);
             }
             catch (Exception)
             {

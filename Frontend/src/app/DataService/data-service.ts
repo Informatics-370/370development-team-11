@@ -292,8 +292,8 @@ export class DataService {
     return this.httpClient.get<VendorDetails>(`${this.apiUrl}Vendor/GetVendorDetailByID/${VendorDetailID}`, this.httpOptions).pipe(map(result => result))
   }
 
-  getAllApprovedVendors(): Observable<any> {
-    return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}Vendor/getAllApprovedVendors`).pipe(map(result => result))
+  getAllApprovedVendors(VendorStatusID: number): Observable<any> {
+    return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}Vendor/getAllApprovedVendors/${VendorStatusID}`).pipe(map(result => result))
   }
 
   GetVendorByID(VendorID: number): Observable<any> {
@@ -541,6 +541,22 @@ export class DataService {
   ChangeOnboardStatus(statusID: number, onboardRequestId: number, VenID: number): Observable<any> {
     return this.httpClient.put(`${this.apiUrl}Vendor/ChangeOnboardStatus/${statusID}/${onboardRequestId}/${VenID}`, this.httpOptions).pipe(map(result => result))
   }
+
+  //--------------------------------------------------------------------------------------Vendor System Generate Notifications--------------------------------------------------------------------------------------
+
+  GenerateSoleSupplierPerformanceNotification(): Observable<any> {
+    return this.httpClient.get(`${this.apiUrl}Vendor/RecurringJobDelegation`).pipe(map(result => result))
+  }
+
+  GenerateVendorBEEExpiryNotification(VendorID: number, date: Date): Observable<any> {
+    return this.httpClient.get(`${this.apiUrl}Vendor/DelayedJob/${VendorID}/${date}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  VendorAddNotification(VendorNotification: Notification): Observable<any> {
+    return this.httpClient.post<Notification>(`${this.apiUrl}Vendor/VendorAddNotification`, VendorNotification, this.httpOptions).pipe(map(result => result))
+  }
+
+
 
   //--------------------------------------------------------------------------------------Mandate Limit--------------------------------------------------------------------------------------
   GetMandateLimits(): Observable<any> {
@@ -1012,10 +1028,11 @@ export class DataService {
     return this.httpClient.post<Procurement_Request>(`${this.apiUrl}ProcurementRequest/CreateProcurementRequest`, AddProcurementRequest).pipe(map(result => result))
   }
 
-  ProcurementRequestFileAdd(VendorName: string, file: File): Observable<any> {
+  ProcurementRequestFileAdd(VendorName: string, RequestID: string, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('VendorName', VendorName)
+    formData.append('RequestID', RequestID)
     return this.httpClient.post<any>(`${this.apiUrl}ProcurementRequest/uploadProcurementQuote`, formData, this.httpOptions).pipe(map(result => result))
   }
 
@@ -1054,7 +1071,7 @@ export class DataService {
   }
 
   AddVendorConsumable(AddVendorConsumable: Vendor_Consumable): Observable<any> {
-    return this.httpClient.post<Vendor_Consumable>(`${this.apiUrl}ProcurementDetails/AddVendorConsumable`, AddVendorConsumable, this.httpOptions).pipe(map(result => result))
+    return this.httpClient.post<Vendor_Consumable[]>(`${this.apiUrl}ProcurementDetails/AddVendorConsumable`, AddVendorConsumable, this.httpOptions)
   }
 
   AddAsset(AddAsset: Asset): Observable<any> {
@@ -1097,8 +1114,8 @@ export class DataService {
   }
 
 
-  DeleteProcurementRequestFiles(VendorName: string, fileName: string): Observable<any> {
-    return this.httpClient.delete<any>(`${this.apiUrl}ProcurementRequest/DeleteFile/${VendorName}/${fileName}`, this.httpOptions)
+  DeleteProcurementRequestFiles(VendorName: string, RequestID: String, fileName: string): Observable<any> {
+    return this.httpClient.delete<any>(`${this.apiUrl}ProcurementRequest/DeleteFile/${VendorName}/${RequestID}/${fileName}`, this.httpOptions)
   }
 
   GetProcurementQuotesbyID(id: Number): Observable<any> {
@@ -1151,4 +1168,33 @@ export class DataService {
     return this.httpClient.put<Procurement_Request_Quote>(`${this.apiUrl}ProcurementRequest/UpdateProcurementQuotes/` + RequestID, UpdateQuoteRequest, this.httpOptions)
   }
 
+  FileValidation(Vendorname: String, FileName: String): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}ProcurementRequest/GetFileByName/` + Vendorname + "/" + FileName, this.httpOptions)
+  }
+
+  GetProcurementDetailsByRequestID(RequestID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/GetProcurementDetailsByRequestID/${RequestID}`).pipe(map(result => result))
+  }
+
+  ProcurementAddNotification(ProcurementNotification: Notification): Observable<any> {
+    return this.httpClient.post<Notification>(`${this.apiUrl}ProcurementDetails/ProcurementAddNotification`, ProcurementNotification, this.httpOptions).pipe(map(result => result))
+  }
+
+  ConsumableAddNotification(ConsumableNotification: Notification): Observable<any> {
+    return this.httpClient.post<Notification>(`${this.apiUrl}Consumable/ConsumableAddNotification`, ConsumableNotification, this.httpOptions).pipe(map(result => result))
+  }
+
+  ProcurementRequestAddNotification(ProcurementNotif: Notification): Observable<any> {
+    return this.httpClient.post<Notification>(`${this.apiUrl}ProcurementRequest/ProcurementAddNotification`, ProcurementNotif, this.httpOptions).pipe(map(result => result))
+  }
+
+
+  //Los Pls baas
+  // GetAppVendorsRequest() {
+  //   return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetAllApprovedVendor`).pipe(map(result => result))
+  // }
+
+
 }
+
+

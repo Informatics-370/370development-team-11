@@ -62,12 +62,12 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
-        [Route("getAllApprovedVendors")]
-        public async Task<IActionResult> getAllApprovedVendors()
+        [Route("getAllApprovedVendors/{VendorStatusID}")]
+        public async Task<IActionResult> getAllApprovedVendors(int VendorStatusID)
         {
             try
             {
-                var result = await _VendorRepository.getAllApprovedVendorsAsync();
+                var result = await _VendorRepository.getAllApprovedVendorsAsync(VendorStatusID);
                 return Ok(result);
             }
             catch (Exception)
@@ -1106,19 +1106,19 @@ namespace ProcionAPI.Controllers
 
 
         [HttpGet]
-        [Route("DelayedJob")]
+        [Route("DelayedJob/{VendorID}/{date}")]
         public string DelayedJob(int VendorID, DateTime date)
         {
             var selectedDate = new DateTimeOffset(date, TimeSpan.Zero);
+           // selectedDate = selectedDate.LocalDateTime(selectedDate);
+            BackgroundJob.Schedule(() => getBEE(VendorID, date, 1), selectedDate.AddYears(1).AddDays(-21).ToLocalTime());
 
-            BackgroundJob.Schedule(() => getBEE(VendorID, date, 1), selectedDate.AddYears(1).AddDays(-21));
+            BackgroundJob.Schedule(() => getBEE(VendorID, date, 2), selectedDate.AddYears(1).AddDays(-7).ToLocalTime());
 
-            BackgroundJob.Schedule(() => getBEE(VendorID, date, 2), selectedDate.AddYears(1).AddDays(-7));
-
-            BackgroundJob.Schedule(() => getBEE(VendorID, date, 3), selectedDate.AddYears(1));
+            BackgroundJob.Schedule(() => getBEE(VendorID, date, 3), selectedDate.AddYears(1).ToLocalTime());
 
 
-            return "Added new delayed jobs!";
+            return null;
 
         }
 
@@ -1128,27 +1128,83 @@ namespace ProcionAPI.Controllers
         {
 
             var VenBee = await _VendorRepository.GetBEEDetailsAsync(VendorID);
-
-
-            if (NotifyWhenNumber == 1)
+            if(VenBee.Date == date && VenBee != null)
             {
+                if (NotifyWhenNumber == 1)
+                {
 
-                var Description = "3 Weeks before " + VenBee.Vendor.Name + " BEE expires!";
-                var result = await _VendorRepository.AddVendorBEENotificationAsync(date, VendorID, Description);
+                    var Description = "3 Weeks before " + VenBee.Vendor.Name + " BEE expires!";
+                    var result = await _VendorRepository.AddVendorBEENotificationAsync(date, VendorID, Description);
+                }
+                else if (NotifyWhenNumber == 2)
+                {
+                    var Description = "1 Week before " + VenBee.Vendor.Name + " BEE expires!";
+                    var result = await _VendorRepository.AddVendorBEENotificationAsync(date, VendorID, Description);
+                }
+                else if (NotifyWhenNumber == 3)
+                {
+                    var Description = VenBee.Vendor.Name + " BEE expires has expired!";
+                    var result = await _VendorRepository.AddVendorBEENotificationAsync(date, VendorID, Description);
+                }
             }
-            else if (NotifyWhenNumber == 2)
-            {
-                var Description = "1 Week before " + VenBee.Vendor.Name + " BEE expires!";
-                var result = await _VendorRepository.AddVendorBEENotificationAsync(date, VendorID, Description);
-            }
-            else if (NotifyWhenNumber == 3)
-            {
-                var Description = VenBee.Vendor.Name + " BEE expires has expired!";
-                var result = await _VendorRepository.AddVendorBEENotificationAsync(date, VendorID, Description);
-            }
+
+            
             return Ok();
 
         }
+
+        [HttpGet]
+        [Route("RecurringJobDelegation")]
+        public string RecurringJobs()
+        {
+            //Recurring Jobs
+            //Recurring jobs fire many times on the specified CRON schedule.
+            RecurringJob.AddOrUpdate(() => SoleSupplierPerformanceReview(), Cron.Monthly, TimeZoneInfo.Local);
+
+            return null;
+        }
+
+        [HttpPost]
+        [Route("SoleSupplierPerformanceReview")]
+        public async Task<IActionResult> SoleSupplierPerformanceReview()
+        {
+            try
+            {
+                var vendors = await _VendorRepository.GetAllSoleSupplierVendorAsync();
+                if(vendors != null)
+                {
+                    foreach(var ven in vendors)
+                    {
+                        var result = await _VendorRepository.GenerateSoleSupplierPerformanceReviewAsync(ven);
+                    }
+                    
+                }
+                
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPost]
+        [Route("VendorAddNotification")]
+        public async Task<IActionResult> VendorAddNotification(Notification VendorNotification)
+        {
+            try
+            {
+               var result = await _VendorRepository.AddNotificationAsync(VendorNotification);
+               return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+
+
     }
 }
 

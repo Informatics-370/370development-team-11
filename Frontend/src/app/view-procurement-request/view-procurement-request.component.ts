@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -8,6 +8,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { HttpClient } from '@angular/common/http';
 import { DeleteConsumableComponent } from '../delete-consumable/delete-consumable.component';
 import { DeleteProcurementRequestComponent } from '../delete-procurement-request/delete-procurement-request.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-view-procurement-request',
@@ -22,6 +24,7 @@ import { DeleteProcurementRequestComponent } from '../delete-procurement-request
   ],
 })
 export class ViewProcurementRequestComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ProcurementRequests: Procurement_Request[] = [];
   SearchedPRequests: Procurement_Request[] = [];
@@ -30,6 +33,8 @@ export class ViewProcurementRequestComponent implements OnInit {
   searchWord: string = '';
   ProcurementQuotes: Procurement_Request_Quote[] = [];
   expandedElement: Procurement_Request_Quote | undefined;
+  dataSource: any;
+
 
   FileDetails: any[] = [];
 
@@ -44,6 +49,8 @@ export class ViewProcurementRequestComponent implements OnInit {
     console.log(this.ProcurementRequests)
 
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+
+
     console.log(User)
   }
 
@@ -63,6 +70,8 @@ export class ViewProcurementRequestComponent implements OnInit {
       this.ProcurementRequests = [...procurementRequestList];
       this.SearchedPRequests = [...procurementRequestList];
       console.log(this.SearchedPRequests)
+      this.dataSource = new MatTableDataSource(this.ProcurementRequests.filter((value, index, self) => self.map(x => x.procurement_Request_ID).indexOf(value.procurement_Request_ID) == index));
+      this.dataSource.paginator = this.paginator
       if (result) {
         hideloader();
       }
@@ -79,10 +88,10 @@ export class ViewProcurementRequestComponent implements OnInit {
     const Searchterm = this.searchWord.toLocaleLowerCase();
 
     if (Searchterm) {
-      this.SearchedPRequests = this.ProcurementRequests.filter(PR => PR.name.toLocaleLowerCase().includes(Searchterm))
+      this.dataSource = this.ProcurementRequests.filter(PR => PR.name.toLocaleLowerCase().includes(Searchterm))
     }
     else if (Searchterm == "") {
-      this.SearchedPRequests = [...this.ProcurementRequests];
+      this.GetProcurementRequests()
     }
   }
 
@@ -98,9 +107,10 @@ export class ViewProcurementRequestComponent implements OnInit {
 
           if (sFile != "None") {
             let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+            let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
+            let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
 
-            this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${filename}`
+            this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${RequestID}/${filename}`
             this.FileDetails[i].FileName = filename
           }
           else {
@@ -108,9 +118,6 @@ export class ViewProcurementRequestComponent implements OnInit {
             this.FileDetails[i].FileName = sFile;
           }
         }
-
-        console.log(this.ProcurementQuotes)
-        console.log(this.FileDetails)
 
       }
     })
