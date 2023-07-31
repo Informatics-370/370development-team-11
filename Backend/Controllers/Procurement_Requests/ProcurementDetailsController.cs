@@ -499,10 +499,6 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             {
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
-            catch (Exception)
-            {
-                return null;
-            }
         }
 
         [HttpGet]
