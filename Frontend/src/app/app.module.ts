@@ -131,6 +131,16 @@ import { DeleteProcurementRequestComponent } from './delete-procurement-request/
 import { EditProcurementRequestComponent } from './edit-procurement-request/edit-procurement-request.component';
 import { ViewFlaggedProcurementRequestComponent } from './view-flagged-procurement-request/view-flagged-procurement-request.component';
 import { ViewFlaggedProcurementDetailsComponent } from './view-flagged-procurement-details/view-flagged-procurement-details.component';
+import { FinalizeProcurementRequestComponent } from './finalize-procurement-request/finalize-procurement-request.component';
+import { FinalizeProcurementRequestCreateComponent } from './finalize-procurement-request-create/finalize-procurement-request-create.component';
+import { ViewProcurementDetailsComponent } from './view-procurement-details/view-procurement-details.component';
+import { ReceiveProcurementItemComponent } from './receive-procurement-item/receive-procurement-item.component';
+import { ViewHelpuserComponent } from './view-helpuser/view-helpuser/view-helpuser.component';
+import { RestoreDialogComponent } from './Settings/restore-dialog/restore-dialog.component';
+import { UploadPayementFileComponent } from './upload-payement-file/upload-payement-file.component';
+import { UploadInvoiceComponent } from './upload-invoice/upload-invoice.component';
+import { ViewUnapprovedRequestsComponent } from './view-unapproved-requests/view-unapproved-requests.component';
+import { SignOffRequestComponent } from './sign-off-request/sign-off-request.component';
 
 
 @NgModule({
@@ -227,7 +237,17 @@ import { ViewFlaggedProcurementDetailsComponent } from './view-flagged-procureme
     DeleteProcurementRequestComponent,
     EditProcurementRequestComponent,
     ViewFlaggedProcurementRequestComponent,
-    ViewFlaggedProcurementDetailsComponent
+    ViewFlaggedProcurementDetailsComponent,
+    FinalizeProcurementRequestComponent,
+    FinalizeProcurementRequestCreateComponent,
+    ViewProcurementDetailsComponent,
+    ReceiveProcurementItemComponent,
+    ViewHelpuserComponent,
+    RestoreDialogComponent,
+    UploadPayementFileComponent,
+    UploadInvoiceComponent,
+    ViewUnapprovedRequestsComponent,
+    SignOffRequestComponent
   ],
   imports: [
     BrowserModule,

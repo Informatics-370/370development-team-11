@@ -13,6 +13,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { count } from 'rxjs';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
+import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -41,7 +42,7 @@ export class ViewBranchComponent implements OnInit {
     province:'',
   }
 
-  displayedColumns: string[] = ['branch_ID','name', 'street','city','postal_Code','province', 'action', 'delete'];
+  displayedColumns: string[] = ['name', 'street','city','postal_Code','province', 'action', 'delete'];
   dataSource = new MatTableDataSource<Branch>();
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router, private sanitizer: DomSanitizer, private dialog: MatDialog) { }
 
@@ -133,6 +134,14 @@ export class ViewBranchComponent implements OnInit {
 
   openDialog() {
     const dialogRef = this.dialog.open(RestoreComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  openRestoreDialog() {
+    const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);

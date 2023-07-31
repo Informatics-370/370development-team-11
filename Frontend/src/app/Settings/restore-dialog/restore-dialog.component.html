@@ -1,0 +1,16 @@
+<h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;">
+    RESTORE SYSTEM DATA
+  </h1>
+  <div mat-dialog-content style="display: flex; flex-direction: column; align-items: center;">
+    <p>Select the backup file you want to use for restoring the system.</p>
+    <input type="file" class="file-upload" accept=".bak"  (change)="onFileSelected($event)" required>
+  </div>
+  <div class="spinner-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div mat-dialog-actions align="end">
+    <button mat-raised-button (click)="onConfirm()" [disabled]="isLoading" style="color: white; background-color: #94CC5B;">
+      Restore Database
+    </button>
+    <button mat-raised-button (click)="onCancel()" style="color: white; background-color: #244688;">Cancel</button>
+  </div>

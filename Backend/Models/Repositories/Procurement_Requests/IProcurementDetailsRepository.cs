@@ -30,6 +30,11 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
         Task<Procurement_Details> GetProcurementDetailsByRequestIDAsync(int RequestID);
         Task<Notification[]> AddNotificationAsync(Notification ProcurementNotification);
+        Task<Procurement_Details[]> GetUnpaidProcurementDetailsAsync();
+        Task<Procurement_Consumable> GetConsumableForRequest(int ProcurementRequestID);
+        Task<Procurement_Details> FinalizeProcurementRequest(int DetailsID);
+        Task<Procurement_Details> RequisitionApproval(int DetailsID);
+        Task<Procurement_Details[]> GetUnapprovedRequests();
     }
 }
 

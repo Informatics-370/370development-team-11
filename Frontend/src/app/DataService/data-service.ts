@@ -135,12 +135,16 @@ export class DataService {
   }
 
   EditBranch(branch_ID: Number, UpdateBranchRequest: Branch): Observable<Branch> {
-    return this.httpClient.put<Branch>(`${this.apiUrl}Branch/UpdateBranch/${branch_ID}`, UpdateBranchRequest, this.httpOptions)
+    return this.httpClient.put<Branch>(`${this.apiUrl}Branch/EditBranch/${branch_ID}`, UpdateBranchRequest, this.httpOptions)
   }
 
   BranchValidation(name: String): Observable<Branch> {
     return this.httpClient.get<Branch>(`${this.apiUrl}Branch/BranchValidation/` + name, this.httpOptions)
   }
+  EditBranchValidation(name: String, id: Number): Observable<Branch> {
+    return this.httpClient.get<Branch>(`${this.apiUrl}Branch/EditBranchValidation/` + name + '/' + id, this.httpOptions)
+  }
+
 
   //--------------------------------------------------------------------------------------Department--------------------------------------------------------------------------------------
   GetDepartments(): Observable<any> {
@@ -165,6 +169,9 @@ export class DataService {
 
   DepartmentValidation(name: String): Observable<Department> {
     return this.httpClient.get<Department>(`${this.apiUrl}Department/DepartmentValidation/` + name, this.httpOptions)
+  }
+  EditDepartmentValidation(name: String, id: Number): Observable<Department> {
+    return this.httpClient.get<Department>(`${this.apiUrl}Department/EditDepartmentValidation/` + name + '/' + id, this.httpOptions)
   }
 
   //--------------------------------------------------------------------------------------Help And Help Files--------------------------------------------------------------------------------------
@@ -191,8 +198,11 @@ export class DataService {
     return this.httpClient.put<Help>(`${this.apiUrl}Help/EditHelp/` + help_ID, UpdateHelpRequest, this.httpOptions)
   }
 
-  HelpValidation(name: String, category: String): Observable<Help> {
-    return this.httpClient.get<Help>(`${this.apiUrl}Help/HelpValidation/` + name + "/" + category, this.httpOptions)
+  HelpValidation(name: String): Observable<Help> {
+    return this.httpClient.get<Help>(`${this.apiUrl}Help/HelpValidation/` + name , this.httpOptions)
+  }
+  EditHelpValidation(name: String, id: Number): Observable<Help> {
+    return this.httpClient.get<Help>(`${this.apiUrl}Help/EditHelpValidation/` + name + '/' + id, this.httpOptions)
   }
 
   DeleteHelpFile(HelpName: string, fileName: string): Observable<any> {
@@ -215,6 +225,15 @@ export class DataService {
     return this.httpClient.post<any>(`${this.apiUrl}Help/GetHelpVideoFiles/${HelpName}/${filename}`, this.httpOptions)
   }
 
+   //----------------------------------------------------------------------Backup&Restore-----------------------------------------------------------------------------
+   createBackup(): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiUrl}Backup/CreateBackup`, this.httpOptions);
+  }
+  restoreDatabase(backupFile: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('backupFile', backupFile, backupFile.name);
+    return this.httpClient.post<any>(`${this.apiUrl}Backup/restore`, formData, { reportProgress: true, observe: 'events' });
+  }
   //--------------------------------------------------------------------------------------Requests--------------------------------------------------------------------------------------
 
   GetAllOnboardRequest(): Observable<any> {
@@ -1015,11 +1034,9 @@ export class DataService {
   ResetNotif(username: string) {
     return this.httpClient.put<User>(`${this.apiUrl}User/ResetNotif/` + username, this.httpOptions)
   }
-  //----------------------------------------------------------------------Backup&Restore-----------------------------------------------------------------------------
-  private backupUrl = 'Backup/CreateBackup';
-  createBackup(): Observable<any> {
-    return this.httpClient.post(this.backupUrl, {});
-  }
+ 
+
+  //----------------------------------------------------------------------Procurement Request-----------------------------------------------------------------------------
   GetProcurementRequests(): Observable<any> {
     return this.httpClient.get<Procurement_Request[]>(`${this.apiUrl}ProcurementRequest/GetProcurementRequests`).pipe(map(result => result))
   }
@@ -1173,7 +1190,7 @@ export class DataService {
   }
 
   GetProcurementDetailsByRequestID(RequestID: Number): Observable<any> {
-    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/GetProcurementDetailsByRequestID/${RequestID}`).pipe(map(result => result))
+    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/GetProcurementDetailsByID/${RequestID}`).pipe(map(result => result))
   }
 
   ProcurementAddNotification(ProcurementNotification: Notification): Observable<any> {
@@ -1195,6 +1212,39 @@ export class DataService {
   // }
 
 
+  GetUnfinalizedProcurements(): Observable<any> {
+    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetUnpaidProcurementDetails`).pipe(map(result => result))
+  }
+
+  FinalizeProcurementRequest(DetailsID: number): Observable<any> {
+    return this.httpClient.put<Procurement_Details>(`${this.apiUrl}ProcurementDetails/FinalizeProcurementRequest${DetailsID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  GetConsumablesForRequest(AssetID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Consumable>(`${this.apiUrl}ProcurementDetails/GetConsumablesForRequest${AssetID}`).pipe(map(result => result))
+  }
+
+  POPFileAdd(ProofName: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('ProofName', ProofName)
+    return this.httpClient.post<any>(`${this.apiUrl}ProcurementDetails/uploadProofFile`, formData, this.httpOptions)
+  }
+
+  InvoiceFileAdd(InvoiceName: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('InvoiceName', InvoiceName)
+    return this.httpClient.post<any>(`${this.apiUrl}ProcurementDetails/uploadInvoice`, formData, this.httpOptions)
+  }
+
+  RequisitionApproval(DetailsID: number): Observable<any> {
+    return this.httpClient.put<Procurement_Details>(`${this.apiUrl}ProcurementDetails/RequisitionApproval${DetailsID}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  GetUnapprovedRequests(): Observable<any> {
+    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/UnapprovedRequests`).pipe(map(result => result))
+  }
 }
 
 

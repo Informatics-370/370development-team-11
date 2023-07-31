@@ -51,9 +51,9 @@ export class EditBranchComponent implements OnInit{
   onSubmit() {
     var street = this.myForm.get('street')?.value;
 
-    this.dataService.BranchValidation(street).subscribe({
+    this.dataService.EditBranchValidation(street, this.Branch.branch_ID).subscribe({
       next: (Result) => {
-        if (Result == null) {
+        if (Result != null) {
           this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe({
             next: (response) => {
               document.getElementById('cBtn').style.display = "none";

@@ -127,5 +127,13 @@ export class MainNavComponent implements OnInit {
     })
   }
 
+  HelpRoute() {
+    if (this.rAdmin) {
+      this.router.navigate(['/ViewHelp']);
+    }
+    else {
+      this.router.navigate(['/ViewHelpUser']);
+    }
+  }
   
 }

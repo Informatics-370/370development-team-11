@@ -12,6 +12,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { RestoreComponent } from '../Settings/backupDialog/restore.component';
+import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -27,7 +28,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 })
 export class ViewEmployeeRoleComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'name', 'description', 'action', 'delete'];
+  displayedColumns: string[] = [ 'name', 'description', 'action', 'delete'];
   roleDelete: any
   RoleToUse: string = "";
 
@@ -146,6 +147,13 @@ export class ViewEmployeeRoleComponent implements OnInit {
 
   openDialog() {
     const dialogRef = this.dialog.open(RestoreComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+  openRestoreDialog() {
+    const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);

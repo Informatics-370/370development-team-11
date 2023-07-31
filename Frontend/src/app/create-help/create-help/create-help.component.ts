@@ -140,7 +140,11 @@ export class CreateHelpComponent implements OnInit{
 
 
 
-                          console.log(this.Help)
+            this.dataService.HelpValidation(name).subscribe({
+              next: (result) => {
+                if( result ==null){
+
+              
                
                       this.dataService.AddHelps(this.Help).subscribe({
                         next: (response) => {
@@ -152,9 +156,8 @@ export class CreateHelpComponent implements OnInit{
                           }
 
                           var action = "Create";
-                          var title = "CREATED SUCCESSFUL";
-                          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
-
+                          var title = "CREATE SUCCESSFUL";
+                          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
                           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
                             disableClose: true,
                             data: { action, title, message }
@@ -167,12 +170,37 @@ export class CreateHelpComponent implements OnInit{
                           }, duration);
                         }
                       })
+                    }else{
+                      elsehideloader();
+                       var action = "ERROR";
+                       var title = "ERROR: Help Exists";
+                       var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+                       const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                       disableClose: true,
+                       data: { action, title, message }
+                       });
+
+                       const duration = 1750;
+                       setTimeout(() => {
+                       dialogRef.close();
+                       }, duration);
+
+                       function elsehideloader() {
+                        document.getElementById('loading')
+                          .style.display = 'none';
+                      }
+                    }
+                  }
+                })
+
+
+
+
                       function hideloader() {
                         document.getElementById('loading')
                           .style.display = 'none';
                       }
-                      
-                 
             })
           }
       })

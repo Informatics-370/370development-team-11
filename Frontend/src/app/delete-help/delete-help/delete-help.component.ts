@@ -27,6 +27,7 @@ export class DeleteHelpComponent  implements OnInit{
 
         if (ID) {
           this.dataService.GetHelp(ID).subscribe(result => {
+            console.log(result);
             this.Help = result
           });
         }
@@ -67,6 +68,10 @@ export class DeleteHelpComponent  implements OnInit{
     let vHelpName = vFile.substring(0, vFile.indexOf("\\"))
     let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
     let vfilename = vFile.substring(vFile.indexOf("\\") + 1, vFile.length)
+
+
+
+
 
     this.dataService.DeleteHelpFile(HelpName, filename).subscribe(r => {
     this.dataService.DeleteHelpFile(vHelpName, vfilename).subscribe(d =>{

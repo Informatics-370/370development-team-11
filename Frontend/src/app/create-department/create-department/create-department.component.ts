@@ -31,9 +31,9 @@ export class CreateDepartmentComponent implements OnInit {
     this.dataService.DepartmentValidation(name).subscribe({
       next: (Result) => {
         if (Result == null) {
+
           this.dataService.AddDepartments(this.myForm.value).subscribe({
             next: (response) => {
-
               if (response) {
                 document.getElementById('cBtn').style.display = "none";
                 document.querySelector('button').classList.toggle("is_active");

@@ -447,6 +447,20 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
             return await query.FirstOrDefaultAsync();
         }
+        public async Task<Procurement_Details[]> GetUnpaidProcurementDetailsAsync()
+        {
+            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Where(x => x.Procurement_Payment_Status_ID == 2).Include(x => x.Employee)
+                .ThenInclude(x => x.Mandate_Limit).Include(x => x.Procurement_Request).ThenInclude(x => x.Vendor).Include(x => x.Sign_Off_Status)
+                .Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line);
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Procurement_Consumable> GetConsumableForRequest(int ProcurementRequestID)
+        {
+            IQueryable<Procurement_Consumable> query = _dbContext.Procurement_Consumable.Include(x => x.Consumable).Include(x => x.Procurement_Details).Where(x => x.Procurement_Details_ID == ProcurementRequestID);
+
+            return await query.FirstOrDefaultAsync();
+        }
 
         public async Task<Notification[]> AddNotificationAsync(Notification ProcurementNotification)
         {
@@ -473,5 +487,37 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             return new Notification[] { ProcurementNotification };
         }
 
+        public async Task<Procurement_Details> FinalizeProcurementRequest(int DetailsID)
+        {
+            Procurement_Details existingDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(b => b.Procurement_Details_ID == DetailsID);
+
+            if (existingDetails != null)
+            {
+                existingDetails.Procurement_Payment_Status_ID = 1;
+                existingDetails.Payment_Made = true;
+                await _dbContext.SaveChangesAsync();
+            }
+            return existingDetails;
+        }
+
+        public async Task<Procurement_Details> RequisitionApproval(int DetailsID)
+        {
+            Procurement_Details existingDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(b => b.Procurement_Details_ID == DetailsID);
+
+            if (existingDetails != null)
+            {
+                existingDetails.Procurement_Request.Requisition_Status_ID = 1;
+                await _dbContext.SaveChangesAsync();
+            }
+            return existingDetails;
+        }
+
+        public async Task<Procurement_Details[]> GetUnapprovedRequests()
+        {
+            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Include(x => x.Employee)
+                  .ThenInclude(x => x.Mandate_Limit).Include(x => x.Procurement_Request).ThenInclude(x => x.Vendor).Include(x => x.Sign_Off_Status)
+                  .Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line);
+            return await query.ToArrayAsync();
+        }
     }
 }
