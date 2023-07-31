@@ -1,8 +1,7 @@
-﻿using Azure;
-using Azure.Core;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
-using MimeKit;
+
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Models.Repositories;
 using System.Data.SqlTypes;

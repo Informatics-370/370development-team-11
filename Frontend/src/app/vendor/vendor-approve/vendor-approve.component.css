@@ -1,13 +1,13 @@
- mat-tab-header {
+::ng-deep mat-tab-header {
     background-color: #244688;
   }
 
- .mdc-tab-indicator__content--underline {
+::ng-deep .mdc-tab-indicator__content--underline {
         --mdc-tab-indicator-active-indicator-color: white; 
 }
 
 
- .mdc-tab__text-label {
+::ng-deep .mdc-tab__text-label {
     color: white;
 }
 
@@ -40,7 +40,7 @@ mat-mdc-tab-body-content {
     height:fit-content!important;
 }
 
- .mat-expansion-panel:not([class*=mat-elevation-z]) {
+::ng-deep .mat-expansion-panel:not([class*=mat-elevation-z]) {
     box-shadow:none!important;
 
 }
@@ -51,7 +51,7 @@ mat-mdc-tab-body-content {
     margin-left: 1%;
 } 
 
- .mat-expansion-panel-body {
+::ng-deep .mat-expansion-panel-body {
     padding:0!important;
 }
 

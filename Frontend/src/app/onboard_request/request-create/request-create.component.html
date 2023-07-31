@@ -16,13 +16,13 @@
  
   <div>
       <div style="display: inline-block; text-align: left;position: relative;width: 710px;" *ngIf="selectedOption == 'true' ;Sole" #General>
-      <mat-tab-group style="background-color: white;" #tabGroup [(selectedIndex)]=selectedIndex >
-        <form [formGroup]="CompanyContactInfoFormGroup" >
-        <mat-tab  formArrayName="RequestData" *ngFor="let data of rows.controls; let i = index;" > 
-         <div [formGroupName]="i" style="width: 690px;height:360px;">
+      <mat-tab-group style="background-color: white;" #tabGroup [(selectedIndex)]=selectedIndex>
+        <form [formGroup]="CompanyContactInfoFormGroup">
+        <mat-tab  formArrayName="RequestData" *ngFor="let data of rows.controls; let i = index;"> 
+         <div [formGroupName]="i" style="width: 690px;height:360px;" style="background-color: white;">
           <ng-template  mat-tab-label > 
             <label style="color:white">Quotation {{i + 1}}</label>
-          </ng-template> 
+          </ng-template>
           <table style="margin-left: 1%;">
             <br>
           <tr>
