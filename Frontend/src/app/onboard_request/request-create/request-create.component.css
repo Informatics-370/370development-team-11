@@ -1,13 +1,13 @@
-::ng-deep mat-tab-header {
+mat-tab-header {
     background-color: #244688;
   }
 
-::ng-deep .mdc-tab-indicator__content--underline {
+.mdc-tab-indicator__content--underline {
         --mdc-tab-indicator-active-indicator-color: white; 
 }
 
 
-::ng-deep .mdc-tab__text-label {
+.mdc-tab__text-label {
     color: white;
 }
 
