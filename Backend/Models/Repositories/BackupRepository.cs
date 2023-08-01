@@ -104,34 +104,41 @@ namespace ProcionAPI.Models.Repositories
         {
             try
             {
+                Console.WriteLine(backupFile.FileName);
                 if (backupFile == null || backupFile.Length <= 0)
                 {
                     throw new ArgumentException("Please select a backup file to restore the database.");
                 }
 
-                string connectionString = _configuration.GetConnectionString("DefaultConnection");
+                string connectionString = _configuration.GetConnectionString("RestoreConnection");
+                string DefaultString = _configuration.GetConnectionString("DefaultConnection");
                 string sqlServerBasePath = _configuration.GetValue<string>("SqlServerBasePath");
                 string backupDirectory = _configuration.GetValue<string>("BackupDirectory");
                 Console.WriteLine(connectionString);
                 Console.WriteLine(sqlServerBasePath);
                 Console.WriteLine(backupDirectory);
+                Console.WriteLine("Success");
 
                 // Save the uploaded backup file to a temporary location
-                var tempFilePath = Path.Combine("C:\\Backup\\BackupDirectory", "MyTempFileBackup.bak");
+                var tempFilePath = Path.Combine(backupDirectory, "TempFile.bak");
+                Console.WriteLine(tempFilePath);
                 using (var stream = new FileStream(tempFilePath, FileMode.Create))
                 {
                     await backupFile.CopyToAsync(stream);
                 }
-                Console.WriteLine(tempFilePath);
 
                 // Create a new ServerConnection
+                var DefaultCOnnect = new ServerConnection();
+                DefaultCOnnect.ConnectionString = DefaultString;
                 var serverConnection = new ServerConnection();
                 serverConnection.ConnectionString = connectionString;
                 Console.WriteLine(serverConnection.ConnectionString);
+                Console.WriteLine("Success");
 
                 // Create a new Server object using the ServerConnection
                 var server = new Server(serverConnection);
                 Console.WriteLine(server);
+                Console.WriteLine("Success");
 
                 // Create a new Restore object and set properties
                 var restore = new Restore
@@ -142,15 +149,26 @@ namespace ProcionAPI.Models.Repositories
                     NoRecovery = false,
                 };
                 Console.WriteLine(restore.Database);
+                Console.WriteLine("Success");
 
                 // Specify the backup file to restore from
                 restore.Devices.AddDevice(tempFilePath, DeviceType.File);
+                Console.WriteLine("Success");
+
+                // Ensure the 'ProcionAPI.Data' database is closed
+
+                server.KillAllProcesses("ProcionAPI.Data");
+                DefaultCOnnect.Disconnect();
+                
+
 
                 // Perform the restore asynchronously
                 restore.SqlRestore(server);
 
+
                 // Delete the temporary file after restore
                 File.Delete(tempFilePath);
+                Console.WriteLine("Success");
 
                 return true;
             }

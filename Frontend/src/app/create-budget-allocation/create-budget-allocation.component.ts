@@ -40,8 +40,8 @@ export class CreateBudgetAllocationComponent {
     this.budgetAllocationForm = this.formBuilder.group({
       department_ID: ['', [Validators.required]],
       date_Created: ['', [Validators.required]],
-      year: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern("^[0-9]+$")]],
-      total: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]]
+      year: [0, [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern("^[0-9]+$")]],
+      total: [0, [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]]
     })
   }
 
@@ -75,7 +75,7 @@ export class CreateBudgetAllocationComponent {
 
               const duration = 1750;
               setTimeout(() => {
-                this.router.navigate(['/ViewBudgetLines/' + AllocationAdded.budget_ID]);
+                this.router.navigate(['/ViewBudgetLines/' + AllocationAdded[0].budget_ID]);
                 dialogRef.close();
               }, duration);
             }

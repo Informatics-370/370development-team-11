@@ -46,18 +46,11 @@ namespace ProcionAPI.Controllers
             try
             {
                 bool success = await _backupRepository.RestoreDatabase(backupFile);
-                if (success)
-                {
-                    return Ok(success);
-                }
-                else
-                {
-                    return StatusCode(500, "Failed to restore database.");
-                }
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
+                return Ok(success);
+
+
+
+
             }
             catch (Exception ex)
             {

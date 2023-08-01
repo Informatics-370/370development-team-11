@@ -256,9 +256,8 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   GetVendors() {
-    this.dataService.getAllApprovedVendors(2).subscribe({
+    this.dataService.getAllApprovedVendors(3).subscribe({
       next: (response) => {
-        console.log(response)
         let VendorList: any[] = response
         VendorList.forEach((element) => {
           this.vendors.push(element)
@@ -335,7 +334,6 @@ export class CreateProcurementRequestComponent implements OnInit {
         //store
         this.Procurement_Request_Quote.procurement_Request.name = this.myForm.get("RequestName").value;
         this.Procurement_Request_Quote.path = UploadedPath
-        console.log(UploadedPath)
         let test: any
         test = new DatePipe('en-ZA');
         this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
@@ -351,8 +349,6 @@ export class CreateProcurementRequestComponent implements OnInit {
           this.ProcurementQuotes[a] = this.Procurement_Request_Quote
 
         }
-
-        console.log(this.ProcurementQuotes)
       }
       this.AddQuote()
     }
@@ -418,7 +414,7 @@ export class CreateProcurementRequestComponent implements OnInit {
     this.Procurement_Request.name = this.myForm.get("Name").value;
     this.Procurement_Request.description = this.myForm.get("Description").value;
     this.Procurement_Request.vendor.name = this.myForm.get("Vendor").value;
-    this.Procurement_Request.user.username = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.Procurement_Request.user.username = this.dataService.decodeUser(sessionStorage.getItem("token"));
 
 
     this.dataService.AddProcurementRequest(this.Procurement_Request).subscribe({
