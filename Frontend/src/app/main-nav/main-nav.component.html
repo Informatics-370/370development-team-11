@@ -14,7 +14,7 @@
     <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/ViewProcurementRequest" mat-button (click)="reload()">Procurement</a>
     <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/request-view"
        mat-button (click)="reload()">Vendor</a>
-    <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()">Reports</a>
+    <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()" routerLink="/ReportsMainView">Reports</a>
     <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()" (click)="HelpRoute()">Help</a>
     <mat-icon aria-hidden="false" aria-label="notification icon" fontIcon="notifications" class="sub-spacer"
               style="font-size:19pt;" matBadge="{{numNotifications}}" matBadgeColor="warn" [matBadgeHidden]="hidden" routerLink="/NotificationHub"></mat-icon>

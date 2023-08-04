@@ -1,0 +1,25 @@
+<mat-sidenav-container class="example-container" style="padding: 0px;">
+    <mat-sidenav mode="side" opened class="sidenav-container">
+      <mat-nav-list>
+      <div mat-list-item style="display: flex; align-items: center;">
+        <mat-icon aria-hidden="false" style="width:30px; height: 44px; margin-left: 5%;">add_business</mat-icon>
+        <h2 class="uni-font">Vendor</h2>
+      </div>
+      <a mat-list-item class="uni-font" routerLink="/request-view">Onboard Request</a>
+      <a mat-list-item class="uni-font" routerLink="/vendor-unofficial-vendorlist">Approve Vendor</a>
+      <a mat-list-item class="uni-font"  routerLink="/vendor-view">Manage Vendor</a>
+    </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="content">
+      
+      <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
+        Reports
+      </h1>
+     
+      <div>
+        <button (click)="GenerateApprovedReport()">Generate Approved Vendor</button>
+
+      </div>
+
+    </mat-sidenav-content>
+  </mat-sidenav-container>
