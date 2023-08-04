@@ -1,10 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../DataService/data-service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog,MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
 import { FormBuilder, FormControl, FormGroupDirective, NgForm, FormArray, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { Notification } from 'src/app/Shared/Notification';
+import { DatePipe } from '@angular/common';
+import { Notification_Type } from '../Shared/Notification_Type';
+import { Role } from '../Shared/EmployeeRole';
+import { User } from '../Shared/User';
+
 
 @Component({
   selector: 'app-view-procurement-request-approval',
@@ -12,7 +20,42 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./view-procurement-request-approval.component.css']
 })
 export class ViewProcurementRequestApprovalComponent implements OnInit{
-  
+
+
+  rl: Role = {
+    role_ID: 0,
+    name: '',
+    description: ''
+  }
+
+  usr: User = {
+    user_Id: 0,
+    role_ID: 0,
+    username: '',
+    password: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
+    no_Notifications: 0,
+    role: this.rl
+  }
+
+
+  Notification_Type: Notification_Type = {
+    notification_Type_ID: 0,
+    name: "",
+    description: "",
+  }
+
+  ProcurementNotification: Notification = {
+    notification_ID: 0,
+    notification_Type_ID: 0,
+    user_ID: 0,
+    name: "",
+    send_Date: new Date(),
+    user: this.usr,
+    notification_Type: this.Notification_Type,
+  };
+
+
   VendorFormGroup = this._formBuilder.group({
     CompanyName: '',
     CompanyEmail: '',
@@ -21,11 +64,14 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
 
 
   
-  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router,private route: ActivatedRoute,private _formBuilder: FormBuilder, private http: HttpClient) { }
+  constructor(private dataService: DataService, private router: Router,private route: ActivatedRoute,private _formBuilder: FormBuilder, private http: HttpClient,private dialog: MatDialog, private sanitizer:DomSanitizer) { }
   ProcurementRequestID= 0;
   ProcurementRequestDetails: Procurement_Request;
  // file:File[] = [null,null,null]
   FileDetails:any = [];
+
+  
+  
   ngOnInit() {
     for(let i = 0;i < 3;i++) {
       this.FileDetails.push({FileURL:"",FileName:""})
@@ -43,9 +89,12 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
           this.VendorFormGroup.get("Description")?.setValue(this.ProcurementRequestDetails.description.toString())
           this.dataService.GetProcurementRequestQuoteByID(this.ProcurementRequestID).subscribe(result => {
             let b = 0;
+            console.log(result)
             result.forEach(a => {
               this.GetFiles(a.path,b)
               b += 1
+              console.log(a.path)
+              console.log(b)
             })
           })
         }
@@ -59,6 +108,7 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
             result.forEach(a => {
               this.GetFiles(a.path,b)
               b += 1
+              
             })
           })
         }
@@ -72,19 +122,76 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
 
   GetFiles(sfilepath:string,i:number) {
     let sFile = sfilepath;
+    //console.log(sfilepath)
     let VendorName = sFile.substring(0,sFile.indexOf("\\"))
+    sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+    let RequestID = sFile.substring(0,sFile.indexOf("\\"))
     let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-    this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${filename}`
+    this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${RequestID}/${filename}`
     this.FileDetails[i].FileName = filename
   }
 
   AcceptRequest() {
     console.log(this.ProcurementRequestDetails)
-    this.dataService.UpdateProcurementRequestStatus(1,this.ProcurementRequestDetails).subscribe(r => {console.log(r)})
+    this.dataService.UpdateProcurementRequestStatus(1,this.ProcurementRequestDetails).subscribe({
+      next: (response) => {
+        console.log(response)
+        this.ProcurementNotification.notification_Type_ID = 8;
+        let transVar: any
+        transVar = new DatePipe('en-ZA');
+        this.ProcurementNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+        this.ProcurementNotification.name = response.name + " has been approved";
+        this.ProcurementNotification.user_ID = response.user_ID;
+        console.log(this.ProcurementNotification)
+        this.dataService.ProcurementAddNotification(this.ProcurementNotification).subscribe();
+
+        console.log(response);
+        var action = "APPROVE";
+        var title = "APPROVE SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement Request <strong>" + response.name + "</strong> has been <strong style='color:green'> APPROVED </strong> successfully!");
+
+        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 1750;
+        setTimeout(() => {
+          this.router.navigate(['/ViewPendingProcurementRequest']);
+          dialogRef.close();
+        }, duration);
+      }
+    })
   }
 
   RejectRequest() {
-    this.dataService.UpdateProcurementRequestStatus(2,this.ProcurementRequestDetails).subscribe()
+    this.dataService.UpdateProcurementRequestStatus(2,this.ProcurementRequestDetails).subscribe({
+      next: (response) => {
+        this.ProcurementNotification.notification_Type_ID = 9;
+        let transVar: any
+        transVar = new DatePipe('en-ZA');
+        this.ProcurementNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+        this.ProcurementNotification.name = response.name + " has been rejected";
+        this.ProcurementNotification.user_ID = response.user_Id;
+        this.dataService.ProcurementAddNotification(this.ProcurementNotification).subscribe();
+
+        console.log(response);
+        var action = "REJECTED";
+        var title = "REJECTION SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement Request <strong>" + response.name + "</strong> has been <strong style='color:red'> Rejected </strong> successfully!");
+
+        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 1750;
+        setTimeout(() => {
+          this.router.navigate(['/ViewPendingProcurementRequest']);
+          dialogRef.close();
+        }, duration);
+      }
+    })
   }
 
   openPDFInNewTab(i:number): void {

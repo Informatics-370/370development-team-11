@@ -23,15 +23,17 @@
 }
 
 
+
+mat-mdc-tab-body ng-tns-c60-18 ng-star-inserted mat-mdc-tab-body-active {
+    height: 400px!important;
+}
+
+
 td {
     width: 200px;
 }
 
- .mat-mdc-tab-body-content {
-    /* //height:335px!important; */
-    inline-size: max-content;
-    height:fit-content!important;
-}
+
 
 mat-error {
     display: none !important;

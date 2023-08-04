@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-view-pending-procurement-request',
   templateUrl: './view-pending-procurement-request.component.html',
@@ -10,10 +14,11 @@ import { Procurement_Request } from '../Shared/Procurement_Request';
 })
 export class ViewPendingProcurementRequestComponent implements OnInit {
   ProcurementRequests: Procurement_Request[] = [];
-  SearchedPRequests: Procurement_Request[] = [];
-  displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'Status', 'View'];
-  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
+  SearchedPRequests:any;
+  displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'View'];
+  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) { }
   searchWord: string = '';
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
     this.GetProcurementRequests();
@@ -28,14 +33,15 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
       let procurementRequestList: any[] = result;
       procurementRequestList.forEach(e => {
         //console.log(e)
-        if(e.requisition_Status_ID == 3) {
+        if (e.requisition_Status_ID == 3) {
           this.ProcurementRequests.push(e)
           //this.SearchedPRequests.push(e)
         }
       })
 
       //this.ProcurementRequests = [...procurementRequestList];
-      this.SearchedPRequests = [...this.ProcurementRequests];
+      this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
+      this.SearchedPRequests.paginator = this.paginator;
       //console.log(this.SearchedPRequests[0].requisition_Status_ID)
       if (result) {
         hideloader();
@@ -58,12 +64,18 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
     else if (Searchterm == "") {
       this.SearchedPRequests = [...this.ProcurementRequests];
     }
+
+    if (this.SearchedPRequests.paginator) {
+      this.SearchedPRequests.paginator.firstPage();
+    }
   }
+
+
 
   getStatusColor(status: string): string {
     switch (status.toLowerCase()) {
       case 'approval required':
-        return 'orange'; // Set the color you want for 'Pending'
+        return 'orange'; // Set the color you want for 'approval required'
       case 'accepted':
         return 'green'; // Set the color you want for 'Approved'
       case 'rejected':

@@ -138,12 +138,18 @@ export class EditHelpComponent implements OnInit{
     document.querySelector('button').disabled;
     this.myForm.disabled;
 
-    if (this.ManualFiles[0] == "" && this.Videofiles[0] == "") {
+
+
+    if (this.ManualFiles[0] == "" && this.Videofiles[0] == "") {  // no new Video or PDF
       this.HelpToEdit.name = this.myForm.get('name')?.value;
       this.HelpToEdit.description = this.myForm.get('description')?.value;
 
      
-      
+      this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
+        next: (result) => {
+          if (result != null){
+
+         
       this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
         next: (response) => {
 
@@ -169,8 +175,176 @@ export class EditHelpComponent implements OnInit{
           }, duration);
         }
       })
-      //if(this.ManualFiles[0] != "" && this.Videofiles[0] != "")
-    } else {
+             } else{
+              hideloader();
+              var action = "ERROR";
+              var title = "ERROR: Help Exists";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+               disableClose: true,
+               data: { action, title, message }
+              });
+
+              const duration = 1750;
+               setTimeout(() => {
+               dialogRef.close();
+              }, duration);
+
+              function hideloader() {
+                document.getElementById('loading')
+               .style.display = 'none';
+              }
+             }
+            }
+          })
+    } else if(this.Videofiles[0] != "" && this.ManualFiles[0] == ""){   // only new Video is added
+
+      this.fileToUpload = this.Videofiles[0];    
+
+      if(this.fileToUpload != null){
+        let sFile = this.HelpToEdit.video;
+        let HelpName = sFile.substring(0, sFile.indexOf("\\"))
+        let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length) 
+        this.dataService.DeleteHelpFile(HelpName,filename).subscribe( r =>{
+          let HelpName: string = name
+          let file: File = this.fileToUpload
+ 
+      
+        this.dataService.HelpFileAdd(HelpName,file).subscribe(response =>{
+          let Path: any = response
+          this.sPath=Path.pathSaved.toString()
+          this.HelpToEdit.video = this.sPath;
+
+          this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
+            next: (result) => {
+              if (result != null){
+
+              
+          this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
+           next: (response) => {
+             var action = "EDIT";
+             var title = "EDIT SUCCESSFUL";
+             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
+
+             const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+               disableClose: true,
+               data: { action, title, message }
+             });
+
+             const duration = 1750;
+             setTimeout(() => {
+               this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
+               dialogRef.close();
+               
+             }, duration);
+             }
+             })
+
+            }else{
+              hideloader();
+              var action = "ERROR";
+              var title = "ERROR: Help Exists";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+               disableClose: true,
+               data: { action, title, message }
+              });
+
+              const duration = 1750;
+               setTimeout(() => {
+               dialogRef.close();
+              }, duration);
+
+              function hideloader() {
+                document.getElementById('loading')
+               .style.display = 'none';
+              }
+            }
+            }
+            })
+      })
+      })
+      }
+
+    } else if(this.ManualFiles[0] != "" && this.Videofiles[0] == "") {  // only new PDF is added
+
+      this.fileToUpload = this.ManualFiles[0];  
+
+      if(this.fileToUpload != null){
+        let vFile = this.HelpToEdit.user_Manual;
+        let HelpName = vFile.substring(0, vFile.indexOf("\\"))
+        let filename = vFile.substring(vFile.indexOf("\\") + 1, vFile.length)
+       this.dataService.DeleteHelpFile(HelpName, filename).subscribe( r =>{
+         let HelpName: string = name
+         let file: File = this.fileToUpload
+
+       
+        
+
+        this.dataService.HelpFileAdd(HelpName,file).subscribe(response =>{
+            let Path: any = response
+            this.sPath=Path.pathSaved.toString()
+            this.HelpToEdit.user_Manual = this.sPath;
+
+        this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
+          next: (result) =>{
+            if (result != null){
+
+           
+
+        this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
+             next: (response) => {
+               var action = "EDIT";
+               var title = "EDIT SUCCESSFUL";
+               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
+ 
+               const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                 disableClose: true,
+                 data: { action, title, message }
+               });
+ 
+               const duration = 1750;
+               setTimeout(() => {
+                 this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
+                 dialogRef.close();
+                 
+               }, duration);
+             }
+             })
+
+            }else{
+              hideloader();
+              var action = "ERROR";
+              var title = "ERROR: Help Exists";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+               disableClose: true,
+               data: { action, title, message }
+              });
+
+              const duration = 1750;
+               setTimeout(() => {
+               dialogRef.close();
+              }, duration);
+
+              function hideloader() {
+                document.getElementById('loading')
+               .style.display = 'none';
+              }
+            }
+          }
+        })
+ 
+ 
+       })
+       })
+      }
+    
+
+    } else if(this.ManualFiles[0] != "" && this.Videofiles[0] != ""){     // New Video and PDF
       
         this.fileToUpload = this.ManualFiles[0];
         
@@ -191,14 +365,14 @@ export class EditHelpComponent implements OnInit{
 
             this.fileToUpload = this.Videofiles[0];    
        if(this.fileToUpload != null){
-         let vFile = this.HelpToEdit.user_Manual;
-         let HelpName = vFile.substring(0, vFile.indexOf("\\"))
-         let filename = vFile.substring(vFile.indexOf("\\") + 1, vFile.length)
-        this.dataService.DeleteHelpFile(HelpName, filename).subscribe( r =>{
-          let HelpName: string = name
+         let vFile = this.HelpToEdit.video;
+         let vHelpName = vFile.substring(0, vFile.indexOf("\\"))
+         let vfilename = vFile.substring(vFile.indexOf("\\") + 1, vFile.length)
+        this.dataService.DeleteHelpFile(vHelpName, vfilename).subscribe( r =>{
+          let vHelpName: string = name
           let file: File = this.fileToUpload
 
-        this.dataService.HelpFileAdd(HelpName,file).subscribe(response =>{
+        this.dataService.HelpFileAdd(vHelpName,file).subscribe(response =>{
             let Path: any = response
             this.sPath=Path.pathSaved.toString()
             this.HelpToEdit.video = this.sPath;
@@ -206,7 +380,11 @@ export class EditHelpComponent implements OnInit{
 
 
 
+              this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
+                next: (result) =>{
+                  if (result != null){
 
+                 
               this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
                 next: (response) => {
 
@@ -235,6 +413,30 @@ export class EditHelpComponent implements OnInit{
                 }
               })
 
+              } else{
+                hideloader();
+              var action = "ERROR";
+              var title = "ERROR: Help Exists";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+               disableClose: true,
+               data: { action, title, message }
+              });
+
+              const duration = 1750;
+               setTimeout(() => {
+               dialogRef.close();
+              }, duration);
+
+              function hideloader() {
+                document.getElementById('loading')
+               .style.display = 'none';
+              }
+              }
+             }
+            })
+
 
           })
           })
@@ -244,96 +446,12 @@ export class EditHelpComponent implements OnInit{
       })
       })
       }
+    }
         
       
             
-    // } else if(this.ManualFiles[0] != "" && this.Videofiles[0] == ""){
-    //   this.fileToUpload = this.ManualFiles[0];
-        
-    //   if(this.fileToUpload != null){
-    //     let sFile = this.HelpToEdit.user_Manual;
-    //     let HelpName = sFile.substring(0, sFile.indexOf("\\"))
-    //     let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-     
-    //     this.dataService.DeleteHelpFile(HelpName,filename).subscribe( r =>{
-    //       let HelpName: string = name
-    //       let file: File = this.fileToUpload
- 
-      
-    //     this.dataService.HelpFileAdd(HelpName,filename).subscribe(response =>{
-    //       let Path: any = response
-    //       this.sPath=Path.pathSaved.toString()
-    //       this.HelpToEdit.user_Manual = this.sPath;
-    //       this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
-    //        next: (response) => {
-    //          var action = "EDIT";
-    //          var title = "EDIT SUCCESSFUL";
-    //          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
-
-    //          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-    //            disableClose: true,
-    //            data: { action, title, message }
-    //          });
-
-    //          const duration = 1750;
-    //          setTimeout(() => {
-    //            this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
-    //            dialogRef.close();
-               
-    //          }, duration);
-    //        }
-    //      })
-    //   })
-    //   })
-    //   }
-
-    // } else if(this.ManualFiles[0] == "" && this.Videofiles[0] != ""){
-
-    //   this.fileToUpload = this.Videofiles[0];    
-    //   if(this.fileToUpload != null){
-    //     let vFile = this.HelpToEdit.user_Manual;
-    //     let HelpName = vFile.substring(0, vFile.indexOf("\\"))
-    //     let filename = vFile.substring(vFile.indexOf("\\") + 1, vFile.length)
-    //    this.dataService.DeleteHelpFile(HelpName, filename).subscribe( r =>{
-    //      let HelpName: string = name
-    //      let file: File = this.fileToUpload
-
-    //    this.dataService.HelpFileAdd(HelpName,file).subscribe(response =>{
-    //        let Path: any = response
-    //        this.sPath=Path.pathSaved.toString()
-    //        this.HelpToEdit.video = this.sPath;
-        
-
-    //     this.dataService.HelpFileAdd(HelpName,file).subscribe(response =>{
-    //         let Path: any = response
-    //         this.sPath=Path.pathSaved.toString()
-    //         this.HelpToEdit.user_Manual = this.sPath;
-    //     this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
-    //          next: (response) => {
-    //            var action = "EDIT";
-    //            var title = "EDIT SUCCESSFUL";
-    //            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
- 
-    //            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-    //              disableClose: true,
-    //              data: { action, title, message }
-    //            });
- 
-    //            const duration = 1750;
-    //            setTimeout(() => {
-    //              this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
-    //              dialogRef.close();
-                 
-    //            }, duration);
-    //          }
-    //          })
- 
- 
-    //    })
-    //    })
-    //    })
-    //   }
-     }  
+   
+       
      function hideloader() {
       document.getElementById('loading')
         .style.display = 'none';

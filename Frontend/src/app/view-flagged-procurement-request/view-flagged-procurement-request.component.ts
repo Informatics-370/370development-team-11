@@ -1,9 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
 import { Procurement_Details } from '../Shared/ProcurementDetails';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+
+
+
 
 @Component({
   selector: 'app-view-flagged-procurement-request',
@@ -11,12 +16,13 @@ import { Procurement_Details } from '../Shared/ProcurementDetails';
   styleUrls: ['./view-flagged-procurement-request.component.css']
 })
 export class ViewFlaggedProcurementRequestComponent implements OnInit{
+
   ProcurementRequests: Procurement_Request[] = [];
-  SearchedPDetails: Procurement_Details[] = [];
+  SearchedPDetails:any;
   displayedColumns: string[] = ['name', 'employee', 'mandateTotal', 'Total', 'PaymentDue', 'View'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
-
+  @ViewChild(MatPaginator) paginator:MatPaginator;
   ngOnInit() {
     this.GetProcurementDetails();
     console.log(this.ProcurementDetails)
@@ -32,7 +38,8 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit{
         this.ProcurementDetails.push(e);
       })
 
-      this.SearchedPDetails = [...this.ProcurementDetails];
+      this.SearchedPDetails = new MatTableDataSource(this.ProcurementDetails);
+      this.SearchedPDetails.paginator = this.paginator;
       if (result) {
         hideloader();
       }
@@ -52,6 +59,10 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit{
     }
     else if (Searchterm == "") {
       this.SearchedPDetails = [...this.ProcurementDetails];
+    }
+
+    if (this.SearchedPDetails.paginator) {
+      this.SearchedPDetails.paginator.firstPage();
     }
   }
 

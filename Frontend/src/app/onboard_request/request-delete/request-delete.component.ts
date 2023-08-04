@@ -81,10 +81,10 @@ OnboardRequestDetails: any[] = [];
     for(let i = 0; i < this.OnboardRequestDetails.length; i++) {
       let VendorID = this.OnboardRequestDetails[i].vendor.vendor_ID
       let sFile = this.OnboardRequestDetails[i].quotes;
-            let sFi = sFile.substring(0,sFile.indexOf("\\"))
-             sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            let sOR = sFile.substring(0,sFile.indexOf("\\"))
-            sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            // let sFi = sFile.substring(0,sFile.indexOf("\\"))
+            //  sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            // let sOR = sFile.substring(0,sFile.indexOf("\\"))
+            // sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
             let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
             let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
         this.dataService.DeleteFile(RequestNo,filename).subscribe()

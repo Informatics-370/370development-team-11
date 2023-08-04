@@ -8,7 +8,7 @@ namespace ProcionAPI.Models.Repositories
     {
         Task<Vendor_Detail[]> GetAllVendorDetailstAsync();
         Task<Vendor_Detail> GetVendorDetailByIDAsync(int VendorDetailID);
-        Task<Vendor[]> getAllApprovedVendorsAsync();
+        Task<Vendor[]> getAllApprovedVendorsAsync(int VendorStatusID);
         Task<Vendor> GetVendorByIDAsync(int VendorID);
         Task<Vendor_Detail[]> AddVendorDetailsAsync(Vendor_Detail VenDetails);
         Task<Vendor_Detail> UpdateVendorDetailsAsync(int VendorDetailsID, Vendor_Detail VenDetails);
@@ -89,5 +89,8 @@ namespace ProcionAPI.Models.Repositories
         Task<Onboard_Request> ChangeOnboardStatusAsync(int statusID, int onboardRequestId, int VenID);
 
         Task<Notification[]> AddVendorBEENotificationAsync(DateTime beeDate,int VendorID, string Description);
+        Task<Vendor[]> GetAllSoleSupplierVendorAsync();
+        Task<Notification[]> GenerateSoleSupplierPerformanceReviewAsync(Vendor ven);
+        Task<Notification[]> AddNotificationAsync(Notification VendorNotification);
     }
 }

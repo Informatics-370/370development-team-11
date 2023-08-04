@@ -17,7 +17,7 @@
                       <h1 style="font-size:20pt">{{row.notification_Type.name}}</h1>
                     </div>
                   </mat-card-title>
-                  <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date}}</mat-card-subtitle>
+                  <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date | date:'dd/MM/yyyy, h:mm a'}}</mat-card-subtitle>
                 </mat-card-title-group>
               </mat-card-header>
               <mat-card-content style="font-size:16pt; margin-top: 20px;">
@@ -271,7 +271,7 @@
                           <h1 style="font-size:20pt">{{row.notification_Type.name}}</h1>
                         </div>
                       </mat-card-title>
-                      <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date}}</mat-card-subtitle>
+                      <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date | date:'dd/MM/yyyy, h:mm a'}}</mat-card-subtitle>
                     </mat-card-title-group>
                   </mat-card-header>
                   <mat-card-content style="font-size:16pt; margin-top: 20px;">

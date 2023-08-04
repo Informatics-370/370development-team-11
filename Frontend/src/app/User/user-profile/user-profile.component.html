@@ -2,9 +2,8 @@
   <mat-card style="width: 600px; margin-top: 1%; align-items: center; margin-bottom: 1%;">
     <mat-card-header>
       <div class="avatar-container">
-        <div class="image-container"
-             [ngClass]="{'box-shadow-avatar': !!file}">
-          <img class="image-container" src="{{usr.profile_Picture}}" style="object-fit: cover;"/>
+        <div class="image-container" [ngClass]="{'box-shadow-avatar': !!file}">
+          <img class="image-container" src="{{usr.profile_Picture}}" style="object-fit: cover;" />
         </div>
 
         <!--<label for="avatar-input-file">
@@ -18,23 +17,21 @@
       </div>
     </mat-card-header>
     <mat-card-content>
-           <!--AdminTempelate-->
+      <!--AdminTempelate-->
       <div *ngIf="rAdmin; else elseBlock">
         <h1 style="text-align:center; margin-bottom:5%;">
           {{adm.adminName}} {{adm.adminSurname}} <br /> <sub style="color: #747474">{{rl.name}}</sub>
           <br />
           <button mat-raised-button
-                  style="color:white; margin-top: 10px; margin-right: 10px; font-size: 16px; width: 85px; background-color: #244688;"
-                  type="button" routerLink="/ProfileEdit">
-            <mat-icon matPrefix
-                      style="margin-right:10%;">edit</mat-icon>Edit
+            style="color:white; margin-top: 10px; margin-right: 10px; font-size: 16px; width: 85px; background-color: #244688;"
+            type="button" routerLink="/ProfileEdit">
+            <mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Edit
           </button>
           <button mat-raised-button
-          style="color:white; margin-top: 10px; font-size: 16px; width: 212px; background-color: #244688;"
-          type="button" routerLink="/UpdatePassword">
-    <mat-icon matPrefix
-              style="margin-right:10%;">edit</mat-icon>Update Password
-  </button>
+            style="color:white; margin-top: 10px; font-size: 16px; width: 212px; background-color: #244688;"
+            type="button" routerLink="/UpdatePassword">
+            <mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Update Password
+          </button>
         </h1>
       </div>
       <!--EmployeeTempelate-->
@@ -43,17 +40,15 @@
           {{emp.employeeName}} {{emp.employeeSurname}} <br /> <sub style="color: #747474">{{rl.description}}</sub>
           <br />
           <button mat-raised-button
-                  style="color:white; margin-top: 10px; font-size: 16px; width: 85px; background-color: #244688;"
-                  type="button" routerLink="/ProfileEdit">
-            <mat-icon matPrefix
-                      style="margin-right:10%;">edit</mat-icon>Edit
+            style="color:white; margin-top: 10px; margin-right: 10px; font-size: 16px; width: 85px; background-color: #244688;"
+            type="button" routerLink="/ProfileEdit">
+            <mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Edit
           </button>
           <button mat-raised-button
-          style="color:white; margin-top: 10px; font-size: 16px; width: 212px; background-color: #244688;"
-          type="button" routerLink="/UpdatePassword">
-    <mat-icon matPrefix
-              style="margin-right:10%;">edit</mat-icon>Update Password
-  </button>
+            style="color:white; margin-top: 10px; font-size: 16px; width: 212px; background-color: #244688;"
+            type="button" routerLink="/UpdatePassword">
+            <mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Update Password
+          </button>
         </h1>
       </ng-template>
       <!--<h4 style="text-align:center;"></h4>-->
@@ -61,7 +56,8 @@
       <!--Admin Table-->
 
       <div *ngIf="rAdmin; else elseBlock2">
-        <table style="width: 450px; font-size: 18px; background-color: #b9ccf1; border-radius: 8px;  margin: 8px 0; display: inline-block; border: 2px solid #244688; box-sizing: border-box; ">
+        <table
+          style="width: 450px; font-size: 18px; background-color: #b9ccf1; border-radius: 8px;  margin: 8px 0; display: inline-block; border: 2px solid #244688; box-sizing: border-box; ">
           <tr>
             <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
 
@@ -98,7 +94,8 @@
       </div>
       <!--Employee Table-->
       <ng-template #elseBlock2>
-        <table style="width: 450px; font-size: 18px; background-color: #b9ccf1; border-radius: 8px;  margin: 8px 0; display: inline-block; border: 2px solid #244688; box-sizing: border-box; ">
+        <table
+          style="width: 450px; font-size: 18px; background-color: #b9ccf1; border-radius: 8px;  margin: 8px 0; display: inline-block; border: 2px solid #244688; box-sizing: border-box; ">
           <tr>
             <td style="padding: 12px 20px; display: inline-block; box-sizing: border-box; ">
 

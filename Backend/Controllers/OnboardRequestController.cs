@@ -1,8 +1,7 @@
-﻿using Azure;
-using Azure.Core;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
-using MimeKit;
+
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Models.Repositories;
 using System.Data.SqlTypes;
@@ -189,7 +188,7 @@ namespace ProcionAPI.Controllers
                 if (System.IO.File.Exists(filePath))
                 {
                     System.IO.File.Delete(filePath);
-                    return Ok($"File {fileName} deleted successfully");
+                    return Ok();
                 }
                 else
                 {
@@ -273,6 +272,22 @@ namespace ProcionAPI.Controllers
         {
             var results = await _OnboardRequestRepository.DeleteVendorAsync(VendorID);
             return Ok(results);
+        }
+
+        [HttpGet]
+        [Route("GetAllApprovedVendor")]
+        public async Task<IActionResult> GetAllApprovedVendor()
+        {
+            try
+            {
+                var result = await _OnboardRequestRepository.GetAllApprovedVendorRequestsAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
         }
     }
     

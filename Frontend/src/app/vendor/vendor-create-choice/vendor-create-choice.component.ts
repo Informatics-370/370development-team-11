@@ -25,7 +25,7 @@ export class VendorCreateChoiceComponent {
       this.mySelect = this.formBuilder.group({VendorsApproved: ['', [Validators.required]]})
 
 
-      this.dataService.getAllApprovedVendors().subscribe(result => {
+      this.dataService.getAllApprovedVendors(4).subscribe(result => {
       let requestlist:any[] = result
       requestlist.forEach((element) => {
         if(element.vendor_Status_ID == 4) {

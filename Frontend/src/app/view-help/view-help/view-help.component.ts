@@ -14,6 +14,7 @@ import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { VideoDialogComponent } from 'src/app/VideoDialog/video-dialog/video-dialog.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
+import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -30,8 +31,10 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewHelpComponent implements OnInit {
-  displayedColumnsAdmin: string[] = ['help_ID','helpCategory', 'name', 'description', 'video', 'user_Manual',  'action', 'delete'];
-  displayedColumnsUser: string[] = ['help_ID', 'helpCategory', 'name', 'description', 'video', 'user_Manual'];
+  displayedColumnsAdmin: string[] = ['helpCategory', 'name', 'description', 'video', 'user_Manual',  'action', 'delete'];
+                                  //'help_ID',
+  displayedColumnsUser: string[] = [ 'helpCategory', 'name', 'description', 'video', 'user_Manual'];
+                                 //'help_ID',
   dataSource = new MatTableDataSource<Help>();
 
   HelpToDelete:any  = {
@@ -191,6 +194,14 @@ export class ViewHelpComponent implements OnInit {
 
   openDialog() {
     const dialogRef = this.dialog.open(RestoreComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  openRestoreDialog() {
+    const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);

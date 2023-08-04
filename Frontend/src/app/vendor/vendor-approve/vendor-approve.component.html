@@ -37,7 +37,7 @@
           <tr *ngIf="FileDetails[i] != undefined && files[i] != undefined">
             <td><label for="file" style="margin-right: 1%;">Company Quote: </label></td>
             <td *ngIf="files[i].type == 'application/pdf'">
-                  <a id="btnLink" (click)="openPDFInNewTab(i)" target="_blank" style="color: black;font-weight: 600;">{{FileDetails[i].FileName}}</a> 
+                  <a id="btnLink" (click)="openPDFInNewTab(i)" target="_blank" style="color: black;">{{FileDetails[i].FileName}}</a> 
             </td>
             <td *ngIf="files[i].type != 'application/pdf'">
               <a href="{{FileDetails[i].FileURL}}" download="{{FileDetails[i].FileName}}" target="_blank" style="color: black;">{{FileDetails[i].FileName}}</a> 
@@ -81,11 +81,19 @@
   </div>
   </div>
   <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="onboardRequest.length == 1 && onboardRequest[0].status_ID == 4;General" #Sole>
-    <h1 *ngIf="onboardRequest[0] != undefined" style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;" >
+   <div>
+    
+    <div style="display: -webkit-box;margin-top: 1%;">
+      <button mat-raised-button (click)="ReturnOnboardRequestStatus()" style="float:left; background-color:#244688; color:white;margin-right: 1%;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
+      <h1 *ngIf="onboardRequest[0] != undefined" style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;" >
       Onboard Request #{{onboardRequest[0].onboard_Request_Id}}
     </h1>
+    </div>
     <div>  
     <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;">Please Approve or Reject the Request</label>
+    </div>
+  
+  
     <br>
  
   <div>
@@ -126,7 +134,7 @@
         <tr *ngIf="FileDetails[0] != undefined && files[0] != undefined">
           <td><label for="file" style="margin-right: 1%;">Company Quote: </label></td>
           <td *ngIf="files[0].type == 'application/pdf'">
-                <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" style="color: black;font-weight: 600;">{{FileDetails[0].FileName}}</a> 
+                <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" style="color: black;">{{FileDetails[0].FileName}}</a> 
           </td>
           <td *ngIf="files[0].type != 'application/pdf'">
             <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}" target="_blank" style="color: black;">{{FileDetails[0].FileName}}</a> 
@@ -144,24 +152,43 @@
           
         </td>
     </tr>
-      <tr>
-        <td><label>Confirm selected quote:</label></td>
+      <!-- <tr>
+        <td><label>Confirm Approval :</label></td>
         <td><mat-checkbox (click)="onQuoteChecked()" checked="{{QuoteChecked}}"></mat-checkbox></td>
       </tr>
       <mat-expansion-panel hideToggle disabled expanded="{{QuoteChecked}}">
         <div  style="background-color: white;display: flex;border-top:0px solid white;">
           <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 160px;background-color: #94CC5B;" (click)="SoleSupplierApproved()"> Approve  </button>
        </div> 
-      </mat-expansion-panel>
+      </mat-expansion-panel> -->
       </table> 
     </div>
          
         </mat-tab>
       </form>      
       </mat-tab-group>
-      <div  style="background-color: white;display: flex;border-left:1px solid #244688;border-right:1px solid #244688;border-bottom:1px solid #244688;">
-        <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 160px;background-color: #244688;color: white;" (click)="ReturnOnboardRequestStatus()"> Back </button>
-        <button mat-raised-button id="btnHover" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 160px;" (click)="RejectRequest()"> Reject Request </button>
+      <div  style="background-color: white;display: flex;border-left:1px solid #244688;border-right:1px solid #244688;border-bottom:1px solid #244688;justify-content: center;">
+        <div class="wrapper" style="margin-bottom:1%;">
+          <button class="" (click)="SoleSupplierApproved()">
+              <span>Approve</span>
+              <div class="success">
+                  <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                      viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;"
+                      xml:space="preserve">
+                      <path
+                          d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+                  </svg>
+              </div>
+          </button>
+
+          <button mat-raised-button type="button" (click)="RejectRequest()" class="CloseButton"
+              style="margin-left: 5px;">
+              Reject
+          </button>
+
+      </div>
+        <!-- <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 160px;background-color: #94CC5B;" (click)="SoleSupplierApproved()"> Approve  </button> -->
+        <!-- <button mat-raised-button id="btnHover" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 160px;" (click)="RejectRequest()"> Reject Request </button> -->
      </div>
     </div>
   </div> 
@@ -221,7 +248,7 @@
       <tr *ngIf="FileDetails[0] != undefined && files[0] != undefined">
         <td><label for="file" style="margin-right: 1%;">Company Quote: </label></td>
         <td *ngIf="files[0].type == 'application/pdf'">
-              <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" style="color: black;font-weight: 600;">{{FileDetails[0].FileName}}</a> 
+              <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" style="color: black;">{{FileDetails[0].FileName}}</a> 
         </td>
         <td *ngIf="files[0].type != 'application/pdf'">
           <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}" target="_blank" style="color: black;">{{FileDetails[0].FileName}}</a> 
@@ -254,9 +281,9 @@
     </form>      
     </mat-tab-group>
     <div  style="background-color: white;display: flex;border-left:1px solid #244688;border-right:1px solid #244688;border-bottom:1px solid #244688;">
-      <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 170px;background-color: #94CC5B;" *ngIf="BEEbool == true" > Update BEE</button>
+      <!-- <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 170px;background-color: #94CC5B;" *ngIf="BEEbool == true" > Update BEE</button> -->
       <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 170px;background-color: #94CC5B;" *ngIf="onboardRequest.length > 1 && onboardRequestSelectedData.vendor.vendor_Status_ID == 4 && onboardRequestSelectedData.vendor_ID != undefined" (click)="UpdateOnboardRequestStatus(onboardRequestSelectedData.vendor_ID)"> Reselect Quote </button>
-      <button mat-raised-button id="btnHover" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 170px;" *ngIf="onboardRequestSelectedData.vendor.vendor_Status_ID == 4" (click)="Delete(onboardRequestSelectedData.vendor_ID)"> Delete Request </button>
+      <button mat-raised-button id="btnHover" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 170px;" *ngIf="onboardRequestSelectedData.vendor.vendor_Status_ID == 4" (click)="Delete(onboardRequestSelectedData.vendor_ID)"> Reject Request </button>
    </div>
   </div>
 </div> 

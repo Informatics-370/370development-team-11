@@ -11,6 +11,7 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { MatPaginator } from '@angular/material/paginator';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -22,16 +23,18 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-consumable',
   templateUrl: './view-consumable.component.html',
   styleUrls: ['./view-consumable.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 
 
 export class ViewConsumableComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   Consumables: Consumable[] = [];
   SearchedConsumables: Consumable[] = [];
   displayedColumns: string[] = ['Name', 'Description', 'On Hand', 'Minimum Reorder Quantity', 'Maximum Reorder Quantity', 'Category', 'action', 'update', 'delete'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
+  dataSource: any;
 
   openDialog(name: string, ID: Number) {
     console.log(name)
@@ -75,10 +78,10 @@ export class ViewConsumableComponent implements OnInit {
             widths: ['*', 'auto', 'auto', 'auto', 'auto'],
             body: [
               [{ text: 'Name', fillColor: '#244688', color: "white" },
-              { text: 'Category', fillColor: '#244688', color: "white"},
+              { text: 'Category', fillColor: '#244688', color: "white" },
               { text: 'Minimum Reorder- Quantity', fillColor: '#244688', color: "white" },
               { text: 'Maximum Reorder- Quantity', fillColor: '#244688', color: "white" },
-              { text: 'On-Hand', fillColor: '#244688',color: "white" }],
+              { text: 'On-Hand', fillColor: '#244688', color: "white" }],
               ...this.Consumables.map(p => ([p.name, p.consumable_Category.name, p.minimum_Reorder_Quantity, p.maximum_Reorder_Quantity, p.on_Hand]))
             ],
             // Add space after the table
@@ -119,10 +122,10 @@ export class ViewConsumableComponent implements OnInit {
     const Searchterm = this.searchWord.toLocaleLowerCase();
 
     if (Searchterm) {
-      this.SearchedConsumables = this.Consumables.filter(consumable => consumable.name.toLocaleLowerCase().includes(Searchterm))
+      this.dataSource = this.Consumables.filter(consumable => consumable.name.toLocaleLowerCase().includes(Searchterm))
     }
     else if (Searchterm == "") {
-      this.SearchedConsumables = [...this.Consumables];
+      this.GetConsumables();
     }
   }
 
@@ -139,7 +142,8 @@ export class ViewConsumableComponent implements OnInit {
       let consumableList: any[] = result;
       this.Consumables = [...consumableList];
       this.SearchedConsumables = [...consumableList];
-      console.log(this.SearchedConsumables)
+      this.dataSource = new MatTableDataSource(this.Consumables.filter((value, index, self) => self.map(x => x.consumable_ID).indexOf(value.consumable_ID) == index));
+      this.dataSource.paginator = this.paginator
       if (result) {
         hideloader();
       }

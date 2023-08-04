@@ -124,5 +124,20 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+        [HttpGet]
+        [Route("EditDepartmentValidation/{name}/{id}")]
+        public async Task<IActionResult> EditDepartmentValidation([FromRoute] string name, int id)
+        {
+            try
+            {
+                var result = await _departmentRepository.EditDepartmentValidationAsync(name, id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
 }

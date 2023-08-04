@@ -441,7 +441,7 @@ namespace ProcionAPI.Controllers.Procurement_Requests
         }
 
         [HttpPut]
-        [Route("UpdateProcurementDetailsStatus{StatusID}")]
+        [Route("UpdateProcurementDetailsStatus/{StatusID}")]
         public async Task<IActionResult> UpdateProcurementDetailsStatus(int StatusID, Procurement_Details ProcurementDetails)
         {
             try
@@ -455,5 +455,180 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
         }
 
+        [HttpGet]
+        [Route("GetProcurementDetailsByRequestID/{RequestID}")]
+        public async Task<IActionResult> GetProcurementDetailsByRequestID(int RequestID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementDetailsByRequestIDAsync(RequestID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return null;
+                // return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+        [HttpGet]
+        [Route("GetUnpaidProcurementDetails")]
+        public async Task<IActionResult> GetUnpaidProcurementDetails()
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetUnpaidProcurementDetailsAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return null;
+               // return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPost]
+        [Route("ProcurementAddNotification")]
+        public async Task<IActionResult> ProcurementAddNotification(Notification ProcurementNotification)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.AddNotificationAsync(ProcurementNotification);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetConsumablesForRequest{procurementRequestID}")]
+
+        public async Task<IActionResult> GetConsumablesForRequest(int procurementRequestID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetConsumableForRequest(procurementRequestID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("FinalizeProcurementRequest{DetailsID}")]
+        public async Task<IActionResult> FinalizeProcurementRequest(int DetailsID)
+        {
+            try
+            {
+                var results = await _ProcurementDetailsRepository.FinalizeProcurementRequest(DetailsID);
+                return Ok(results);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+        [HttpPut]
+        [Route("RequisitionApproval{DetailsID}")]
+        public async Task<IActionResult> RequisitionApproval(int DetailsID)
+        {
+            try
+            {
+                var results = await _ProcurementDetailsRepository.RequisitionApproval(DetailsID);
+                return Ok(results);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetUnapprovedRequests")]
+        public async Task<IActionResult> GetUnapprovedRequests()
+        {
+              try
+            {
+                var result = await _ProcurementDetailsRepository.GetUnapprovedRequests();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }   
+        
+
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        [Route("uploadProofFile")]
+        public async Task<IActionResult> UploadPOPHandler()
+        {
+            var formCollection = await Request.ReadFormAsync();
+            var file = formCollection.Files.First();
+
+
+            var ProofName = Request.Form["ProofName"];
+
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file selected");
+            }
+
+            var folderPath = Path.Combine("Files", "ProofOfPayment", ProofName);
+            var filePath = Path.Combine(folderPath, file.FileName);
+            var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
+
+            if (!Directory.Exists(absoluteFolderPath))
+            {
+                Directory.CreateDirectory(absoluteFolderPath);
+            }
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var PathSaved = Path.Combine(ProofName, file.FileName);
+            return Ok(new { PathSaved });
+        }
+
+
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        [Route("uploadInvoice")]
+        public async Task<IActionResult> UploadInvoice()
+        {
+            var formCollection = await Request.ReadFormAsync();
+            var file = formCollection.Files.First();
+
+
+            var InvoiceName = Request.Form["InvoiceName"];
+
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file selected");
+            }
+
+            var folderPath = Path.Combine("Files", "Invoices", InvoiceName);
+            var filePath = Path.Combine(folderPath, file.FileName);
+            var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
+
+            if (!Directory.Exists(absoluteFolderPath))
+            {
+                Directory.CreateDirectory(absoluteFolderPath);
+            }
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var PathSaved = Path.Combine(InvoiceName, file.FileName);
+            return Ok(new { PathSaved });
+        }
     }
 }

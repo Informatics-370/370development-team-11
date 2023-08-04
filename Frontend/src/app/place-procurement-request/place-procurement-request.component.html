@@ -7,20 +7,25 @@
                 <h2 class="uni-font">Procurement Request</h2>
             </div>
 
-            <a mat-list-item class="uni-font" routerLink="/ViewConsumable">View Consumables</a>
-            <a mat-list-item class="uni-font" routerLink="/ViewPendingProcurementRequest">View Pending Procurement Request</a>
-            <a mat-list-item class="uni-font" routerLink="/PlaceProcurementRequest">Place Procurement Request</a>
-            <a mat-list-item class="uni-font" routerLink="/ViewFlaggedProcurementRequest">View Flagged Procurement Request</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewProcurementRequest">View Procurement Requests</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewPendingProcurementRequest">View Pending Procurement
+                Request</a>
+            <a mat-list-item class="uni-font" routerLink="/PlaceProcurementRequest">Place Procurement Details</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewFlaggedProcurementRequest">View Flagged Procurement
+                Details</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewProcurementDetails">View Procurement Details</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewUnapprovedRequests">View Unapproved Requests</a>
+
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content class="Main-content">
         <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
-            View Pending Procurement Request
+            Place Procurement Request
         </h1>
 
         <div mat-list-item style="margin-left: 0.5%; display: flex;  align-items: center; ">
 
-            
+
             <span style="flex: 1 1 auto;"></span>
 
             <mat-form-field appearance="fill"
@@ -63,37 +68,39 @@
                     <td mat-cell *matCellDef="let procurement"> {{procurement.vendor.name}} </td>
                 </ng-container>
 
-                <ng-container matColumnDef="Status">
+                <<<<<<< HEAD=======<ng-container matColumnDef="Status">
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Status
                     </th>
                     <td mat-cell *matCellDef="let procurement">
                         <span [style.color]="getStatusColor(procurement.requisition_Status.name)">
-                            {{procurement.requisition_Status.name}} 
+                            {{procurement.requisition_Status.name}}
                         </span>
                     </td>
-                </ng-container>
+                    </ng-container>
 
-                <ng-container matColumnDef="View">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let procurement" style="width:100px;">
+                    >>>>>>> Bupe
+                    <ng-container matColumnDef="View">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let procurement" style="width:100px;">
 
-                        <button class="noselect" type="button"
-                            style="background-color: #94CC5B;" routerLink="/PlaceProcurementRequestCreateDetails/{{procurement.procurement_Request_ID}}">
-                            <span class='text'>Create</span>
-                            <span class="icon" style="border-left: 1px solid #94CC5B; ">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="1em"
-                                    viewBox="0 0 512 512">
-                                    <path
-                                        d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
-                                </svg>
-                            </span>
-                        </button>
-                    </td>
-                </ng-container>
+                            <button class="noselect" type="button" style="background-color: #94CC5B;"
+                                routerLink="/PlaceProcurementRequestCreateDetails/{{procurement.procurement_Request_ID}}">
+                                <span class='text'>Create</span>
+                                <span class="icon" style="border-left: 1px solid #94CC5B; ">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                                        <path
+                                            d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
+                                    </svg>
+                                </span>
+                            </button>
+                        </td>
+                    </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns" style="background-color:#244688;"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns" style="background-color:#244688;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
+            <mat-paginator style="background-color: #eee;" [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5"
+                aria-label="Select page of GitHub search results"></mat-paginator>
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>

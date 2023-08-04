@@ -40,7 +40,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 RequestAdd.Vendor = ExistingVendor;
                 RequestAdd.Vendor.Vendor_Status = ExistingVendorStatus;
                 RequestAdd.Requisition_Status = ExistingStatus;
-                RequestAdd.Vendor.Number_Of_Times_Used = RequestAdd.Vendor.Number_Of_Times_Used + 1;
+                RequestAdd.Vendor.Number_Of_Times_Used = ExistingVendor.Number_Of_Times_Used + 1;
 
                 if (RequestAdd.Vendor.Vendor_Status.Name == "Other" && RequestAdd.Vendor.Number_Of_Times_Used >= 3)
                 {
@@ -128,6 +128,8 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         {
             var hasDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Request_ID == id);
             var hasQuotes = await _dbContext.Procurement_Request_Quote.FirstOrDefaultAsync(x => x.Procurement_Request_ID == id);
+            var VendorDetails = await _dbContext.Procurement_Request.Include(v => v.Vendor).FirstOrDefaultAsync(i => i.Procurement_Request_ID == id);
+            VendorDetails.Vendor.Number_Of_Times_Used = VendorDetails.Vendor.Number_Of_Times_Used - 1;
 
             if (hasDetails != null || hasQuotes != null)
             {
@@ -139,6 +141,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 _dbContext.Procurement_Request_Quote.RemoveRange(quotesRemove);
             }
             var RequestToDelete = await _dbContext.Procurement_Request.FindAsync(id);
+            RequestToDelete.Vendor.Number_Of_Times_Used  = RequestToDelete.Vendor.Number_Of_Times_Used - 1;
             _dbContext.Procurement_Request.Remove(RequestToDelete);
             await _dbContext.SaveChangesAsync();
 
@@ -173,6 +176,31 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             await _dbContext.SaveChangesAsync();
 
             return PRRequest;
+        }
+
+        public async Task<Notification[]> AddNotificationAsync(Notification ProcurementNotif)
+        {
+
+            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == ProcurementNotif.Notification_Type_ID);
+
+            if (existingNotificationType != null)
+            {
+                ProcurementNotif.Notification_Type = existingNotificationType;
+            }
+
+            var existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == ProcurementNotif.User_Id);
+
+            if (existingUser != null)
+            {
+                ProcurementNotif.User = existingUser;
+                ProcurementNotif.User.No_Notifications = existingUser.No_Notifications + 1;
+            }
+
+
+            await _dbContext.Notification.AddAsync(ProcurementNotif);
+            await _dbContext.SaveChangesAsync();
+
+            return new Notification[] { ProcurementNotif };
         }
     }
 }

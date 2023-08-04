@@ -4,13 +4,18 @@
 
             <div mat-list-item style="display: flex; align-items: center;">
                 <mat-icon matSuffix style="width:30px; height: 44px; margin-left: 5%;">inventory</mat-icon>
-                <h2 class="uni-font">Procurement Request</h2>
+                <h2 class="uni-font">Procurement Requests</h2>
             </div>
 
-            <a mat-list-item class="uni-font" routerLink="/ViewConsumable">View Consumables</a>
-            <a mat-list-item class="uni-font" routerLink="/ViewPendingProcurementRequest">View Pending Procurement Request</a>
-            <a mat-list-item class="uni-font" routerLink="/PlaceProcurementRequest">Place Procurement Request</a>
-            <a mat-list-item class="uni-font" routerLink="/ViewFlaggedProcurementRequest">View Flagged Procurement Request</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewProcurementRequest">View Procurement Requests</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewPendingProcurementRequest">View Pending Procurement
+                Request</a>
+            <a mat-list-item class="uni-font" routerLink="/PlaceProcurementRequest">Place Procurement Details</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewFlaggedProcurementRequest">View Flagged Procurement
+                Details</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewProcurementDetails">View Procurement Details</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewUnapprovedRequests">View Unapproved Requests</a>
+
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content class="Main-content">
@@ -43,7 +48,7 @@
                 <span class="loader" id="loading"></span>
             </div>
 
-            <table mat-table [dataSource]="SearchedPRequests" class="mat-elevation-z8" id="table" multiTemplateDataRows>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" id="table" multiTemplateDataRows>
 
                 <ng-container matColumnDef="Name">
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Name </th>
@@ -180,6 +185,10 @@
                     (click)="expandedElement = expandedElement === element ? null : element"></tr>
                 <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
             </table>
+            <mat-paginator style="background-color: #eee;" [length]="100" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page">
+            </mat-paginator>
+
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>
