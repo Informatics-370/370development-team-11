@@ -52,7 +52,7 @@ export class DeleteBudgetLineComponent {
   showConfirmationDialog: boolean = true;
   showSuccessDialog: boolean = false;
 
-  constructor(public dialogRef: MatDialogRef<DeleteBudgetLineComponent>, private route: ActivatedRoute, private routee: Router, private dataService: DataService,
+  constructor(public dialogRef: MatDialogRef<DeleteBudgetLineComponent>, private route: ActivatedRoute, private router: Router, private dataService: DataService,
     @Inject(MAT_DIALOG_DATA) public data: { id2: number }) { }
 
   ngOnInit(): void {
@@ -78,7 +78,6 @@ export class DeleteBudgetLineComponent {
         this.showSuccessDialog = true;
         setTimeout(() => {
           this.dialogRef.close('confirm');
-          location.reload();
         }, 1750);
       }
     });

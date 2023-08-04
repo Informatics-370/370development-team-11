@@ -50,8 +50,9 @@ export class EditBudgetLineComponent {
     actualAmt: 0,
     variance: 0
   }
-  categories: any[] = []
+  categories: BudgetCategory[] = []
   budgetLineForm: FormGroup = new FormGroup({});
+  CatInUse: String;
 
   constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder) { }
 
@@ -70,17 +71,31 @@ export class EditBudgetLineComponent {
       actualAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],
     });
     this.GetBudgetLineByID();
+
+
   }
 
   GetBudgetLineByID() {
     this.dataService.GetBudgetLine(this.id2).subscribe((data: any) => {
       this.budgetLine = data;
+      console.log(this.budgetLine)
+
+      const CategoryID = Number(this.budgetLine.budget_Category.category_ID);
+      console.log(CategoryID)
+      const CategoryIndex = this.categories.findIndex((category) => category.category_ID == CategoryID);
+      console.log(CategoryIndex)
+
+      this.budgetLineForm.get('category_ID')?.setValue(this.categories[CategoryIndex].account_Name);
+      console.log(this.budgetLineForm.get('category_ID')?.value)
+
     });
   }
 
   GetCategories() {
     this.dataService.GetBudgetCategories().subscribe((data: any) => {
       this.categories = data;
+      console.log(this.categories)
+
     });
   }
 
