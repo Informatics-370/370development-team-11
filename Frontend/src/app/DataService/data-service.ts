@@ -52,6 +52,7 @@ import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
+import { BEESpentReportVM } from '../Shared/BEESpentReportVM';
 
 @Injectable({
   providedIn: 'root'
@@ -1245,6 +1246,19 @@ export class DataService {
   GetUnapprovedRequests(): Observable<any> {
     return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/UnapprovedRequests`).pipe(map(result => result))
   }
+
+
+
+
+
+
+  //----------------------------------------------------------------------Reports-----------------------------------------------------------------------------
+
+  getBEESpendReport(): Observable<any> {
+    return this.httpClient.get<BEESpentReportVM[]>(`${this.apiUrl}Reports/getBEESpendReport`).pipe(map(result => result))
+  }
+
+
 }
 
 

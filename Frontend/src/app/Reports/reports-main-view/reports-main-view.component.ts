@@ -72,6 +72,10 @@ export class ReportsMainViewComponent {
      
   }
 
+  GenerateBEESpendtReport() {
+    this.ReportService.getBEESpendReport().subscribe(result => console.log(result))
+  }
+
   
 
 }

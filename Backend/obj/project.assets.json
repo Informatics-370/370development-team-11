@@ -12833,25 +12833,28 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\werne\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\Documents\\GitHub\\370development-team-11\\Backend\\ProcionAPI.csproj",
+      "projectUniqueName": "C:\\Users\\werne\\OneDrive\\Desktop\\Universiteit\\2023\\INF370\\Laptop_Repository\\370development-team-11\\Backend\\ProcionAPI.csproj",
       "projectName": "ProcionAPI",
-      "projectPath": "C:\\Users\\User\\Documents\\GitHub\\370development-team-11\\Backend\\ProcionAPI.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\Documents\\GitHub\\370development-team-11\\Backend\\obj\\",
+      "projectPath": "C:\\Users\\werne\\OneDrive\\Desktop\\Universiteit\\2023\\INF370\\Laptop_Repository\\370development-team-11\\Backend\\ProcionAPI.csproj",
+      "packagesPath": "C:\\Users\\werne\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\werne\\OneDrive\\Desktop\\Universiteit\\2023\\INF370\\Laptop_Repository\\370development-team-11\\Backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\werne\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
