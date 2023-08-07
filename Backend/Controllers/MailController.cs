@@ -76,5 +76,27 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpPost("OTPEmail")]
+        public async Task<IActionResult> OTPEmail(NewEmpMail OTP)
+        {
+            // Create MailData object
+            MailData mailData = new MailData(
+                new List<string> { OTP.Email },
+                "OTP",
+                _mail.GetEmailTemplate("OTP", OTP));
+
+
+            bool sendResult = await _mail.SendAsync(mailData, new CancellationToken());
+
+            if (sendResult)
+            {
+                return Ok(sendResult);
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. The Mail could not be sent.");
+            }
+        }
+
     }
 }

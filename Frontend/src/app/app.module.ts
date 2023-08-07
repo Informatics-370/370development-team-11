@@ -142,6 +142,8 @@ import { UploadInvoiceComponent } from './upload-invoice/upload-invoice.componen
 import { ViewUnapprovedRequestsComponent } from './view-unapproved-requests/view-unapproved-requests.component';
 import { SignOffRequestComponent } from './sign-off-request/sign-off-request.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { OTPComponent } from './otp/otp.component';
+
 
 @NgModule({
   declarations: [
@@ -247,7 +249,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     UploadPayementFileComponent,
     UploadInvoiceComponent,
     ViewUnapprovedRequestsComponent,
-    SignOffRequestComponent
+    SignOffRequestComponent,
+    OTPComponent
   ],
   imports: [
     BrowserModule,
