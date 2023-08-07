@@ -12,6 +12,7 @@ import { AuthService } from '../DataService/AuthService';
 import { MailData } from '../Shared/Mail';
 import { Delegation_Of_Authority } from '../Shared/DelegationOfAuthority';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { OTPComponent } from '../otp/otp.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -50,7 +51,7 @@ export class LoginComponent implements OnInit {
 
   tempAccess: any;
   tempUsername: any;
-  constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer, private AuthServ: AuthService) { }
+  constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private Notifdialog: MatDialog, private sanitizer: DomSanitizer, private AuthServ: AuthService) { }
 
 
   ngOnInit(): void {
@@ -207,40 +208,48 @@ export class LoginComponent implements OnInit {
       console.log(result)
       if (result != null) {
         let newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
+        let OTP = Array(6).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
         console.log(result)
-        this.mail.Name = result.employeeName,
-          this.mail.Username = result.user.username,
-          this.mail.Password = newPassword;
-        this.mail.Email = this.Email;
         document.getElementById('loading').style.display = 'block';
 
-        this.dataService.UpdatePassword(result.user.user_Id, newPassword).subscribe({
-          next: (response) => {
-            if (response) {
-              this.dataService.SendPasswordEmail(this.mail).subscribe({
-                next: (response) => {
+        this.mail.Name = result.employeeName,
+          this.mail.Username = result.user.username,
+          this.mail.Password = OTP;
+        this.mail.Email = this.Email;
 
-                  if (response) {
-                    this.hideloader();
-                  }
+        this.dataService.SendOTP(this.mail).subscribe({
+          next: (Result) => {
+            let MailName = this.mail.Name;
+            let MailUserName = this.mail.Username;
+            console.log(MailUserName)
+            let NewPass = newPassword;
+            let MailEmail = this.mail.Email;
+            let userID = Number(result.user.user_Id);
+            console.log(userID)
 
-                  var action = "Update";
-                  var title = "PASSWORD UPDATE SUCCESSFUL";
-                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your Password as been updated successfully!");
+            this.dialog.open(OTPComponent, {
+              data: { OTP, MailName, MailUserName, NewPass, MailEmail, userID },
+              disableClose: true
+            });
 
-                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                    disableClose: true,
-                    data: { action, title, message }
-                  });
+            this.dialog.afterAllClosed.subscribe({
+              next: (TrueClose) => {
+                var action = "Update";
+                var title = "PASSWORD UPDATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your Password as been updated successfully!");
 
-                  const duration = 1750;
-                  setTimeout(() => {
-                    this.router.navigate(['']);
-                    dialogRef.close();
-                  }, duration);
-                }
-              })
-            }
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  location.reload();
+                  dialogRef.close();
+                }, duration);
+              }
+            })
           }
         })
       }
@@ -250,42 +259,49 @@ export class LoginComponent implements OnInit {
           console.log(result)
           if (result != null) {
             let newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
+            let OTP = Array(6).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
             console.log(result)
-            this.mail.Name = result.adminName,
-              this.mail.Username = result.user.username,
-              this.mail.Password = newPassword;
-            this.mail.Email = this.Email;
             document.getElementById('loading').style.display = 'block';
 
-            this.dataService.UpdatePassword(result.user.user_Id, newPassword).subscribe({
-              next: (response) => {
+            this.mail.Name = result.adminName,
+              this.mail.Username = result.user.username,
+              this.mail.Password = OTP;
+            this.mail.Email = this.Email;
 
-                console.log(response)
-                if (response) {
-                  this.dataService.SendPasswordEmail(this.mail).subscribe({
-                    next: (response) => {
+            this.dataService.SendOTP(this.mail).subscribe({
+              next: (Result) => {
+                this.hideloader()
+                let MailName = this.mail.Name;
+                let MailUserName = this.mail.Username;
+                console.log(MailUserName)
+                let NewPass = newPassword;
+                let MailEmail = this.mail.Email;
+                let userID = Number(result.user.user_Id);
+                console.log(userID)
 
-                      if (response) {
-                        this.hideloader();
-                      }
+                this.dialog.open(OTPComponent, {
+                  data: { OTP, MailName, MailUserName, NewPass, MailEmail, userID },
+                  disableClose: true
+                });
 
-                      var action = "Update";
-                      var title = "PASSWORD UPDATE SUCCESSFUL";
-                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your Password as been updated successfully!");
+                this.dialog.afterAllClosed.subscribe({
+                  next: (TrueClose) => {
+                    var action = "Update";
+                    var title = "PASSWORD UPDATE SUCCESSFUL";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your Password as been updated successfully!");
 
-                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                        disableClose: true,
-                        data: { action, title, message }
-                      });
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
 
-                      const duration = 1750;
-                      setTimeout(() => {
-                        this.router.navigate(['']);
-                        dialogRef.close();
-                      }, duration);
-                    }
-                  })
-                }
+                    const duration = 1750;
+                    setTimeout(() => {
+                      location.reload();
+                      dialogRef.close();
+                    }, duration);
+                  }
+                })
               }
             })
           }
@@ -318,7 +334,6 @@ export class LoginComponent implements OnInit {
 
   Close() {
     this.myForm.reset();
-    this.router.navigate(['/ViewEmployee']);
   }
 
 

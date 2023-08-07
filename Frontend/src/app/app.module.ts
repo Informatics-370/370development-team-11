@@ -141,6 +141,7 @@ import { UploadPayementFileComponent } from './upload-payement-file/upload-payem
 import { UploadInvoiceComponent } from './upload-invoice/upload-invoice.component';
 import { ViewUnapprovedRequestsComponent } from './view-unapproved-requests/view-unapproved-requests.component';
 import { SignOffRequestComponent } from './sign-off-request/sign-off-request.component';
+import { OTPComponent } from './otp/otp.component';
 
 
 @NgModule({
@@ -247,7 +248,8 @@ import { SignOffRequestComponent } from './sign-off-request/sign-off-request.com
     UploadPayementFileComponent,
     UploadInvoiceComponent,
     ViewUnapprovedRequestsComponent,
-    SignOffRequestComponent
+    SignOffRequestComponent,
+    OTPComponent
   ],
   imports: [
     BrowserModule,

@@ -199,7 +199,7 @@ export class DataService {
   }
 
   HelpValidation(name: String): Observable<Help> {
-    return this.httpClient.get<Help>(`${this.apiUrl}Help/HelpValidation/` + name , this.httpOptions)
+    return this.httpClient.get<Help>(`${this.apiUrl}Help/HelpValidation/` + name, this.httpOptions)
   }
   EditHelpValidation(name: String, id: Number): Observable<Help> {
     return this.httpClient.get<Help>(`${this.apiUrl}Help/EditHelpValidation/` + name + '/' + id, this.httpOptions)
@@ -225,8 +225,8 @@ export class DataService {
     return this.httpClient.post<any>(`${this.apiUrl}Help/GetHelpVideoFiles/${HelpName}/${filename}`, this.httpOptions)
   }
 
-   //----------------------------------------------------------------------Backup&Restore-----------------------------------------------------------------------------
-   createBackup(): Observable<any> {
+  //----------------------------------------------------------------------Backup&Restore-----------------------------------------------------------------------------
+  createBackup(): Observable<any> {
     return this.httpClient.post<any>(`${this.apiUrl}Backup/CreateBackup`, this.httpOptions);
   }
   restoreDatabase(backupFile: File): Observable<any> {
@@ -651,6 +651,10 @@ export class DataService {
     return this.httpClient.post(`${this.apiUrl}Mail/ForgotPasswordEmail`, mail, this.httpOptions)
   }
 
+  SendOTP(mail: MailData) {
+    return this.httpClient.post(`${this.apiUrl}Mail/OTPEmail`, mail, this.httpOptions)
+  }
+
   UpdatePassword(UserID: Number, NewPassword: String) {
     return this.httpClient.put<User>(`${this.apiUrl}User/UpdatePassword/` + UserID + "/" + NewPassword, this.httpOptions)
   }
@@ -1034,7 +1038,7 @@ export class DataService {
   ResetNotif(username: string) {
     return this.httpClient.put<User>(`${this.apiUrl}User/ResetNotif/` + username, this.httpOptions)
   }
- 
+
 
   //----------------------------------------------------------------------Procurement Request-----------------------------------------------------------------------------
   GetProcurementRequests(): Observable<any> {
