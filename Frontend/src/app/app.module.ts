@@ -141,7 +141,7 @@ import { UploadPayementFileComponent } from './upload-payement-file/upload-payem
 import { UploadInvoiceComponent } from './upload-invoice/upload-invoice.component';
 import { ViewUnapprovedRequestsComponent } from './view-unapproved-requests/view-unapproved-requests.component';
 import { SignOffRequestComponent } from './sign-off-request/sign-off-request.component';
-
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -286,7 +286,8 @@ import { SignOffRequestComponent } from './sign-off-request/sign-off-request.com
     MatAutocompleteModule,
     ReactiveFormsModule,
     AsyncPipe,
-    NgFor
+    NgFor,
+    FlexLayoutModule
   ],
   providers: [
     //AppService,
