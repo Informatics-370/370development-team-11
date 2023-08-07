@@ -45,7 +45,7 @@ export class CreateBudgetLineComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: 0,
+    account_Code: '',
     budget_Category: this.category,
     month: '',
     budgetAmt: 0,
@@ -64,7 +64,7 @@ export class CreateBudgetLineComponent {
     this.GetCategories();
     this.budgetLineForm = this.formBuilder.group({
       category_ID: ['', [Validators.required]],
-      account_Code: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8), Validators.pattern("^[0-9]+$")]],
+      account_Code: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8), Validators.pattern("^[0-9 ,]+$")]],
       month: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(9), Validators.pattern("^[a-zA-Z ]+$")]],
       budgetAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],
       actualAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],

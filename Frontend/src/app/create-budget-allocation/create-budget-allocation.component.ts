@@ -7,6 +7,7 @@ import { Department } from '../Shared/Department';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-create-budget-allocation',
@@ -33,6 +34,8 @@ export class CreateBudgetAllocationComponent {
   departments: any[] = []
 
   budgetAllocationForm: FormGroup = new FormGroup({});
+
+
   constructor(private router: Router, private dataService: DataService, private formBuilder: FormBuilder, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {

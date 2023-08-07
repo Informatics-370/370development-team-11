@@ -16,7 +16,7 @@ namespace ProcionAPI.Models.Entities
         [Required]
         public int Procurement_Payment_Status_ID { get; set; }
         [Required]
-        public int Account_Code { get; set; }
+        public string Account_Code { get; set; }
         [Required]
         public int Procurement_Status_ID { get; set; }
         [Required]

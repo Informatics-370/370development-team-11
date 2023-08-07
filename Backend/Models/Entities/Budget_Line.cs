@@ -5,9 +5,9 @@ namespace ProcionAPI.Models.Entities
 {
     public class Budget_Line
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Required]
-        public int Account_Code { get; set; }
+        public string Account_Code { get; set; }
 
         [Key]
         [Required]

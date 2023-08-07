@@ -109,7 +109,7 @@ import { DeleteDelegationComponent } from './Delegation/delete-delegation/delete
 import { MatSortModule } from '@angular/material/sort';
 import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { AsyncPipe, DatePipe, NgFor } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DatePipe, NgFor } from '@angular/common';
 import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
 import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
 import { UpdatePasswordComponent } from './User/update-password/update-password.component';
@@ -304,7 +304,8 @@ import { OTPComponent } from './otp/otp.component';
       useClass: AuthInterceptorComponent, // Add the AuthInterceptor as a provider
       multi: true
     },
-    DatePipe
+    DatePipe,
+    CurrencyPipe
 
   ],
   bootstrap: [AppComponent]

@@ -68,7 +68,7 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit{
     ConsumableQuantity: 0,
     AssetName:"",
     AssetDescription:"",
-    AccountCode:0,
+    AccountCode:"",
     PaymentType: "",
     HasDeposit:false,
     DepositAmount: 0,

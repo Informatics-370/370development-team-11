@@ -849,15 +849,15 @@ export class DataService {
     return this.httpClient.post<BudgetLine>(`${this.apiUrl}BudgetAllocation/AddBudgetLine`, budgetLine, this.httpOptions)
   }
 
-  GetBudgetLine(accountCode: Number) {
+  GetBudgetLine(accountCode: String) {
     return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetLine` + '/' + accountCode).pipe(map(result => result))
   }
 
-  EditBudgetLine(accountCode: Number, budgetLine: BudgetLine) {
+  EditBudgetLine(accountCode: String, budgetLine: BudgetLine) {
     return this.httpClient.put<BudgetLine>(`${this.apiUrl}BudgetAllocation/EditBudgetLine/${accountCode}`, budgetLine, this.httpOptions)
   }
 
-  DeleteBudgetLine(accountCode: Number) {
+  DeleteBudgetLine(accountCode: String) {
     return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetLine` + "/" + accountCode, this.httpOptions)
   }
 
