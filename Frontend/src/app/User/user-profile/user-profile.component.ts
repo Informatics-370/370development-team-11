@@ -115,7 +115,16 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       this.employee = result
       this.emp.employeeName = this.employee.employeeName;
       this.emp.employeeSurname = this.employee.employeeSurname;
-      this.emp.cellPhone_Num = this.employee.cellPhone_Num;
+
+      let temp1 = this.employee.cellPhone_Num.substring(0, 3);
+      let temp2 = this.employee.cellPhone_Num.substring(3, 6);
+      let temp3 = this.employee.cellPhone_Num.substring(6, 10);
+      let t = temp1.concat(' ');
+      t = t.concat(temp2);
+      t = t.concat(' ');
+      t = t.concat(temp3);
+
+      this.emp.cellPhone_Num = t;
       this.emp.email = this.employee.email;
       this.rl.name = this.employee.user.role.name;
       this.rl.description = this.employee.user.role.description;
@@ -133,7 +142,14 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       this.admin = result
       this.adm.adminName = this.admin.adminName;
       this.adm.adminSurname = this.admin.adminSurname;
-      this.adm.cellPhone_Num = this.admin.cellPhone_Num;
+      let temp1 = this.admin.cellPhone_Num.substring(0, 3);
+      let temp2 = this.admin.cellPhone_Num.substring(3, 6);
+      let temp3 = this.admin.cellPhone_Num.substring(6, 10);
+      let t = temp1.concat(' ');
+      t = t.concat(temp2);
+      t = t.concat(' ');
+      t = t.concat(temp3);
+      this.adm.cellPhone_Num = t;
       this.adm.email = this.admin.email;
       this.rl.name = this.admin.user.role.name;
       this.rl.description = this.admin.user.role.description;

@@ -46,7 +46,7 @@ namespace ProcionAPI.Models.Repositories
             return await query.ToArrayAsync();
         }
 
-        public async Task<Budget_Line> GetBudgetLineAsync(int accountCode)
+        public async Task<Budget_Line> GetBudgetLineAsync(string accountCode)
         {
             IQueryable<Budget_Line> query = _dbContext.Budget_Line.Where(c => c.Account_Code == accountCode).Include(c => c.Budget_Category).Include(b => b.Budget_Allocation).ThenInclude(a => a.Department);
             return await query.FirstOrDefaultAsync();
@@ -89,7 +89,7 @@ namespace ProcionAPI.Models.Repositories
 
             return new Budget_Line[] { budgetLine };
         }
-        public async Task<Budget_Line> UpdateBudgetLineAsync(Budget_Line budget_Line, int accountCode)
+        public async Task<Budget_Line> UpdateBudgetLineAsync(Budget_Line budget_Line, string accountCode)
         {
             //Cannot alter fields of composite key unless you delete the record and recreate it
             Budget_Line existingBudgetLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(b => b.Account_Code == accountCode);

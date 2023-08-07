@@ -15,7 +15,7 @@ import { Department } from '../Shared/Department';
 export class EditBudgetLineComponent {
 
   id: Number;
-  id2: Number;
+  id2: String;
 
   dep: Department = {
     department_ID: 0,
@@ -43,7 +43,7 @@ export class EditBudgetLineComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: 0,
+    account_Code: '',
     budget_Category: this.category,
     month: '2023-05-07',
     budgetAmt: 0,
@@ -58,14 +58,14 @@ export class EditBudgetLineComponent {
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    const id2 = Number(this.route.snapshot.paramMap.get('id2'));
+    const id2 = String(this.route.snapshot.paramMap.get('id2'));
     console.log(id2);
     this.id = id;
     this.id2 = id2;
     this.GetCategories();
     this.budgetLineForm = this.formBuilder.group({
       category_ID: ['', [Validators.required]],
-      account_Code: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8), Validators.pattern("^[0-9]+$")]],
+      account_Code: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8), Validators.pattern("^[0-9 ,]+$")]],
       month: ['', [Validators.required]],
       budgetAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],
       actualAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],

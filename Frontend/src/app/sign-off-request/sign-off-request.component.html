@@ -10,37 +10,26 @@
                 <mat-card-subtitle>
                     <table style="width:100%;" cellspacing="0">
                         <tr>
-                            <!-- <td style="width:100%;">
-                                <mat-card-content>
-                                    <label style=" color:black;">Mandate Limit:</label>
-                                    <br />
-                                    <mat-form-field>
-                                        <input matInput type="text" placeholder="" formControlName="mandateLimit"
-                                            id="mandateLimit"
-                                            [(ngModel)]="ProcurementDetails.employee.mandate_limit.ammount" required>
-                                    </mat-form-field>
-                                </mat-card-content>
-                            </td> -->
-                            <td style="width:100%;">
+                            <td style="width: 100%; display: flex; justify-content: center; align-items: center; ">
                                 <mat-card-content>
                                     <label style=" color:black;">Total:</label>
                                     <br />
                                     <mat-form-field>
                                         <input matInput type="text" placeholder="" formControlName="total" id="total"
-                                            [(ngModel)]="ProcurementDetails.total_Amount" required>
+                                            [(ngModel)]="TotalAmountDisplay" [readonly]="true">
                                     </mat-form-field>
                                 </mat-card-content>
                             </td>
                         </tr>
                         <tr>
-                            <td style="width:100%;">
+                            <td style="width: 100%; display: flex; justify-content: center; align-items: center; ">
                                 <mat-card-content>
                                     <label style=" color:black;">Budget Line Total:</label>
                                     <br />
                                     <mat-form-field>
                                         <input matInput type="text" placeholder="" formControlName="budgetLine"
-                                            id="budgetLine" [(ngModel)]="ProcurementDetails.budget_Line.actualAmt"
-                                            required>
+                                            id="budgetLine" [(ngModel)]="ActualAmountDisplay"
+                                            [readonly]="true">
                                     </mat-form-field>
                                 </mat-card-content>
                             </td>

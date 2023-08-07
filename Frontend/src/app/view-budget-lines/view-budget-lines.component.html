@@ -39,15 +39,15 @@
                 </ng-container>
                 <ng-container matColumnDef="budget">
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> Budgeted </th>
-                    <td mat-cell *matCellDef="let BudgetLines">{{BudgetLines.budgetAmt}}</td>
+                    <td mat-cell *matCellDef="let BudgetLines">{{BudgetLines.budgetAmt | currency:'ZAR':'symbol-narrow'}}</td>
                 </ng-container>
                 <ng-container matColumnDef="actual">
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> Actual </th>
-                    <td mat-cell *matCellDef="let BudgetLines">{{BudgetLines.actualAmt}}</td>
+                    <td mat-cell *matCellDef="let BudgetLines">{{BudgetLines.actualAmt | currency:'ZAR':'symbol-narrow'}}</td>
                 </ng-container>
                 <ng-container matColumnDef="variance">
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> Variance </th>
-                    <td mat-cell *matCellDef="let BudgetLines">{{BudgetLines.variance}}</td>
+                    <td mat-cell *matCellDef="let BudgetLines">{{BudgetLines.variance | currency:'ZAR':'symbol-narrow'}}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="action">

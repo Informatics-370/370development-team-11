@@ -98,7 +98,7 @@ namespace ProcionAPI.Controllers
 
         [HttpGet]
         [Route("GetBudgetLine/{accountCode}")]
-        public async Task<IActionResult> GetBudgetLine(int accountCode)
+        public async Task<IActionResult> GetBudgetLine(string accountCode)
         {
             try
             {
@@ -236,7 +236,7 @@ namespace ProcionAPI.Controllers
         [HttpPut]
         [Route("EditBudgetLine/{accountCode}")]
 
-        public async Task<IActionResult> EditBudgetLine(int accountCode, Budget_Line budgetLine)
+        public async Task<IActionResult> EditBudgetLine(string accountCode, Budget_Line budgetLine)
         {
             try
             {
@@ -294,7 +294,7 @@ namespace ProcionAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteBudgetLine/{accountCode}")]
-        public async Task<IActionResult> DeleteBudgetLine(int accountCode)
+        public async Task<IActionResult> DeleteBudgetLine(string accountCode)
         {
             try
             {

@@ -191,7 +191,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: 0,
+    account_Code: '',
     budget_Category: this.category,
     month: '',
     budgetAmt: 0,
@@ -205,7 +205,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
      procurement_Request_ID:0,
      sign_Off_Status_ID :0,
      procurement_Payment_Status_ID:0,
-     account_Code:0,
+     account_Code:'',
      procurement_Status_ID:0,
      payment_Method_ID:0,
      employee: this.EmployeeDetails,
@@ -332,7 +332,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     ConsumableQuantity: [null,[Validators.required, Validators.pattern(/^[0-9]*$/)]],
     AssetName:["",[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
     AssetDescription:["",[Validators.required,Validators.maxLength(50)]],
-    AccountCode:[null,[Validators.required]],
+    AccountCode:["",[Validators.required]],
     PaymentType: [null,[Validators.required]],
     HasDeposit:[false],
     DepositAmount: [null,[Validators.required, Validators.pattern(/^[0-9]*$/)]],
@@ -515,6 +515,9 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     
 
     this.ProcurementDetails.account_Code = this.ProcurementFormGroup.get("AccountCode")?.value;
+    this.ProcurementDetails.budget_Line.account_Code = this.ProcurementFormGroup.get("AccountCode")?.value;
+    console.log(this.ProcurementFormGroup.get("AccountCode")?.value)
+    console.log(this.ProcurementDetails.account_Code)
     this.ProcurementDetails.payment_Method_ID = this.ProcurementFormGroup.get("PaymentType")?.value;
     this.ProcurementDetails.procurement_Request = this.Procurement_Request;
     this.ProcurementDetails.procurement_Request_ID = Number(this.Procurement_Request.procurement_Request_ID);
