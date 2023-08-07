@@ -25,8 +25,8 @@ export class CreateBudgetCategoryComponent {
 
   ngOnInit(): void {
     this.budgetCategoryForm = this.formBuilder.group({
-      account_Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
-      description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]]
+      account_Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 -&:]+$")]],
+      description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern("^[a-zA-Z0-9 -&:]+$")]]
     })
   }
 

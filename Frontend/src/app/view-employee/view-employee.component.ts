@@ -28,7 +28,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewEmployeeComponent implements OnInit {
-  displayedColumns: string[] = [ 'name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete', 'delegation'];
+  displayedColumns: string[] = ['name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete', 'delegation'];
   dataSource = new MatTableDataSource<Employee>();
 
   userDelete: any

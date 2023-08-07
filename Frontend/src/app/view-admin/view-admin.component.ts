@@ -23,7 +23,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewAdminComponent implements OnInit {
-  displayedColumns: string[] = [ 'name', 'surname', 'email', 'phone', 'role', 'action', 'delete'];
+  displayedColumns: string[] = ['name', 'surname', 'email', 'phone', 'role', 'action', 'delete'];
   dataSource = new MatTableDataSource<Admin>();
 
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService) { }
