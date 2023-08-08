@@ -11,6 +11,7 @@ import { DatePipe, NgFor } from '@angular/common';
 import { Observable } from 'rxjs';
 import { VendorOnboardRequest } from '../Shared/VendorOnboardRequest';
 import { HttpClient } from '@angular/common/http';
+import { AuditLog } from '../Shared/AuditLog';
 
 @Component({
   selector: 'app-edit-procurement-request',
@@ -66,6 +67,13 @@ export class EditProcurementRequestComponent implements OnInit {
     },
     name: "",
     description: ""
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   Procurement_Request_Quote: Procurement_Request_Quote = {
@@ -330,20 +338,30 @@ export class EditProcurementRequestComponent implements OnInit {
   }
 
   DisplayNotif() {
-    var action = "UPDATE";
-    var title = "UPDATE SUCCESSFUL";
-    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+    this.log.action = "Edited Procurement Request: " + this.Procurement_Request.name;
+    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    let test: any
+    test = new DatePipe('en-ZA');
+    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+    this.dataService.AuditLogAdd(this.log).subscribe({
+      next: (Log) => {
+        var action = "UPDATE";
+        var title = "UPDATE SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-      disableClose: true,
-      data: { action, title, message }
-    });
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
 
-    const duration = 1750;
-    setTimeout(() => {
-      dialogRef.close();
-      this.router.navigate(['/ViewProcurementRequest']);
-    }, duration);
+        const duration = 1750;
+        setTimeout(() => {
+          dialogRef.close();
+          this.router.navigate(['/ViewProcurementRequest']);
+        }, duration);
+      }
+    })
+
   }
 
   EditProcurementRequestA() {

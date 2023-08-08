@@ -19,6 +19,7 @@ import { Notification } from '../Shared/Notification';
 import { Notification_Type } from '../Shared/Notification_Type';
 import { User } from '../Shared/User';
 import { Role } from '../Shared/EmployeeRole';
+import { AuditLog } from '../Shared/AuditLog';
 
 @Component({
   selector: 'app-create-procurement-request',
@@ -124,6 +125,13 @@ export class CreateProcurementRequestComponent implements OnInit {
   FinalisedProcurementQuotes: Procurement_Request_Quote[] = []
   sPath = "";
   uploadedPathArray: any[] = []
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   originalBorderColor: string = 'solid #244688';
 
@@ -394,20 +402,30 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   DisplayNotif() {
-    var action = "CREATE";
-    var title = "CREATE SUCCESSFUL";
-    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
+    this.log.action = "Created Procurement Request For: " + this.Procurement_Request.name;
+    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    let test: any
+    test = new DatePipe('en-ZA');
+    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+    this.dataService.AuditLogAdd(this.log).subscribe({
+      next: (Result) => {
+        var action = "CREATE";
+        var title = "CREATE SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
 
-    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-      disableClose: true,
-      data: { action, title, message }
-    });
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
 
-    const duration = 1750;
-    setTimeout(() => {
-      dialogRef.close();
-      this.router.navigate(['/ViewProcurementRequest']);
-    }, duration);
+        const duration = 1750;
+        setTimeout(() => {
+          dialogRef.close();
+          this.router.navigate(['/ViewProcurementRequest']);
+        }, duration);
+      }
+    })
+
   }
 
   AddProcurementRequestA() {
@@ -437,20 +455,7 @@ export class CreateProcurementRequestComponent implements OnInit {
 
               this.dataService.AddProcurementRequestQuote(this.Procurement_Request_Quote).subscribe({
                 next: (result) => {
-                  var action = "CREATE";
-                  var title = "CREATE SUCCESSFUL";
-                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
-
-                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                    disableClose: true,
-                    data: { action, title, message }
-                  });
-
-                  const duration = 1750;
-                  setTimeout(() => {
-                    dialogRef.close();
-                    this.router.navigate(['/ViewProcurementRequest']);
-                  }, duration);
+                  this.DisplayNotif();
                 }
               })
             }

@@ -73,6 +73,7 @@ namespace ProcionAPI.Data
         public DbSet<Vendor_Asset> Vendor_Asset { get; set; }
         public DbSet<Procurement_Asset> Procurement_Asset { get; set; }
         public DbSet<Consumable_History> Consumable_History { get; set; }
+        public DbSet<AuditLog> AuditLog { get; set; }
 
         UserRepository userrep = new UserRepository();
 

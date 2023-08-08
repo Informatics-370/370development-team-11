@@ -52,6 +52,7 @@ import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
+import { AuditLog } from '../Shared/AuditLog';
 
 @Injectable({
   providedIn: 'root'
@@ -1210,12 +1211,6 @@ export class DataService {
   }
 
 
-  //Los Pls baas
-  // GetAppVendorsRequest() {
-  //   return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetAllApprovedVendor`).pipe(map(result => result))
-  // }
-
-
   GetUnfinalizedProcurements(): Observable<any> {
     return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetUnpaidProcurementDetails`).pipe(map(result => result))
   }
@@ -1248,6 +1243,10 @@ export class DataService {
 
   GetUnapprovedRequests(): Observable<any> {
     return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/UnapprovedRequests`).pipe(map(result => result))
+  }
+
+  AuditLogAdd(LogToAdd: AuditLog): Observable<any> {
+    return this.httpClient.post<AuditLog>(`${this.apiUrl}User/AddLog`, LogToAdd, this.httpOptions).pipe(map(result => result))
   }
 }
 
