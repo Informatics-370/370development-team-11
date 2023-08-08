@@ -7,6 +7,8 @@ import { ConsumableCategory } from '../Shared/ConsumableCategory';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-create-consumable',
@@ -38,6 +40,14 @@ export class CreateConsumableComponent implements OnInit {
     name: '',
     description: '',
   }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   ngOnInit(): void {
 
     this.GetCategories();
@@ -82,20 +92,33 @@ export class CreateConsumableComponent implements OnInit {
                 document.querySelector('button').classList.toggle("is_active");
               }
 
-              var action = "CREATE";
-              var title = "CREATE SUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.Consumables.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
+              this.log.action = "Created Consumable: " + this.Consumables.name;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Response) => {
+                  if (Response) {
+                    var action = "CREATE";
+                    var title = "CREATE SUCCESSFUL";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.Consumables.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
 
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
 
-              const duration = 1750;
-              setTimeout(() => {
-                dialogRef.close();
-                this.router.navigate(['/ViewConsumable']);
-              }, duration);
+                    const duration = 1750;
+                    setTimeout(() => {
+                      dialogRef.close();
+                      this.router.navigate(['/ViewConsumable']);
+                    }, duration);
+                  }
+                }
+              })
+
+
             }
           );
         }

@@ -9,6 +9,8 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatAutocomplete } from '@angular/material/autocomplete';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-edit-consumable-category',
@@ -25,6 +27,13 @@ export class EditConsumableCategoryComponent implements OnInit {
     consumable_Category_ID: 0,
     name: '',
     description: '',
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   ngOnInit(): void {
@@ -62,23 +71,33 @@ export class EditConsumableCategoryComponent implements OnInit {
         if (Result == null) {
           this.dataService.UpdateCategory(this.CategoryToEdit.consumable_Category_ID, this.CategoryToEdit).subscribe({
             next: (response) => {
+              this.log.action = "Edited Consumable Category: " + this.CategoryToEdit.name;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  document.getElementById('cBtn').style.display = "none";
+                  document.querySelector('button').classList.toggle("is_active");
+                  var action = "Update";
+                  var title = "UPDATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The category <strong>" + this.CategoryToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-              document.getElementById('cBtn').style.display = "none";
-              document.querySelector('button').classList.toggle("is_active");
-              var action = "Update";
-              var title = "UPDATE SUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The category <strong>" + this.CategoryToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
 
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewConsumableCategory']);
+                    dialogRef.close();
+                  }, duration);
+                }
+              })
 
-              const duration = 1750;
-              setTimeout(() => {
-                this.router.navigate(['/ViewConsumableCategory']);
-                dialogRef.close();
-              }, duration);
+
 
             }
           });

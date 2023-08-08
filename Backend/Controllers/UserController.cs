@@ -626,5 +626,20 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support");
             }
         }
+
+        [HttpPost]
+        [Route("AddLog")]
+        public async Task<IActionResult> AddLog(AuditLog LogAdd)
+        {
+            try
+            {
+                var result = await _UserRepository.AddLogAsync(LogAdd);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
 }

@@ -12,6 +12,8 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { MatPaginator } from '@angular/material/paginator';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -35,6 +37,13 @@ export class ViewConsumableComponent implements OnInit {
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
   dataSource: any;
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   openDialog(name: string, ID: Number) {
     console.log(name)
@@ -112,11 +121,18 @@ export class ViewConsumableComponent implements OnInit {
         }
       }
     };
+    this.log.action = "Exported Inventory Details";
+    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    let test: any
+    test = new DatePipe('en-ZA');
+    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+    this.dataService.AuditLogAdd(this.log).subscribe({
+      next: (Log) => {
+        pdfMake.createPdf(docDefinition).open();
+      }
+    })
 
-    pdfMake.createPdf(docDefinition).open();
   }
-
-
 
   OnInPutChange() {
     const Searchterm = this.searchWord.toLocaleLowerCase();
