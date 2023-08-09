@@ -234,20 +234,7 @@ export class LoginComponent implements OnInit {
 
             this.dialog.afterAllClosed.subscribe({
               next: (TrueClose) => {
-                var action = "Update";
-                var title = "PASSWORD UPDATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your Password as been updated successfully!");
-
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
-
-                const duration = 1750;
-                setTimeout(() => {
-                  location.reload();
-                  dialogRef.close();
-                }, duration);
+                this.hideloader()
               }
             })
           }

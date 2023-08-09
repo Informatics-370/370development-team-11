@@ -61,7 +61,20 @@ export class OTPComponent implements OnInit {
           if (response) {
             this.dataservice.SendPasswordEmail(this.mail).subscribe({
               next: (response) => {
-                this.Close()
+                var action = "Update";
+                var title = "PASSWORD UPDATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your Password as been updated successfully!");
+
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  location.reload();
+                  dialogRef.close();
+                }, duration);
               }
             })
           }
