@@ -397,7 +397,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.EmployeeDetails.email.toString())
           console.log(this.EmployeeDetails);
           console.log(this.MandateLimitAmount)
-        },
+        }),
           (error) => {
             var action = "ERROR";
             var title = "USER NOT AN EMPLOYEE";
@@ -444,7 +444,9 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
               console.log(this.Procurement_Request)
             })
           }
+      }
     })
+
 
 
   }

@@ -29,6 +29,10 @@ import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { AuditLog } from '../Shared/AuditLog';
 @Component({
   selector: 'app-finalize-procurement-request-create',
   templateUrl: './finalize-procurement-request-create.component.html',
@@ -295,12 +299,19 @@ export class FinalizeProcurementRequestCreateComponent {
     asset: this.assets,
     vendor: this.Procurement_Request.vendor,
   }
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   BudgetAllocationCode: BudgetLine[] = [];
   finalizationForm: FormGroup = new FormGroup({});
 
   ActualAmountDisplay;
   TotalAmountDisplay;
-  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder, private currencyPipe: CurrencyPipe) { }
+  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder, private currencyPipe: CurrencyPipe, private sanitizer: DomSanitizer, private dialog: MatDialog) { }
 
 
   ngOnInit(): void {
@@ -337,7 +348,29 @@ export class FinalizeProcurementRequestCreateComponent {
         this.ProofOfPayment.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category;
         this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe();
       })
-      this.router.navigate(['/ViewBudgetAllocation']);
+      this.log.action = "Finalised procurement request for: " + this.Procurement_Request.name;
+      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+      let test: any
+      test = new DatePipe('en-ZA');
+      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+      this.dataService.AuditLogAdd(this.log).subscribe({
+        next: (Log) => {
+          var action = "CREATE";
+          var title = "CREATE SUCCESSFUL";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> FINALISED! </strong> successfully!");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+            this.router.navigate(['/ViewBudgetAllocation']);
+          }, duration);
+        }
+      })
     })
 
   }
