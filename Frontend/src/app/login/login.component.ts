@@ -13,6 +13,8 @@ import { MailData } from '../Shared/Mail';
 import { Delegation_Of_Authority } from '../Shared/DelegationOfAuthority';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { OTPComponent } from '../otp/otp.component';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -51,6 +53,15 @@ export class LoginComponent implements OnInit {
 
   tempAccess: any;
   tempUsername: any;
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
+
+
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private Notifdialog: MatDialog, private sanitizer: DomSanitizer, private AuthServ: AuthService) { }
 
 
@@ -167,10 +178,20 @@ export class LoginComponent implements OnInit {
 
 
                 this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
+                this.log.action = "Logged In to the system";
+                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.dataService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    this.myForm.reset();
+                    this.router.navigate(['/Home']);
+                    location.reload();
+                  }
+                })
 
-                this.myForm.reset();
-                this.router.navigate(['/Home']);
-                location.reload();
+
               }
 
 
@@ -234,7 +255,17 @@ export class LoginComponent implements OnInit {
 
             this.dialog.afterAllClosed.subscribe({
               next: (TrueClose) => {
-                this.hideloader()
+                this.log.action = "Reset Password";
+                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.dataService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    this.hideloader()
+                  }
+                })
+
               }
             })
           }
@@ -273,20 +304,16 @@ export class LoginComponent implements OnInit {
 
                 this.dialog.afterAllClosed.subscribe({
                   next: (TrueClose) => {
-                    var action = "Update";
-                    var title = "PASSWORD UPDATE SUCCESSFUL";
-                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your Password as been updated successfully!");
-
-                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                      disableClose: true,
-                      data: { action, title, message }
-                    });
-
-                    const duration = 1750;
-                    setTimeout(() => {
-                      location.reload();
-                      dialogRef.close();
-                    }, duration);
+                    this.log.action = "Reset Password";
+                    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                    let test: any
+                    test = new DatePipe('en-ZA');
+                    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                    this.dataService.AuditLogAdd(this.log).subscribe({
+                      next: (Log) => {
+                        this.hideloader()
+                      }
+                    })
                   }
                 })
               }

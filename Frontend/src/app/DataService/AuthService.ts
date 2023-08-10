@@ -1,14 +1,25 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { AuditLog } from '../Shared/AuditLog';
+import { DataService } from './data-service';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
+
+    log: AuditLog = {
+        log_ID: 0,
+        user: "",
+        action: "",
+        actionTime: new Date(),
+    }
+
     private tokenExpirationTimer: any;
 
-    constructor(private router: Router) { }
+    constructor(private router: Router, private dataService: DataService) { }
 
     private userRoleSubject = new BehaviorSubject<string>(null);
     userRole$ = this.userRoleSubject.asObservable();
@@ -52,9 +63,20 @@ export class AuthService {
     }
 
     logout(): void {
-        sessionStorage.removeItem('token');
-        sessionStorage.removeItem('tokenExpiration');
-        this.router.navigate(['']);
+
+        this.log.action = "Force logged out of the system due to inactivity";
+        this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.dataService.AuditLogAdd(this.log).subscribe({
+            next: (Log) => {
+                sessionStorage.removeItem('token');
+                sessionStorage.removeItem('tokenExpiration');
+                this.router.navigate(['']);
+            }
+        })
+
     }
 
     private resetTokenExpirationTimer(): void {

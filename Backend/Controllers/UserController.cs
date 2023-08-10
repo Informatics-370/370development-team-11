@@ -641,5 +641,21 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
+        [HttpGet]
+        [Route("GetLogs")]
+        public async Task<IActionResult> GetAllConsumables()
+        {
+            try
+            {
+                var result = await _UserRepository.GetAllLogsAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
 }

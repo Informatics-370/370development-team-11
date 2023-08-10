@@ -67,10 +67,11 @@ export class ReceiveProcurementItemComponent {
     }
   }
 
+  HistAmt: Number = 0;
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.GetConsumable(id);
-    // this.GetCategories();
 
     this.myForm = this.formBuilder.group({
       Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
@@ -85,16 +86,6 @@ export class ReceiveProcurementItemComponent {
 
   }
 
-  // GetCategories() {
-  //   this.dataService.GetCategories().subscribe(result => {
-  //     let CategoryList: any[] = result
-  //     CategoryList.forEach((element) => {
-  //       this.consumableCategories.push(element)
-  //       console.log(element)
-  //     })
-  //   })
-  // }
-
   GetConsumable(id: number) {
     this.dataService.GetConsumablesForRequest(id).subscribe(result => {
       this.ConsumableRequest = result;
@@ -102,38 +93,40 @@ export class ReceiveProcurementItemComponent {
   }
 
   updateStock() {
-    console.log("hi");
-    this.dataService.GetConsumableByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
-      next: (response) => {
-        this.dataService.GetCategoryByID(response.consumable_Category_ID).subscribe({
-          next: (result) => {
-            this.Consumables.name = response.name
-            this.Consumables.consumable_Category.name = result.name
-            console.log(this.Consumables)
+    this.dataService.GetConsumableHistoryByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
+      next: (Hist) => {
+        this.HistAmt = Hist.StockAmt
+        this.dataService.GetConsumableByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
+          next: (response) => {
+            this.dataService.GetCategoryByID(response.consumable_Category_ID).subscribe({
+              next: (result) => {
+                this.Consumables.name = response.name
+                this.Consumables.consumable_Category.name = result.name
 
-            this.History.StockAmt = this.myForm.get('On_Hand')?.value;
+                this.History.StockAmt = this.myForm.get('On_Hand')?.value + this.HistAmt;
 
-            let test: any
-            test = new DatePipe('en-ZA');
-            this.History.DateCaptured = test.transform(this.History.DateCaptured, 'MMM d, y, h:mm:ss a');
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.History.DateCaptured = test.transform(this.History.DateCaptured, 'MMM d, y, h:mm:ss a');
 
-            this.History.consumable = this.Consumables
+                this.History.consumable = this.Consumables
 
-            console.log(this.History)
+                console.log(this.History)
 
-            this.dataService.UpdateStock(this.History).subscribe({
-              next: (response) => {
-                console.log(response)
-                // document.querySelector('button').classList.toggle("is_active");
-                // this.dialogRef.close();
-                this.router.navigate(['/ViewConsumable'])
+                this.dataService.UpdateStock(this.History).subscribe({
+                  next: (response) => {
+                    console.log(response)
+                    this.router.navigate(['/ViewProcurementDetails'])
 
+                  }
+                })
               }
             })
           }
         })
       }
     })
+
   }
 
   Close() {

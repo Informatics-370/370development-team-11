@@ -1253,7 +1253,7 @@ export class DataService {
 
   //----------------------------------------------------------------------Reports-----------------------------------------------------------------------------
 
-  getBEESpendReport( StartDate:Date,EndDate:Date): Observable<any> {
+  getBEESpendReport(StartDate: Date, EndDate: Date): Observable<any> {
     return this.httpClient.get<BEESpentReportVM[]>(`${this.apiUrl}Reports/getBEESpendReport/${StartDate}/${EndDate}`).pipe(map(result => result))
   }
 
@@ -1262,6 +1262,14 @@ export class DataService {
   }
 
 
+  GetLogs(): Observable<any> {
+    return this.httpClient.get<AuditLog[]>(`${this.apiUrl}User/GetLogs`).pipe(map(result => result))
+  }
+
+  GetConsumableHistoryByID(consumableID: Number): Observable<Consumable_History> {
+    console.log(consumableID)
+    return this.httpClient.get<Consumable_History>(`${this.apiUrl}Consumable/GetConsumableHistoryByID/` + consumableID, this.httpOptions)
+  }
 }
 
 

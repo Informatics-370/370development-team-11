@@ -94,6 +94,12 @@ namespace ProcionAPI.Models.Repositories.Consumables
             return ChosenConsumable;
         }
 
+        public async Task<Consumable_History> GetConsumableHistoryByIDAsync(int id)
+        {
+            Consumable_History ChosenHist = await _dbContext.Consumable_History.FirstOrDefaultAsync(x => x.Consumable_ID == id);
+            return ChosenHist;
+        }
+
         public async Task<Consumable> DeleteConsumableAsync(int id)
         {
             var hasHistory = await _dbContext.Consumable_History.FirstOrDefaultAsync(x => x.Consumable_ID == id);
