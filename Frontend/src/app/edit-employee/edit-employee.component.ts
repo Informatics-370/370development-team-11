@@ -12,6 +12,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-edit-employee',
@@ -82,6 +84,13 @@ export class EditEmployeeComponent implements OnInit {
     department: this.dep,
     user: this.usr,
     mandate_limit: this.ml
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   ngOnInit() {
@@ -211,20 +220,32 @@ export class EditEmployeeComponent implements OnInit {
               next: (response) => {
                 document.getElementById('cBtn').style.display = "none";
                 document.querySelector('button').classList.toggle("is_active");
-                var action = "Update";
-                var title = "UPDATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
+                this.log.action = "Edited Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.dataService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    var action = "Update";
+                    var title = "UPDATE SUCCESSFUL";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-                const duration = 1750;
-                setTimeout(() => {
-                  this.router.navigate(['/ViewEmployee']);
-                  dialogRef.close();
-                }, duration);
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
+
+                    const duration = 1750;
+                    setTimeout(() => {
+                      this.router.navigate(['/ViewEmployee']);
+                      dialogRef.close();
+                    }, duration);
+                  }
+                })
+
+                
               }
             })
           })

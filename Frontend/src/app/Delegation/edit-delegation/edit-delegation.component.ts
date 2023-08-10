@@ -12,6 +12,7 @@ import { DelegationStatus } from '../../Shared/DelegationStatus';
 import { Role } from '../../Shared/EmployeeRole';
 import { User } from '../../Shared/User';
 import { DatePipe } from '@angular/common';
+import { AuditLog } from '../../Shared/AuditLog';
 
 @Component({
   selector: 'app-edit-delegation',
@@ -79,6 +80,13 @@ export class EditDelegationComponent implements OnInit {
     user: this.usr,
     admin: this.adm,
     delegation_Status: this.doas
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
@@ -188,20 +196,30 @@ export class EditDelegationComponent implements OnInit {
           this.dataService.CheckDelegation().subscribe({
             next: (r) => {
               if (r) {
-                var action = "EDIT";
-                var title = "EDIT SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
 
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
+                this.log.action = "Edited Delegation for Request: " + this.delID;
+                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.dataService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    var action = "EDIT";
+                    var title = "EDIT SUCCESSFUL";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
 
-                const duration = 1750;
-                setTimeout(() => {
-                  this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-                  dialogRef.close();
-                }, duration);
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
+
+                    const duration = 1750;
+                    setTimeout(() => {
+                      this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
+                      dialogRef.close();
+                    }, duration);
+                  }
+                })
               }
             }
           })
@@ -241,20 +259,32 @@ export class EditDelegationComponent implements OnInit {
                 this.dataService.CheckDelegation().subscribe({
                   next: (r) => {
                     if (r) {
-                      var action = "EDIT";
-                      var title = "EDIT SUCCESSFUL";
-                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
 
-                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                        disableClose: true,
-                        data: { action, title, message }
-                      });
+                      this.log.action = "Edited Delegation for Request: " + this.delID;
+                      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataService.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          var action = "EDIT";
+                          var title = "EDIT SUCCESSFUL";
+                          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
 
-                      const duration = 1750;
-                      setTimeout(() => {
-                        this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-                        dialogRef.close();
-                      }, duration);
+                          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                            disableClose: true,
+                            data: { action, title, message }
+                          });
+
+                          const duration = 1750;
+                          setTimeout(() => {
+                            this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
+                            dialogRef.close();
+                          }, duration);
+                        }
+                      })
+
+                      
                     }
                   }
                 })

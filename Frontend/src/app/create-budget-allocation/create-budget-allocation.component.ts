@@ -8,6 +8,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { CurrencyPipe } from '@angular/common';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-create-budget-allocation',
@@ -29,6 +31,13 @@ export class CreateBudgetAllocationComponent {
     year: 0,
     total: 0,
     department: this.dep
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   departments: any[] = []
@@ -67,20 +76,31 @@ export class CreateBudgetAllocationComponent {
                 document.querySelector('button').classList.toggle("is_active");
               }
 
-              var action = "CREATE";
-              var title = "CREATE SUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Allocation for department <strong>" + this.budgetAllocation.department.name + " </strong> For year <strong>" + this.budgetAllocation.year + " <strong style='color:green'> ADDED </strong> successfully!");
+              this.log.action = "Created Budget Allocation for: " + this.budgetAllocation.department;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  var action = "CREATE";
+                  var title = "CREATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Allocation for department <strong>" + this.budgetAllocation.department.name + " </strong> For year <strong>" + this.budgetAllocation.year + " <strong style='color:green'> ADDED </strong> successfully!");
 
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
 
-              const duration = 1750;
-              setTimeout(() => {
-                this.router.navigate(['/ViewBudgetLines/' + AllocationAdded[0].budget_ID]);
-                dialogRef.close();
-              }, duration);
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewBudgetLines/' + AllocationAdded[0].budget_ID]);
+                    dialogRef.close();
+                  }, duration);
+                }
+              })
+
+              
             }
           );
         }

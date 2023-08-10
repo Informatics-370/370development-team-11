@@ -7,6 +7,8 @@ import { Help_Category } from 'src/app/Shared/HelpCategory';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
+import { AuditLog } from '../../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-edit-help',
@@ -42,6 +44,12 @@ export class EditHelpComponent implements OnInit{
     user_Manual:''
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   ngOnInit():void {
 
@@ -150,32 +158,41 @@ export class EditHelpComponent implements OnInit{
           if (result != null){
 
          
-      this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
-        next: (response) => {
+            this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
+              next: (response) => {
 
-          if (response) {
-            hideloader();
-            document.getElementById('cBtn').style.display = "none";
-            document.querySelector('button').classList.toggle("is_active");
-          }
+                if (response) {
+                  hideloader();
+                  document.getElementById('cBtn').style.display = "none";
+                  document.querySelector('button').classList.toggle("is_active");
+                }
 
-          var action = "EDIT";
-          var title = "EDIT SUCCESSFUL";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
+                this.log.action = "Edited Help: " + this.HelpToEdit.name;
+                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.dataService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    var action = "EDIT";
+                    var title = "EDIT SUCCESSFUL";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
 
-          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-            disableClose: true,
-            data: { action, title, message }
-          });
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
 
-          const duration = 1750;
-          setTimeout(() => {
-            this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
-            dialogRef.close();
-          }, duration);
-        }
-      })
-             } else{
+                    const duration = 1750;
+                    setTimeout(() => {
+                      this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
+                      dialogRef.close();
+                    }, duration);
+                  }
+                }) 
+              }
+            })
+          } else{
               hideloader();
               var action = "ERROR";
               var title = "ERROR: Help Exists";
@@ -221,25 +238,33 @@ export class EditHelpComponent implements OnInit{
               if (result != null){
 
               
-          this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
-           next: (response) => {
-             var action = "EDIT";
-             var title = "EDIT SUCCESSFUL";
-             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
+                this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
+                 next: (response) => {
+                    this.log.action = "Edited Help for: " + this.HelpToEdit.name;
+                    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                    let test: any
+                    test = new DatePipe('en-ZA');
+                    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                    this.dataService.AuditLogAdd(this.log).subscribe({
+                      next: (Log) => {
+                        var action = "EDIT";
+                        var title = "EDIT SUCCESSFUL";
+                        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
 
-             const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-               disableClose: true,
-               data: { action, title, message }
-             });
+                        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                          disableClose: true,
+                          data: { action, title, message }
+                        });
 
-             const duration = 1750;
-             setTimeout(() => {
-               this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
-               dialogRef.close();
-               
-             }, duration);
-             }
-             })
+                        const duration = 1750;
+                        setTimeout(() => {
+                          this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
+                          dialogRef.close();
+                        }, duration);
+                      }
+                    }) 
+                   }
+                   })
 
             }else{
               hideloader();
@@ -294,25 +319,33 @@ export class EditHelpComponent implements OnInit{
 
            
 
-        this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
-             next: (response) => {
-               var action = "EDIT";
-               var title = "EDIT SUCCESSFUL";
-               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
- 
-               const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                 disableClose: true,
-                 data: { action, title, message }
-               });
- 
-               const duration = 1750;
-               setTimeout(() => {
-                 this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
-                 dialogRef.close();
-                 
-               }, duration);
-             }
-             })
+              this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
+                   next: (response) => {
+                  this.log.action = "Edited Help for: " + this.HelpToEdit.name;
+                  this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                  let test: any
+                  test = new DatePipe('en-ZA');
+                  this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                  this.dataService.AuditLogAdd(this.log).subscribe({
+                    next: (Log) => {
+                      var action = "EDIT";
+                      var title = "EDIT SUCCESSFUL";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
+
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
+
+                      const duration = 1750;
+                      setTimeout(() => {
+                        this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
+                        dialogRef.close();
+                      }, duration);
+                    }
+                  }) 
+                   }
+                   })
 
             }else{
               hideloader();
@@ -395,21 +428,29 @@ export class EditHelpComponent implements OnInit{
                   }
 
 
-                  var action = "EDIT";
-                  var title = "EDIT SUCCESSFUL";
-                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
-  
-                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                    disableClose: true,
-                    data: { action, title, message }
-                  });
-  
-                  const duration = 1750;
-                  setTimeout(() => {
-                    this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
-                    dialogRef.close();
-                    
-                  }, duration);
+                  this.log.action = "Edited Help for: " + this.HelpToEdit.name;
+                  this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                  let test: any
+                  test = new DatePipe('en-ZA');
+                  this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                  this.dataService.AuditLogAdd(this.log).subscribe({
+                    next: (Log) => {
+                      var action = "EDIT";
+                      var title = "EDIT SUCCESSFUL";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help <strong>" + name + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
+
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
+
+                      const duration = 1750;
+                      setTimeout(() => {
+                        this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
+                        dialogRef.close();
+                      }, duration);
+                    }
+                  }) 
                 }
               })
 

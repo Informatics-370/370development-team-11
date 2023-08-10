@@ -19,6 +19,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { CropperModalComponent } from '../cropper-modal/cropper-modal.component';
 import { MainNavComponent } from '../../main-nav/main-nav.component';
 import { MatIconRegistry } from '@angular/material/icon';
+import { AuditLog } from '../../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 //const CHECK_ICON = `<svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
       
@@ -106,6 +108,13 @@ export class UserProfileEditComponent {
     cellPhone_Num: '',
     email: '',
     user: this.usr,
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer, private nav: MainNavComponent, iconRegistry: MatIconRegistry) {
@@ -243,23 +252,33 @@ export class UserProfileEditComponent {
               next: (response) => {
                 document.getElementById('cBtn').style.display = "none";
                 document.querySelector('button').classList.toggle("is_active");
-                var action = "Update";
-                var title = "UPDATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
+                this.log.action = "Edited User Profile for: " + this.adm.adminName + " " + this.adm.adminSurname;
+                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.dataService.AuditLogAdd(this.log).subscribe({
+                   next: (Log) => {
+                        var action = "Update";
+                        var title = "UPDATE SUCCESSFUL";
+                        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-                const duration = 1750;
-                setTimeout(() => {
-                  this.router.navigate(['/Profile']);
-                  //this.nav.reload();
-                  //const NavbarElement = document.getElementById("nav");
-                  //NavbarElement.innerHTML = NavbarElement.innerHTML;
-                  dialogRef.close();
-                }, duration);
+                        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                            disableClose: true,
+                            data: { action, title, message }
+                        });
+
+                        const duration = 1750;
+                        setTimeout(() => {
+                            this.router.navigate(['/Profile']);
+                            //this.nav.reload();
+                            //const NavbarElement = document.getElementById("nav");
+                            //NavbarElement.innerHTML = NavbarElement.innerHTML;
+                            dialogRef.close();
+                        }, duration);
+                   }
+                })
               }
             })
           })
@@ -312,23 +331,33 @@ export class UserProfileEditComponent {
               next: (response) => {
                 document.getElementById('cBtn').style.display = "none";
                 document.querySelector('button').classList.toggle("is_active");
-                var action = "Update";
-                var title = "UPDATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
+                this.log.action = "Edited User Profile for: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.dataService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    var action = "Update";
+                    var title = "UPDATE SUCCESSFUL";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-                const duration = 1750;
-                setTimeout(() => {
-                  this.router.navigate(['/Profile']);
-                  //this.nav.reload();
-                  //const NavbarElement = document.getElementById("nav");
-                  //NavbarElement.innerHTML = NavbarElement.innerHTML;
-                  dialogRef.close();
-                }, duration);
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
+
+                    const duration = 1750;
+                    setTimeout(() => {
+                      this.router.navigate(['/Profile']);
+                      //this.nav.reload();
+                      //const NavbarElement = document.getElementById("nav");
+                      //NavbarElement.innerHTML = NavbarElement.innerHTML;
+                      dialogRef.close();
+                    }, duration);
+                  }
+                })
               }
             })
           })

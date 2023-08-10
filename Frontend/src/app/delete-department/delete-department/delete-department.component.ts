@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/DataService/data-service'; 
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Department } from 'src/app/Shared/Department';
+import { AuditLog } from '../../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-delete-department',
@@ -14,6 +16,13 @@ export class DeleteDepartmentComponent implements OnInit{
   Department: any
   showConfirmationDialog: boolean = true;
   showSuccessDialog: boolean = false;
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   constructor(public dialogRef: MatDialogRef<DeleteDepartmentComponent>, private ActRoute: ActivatedRoute, private route: Router, private dataService: DataService,
     @Inject(MAT_DIALOG_DATA) public data: { department_ID: number }) { }
@@ -39,13 +48,24 @@ export class DeleteDepartmentComponent implements OnInit{
   onConfirm(ID: number): void {
     this.dataService.DeleteDepartment(ID).subscribe({
       next: (response) => {
-        this.showConfirmationDialog = false;
-        this.showSuccessDialog = true;
-        setTimeout(() => {
-          this.dialogRef.close();
-          this.route.navigate(['/ViewDepartment'], { queryParams: { refresh: true } });
-          location.reload();
-        }, 1750);
+        this.log.action = "Deleted Department: " + this.Department.name;
+        this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.dataService.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.dialogRef.close();
+              this.route.navigate(['/ViewDepartment'], { queryParams: { refresh: true } });
+              location.reload();
+            }, 1750);
+          }
+        })
+
+        
       }
     });
   }

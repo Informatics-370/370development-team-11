@@ -66,7 +66,7 @@
                                         <mat-select formControlName="department_ID" required>
                                             <mat-option>---</mat-option>
                                             <mat-option *ngFor="let dep of departments"
-                                                [value]="dep">{{dep.name}}</mat-option>
+                                                [value]="dep.department_ID">{{dep.name}}</mat-option>
                                         </mat-select>
                                         <mat-error *ngIf="myError('department_ID', 'required')">Please choose a
                                             department</mat-error>

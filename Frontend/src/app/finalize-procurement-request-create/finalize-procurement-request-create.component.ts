@@ -347,6 +347,17 @@ export class FinalizeProcurementRequestCreateComponent {
         this.ProofOfPayment.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
         this.ProofOfPayment.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category;
         this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe();
+
+        this.log.action = "Procurement Request " + this.route.snapshot.paramMap.get('id') + " Finalised";
+        this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.dataService.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            this.router.navigate(['/ViewBudgetAllocation']);
+          }
+        })
       })
       this.log.action = "Finalised procurement request for: " + this.Procurement_Request.name;
       this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));

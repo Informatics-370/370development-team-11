@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { Mandate_Limit } from '../Shared/MandateLimit';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -16,6 +18,13 @@ export class CreateMandateLimitComponent {
     mandate_ID: 0,
     ammount: 0,
     date: '2023-05-07T12:14:46.249'
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   mandateLimitForm: FormGroup = new FormGroup({});
@@ -37,7 +46,18 @@ export class CreateMandateLimitComponent {
         document.querySelector('button').classList.toggle("is_active");
       }
 
-      this.router.navigate(['/ViewMandateLimit']);
+      this.log.action = "Exported Inventory Details";
+      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+      let test: any
+      test = new DatePipe('en-ZA');
+      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+      this.dataService.AuditLogAdd(this.log).subscribe({
+        next: (Log) => {
+          this.router.navigate(['/ViewMandateLimit']);
+        }
+      })
+
+      
     });
   }
 

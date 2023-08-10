@@ -33,6 +33,7 @@ import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
+import { AuditLog } from '../Shared/AuditLog';
 
 @Component({
   selector: 'app-upload-invoice',
@@ -311,6 +312,12 @@ export class UploadInvoiceComponent {
     proof_Of_Payment_Doc: "string"
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, ID: Number }, private formBuilder: FormBuilder, private dataservice: DataService, private router: Router, private dialogRef: MatDialogRef<UploadInvoiceComponent>) { }
 
@@ -358,8 +365,20 @@ export class UploadInvoiceComponent {
         this.sPath = Path.pathSaved.toString()
         this.pop.proof_Of_Payment_Doc = this.sPath;
         this.pop.procurement_Details_ID = 1;
-        this.dialogRef.close();
-        this.router.navigate(['/ViewProcurementDetails'])
+
+        this.log.action = "Invoice Uploaded for: " + this.data.name;
+        this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.dataservice.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            this.dialogRef.close();
+            this.router.navigate(['/ViewProcurementDetails'])
+          }
+        })
+
+       
       })
     }
   }

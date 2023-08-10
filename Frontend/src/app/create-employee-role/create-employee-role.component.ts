@@ -7,6 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-create-employee-role',
@@ -15,6 +17,14 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class CreateEmployeeRoleComponent implements OnInit {
   public myForm !: FormGroup;
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   constructor(private router: Router, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
 
@@ -45,21 +55,32 @@ export class CreateEmployeeRoleComponent implements OnInit {
             next: (response) => {
               document.getElementById('cBtn').style.display = "none";
               document.querySelector('button').classList.toggle("is_active");
+
+              this.log.action = "Created Employee Role: " + name;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  var action = "Create";
+                  var title = "CREATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
+
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewEmpRole']);
+                    dialogRef.close();
+                  }, duration);
+                }
+              })
+
               
-              var action = "Create";
-              var title = "CREATE SUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
-
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
-
-              const duration = 1750;
-              setTimeout(() => {
-                this.router.navigate(['/ViewEmpRole']);
-                dialogRef.close();
-              }, duration);
             }
           })
         }
