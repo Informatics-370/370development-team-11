@@ -52,6 +52,7 @@ import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
+import { AuditLog } from '../Shared/AuditLog';
 
 @Injectable({
   providedIn: 'root'
@@ -199,7 +200,7 @@ export class DataService {
   }
 
   HelpValidation(name: String): Observable<Help> {
-    return this.httpClient.get<Help>(`${this.apiUrl}Help/HelpValidation/` + name , this.httpOptions)
+    return this.httpClient.get<Help>(`${this.apiUrl}Help/HelpValidation/` + name, this.httpOptions)
   }
   EditHelpValidation(name: String, id: Number): Observable<Help> {
     return this.httpClient.get<Help>(`${this.apiUrl}Help/EditHelpValidation/` + name + '/' + id, this.httpOptions)
@@ -225,8 +226,8 @@ export class DataService {
     return this.httpClient.post<any>(`${this.apiUrl}Help/GetHelpVideoFiles/${HelpName}/${filename}`, this.httpOptions)
   }
 
-   //----------------------------------------------------------------------Backup&Restore-----------------------------------------------------------------------------
-   createBackup(): Observable<any> {
+  //----------------------------------------------------------------------Backup&Restore-----------------------------------------------------------------------------
+  createBackup(): Observable<any> {
     return this.httpClient.post<any>(`${this.apiUrl}Backup/CreateBackup`, this.httpOptions);
   }
   restoreDatabase(backupFile: File): Observable<any> {
@@ -651,6 +652,10 @@ export class DataService {
     return this.httpClient.post(`${this.apiUrl}Mail/ForgotPasswordEmail`, mail, this.httpOptions)
   }
 
+  SendOTP(mail: MailData) {
+    return this.httpClient.post(`${this.apiUrl}Mail/OTPEmail`, mail, this.httpOptions)
+  }
+
   UpdatePassword(UserID: Number, NewPassword: String) {
     return this.httpClient.put<User>(`${this.apiUrl}User/UpdatePassword/` + UserID + "/" + NewPassword, this.httpOptions)
   }
@@ -845,15 +850,15 @@ export class DataService {
     return this.httpClient.post<BudgetLine>(`${this.apiUrl}BudgetAllocation/AddBudgetLine`, budgetLine, this.httpOptions)
   }
 
-  GetBudgetLine(accountCode: Number) {
+  GetBudgetLine(accountCode: String) {
     return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetLine` + '/' + accountCode).pipe(map(result => result))
   }
 
-  EditBudgetLine(accountCode: Number, budgetLine: BudgetLine) {
+  EditBudgetLine(accountCode: String, budgetLine: BudgetLine) {
     return this.httpClient.put<BudgetLine>(`${this.apiUrl}BudgetAllocation/EditBudgetLine/${accountCode}`, budgetLine, this.httpOptions)
   }
 
-  DeleteBudgetLine(accountCode: Number) {
+  DeleteBudgetLine(accountCode: String) {
     return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetLine` + "/" + accountCode, this.httpOptions)
   }
 
@@ -1034,7 +1039,7 @@ export class DataService {
   ResetNotif(username: string) {
     return this.httpClient.put<User>(`${this.apiUrl}User/ResetNotif/` + username, this.httpOptions)
   }
- 
+
 
   //----------------------------------------------------------------------Procurement Request-----------------------------------------------------------------------------
   GetProcurementRequests(): Observable<any> {
@@ -1206,12 +1211,6 @@ export class DataService {
   }
 
 
-  //Los Pls baas
-  // GetAppVendorsRequest() {
-  //   return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetAllApprovedVendor`).pipe(map(result => result))
-  // }
-
-
   GetUnfinalizedProcurements(): Observable<any> {
     return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetUnpaidProcurementDetails`).pipe(map(result => result))
   }
@@ -1244,6 +1243,10 @@ export class DataService {
 
   GetUnapprovedRequests(): Observable<any> {
     return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/UnapprovedRequests`).pipe(map(result => result))
+  }
+
+  AuditLogAdd(LogToAdd: AuditLog): Observable<any> {
+    return this.httpClient.post<AuditLog>(`${this.apiUrl}User/AddLog`, LogToAdd, this.httpOptions).pipe(map(result => result))
   }
 }
 

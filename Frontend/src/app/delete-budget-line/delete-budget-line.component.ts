@@ -41,7 +41,7 @@ export class DeleteBudgetLineComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: 0,
+    account_Code: '',
     budget_Category: this.category,
     month: '2023-05-07',
     budgetAmt: 0,
@@ -52,8 +52,8 @@ export class DeleteBudgetLineComponent {
   showConfirmationDialog: boolean = true;
   showSuccessDialog: boolean = false;
 
-  constructor(public dialogRef: MatDialogRef<DeleteBudgetLineComponent>, private route: ActivatedRoute, private routee: Router, private dataService: DataService,
-    @Inject(MAT_DIALOG_DATA) public data: { id2: number }) { }
+  constructor(public dialogRef: MatDialogRef<DeleteBudgetLineComponent>, private route: ActivatedRoute, private router: Router, private dataService: DataService,
+    @Inject(MAT_DIALOG_DATA) public data: { id2: string }) { }
 
   ngOnInit(): void {
 
@@ -71,14 +71,13 @@ export class DeleteBudgetLineComponent {
     });
   }
 
-  onConfirm(id: number): void {
+  onConfirm(id: string): void {
     this.dataService.DeleteBudgetLine(id).subscribe({
       next: () => {
         this.showConfirmationDialog = false;
         this.showSuccessDialog = true;
         setTimeout(() => {
           this.dialogRef.close('confirm');
-          location.reload();
         }, 1750);
       }
     });

@@ -19,7 +19,7 @@ import { Procurement_Status } from '../Shared/ProcurementStatus';
 import { Payment_Method } from '../Shared/PaymentMethod';
 import { BudgetLine } from '../Shared/BudgetLine';
 import { BudgetCategory } from '../Shared/BudgetCategory';
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Deposit } from '../Shared/Deposit';
 import { Payment_Made } from '../Shared/PaymentMade';
 import { Proof_Of_Payment } from '../Shared/ProofOfPayment';
@@ -181,7 +181,7 @@ export class FinalizeProcurementRequestCreateComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: 0,
+    account_Code: '',
     budget_Category: this.category,
     month: '',
     budgetAmt: 0,
@@ -195,7 +195,7 @@ export class FinalizeProcurementRequestCreateComponent {
     procurement_Request_ID: 0,
     sign_Off_Status_ID: 0,
     procurement_Payment_Status_ID: 0,
-    account_Code: 0,
+    account_Code: '',
     procurement_Status_ID: 0,
     payment_Method_ID: 0,
     employee: this.EmployeeDetails,
@@ -297,7 +297,10 @@ export class FinalizeProcurementRequestCreateComponent {
   }
   BudgetAllocationCode: BudgetLine[] = [];
   finalizationForm: FormGroup = new FormGroup({});
-  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder) { }
+
+  ActualAmountDisplay;
+  TotalAmountDisplay;
+  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder, private currencyPipe: CurrencyPipe) { }
 
 
   ngOnInit(): void {
@@ -351,6 +354,10 @@ export class FinalizeProcurementRequestCreateComponent {
   GetProcurementDetails(id: number) {
     this.dataService.GetProcurementDetailsByID(id).subscribe(result => {
       this.ProcurementDetails = result;
+      this.ActualAmountDisplay = this.ProcurementDetails.budget_Line.actualAmt;
+      this.TotalAmountDisplay = this.ProcurementDetails.total_Amount;
+      this.ActualAmountDisplay = this.currencyPipe.transform(this.ActualAmountDisplay, 'R');
+      this.TotalAmountDisplay = this.currencyPipe.transform(this.TotalAmountDisplay, 'R');
       console.log(result)
     })
   }

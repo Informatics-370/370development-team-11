@@ -95,7 +95,7 @@ export class EditEmployeeComponent implements OnInit {
       Name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       Surname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
-      CellPhone_Num: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12), Validators.pattern("^[0-9 ]*$")]],
+      CellPhone_Num: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12), Validators.pattern("^[0-9]*$")]],
       Role: ['', [Validators.required]],
       Mandate: ['', [Validators.required]],
       Department: ['', [Validators.required]],
@@ -193,7 +193,7 @@ export class EditEmployeeComponent implements OnInit {
     var name = this.myForm.get('Name')?.value;
     var surname = this.myForm.get('Surname')?.value;
     var ts = name.concat(surname);
-    var username = ts.concat(cel.toString().substring(4, 7));
+    var username = ts.concat(cel.toString().substring(3, 6));
     username = username.replace(/\s/g, "");
 
 

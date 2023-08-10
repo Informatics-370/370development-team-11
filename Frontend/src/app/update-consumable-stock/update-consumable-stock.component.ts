@@ -14,6 +14,7 @@ import { Notification } from '../Shared/Notification';
 import { Notification_Type } from '../Shared/Notification_Type';
 import { User } from '../Shared/User';
 import { Role } from '../Shared/EmployeeRole';
+import { AuditLog } from '../Shared/AuditLog';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -99,7 +100,12 @@ export class UpdateConsumableStockComponent implements OnInit {
     user: this.usr,
     notification_Type: this.Notification_Type,
   }
-
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   ngOnInit(): void {
     this.myForm = this.formBuilder.group({
@@ -217,9 +223,19 @@ export class UpdateConsumableStockComponent implements OnInit {
 
                   this.dataservice.ConsumableAddNotification(this.ComsumableNotif).subscribe({
                     next: (LowStock) => {
-                      document.querySelector('button').classList.toggle("is_active");
-                      this.dialogRef.close();
-                      this.router.navigate(['/ViewConsumable'])
+                      this.log.action = "Edited Procurement Request: " + this.Consumables.name;
+                      this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataservice.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          document.querySelector('button').classList.toggle("is_active");
+                          this.dialogRef.close();
+                          this.router.navigate(['/ViewConsumable'])
+                        }
+                      })
+
 
                     }
                   })

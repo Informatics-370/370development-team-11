@@ -18,7 +18,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-budget-lines',
   templateUrl: './view-budget-lines.component.html',
   styleUrls: ['./view-budget-lines.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewBudgetLinesComponent {
 
@@ -26,7 +26,7 @@ export class ViewBudgetLinesComponent {
   BudgetLines: BudgetLine[] = [];
   SearchedBudgetLines: BudgetLine[] = [];
   searchTerm: String = '';
-  displayedColumns: string[] = [ 'budgetCategory', 'month', 'budget', 'actual', 'variance', 'action', 'delete'];
+  displayedColumns: string[] = ['budgetCategory', 'month', 'budget', 'actual', 'variance', 'action', 'delete'];
   dataSource = new MatTableDataSource<BudgetLine>();
 
   constructor(private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private dataService: DataService) { }
@@ -75,19 +75,7 @@ export class ViewBudgetLinesComponent {
       data: { id2 }
     });
     confirm.afterClosed().subscribe(result => {
-      if (result === 'confirm') {
-        this.dataService.DeleteBudgetLine(id2).subscribe(() => {
-          this.dataService.GetBudgetAllocation(this.id).subscribe((budgetAllocation: BudgetAllocation) => {
-            this.dataService.GetBudgetLineItems(this.id).subscribe(budgetLineItems => {
-              let totalBudgetLinesAmount = budgetLineItems.reduce((prev, cur) => prev + Number(cur.budgetAmt), 0);
-              if (totalBudgetLinesAmount <= budgetAllocation.total) {
-                this.GetBudgetLines(Number(this.id)); // Refresh budget lines
-              } else {
-              }
-            });
-          });
-        });
-      }
+      this.ngOnInit()
     });
   }
 }

@@ -384,6 +384,16 @@ namespace ProcionAPI.Models.Repositories
 
             return user;
         }
+        public async Task<AuditLog[]> AddLogAsync(AuditLog LogAdd)
+        {
+
+
+            await _dbContext.AuditLog.AddAsync(LogAdd);
+            await _dbContext.SaveChangesAsync();
+
+            return new AuditLog[] { LogAdd };
+        }
+
 
     }
 
