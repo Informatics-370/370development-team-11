@@ -385,6 +385,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         let employeeInfo:any = result;
         this.EmployeeDetails = employeeInfo;
         this.MandateLimitAmount = employeeInfo.mandate_Limit.ammount
+        this.ProcurementFormGroup.get("BuyerName")?.setValue(this.EmployeeDetails.employeeName.toString())
+        this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.EmployeeDetails.email.toString())
         console.log(this.EmployeeDetails);
         console.log(this.MandateLimitAmount)
       },

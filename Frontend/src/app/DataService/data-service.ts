@@ -53,6 +53,8 @@ import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
 import { AuditLog } from '../Shared/AuditLog';
+import { BEESpentReportVM } from '../Shared/BEESpentReportVM';
+import { VendorSpentReport } from '../Shared/VendorSpentReport';
 
 @Injectable({
   providedIn: 'root'
@@ -1248,6 +1250,18 @@ export class DataService {
   AuditLogAdd(LogToAdd: AuditLog): Observable<any> {
     return this.httpClient.post<AuditLog>(`${this.apiUrl}User/AddLog`, LogToAdd, this.httpOptions).pipe(map(result => result))
   }
+
+  //----------------------------------------------------------------------Reports-----------------------------------------------------------------------------
+
+  getBEESpendReport( StartDate:Date,EndDate:Date): Observable<any> {
+    return this.httpClient.get<BEESpentReportVM[]>(`${this.apiUrl}Reports/getBEESpendReport/${StartDate}/${EndDate}`).pipe(map(result => result))
+  }
+
+  getVendorSpentReport(): Observable<any> {
+    return this.httpClient.get<VendorSpentReport[]>(`${this.apiUrl}Reports/getVendorSpentReport`).pipe(map(result => result))
+  }
+
+
 }
 
 

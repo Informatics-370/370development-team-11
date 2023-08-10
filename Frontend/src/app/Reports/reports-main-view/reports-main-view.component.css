@@ -1,0 +1,29 @@
+
+  
+  .content {
+    margin-top: 20px;
+    position:center;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px,solid,black;
+  }
+  
+ 
+.row {
+  margin-bottom: 15px;
+}
+
+.col-6 {
+  margin-left: 1%;
+  align-self: center;
+}
+
+.col {
+  text-align: -webkit-center;
+}
+
+label {
+  font-weight: bold;
+}

@@ -14,10 +14,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <input matInput placeholder="Buyer Name" formControlName="BuyerName" [errorStateMatcher]="matcher">
-                    <mat-error *ngIf="ProcurementFormGroup.controls['BuyerName'].hasError('required')">Buyer name is required</mat-error>
-                    <mat-error *ngIf="ProcurementFormGroup.controls['BuyerName'].hasError('maxlength')">Buyer name cannot exceed more than 32 characters</mat-error>
-                    <mat-error *ngIf="ProcurementFormGroup.controls['BuyerName'].hasError('pattern')">Buyer name may only contain letters</mat-error>
+                    <input matInput placeholder="Buyer Name" formControlName="BuyerName" readonly>
                   </mat-form-field>
             </div>
         </div>
@@ -27,10 +24,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <input matInput placeholder="Buyer Email" formControlName="BuyerEmail" [errorStateMatcher]="matcher">
-                    <mat-error *ngIf="ProcurementFormGroup.controls['BuyerEmail'].hasError('required')">Buyer email is required</mat-error>
-                    <mat-error *ngIf="ProcurementFormGroup.controls['BuyerEmail'].hasError('maxlength')">Buyer email cannot exceed more than 32 characters</mat-error>
-                    <mat-error *ngIf="ProcurementFormGroup.controls['BuyerEmail'].hasError('email')">Buyer email must be a valid email</mat-error>
+                    <input matInput placeholder="Buyer Email" formControlName="BuyerEmail" readonly>
                    </mat-form-field>
             </div>
         </div>

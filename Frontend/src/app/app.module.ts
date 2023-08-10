@@ -143,6 +143,8 @@ import { ViewUnapprovedRequestsComponent } from './view-unapproved-requests/view
 import { SignOffRequestComponent } from './sign-off-request/sign-off-request.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { OTPComponent } from './otp/otp.component';
+import { ReportsMainViewComponent } from './Reports/reports-main-view/reports-main-view.component';
+import { ReportFilterMenuComponent } from './Reports/report-filter-menu/report-filter-menu.component';
 
 
 @NgModule({
@@ -250,7 +252,9 @@ import { OTPComponent } from './otp/otp.component';
     UploadInvoiceComponent,
     ViewUnapprovedRequestsComponent,
     SignOffRequestComponent,
-    OTPComponent
+    OTPComponent,
+    ReportsMainViewComponent,
+    ReportFilterMenuComponent,
   ],
   imports: [
     BrowserModule,

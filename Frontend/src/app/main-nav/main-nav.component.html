@@ -34,7 +34,7 @@
         Vendor
       </button>
 
-      <button class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()">
+      <button class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()" routerLink="/ReportsMainView">
         Reports
       </button>
 
@@ -103,7 +103,7 @@
         Vendor
       </button>
       <!--<a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()">Reports</a>-->
-      <button mat-menu-item *ngIf="rAdmin" style="font-size: 16pt; text-decoration: none; color: black;" (click)="reload()">
+      <button mat-menu-item *ngIf="rAdmin" style="font-size: 16pt; text-decoration: none; color: black;" (click)="reload()" routerLink="/ReportsMainView">
         Reports
       </button>
       <!--<a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()" (click)="HelpRoute()">Help</a>-->
