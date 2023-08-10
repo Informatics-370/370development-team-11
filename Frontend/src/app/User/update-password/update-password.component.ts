@@ -19,6 +19,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { CropperModalComponent } from '../cropper-modal/cropper-modal.component';
 import { MainNavComponent } from '../../main-nav/main-nav.component';
 import { MatIconRegistry } from '@angular/material/icon';
+import { AuditLog } from 'src/app/Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-update-password',
@@ -26,7 +28,7 @@ import { MatIconRegistry } from '@angular/material/icon';
   styleUrls: ['./update-password.component.css'],
   providers: [MainNavComponent]
 })
-export class UpdatePasswordComponent implements OnInit{
+export class UpdatePasswordComponent implements OnInit {
   imgChangeEvt: string = '';
   file: string = '';
   iName: string;
@@ -103,6 +105,13 @@ export class UpdatePasswordComponent implements OnInit{
     user: this.usr,
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer, private nav: MainNavComponent, iconRegistry: MatIconRegistry) {
     /*iconRegistry.addSvgIconLiteral('check', sanitizer.bypassSecurityTrustHtml(CHECK_ICON));*/
   }
@@ -116,12 +125,12 @@ export class UpdatePasswordComponent implements OnInit{
       NewPass: ['', [Validators.required]],
     })
 
-      this.dataService.GetUserByUsername(this.iName).subscribe({
-        next: (Response) => {
-          this.usr = Response
-        }
-      })
-    } 
+    this.dataService.GetUserByUsername(this.iName).subscribe({
+      next: (Response) => {
+        this.usr = Response
+      }
+    })
+  }
 
 
   get f() {
@@ -138,70 +147,79 @@ export class UpdatePasswordComponent implements OnInit{
     var UserID = this.usr.user_Id;
     var Password = this.myForm.get("CurrentPass")?.value;
     var NewPassword = this.myForm.get("NewPass")?.value;
-   //Validate Current Password
-   this.dataService.VerifyCredentials(Username, Password).subscribe({
-    next: (response) => {
-      console.log(response)
-      if(response == true){
-        this.dataService.UpdatePassword(UserID, NewPassword).subscribe({
-          next: (Response) => {
-            if(Response != null){
+    //Validate Current Password
+    this.dataService.VerifyCredentials(Username, Password).subscribe({
+      next: (response) => {
+        console.log(response)
+        if (response == true) {
+          this.dataService.UpdatePassword(UserID, NewPassword).subscribe({
+            next: (Response) => {
+              if (Response != null) {
 
-              var action = "Update";
-              var title = "UPDATE SUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Password for <strong>" + this.usr.username + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+                this.log.action = "Updatet User Password";
+                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.dataService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    var action = "Update";
+                    var title = "UPDATE SUCCESSFUL";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Password for <strong>" + this.usr.username + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
 
-              const duration = 1750;
-              setTimeout(() => {
-                dialogRef.close();
-                this.Logout();
-              }, duration);
+                    const duration = 1750;
+                    setTimeout(() => {
+                      dialogRef.close();
+                      this.Logout();
+                    }, duration);
+                  }
+                })
+              }
             }
-          }
-        })
-      }
+          })
+        }
 
-      else{
+        else {
+          var action = "Update";
+          var title = "UPDATE UNSUCCESSFUL";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Password for <strong>" + this.usr.username + "</strong><strong style='color:red'> DOES NOT MATCH </strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
+
+      },
+      error: (error) => {
         var action = "Update";
-              var title = "UPDATE UNSUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Password for <strong>" + this.usr.username + "</strong><strong style='color:red'> DOES NOT MATCH </strong>");
+        var title = "UPDATE UNSUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Password for <strong>" + this.usr.username + "</strong><strong style='color:red'> DOES NOT MATCH! </strong>");
 
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
 
-              const duration = 1750;
-              setTimeout(() => {
-                dialogRef.close();
-              }, duration);
+        const duration = 1750;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
       }
-      
-    },
-    error: (error) => {
-      var action = "Update";
-              var title = "UPDATE UNSUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Password for <strong>" + this.usr.username + "</strong><strong style='color:red'> DOES NOT MATCH! </strong>");
-
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
-
-              const duration = 1750;
-              setTimeout(() => {
-                dialogRef.close();
-              }, duration);
-    }
-   })
+    })
   }
 
-  Logout(){
+  Logout() {
     sessionStorage.removeItem("token")
     sessionStorage.removeItem("tokenExpiration")
     this.router.navigate([""]);

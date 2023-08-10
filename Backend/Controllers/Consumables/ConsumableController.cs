@@ -161,5 +161,21 @@ namespace ProcionAPI.Controllers.Consumables
             }
         }
 
+        [HttpGet]
+        [Route("GetConsumableHistoryByID/{id}")]
+        public async Task<IActionResult> GetConsumableHistoryByID([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _consumableRepository.GetConsumableHistoryByIDAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
     }
 }

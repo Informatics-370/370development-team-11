@@ -394,6 +394,13 @@ namespace ProcionAPI.Models.Repositories
             return new AuditLog[] { LogAdd };
         }
 
+        public async Task<AuditLog[]> GetAllLogsAsync()
+        {
+            IQueryable<AuditLog> query = _dbContext.AuditLog;
+            query = query.OrderByDescending(log => log.ActionTime);
+            return await query.ToArrayAsync();
+        }
+
 
     }
 

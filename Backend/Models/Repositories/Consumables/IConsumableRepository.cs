@@ -14,5 +14,6 @@ namespace ProcionAPI.Models.Repositories.Consumables
         //Task<IEnumerable<int>> PredictStockLevelAsync(int id);
         Task<IEnumerable<(int Year, int Month, int ActualAmount, int PredictedAmount)>> PredictStockLevelAsync(int id);
         Task<Notification[]> AddNotificationAsync(Notification ConsumableNotif);
+        Task<Consumable_History> GetConsumableHistoryByIDAsync(int id);
     }
 }

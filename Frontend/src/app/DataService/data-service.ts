@@ -1248,6 +1248,15 @@ export class DataService {
   AuditLogAdd(LogToAdd: AuditLog): Observable<any> {
     return this.httpClient.post<AuditLog>(`${this.apiUrl}User/AddLog`, LogToAdd, this.httpOptions).pipe(map(result => result))
   }
+
+  GetLogs(): Observable<any> {
+    return this.httpClient.get<AuditLog[]>(`${this.apiUrl}User/GetLogs`).pipe(map(result => result))
+  }
+
+  GetConsumableHistoryByID(consumableID: Number): Observable<Consumable_History> {
+    console.log(consumableID)
+    return this.httpClient.get<Consumable_History>(`${this.apiUrl}Consumable/GetConsumableHistoryByID/` + consumableID, this.httpOptions)
+  }
 }
 
 

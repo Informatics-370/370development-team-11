@@ -9,6 +9,8 @@ import { interval, Observable } from 'rxjs';
 import { Role } from '../Shared/EmployeeRole';
 import { User } from '../Shared/User';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -20,7 +22,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-main-nav',
   templateUrl: './main-nav.component.html',
   styleUrls: ['./main-nav.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 
 
@@ -46,6 +48,13 @@ export class MainNavComponent implements OnInit {
     profile_Picture: '',
     no_Notifications: 0,
     role: this.rl
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   previousRoute: string;
@@ -111,10 +120,21 @@ export class MainNavComponent implements OnInit {
 
   }
 
-  Logout() {
-    sessionStorage.removeItem("token")
-    sessionStorage.removeItem("tokenExpiration")
-    this.router.navigate([""]);
+  Logout(): void {
+
+    this.log.action = "Manually Logged out of the system";
+    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    let test: any
+    test = new DatePipe('en-ZA');
+    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+    this.dataService.AuditLogAdd(this.log).subscribe({
+      next: (Log) => {
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('tokenExpiration');
+        this.router.navigate(['']);
+      }
+    })
+
   }
 
   GetUser() {
@@ -135,5 +155,5 @@ export class MainNavComponent implements OnInit {
       this.router.navigate(['/ViewHelpUser']);
     }
   }
-  
+
 }
