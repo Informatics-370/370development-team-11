@@ -142,6 +142,7 @@ import { UploadInvoiceComponent } from './upload-invoice/upload-invoice.componen
 import { ViewUnapprovedRequestsComponent } from './view-unapproved-requests/view-unapproved-requests.component';
 import { SignOffRequestComponent } from './sign-off-request/sign-off-request.component';
 import { ReportsMainViewComponent } from './Reports/reports-main-view/reports-main-view.component';
+import { ReportFilterMenuComponent } from './Reports/report-filter-menu/report-filter-menu.component';
 
 
 @NgModule({
@@ -249,7 +250,8 @@ import { ReportsMainViewComponent } from './Reports/reports-main-view/reports-ma
     UploadInvoiceComponent,
     ViewUnapprovedRequestsComponent,
     SignOffRequestComponent,
-    ReportsMainViewComponent
+    ReportsMainViewComponent,
+    ReportFilterMenuComponent
   ],
   imports: [
     BrowserModule,

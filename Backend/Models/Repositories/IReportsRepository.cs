@@ -5,6 +5,7 @@ namespace ProcionAPI.Models.Repositories
 {
     public interface IReportsRepository
     {
-        Task<BEESpentReportVM[]> getBEESpendReportAsync();
+        Task<BEESpentReportVM[]> getBEESpendReportAsync(DateTime StartDate, DateTime EndDate); 
+        Task<VendorSpentReport[]> getVendorSpentReportAsync();
     }
 }

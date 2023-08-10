@@ -31,12 +31,29 @@ namespace ProcionAPI.Controllers
 
 
         [HttpGet]
-        [Route("getBEESpendReport")]
-        public async Task<IActionResult> getBEESpendReport()
+        [Route("getBEESpendReport/{StartDate}/{EndDate}")]
+        public async Task<IActionResult> getBEESpendReport(DateTime StartDate, DateTime EndDate)
         {
             try
             {
-                var result = await _ReportsRepository.getBEESpendReportAsync();
+                var result = await _ReportsRepository.getBEESpendReportAsync(StartDate,EndDate);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        
+        [HttpGet]
+        [Route("getVendorSpentReport")]
+        public async Task<IActionResult> getVendorSpentReport()
+        {
+            try
+            {
+                var result = await _ReportsRepository.getVendorSpentReportAsync();
                 return Ok(result);
             }
             catch (Exception)

@@ -88,6 +88,7 @@ import { BackupComponent } from './Settings/backup/backup.component';
 import { EditProcurementRequestComponent } from './edit-procurement-request/edit-procurement-request.component';
 
 import { ReportsMainViewComponent } from './Reports/reports-main-view/reports-main-view.component';
+import { ReportFilterMenuComponent } from './Reports/report-filter-menu/report-filter-menu.component';
 
 const routes: Routes = [
   {
@@ -374,9 +375,13 @@ const routes: Routes = [
   {
     path: 'ReportsMainView',
     component: ReportsMainViewComponent
+  },
+  {
+    path: 'ReportFilterMenu',
+    component: ReportFilterMenuComponent
   }
 
-
+  
   
 
 ];

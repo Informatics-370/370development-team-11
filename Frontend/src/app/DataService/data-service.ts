@@ -53,6 +53,7 @@ import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
 import { BEESpentReportVM } from '../Shared/BEESpentReportVM';
+import { VendorSpentReport } from '../Shared/VendorSpentReport';
 
 @Injectable({
   providedIn: 'root'
@@ -1254,8 +1255,12 @@ export class DataService {
 
   //----------------------------------------------------------------------Reports-----------------------------------------------------------------------------
 
-  getBEESpendReport(): Observable<any> {
-    return this.httpClient.get<BEESpentReportVM[]>(`${this.apiUrl}Reports/getBEESpendReport`).pipe(map(result => result))
+  getBEESpendReport( StartDate:Date,EndDate:Date): Observable<any> {
+    return this.httpClient.get<BEESpentReportVM[]>(`${this.apiUrl}Reports/getBEESpendReport/${StartDate}/${EndDate}`).pipe(map(result => result))
+  }
+
+  getVendorSpentReport(): Observable<any> {
+    return this.httpClient.get<VendorSpentReport[]>(`${this.apiUrl}Reports/getVendorSpentReport`).pipe(map(result => result))
   }
 
 
