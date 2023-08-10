@@ -6,6 +6,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 import { Branch } from 'src/app/Shared/Branch';
+import { AuditLog } from '../../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-create-branch',
@@ -14,6 +16,14 @@ import { Branch } from 'src/app/Shared/Branch';
 })
 export class CreateBranchComponent {
   myForm: FormGroup = new FormGroup({});
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   constructor(private router: Router, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
 
@@ -44,20 +54,29 @@ export class CreateBranchComponent {
                 document.querySelector('button').classList.toggle("is_active");
               }
 
-              var action = "Create";
-              var title = "CREATE SUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + street + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+              this.log.action = "Created Branch: " + this.myForm.get('name')?.value;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  var action = "Create";
+                  var title = "CREATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + street + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
 
-              const duration = 1750;
-              setTimeout(() => {
-                this.router.navigate(['/ViewBranch']);
-                dialogRef.close();
-              }, duration);
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewBranch']);
+                    dialogRef.close();
+                  }, duration);
+                }
+              }) 
             }
           })
         }

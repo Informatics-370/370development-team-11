@@ -29,6 +29,7 @@ import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
+import { AuditLog } from '../Shared/AuditLog';
 
 @Component({
   selector: 'app-sign-off-request',
@@ -295,6 +296,14 @@ export class SignOffRequestComponent {
     asset: this.assets,
     vendor: this.Procurement_Request.vendor,
   }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   BudgetAllocationCode: BudgetLine[] = [];
   finalizationForm: FormGroup = new FormGroup({});
 
@@ -338,7 +347,18 @@ export class SignOffRequestComponent {
       //   this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe();
       // })
 
-      this.router.navigate(['/ViewProcurementDetails']);
+      this.log.action = "Procurement Sign-Off Completed for Request: " + this.ProcurementDetails.procurement_Details_ID;
+      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+      let test: any
+      test = new DatePipe('en-ZA');
+      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+      this.dataService.AuditLogAdd(this.log).subscribe({
+        next: (Log) => {
+          this.router.navigate(['/ViewProcurementDetails']);
+        }
+      })
+
+      
     })
 
   }

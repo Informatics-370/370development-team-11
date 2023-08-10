@@ -18,7 +18,7 @@
                                         <mat-select formControlName="category_ID" required>
                                             <mat-option>---</mat-option>
                                             <mat-option *ngFor="let category of categories"
-                                                [value]="category.account_Name">{{category.account_Name}}</mat-option>
+                                                [value]="category.category_ID">{{category.account_Name}}</mat-option>
                                         </mat-select>
                                         <mat-error *ngIf="myError('category_ID', 'required')">Please choose a
                                             category</mat-error>

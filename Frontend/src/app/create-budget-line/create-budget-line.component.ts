@@ -9,7 +9,8 @@ import { Department } from '../Shared/Department';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-create-budget-line',
@@ -51,6 +52,13 @@ export class CreateBudgetLineComponent {
     budgetAmt: 0,
     actualAmt: 0,
     variance: 0
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   categories: any[] = []
@@ -107,9 +115,21 @@ export class CreateBudgetLineComponent {
             if (result) {
               document.getElementById('cBtn').style.display = "none";
               document.querySelector('button').classList.toggle("is_active");
+
+              this.log.action = "Created Budget Line for: " + this.budgetLine.account_Code;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  this.router.navigate(['/ViewBudgetLines', this.id]);
+                }
+              })
+
             }
 
-            this.router.navigate(['/ViewBudgetLines', this.id]);
+            
           });
         }
       });

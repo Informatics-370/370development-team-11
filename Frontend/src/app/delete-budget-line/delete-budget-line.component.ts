@@ -6,7 +6,8 @@ import { BudgetLine } from '../Shared/BudgetLine';
 import { BudgetCategory } from '../Shared/BudgetCategory';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { Department } from '../Shared/Department';
-
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -49,6 +50,13 @@ export class DeleteBudgetLineComponent {
     variance: 0
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   showConfirmationDialog: boolean = true;
   showSuccessDialog: boolean = false;
 
@@ -74,11 +82,20 @@ export class DeleteBudgetLineComponent {
   onConfirm(id: string): void {
     this.dataService.DeleteBudgetLine(id).subscribe({
       next: () => {
-        this.showConfirmationDialog = false;
-        this.showSuccessDialog = true;
-        setTimeout(() => {
-          this.dialogRef.close('confirm');
-        }, 1750);
+        this.log.action = "Deleted Budget Line: " + this.budgetLine.account_Code;
+        this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.dataService.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.dialogRef.close('confirm');
+            }, 1750);
+          }
+        })
       }
     });
   }

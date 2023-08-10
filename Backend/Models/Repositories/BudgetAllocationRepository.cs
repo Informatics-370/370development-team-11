@@ -31,7 +31,7 @@ namespace ProcionAPI.Models.Repositories
         }
         public async Task<Budget_Allocation> GetBudgetAllocationAsync(int budgetAllocationId)
         {
-            IQueryable<Budget_Allocation> query = _dbContext.Budget_Allocation.Where(c => c.Budget_ID == budgetAllocationId);
+            IQueryable<Budget_Allocation> query = _dbContext.Budget_Allocation.Include(c => c.Department).Where(c => c.Budget_ID == budgetAllocationId);
             return await query.FirstOrDefaultAsync();
         }
         public async Task<Budget_Line[]> GetAllBudgetLinesAsync()

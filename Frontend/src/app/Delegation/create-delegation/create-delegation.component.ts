@@ -8,6 +8,7 @@ import { Observable, startWith, map } from 'rxjs';
 import { DataService } from '../../DataService/data-service';
 import { NotificationdisplayComponent } from '../../notificationdisplay/notificationdisplay.component';
 import { Admin } from '../../Shared/Admin';
+import { AuditLog } from '../../Shared/AuditLog';
 import { Delegation_Of_Authority } from '../../Shared/DelegationOfAuthority';
 import { DelegationStatus } from '../../Shared/DelegationStatus';
 import { Role } from '../../Shared/EmployeeRole';
@@ -86,6 +87,13 @@ export class CreateDelegationComponent implements OnInit {
     delegation_Of_Authority: this.doa,
     name: '',
     description: '',
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
@@ -214,20 +222,30 @@ export class CreateDelegationComponent implements OnInit {
                 this.dataService.CheckDelegation().subscribe({
                   next: (r) => {
                     if (r) {
-                      var action = "CREATE";
-                      var title = "CREATE SUCCESSFUL";
-                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].delegation_ID + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                        disableClose: true,
-                        data: { action, title, message }
-                      });
+                      this.log.action = "Created Delegation: " + response[0].delegation_ID;
+                      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataService.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          var action = "CREATE";
+                          var title = "CREATE SUCCESSFUL";
+                          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].delegation_ID + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-                      const duration = 1750;
-                      setTimeout(() => {
-                        this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-                        dialogRef.close();
-                      }, duration);
+                          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                            disableClose: true,
+                            data: { action, title, message }
+                          });
+
+                          const duration = 1750;
+                          setTimeout(() => {
+                            this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
+                            dialogRef.close();
+                          }, duration);
+                        }
+                      })
                     }
                   }
                 })

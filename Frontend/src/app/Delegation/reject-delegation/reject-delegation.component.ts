@@ -3,6 +3,8 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn,
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../../DataService/data-service';
+import { DatePipe } from '@angular/common';
+import { AuditLog } from '../../Shared/AuditLog';
 
 @Component({
   selector: 'app-reject-delegation',
@@ -16,6 +18,13 @@ export class RejectDelegationComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
   showConfirmationDialog: boolean = true;
   showSuccessDialog: boolean = false;
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   constructor(public dialogRef: MatDialogRef<RejectDelegationComponent>, private formBuilder: FormBuilder, private ActRoute: ActivatedRoute, private route: Router, private dataService: DataService,
     @Inject(MAT_DIALOG_DATA) public data: { ID: number }) { }
@@ -48,11 +57,20 @@ export class RejectDelegationComponent implements OnInit {
 
       this.dataService.EditDelegationStatus(statusID, this.delID).subscribe(r => {
         this.dataService.DeleteTempAcc(this.delID).subscribe(x => {
-          this.showConfirmationDialog = false;
-          this.showSuccessDialog = true;
-          setTimeout(() => {
-            this.dialogRef.close();
-          }, 1750);
+          this.log.action = "Revoked Access for Delegation: " + this.data.ID;
+          this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+          let test: any
+          test = new DatePipe('en-ZA');
+          this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+          this.dataService.AuditLogAdd(this.log).subscribe({
+            next: (Log) => {
+              this.showConfirmationDialog = false;
+              this.showSuccessDialog = true;
+              setTimeout(() => {
+                this.dialogRef.close();
+              }, 1750);
+            }
+          })
         })
       })
     })

@@ -29,6 +29,8 @@ import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
+import { AuditLog } from '../Shared/AuditLog';
+
 @Component({
   selector: 'app-finalize-procurement-request-create',
   templateUrl: './finalize-procurement-request-create.component.html',
@@ -295,6 +297,14 @@ export class FinalizeProcurementRequestCreateComponent {
     asset: this.assets,
     vendor: this.Procurement_Request.vendor,
   }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   BudgetAllocationCode: BudgetLine[] = [];
   finalizationForm: FormGroup = new FormGroup({});
 
@@ -336,8 +346,19 @@ export class FinalizeProcurementRequestCreateComponent {
         this.ProofOfPayment.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
         this.ProofOfPayment.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category;
         this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe();
+
+        this.log.action = "Procurement Request " + this.route.snapshot.paramMap.get('id') + " Finalised";
+        this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.dataService.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            this.router.navigate(['/ViewBudgetAllocation']);
+          }
+        })
       })
-      this.router.navigate(['/ViewBudgetAllocation']);
+      
     })
 
   }

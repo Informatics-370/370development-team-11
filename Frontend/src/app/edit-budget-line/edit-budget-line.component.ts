@@ -6,6 +6,8 @@ import { BudgetLine } from '../Shared/BudgetLine';
 import { BudgetCategory } from '../Shared/BudgetCategory';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { Department } from '../Shared/Department';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-edit-budget-line',
@@ -50,6 +52,14 @@ export class EditBudgetLineComponent {
     actualAmt: 0,
     variance: 0
   }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   categories: BudgetCategory[] = []
   budgetLineForm: FormGroup = new FormGroup({});
   CatInUse: String;
@@ -80,13 +90,17 @@ export class EditBudgetLineComponent {
       this.budgetLine = data;
       console.log(this.budgetLine)
 
-      const CategoryID = Number(this.budgetLine.budget_Category.category_ID);
-      console.log(CategoryID)
-      const CategoryIndex = this.categories.findIndex((category) => category.category_ID == CategoryID);
-      console.log(CategoryIndex)
+      this.budgetLineForm.patchValue({
+        category_ID: this.budgetLine.category_ID,
+        account_Code: this.budgetLine.account_Code,
+        month: this.budgetLine.month,
+        budgetAmt: this.budgetLine.budgetAmt,
+        actualAmt: this.budgetLine.actualAmt
+      })
 
-      this.budgetLineForm.get('category_ID')?.setValue(this.categories[CategoryIndex].account_Name);
-      console.log(this.budgetLineForm.get('category_ID')?.value)
+      //const CategoryID = Number(this.budgetLine.budget_Category.category_ID);
+      //const CategoryIndex = this.categories.findIndex((category) => category.category_ID == CategoryID);
+      //this.budgetLineForm.get('category_ID')?.setValue(this.categories[CategoryIndex].account_Name);
 
     });
   }
@@ -100,21 +114,28 @@ export class EditBudgetLineComponent {
   }
 
   onSubmit() {
-    this.category = this.budgetLineForm.get('category_ID')?.value;
-    this.budgetLine.budget_Category = this.category;
+    this.budgetLine.category_ID = this.budgetLineForm.get('category_ID')?.value;
     this.budgetLine.account_Code = this.budgetLineForm.get('account_Code')?.value;
     this.budgetLine.month = this.budgetLineForm.get('month')?.value;
     this.budgetLine.budgetAmt = this.budgetLineForm.get('budgetAmt')?.value;
     this.budgetLine.actualAmt = this.budgetLineForm.get('actualAmt')?.value;
     this.budgetLine.variance = Number(this.budgetLine.budgetAmt) - Number(this.budgetLine.actualAmt);
-    this.budgetLine.budget_Allocation.budget_ID = this.id;
-    this.budgetLine.budget_Allocation.department_ID = 0;
     console.log(this.budgetLine);
 
     this.dataService.EditBudgetLine(this.id2, this.budgetLine).subscribe(result => {
       document.getElementById('cBtn').style.display = "none";
       document.querySelector('button').classList.toggle("is_active");
-      this.router.navigate(['/ViewBudgetLines', this.id]);
+
+      this.log.action = "Edited Budget Line for: " + this.budgetLine.budget_Category.account_Name;
+      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+      let test: any
+      test = new DatePipe('en-ZA');
+      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+      this.dataService.AuditLogAdd(this.log).subscribe({
+        next: (Log) => {
+          this.router.navigate(['/ViewBudgetLines', this.id]);
+        }
+      })
     });
   }
 

@@ -4,7 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../DataService/data-service';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { Department } from '../Shared/Department';
-
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-delete-budget-allocation',
@@ -26,6 +27,13 @@ export class DeleteBudgetAllocationComponent {
     year: 0,
     total: 0,
     department: this.dep
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   showConfirmationDialog: boolean = true;
@@ -53,12 +61,23 @@ export class DeleteBudgetAllocationComponent {
   onConfirm(id: number): void {
     this.dataService.DeleteBudgetAllocation(id).subscribe({
       next: () => {
-        this.showConfirmationDialog = false;
-        this.showSuccessDialog = true;
-        setTimeout(() => {
-          this.dialogRef.close();
-          location.reload();
-        }, 1750);
+        this.log.action = "Deleted Budget Allocation: " + this.budgetAllocation.department.name;
+        this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.dataService.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.dialogRef.close();
+              location.reload();
+            }, 1750);
+          }
+        })
+
+        
       }
     });
   }

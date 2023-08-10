@@ -3,6 +3,8 @@ import { DataService } from '../DataService/data-service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BudgetCategory } from '../Shared/BudgetCategory';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-edit-budget-category',
@@ -15,6 +17,13 @@ export class EditBudgetCategoryComponent {
     category_ID: 0,
     account_Name: '',
     description: ''
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   budgetCategoryForm: FormGroup = new FormGroup({});
@@ -45,7 +54,17 @@ export class EditBudgetCategoryComponent {
     this.dataService.EditBudgetCategory(this.currentBudgetCategory.category_ID, this.currentBudgetCategory).subscribe(result => {
       document.getElementById('cBtn').style.display = "none";
       document.querySelector('button').classList.toggle("is_active");
-      this.router.navigate(['/ViewBudgetCategory']);
+
+      this.log.action = "Edited Budget Category for: " + this.currentBudgetCategory.account_Name;
+      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+      let test: any
+      test = new DatePipe('en-ZA');
+      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+      this.dataService.AuditLogAdd(this.log).subscribe({
+        next: (Log) => {
+          this.router.navigate(['/ViewBudgetCategory']);
+        }
+      })
     });
   }
 

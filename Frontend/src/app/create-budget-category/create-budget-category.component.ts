@@ -6,7 +6,8 @@ import { BudgetCategory } from '../Shared/BudgetCategory';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
-
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-create-budget-category',
@@ -18,6 +19,13 @@ export class CreateBudgetCategoryComponent {
     category_ID: 0,
     account_Name: '',
     description: ''
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   budgetCategoryForm: FormGroup = new FormGroup({});
@@ -44,20 +52,31 @@ export class CreateBudgetCategoryComponent {
                 document.querySelector('button').classList.toggle("is_active");
               }
 
-              var action = "CREATE";
-              var title = "CREATE SUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The budget category <strong>" + this.budgetCategory.account_Name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
+              this.log.action = "Created Budget Category: " + this.budgetCategory.account_Name;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  var action = "CREATE";
+                  var title = "CREATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The budget category <strong>" + this.budgetCategory.account_Name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
 
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
 
-              const duration = 1750;
-              setTimeout(() => {
-                this.router.navigate(['/ViewBudgetCategory']);
-                dialogRef.close();
-              }, duration);
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewBudgetCategory']);
+                    dialogRef.close();
+                  }, duration);
+                }
+              })
+
+              
             }
           );
         }
