@@ -7,6 +7,7 @@ import { Department } from '../Shared/Department';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { MatDatepicker } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-create-budget-allocation',
@@ -30,6 +31,7 @@ export class CreateBudgetAllocationComponent {
     department: this.dep
   }
 
+  currentDate = Date.now();
   departments: any[] = []
 
   budgetAllocationForm: FormGroup = new FormGroup({});
@@ -39,7 +41,7 @@ export class CreateBudgetAllocationComponent {
     this.GetDepartments();
     this.budgetAllocationForm = this.formBuilder.group({
       department_ID: ['', [Validators.required]],
-      date_Created: ['', [Validators.required]],
+      // date_Created: ['', [Validators.required]],
       year: [0, [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern("^[0-9]+$")]],
       total: [0, [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]]
     })
@@ -49,7 +51,7 @@ export class CreateBudgetAllocationComponent {
     this.dep = this.budgetAllocationForm.get('department_ID')?.value;
     this.dep.department_ID = 0;
     this.budgetAllocation.department = this.dep;
-    this.budgetAllocation.date_Created = this.budgetAllocationForm.get('date_Created')?.value;
+    this.budgetAllocation.date_Created = new Date().toISOString();
     this.budgetAllocation.year = this.budgetAllocationForm.get('year')?.value;
     this.budgetAllocation.total = this.budgetAllocationForm.get('total')?.value;
     console.log(this.budgetAllocation.department.name)
@@ -109,6 +111,10 @@ export class CreateBudgetAllocationComponent {
   onCancel(): void {
     this.budgetAllocationForm.reset();
     this.router.navigate(['/ViewBudgetAllocation']);
+  }
+  monthSelectedHandler(event, datepicker: MatDatepicker<number>) {
+    const date = new Date(`${event._i.month + 1}/${event._i.date}/${event._i.year}`);
+    datepicker.close();
   }
 
   public myError = (controlName: string, errorName: string) => {
