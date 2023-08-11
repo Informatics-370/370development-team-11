@@ -35,8 +35,10 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import { ErrorStateMatcher } from '@angular/material/core';
 import { Notification } from 'src/app/Shared/Notification';
 import { Notification_Type } from '../Shared/Notification_Type';
-import { catchError } from 'rxjs';
+import { catchError, map, startWith } from 'rxjs';
 import { AuditLog } from '../Shared/AuditLog';
+import {Observable} from 'rxjs';
+import {NgFor} from '@angular/common';
 
 @Component({
   selector: 'app-place-procurement-request-create-details',
@@ -362,9 +364,30 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   AssetChecked = false;
   ProcurementRequest_ID = 0;
   MandateLimitAmount: 0;
-  currentDate = Date.now()
-  
+  currentYear = new Date().getFullYear();
+  currentmonth = new Date().getMonth();
+  currentDay = new Date().getDate();
+  currentDate:any;
+  sAssets:Asset[] = []
+  assetnames:string[] = [];
+  filteredAssets: Observable<string[]>;
   ngOnInit() {
+
+    this.ProcureService.GetAssetByID(1).subscribe(r => {
+      this.sAssets = r
+     // this.sAssets.forEach(x=> this.assetnames.push(x.name));
+     this.assetnames.push(r.name);
+      console.log(this.sAssets)
+      this.filteredAssets = this.ProcurementFormGroup.get("AssetName")?.valueChanges.pipe( 
+        startWith(''),
+        map(value => this._filter(value)),
+      );
+      console.log(this.filteredAssets)
+    })
+
+
+
+    this.currentDate = new Date(this.currentYear, this.currentmonth, this.currentDay);
     this.ProcurementFormGroup.get("AssetName")?.disable();
     this.ProcurementFormGroup.get("AssetDescription")?.disable();
     this.ProcurementFormGroup.get("DepositAmount")?.disable();
@@ -426,6 +449,18 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
 
   }
+
+  
+
+  _normalizeValue(value: string): string {
+    return value.toLowerCase().replace(/\s/g, '');
+  }
+
+  _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.assetnames.filter(asset => this._normalizeValue(asset).toLowerCase().indexOf(filterValue) === 0);
+  }
+
 
   ConsumableCheckChange() {
     if (this.ProcurementFormGroup.get("ItemType")?.value == "Consumable") {

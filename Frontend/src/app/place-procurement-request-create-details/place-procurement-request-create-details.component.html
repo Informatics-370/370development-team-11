@@ -81,8 +81,13 @@
                 <label style="width: 450px;">Asset Name:</label>
               </div>
               <div class="col-7">
-                  <mat-form-field appearance="fill">
-                    <input matInput formControlName="AssetName" [errorStateMatcher]="matcher">
+                  <mat-form-field appearance="fill" *ngIf="assetnames != undefined">
+                    <input matInput formControlName="AssetName" [errorStateMatcher]="matcher" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" >
+                      <mat-option *ngFor="let assets of filteredAssets | async " [value]="assets">
+                        {{assets}}
+                      </mat-option>
+                    </mat-autocomplete>
                     <mat-error *ngIf="ProcurementFormGroup.controls['AssetName'].hasError('required')">Asset name is required</mat-error>
                     <mat-error *ngIf="ProcurementFormGroup.controls['AssetName'].hasError('maxlength')">Asset name cannot exceed more than 32 characters</mat-error>
                     <mat-error *ngIf="ProcurementFormGroup.controls['AssetName'].hasError('pattern')">Asset name may only contain letters</mat-error>
@@ -110,7 +115,7 @@
           <div class="col-7">
             <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length > 0">
               <mat-select formControlName="AccountCode" placeholder="Please Select an Account Code" style="display: contents;" [errorStateMatcher]="matcher">
-                <mat-option *ngFor="let codes of BudgetAllocationCode" [value]="codes.account_Code">{{codes.account_Code}}</mat-option>
+                <mat-option *ngFor="let codes of BudgetAllocationCode" [value]="codes.account_Code">{{codes.budget_Category.account_Name}}</mat-option>
               </mat-select>
               <mat-error *ngIf="ProcurementFormGroup.controls['AccountCode'].hasError('required')">Please Select an Account Code</mat-error>
             </mat-form-field>
@@ -164,7 +169,7 @@
                 <div class="col-7">
                   <mat-form-field appearance="outline">
                     <mat-label>Choose a date</mat-label>
-                    <input matInput  [matDatepicker]="dp1" formControlName="DepositDueDate"  readonly (click)="dp1.open()" [errorStateMatcher]="matcher">
+                    <input matInput  [matDatepicker]="dp1" formControlName="DepositDueDate" [min]="currentDate"   readonly (click)="dp1.open()" [errorStateMatcher]="matcher">
                     <mat-datepicker-toggle matIconSuffix [for]="dp1" >
                     <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                     </mat-datepicker-toggle>
@@ -191,7 +196,7 @@
             <div class="col-7">
               <mat-form-field appearance="outline">
                 <mat-label>Choose a date</mat-label>
-                <input matInput  [matDatepicker]="dp2" formControlName="PaidOnDate"  readonly (click)="dp2.open()" [errorStateMatcher]="matcher">
+                <input matInput  [matDatepicker]="dp2" formControlName="PaidOnDate" [min]="currentDate"  readonly (click)="dp2.open()" [errorStateMatcher]="matcher">
                 <mat-datepicker-toggle matIconSuffix [for]="dp2" >
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                 </mat-datepicker-toggle>
@@ -250,11 +255,11 @@
             <div class="col-7">
                 <mat-form-field appearance="outline">
                     <mat-label>Choose a date</mat-label>
-                    <input matInput  [matDatepicker]="dp3" formControlName="TotalAmountDueDate" readonly (click)="dp3.open()" [errorStateMatcher]="matcher" >
+                    <input matInput  [matDatepicker]="dp3" formControlName="TotalAmountDueDate" [min]="currentDate" readonly (click)="dp3.open()" [errorStateMatcher]="matcher" >
                     <mat-datepicker-toggle matIconSuffix [for]="dp3" >
                     <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                     </mat-datepicker-toggle>
-                    <mat-datepicker #dp3 startView="year" [startAt]="currentDate"></mat-datepicker>
+                    <mat-datepicker #dp3 startView="year" [startAt]="currentDate" ></mat-datepicker>
                     <mat-error *ngIf="ProcurementFormGroup.controls['TotalAmountDueDate'].hasError('required')">Total Amount to be paid due date is required</mat-error>
                 </mat-form-field> 
             </div>

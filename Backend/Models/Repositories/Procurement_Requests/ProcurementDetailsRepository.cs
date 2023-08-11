@@ -30,7 +30,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
         public async Task<Procurement_Details[]> CreateProcurementDetailsAsync(Procurement_Details ProcurementDetails)
         {
-            Employee existingEmployee = await _dbContext.Employee.FirstOrDefaultAsync(x => x.EmployeeID == ProcurementDetails.EmployeeID);
+            Employee existingEmployee = await _dbContext.Employee.Include(x=> x.User).ThenInclude(x=> x.Role).FirstOrDefaultAsync(x => x.EmployeeID == ProcurementDetails.EmployeeID);
 
             if (existingEmployee != null)
             {
@@ -45,20 +45,6 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
                
             }
-
-            //Vendor_Status existingVendorStatus = await _dbContext.Vendor_Status.FirstOrDefaultAsync(x => x.Vendor_Status_ID == ProcurementDetails.Procurement_Request.Vendor.Vendor_Status_ID);
-
-            //if (existingVendorStatus != null)
-            //{
-            //    ProcurementDetails.Procurement_Request.Vendor.Vendor_Status = existingVendorStatus;
-            //}
-
-            //Role existingRole = await _dbContext.Role.FirstOrDefaultAsync(x => x.Role_ID == ProcurementDetails.Procurement_Request.User.Role_ID);
-
-            //if (existingRole != null)
-            //{
-            //    ProcurementDetails.Procurement_Request.User.Role = existingRole;
-            //}
 
             Sign_Off_Status existingSignOffStatus = await _dbContext.Sign_Off_Status.FirstOrDefaultAsync(x => x.Sign_Off_Status_ID == ProcurementDetails.Sign_Off_Status_ID);
 
@@ -162,8 +148,8 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         {
             
 
-            Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Details_ID == AddProcurementConsumable.Procurement_Details_ID);
-
+            Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details.Include(x=> x.Employee).ThenInclude(x=> x.User).ThenInclude(x=> x.Role).FirstOrDefaultAsync(x => x.Procurement_Details_ID == AddProcurementConsumable.Procurement_Details_ID);
+            Console.WriteLine(existingProcurementDetails);
             if (existingProcurementDetails != null)
             {
                 AddProcurementConsumable.Procurement_Details = existingProcurementDetails;
