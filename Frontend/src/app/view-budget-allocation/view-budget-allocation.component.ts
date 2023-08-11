@@ -10,6 +10,8 @@ import { DeleteBudgetAllocationComponent } from '../delete-budget-allocation/del
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -49,7 +51,12 @@ export class ViewBudgetAllocationComponent {
     department: this.dep
   }
 
-
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService,
     private sanitizer: DomSanitizer) { }
@@ -81,7 +88,17 @@ export class ViewBudgetAllocationComponent {
   }
 
   exportExcel(id: Number, name: String) {
-    this.dataService.ExportExcel(id, name)
+    this.log.action = "Exported Budget Allocation";
+    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    let test: any
+    test = new DatePipe('en-ZA');
+    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+    this.dataService.AuditLogAdd(this.log).subscribe({
+      next: (Log) => {
+        this.dataService.ExportExcel(id, name)
+      }
+    })
+    
   }
 
   DeleteBudgetAllocation(id: Number) {

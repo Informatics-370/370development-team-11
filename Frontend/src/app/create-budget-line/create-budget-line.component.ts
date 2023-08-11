@@ -82,12 +82,14 @@ export class CreateBudgetLineComponent {
   onSubmit(): void {
     this.category = this.budgetLineForm.get('category_ID')?.value;
     this.budgetLine.budget_Category = this.category;
+    this.budgetLine.category_ID = this.category.category_ID;
     this.budgetLine.account_Code = this.budgetLineForm.get('account_Code')?.value;
     this.budgetLine.month = this.budgetLineForm.get('month')?.value;
     this.budgetLine.budgetAmt = this.budgetLineForm.get('budgetAmt').value;
     this.budgetLine.actualAmt = this.budgetLineForm.get('actualAmt').value;
     this.budgetLine.variance = Number(this.budgetLine.budgetAmt) - Number(this.budgetLine.actualAmt);
     this.budgetLine.budget_Allocation.budget_ID = this.id;
+    this.budgetLine.budget_ID = this.id;
     this.budgetLine.budget_Allocation.department_ID = 0;
     console.log(this.budgetLine);
 
@@ -112,7 +114,7 @@ export class CreateBudgetLineComponent {
           }, duration);
         } else {
           this.dataService.AddBudgetLine(this.budgetLine).subscribe(result => {
-            if (result) {
+            if (result != null) {
               document.getElementById('cBtn').style.display = "none";
               document.querySelector('button').classList.toggle("is_active");
 
@@ -127,6 +129,20 @@ export class CreateBudgetLineComponent {
                 }
               })
 
+            } else {
+              var action = "Error";
+              var title = "Validation Error";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The budget line already exists.");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+
+              const duration = 1750;
+              setTimeout(() => {
+                dialogRef.close();
+              }, duration);
             }
 
             
