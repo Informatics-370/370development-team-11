@@ -4,6 +4,7 @@
 
     <img src="./assets/Images/image 3.jpg" />
     <span class="main-spacer"></span>
+
     <div fxHide.lt-lg>
       <button mat-button routerLink="/Home" (click)="reload()" matTooltip="Home Page" style="margin-bottom:3px">
         <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home" class="sub-spacer"
@@ -51,24 +52,10 @@
           [matBadgeHidden]="hidden"></mat-icon>
       </button>
 
-      <!--<a *ngIf="rAdmin" class="sub-spacer"
-  style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/ViewEmployee"
-  mat-button (click)="reload()">Administration</a>-->
-      <!--<a class="sub-spacer" style="font-size:16pt; text-decoration:none; color:white;" routerLink="/ViewConsumable"
-  mat-button (click)="reload()">Inventory</a>-->
-      <!--<a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;"
-     routerLink="/ViewBudgetAllocation" mat-button (click)="reload()">Finance</a>
-  <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/ViewProcurementRequest" mat-button (click)="reload()">Procurement</a>
-  <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/request-view"
-     mat-button (click)="reload()">Vendor</a>-->
-      <!--<a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()">Reports</a>
-      <a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()" (click)="HelpRoute()">Help</a>
-      <mat-icon aria-hidden="false" aria-label="notification icon" fontIcon="notifications" class="sub-spacer"
-                style="font-size:19pt;" matBadge="{{numNotifications}}" matBadgeColor="warn" [matBadgeHidden]="hidden" routerLink="/NotificationHub"></mat-icon>-->
     </div>
 
-    <img *ngIf="this.isLoggedIn === true" class="image-container" src="{{usr.profile_Picture}}"
-      style="object-fit: cover;" [matMenuTriggerFor]="beforeMenu" />
+    <!--------------------------------------------------------------------------------Minimized------------------------------------------------------------------------------------->
+    <img *ngIf="this.isLoggedIn === true" class="image-container" src="{{usr.profile_Picture}}" style="object-fit: cover;" [matMenuTriggerFor]="beforeMenu" />
     <mat-menu #beforeMenu="matMenu" xPosition="before">
       <button mat-menu-item routerLink="/Profile" (click)="reload()"><mat-icon
           matPrefix>pageview</mat-icon>Profile</button>
@@ -87,48 +74,35 @@
         routerLink="/ViewEmployee" (click)="reload()">
         Administration
       </button>
-      <!--<a *ngIf="rAdmin" class="sub-spacer"
-    style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/ViewEmployee"
-    mat-button (click)="reload()">Administration</a>-->
-      <!--<a class="sub-spacer" style="font-size:16pt; text-decoration:none; color:white;" routerLink="/ViewConsumable"
-    mat-button (click)="reload()">Inventory</a>-->
-      <button mat-menu-item *ngIf="rAdmin" style="font-size: 16pt; text-decoration: none; color: black;"
-        routerLink="/ViewConsumable" (click)="reload()">
+
+      <button mat-menu-item style="font-size: 16pt; text-decoration: none; color: black;" routerLink="/ViewConsumable" (click)="reload()">
         Inventory
       </button>
-      <!--<a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;"
-    routerLink="/ViewBudgetAllocation" mat-button (click)="reload()">Finance</a>-->
-      <button mat-menu-item style="font-size: 16pt; text-decoration: none; color: black;"
-        routerLink="/ViewBudgetAllocation" (click)="reload()">
+
+      <button mat-menu-item style="font-size: 16pt; text-decoration: none; color: black;" routerLink="/ViewBudgetAllocation" (click)="reload()">
         Finance
       </button>
-      <!--<a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/ViewProcurementRequest" mat-button (click)="reload()">Procurement</a>-->
-      <button mat-menu-item *ngIf="rAdmin" style="font-size: 16pt; text-decoration: none; color: black;"
-        routerLink="/ViewProcurementRequest" (click)="reload()">
+
+      <button mat-menu-item style="font-size: 16pt; text-decoration: none; color: black;" routerLink="/ViewProcurementRequest" (click)="reload()">
         Procurement
       </button>
-      <!--<a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" routerLink="/request-view"
-    mat-button (click)="reload()">Vendor</a>-->
-      <button mat-menu-item *ngIf="rAdmin" style="font-size: 16pt; text-decoration: none; color: black;"
-        routerLink="/request-view" (click)="reload()">
+
+      <button mat-menu-item style="font-size: 16pt; text-decoration: none; color: black;" routerLink="/request-view" (click)="reload()">
         Vendor
       </button>
-      <!--<a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()">Reports</a>-->
-      <button mat-menu-item *ngIf="rAdmin" style="font-size: 16pt; text-decoration: none; color: black;"
-        (click)="reload()" routerLink="/ReportsMainView">
+
+      <button mat-menu-item style="font-size: 16pt; text-decoration: none; color: black;" (click)="reload()" routerLink="/ReportsMainView">
         Reports
       </button>
-      <!--<a class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button (click)="reload()" (click)="HelpRoute()">Help</a>-->
-      <button mat-menu-item *ngIf="rAdmin" style="font-size: 16pt; text-decoration: none; color: black;"
-        (click)="HelpRoute()" (click)="reload()">
+
+      <button mat-menu-item style="font-size: 16pt; text-decoration: none; color: black;" (click)="HelpRoute()" (click)="reload()">
         Help
       </button>
-      <button mat-menu-item routerLink="/NotificationHub" (click)="reload()" matBadge="{{numNotifications}}"
-        matBadgeColor="warn" [matBadgeHidden]="hidden">
+
+      <button mat-menu-item routerLink="/NotificationHub" (click)="reload()" matBadge="{{numNotifications}}" matBadgeColor="warn" [matBadgeHidden]="hidden">
         Notifications
       </button>
-      <!--<mat-icon aria-hidden="false" aria-label="notification icon" fontIcon="notifications" class="sub-spacer"
-               ></mat-icon>-->
+
     </mat-menu>
   </mat-toolbar>
 </div>

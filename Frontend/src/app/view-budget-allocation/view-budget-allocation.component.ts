@@ -28,8 +28,10 @@ export class ViewBudgetAllocationComponent {
   BudgetLines: BudgetLine[] = [];
   BudgetAllocations: BudgetAllocation[] = [];
   SearchedBudgetAllocations: BudgetAllocation[] = [];
+  ExportBudgetLine: BudgetLine[] = [];
+
   searchNumber: Number = 0;
-  displayedColumns: string[] = [ 'department', 'date', 'year', 'total', 'lines', 'action', 'delete'];
+  displayedColumns: string[] = ['department', 'date', 'year', 'total', 'lines', 'export', 'action', 'delete' ];
   dataSource = new MatTableDataSource<BudgetAllocation>();
 
   dep: Department = {
@@ -77,6 +79,11 @@ export class ViewBudgetAllocationComponent {
       this.dataSource = new MatTableDataSource(this.BudgetAllocations);
     });
   }
+
+  exportExcel(id: Number, name: String) {
+    this.dataService.ExportExcel(id, name)
+  }
+
   DeleteBudgetAllocation(id: Number) {
     this.dataService.GetBudgetLines().subscribe({
       next: (result) => {

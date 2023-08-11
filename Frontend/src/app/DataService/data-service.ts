@@ -55,6 +55,8 @@ import { Vendor_Asset } from '../Shared/Vendor_Asset';
 import { AuditLog } from '../Shared/AuditLog';
 import { BEESpentReportVM } from '../Shared/BEESpentReportVM';
 import { VendorSpentReport } from '../Shared/VendorSpentReport';
+import * as FileSaver from 'file-saver';
+
 
 @Injectable({
   providedIn: 'root'
@@ -932,6 +934,12 @@ export class DataService {
         return result.map(item => ({ Year: item.item1, Month: item.item2, ActualAmount: item.item3, PredictedAmount: item.item4 }));
       })
     );
+  }
+
+  ExportExcel(id: Number, name: String) {
+    return this.httpClient.get(`${this.apiUrl}BudgetAllocation/ExportExcel/` + id, { 'responseType': 'blob' }).subscribe((x: Blob) => {
+      FileSaver.saveAs(x, 'Budget Allocation - ' + name + '.xlsx')
+    })
   }
   //--------------------------------------------------------------------------------------Delegation--------------------------------------------------------------------------------------
   GetDelegations(): Observable<any> {
