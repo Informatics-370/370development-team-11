@@ -186,9 +186,15 @@ export class VendordetailsViewComponent implements OnInit {
   VendorID:any;
   VenDetails: VendorDetails[] = [];
   FileDetails:any[] = [];
+  bValid = false;
   ngOnInit(): void {
     this.convertImageToBase64('./assets/Images/CheckMarkBox.png')
     this.convertImageToBase64('./assets/Images/checkboxEmpty.png')
+    let role = this.VendorService.decodeUserRole(sessionStorage.getItem("token"));
+    if(role == "GRC") {
+      this.bValid = true;
+    }
+
 
    for(let i = 0;i < 8;i++) {
       this.FileDetails.push({FileURL:"",FileName:""})

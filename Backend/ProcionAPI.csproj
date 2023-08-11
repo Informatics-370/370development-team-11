@@ -51,4 +51,8 @@
     <None Include="ProcionAPI.sln" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Files\ProcurementQuotes\" />
+  </ItemGroup>
+
 </Project>

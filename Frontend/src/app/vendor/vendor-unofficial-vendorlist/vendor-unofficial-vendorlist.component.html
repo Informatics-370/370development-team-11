@@ -101,7 +101,7 @@
                 </span>
                 </button>
                 <button class="noselect" type="button" matTooltip="This will direct you to Approve Vendor Onboard page, here you will be able to delete onboard request"
-                style="background-color: #94CC5B;" *ngIf="element.quoteTotal == 1 && (element.VendorStatusId == 4 || element.onboardRequestStatusID == 4 || element.onboard_Request_status_ID == 3) && element.VendorStatusId != 2"  (click)="CorrectRouteChoice(element.onboard_Request_Id)" >
+                style="background-color: #94CC5B;" *ngIf="element.quoteTotal == 1 && (element.VendorStatusId == 4 || element.onboardRequestStatusID == 4 || element.VendorStatusId == 3) && element.VendorStatusId != 2"  (click)="CorrectRouteChoice(element.onboard_Request_Id)" >
                 <span class='text'>View</span>
                 <span class="icon" style="border-left: 1px solid #94CC5B; ">
                     <svg xmlns="http://www.w3.org/2000/svg" height="1em"

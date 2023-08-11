@@ -221,7 +221,7 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
      console.log(result)
     for (let a = 0; a < result.length;a++) {
       console.log(i)
-      if(result[a].vendor.vendor_Status_ID == 4) {
+      if(result[a].vendor.vendor_Status_ID == 4 || result[a].vendor.vendor_Status_ID == 3) {
         this.router.navigate(['/vendor-approve-edit/' + result[a].vendor_ID])
       }
       

@@ -24,8 +24,8 @@
 
 
 
-mat-mdc-tab-body ng-tns-c60-18 ng-star-inserted mat-mdc-tab-body-active {
-    height: 400px!important;
+:host ::ng-deep .mat-mdc-tab-body  {
+    height: 320px!important;
 }
 
 
