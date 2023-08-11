@@ -82,7 +82,7 @@ namespace ProcionAPI.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Budget_Line>()
-                .HasKey(bl => new { bl.Account_Code, bl.Budget_ID, bl.Category_ID });
+                .HasKey(bl => new { bl.BudgetLineId });
 
             modelBuilder.Entity<Onboard_Request>()
                .HasKey(or => new {or.Onboard_Request_Id, or.User_Id, or.Vendor_ID });

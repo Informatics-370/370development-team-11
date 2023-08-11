@@ -46,6 +46,12 @@ namespace ProcionAPI.Models.Repositories
             return await query.ToArrayAsync();
         }
 
+        public async Task<Budget_Line[]> GetBudgetAllocationExportAsync(int budgetAllocationId)
+        {
+            IQueryable<Budget_Line> query = _dbContext.Budget_Line.Where(b => b.Budget_Allocation.Budget_ID == budgetAllocationId).Include(c => c.Budget_Category).Include(a => a.Budget_Allocation).ThenInclude(a => a.Department).OrderBy(m => m.Month);
+            return await query.ToArrayAsync();
+        }
+
         public async Task<Budget_Line> GetBudgetLineAsync(string accountCode)
         {
             IQueryable<Budget_Line> query = _dbContext.Budget_Line.Where(c => c.Account_Code == accountCode).Include(c => c.Budget_Category).Include(b => b.Budget_Allocation).ThenInclude(a => a.Department);
@@ -70,24 +76,35 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Budget_Line[]> AddBudgetLineAsync(Budget_Line budgetLine)
         {
-            Budget_Category existingBudgetCategory = await _dbContext.Budget_Category.FirstOrDefaultAsync(d => d.Account_Name == budgetLine.Budget_Category.Account_Name);
-            Budget_Allocation existingBudgetAllocation = await _dbContext.Budget_Allocation.Include(b => b.Department).Where(a => a.Budget_ID == budgetLine.Budget_Allocation.Budget_ID).FirstOrDefaultAsync();
-
-            if (existingBudgetCategory != null)
+            Budget_Line existingLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(d => d.Budget_Category.Account_Name == budgetLine.Budget_Category.Account_Name && d.Month == budgetLine.Month);
+            
+            if (existingLine != null)
             {
-                budgetLine.Budget_Category = existingBudgetCategory;
+                return null;
             }
-
-            if(existingBudgetAllocation != null)
+            else
             {
-                budgetLine.Budget_Allocation = existingBudgetAllocation;
+                Budget_Category existingBudgetCategory = await _dbContext.Budget_Category.FirstOrDefaultAsync(d => d.Account_Name == budgetLine.Budget_Category.Account_Name);
+                Budget_Allocation existingBudgetAllocation = await _dbContext.Budget_Allocation.Include(b => b.Department).Where(a => a.Budget_ID == budgetLine.Budget_Allocation.Budget_ID).FirstOrDefaultAsync();
 
+                if (existingBudgetCategory != null)
+                {
+                    budgetLine.Budget_Category = existingBudgetCategory;
+                }
+
+                if (existingBudgetAllocation != null)
+                {
+                    budgetLine.Budget_Allocation = existingBudgetAllocation;
+
+                }
+
+                await _dbContext.Budget_Line.AddAsync(budgetLine);
+                await _dbContext.SaveChangesAsync();
+
+                return new Budget_Line[] { budgetLine };
             }
-
-            await _dbContext.Budget_Line.AddAsync(budgetLine);
-            await _dbContext.SaveChangesAsync();
-
-            return new Budget_Line[] { budgetLine };
+            
+            
         }
         public async Task<Budget_Line> UpdateBudgetLineAsync(Budget_Line budget_Line, string accountCode)
         {

@@ -29,7 +29,7 @@ namespace ProcionAPI.Models.Entities
         public Sign_Off_Status Sign_Off_Status { get; set; }
         [ForeignKey("Procurement_Payment_Status_ID")]
         public Procurement_Payment_Status Procurement_Payment_Status { get; set; }
-        [ForeignKey("Account_Code, Budget_ID, Category_ID")]
+        [ForeignKey("BudgetLineId")]
         public Budget_Line Budget_Line { get; set; }
         [ForeignKey("Procurement_Status_ID")]
         public Procurement_Status Procurement_Status { get; set; }

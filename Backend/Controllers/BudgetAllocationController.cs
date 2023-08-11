@@ -351,7 +351,7 @@ namespace ProcionAPI.Controllers
         public async Task<IActionResult> ExportExcel(int bai)
         {
 
-            var budgetline = await _repository.GetBudgetLinesForAllocationAsync(bai);
+            var budgetline = await _repository.GetBudgetAllocationExportAsync(bai);
 
             using var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Budget Allocation");
