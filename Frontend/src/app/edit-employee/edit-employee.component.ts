@@ -104,7 +104,7 @@ export class EditEmployeeComponent implements OnInit {
       Name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       Surname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
-      CellPhone_Num: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12), Validators.pattern("^[0-9]*$")]],
+      CellPhone_Num: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern("^[0-9]*$")]],
       Role: ['', [Validators.required]],
       Mandate: ['', [Validators.required]],
       Department: ['', [Validators.required]],
@@ -213,7 +213,7 @@ export class EditEmployeeComponent implements OnInit {
     
     this.dataService.EditUserValidation(username, this.employee.user_Id).subscribe({
       next: (Result) => {
-        
+        console.log
         if (Result != null) {
           this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
             this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
