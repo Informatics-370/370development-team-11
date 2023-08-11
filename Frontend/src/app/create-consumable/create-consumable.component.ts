@@ -117,8 +117,6 @@ export class CreateConsumableComponent implements OnInit {
                   }
                 }
               })
-
-
             }
           );
         }

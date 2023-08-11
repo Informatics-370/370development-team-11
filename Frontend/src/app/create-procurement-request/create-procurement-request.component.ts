@@ -371,12 +371,15 @@ export class CreateProcurementRequestComponent implements OnInit {
   AddQuote() {
     this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[0]).subscribe({
       next: (result1) => {
+        console.log(this.ProcurementQuotes[0])
         if (result1) {
           this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[1]).subscribe({
             next: (Result2) => {
+              console.log(this.ProcurementQuotes[1])
               if (Result2) {
                 this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[2]).subscribe({
                   next: (Result3) => {
+                    console.log(this.ProcurementQuotes[2])
                     if (Result3) {
                       this.ProcurementNotif.notification_Type_ID = 18;
                       let transVar: any

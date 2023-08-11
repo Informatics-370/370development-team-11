@@ -397,53 +397,29 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.EmployeeDetails.email.toString())
           console.log(this.EmployeeDetails);
           console.log(this.MandateLimitAmount)
-        }),
+        },
           (error) => {
             var action = "ERROR";
             var title = "USER NOT AN EMPLOYEE";
             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("User must be an <strong style='color:red'> EMPLOYEE </strong>!");
 
-            this.ProcurementRequest_ID = Number(paramater.get("ProcurementRequestID"));
-            this.ProcureService.GetConsumables().subscribe(response => {
-              this.ConsumableItems = response
-              console.log(this.ConsumableItems)
-            })
-            this.ProcureService.GetBudgetLines().subscribe(response => {
-              this.BudgetAllocationCode = response;
-              console.log(this.BudgetAllocationCode)
-            })
-            //User
-            this.ProcureService.GetEmployeeByUsername(User).subscribe(result => {
-              console.log(result)
-              let employeeInfo: any = result;
-              this.EmployeeDetails = employeeInfo;
-              this.MandateLimitAmount = employeeInfo.mandate_Limit.ammount
-              console.log(this.EmployeeDetails);
-              console.log(this.MandateLimitAmount)
-            },
-              (error) => {
-                var action = "ERROR";
-                var title = "USER NOT AN EMPLOYEE";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("User must be an <strong style='color:red'> EMPLOYEE </strong>!");
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
 
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
-
-                const duration = 1750;
-                setTimeout(() => {
-                  this.router.navigate(['/PlaceProcurementRequest']);
-                  dialogRef.close();
-                }, duration);
-              }
-            )
-            this.ProcureService.GetProcurementRequestByID(this.ProcurementRequest_ID).subscribe(result => {
-              console.log(result)
-              this.Procurement_Request = result
-              console.log(this.Procurement_Request)
-            })
+            const duration = 1750;
+            setTimeout(() => {
+              this.router.navigate(['/PlaceProcurementRequest']);
+              dialogRef.close();
+            }, duration);
           }
+        )
+        this.ProcureService.GetProcurementRequestByID(this.ProcurementRequest_ID).subscribe(result => {
+          console.log(result)
+          this.Procurement_Request = result
+          console.log(this.Procurement_Request)
+        })
       }
     })
 
@@ -625,6 +601,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
             this.Procurement_Consumable.consumable = e
           }
         })
+        console.log(this.Procurement_Consumable)
         this.ProcureService.AddProcurementConsumable(this.Procurement_Consumable).subscribe(r => { console.log(r) })
         this.ProcureService.GetVendorConsumable().subscribe(b => {
           this.Vendor_Consumable.consumable_ID = Number(this.ProcurementFormGroup.get("ConsumableItem")?.value)

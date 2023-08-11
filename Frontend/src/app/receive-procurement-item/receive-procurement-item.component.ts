@@ -1,17 +1,14 @@
-import { Component, Inject, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators, ReactiveFormsModule, FormBuilder, AbstractControlOptions } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { DataService } from '../DataService/data-service';
 import { Router } from '@angular/router';
 import { Consumable } from '../Shared/Consumable';
 import { ConsumableCategory } from '../Shared/ConsumableCategory';
 import { Consumable_History } from '../Shared/Consumable_History';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Procurement_Consumable } from '../Shared/Procurement_Consumable';
 import { DatePipe } from '@angular/common';
-import { UpdateConsumableStockComponent } from '../update-consumable-stock/update-consumable-stock.component';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 
 
@@ -72,14 +69,12 @@ export class ReceiveProcurementItemComponent {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.GetConsumable(id);
+    console.log(this.GetConsumable(id))
 
     this.myForm = this.formBuilder.group({
       Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
       Description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
-      On_Hand: [0, [Validators.required, Validators.pattern("^[0-9]+$")]],
-      Minimum_Reorder_Quantity: [0, [Validators.required, Validators.pattern("^[0-9]+$")]],
-      Maximum_Reorder_Quantity: [0, [Validators.required, Validators.pattern("^[0-9]+$")]],
-      ConsumableCategory: ['', [Validators.required]]
+      On_Hand: [0, [Validators.required, Validators.pattern("^[0-9]+$")]]
     })
 
 
@@ -87,14 +82,16 @@ export class ReceiveProcurementItemComponent {
   }
 
   GetConsumable(id: number) {
-    this.dataService.GetConsumablesForRequest(id).subscribe(result => {
+    this.dataService.GetConsumablesForRequestConsRecieve(id).subscribe(result => {
       this.ConsumableRequest = result;
+      console.log(result)
     })
   }
 
   updateStock() {
     this.dataService.GetConsumableHistoryByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
       next: (Hist) => {
+        console.log(Hist)
         this.HistAmt = Hist.StockAmt
         this.dataService.GetConsumableByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
           next: (response) => {
