@@ -76,7 +76,7 @@ export class CreateBudgetAllocationComponent {
                 document.querySelector('button').classList.toggle("is_active");
               }
 
-              this.log.action = "Created Budget Allocation for: " + this.budgetAllocation.department;
+              this.log.action = "Created Budget Allocation for: " + this.budgetAllocation.department.name;
               this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
               let test: any
               test = new DatePipe('en-ZA');
@@ -100,7 +100,7 @@ export class CreateBudgetAllocationComponent {
                 }
               })
 
-              
+
             }
           );
         }

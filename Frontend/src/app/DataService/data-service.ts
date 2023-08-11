@@ -1224,7 +1224,9 @@ export class DataService {
   GetConsumablesForRequest(AssetID: Number): Observable<any> {
     return this.httpClient.get<Procurement_Consumable>(`${this.apiUrl}ProcurementDetails/GetConsumablesForRequest${AssetID}`).pipe(map(result => result))
   }
-
+  GetConsumablesForRequestConsRecieve(AssetID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Consumable>(`${this.apiUrl}ProcurementDetails/GetConsumableToRecieve/${AssetID}`).pipe(map(result => result))
+  }
   POPFileAdd(ProofName: string, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);

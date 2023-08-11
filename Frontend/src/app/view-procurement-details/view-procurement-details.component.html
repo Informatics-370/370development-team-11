@@ -78,7 +78,8 @@
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Upload Proof of Payment
                     </th>
                     <td mat-cell *matCellDef="let procurement" style="width:100px;">
-                        <button mat-raised-button (click)="openDialog(procurement.buyer_Name, procurement.procurement_Request_ID)"
+                        <button mat-raised-button
+                            (click)="openDialog(procurement.buyer_Name, procurement.procurement_Request_ID)"
                             type="button"
                             style="margin-right: 5%; display: flex; align-items: center; font-weight:bold ; width: 180px; margin-top: 0.5%; background-color: #94CC5B;">
                             Proof of Payment
@@ -87,10 +88,12 @@
                 </ng-container>
 
                 <ng-container matColumnDef="Inv">
-                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600; width:133px">Upload Invoice
+                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600; width:133px">Upload
+                        Invoice
                     </th>
                     <td mat-cell *matCellDef="let procurement" style="width:100px;">
-                        <button mat-raised-button (click)="openInvDialog(procurement.buyer_Name, procurement.procurement_Request_ID)"
+                        <button mat-raised-button
+                            (click)="openInvDialog(procurement.buyer_Name, procurement.procurement_Request_ID)"
                             type="button"
                             style="margin-right: 5%; display: flex; align-items: center; font-weight: bold; width: 133px; margin-top: 0.5%; background-color: #94CC5B;">
                             Invoice
@@ -105,9 +108,9 @@
 
                         <button *ngIf="!getFlagged(procurement.procurement_Status.name) " class="noselect" type="button"
                             style="background-color: #94CC5B;"
-                            routerLink="/ReceiveProcurementItem/{{procurement.procurement_Request.procurement_Request_ID}}">
+                            routerLink="/ReceiveProcurementItem/{{procurement.procurement_Details_ID}}">
                             <span class='text'>Receive</span>
-                            <span class="icon" style="border-left: 1px solid #94CC5B; ">
+                            <span class="icon" style="border-left: 1px solid #94CC5B;">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
                                     <path
                                         d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />

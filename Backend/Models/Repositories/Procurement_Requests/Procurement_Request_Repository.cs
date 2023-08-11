@@ -96,7 +96,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         public async Task<Procurement_Request_Quote[]> CreateProcurementQuoteAsync(Procurement_Request_Quote RequestAdd)
         {
             //Get Procurement Request
-            Procurement_Request ExistingPRRequest = await _dbContext.Procurement_Request.FirstOrDefaultAsync(PR => PR.Name == RequestAdd.Procurement_Request.Name);
+            Procurement_Request ExistingPRRequest = await _dbContext.Procurement_Request.FirstOrDefaultAsync(PR => PR.Procurement_Request_ID == RequestAdd.Procurement_Request.Procurement_Request_ID);
 
 
             if (ExistingPRRequest != null)

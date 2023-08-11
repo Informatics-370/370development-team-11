@@ -462,6 +462,13 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             return await query.FirstOrDefaultAsync();
         }
 
+        public async Task<Procurement_Consumable> GetConsumableForRequestConsRecieve(int ProcurementDetailsID)
+        {
+            IQueryable<Procurement_Consumable> query = _dbContext.Procurement_Consumable.Include(x => x.Consumable).Include(x => x.Procurement_Details).Where(x => x.Procurement_Details_ID == ProcurementDetailsID);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
         public async Task<Notification[]> AddNotificationAsync(Notification ProcurementNotification)
         {
 

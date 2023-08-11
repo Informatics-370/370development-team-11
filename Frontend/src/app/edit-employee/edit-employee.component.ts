@@ -104,7 +104,7 @@ export class EditEmployeeComponent implements OnInit {
       Name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       Surname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
-      CellPhone_Num: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12), Validators.pattern("^[0-9]*$")]],
+      CellPhone_Num: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern("^[0-9]*$")]],
       Role: ['', [Validators.required]],
       Mandate: ['', [Validators.required]],
       Department: ['', [Validators.required]],
@@ -210,16 +210,15 @@ export class EditEmployeeComponent implements OnInit {
     this.usr.role_ID = this.myForm.get('Role')?.value;
 
 
-    
+
     this.dataService.EditUserValidation(username, this.employee.user_Id).subscribe({
       next: (Result) => {
-        
+
         if (Result != null) {
           this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
             this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
               next: (response) => {
-                document.getElementById('cBtn').style.display = "none";
-                document.querySelector('button').classList.toggle("is_active");
+
 
                 this.log.action = "Edited Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
                 this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
@@ -228,6 +227,8 @@ export class EditEmployeeComponent implements OnInit {
                 this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
                 this.dataService.AuditLogAdd(this.log).subscribe({
                   next: (Log) => {
+                    document.getElementById('cBtn').style.display = "none";
+                    document.querySelector('button').classList.toggle("is_active");
                     var action = "Update";
                     var title = "UPDATE SUCCESSFUL";
                     var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -245,7 +246,7 @@ export class EditEmployeeComponent implements OnInit {
                   }
                 })
 
-                
+
               }
             })
           })
