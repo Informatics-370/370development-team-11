@@ -350,7 +350,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     UploadReceiptDoc: ["", [Validators.required]],
     ProofOfPayment: false,
     ProofOfPaymentDoc: ["", [Validators.required]],
-    TotalAmount: [null, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+    TotalAmount: [null, [Validators.required, Validators.pattern(/^[0-9.]*$/)]],
     TotalAmountDueDate: [Date.now(), [Validators.required]],
     Comments: ["", [Validators.maxLength(50)]],
   });
@@ -363,7 +363,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   ProcurementRequest_ID = 0;
   MandateLimitAmount: 0;
   currentDate = Date.now()
-
+  
   ngOnInit() {
     this.ProcurementFormGroup.get("AssetName")?.disable();
     this.ProcurementFormGroup.get("AssetDescription")?.disable();
@@ -398,54 +398,31 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           console.log(this.EmployeeDetails);
           console.log(this.MandateLimitAmount)
         },
-          (error) => {
-            var action = "ERROR";
-            var title = "USER NOT AN EMPLOYEE";
-            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("User must be an <strong style='color:red'> EMPLOYEE </strong>!");
+        (error) => {
+          var action = "ERROR";
+          var title = "USER NOT AN EMPLOYEE";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("User must be an <strong style='color:red'> EMPLOYEE </strong>!");
+  
+        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+  
+        const duration = 1750;
+        setTimeout(() => {
+          this.router.navigate(['/PlaceProcurementRequest']);
+          dialogRef.close();
+        }, duration);
+        }
+        )
+        this.ProcureService.GetProcurementRequestByID(this.ProcurementRequest_ID).subscribe(result => {
+          console.log(result)
+          this.Procurement_Request = result
+          console.log(this.Procurement_Request)
+        })
+        }})
 
-            this.ProcurementRequest_ID = Number(paramater.get("ProcurementRequestID"));
-            this.ProcureService.GetConsumables().subscribe(response => {
-              this.ConsumableItems = response
-              console.log(this.ConsumableItems)
-            })
-            this.ProcureService.GetBudgetLines().subscribe(response => {
-              this.BudgetAllocationCode = response;
-              console.log(this.BudgetAllocationCode)
-            })
-            //User
-            this.ProcureService.GetEmployeeByUsername(User).subscribe(result => {
-              console.log(result)
-              let employeeInfo: any = result;
-              this.EmployeeDetails = employeeInfo;
-              this.MandateLimitAmount = employeeInfo.mandate_Limit.ammount
-              console.log(this.EmployeeDetails);
-              console.log(this.MandateLimitAmount)
-            },
-              (error) => {
-                var action = "ERROR";
-                var title = "USER NOT AN EMPLOYEE";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("User must be an <strong style='color:red'> EMPLOYEE </strong>!");
-
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
-
-                const duration = 1750;
-                setTimeout(() => {
-                  this.router.navigate(['/PlaceProcurementRequest']);
-                  dialogRef.close();
-                }, duration);
-              }
-            )
-            this.ProcureService.GetProcurementRequestByID(this.ProcurementRequest_ID).subscribe(result => {
-              console.log(result)
-              this.Procurement_Request = result
-              console.log(this.Procurement_Request)
-            })
-          }
-    })
-
+  
 
   }
 
