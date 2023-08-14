@@ -42,6 +42,7 @@ export class CreateAdminComponent implements OnInit {
     name: '',
     description: ''
   }
+
   Access: Access = {
     Access_ID: 0,
     IsAdmin: false,
@@ -121,9 +122,24 @@ export class CreateAdminComponent implements OnInit {
     this.rl.name = "Admin";
     this.rl.description = "Admin";
 
+    this.Access.IsAdmin = true;
+    this.Access.CanAccFin = true;
+    this.Access.CanAccInv = true;
+    this.Access.CanAccPro = true;
+    this.Access.CanAccRep = true;
+    this.Access.CanAccVen = true;
+    this.Access.CanAppVen = true;
+    this.Access.CanDeleteVen = true;
+    this.Access.CanEditVen = true;
+    this.Access.CanViewFinPro = true;
+    this.Access.CanViewFlagPro = true;
+    this.Access.CanViewPenPro = true;
+
+
     this.usr.username = username;
     this.usr.password = newPassword;
     this.usr.role = this.rl;
+    this.usr.access = this.Access;
 
     this.adm.adminName = this.myForm.get('AdminName')?.value;
     this.adm.adminSurname = this.myForm.get('AdminSurname')?.value;

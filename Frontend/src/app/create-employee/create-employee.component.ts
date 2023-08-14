@@ -67,6 +67,7 @@ export class CreateEmployeeComponent implements OnInit {
     name: '',
     description: ''
   }
+
   Access: Access = {
     Access_ID: 0,
     IsAdmin: false,
@@ -197,9 +198,54 @@ export class CreateEmployeeComponent implements OnInit {
     this.rl = this.myForm.get('Role_ID')?.value;
     this.rl.role_ID = 0;
 
+    if (this.rl.name == "MD") {
+      this.Access.IsAdmin = true;
+      this.Access.CanAccFin = true;
+      this.Access.CanAccInv = true;
+      this.Access.CanAccPro = true;
+      this.Access.CanAccRep = true;
+      this.Access.CanAccVen = true;
+      this.Access.CanAppVen = true;
+      this.Access.CanDeleteVen = true;
+      this.Access.CanEditVen = true;
+      this.Access.CanViewFinPro = true;
+      this.Access.CanViewFlagPro = true;
+      this.Access.CanViewPenPro = true;
+    }
+    else if (this.rl.name == "GRC") {
+      this.Access.CanAccPro = true;
+      this.Access.CanAccRep = true;
+      this.Access.CanAccVen = true;
+      this.Access.CanAppVen = true;
+      this.Access.CanDeleteVen = true;
+      this.Access.CanEditVen = true;
+      this.Access.CanViewFinPro = true;
+      this.Access.CanViewFlagPro = true;
+      this.Access.CanViewPenPro = true;
+    }
+    else if (this.rl.name == "Finance") {
+      this.Access.CanAccFin = true;
+      this.Access.CanAccPro = true;
+      this.Access.CanAccRep = true;
+      this.Access.CanAccVen = true;
+      this.Access.CanViewFinPro = true;
+      this.Access.CanViewFlagPro = true;
+      this.Access.CanViewPenPro = true;
+    }
+    else if (this.rl.name == "FD") {
+      this.Access.CanAccFin = true;
+      this.Access.CanAccPro = true;
+      this.Access.CanAccRep = true;
+      this.Access.CanAccVen = true;
+      this.Access.CanViewFinPro = true;
+      this.Access.CanViewFlagPro = true;
+      this.Access.CanViewPenPro = true;
+    }
+
     this.usr.username = username;
     this.usr.password = newPassword;
     this.usr.role = this.rl;
+    this.usr.access = this.Access;
 
     this.br = this.myForm.get('Branch_ID')?.value;
     this.br.branch_ID = 0;

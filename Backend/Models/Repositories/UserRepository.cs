@@ -24,6 +24,8 @@ namespace ProcionAPI.Models.Repositories
                 .Include(d => d.Department)
                 .Include(m => m.Mandate_Limit)
                 .Include(u => u.User)
+                .ThenInclude(a => a.Access)
+                .Include(u => u.User)
                 .ThenInclude(r => r.Role);
 
 
@@ -101,6 +103,8 @@ namespace ProcionAPI.Models.Repositories
                 .Include(m => m.Mandate_Limit)
                 .Include(u => u.User)
                 .ThenInclude(r => r.Role)
+                .Include(u => u.User)
+                .ThenInclude(a => a.Access)
                 .Where(w => w.User.User_Id == userID);
 
 
@@ -140,6 +144,8 @@ namespace ProcionAPI.Models.Repositories
                 .Include(m => m.Mandate_Limit)
                 .Include(u => u.User)
                 .ThenInclude(r => r.Role)
+                .Include(u => u.User)
+                .ThenInclude(a => a.Access)
                 .Where(w => w.User.Username == username);
 
 
@@ -153,7 +159,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<User> GetUserAsync(int userID)
         {
-            IQueryable<User> query = _dbContext.User.Include(c => c.Role)
+            IQueryable<User> query = _dbContext.User.Include(c => c.Role).Include(a => a.Access)
                 .Where(w => w.User_Id == userID);
 
 
@@ -164,6 +170,7 @@ namespace ProcionAPI.Models.Repositories
         {
             IQueryable<User> query = _dbContext.User
                 .Include(r => r.Role)
+                .Include(a => a.Access)
                 .Where(w => w.Username == username);
 
 
@@ -190,7 +197,9 @@ namespace ProcionAPI.Models.Repositories
         {
             IQueryable<Admin> query = _dbContext.Admin
                 .Include(u => u.User)
-                .ThenInclude(r => r.Role);
+                .ThenInclude(r => r.Role)
+                .Include(u => u.User)
+                .ThenInclude(a => a.Access);
 
 
             return await query.ToArrayAsync();
@@ -201,6 +210,8 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Admin> query = _dbContext.Admin
                 .Include(u => u.User)
                 .ThenInclude(r => r.Role)
+                .Include(u => u.User)
+                .ThenInclude(a => a.Access)
                 .Where(w => w.User.User_Id == userID);
 
 
@@ -212,6 +223,8 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Admin> query = _dbContext.Admin
                 .Include(u => u.User)
                 .ThenInclude(r => r.Role)
+                .Include(u => u.User)
+                .ThenInclude(a => a.Access)
                 .Where(w => w.User.Username == username);
 
 
