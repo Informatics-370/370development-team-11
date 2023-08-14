@@ -161,5 +161,20 @@ namespace ProcionAPI.Controllers.Consumables
             }
         }
 
+        [HttpGet]
+        [Route("GetConsumableManagementReport")]
+        public async Task<IActionResult> GetConsumableManagementReport([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            try
+            {
+                var result = await _consumableRepository.GetReportData(startDate, endDate);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
     }
 }

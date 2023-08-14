@@ -53,6 +53,7 @@ import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
 import { AuditLog } from '../Shared/AuditLog';
+import { ReportData } from '../Shared/ConsumableReport';
 
 @Injectable({
   providedIn: 'root'
@@ -1247,6 +1248,13 @@ export class DataService {
 
   AuditLogAdd(LogToAdd: AuditLog): Observable<any> {
     return this.httpClient.post<AuditLog>(`${this.apiUrl}User/AddLog`, LogToAdd, this.httpOptions).pipe(map(result => result))
+  }
+  GetVarianceByDepartment(): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}BudgetAllocation/GetVarianceByDepartment`);
+  }
+
+  GetReportData(startDate: Date, endDate: Date): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}Consumable/GetConsumableManagementReport?startDate=${startDate}&endDate=${endDate}`);
   }
 }
 

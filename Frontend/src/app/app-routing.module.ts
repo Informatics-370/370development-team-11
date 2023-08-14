@@ -86,7 +86,7 @@ import { SignOffRequestComponent } from './sign-off-request/sign-off-request.com
 
 import { BackupComponent } from './Settings/backup/backup.component';
 import { EditProcurementRequestComponent } from './edit-procurement-request/edit-procurement-request.component';
-
+import { BudgetVarianceReportComponent } from './budget-variance-report/budget-variance-report.component';
 const routes: Routes = [
   {
     path: "",
@@ -216,11 +216,11 @@ const routes: Routes = [
     component: ViewHelpComponent
   },
   {
-    path: 'ViewHelpUser' ,canActivate:[AuthService],
+    path: 'ViewHelpUser', canActivate: [AuthService],
     component: ViewHelpuserComponent
   },
   {
-    path: 'CreateHelp' , canActivate: [AuthService],
+    path: 'CreateHelp', canActivate: [AuthService],
     component: CreateHelpComponent
   },
   {
@@ -368,6 +368,10 @@ const routes: Routes = [
   {
     path: 'SignOffRequest/:id',
     component: SignOffRequestComponent
+  },
+  {
+    path: 'VarianceReport',
+    component: BudgetVarianceReportComponent
   }
 
 

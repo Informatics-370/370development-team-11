@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { Department } from '../Shared/Department';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -9,12 +9,36 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { CurrencyPipe } from '@angular/common';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+
+export class YearOnlyDateAdapter extends NativeDateAdapter {
+  override format(date: Date, displayFormat: Object): string {
+    return date.getFullYear().toString();
+  }
+}
+
+export const YEAR_ONLY_FORMAT = {
+  parse: { dateInput: 'YYYY' },
+  display: {
+    dateInput: 'YYYY',
+    monthYearLabel: 'YYYY',
+    dateA11yLabel: 'YYYY',
+    monthYearA11yLabel: 'YYYY',
+  },
+};
 
 @Component({
   selector: 'app-create-budget-allocation',
   templateUrl: './create-budget-allocation.component.html',
-  styleUrls: ['./create-budget-allocation.component.css']
+  styleUrls: ['./create-budget-allocation.component.css'],
+  providers: [
+    { provide: DateAdapter, useClass: YearOnlyDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: YEAR_ONLY_FORMAT }
+  ]
 })
+
 export class CreateBudgetAllocationComponent {
 
   dep: Department = {
@@ -32,20 +56,23 @@ export class CreateBudgetAllocationComponent {
     department: this.dep
   }
 
+  @ViewChild('dp1') dp1: MatDatepicker<Date>;
+
   currentDate = Date.now();
   departments: any[] = []
 
   budgetAllocationForm: FormGroup = new FormGroup({});
 
-
   constructor(private router: Router, private dataService: DataService, private formBuilder: FormBuilder, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
+
+
     this.GetDepartments();
     this.budgetAllocationForm = this.formBuilder.group({
       department_ID: ['', [Validators.required]],
       // date_Created: ['', [Validators.required]],
-      year: [0, [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern("^[0-9]+$")]],
+      year: [0, [Validators.required]],
       total: [0, [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]]
     })
   }
@@ -115,9 +142,24 @@ export class CreateBudgetAllocationComponent {
     this.budgetAllocationForm.reset();
     this.router.navigate(['/ViewBudgetAllocation']);
   }
-  monthSelectedHandler(event, datepicker: MatDatepicker<number>) {
-    const date = new Date(`${event._i.month + 1}/${event._i.date}/${event._i.year}`);
-    datepicker.close();
+  // chosenYearHandler(normalizedYear: any, datepicker: MatDatepicker<any>) {
+  //   const chosenYear = normalizedYear.getFullYear();
+  //   this.budgetAllocation.year = chosenYear;
+  //   console.log(this.budgetAllocation.year)
+  //   this.budgetAllocationForm.get('year')?.setValue(chosenYear);
+  //   datepicker.close();
+  // }
+
+  onYearSelected(event: any) {
+    // Set only the year to the form control
+    this.budgetAllocationForm.get('year').setValue(event.getFullYear());
+
+    // Close the datepicker
+    this.dp1.close();
+  }
+
+  displayYearOnly(date: Date | null): string {
+    return date ? date.getFullYear().toString() : '';
   }
 
   public myError = (controlName: string, errorName: string) => {

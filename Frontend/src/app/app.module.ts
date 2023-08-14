@@ -143,6 +143,8 @@ import { ViewUnapprovedRequestsComponent } from './view-unapproved-requests/view
 import { SignOffRequestComponent } from './sign-off-request/sign-off-request.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { OTPComponent } from './otp/otp.component';
+import { BudgetVarianceReportComponent } from './budget-variance-report/budget-variance-report.component';
+import { BusinessUnitAllocationReportComponent } from './business-unit-allocation-report/business-unit-allocation-report.component';
 
 
 @NgModule({
@@ -250,7 +252,9 @@ import { OTPComponent } from './otp/otp.component';
     UploadInvoiceComponent,
     ViewUnapprovedRequestsComponent,
     SignOffRequestComponent,
-    OTPComponent
+    OTPComponent,
+    BudgetVarianceReportComponent,
+    BusinessUnitAllocationReportComponent
   ],
   imports: [
     BrowserModule,
