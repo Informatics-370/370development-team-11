@@ -19,6 +19,7 @@ import { interval, take } from 'rxjs';
 import { Notification } from 'src/app/Shared/Notification';
 import { DatePipe } from '@angular/common';
 import { Notification_Type } from 'src/app/Shared/Notification_Type';
+import { AuditLog } from 'src/app/Shared/AuditLog';
 @Component({
   selector: 'app-request-create',
   templateUrl: './request-create.component.html',
@@ -100,6 +101,13 @@ export class RequestCreateComponent implements OnInit {
     user: this.usr,
     notification_Type: this.Notification_Type,
   };
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   SoleSupplierFormGroup = this._formBuilder.group({
     CompanyName: ['', [Validators.required, Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
@@ -333,6 +341,17 @@ export class RequestCreateComponent implements OnInit {
                   this.VendorNotification.name = "Request #" + response[0].onboard_Request_Id + " has been created";
                   this.VendorNotification.user_ID = 1;
                   this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
+
+                  this.log.action = "Created Onboard Request #" + this.Onboard_Request.onboard_Request_Id;
+                  this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                  let test: any
+                  test = new DatePipe('en-ZA');
+                  this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                  this.dataService.AuditLogAdd(this.log).subscribe({
+                    next: (Log) => {
+                      //Action to take after log (Notification etc)
+                    }
+                  })
                 }
                 console.log(response);
                 var action = "CREATE";
@@ -394,27 +413,37 @@ export class RequestCreateComponent implements OnInit {
                 this.VendorNotification.name = "Sole Supplier Addition Request for " + response[0].vendor.name;
                 this.VendorNotification.user_ID = 1;
                 this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
-                console.log(response);
+                
+                this.log.action = "Created Onboard Request #" + this.Onboard_Request.onboard_Request_Id;
+                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.dataService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    var action = "CREATE";
+                    var title = "CREATE SUCCESSFUL";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.Onboard_Request.onboard_Request_Id + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-                var action = "CREATE";
-                var title = "CREATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.Onboard_Request.onboard_Request_Id + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
 
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
+                    const duration = 1750;
+                    setTimeout(() => {
+                      this.dialog.afterAllClosed.subscribe({
+                        next: (response) => {
+                          this.ngOnInit();
+                        }
+                      })
+                      this.router.navigate(['/request-view']);
+                      dialogRef.close();
+                    }, duration);
+                  }
+                })
 
-                const duration = 1750;
-                setTimeout(() => {
-                  this.dialog.afterAllClosed.subscribe({
-                    next: (response) => {
-                      this.ngOnInit();
-                    }
-                  })
-                  this.router.navigate(['/request-view']);
-                  dialogRef.close();
-                }, duration);
+                
               }
             }
 
@@ -442,28 +471,35 @@ export class RequestCreateComponent implements OnInit {
               this.VendorNotification.user_ID = 1;
               this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
 
-
-              console.log(response);
-              this.dataService.ChangeOnboardStatus(4, this.Onboard_Request.onboard_Request_Id, this.Onboard_Request.vendor_ID)
-              var action = "CREATE";
-              var title = "CREATE SUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.Onboard_Request.onboard_Request_Id + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
-
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
-
-              const duration = 1750;
-              setTimeout(() => {
-                this.router.navigate(['/request-view']);
-                this.dialog.afterAllClosed.subscribe({
-                  next: (response) => {
-                    this.ngOnInit();
-                  }
-                })
-                dialogRef.close();
-              }, duration);
+              this.log.action = "Created Onboard Request #" + this.Onboard_Request.onboard_Request_Id;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+              next: (Log) => {
+                this.dataService.ChangeOnboardStatus(4, this.Onboard_Request.onboard_Request_Id, this.Onboard_Request.vendor_ID)
+                var action = "CREATE";
+                var title = "CREATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.Onboard_Request.onboard_Request_Id + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+  
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+  
+                const duration = 1750;
+                setTimeout(() => {
+                  this.router.navigate(['/request-view']);
+                  this.dialog.afterAllClosed.subscribe({
+                    next: (response) => {
+                      this.ngOnInit();
+                    }
+                  })
+                  dialogRef.close();
+                }, duration);
+              }
+              })
             }
           }
 

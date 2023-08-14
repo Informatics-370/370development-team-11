@@ -20,6 +20,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
+import { AuditLog } from 'src/app/Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-vendor-update',
@@ -160,7 +162,12 @@ export class VendorUpdateComponent {
     proof_Of_Registration_Doc:"",
   }
 
-  
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
 
   CompanyContactInfoFormGroup = this._formBuilder.group({
@@ -1024,20 +1031,30 @@ CreateContinue(VenDetailsID:number) {
             
             this.VendorService.GetVendorDetailByID(this.VendorDetail.vendor_Detail_ID).subscribe({
               next: (response) => {
-                var action = "UPDATED";
-                var title = "UPDATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Vendor <strong>" + this.Vendor.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
-        
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
-        
-                 const duration = 1750;
-                 setTimeout(() => {
-                  this.router.navigate(['/vendor-view']);
-                  dialogRef.close();
-                 }, duration);
+                this.log.action = "Updated Vendor Details of " + response.vendor.name;
+                this.log.user = this.VendorService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.VendorService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    var action = "UPDATED";
+                    var title = "UPDATE SUCCESSFUL";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Vendor <strong>" + this.Vendor.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
+
+                    const duration = 1750;
+                    setTimeout(() => {
+                      this.router.navigate(['/vendor-view']);
+                      dialogRef.close();
+                    }, duration);
+                  }
+                })
+                
               }
             })
 

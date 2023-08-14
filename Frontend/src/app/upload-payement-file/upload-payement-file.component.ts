@@ -205,7 +205,7 @@ export class UploadPayementFileComponent {
     procurement_Request_ID: 0,
     sign_Off_Status_ID: 0,
     procurement_Payment_Status_ID: 0,
-    account_Code: '',
+    BudgetLineId: 0,
     procurement_Status_ID: 0,
     payment_Method_ID: 0,
     employee: this.EmployeeDetails,

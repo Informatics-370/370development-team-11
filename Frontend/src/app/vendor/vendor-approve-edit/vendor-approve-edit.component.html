@@ -6,7 +6,7 @@
   </h1>
   <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;width: 330px;">Please fill in the following details:</label>
   </div>
-  <mat-stepper [linear]="false"  #stepper style="background-color: #eee;" orientation="vertical" (selectionChange)="setFocus(stepper)" >
+  <mat-stepper [linear]="bvalid"  #stepper style="background-color: #eee;" orientation="vertical" (selectionChange)="setFocus(stepper)" (click)="validationLinear()">
     <mat-step [stepControl]="DueDiligenceChecklistDetailsFormGroup" >
       <form [formGroup]="DueDiligenceChecklistDetailsFormGroup" style="text-align: -webkit-center;" class="table-responsive">
         <ng-template matStepLabel>DUE DILIGENCE CHECKLIST DETAILS</ng-template>
@@ -35,9 +35,9 @@
                 </td>
             </tr>
             <tr>
-                <td> <label>Basic Company Information:</label></td>
+                <td> <label>Basic Company Information:<span *ngIf="!FoundationaldocumentsFormGroup.get('BasicCompanyInfo').value" style="color: red;">(Required)</span> </label></td>
                 <td>
-                    <mat-checkbox formControlName="BasicCompanyInfo"></mat-checkbox> 
+                   <mat-checkbox formControlName="BasicCompanyInfo"></mat-checkbox> 
                 </td>
             </tr>
             <tr>
@@ -48,9 +48,9 @@
                 </td>
             </tr>
             <tr>
-                <td> <label>Income tax number:</label></td>
+                <td> <label>Income tax number:<span *ngIf="!FoundationaldocumentsFormGroup.get('IncomeTaxNumber').value" style="color: red;">(Required)</span></label></td>
                 <td>
-                        <mat-checkbox formControlName="IncomeTaxNumber"></mat-checkbox>
+                    <mat-checkbox formControlName="IncomeTaxNumber"></mat-checkbox>
                     
                 </td>
             </tr>
@@ -217,7 +217,7 @@
               <tr>
                 <td><label >General liability insurance:</label></td>
                 <td> 
-                      <mat-checkbox formControlName="GeneralLiabilityInsurance"></mat-checkbox>
+                      <mat-checkbox formControlName="GeneralLiabilityInsurance" (click)="onInsuranceChecked()"></mat-checkbox>
                 </td>
             </tr>
             <tr>
@@ -243,7 +243,7 @@
             <tr>
                 <td> <label>Cyber insurance:</label></td>
                 <td>
-                      <mat-checkbox formControlName="CyberInsurance"></mat-checkbox>    
+                      <mat-checkbox formControlName="CyberInsurance" (click)="onInsuranceChecked()"></mat-checkbox>    
                 </td>
             </tr>
             <tr>
@@ -269,7 +269,7 @@
             <tr>
                 <td><label>Professional indemnity insurance (if applicable):</label></td>
                 <td>              
-                    <mat-checkbox formControlName="ProfessionalIndemnityInsurance"></mat-checkbox> 
+                    <mat-checkbox formControlName="ProfessionalIndemnityInsurance" (click)="onInsuranceChecked()"></mat-checkbox> 
                 </td>
             </tr>
             <tr>
@@ -295,7 +295,7 @@
             <tr>
               <td><label>Other specific insurance required per service/industry:</label></td>
               <td>              
-                  <mat-checkbox formControlName="OtherInsurance"></mat-checkbox> 
+                  <mat-checkbox formControlName="OtherInsurance" (click)="onInsuranceChecked()"></mat-checkbox> 
               </td>
           </tr>
           <tr>
@@ -384,12 +384,12 @@
                       <label>Does the contract set out what personal data is used for what purpose?</label>
                     </div>
                     <div class="col-3">
-                      <mat-checkbox formControlName="Personal_Data_Purpose"></mat-checkbox>
+                      <span *ngIf="!InformationSecurityFormGroup.get('Personal_Data_Purpose')?.value" style="color: red;">(Required)</span> <mat-checkbox formControlName="Personal_Data_Purpose"></mat-checkbox>
                     </div> 
                   </div>
                   <div class="row">
                     <div class="col-9">
-                      <label>Is the contracted partner a controller (C), joint controller (JC), processor (P) or sub-processor (SP)?</label>
+                      <label>Is the contracted partner a controller (C), joint controller (JC), processor (P) or sub-processor (SP)? </label>
                     </div>
                     <div class="col-3" *ngIf="POPIDetails.contracted_Partner_Type.name != ''">
                       <mat-form-field style="width: 200px;font-size: 12px;font-weight: 400;">
@@ -417,7 +417,7 @@
                       <label>Depending on the controller/processor relationship, do you have a Data Processing Agreement or a Joint Controller Agreement in place?</label>
                     </div>
                     <div class="col-3">
-                      <mat-checkbox formControlName="DataProcessing_JointController_Agreement"></mat-checkbox>
+                      <span *ngIf="!InformationSecurityFormGroup.get('DataProcessing_JointController_Agreement')?.value" style="color: red;">(Required)</span><mat-checkbox formControlName="DataProcessing_JointController_Agreement"></mat-checkbox>
                     </div> 
                   </div>
                   <div class="row">
@@ -425,7 +425,7 @@
                       <label>Does the contract highlight the importance of confidentiality?</label>
                     </div>
                     <div class="col-3">
-                      <mat-checkbox formControlName="Confidentiality_Importance_Highlighted"></mat-checkbox>
+                      <span *ngIf="!InformationSecurityFormGroup.get('Confidentiality_Importance_Highlighted')?.value" style="color: red;">(Required)</span><mat-checkbox formControlName="Confidentiality_Importance_Highlighted"></mat-checkbox>
                     </div> 
                   </div>
                   <div class="row">
@@ -433,7 +433,7 @@
                       <label>Does the contract provide for audits and inspections?</label>
                     </div>
                     <div class="col-3">
-                      <mat-checkbox formControlName="Contract_Audits_Provisions_Provided"></mat-checkbox>
+                      <span *ngIf="!InformationSecurityFormGroup.get('Contract_Audits_Provisions_Provided')?.value" style="color: red;">(Required)</span><mat-checkbox formControlName="Contract_Audits_Provisions_Provided"></mat-checkbox>
                     </div> 
                   </div>
                   <div class="row">
@@ -441,7 +441,7 @@
                       <label>Is it clear who is accountable and liable for different activities?</label>
                     </div>
                     <div class="col-3">
-                      <mat-checkbox formControlName="Activity_Liability_Present"></mat-checkbox>
+                      <span *ngIf="!InformationSecurityFormGroup.get('Activity_Liability_Present')?.value" style="color: red;">(Required)</span> <mat-checkbox formControlName="Activity_Liability_Present"></mat-checkbox>
                     </div> 
                   </div>
                   <div class="row">
@@ -449,7 +449,7 @@
                       <label>Is there a provision to cover third party processing of data?</label>
                     </div>
                     <div class="col-3">
-                      <mat-checkbox formControlName="Third_Party_Data_Processing_Provisioned"></mat-checkbox>
+                      <span *ngIf="!InformationSecurityFormGroup.get('Third_Party_Data_Processing_Provisioned')?.value" style="color: red;">(Required)</span><mat-checkbox formControlName="Third_Party_Data_Processing_Provisioned"></mat-checkbox>
                     </div> 
                   </div>
                   <div class="row">
@@ -457,7 +457,7 @@
                       <label>Does a process exist for managing data when the contract ends?</label>
                     </div>
                     <div class="col-3">
-                      <mat-checkbox formControlName="Contract_End_Data_Management_Provided"></mat-checkbox>
+                      <span *ngIf="!InformationSecurityFormGroup.get('Contract_End_Data_Management_Provided')?.value" style="color: red;">(Required)</span> <mat-checkbox formControlName="Contract_End_Data_Management_Provided"></mat-checkbox>
                     </div> 
                   </div>
                   <div class="row">
@@ -465,7 +465,7 @@
                       <label>Is the personal data that's being processed detailed in your and their 'Record of Processing Activities'?</label>
                     </div>
                     <div class="col-3">
-                      <mat-checkbox formControlName="Personal_Data_Processing_Details_Present"></mat-checkbox>
+                      <span *ngIf="!InformationSecurityFormGroup.get('Personal_Data_Processing_Details_Present')?.value" style="color: red;">(Required)</span> <mat-checkbox formControlName="Personal_Data_Processing_Details_Present"></mat-checkbox>
                     </div> 
                   </div>
                   <div class="row">
@@ -473,7 +473,7 @@
                       <label>Does the supplier hold any form of certification for their processing activities?</label>
                     </div>
                     <div class="col-3">
-                      <mat-checkbox formControlName="Processing_Activities_Certification_Held"></mat-checkbox>
+                      <span *ngIf="!InformationSecurityFormGroup.get('Processing_Activities_Certification_Held')?.value" style="color: red;">(Required)</span> <mat-checkbox formControlName="Processing_Activities_Certification_Held"></mat-checkbox>
                     </div> 
                   </div>
                 </div>          

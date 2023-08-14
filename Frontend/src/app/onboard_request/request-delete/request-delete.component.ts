@@ -1,8 +1,10 @@
+import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/DataService/data-service';
+import { AuditLog } from 'src/app/Shared/AuditLog';
 import { Role } from 'src/app/Shared/EmployeeRole';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
 import { Onboard_Status } from 'src/app/Shared/OnboardStatus';
@@ -43,6 +45,13 @@ export class RequestDeleteComponent {
     onboard_Status: this.OnboardStatus,
     users: { user_Id: 0, role_ID: 0, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', no_Notifications:0, role: this.rl },
     quotes: '',
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   
@@ -96,6 +105,20 @@ OnboardRequestDetails: any[] = [];
             this.showConfirmationDialog = false;
             this.showSuccessDialog = true;
             setTimeout(() => {
+              if(this.OnboardRequestDetails.length - 1 == i) {
+                this.log.action = "Deleted Onboard Request #" + this.OnboardRequestDetails[i].onboard_Request_Id;
+                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.dataService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    //Action to take after log (Notification etc)
+                  }
+                })
+              }
+
+
               this.dialogRef.close();
             }, 1750);
           }
@@ -120,6 +143,17 @@ OnboardRequestDetails: any[] = [];
             this.showConfirmationDialog = false;
             this.showSuccessDialog = true;
             setTimeout(() => {
+              this.log.action = "Deleted Onboard Request #" + this.OnboardRequestDetails[0].onboard_Request_Id;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  //Action to take after log (Notification etc)
+                }
+              })
+
               this.dialogRef.close();
             }, 1750);
           }
@@ -137,6 +171,16 @@ OnboardRequestDetails: any[] = [];
             this.showConfirmationDialog = false;
             this.showSuccessDialog = true;
             setTimeout(() => {
+              this.log.action = "Deleted Onboard Request #" + this.OnboardRequestDetails[0].onboard_Request_Id;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  //Action to take after log (Notification etc)
+                }
+              })
               this.dialogRef.close();
             }, 1750);
           }

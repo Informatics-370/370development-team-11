@@ -40,6 +40,19 @@ import { AuditLog } from '../Shared/AuditLog';
 import {Observable} from 'rxjs';
 import {NgFor} from '@angular/common';
 
+interface AccountCodeDisplay {
+  AccountCodeValue:number;
+  AccountCodeName: string;
+  Year: string;
+  Month: string;
+}
+
+interface AccountCodeDisplayGroup {
+  Year: string;
+  Month: string;
+  AccountDetails:AccountCodeDisplay[];
+}
+
 @Component({
   selector: 'app-place-procurement-request-create-details',
   templateUrl: './place-procurement-request-create-details.component.html',
@@ -208,7 +221,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     procurement_Request_ID: 0,
     sign_Off_Status_ID: 0,
     procurement_Payment_Status_ID: 0,
-    account_Code: '',
+    BudgetLineId: 0,
     procurement_Status_ID: 0,
     payment_Method_ID: 0,
     employee: this.EmployeeDetails,
@@ -332,6 +345,9 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     actionTime: new Date(),
   }
 
+
+
+
   constructor(private _formBuilder: FormBuilder, private ProcureService: DataService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ProcurementFormGroup = this._formBuilder.group({
@@ -359,7 +375,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
 
   ConsumableItems: Consumable[] = [];
-  BudgetAllocationCode: BudgetLine[] = [];
+  BudgetAllocationCode: any[] = [];
   ConsumableChecked = true;
   AssetChecked = false;
   ProcurementRequest_ID = 0;
@@ -371,12 +387,17 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   sAssets:Asset[] = []
   assetnames:string[] = [];
   filteredAssets: Observable<string[]>;
+
+  AccountCodeDetails: AccountCodeDisplay[] = [];
+  AccountCodeGroups: AccountCodeDisplayGroup[] = [];
   ngOnInit() {
 
-    this.ProcureService.GetAssetByID(1).subscribe(r => {
+    this.ProcureService.getAssets().subscribe(r => {
+      console.log(r)
       this.sAssets = r
-     // this.sAssets.forEach(x=> this.assetnames.push(x.name));
-     this.assetnames.push(r.name);
+      console.log(this.sAssets)
+      this.sAssets.forEach(x=> this.assetnames.push(x.name));
+     //this.assetnames.push(r.name);
       console.log(this.sAssets)
       this.filteredAssets = this.ProcurementFormGroup.get("AssetName")?.valueChanges.pipe( 
         startWith(''),
@@ -406,10 +427,6 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.ConsumableItems = response
           console.log(this.ConsumableItems)
         })
-        this.ProcureService.GetBudgetLines().subscribe(response => {
-          this.BudgetAllocationCode = response;
-          console.log(this.BudgetAllocationCode)
-        })
         //User
         this.ProcureService.GetEmployeeByUsername(User).subscribe(result => {
           console.log(result)
@@ -418,8 +435,35 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.MandateLimitAmount = employeeInfo.mandate_Limit.ammount
           this.ProcurementFormGroup.get("BuyerName")?.setValue(this.EmployeeDetails.employeeName.toString())
           this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.EmployeeDetails.email.toString())
-          console.log(this.EmployeeDetails);
-          console.log(this.MandateLimitAmount)
+          let departmentname = this.EmployeeDetails.department.name
+          this.ProcureService.GetProcurementAccountCodeDetails(this.currentYear,this.currentmonth,departmentname.toString()).subscribe(response => {
+            console.log(response)
+            this.BudgetAllocationCode = response;
+            this.BudgetAllocationCode.forEach(t => {
+              let AccountInfo:AccountCodeDisplay = {
+                AccountCodeValue: t.budgetLineId,
+                AccountCodeName: t.budget_Category.account_Name.toString(),
+                Year: t.month.toString(),
+                Month: t.budget_Allocation.year.toString(),
+              };
+              this.AccountCodeDetails.push(AccountInfo);
+            })
+
+            this.AccountCodeDetails.forEach(b => {
+
+              if(this.AccountCodeGroups.filter(x=> (x.Month == b.Month) && (x.Year == b.Year) == null || this.AccountCodeDetails == undefined)) {
+                let AccountGroupInfo:AccountCodeDisplayGroup = {
+                  Year: b.Year,
+                  Month: b.Month,
+                  AccountDetails: this.AccountCodeDetails.filter(x=> (x.Month == b.Month) && (x.Year == b.Year)),
+                };
+                this.AccountCodeGroups.push(AccountGroupInfo)
+              }
+            })
+
+            console.log(this.AccountCodeGroups)
+           
+          })
         },
           (error) => {
             var action = "ERROR";
@@ -447,7 +491,10 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     })
   }
 
-  
+  ChangeDescription(sName:string) {
+    let Description = this.sAssets.find(x=> x.name == sName).description
+    this.ProcurementFormGroup.get("AssetDescription")?.setValue(Description)
+  }
 
   _normalizeValue(value: string): string {
     return value.toLowerCase().replace(/\s/g, '');
@@ -558,10 +605,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     }
 
 
-    this.ProcurementDetails.account_Code = this.ProcurementFormGroup.get("AccountCode")?.value;
+    this.ProcurementDetails.BudgetLineId = Number(this.ProcurementFormGroup.get("AccountCode")?.value);
     this.ProcurementDetails.budget_Line.account_Code = this.ProcurementFormGroup.get("AccountCode")?.value;
-    console.log(this.ProcurementFormGroup.get("AccountCode")?.value)
-    console.log(this.ProcurementDetails.account_Code)
     this.ProcurementDetails.payment_Method_ID = this.ProcurementFormGroup.get("PaymentType")?.value;
     this.ProcurementDetails.procurement_Request = this.Procurement_Request;
     this.ProcurementDetails.procurement_Request_ID = Number(this.Procurement_Request.procurement_Request_ID);

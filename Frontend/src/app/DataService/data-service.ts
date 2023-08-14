@@ -57,7 +57,6 @@ import { BEESpentReportVM } from '../Shared/BEESpentReportVM';
 import { VendorSpentReport } from '../Shared/VendorSpentReport';
 import * as FileSaver from 'file-saver';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -1259,6 +1258,14 @@ export class DataService {
 
   AuditLogAdd(LogToAdd: AuditLog): Observable<any> {
     return this.httpClient.post<AuditLog>(`${this.apiUrl}User/AddLog`, LogToAdd, this.httpOptions).pipe(map(result => result))
+  }
+
+  GetProcurementAccountCodeDetails(year: number,Month:number,department:string): Observable<any> {
+    return this.httpClient.get<BudgetLine[]>(`${this.apiUrl}ProcurementDetails/GetProcurementAccountCodeDetails/${year}/${Month}/${department}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  getAssets(): Observable<any> {
+    return this.httpClient.get<Asset[]>(`${this.apiUrl}ProcurementDetails/getAssets`, this.httpOptions).pipe(map(result => result))
   }
 
   //----------------------------------------------------------------------Reports-----------------------------------------------------------------------------

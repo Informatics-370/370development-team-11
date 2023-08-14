@@ -1,8 +1,10 @@
+import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/DataService/data-service';
+import { AuditLog } from 'src/app/Shared/AuditLog';
 import { Vendor_Category } from 'src/app/Shared/VendorCategory';
 import { VendorDetails } from 'src/app/Shared/VendorDetails';
 import { Vendor_Fax } from 'src/app/Shared/VendorDetailsFax';
@@ -157,6 +159,13 @@ export class VendorDeleteComponent {
     proof_Of_Registration_Doc:"",
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   showConfirmationDialog: boolean = true;
   showSuccessDialog: boolean = false;
   FileDetails:any[] = [];
@@ -228,10 +237,6 @@ OnboardRequestDetails: any[] = [];
     let fileName = ""
 
     
-      
-
-
-    console.log(this.Vendorfax)
     if(this.VendorDetail.faxProvided == true ) {
       this.VendorService.DeleteFaxByID(this.Vendorfax.fax_ID).subscribe(response => {console.log(response)})
     }
@@ -298,14 +303,24 @@ OnboardRequestDetails: any[] = [];
     this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe({next:(Response) => {
     this.VendorService.DeleteVendorDetails(this.VendorDetail.vendor_Detail_ID).subscribe({
       next:(response) => { 
-       this.showConfirmationDialog = false;
-      this.showSuccessDialog = true;
-      setTimeout(() => {
-        this.dialogRef.close();
-        this.VendorService.ChangeVendorStatus(2,this.Vendor.vendor_ID).subscribe(result => {
-         this.router.navigate(['/vendor-view']);
-        });
-      }, 1750);
+        this.log.action = "Exported Inventory Details";
+        this.log.user = this.VendorService.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.VendorService.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.dialogRef.close();
+              this.VendorService.ChangeVendorStatus(2,this.Vendor.vendor_ID).subscribe(result => {
+               this.router.navigate(['/vendor-view']);
+              });
+            }, 1750);
+          }
+        })
+      
     }
     })
   }})

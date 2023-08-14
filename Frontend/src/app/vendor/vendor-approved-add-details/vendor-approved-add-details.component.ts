@@ -26,6 +26,7 @@ import { Notification } from 'src/app/Shared/Notification';
 import { Role } from 'src/app/Shared/EmployeeRole';
 import { User } from 'src/app/Shared/User';
 import { Notification_Type } from 'src/app/Shared/Notification_Type';
+import { AuditLog } from 'src/app/Shared/AuditLog';
 
 
 @Component({
@@ -272,6 +273,13 @@ export class VendorApprovedAddDetailsComponent implements OnInit{
     notification_Type: this.Notification_Type,
   };
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
 
   ngOnInit(): void {
     this.FoundationaldocumentsFormGroup.get("BEECertificateDoc").disable();
@@ -383,6 +391,40 @@ onBEEChecked() {
 
 }
 
+
+onInsuranceChecked() {
+  if(this.InsuranceFormGroup.get("GeneralLiabilityInsurance")?.value == true) {
+    this.InsuranceFormGroup.get("GeneralLiabilityInsuranceDoc")?.addValidators(Validators.required)
+    this.InsuranceFormGroup.get("GeneralLiabilityInsuranceDoc")?.enable();
+  }
+  else {
+    this.InsuranceFormGroup.get("GeneralLiabilityInsuranceDoc")?.disable();
+  }
+
+  if(this.InsuranceFormGroup.get("CyberInsurance")?.value == true) {
+    this.InsuranceFormGroup.get("CyberInsuranceDoc")?.addValidators(Validators.required)
+    this.InsuranceFormGroup.get("CyberInsuranceDoc")?.enable();
+  }
+  else {
+    this.InsuranceFormGroup.get("CyberInsuranceDoc")?.disable();
+  }
+
+  if(this.InsuranceFormGroup.get("ProfessionalIndemnityInsurance")?.value == true) {
+    this.InsuranceFormGroup.get("ProfessionalIndemnityInsuranceDoc")?.addValidators(Validators.required)
+    this.InsuranceFormGroup.get("ProfessionalIndemnityInsuranceDoc")?.enable();
+  }
+  else {
+    this.InsuranceFormGroup.get("ProfessionalIndemnityInsuranceDoc")?.disable();
+  }
+
+  if(this.InsuranceFormGroup.get("OtherInsurance")?.value == true) {
+    this.InsuranceFormGroup.get("OtherInsuranceDoc")?.addValidators(Validators.required)
+    this.InsuranceFormGroup.get("OtherInsuranceDoc")?.enable();
+  }
+  else {
+    this.InsuranceFormGroup.get("OtherInsuranceDoc")?.disable();
+  }
+}
 
 
 
@@ -554,23 +596,31 @@ Create() {
             this.VendorService.VendorAddNotification(this.VendorNotification).subscribe();
           }
         }
-        
+        this.log.action = "Created Due Diligence Checklist of " + result.vendor.name;
+        this.log.user = this.VendorService.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.VendorService.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            var action = "CREATE";
+            var title = "CREATE SUCCESSFUL";
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully <strong style='color:green'> ADDED </strong>  Due Dilligence Checklist for <strong>" + result.vendor.name + "</strong>.");
 
-        var action = "CREATE";
-        var title = "CREATE SUCCESSFUL";
-        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully <strong style='color:green'> ADDED </strong>  Due Dilligence Checklist for <strong>" + result.vendor.name  +  "</strong>.");
-    
-        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-          disableClose: true,
-          data: { action, title, message }
-        });
-    
-        const duration = 2000;
-        setTimeout(() => {
-          //this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
-         
-          dialogRef.close();
-        }, duration);
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
+
+            const duration = 2000;
+            setTimeout(() => {
+
+              dialogRef.close();
+            }, duration);
+          }
+        })
+
+        
 
         
       })
@@ -671,9 +721,6 @@ CancelOnboardRequestStatus(i:number) {
     }
     this.router.navigate(['/vendor-approve/' + this.RequestID])
     this.ngOnInit();
-   // this.router.navigate(['/vendor-unofficial-vendorlist'])
-    //window.location.reload()
-    //this.router.navigate(['/vendor-approve/' + this.onboardRequest[0].onboard_Request_Id]) routerLink="/vendor-unofficial-vendorlist"
   }
  
   

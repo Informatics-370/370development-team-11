@@ -13,6 +13,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { VendorSpentReport } from 'src/app/Shared/VendorSpentReport';
 import { ReportFilterMenuComponent } from '../report-filter-menu/report-filter-menu.component';
+import { identifierName } from '@angular/compiler';
 
 
 
@@ -32,7 +33,10 @@ export class ReportsMainViewComponent implements OnInit{
   logoImageBase64:any;
   pieChartBaseString:any;
   myBar:any;
+  //splitButtons = document.getElementsByClassName('gui-split-button')
+  //popupButtons = document.getElementsByClassName('gui-popup-button')
   ngOnInit(): void {
+    
     //this.ReportService.getBEESpendReport().subscribe(result => {
      // this.BEESpendReportDetails = result;
       this.convertImageToBase64()
@@ -150,11 +154,17 @@ export class ReportsMainViewComponent implements OnInit{
       } 
       };
      
-      pdfMake.createPdf(docDefinition).open();
+      if(this.bDownload == true) {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).download("Approved Vendor Report List")
+      }
+      else {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).open();
+      }
       } ) 
      
   }
-  
   
 
 
@@ -959,7 +969,7 @@ export class ReportsMainViewComponent implements OnInit{
       this.VendorSpentReportDetails = result;
       var User = this.ReportService.decodeUser(sessionStorage.getItem('token'))
       var CurrencyTransform = new CurrencyPipe('en-ZA')
-      let uniqueBranches =  this.VendorSpentReportDetails.map(p => (p.departmentName)).filter((name,index,currentval) => currentval.indexOf(name) === index)
+      let uniqueBranches =  this.VendorSpentReportDetails.map(p => (p.branchName)).filter((name,index,currentval) => currentval.indexOf(name) === index)
       console.log(this.VendorSpentReportDetails)
       let content = [
         {table: {
@@ -1008,8 +1018,8 @@ export class ReportsMainViewComponent implements OnInit{
         {text:'BEE Level',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
         {text:'Amount Spend',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
         ],
-        ...this.VendorSpentReportDetails.filter(x => x.departmentName == uniqueBranches[0]).map(p => ([{text:p.supplierName,fillColor: '#b4c6e7'}, {text:p.accountCode,fillColor: '#b4c6e7'},{text:p.accountName,fillColor: '#b4c6e7'},{text:p.budgetDepartment,fillColor: '#b4c6e7'},{text:p.departmentName,fillColor: '#b4c6e7'},{text:p.beE_Level,fillColor: '#b4c6e7'},{text:CurrencyTransform.transform(Number(p.totalSpend),'R'),fillColor: '#b4c6e7'}])),
-        [{text:'Total Amount for the ' + uniqueBranches[0],colSpan: 6,fillColor:'#d9e2f3'},{},{},{},{},{},{text:CurrencyTransform.transform(Number(this.VendorSpentReportDetails.filter(x => x.departmentName == uniqueBranches[0]).reduce((sum, p)=> sum + Number(p.totalSpend), 0).toFixed(2)),'R'),fillColor:'#d9e2f3'}],
+        ...this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[0]).map(p => ([{text:p.supplierName,fillColor: '#b4c6e7'}, {text:p.accountCode,fillColor: '#b4c6e7'},{text:p.accountName,fillColor: '#b4c6e7'},{text:p.budgetDepartment,fillColor: '#b4c6e7'},{text:p.branchName,fillColor: '#b4c6e7'},{text:p.beE_Level,fillColor: '#b4c6e7'},{text:CurrencyTransform.transform(Number(p.totalSpend),'R'),fillColor: '#b4c6e7'}])),
+        [{text:'Total Amount for the ' + uniqueBranches[0],colSpan: 6,fillColor:'#d9e2f3'},{},{},{},{},{},{text:CurrencyTransform.transform(Number(this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[0]).reduce((sum, p)=> sum + Number(p.totalSpend), 0).toFixed(2)),'R'),fillColor:'#d9e2f3'}],
         [{text: ' ',colSpan: 7,fillColor:"#244688"}, {}, {}, {}, {}, {}],
       ],
         
@@ -1039,13 +1049,13 @@ export class ReportsMainViewComponent implements OnInit{
     console.log(i)
     console.log(uniqueBranches[i])
     console.log(uniqueBranches.length);
-    if(this.VendorSpentReportDetails.filter(x => x.departmentName == uniqueBranches[i]).length != 0) {
+    if(this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[i]).length != 0) {
       content.push(
         { 
         table: {headerRows: 0,
         widths: [62,54,96,54,50,40,70],
         body:[
-        ...this.VendorSpentReportDetails.filter(x => x.departmentName == uniqueBranches[i]).map(p => ([{text:p.supplierName,fillColor: '#b4c6e7'},{text: p.accountCode,fillColor: '#b4c6e7'},{text:p.accountName,fillColor: '#b4c6e7'},{text:p.budgetDepartment,fillColor: '#b4c6e7'},{text:p.departmentName,fillColor: '#b4c6e7'},{text:p.beE_Level,fillColor: '#b4c6e7'},{text:CurrencyTransform.transform(Number(p.totalSpend),'R'),fillColor: '#b4c6e7'}])),
+        ...this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[i]).map(p => ([{text:p.supplierName,fillColor: '#b4c6e7'},{text: p.accountCode,fillColor: '#b4c6e7'},{text:p.accountName,fillColor: '#b4c6e7'},{text:p.budgetDepartment,fillColor: '#b4c6e7'},{text:p.branchName,fillColor: '#b4c6e7'},{text:p.beE_Level,fillColor: '#b4c6e7'},{text:CurrencyTransform.transform(Number(p.totalSpend),'R'),fillColor: '#b4c6e7'}])),
       ],},
       layout: {
         hLineWidth: function (i, node) {
@@ -1070,7 +1080,7 @@ export class ReportsMainViewComponent implements OnInit{
         table: {headerRows: 0,
         widths: [401,70],
         body:[
-          [{text:'Total Amount for the '+ uniqueBranches[i],alignment:'center',color:'black',fillColor:'#d9e2f3'} ,{text: CurrencyTransform.transform(Number(this.VendorSpentReportDetails.filter(x => x.departmentName == uniqueBranches[i]).reduce((sum, p)=> sum + Number(p.totalSpend), 0).toFixed(2)),'R'),alignment:'center',color:'black',fillColor:'#d9e2f3'}],
+          [{text:'Total Amount for the '+ uniqueBranches[i],alignment:'center',color:'black',fillColor:'#d9e2f3'} ,{text: CurrencyTransform.transform(Number(this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[i]).reduce((sum, p)=> sum + Number(p.totalSpend), 0).toFixed(2)),'R'),alignment:'center',color:'black',fillColor:'#d9e2f3'}],
       ],},
       layout: {
         hLineWidth: function (i, node) {
@@ -1131,16 +1141,51 @@ export class ReportsMainViewComponent implements OnInit{
       } 
       };  
       //docDefinition.push()
-      pdfMake.createPdf(docDefinition).open();
+
+      if(this.bDownload == true) {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).download("Vendor Spent Report")
+      }
+      else {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).open();
+      }
+
+      
     })
   }
 
+  bDownload = false;
+  iVal = 0;
+  value(ID:number) {
+    this.iVal = ID;
+  }
 
-  ViewFilter(ID: Number) {
+  CorrectRouting(boolValue:boolean) {
+    let ID=this.iVal
+    switch(ID) {
+      case 1: {
+        this.bDownload = boolValue;
+        this.GenerateApprovedReport()
+      }
+      break;
+      case 2: {
+        this.ViewFilter(2,boolValue)
+      } 
+      break;
+      case 3: {
+        this.bDownload = boolValue;
+        this.GenerateVendorSpentReport()
+      }
+      break;
+    }
+  }
+
+  ViewFilter(ID: Number,sDownload:boolean) {
     
     const confirm = this.dialog.open(ReportFilterMenuComponent, {
       disableClose: true,
-      data: { ID }
+      data: { ID, sDownload }
       
     });
     this.dialog.afterAllClosed.subscribe({

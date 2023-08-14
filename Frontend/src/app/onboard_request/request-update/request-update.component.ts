@@ -16,6 +16,8 @@ import { SoleSupplier } from 'src/app/Shared/Sole_Supplier';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
+import { AuditLog } from 'src/app/Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-request-update',
@@ -86,6 +88,13 @@ export class RequestUpdateComponent {
     mD_Approval : false,
     date: new Date(),
     reason : "",
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   SoleSupplierFormGroup = this._formBuilder.group({
@@ -396,7 +405,6 @@ export class RequestUpdateComponent {
           console.log(this.Onboard_Request)
           this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
             next: (response) => {
-              console.log(response);
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -429,21 +437,32 @@ export class RequestUpdateComponent {
         this.dataService.DeleteFile(RequestNo,filename).subscribe!
         this.dataService.DeleteRequest(this.onboardRequest[i].onboard_Request_Id,this.onboardRequest[i].vendor_ID).subscribe({
           next: (response) => {
-            console.log(response);
-            var action = "Update";
-            var title = "UPDATE SUCCESSFUL";
-            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
-  
-            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-              disableClose: true,
-              data: { action, title, message }
-            });
-  
-            const duration = 1750;
-            setTimeout(() => {
-              this.router.navigate(['/request-view']);
-              dialogRef.close();
-            }, duration);
+            if(this.onboardRequest.length == this.CompanyContactInfoFormGroup.controls.RequestData.value.length -1) {
+              this.log.action = "Exported Inventory Details";
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  var action = "Update";
+                  var title = "UPDATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
+
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/request-view']);
+                    dialogRef.close();
+                  }, duration);
+                }
+              })
+            }
+            
           }})
 
       }
@@ -492,21 +511,20 @@ export class RequestUpdateComponent {
             this.SoleSupply.vendor_ID = RequestAdded.vendor_ID
             this.dataService.UpdateSoleSupplier(RequestAdded.vendor_ID,this.SoleSupply).subscribe({
               next: (response) => {
-                console.log(response);
                 var action = "Update";
-                var title = "UPDATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + RequestAdded.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
-      
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
-      
-                const duration = 1750;
-                setTimeout(() => {
-                  this.router.navigate(['/request-view']);
-                  dialogRef.close();
-                }, duration);
+                    var title = "UPDATE SUCCESSFUL";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + RequestAdded.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
+
+                    const duration = 1750;
+                    setTimeout(() => {
+                      this.router.navigate(['/request-view']);
+                      dialogRef.close();
+                    }, duration);     
               }});
           }//response
         );//dataservice
@@ -528,27 +546,39 @@ export class RequestUpdateComponent {
             this.SoleSupply.vendor = RequestAdded.vendor
             this.dataService.UpdateSoleSupplier(RequestAdded.vendor_ID,this.SoleSupply).subscribe({
               next: (response) => {
-                console.log(response);
                 var action = "Update";
                 var title = "UPDATE SUCCESSFUL";
                 var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + RequestAdded.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
-      
+
                 const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
                   disableClose: true,
                   data: { action, title, message }
                 });
-      
+
                 const duration = 1750;
                 setTimeout(() => {
                   this.router.navigate(['/request-view']);
-                  
+
                   dialogRef.close();
                 }, duration);
+               
+                
               }});
           }//response
         );//dataservice
     }
   }//if
+
+  this.log.action = "Updated Onboard Request # " + this.onboardRequest[0].onboard_Request_Id;
+  this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+  let test: any
+  test = new DatePipe('en-ZA');
+  this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+  this.dataService.AuditLogAdd(this.log).subscribe({
+    next: (Log) => {
+      
+    }
+  })
   
 
   }//function

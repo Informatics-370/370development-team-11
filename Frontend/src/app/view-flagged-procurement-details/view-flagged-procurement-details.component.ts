@@ -117,7 +117,7 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit{
          this.ProcurementFormGroup.get("ItemType")?.setValue(this.ProcurementDetails.item_Type);
          this.getItemDetails(this.ProcurementDetails.item_Type);
          
-         this.ProcurementFormGroup.get("AccountCode")?.setValue(this.ProcurementDetails.account_Code);
+         this.ProcurementFormGroup.get("AccountCode")?.setValue(this.ProcurementDetails.budget_Line.budget_Category.account_Name.toString());
 
          //paymentType
          this.ProcurementFormGroup.get("PaymentType")?.setValue(this.ProcurementDetails.payment_Method.name);

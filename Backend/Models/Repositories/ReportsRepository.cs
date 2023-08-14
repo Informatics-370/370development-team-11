@@ -26,7 +26,7 @@ namespace ProcionAPI.Models.Repositories
             .Include(PC => PC.Procurement_Request)
             .ThenInclude(V => V.Vendor)
             .Include(E => E.Employee)
-            .ThenInclude(B => B.Department)
+            .ThenInclude(B => B.Branch)
             .Include(BL => BL.Budget_Line)
             .ThenInclude(BC => BC.Budget_Category)
             .Where(P => (P.Procurement_Status_ID == 2) && (P.Full_Payment_Due_Date >= StartDate) && (P.Full_Payment_Due_Date <= EndDate) )
@@ -41,7 +41,7 @@ namespace ProcionAPI.Models.Repositories
 
             var query = ProcurementRequestDetails.Select((R, index) => new BEESpentReportVM
             {
-                BranchName = R.Employee.Department.Name,
+                BranchName = R.Employee.Branch.Name,
                 TotalSpend = R.Total_Amount,
                 BEE_Level = VendorBEELevel[index],
             });
@@ -75,6 +75,8 @@ namespace ProcionAPI.Models.Repositories
             .ThenInclude(V => V.Vendor)
             .Include(E => E.Employee)
             .ThenInclude(B => B.Department)
+            .Include(E => E.Employee)
+            .ThenInclude(B => B.Branch)
             .Include(BL => BL.Budget_Line)
             .ThenInclude(BC => BC.Budget_Category)
             .Include(BL => BL.Budget_Line)
@@ -92,10 +94,10 @@ namespace ProcionAPI.Models.Repositories
             var query = ProcurementRequestDetails.Select((R, index) => new VendorSpentReport
             {
                 SupplierName = R.Procurement_Request.Vendor.Name,
-                AccountCode = R.Account_Code,
+                AccountCode = R.Budget_Line.Account_Code,
                 AccountName = R.Budget_Line.Budget_Category.Account_Name,
-                BudgetDepartment = R.Budget_Line.Budget_Category.Account_Name,
-                DepartmentName = R.Employee.Department.Name,
+                BudgetDepartment = R.Employee.Department.Name,
+                BranchName = R.Employee.Branch.Name,
                 BEE_Level = VendorBEELevel[index],
                 TotalSpend = R.Total_Amount,
             });

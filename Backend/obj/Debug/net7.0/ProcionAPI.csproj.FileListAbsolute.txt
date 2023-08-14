@@ -362,3 +362,10 @@ C:\Users\User\Documents\GitHub\370development-team-11\Backend\obj\Debug\net7.0\r
 C:\Users\User\Documents\GitHub\370development-team-11\Backend\obj\Debug\net7.0\ProcionAPI.pdb
 C:\Users\User\Documents\GitHub\370development-team-11\Backend\obj\Debug\net7.0\ProcionAPI.genruntimeconfig.cache
 C:\Users\User\Documents\GitHub\370development-team-11\Backend\obj\Debug\net7.0\ref\ProcionAPI.dll
+C:\Users\User\Documents\GitHub\370development-team-11\Backend\bin\Debug\net7.0\ClosedXML.dll
+C:\Users\User\Documents\GitHub\370development-team-11\Backend\bin\Debug\net7.0\DocumentFormat.OpenXml.dll
+C:\Users\User\Documents\GitHub\370development-team-11\Backend\bin\Debug\net7.0\ExcelNumberFormat.dll
+C:\Users\User\Documents\GitHub\370development-team-11\Backend\bin\Debug\net7.0\Irony.dll
+C:\Users\User\Documents\GitHub\370development-team-11\Backend\bin\Debug\net7.0\SixLabors.Fonts.dll
+C:\Users\User\Documents\GitHub\370development-team-11\Backend\bin\Debug\net7.0\System.IO.Packaging.dll
+C:\Users\User\Documents\GitHub\370development-team-11\Backend\bin\Debug\net7.0\XLParser.dll
