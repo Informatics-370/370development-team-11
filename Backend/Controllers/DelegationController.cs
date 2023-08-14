@@ -302,6 +302,23 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetLoginTempAcc/{delegationID}")]
+        public async Task<IActionResult> GetLoginTempAcc(int delegationID)
+        {
+            try
+            {
+                var result = await _DelegationRepository.GetLoginTempAccAsync(delegationID);
+                if (result == null) return NotFound("Delegation does not exist. You need to create it first");
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
+
         [HttpPut]
         [Route("EditTempAcc/{tempAccID}")]
         public async Task<ActionResult> EditTempAcc(Temporary_Access UpdatedTempAcc,[FromRoute] int tempAccID)
