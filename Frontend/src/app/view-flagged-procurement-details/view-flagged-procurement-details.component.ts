@@ -151,7 +151,7 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
           this.ProcurementFormGroup.get("ItemType")?.setValue(this.ProcurementDetails.item_Type);
           this.getItemDetails(this.ProcurementDetails.item_Type);
 
-          this.ProcurementFormGroup.get("AccountCode")?.setValue(this.ProcurementDetails.account_Code);
+          this.ProcurementFormGroup.get("AccountCode")?.setValue(this.ProcurementDetails.budget_Line.budget_Category.account_Name.toString());
 
           //paymentType
           this.ProcurementFormGroup.get("PaymentType")?.setValue(this.ProcurementDetails.payment_Method.name);
@@ -194,8 +194,9 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
           this.ProcurementFormGroup.get("TotalAmountDueDate")?.setValue(dateChange.transform(this.ProcurementDetails.full_Payment_Due_Date, 'MM/dd/y'));
           this.ProcurementFormGroup.get("Comments")?.setValue(this.ProcurementDetails.comment);
         })
-      }
-    })
+      })
+    }
+   })
 
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
     console.log(User)
