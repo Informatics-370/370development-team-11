@@ -775,7 +775,7 @@ export class DataService {
     return this.httpClient.post(`${this.apiUrl}User/login/` + username + "/" + password, this.httpOptions)
   }
 
-  loginWithTemp(username: string, password: string, tempacc: string, tempUsername: string) {
+  loginWithTemp(username: string, password: string, tempacc: Temporary_Access, tempUsername: string) {
     return this.httpClient.post(`${this.apiUrl}User/loginWithTemp/` + username + "/" + password + "/" + tempacc + "/" + tempUsername, this.httpOptions)
   }
 

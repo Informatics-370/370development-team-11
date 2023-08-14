@@ -301,5 +301,20 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support");
             }
         }
+
+        [HttpPut]
+        [Route("EditTempAcc/{tempAccID}")]
+        public async Task<ActionResult> EditTempAcc(Temporary_Access UpdatedTempAcc,[FromRoute] int tempAccID)
+        {
+            try
+            {
+                var result = await _DelegationRepository.UpdateTempAccAsync(UpdatedTempAcc, tempAccID);
+                return Ok(result);
+            }
+            catch
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
     }
 }
