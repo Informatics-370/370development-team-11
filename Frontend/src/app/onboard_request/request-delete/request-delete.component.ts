@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/DataService/data-service';
+import { Access } from 'src/app/Shared/Access';
 import { Role } from 'src/app/Shared/EmployeeRole';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
 import { Onboard_Status } from 'src/app/Shared/OnboardStatus';
@@ -28,69 +29,84 @@ export class RequestDeleteComponent {
     description: ''
   }
 
-  OnboardStatus : Onboard_Status = {
+  OnboardStatus: Onboard_Status = {
     status_ID: 0,
     name: "",
     description: "",
+  }
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
   }
 
   Onboard_Request: OnboardRequest = {
     onboard_Request_Id: 0,
     user_Id: 1,
     vendor_ID: 0,
-    status_ID:0,
-    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0,sole_Supplier_Provided:false,preferedVendor:false },
+    status_ID: 0,
+    vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0, sole_Supplier_Provided: false, preferedVendor: false },
     onboard_Status: this.OnboardStatus,
-    users: { user_Id: 0, role_ID: 0, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', no_Notifications:0, role: this.rl },
+    users: { user_Id: 0, role_ID: 0, access_ID: 0, access: this.Access, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', no_Notifications: 0, role: this.rl },
     quotes: '',
   }
 
-  
+
   showConfirmationDialog: boolean = true;
   showSuccessDialog: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<RequestDeleteComponent>, private ActRoute: ActivatedRoute, private route: Router, private dataService: DataService,
     @Inject(MAT_DIALOG_DATA) public data: { ID: number }) { }
-//create api backend 1 for get and one for delete 
-OnboardRequestDetails: any[] = [];
-    ngOnInit(): void {
-      this.ActRoute.paramMap.subscribe({
-        next: (params) => {
-          const ID = this.data.ID;
-          console.log(ID);
-  
-          if (ID) {
-            this.dataService.GetRequestByID(ID).subscribe(result => {
-              let requestlist:any[] = result
-              requestlist.forEach((element) => {
-                this.OnboardRequestDetails.push(element)
+  //create api backend 1 for get and one for delete 
+  OnboardRequestDetails: any[] = [];
+  ngOnInit(): void {
+    this.ActRoute.paramMap.subscribe({
+      next: (params) => {
+        const ID = this.data.ID;
+        console.log(ID);
+
+        if (ID) {
+          this.dataService.GetRequestByID(ID).subscribe(result => {
+            let requestlist: any[] = result
+            requestlist.forEach((element) => {
+              this.OnboardRequestDetails.push(element)
             });//result
             console.log(this.OnboardRequestDetails.length)
           })//dataservice
         }//if
       }//next
     });//actroute
-  console.log(this.OnboardRequestDetails)
- 
-}//ngonIt
+    console.log(this.OnboardRequestDetails)
 
-//add loop
+  }//ngonIt
+
+  //add loop
   onConfirm(RequestId: number): void {
-   // console.log(this.OnboardRequestDetails.length)
-   if(this.OnboardRequestDetails.length > 2) {
-    for(let i = 0; i < this.OnboardRequestDetails.length; i++) {
-      let VendorID = this.OnboardRequestDetails[i].vendor.vendor_ID
-      let sFile = this.OnboardRequestDetails[i].quotes;
-            // let sFi = sFile.substring(0,sFile.indexOf("\\"))
-            //  sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            // let sOR = sFile.substring(0,sFile.indexOf("\\"))
-            // sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-        this.dataService.DeleteFile(RequestNo,filename).subscribe()
-        this.dataService.DeleteRequest(RequestId,VendorID).subscribe({
+    // console.log(this.OnboardRequestDetails.length)
+    if (this.OnboardRequestDetails.length > 2) {
+      for (let i = 0; i < this.OnboardRequestDetails.length; i++) {
+        let VendorID = this.OnboardRequestDetails[i].vendor.vendor_ID
+        let sFile = this.OnboardRequestDetails[i].quotes;
+        // let sFi = sFile.substring(0,sFile.indexOf("\\"))
+        //  sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+        // let sOR = sFile.substring(0,sFile.indexOf("\\"))
+        // sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+        let RequestNo = sFile.substring(0, sFile.indexOf("\\"))
+        let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+        this.dataService.DeleteFile(RequestNo, filename).subscribe()
+        this.dataService.DeleteRequest(RequestId, VendorID).subscribe({
           next: (response) => {
-            if(this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
+            if (this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
               this.dataService.DeleteVendor(VendorID).subscribe()
             }
             this.showConfirmationDialog = false;
@@ -101,52 +117,52 @@ OnboardRequestDetails: any[] = [];
           }
         });
       }
-   }
-   else {
-    let VendorID = this.OnboardRequestDetails[0].vendor.vendor_ID
-    if(this.OnboardRequestDetails[0].quotes != "None") {
-      let sFile = this.OnboardRequestDetails[0].quotes;
-      let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-      console.log(RequestNo)
-      let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-      console.log(filename)
-      this.dataService.DeleteFile(RequestNo,filename).subscribe()
-      this.dataService.DeleteSoleSupplier(VendorID).subscribe(response => {
-        this.dataService.DeleteRequest(RequestId,VendorID).subscribe({
-          next: (response) => {
-            if(this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
-              this.dataService.DeleteVendor(VendorID).subscribe()
-            }
-            this.showConfirmationDialog = false;
-            this.showSuccessDialog = true;
-            setTimeout(() => {
-              this.dialogRef.close();
-            }, 1750);
-          }
-        });
-      })
-      
     }
     else {
-      this.dataService.DeleteSoleSupplier(VendorID).subscribe(response => {
-        this.dataService.DeleteRequest(RequestId,VendorID).subscribe({
-          next: (response) => {
-            if(this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
-              this.dataService.DeleteVendor(VendorID).subscribe()
+      let VendorID = this.OnboardRequestDetails[0].vendor.vendor_ID
+      if (this.OnboardRequestDetails[0].quotes != "None") {
+        let sFile = this.OnboardRequestDetails[0].quotes;
+        let RequestNo = sFile.substring(0, sFile.indexOf("\\"))
+        console.log(RequestNo)
+        let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+        console.log(filename)
+        this.dataService.DeleteFile(RequestNo, filename).subscribe()
+        this.dataService.DeleteSoleSupplier(VendorID).subscribe(response => {
+          this.dataService.DeleteRequest(RequestId, VendorID).subscribe({
+            next: (response) => {
+              if (this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
+                this.dataService.DeleteVendor(VendorID).subscribe()
+              }
+              this.showConfirmationDialog = false;
+              this.showSuccessDialog = true;
+              setTimeout(() => {
+                this.dialogRef.close();
+              }, 1750);
             }
-            this.showConfirmationDialog = false;
-            this.showSuccessDialog = true;
-            setTimeout(() => {
-              this.dialogRef.close();
-            }, 1750);
-          }
-        });
-      })
+          });
+        })
+
+      }
+      else {
+        this.dataService.DeleteSoleSupplier(VendorID).subscribe(response => {
+          this.dataService.DeleteRequest(RequestId, VendorID).subscribe({
+            next: (response) => {
+              if (this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
+                this.dataService.DeleteVendor(VendorID).subscribe()
+              }
+              this.showConfirmationDialog = false;
+              this.showSuccessDialog = true;
+              setTimeout(() => {
+                this.dialogRef.close();
+              }, 1750);
+            }
+          });
+        })
+      }
+
     }
-    
-   }
-   
-   
+
+
   }
 
   onCancel(): void {

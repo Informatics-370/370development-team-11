@@ -122,6 +122,25 @@ namespace ProcionAPI.Data
 
             }
             );
+            modelBuilder.Entity<Access>()
+            .HasData(
+            new
+            {
+                Access_ID = 1,
+                IsAdmin = true,
+                CanAccInv = true,
+                CanAccFin = true,
+                CanAccPro = true,
+                CanAccVen = true,
+                CanAccRep = true,
+                CanViewPenPro = true,
+                CanViewFlagPro = true,
+                CanViewFinPro = true,
+                CanAppVen = true,
+                CanEditVen = true,
+                CanDeleteVen = true
+            }
+            );
 
             modelBuilder.Entity<User>()
             .HasData(
@@ -129,6 +148,7 @@ namespace ProcionAPI.Data
             {
                 User_Id = 1,
                 Role_ID = 2,
+                Access_ID = 1,
                 Username = "Admin",
                 Password = userrep.HashPassword("Admin123"),
                 Profile_Picture = "test",
@@ -148,6 +168,7 @@ namespace ProcionAPI.Data
 
             }
             );
+
             modelBuilder.Entity<Role>()
             .HasData(
             new
@@ -162,6 +183,24 @@ namespace ProcionAPI.Data
                 Role_ID = 2,
                 Name = "Admin",
                 Description = "Admin",
+            },
+            new
+            {
+                Role_ID = 3,
+                Name = "GRC",
+                Description = "GRC",
+            },
+            new
+            {
+                Role_ID = 4,
+                Name = "Finance",
+                Description = "Finance",
+            },
+            new
+            {
+                Role_ID = 5,
+                Name = "Employee",
+                Description = "Employee",
             }
             );
 

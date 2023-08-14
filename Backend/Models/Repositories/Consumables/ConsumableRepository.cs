@@ -37,10 +37,27 @@ namespace ProcionAPI.Models.Repositories.Consumables
                 // Category already exists, assign its ID to the new consumable
                 ConsumableAdd.Consumable_Category = existingCategory;
             }
-
-            // Add the consumable to the database and save changes
             await _dbContext.AddAsync(ConsumableAdd);
             await _dbContext.SaveChangesAsync();
+
+            var HistData = new List<Consumable_History>();
+
+            var StockAmt = ConsumableAdd.On_Hand;
+            var DCap = DateTime.UtcNow;
+
+            var HistoryAdd = new Consumable_History
+            {
+                Consumable = ConsumableAdd,
+                StockAmt = StockAmt,
+                DateCaptured = DCap
+            };
+
+            HistData.Add(HistoryAdd);
+            await _dbContext.Consumable_History.AddRangeAsync(HistData);
+            await _dbContext.SaveChangesAsync();
+
+            // Add the consumable to the database and save changes
+            
 
             // Generate dummy data for Consumable_History
             var dummyData = new List<Consumable_History>();

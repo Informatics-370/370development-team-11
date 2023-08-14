@@ -11,6 +11,7 @@ import { User } from '../Shared/User';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
+import { Access } from '../Shared/Access';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -40,12 +41,30 @@ export class MainNavComponent implements OnInit {
     description: ''
   }
 
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
+  }
+
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
-    profile_Picture: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
     role: this.rl
   }

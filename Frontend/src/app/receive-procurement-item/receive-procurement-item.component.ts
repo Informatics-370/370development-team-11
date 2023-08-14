@@ -50,8 +50,8 @@ export class ReceiveProcurementItemComponent {
   History: Consumable_History = {
     Consumable_ID: 0,
     history_ID: 0,
-    DateCaptured: new Date(),
-    StockAmt: 0,
+    dateCaptured: new Date(),
+    stockAmt: 0,
     consumable: {
       consumable_ID: 0,
       consumable_Category_ID: 0,
@@ -92,7 +92,8 @@ export class ReceiveProcurementItemComponent {
     this.dataService.GetConsumableHistoryByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
       next: (Hist) => {
         console.log(Hist)
-        this.HistAmt = Hist.StockAmt
+        this.HistAmt = Hist.stockAmt
+        console.log(Hist.stockAmt)
         this.dataService.GetConsumableByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
           next: (response) => {
             this.dataService.GetCategoryByID(response.consumable_Category_ID).subscribe({
@@ -100,11 +101,11 @@ export class ReceiveProcurementItemComponent {
                 this.Consumables.name = response.name
                 this.Consumables.consumable_Category.name = result.name
 
-                this.History.StockAmt = this.myForm.get('On_Hand')?.value + this.HistAmt;
+                this.History.stockAmt = this.myForm.get('On_Hand')?.value + this.HistAmt;
 
                 let test: any
                 test = new DatePipe('en-ZA');
-                this.History.DateCaptured = test.transform(this.History.DateCaptured, 'MMM d, y, h:mm:ss a');
+                this.History.dateCaptured = test.transform(this.History.dateCaptured, 'MMM d, y, h:mm:ss a');
 
                 this.History.consumable = this.Consumables
 

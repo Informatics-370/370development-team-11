@@ -13,6 +13,7 @@ import { Role } from '../../Shared/EmployeeRole';
 import { User } from '../../Shared/User';
 import { DatePipe } from '@angular/common';
 import { AuditLog } from '../../Shared/AuditLog';
+import { Access } from 'src/app/Shared/Access';
 
 @Component({
   selector: 'app-edit-delegation',
@@ -41,10 +42,27 @@ export class EditDelegationComponent implements OnInit {
     name: '',
     description: ''
   }
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
+  }
 
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -133,8 +151,8 @@ export class EditDelegationComponent implements OnInit {
         end: this.delegation.to_Date,
         DelegationFile: this.delegation.delegation_Document
       });
-      
-      
+
+
       this.delID = this.delegation.delegation_ID;
       this.doa.user_Id = this.delegation.user_Id;
       this.doa.admin_ID = this.delegation.admin_ID;
@@ -177,7 +195,7 @@ export class EditDelegationComponent implements OnInit {
     this.doa.delegatingParty = this.myForm.get('DelegatingName')?.value;
     var name = "" + this.doa.delegatingParty;
 
-    
+
 
     if (this.files[0] == "") {
       this.doa.delegationStatus_ID = 1;
@@ -189,7 +207,7 @@ export class EditDelegationComponent implements OnInit {
       let endDate: any
       endDate = new DatePipe('en-ZA');
       this.doa.to_Date = startDate.transform(this.myForm.get('end')?.value, 'MMM d, y, h:mm:ss a');
-      
+
       this.dataService.EditDelegation(this.doa, this.delID).subscribe({
         next: (response) => {
 
@@ -226,7 +244,7 @@ export class EditDelegationComponent implements OnInit {
         }
       })
     } else {
-      
+
       this.fileToUpload = this.files[0];
 
       if (this.fileToUpload != null) {
@@ -284,7 +302,7 @@ export class EditDelegationComponent implements OnInit {
                         }
                       })
 
-                      
+
                     }
                   }
                 })
@@ -293,11 +311,11 @@ export class EditDelegationComponent implements OnInit {
           })
         })
 
-        
-      } 
-    }
-    
 
-    
+      }
+    }
+
+
+
   }
 }

@@ -34,6 +34,7 @@ import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
 import { AuditLog } from '../Shared/AuditLog';
+import { Access } from '../Shared/Access';
 
 @Component({
   selector: 'app-upload-invoice',
@@ -80,9 +81,27 @@ export class UploadInvoiceComponent {
     description: ''
   }
 
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
+  }
+
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -133,6 +152,8 @@ export class UploadInvoiceComponent {
     user: {
       user_Id: 0,
       role_ID: 0,
+      access_ID: 0,
+      access: this.Access,
       username: "",
       password: "",
       profile_Picture: "",
@@ -378,7 +399,7 @@ export class UploadInvoiceComponent {
           }
         })
 
-       
+
       })
     }
   }

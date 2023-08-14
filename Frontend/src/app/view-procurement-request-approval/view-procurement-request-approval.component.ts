@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../DataService/data-service';
-import { MatDialog,MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
 import { FormBuilder, FormControl, FormGroupDirective, NgForm, FormArray, FormGroup, Validators } from '@angular/forms';
@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 import { Notification_Type } from '../Shared/Notification_Type';
 import { Role } from '../Shared/EmployeeRole';
 import { User } from '../Shared/User';
+import { Access } from '../Shared/Access';
 
 
 @Component({
@@ -19,7 +20,7 @@ import { User } from '../Shared/User';
   templateUrl: './view-procurement-request-approval.component.html',
   styleUrls: ['./view-procurement-request-approval.component.css']
 })
-export class ViewProcurementRequestApprovalComponent implements OnInit{
+export class ViewProcurementRequestApprovalComponent implements OnInit {
 
 
   rl: Role = {
@@ -28,9 +29,27 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
     description: ''
   }
 
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
+  }
+
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -63,56 +82,56 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
   })
 
 
-  
-  constructor(private dataService: DataService, private router: Router,private route: ActivatedRoute,private _formBuilder: FormBuilder, private http: HttpClient,private dialog: MatDialog, private sanitizer:DomSanitizer) { }
-  ProcurementRequestID= 0;
-  ProcurementRequestDetails: Procurement_Request;
- // file:File[] = [null,null,null]
-  FileDetails:any = [];
 
-  
-  
+  constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute, private _formBuilder: FormBuilder, private http: HttpClient, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
+  ProcurementRequestID = 0;
+  ProcurementRequestDetails: Procurement_Request;
+  // file:File[] = [null,null,null]
+  FileDetails: any = [];
+
+
+
   ngOnInit() {
-    for(let i = 0;i < 3;i++) {
-      this.FileDetails.push({FileURL:"",FileName:""})
+    for (let i = 0; i < 3; i++) {
+      this.FileDetails.push({ FileURL: "", FileName: "" })
     }
     this.route.paramMap.subscribe({
       next: (paramater) => {
-        
-       this.ProcurementRequestID = Number(paramater.get("ProcurementRequestID"));
 
-       this.dataService.GetProcurementRequestByID(this.ProcurementRequestID).subscribe(response => {
-        this.ProcurementRequestDetails = response;
-        if(this.ProcurementRequestDetails.vendor.vendor_Status_ID == 6) {
-          this.VendorFormGroup.get("CompanyName")?.setValue(this.ProcurementRequestDetails.vendor.name)
-          this.VendorFormGroup.get("CompanyEmail")?.setValue(this.ProcurementRequestDetails.vendor.email)
-          this.VendorFormGroup.get("Description")?.setValue(this.ProcurementRequestDetails.description.toString())
-          this.dataService.GetProcurementRequestQuoteByID(this.ProcurementRequestID).subscribe(result => {
-            let b = 0;
-            console.log(result)
-            result.forEach(a => {
-              this.GetFiles(a.path,b)
-              b += 1
-              console.log(a.path)
-              console.log(b)
+        this.ProcurementRequestID = Number(paramater.get("ProcurementRequestID"));
+
+        this.dataService.GetProcurementRequestByID(this.ProcurementRequestID).subscribe(response => {
+          this.ProcurementRequestDetails = response;
+          if (this.ProcurementRequestDetails.vendor.vendor_Status_ID == 6) {
+            this.VendorFormGroup.get("CompanyName")?.setValue(this.ProcurementRequestDetails.vendor.name)
+            this.VendorFormGroup.get("CompanyEmail")?.setValue(this.ProcurementRequestDetails.vendor.email)
+            this.VendorFormGroup.get("Description")?.setValue(this.ProcurementRequestDetails.description.toString())
+            this.dataService.GetProcurementRequestQuoteByID(this.ProcurementRequestID).subscribe(result => {
+              let b = 0;
+              console.log(result)
+              result.forEach(a => {
+                this.GetFiles(a.path, b)
+                b += 1
+                console.log(a.path)
+                console.log(b)
+              })
             })
-          })
-        }
-        else if(this.ProcurementRequestDetails.vendor.vendor_Status_ID != 6) {
-          this.VendorFormGroup.get("CompanyName")?.setValue(this.ProcurementRequestDetails.vendor.name)
-          this.VendorFormGroup.get("CompanyEmail")?.setValue(this.ProcurementRequestDetails.vendor.email)
-          this.VendorFormGroup.get("Description")?.setValue(this.ProcurementRequestDetails.description.toString())
-          this.dataService.GetProcurementRequestQuoteByID(this.ProcurementRequestID).subscribe(result => {
-            let b = 0;
-            console.log(result);
-            result.forEach(a => {
-              this.GetFiles(a.path,b)
-              b += 1
-              
+          }
+          else if (this.ProcurementRequestDetails.vendor.vendor_Status_ID != 6) {
+            this.VendorFormGroup.get("CompanyName")?.setValue(this.ProcurementRequestDetails.vendor.name)
+            this.VendorFormGroup.get("CompanyEmail")?.setValue(this.ProcurementRequestDetails.vendor.email)
+            this.VendorFormGroup.get("Description")?.setValue(this.ProcurementRequestDetails.description.toString())
+            this.dataService.GetProcurementRequestQuoteByID(this.ProcurementRequestID).subscribe(result => {
+              let b = 0;
+              console.log(result);
+              result.forEach(a => {
+                this.GetFiles(a.path, b)
+                b += 1
+
+              })
             })
-          })
-        }
-       })
+          }
+        })
       }
     })
 
@@ -120,20 +139,20 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
     console.log(User)
   }
 
-  GetFiles(sfilepath:string,i:number) {
+  GetFiles(sfilepath: string, i: number) {
     let sFile = sfilepath;
     //console.log(sfilepath)
-    let VendorName = sFile.substring(0,sFile.indexOf("\\"))
-    sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-    let RequestID = sFile.substring(0,sFile.indexOf("\\"))
-    let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+    let VendorName = sFile.substring(0, sFile.indexOf("\\"))
+    sFile = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+    let RequestID = sFile.substring(0, sFile.indexOf("\\"))
+    let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
     this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${RequestID}/${filename}`
     this.FileDetails[i].FileName = filename
   }
 
   AcceptRequest() {
     console.log(this.ProcurementRequestDetails)
-    this.dataService.UpdateProcurementRequestStatus(1,this.ProcurementRequestDetails).subscribe({
+    this.dataService.UpdateProcurementRequestStatus(1, this.ProcurementRequestDetails).subscribe({
       next: (response) => {
         console.log(response)
         this.ProcurementNotification.notification_Type_ID = 8;
@@ -150,7 +169,7 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
         var title = "APPROVE SUCCESSFUL";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement Request <strong>" + response.name + "</strong> has been <strong style='color:green'> APPROVED </strong> successfully!");
 
-        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
           disableClose: true,
           data: { action, title, message }
         });
@@ -165,7 +184,7 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
   }
 
   RejectRequest() {
-    this.dataService.UpdateProcurementRequestStatus(2,this.ProcurementRequestDetails).subscribe({
+    this.dataService.UpdateProcurementRequestStatus(2, this.ProcurementRequestDetails).subscribe({
       next: (response) => {
         this.ProcurementNotification.notification_Type_ID = 9;
         let transVar: any
@@ -180,7 +199,7 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
         var title = "REJECTION SUCCESSFUL";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement Request <strong>" + response.name + "</strong> has been <strong style='color:red'> Rejected </strong> successfully!");
 
-        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
           disableClose: true,
           data: { action, title, message }
         });
@@ -194,7 +213,7 @@ export class ViewProcurementRequestApprovalComponent implements OnInit{
     })
   }
 
-  openPDFInNewTab(i:number): void {
+  openPDFInNewTab(i: number): void {
     const url = this.FileDetails[i].FileURL;
     this.http.get(url, { responseType: 'blob' }).subscribe(response => {
       const fileURL = URL.createObjectURL(response);

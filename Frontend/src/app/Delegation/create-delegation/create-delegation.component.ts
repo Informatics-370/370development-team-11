@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { DelegationStatus } from '../../Shared/DelegationStatus';
 import { Role } from '../../Shared/EmployeeRole';
 import { Temporary_Access } from '../../Shared/Temporary_Access';
 import { User } from '../../Shared/User';
+import { Access } from 'src/app/Shared/Access';
 
 @Component({
   selector: 'app-create-delegation',
@@ -34,6 +35,21 @@ export class CreateDelegationComponent implements OnInit {
   fileToUpload: File | null = null;
   files: any[] = [''];
   sPath = "";
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
+  }
 
   rl: Role = {
     role_ID: 0,
@@ -44,6 +60,8 @@ export class CreateDelegationComponent implements OnInit {
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -186,7 +204,7 @@ export class CreateDelegationComponent implements OnInit {
     this.doa.delegatingParty = this.myForm.get('DelegatingName')?.value;
     var name = "" + this.doa.delegatingParty;
 
-    
+
     this.fileToUpload = this.files[0];
 
     if (this.fileToUpload != null) {
@@ -251,8 +269,8 @@ export class CreateDelegationComponent implements OnInit {
                 })
 
 
-                
- 
+
+
               }
             })
           }
@@ -261,7 +279,7 @@ export class CreateDelegationComponent implements OnInit {
     }
 
 
-    
+
 
 
     //this.adm.adminName = this.myForm.get('AdminName')?.value;

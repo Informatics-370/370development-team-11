@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Procurement_Request_Quote } from '../Shared/Procurement_Request_Quote';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
+import { Access } from '../Shared/Access';
 
 @Component({
   selector: 'app-delete-procurement-request',
@@ -14,6 +15,23 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./delete-procurement-request.component.css']
 })
 export class DeleteProcurementRequestComponent implements OnInit {
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
+  }
+
+
   Procurement_Request: Procurement_Request = {
     procurement_Request_ID: 0,
     vendor_ID: 0,
@@ -41,6 +59,8 @@ export class DeleteProcurementRequestComponent implements OnInit {
     user: {
       user_Id: 0,
       role_ID: 0,
+      access_ID: 0,
+      access: this.Access,
       username: "",
       password: "",
       profile_Picture: "",

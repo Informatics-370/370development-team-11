@@ -203,12 +203,6 @@
                                             <input matInput type="text" placeholder="" formControlName="VendorName"
                                                 id="VendorName" [formControl]="VendorNameControl"
                                                 [matAutocomplete]="auto" required>
-                                            <mat-autocomplete #auto="matAutocomplete">
-                                                <mat-option *ngFor="let option of filteredVendors | async"
-                                                    [value]="option.name" (click)="setVal(option.name)">
-                                                    {{option.name}}
-                                                </mat-option>
-                                            </mat-autocomplete>
                                             <mat-hint align="end">Not more then 32 characters long.</mat-hint>
                                             <mat-error *ngIf="myError('VendorName', 'required')">Name is
                                                 required</mat-error>
@@ -219,6 +213,12 @@
                                                 exceed</mat-error>
                                             <mat-error *ngIf="myError('VendorName', 'pattern')">Name can not contain
                                                 numbers</mat-error>
+                                            <mat-autocomplete #auto="matAutocomplete">
+                                                <mat-option *ngFor="let option of filteredVendors | async"
+                                                    [value]="option.name" (click)="setVal(option.name)">
+                                                    {{option.name}}
+                                                </mat-option>
+                                            </mat-autocomplete>
                                         </mat-form-field>
                                     </mat-card-content>
                                 </td>

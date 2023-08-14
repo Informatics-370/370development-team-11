@@ -21,9 +21,10 @@ import { MainNavComponent } from '../../main-nav/main-nav.component';
 import { MatIconRegistry } from '@angular/material/icon';
 import { AuditLog } from '../../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
+import { Access } from 'src/app/Shared/Access';
 
 //const CHECK_ICON = `<svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
-      
+
 //                <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
 // </svg>`;
 
@@ -52,13 +53,30 @@ export class UserProfileEditComponent {
     name: '',
     description: ''
   }
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
+  }
 
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
-    profile_Picture: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
     role: this.rl
   }
@@ -150,7 +168,7 @@ export class UserProfileEditComponent {
       })
 
       this.GetEmployee();
-    } 
+    }
   }
 
   get f() {
@@ -212,7 +230,7 @@ export class UserProfileEditComponent {
     this.imgChangeEvt = event;
     var img = this.imgChangeEvt;
     console.log(event.target.files[0].name);
-    
+
     const dialogRef: MatDialogRef<CropperModalComponent> = this.dialog.open(CropperModalComponent, {
       disableClose: true,
       data: { img }
@@ -226,7 +244,7 @@ export class UserProfileEditComponent {
   }
 
   onSubmitA() {
-    
+
 
     this.adm.adminName = this.myForm.get('AdminName')?.value;
     this.adm.adminSurname = this.myForm.get('AdminSurname')?.value;
@@ -259,25 +277,25 @@ export class UserProfileEditComponent {
                 test = new DatePipe('en-ZA');
                 this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
                 this.dataService.AuditLogAdd(this.log).subscribe({
-                   next: (Log) => {
-                        var action = "Update";
-                        var title = "UPDATE SUCCESSFUL";
-                        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
+                  next: (Log) => {
+                    var action = "Update";
+                    var title = "UPDATE SUCCESSFUL";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-                        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                            disableClose: true,
-                            data: { action, title, message }
-                        });
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
 
-                        const duration = 1750;
-                        setTimeout(() => {
-                            this.router.navigate(['/Profile']);
-                            //this.nav.reload();
-                            //const NavbarElement = document.getElementById("nav");
-                            //NavbarElement.innerHTML = NavbarElement.innerHTML;
-                            dialogRef.close();
-                        }, duration);
-                   }
+                    const duration = 1750;
+                    setTimeout(() => {
+                      this.router.navigate(['/Profile']);
+                      //this.nav.reload();
+                      //const NavbarElement = document.getElementById("nav");
+                      //NavbarElement.innerHTML = NavbarElement.innerHTML;
+                      dialogRef.close();
+                    }, duration);
+                  }
                 })
               }
             })

@@ -20,6 +20,7 @@ import { Notification_Type } from '../Shared/Notification_Type';
 import { User } from '../Shared/User';
 import { Role } from '../Shared/EmployeeRole';
 import { AuditLog } from '../Shared/AuditLog';
+import { Access } from '../Shared/Access';
 
 @Component({
   selector: 'app-create-procurement-request',
@@ -35,6 +36,21 @@ export class CreateProcurementRequestComponent implements OnInit {
   filteredVendors: Observable<VendorOnboardRequest[]>
 
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
+  }
 
   Procurement_Request: Procurement_Request = {
     procurement_Request_ID: 0,
@@ -63,6 +79,8 @@ export class CreateProcurementRequestComponent implements OnInit {
     user: {
       user_Id: 0,
       role_ID: 0,
+      access_ID: 0,
+      access: this.Access,
       username: "",
       password: "",
       profile_Picture: "",
@@ -95,6 +113,8 @@ export class CreateProcurementRequestComponent implements OnInit {
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -175,6 +195,7 @@ export class CreateProcurementRequestComponent implements OnInit {
 
     this.setVal(value)
     // If no vendors match the filter, return an array with a single element containing the entered value
+    this.myForm.get("VendorName").setValue(value)
     return this.vendors.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
