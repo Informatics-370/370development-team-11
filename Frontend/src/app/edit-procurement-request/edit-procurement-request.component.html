@@ -68,7 +68,7 @@
                                         <br />
                                         <mat-form-field>
                                             <input matInput type="text" placeholder="" formControlName="VendorName"
-                                                id="VendorName" [(ngModel)]="Procurement_Request.vendor.name">
+                                                id="VendorName" [(ngModel)]="Procurement_Request.vendor.name" readonly>
 
                                             <mat-hint align="end">Not more then 32 characters long.</mat-hint>
                                             <mat-error *ngIf="myError('VendorName', 'required')">Name is
@@ -90,7 +90,8 @@
                                         <br />
                                         <mat-form-field>
                                             <input matInput type="text" placeholder="" formControlName="Email"
-                                                id="Surname" required [(ngModel)]="Procurement_Request.vendor.email">
+                                                id="Surname" required [(ngModel)]="Procurement_Request.vendor.email"
+                                                readonly>
                                             <mat-error *ngIf="myError('Email', 'required')">Email is
                                                 required</mat-error>
                                             <mat-error *ngIf="myError('Email', 'maxlength')">Limit exceed</mat-error>

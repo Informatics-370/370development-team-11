@@ -24,10 +24,11 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(u => u.Username == RequestAdd.User.Username);
             //Get User Role
             Role ExistingRole = await _dbContext.Role.FirstOrDefaultAsync(r => r.Role_ID == ExistingUser.Role_ID);
-            Console.WriteLine("Success 1");
+            //Get Access
+            Access ExistingAccess = await _dbContext.Access.FirstOrDefaultAsync(r => r.Access_ID == ExistingUser.Access_ID);
             //GetVendor
             Vendor ExistingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(v => v.Name.ToLower() == RequestAdd.Vendor.Name.ToLower());
-            Console.WriteLine("Success 2");
+
             //GetRequisition Status
             Requisition_Status ExistingStatus = await _dbContext.Requisition_Status.FirstOrDefaultAsync(c => c.Name == RequestAdd.Requisition_Status.Name);
 
@@ -37,6 +38,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 Vendor_Status ExistingVendorStatus = await _dbContext.Vendor_Status.FirstOrDefaultAsync(vs => vs.Vendor_Status_ID == ExistingVendor.Vendor_Status_ID);
                 RequestAdd.User = ExistingUser;
                 RequestAdd.User.Role = ExistingRole;
+                RequestAdd.User.Access = ExistingAccess;
                 RequestAdd.Vendor = ExistingVendor;
                 RequestAdd.Vendor.Vendor_Status = ExistingVendorStatus;
                 RequestAdd.Requisition_Status = ExistingStatus;
@@ -158,6 +160,17 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         {
             var PRRequest = await _dbContext.Procurement_Request.FindAsync(id);
 
+            User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(u => u.Username == PRRequest.User.Username);
+            //Get User Role
+            Role ExistingRole = await _dbContext.Role.FirstOrDefaultAsync(r => r.Role_ID == ExistingUser.Role_ID);
+            //Get Access
+            Access ExistingAccess = await _dbContext.Access.FirstOrDefaultAsync(r => r.Access_ID == ExistingUser.Access_ID);
+
+            Request.User = ExistingUser;
+            Request.User.Role = ExistingRole;
+            Request.User.Access = ExistingAccess;
+
+
             PRRequest.Name = Request.Name;
             PRRequest.Description = Request.Description;
 
@@ -165,6 +178,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
             return PRRequest;
         }
+
         public async Task<Procurement_Request_Quote> UpdateProcurementRequestQuouteAsync(int id, Procurement_Request_Quote Request)
         {
             var PRRequest = await _dbContext.Procurement_Request_Quote.FindAsync(id);
