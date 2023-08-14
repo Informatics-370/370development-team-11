@@ -117,9 +117,12 @@ export class EditProcurementRequestComponent implements OnInit {
 
     this.ActRoute.paramMap.subscribe({
       next: (paramater) => {
+        let usr = this.dataService.decodeUser(sessionStorage.getItem("token"));
         const id = paramater.get("procurement_Request_ID");
         this.VendorType = paramater.get("name");
         console.log(id)
+
+
 
         if (id) {
           this.dataService.GetPRRequestByID(Number(id)).subscribe({

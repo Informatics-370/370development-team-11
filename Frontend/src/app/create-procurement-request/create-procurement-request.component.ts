@@ -38,18 +38,18 @@ export class CreateProcurementRequestComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
   Access: Access = {
     Access_ID: 0,
-    IsAdmin: 'true',
-    CanAccInv: 'true',
-    CanAccFin: 'true',
-    CanAccPro: 'true',
-    CanAccVen: 'true',
-    CanAccRep: 'true',
-    CanViewPenPro: 'true',
-    CanViewFlagPro: 'true',
-    CanViewFinPro: 'true',
-    CanAppVen: 'true',
-    CanEditVen: 'true',
-    CanDeleteVen: 'true',
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
   }
 
   Procurement_Request: Procurement_Request = {
@@ -156,6 +156,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   originalBorderColor: string = 'solid #244688';
 
   ngOnInit(): void {
+    let usr = this.dataService.decodeUser(sessionStorage.getItem("token"));
     if (this.VendorType == "Approved") {
       this.myForm = this.formBuilder.group({
         Selection: ["Approved", [Validators.required]],
@@ -163,6 +164,17 @@ export class CreateProcurementRequestComponent implements OnInit {
         Vendor: [0, [Validators.required]],
         Description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
         Quote1: ['', [Validators.required]]
+      })
+
+
+      this.dataService.GetUserByUsername(usr).subscribe({
+        next: (Res) => {
+          this.rl = Res.role;
+          this.Access = Res.access;
+          this.usr = Res;
+          this.usr.access = this.Access;
+          this.usr.role = this.rl;
+        }
       })
       this.GetVendors();
     }
@@ -177,6 +189,15 @@ export class CreateProcurementRequestComponent implements OnInit {
         OtherQuote1: ['', [Validators.required]],
         OtherQuote2: ['', [Validators.required]],
         OtherQuote3: ['', [Validators.required]]
+      })
+      this.dataService.GetUserByUsername(usr).subscribe({
+        next: (Res) => {
+          this.rl = Res.role;
+          this.Access = Res.access;
+          this.usr = Res;
+          this.usr.access = this.Access;
+          this.usr.role = this.rl;
+        }
       })
       this.GetVendors();
 
@@ -301,7 +322,7 @@ export class CreateProcurementRequestComponent implements OnInit {
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
     this.Procurement_Request.vendor.name = this.myForm.get("VendorName").value;
     this.Procurement_Request.vendor.email = this.myForm.get("Email").value;
-    this.Procurement_Request.user.username = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    this.Procurement_Request.user = this.usr;
 
     this.dataService.AddProcurementRequest(this.Procurement_Request).subscribe({
       next: (response) => {

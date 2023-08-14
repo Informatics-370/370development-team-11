@@ -152,23 +152,13 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
         public async Task<Procurement_Request> GetRequestByIDAsync(int id)
         {
-            Procurement_Request ChosenRequest = await _dbContext.Procurement_Request.Include(u => u.User).ThenInclude(r => r.Role).Include(v => v.Vendor).ThenInclude(s => s.Vendor_Status).Include(r => r.Requisition_Status).FirstOrDefaultAsync(i => i.Procurement_Request_ID == id);
+            Procurement_Request ChosenRequest = await _dbContext.Procurement_Request.Include(u => u.User).ThenInclude(r => r.Role).Include(Ac => Ac.User.Access).Include(v => v.Vendor).ThenInclude(s => s.Vendor_Status).Include(r => r.Requisition_Status).FirstOrDefaultAsync(i => i.Procurement_Request_ID == id);
             return ChosenRequest;
         }
 
         public async Task<Procurement_Request> UpdateProcurementRequestAsync(int id, Procurement_Request Request)
         {
             var PRRequest = await _dbContext.Procurement_Request.FindAsync(id);
-
-            User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(u => u.Username == PRRequest.User.Username);
-            //Get User Role
-            Role ExistingRole = await _dbContext.Role.FirstOrDefaultAsync(r => r.Role_ID == ExistingUser.Role_ID);
-            //Get Access
-            Access ExistingAccess = await _dbContext.Access.FirstOrDefaultAsync(r => r.Access_ID == ExistingUser.Access_ID);
-
-            Request.User = ExistingUser;
-            Request.User.Role = ExistingRole;
-            Request.User.Access = ExistingAccess;
 
 
             PRRequest.Name = Request.Name;
@@ -196,17 +186,19 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         {
 
             Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == ProcurementNotif.Notification_Type_ID);
-
+            var existingUser = await _dbContext.User.Include(x => x.Access).FirstOrDefaultAsync(x => x.User_Id == ProcurementNotif.User_Id);
+            Access ExistingAccess = await _dbContext.Access.FirstOrDefaultAsync(r => r.Access_ID == existingUser.Access_ID);
             if (existingNotificationType != null)
             {
                 ProcurementNotif.Notification_Type = existingNotificationType;
             }
 
-            var existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == ProcurementNotif.User_Id);
+            
 
             if (existingUser != null)
             {
                 ProcurementNotif.User = existingUser;
+                ProcurementNotif.User.Access = ExistingAccess;
                 ProcurementNotif.User.No_Notifications = existingUser.No_Notifications + 1;
             }
 
