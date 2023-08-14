@@ -412,6 +412,11 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   AccountCodeDetails: AccountCodeDisplay[] = [];
   AccountCodeGroups: AccountCodeDisplayGroup[] = [];
   ngOnInit() {
+    var User = this.ProcureService.decodeUser(sessionStorage.getItem('token'))
+    this.ProcureService.GetUserByUsername(User).subscribe(response => {
+      this.EmployeeDetails.user.access = response.access
+      this.VendorNotification.user.access = response.access
+    })
 
     this.ProcureService.getAssets().subscribe(r => {
       console.log(r)

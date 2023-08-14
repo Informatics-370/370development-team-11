@@ -301,6 +301,15 @@ export class VendorApprovedAddDetailsComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+    var User = this.VendorService.decodeUser(sessionStorage.getItem('token'))
+    this.VendorService.GetUserByUsername(User).subscribe(response => {
+      this.usr = response
+      this.usr.access = response.access
+      this.VendorNotification.user.access = response.access
+    })
+
+
     this.FoundationaldocumentsFormGroup.get("BEECertificateDoc").disable();
     this.FoundationaldocumentsFormGroup.get("BEEValidatityDate").disable();
     this.InformationSecurityFormGroup.get("Personal_Data_Purpose").disable();

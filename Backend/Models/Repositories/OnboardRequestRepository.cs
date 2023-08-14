@@ -28,6 +28,8 @@ namespace ProcionAPI.Models.Repositories
             .ThenInclude(V => V.Vendor_Status)
             .Include(OR => OR.Users)
             .ThenInclude(U => U.Role)
+            .Include(x => x.Users)
+            .ThenInclude(x => x.Access)
             .Include(OR => OR.Onboard_Status)
             .ToListAsync();
 
@@ -68,14 +70,17 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Onboard_Request[]> AddRequestAsync(Onboard_Request RequestAdd)
         {
-            
-            User existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == RequestAdd.User_Id);
+
+            User existingUser = await _dbContext.User.Include(x=> x.Access).Include(x=> x.Role).FirstOrDefaultAsync(x => x.User_Id == RequestAdd.User_Id);
 
             if (existingUser != null)
             {
                 RequestAdd.Users = existingUser;
+                RequestAdd.Users.Access = existingUser.Access;
             }
-            
+
+           
+
             Vendor_Status existingVendorStatus = await _dbContext.Vendor_Status.FirstOrDefaultAsync(x => x.Vendor_Status_ID == RequestAdd.Vendor.Vendor_Status_ID);
 
             if (existingVendorStatus != null)
@@ -167,7 +172,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Onboard_Request[]> GetRequestsAsync(int RequestID)
         {
-            IQueryable<Onboard_Request> query = _dbContext.Onboard_Request.Include(x => x.Vendor).ThenInclude(x => x.Vendor_Status).Include(x => x.Users).ThenInclude(x => x.Role).Include(x => x.Onboard_Status).Where(x => x.Onboard_Request_Id == RequestID);
+            IQueryable<Onboard_Request> query = _dbContext.Onboard_Request.Include(x => x.Vendor).ThenInclude(x => x.Vendor_Status).Include(x => x.Users).ThenInclude(x => x.Role).Include(x=>x.Users).ThenInclude(x=> x.Access).Include(x => x.Onboard_Status).Where(x => x.Onboard_Request_Id == RequestID);
 
             return await query.ToArrayAsync();
         }
@@ -189,7 +194,7 @@ namespace ProcionAPI.Models.Repositories
 
             ReqUpdt.Users = new User();
 
-            User existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == UpdatedRequest.User_Id);
+            User existingUser = await _dbContext.User.Include(x=> x.Access).FirstOrDefaultAsync(x => x.User_Id == UpdatedRequest.User_Id);
 
             ReqUpdt.Users = existingUser;
 

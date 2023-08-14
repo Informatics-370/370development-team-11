@@ -163,10 +163,13 @@ export class RequestCreateComponent implements OnInit {
 
   ngOnInit() {
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
-    //console.log(User)
-    //console.log(User.unique_name)
     this.dataService.GetUserByUsername(User).subscribe(response => {
+      console.log(response)
       this.usr = response;
+      this.usr.access = response.access
+      this.Onboard_Request.users = response
+      this.Onboard_Request.users.access = response.access
+      this.VendorNotification.user.access = response.access
     })
 
     for (let i = 1; i < 4; i++) {

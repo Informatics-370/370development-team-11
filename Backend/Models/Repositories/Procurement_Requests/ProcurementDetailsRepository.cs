@@ -18,7 +18,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
         public async Task<Procurement_Request> GetProcurementRequestByIDAsync(int ProcurementRequestID)
         {
-            IQueryable<Procurement_Request> query = _dbContext.Procurement_Request.Include(x => x.Vendor).ThenInclude(x => x.Vendor_Status).Include(x => x.User).ThenInclude(x => x.Role).Include(x => x.Requisition_Status).Where(x => x.Procurement_Request_ID == ProcurementRequestID);
+            IQueryable<Procurement_Request> query = _dbContext.Procurement_Request.Include(x => x.Vendor).ThenInclude(x => x.Vendor_Status).Include(x => x.User).ThenInclude(x => x.Role).Include(x => x.User).ThenInclude(x => x.Access).Include(x => x.Requisition_Status).Where(x => x.Procurement_Request_ID == ProcurementRequestID);
 
             return await query.FirstOrDefaultAsync();
         }
@@ -347,6 +347,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                                                     .Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit)
                                                     .Include(x => x.Procurement_Request).ThenInclude(x => x.Vendor).ThenInclude(x => x.Vendor_Status)
                                                     .Include(x => x.Procurement_Request).ThenInclude(x => x.User).ThenInclude(x => x.Role)
+                                                    .Include(x => x.Procurement_Request).ThenInclude(x => x.User).ThenInclude(x => x.Access)
                                                     .Include(x => x.Procurement_Request).ThenInclude(x => x.Requisition_Status)
                                                     .Include(x => x.Sign_Off_Status)
                                                     .Include(x => x.Procurement_Payment_Status)
@@ -467,11 +468,12 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 ProcurementNotification.Notification_Type = existingNotificationType;
             }
 
-            var existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == ProcurementNotification.User_Id);
+            var existingUser = await _dbContext.User.Include(x=> x.Access).FirstOrDefaultAsync(x => x.User_Id == ProcurementNotification.User_Id);
 
             if (existingUser != null)
             {
                 ProcurementNotification.User = existingUser;
+                ProcurementNotification.User.Access = existingUser.Access;
                 ProcurementNotification.User.No_Notifications = existingUser.No_Notifications + 1;
             }
 
