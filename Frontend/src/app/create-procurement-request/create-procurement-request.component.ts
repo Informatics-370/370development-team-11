@@ -38,18 +38,18 @@ export class CreateProcurementRequestComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
   Access: Access = {
     Access_ID: 0,
-    IsAdmin: false,
-    CanAccInv: false,
-    CanAccFin: false,
-    CanAccPro: false,
-    CanAccVen: false,
-    CanAccRep: false,
-    CanViewPenPro: false,
-    CanViewFlagPro: false,
-    CanViewFinPro: false,
-    CanAppVen: false,
-    CanEditVen: false,
-    CanDeleteVen: false,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
   }
 
   Procurement_Request: Procurement_Request = {

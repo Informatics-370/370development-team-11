@@ -9,29 +9,29 @@ namespace ProcionAPI.Models.Entities
         public int Access_ID { get; set; }
 
         [Required]
-        public bool IsAdmin { get; set; }
+        public string IsAdmin { get; set; }
         [Required]
-        public bool CanAccInv { get; set; }
+        public string CanAccInv { get; set; }
         [Required]
-        public bool CanAccFin { get; set; }
+        public string CanAccFin { get; set; }
         [Required]
-        public bool CanAccPro { get; set; }
+        public string CanAccPro { get; set; }
         [Required]
-        public bool CanAccVen { get; set; }
+        public string CanAccVen { get; set; }
         [Required]
-        public bool CanAccRep { get; set; }
+        public string CanAccRep { get; set; }
         [Required]
-        public bool CanViewPenPro { get; set; }
+        public string CanViewPenPro { get; set; }
         [Required]
-        public bool CanViewFlagPro { get; set; }
+        public string CanViewFlagPro { get; set; }
         [Required]
-        public bool CanViewFinPro { get; set; }
+        public string CanViewFinPro { get; set; }
         [Required]
-        public bool CanAppVen { get; set; }
+        public string CanAppVen { get; set; }
         [Required]
-        public bool CanEditVen { get; set; }
+        public string CanEditVen { get; set; }
         [Required]
-        public bool CanDeleteVen { get; set; }
+        public string CanDeleteVen { get; set; }
 
 
     }

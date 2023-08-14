@@ -70,18 +70,18 @@ export class CreateEmployeeComponent implements OnInit {
 
   Access: Access = {
     Access_ID: 0,
-    IsAdmin: false,
-    CanAccInv: false,
-    CanAccFin: false,
-    CanAccPro: false,
-    CanAccVen: false,
-    CanAccRep: false,
-    CanViewPenPro: false,
-    CanViewFlagPro: false,
-    CanViewFinPro: false,
-    CanAppVen: false,
-    CanEditVen: false,
-    CanDeleteVen: false,
+    IsAdmin: 'false',
+    CanAccInv: 'false',
+    CanAccFin: 'false',
+    CanAccPro: 'false',
+    CanAccVen: 'false',
+    CanAccRep: 'false',
+    CanViewPenPro: 'false',
+    CanViewFlagPro: 'false',
+    CanViewFinPro: 'false',
+    CanAppVen: 'false',
+    CanEditVen: 'false',
+    CanDeleteVen: 'false',
   }
   usr: User = {
     user_Id: 0,
@@ -199,47 +199,47 @@ export class CreateEmployeeComponent implements OnInit {
     this.rl.role_ID = 0;
 
     if (this.rl.name == "MD") {
-      this.Access.IsAdmin = true;
-      this.Access.CanAccFin = true;
-      this.Access.CanAccInv = true;
-      this.Access.CanAccPro = true;
-      this.Access.CanAccRep = true;
-      this.Access.CanAccVen = true;
-      this.Access.CanAppVen = true;
-      this.Access.CanDeleteVen = true;
-      this.Access.CanEditVen = true;
-      this.Access.CanViewFinPro = true;
-      this.Access.CanViewFlagPro = true;
-      this.Access.CanViewPenPro = true;
+      this.Access.IsAdmin = 'true';
+      this.Access.CanAccFin = 'true';
+      this.Access.CanAccInv = 'true';
+      this.Access.CanAccPro = 'true';
+      this.Access.CanAccRep = 'true';
+      this.Access.CanAccVen = 'true';
+      this.Access.CanAppVen = 'true';
+      this.Access.CanDeleteVen = 'true';
+      this.Access.CanEditVen = 'true';
+      this.Access.CanViewFinPro = 'true';
+      this.Access.CanViewFlagPro = 'true';
+      this.Access.CanViewPenPro = 'true';
     }
     else if (this.rl.name == "GRC") {
-      this.Access.CanAccPro = true;
-      this.Access.CanAccRep = true;
-      this.Access.CanAccVen = true;
-      this.Access.CanAppVen = true;
-      this.Access.CanDeleteVen = true;
-      this.Access.CanEditVen = true;
-      this.Access.CanViewFinPro = true;
-      this.Access.CanViewFlagPro = true;
-      this.Access.CanViewPenPro = true;
+      this.Access.CanAccPro = 'true';
+      this.Access.CanAccRep = 'true';
+      this.Access.CanAccVen = 'true';
+      this.Access.CanAppVen = 'true';
+      this.Access.CanDeleteVen = 'true';
+      this.Access.CanEditVen = 'true';
+      this.Access.CanViewFinPro = 'true';
+      this.Access.CanViewFlagPro = 'true';
+      this.Access.CanViewPenPro = 'true';
     }
     else if (this.rl.name == "Finance") {
-      this.Access.CanAccFin = true;
-      this.Access.CanAccPro = true;
-      this.Access.CanAccRep = true;
-      this.Access.CanAccVen = true;
-      this.Access.CanViewFinPro = true;
-      this.Access.CanViewFlagPro = true;
-      this.Access.CanViewPenPro = true;
+      this.Access.CanAccFin = 'true';
+      this.Access.CanAccPro = 'true';
+      this.Access.CanAccRep = 'true';
+      this.Access.CanAccVen = 'true';
+      this.Access.CanViewFinPro = 'true';
+      this.Access.CanViewFlagPro = 'true';
+      this.Access.CanViewPenPro = 'true';
     }
     else if (this.rl.name == "FD") {
-      this.Access.CanAccFin = true;
-      this.Access.CanAccPro = true;
-      this.Access.CanAccRep = true;
-      this.Access.CanAccVen = true;
-      this.Access.CanViewFinPro = true;
-      this.Access.CanViewFlagPro = true;
-      this.Access.CanViewPenPro = true;
+      this.Access.CanAccFin = 'true';
+      this.Access.CanAccPro = 'true';
+      this.Access.CanAccRep = 'true';
+      this.Access.CanAccVen = 'true';
+      this.Access.CanViewFinPro = 'true';
+      this.Access.CanViewFlagPro = 'true';
+      this.Access.CanViewPenPro = 'true';
     }
 
     this.usr.username = username;

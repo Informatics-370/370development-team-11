@@ -28,9 +28,21 @@ export class VendorViewComponent implements OnInit  {
   constructor(private VendorService: DataService, private dialog: MatDialog, private route: ActivatedRoute,private router: Router,) { }
   private refreshSubscription:Subscription;
   VenDetails: VendorDetails[] = [];
-  VendorSearch:any;
+  VendorSearch: any;
+
+  iCanAppVen: string = "false";
+  canAppVen: string;
+  iRole: string;
+
   ngOnInit(): void {
-    
+    this.iRole = this.VendorService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iCanAppVen = this.VendorService.decodeCanAppVen(sessionStorage.getItem("token"));
+
+    if (this.iRole == "Admin" || this.iRole == "MD" || this.iCanAppVen == "true") {
+      this.canAppVen = "true";
+    }
+
+
    this.VendorService.GetAllVendorDetails().subscribe((result) => {
     let VendorDetails:any[] = result 
     VendorDetails.forEach(element => this.VenDetails.push(element))

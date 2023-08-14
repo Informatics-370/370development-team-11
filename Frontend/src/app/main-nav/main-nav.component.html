@@ -16,27 +16,27 @@
         Administration
       </button>
 
-      <button mat-button class="sub-spacer" style="font-size:16pt; text-decoration:none; color:white;"
+      <button mat-button *ngIf="canAccInv" class="sub-spacer" style="font-size:16pt; text-decoration:none; color:white;"
         routerLink="/ViewConsumable" (click)="reload()">
         Inventory
       </button>
 
-      <button mat-button class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;"
+      <button mat-button *ngIf="canAccFin" class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;"
         routerLink="/ViewBudgetAllocation" (click)="reload()">
         Finance
       </button>
 
-      <button class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;"
+      <button *ngIf="canAccPro" class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;"
         routerLink="/ViewProcurementRequest" mat-button (click)="reload()">
         Procurement
       </button>
 
-      <button class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;"
+      <button *ngIf="canAccVen" class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;"
         routerLink="/request-view" mat-button (click)="reload()">
         Vendor
       </button>
 
-      <button class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button
+      <button *ngIf="canAccRep" class="sub-spacer" style="font-size: 16pt; text-decoration: none; color: white;" mat-button
         (click)="reload()" routerLink="/ReportsMainView">
         Reports
       </button>
@@ -75,23 +75,23 @@
         Administration
       </button>
 
-      <button mat-menu-item style="font-size: 16pt; text-decoration: none; color: black;" routerLink="/ViewConsumable" (click)="reload()">
+      <button mat-menu-item *ngIf="canAccInv" style="font-size: 16pt; text-decoration: none; color: black;" routerLink="/ViewConsumable" (click)="reload()">
         Inventory
       </button>
 
-      <button mat-menu-item style="font-size: 16pt; text-decoration: none; color: black;" routerLink="/ViewBudgetAllocation" (click)="reload()">
+      <button mat-menu-item *ngIf="canAccFin" style="font-size: 16pt; text-decoration: none; color: black;" routerLink="/ViewBudgetAllocation" (click)="reload()">
         Finance
       </button>
 
-      <button mat-menu-item style="font-size: 16pt; text-decoration: none; color: black;" routerLink="/ViewProcurementRequest" (click)="reload()">
+      <button mat-menu-item *ngIf="canAccPro" style="font-size: 16pt; text-decoration: none; color: black;" routerLink="/ViewProcurementRequest" (click)="reload()">
         Procurement
       </button>
 
-      <button mat-menu-item style="font-size: 16pt; text-decoration: none; color: black;" routerLink="/request-view" (click)="reload()">
+      <button mat-menu-item *ngIf="canAccVen" style="font-size: 16pt; text-decoration: none; color: black;" routerLink="/request-view" (click)="reload()">
         Vendor
       </button>
 
-      <button mat-menu-item style="font-size: 16pt; text-decoration: none; color: black;" (click)="reload()" routerLink="/ReportsMainView">
+      <button mat-menu-item *ngIf="canAccRep" style="font-size: 16pt; text-decoration: none; color: black;" (click)="reload()" routerLink="/ReportsMainView">
         Reports
       </button>
 

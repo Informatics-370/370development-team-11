@@ -76,7 +76,7 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
 
    // console.log(this.iRole)
 
-    if (this.iRole == "Admin") {
+    if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
 

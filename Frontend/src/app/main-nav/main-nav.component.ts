@@ -43,18 +43,18 @@ export class MainNavComponent implements OnInit {
 
   Access: Access = {
     Access_ID: 0,
-    IsAdmin: false,
-    CanAccInv: false,
-    CanAccFin: false,
-    CanAccPro: false,
-    CanAccVen: false,
-    CanAccRep: false,
-    CanViewPenPro: false,
-    CanViewFlagPro: false,
-    CanViewFinPro: false,
-    CanAppVen: false,
-    CanEditVen: false,
-    CanDeleteVen: false,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
   }
 
   usr: User = {
@@ -109,6 +109,21 @@ export class MainNavComponent implements OnInit {
   RoleToUse: string = "";
   IsLoggedIn: boolean = false;
 
+  iCanAccInv: string = "false";
+  canAccInv: string;
+
+  iCanAccFin: string = "false";
+  canAccFin: string;
+
+  iCanAccPro: string = "false";
+  canAccPro: string;
+
+  iCanAccVen: string = "false";
+  canAccVen: string;
+
+  iCanAccRep: string = "false";
+  canAccRep: string;
+
   ngOnInit() {
     this.AuthServ.userRole$.subscribe(role => {
       this.RoleToUse = role
@@ -118,9 +133,34 @@ export class MainNavComponent implements OnInit {
 
     this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iCanAccInv = this.dataService.decodeCanAccInv(sessionStorage.getItem("token"));
+    this.iCanAccFin = this.dataService.decodeCanAccFin(sessionStorage.getItem("token"));
+    this.iCanAccPro = this.dataService.decodeCanAccPro(sessionStorage.getItem("token"));
+    this.iCanAccVen = this.dataService.decodeCanAccVen(sessionStorage.getItem("token"));
+    this.iCanAccRep = this.dataService.decodeCanAccRep(sessionStorage.getItem("token"));
 
     if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
+      this.canAccInv = "true";
+      this.canAccFin = "true";
+      this.canAccPro = "true";
+      this.canAccVen = "true";
+      this.canAccRep = "true";
+    }
+    if (this.iCanAccInv == "true") {
+      this.canAccInv = "true";
+    }
+    if (this.iCanAccFin == "true") {
+      this.canAccFin = "true";
+    }
+    if (this.iCanAccPro == "true") {
+      this.canAccPro = "true";
+    }
+    if (this.iCanAccVen == "true") {
+      this.canAccVen = "true";
+    }
+    if (this.iCanAccRep == "true") {
+      this.canAccRep = "true";
     }
 
     this.GetUser()

@@ -10,7 +10,7 @@
 
             <a mat-list-item class="uni-font" routerLink="/ViewBudgetCategory">Budget Categories</a>
             <a mat-list-item class="uni-font" routerLink="/ViewBudgetAllocation">Budget Allocations</a>
-            <a mat-list-item class="uni-font" routerLink="/FinalizeProcurementRequest">Finalize Procurement Requests</a>
+            <a mat-list-item *ngIf="canViewFinPro" class="uni-font" routerLink="/FinalizeProcurementRequest">Finalize Procurement Requests</a>
 
 
         </mat-nav-list>

@@ -38,12 +38,38 @@ export class ViewProcurementRequestComponent implements OnInit {
 
   FileDetails: any[] = [];
 
+  iRole: string;
+
+  iCanViewFlagPro: string = "false";
+  canViewFlagPro: string;
+
+  iCanViewPenPro: string = "false";
+  canViewPenPro: string;
+
   getFileDetailsForRequest(procurement_Request_ID: Number) {
     return this.FileDetails.filter(detail => detail.procurement_Request_ID === procurement_Request_ID);
   }
 
 
   ngOnInit() {
+    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
+    this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
+
+    if (this.iRole == "Admin" || this.iRole == "MD") {
+      this.canViewFlagPro = "true";
+      this.canViewPenPro = "true";
+    }
+
+    if (this.iCanViewFlagPro == "true") {
+      this.canViewFlagPro = "true";
+    }
+
+    if (this.iCanViewPenPro == "true") {
+      this.canViewPenPro = "true";
+    }
+
+
     this.GetProcurementRequests();
     this.GetPRQuotes()
     console.log(this.ProcurementRequests)

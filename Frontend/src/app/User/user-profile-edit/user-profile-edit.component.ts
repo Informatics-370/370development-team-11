@@ -55,18 +55,18 @@ export class UserProfileEditComponent {
   }
   Access: Access = {
     Access_ID: 0,
-    IsAdmin: false,
-    CanAccInv: false,
-    CanAccFin: false,
-    CanAccPro: false,
-    CanAccVen: false,
-    CanAccRep: false,
-    CanViewPenPro: false,
-    CanViewFlagPro: false,
-    CanViewFinPro: false,
-    CanAppVen: false,
-    CanEditVen: false,
-    CanDeleteVen: false,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
   }
 
   usr: User = {
@@ -150,7 +150,7 @@ export class UserProfileEditComponent {
         AdminName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
         AdminSurname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
         Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
-        CellPhone_Num: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12), Validators.pattern("^[0-9]*$")]],
+        CellPhone_Num: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern("^[0-9]*$")]],
         Role: ['', [Validators.required]],
       })
 
@@ -160,7 +160,7 @@ export class UserProfileEditComponent {
         Name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
         Surname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
         Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
-        CellPhone_Num: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12), Validators.pattern("^[0-9]*$")]],
+        CellPhone_Num: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern("^[0-9]*$")]],
         Role: ['', [Validators.required]],
         Mandate: ['', [Validators.required]],
         Department: ['', [Validators.required]],
@@ -191,7 +191,8 @@ export class UserProfileEditComponent {
       this.emp.department_ID = this.employee.department.department_ID;
       this.emp.mandate_ID = this.employee.mandate_Limit.mandate_ID;
 
-      this.usr.role_ID = this.employee.user.role.role_ID
+      this.usr.role_ID = this.employee.user.role.role_ID;
+      this.usr.access_ID = this.employee.user.access.access_ID;
       this.usr.password = this.employee.user.password;
       this.usr.profile_Picture = this.employee.user.profile_Picture;
       this.cropImgPreview = this.employee.user.profile_Picture;
@@ -213,6 +214,8 @@ export class UserProfileEditComponent {
     this.dataService.GetAdminByUsername(this.iName).subscribe(result => {
       this.admin = result
       this.usr.role_ID = this.admin.user.role.role_ID
+      this.usr.access_ID = this.admin.user.access.access_ID;
+      console.log(this.admin.user.access.access_ID)
       this.usr.password = this.admin.user.password;
       this.usr.profile_Picture = this.admin.user.profile_Picture;
       this.cropImgPreview = this.admin.user.profile_Picture;

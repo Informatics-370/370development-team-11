@@ -96,6 +96,7 @@ namespace ProcionAPI.Controllers
         }
         private string GenerateToken(User user)
         {
+            
             byte[] key;
             using (var randomNumberGenerator = new RNGCryptoServiceProvider())
             {
@@ -105,15 +106,27 @@ namespace ProcionAPI.Controllers
             string encodedKey = Convert.ToBase64String(key);
 
             var tokenHandler = new JwtSecurityTokenHandler();
-
+            
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, user.Role.Name),
-            new Claim("TemAccess", "No"),
-            new Claim("TempAccessUsername", "None")
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Role.Name),
+                    new Claim("CanAccInv", user.Access.CanAccInv),
+                    new Claim("CanAccFin", user.Access.CanAccFin),
+                    new Claim("CanAccPro", user.Access.CanAccPro),
+                    new Claim("CanAccVen", user.Access.CanAccVen),
+                    new Claim("CanAccRep", user.Access.CanAccRep),
+                    new Claim("CanViewPenPro", user.Access.CanViewPenPro),
+                    new Claim("CanViewFlagPro", user.Access.CanViewFlagPro),
+                    new Claim("CanViewFinPro", user.Access.CanViewFinPro),
+                    new Claim("CanAppVen", user.Access.CanAppVen),
+                    new Claim("CanEditVen", user.Access.CanEditVen),
+                    new Claim("CanDeleteVen", user.Access.CanDeleteVen),
+                    new Claim("TemAccess", "No"),
+                    new Claim("TempAccessUsername", "None"),
+            
                 }),
                 Expires = DateTime.UtcNow.AddHours(3), // Set token expiration time
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

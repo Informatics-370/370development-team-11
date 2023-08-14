@@ -923,6 +923,156 @@ export class DataService {
     }
   }
 
+  decodeCanAccInv(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+      console.log(decodedPayload)
+
+      return decodedPayload.CanAccInv;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  decodeCanAccFin(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanAccFin;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  decodeCanAccPro(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanAccPro;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  decodeCanAccVen(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanAccVen;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  decodeCanAccRep(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanAccRep;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  decodeCanViewPenPro(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanViewPenPro;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  decodeCanViewFlagPro(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanViewFlagPro;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  decodeCanViewFinPro(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanViewFinPro;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  decodeCanAppVen(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanAppVen;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  decodeCanEditVen(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanEditVen;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  decodeCanDeleteVen(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanDeleteVen;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
   UpdateStock(HistoryAdd: Consumable_History) {
     return this.httpClient.post<Consumable_History>(`${this.apiUrl}Consumable/UpdateStock`, HistoryAdd).pipe(map(result => result))
   }

@@ -47,13 +47,21 @@ export class RequestViewComponent implements OnInit {
   FileDetails:any[] = [];
   vendorIds:any[] = [];
   
- 
+  iCanAppVen: string = "false";
+  canAppVen: string;
+  iRole: string;
 
   private refreshSubscription: Subscription;
   constructor(private RequestService: DataService,private http: HttpClient, private route: ActivatedRoute,private router: Router, private dialog: MatDialog) { }
 
   ngOnInit() {
-    
+
+    this.iRole = this.RequestService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iCanAppVen = this.RequestService.decodeCanAppVen(sessionStorage.getItem("token"));
+
+    if (this.iRole == "Admin" || this.iRole == "MD" || this.iCanAppVen == "true") {
+      this.canAppVen = "true";
+    }
 
     //console.log()
 
