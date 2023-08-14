@@ -152,6 +152,7 @@ namespace ProcionAPI.Data
                 Username = "Admin",
                 Password = userrep.HashPassword("Admin123"),
                 Profile_Picture = "test",
+                No_Notifications = 0
 
             }
             );
