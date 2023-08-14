@@ -9,15 +9,30 @@ namespace ProcionAPI.Models.Entities
         public int Access_ID { get; set; }
 
         [Required]
-        public int Temp_Access_ID { get; set; }
+        public bool IsAdmin { get; set; }
+        [Required]
+        public bool CanAccInv { get; set; }
+        [Required]
+        public bool CanAccFin { get; set; }
+        [Required]
+        public bool CanAccPro { get; set; }
+        [Required]
+        public bool CanAccVen { get; set; }
+        [Required]
+        public bool CanAccRep { get; set; }
+        [Required]
+        public bool CanViewPenPro { get; set; }
+        [Required]
+        public bool CanViewFlagPro { get; set; }
+        [Required]
+        public bool CanViewFinPro { get; set; }
+        [Required]
+        public bool CanAppVen { get; set; }
+        [Required]
+        public bool CanEditVen { get; set; }
+        [Required]
+        public bool CanDeleteVen { get; set; }
 
-        [ForeignKey("Temp_Access_ID")]
-        public Temporary_Access Temporary_Access { get; set; }
 
-        [MaxLength(32)]
-        public string Name { get; set; }
-
-        [MaxLength(50)]
-        public string Description { get; set; }
     }
 }

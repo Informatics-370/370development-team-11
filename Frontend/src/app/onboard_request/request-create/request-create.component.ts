@@ -19,6 +19,7 @@ import { interval, take } from 'rxjs';
 import { Notification } from 'src/app/Shared/Notification';
 import { DatePipe } from '@angular/common';
 import { Notification_Type } from 'src/app/Shared/Notification_Type';
+import { Access } from 'src/app/Shared/Access';
 @Component({
   selector: 'app-request-create',
   templateUrl: './request-create.component.html',
@@ -49,9 +50,27 @@ export class RequestCreateComponent implements OnInit {
     description: ''
   }
 
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
+  }
+
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -72,7 +91,7 @@ export class RequestCreateComponent implements OnInit {
     status_ID: 1,
     vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0, sole_Supplier_Provided: false, preferedVendor: false },
     onboard_Status: this.OnboardStatus,
-    users: { user_Id: 0, role_ID: 0, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', no_Notifications: 0, role: this.rl },
+    users: { user_Id: 0, role_ID: 0, access_ID: 0, access: this.Access, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', no_Notifications: 0, role: this.rl },
     quotes: '',
   }
 

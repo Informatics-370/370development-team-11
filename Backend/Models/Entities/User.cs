@@ -9,9 +9,13 @@ namespace ProcionAPI.Models.Entities
         public int User_Id { get; set; }
         [Required]
         public int Role_ID { get; set; }
-
+        [Required]
+        public int Access_ID { get; set; }
         [ForeignKey("Role_ID")]
         public Role Role { get; set; }
+
+        [ForeignKey("Access_ID")]
+        public Access Access { get; set; }
 
         [MaxLength(32)]
         public string? Username { get; set; }
@@ -21,8 +25,5 @@ namespace ProcionAPI.Models.Entities
 
         public string? Profile_Picture { get; set; }
         public int? No_Notifications { get; set; }
-        //public ICollection<Delegation_Of_Authority>? Delegation_Of_Authority { get; set; }
-
-        //public virtual ICollection<Employee> Employees { get; set; }
     }
 }

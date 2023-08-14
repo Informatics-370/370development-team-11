@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 import { VendorOnboardRequest } from '../Shared/VendorOnboardRequest';
 import { HttpClient } from '@angular/common/http';
 import { AuditLog } from '../Shared/AuditLog';
+import { Access } from '../Shared/Access';
 
 @Component({
   selector: 'app-edit-procurement-request',
@@ -27,6 +28,21 @@ export class EditProcurementRequestComponent implements OnInit {
   filteredVendors: Observable<VendorOnboardRequest[]>
 
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer, private ActRoute: ActivatedRoute, private http: HttpClient) { }
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
+  }
 
   Procurement_Request: Procurement_Request = {
     procurement_Request_ID: 0,
@@ -55,6 +71,8 @@ export class EditProcurementRequestComponent implements OnInit {
     user: {
       user_Id: 0,
       role_ID: 0,
+      access_ID: 0,
+      access: this.Access,
       username: "",
       password: "",
       profile_Picture: "",

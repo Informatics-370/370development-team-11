@@ -44,10 +44,10 @@ export class RestoreDialogComponent {
           this.isLoading = false;
           this.MydialogRef.close();
 
-          var action = 'RESTORE SUCCESSFUL';
-          var title = 'Restore Successful';
+          var action = 'RESTORE IN PROGRESS';
+          var title = 'RESTORE IN PROGRESS';
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
-            'The database has been <strong style="color:green">RESTORED</strong> successfully!'
+            'Please wait <strong style="color:green">5 SECONDS</strong> for the restore to complete!'
           );
 
           const NotifdialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
@@ -59,7 +59,21 @@ export class RestoreDialogComponent {
 
           setTimeout(() => {
             NotifdialogRef.close();
-          }, 1750);
+
+            var action = 'RESTORE SUCCESSFUL';
+            var title = 'Restore Successful';
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
+              'The database has been <strong style="color:green">RESTORED</strong> successfully!'
+            );
+
+            const Success: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
+            setTimeout(() => {
+              Success.close();
+            }, 1750);
+          }, 5000);
         }
       }
     });

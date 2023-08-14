@@ -33,6 +33,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { AuditLog } from '../Shared/AuditLog';
+import { Access } from '../Shared/Access';
 @Component({
   selector: 'app-finalize-procurement-request-create',
   templateUrl: './finalize-procurement-request-create.component.html',
@@ -74,9 +75,27 @@ export class FinalizeProcurementRequestCreateComponent {
     description: ''
   }
 
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
+  }
+
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -127,6 +146,8 @@ export class FinalizeProcurementRequestCreateComponent {
     user: {
       user_Id: 0,
       role_ID: 0,
+      access_ID: 0,
+      access: this.Access,
       username: "",
       password: "",
       profile_Picture: "",

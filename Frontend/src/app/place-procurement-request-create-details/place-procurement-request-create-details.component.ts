@@ -37,8 +37,9 @@ import { Notification } from 'src/app/Shared/Notification';
 import { Notification_Type } from '../Shared/Notification_Type';
 import { catchError, map, startWith } from 'rxjs';
 import { AuditLog } from '../Shared/AuditLog';
-import {Observable} from 'rxjs';
-import {NgFor} from '@angular/common';
+import { Observable } from 'rxjs';
+import { NgFor } from '@angular/common';
+import { Access } from '../Shared/Access';
 
 @Component({
   selector: 'app-place-procurement-request-create-details',
@@ -83,9 +84,27 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     description: ''
   }
 
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
+  }
+
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -136,6 +155,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     user: {
       user_Id: 0,
       role_ID: 0,
+      access_ID: 0,
+      access: this.Access,
       username: "",
       password: "",
       profile_Picture: "",
@@ -367,18 +388,18 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   currentYear = new Date().getFullYear();
   currentmonth = new Date().getMonth();
   currentDay = new Date().getDate();
-  currentDate:any;
-  sAssets:Asset[] = []
-  assetnames:string[] = [];
+  currentDate: any;
+  sAssets: Asset[] = []
+  assetnames: string[] = [];
   filteredAssets: Observable<string[]>;
   ngOnInit() {
 
     this.ProcureService.GetAssetByID(1).subscribe(r => {
       this.sAssets = r
-     // this.sAssets.forEach(x=> this.assetnames.push(x.name));
-     this.assetnames.push(r.name);
+      // this.sAssets.forEach(x=> this.assetnames.push(x.name));
+      this.assetnames.push(r.name);
       console.log(this.sAssets)
-      this.filteredAssets = this.ProcurementFormGroup.get("AssetName")?.valueChanges.pipe( 
+      this.filteredAssets = this.ProcurementFormGroup.get("AssetName")?.valueChanges.pipe(
         startWith(''),
         map(value => this._filter(value)),
       );
@@ -447,7 +468,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     })
   }
 
-  
+
 
   _normalizeValue(value: string): string {
     return value.toLowerCase().replace(/\s/g, '');

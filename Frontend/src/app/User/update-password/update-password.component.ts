@@ -21,6 +21,7 @@ import { MainNavComponent } from '../../main-nav/main-nav.component';
 import { MatIconRegistry } from '@angular/material/icon';
 import { AuditLog } from 'src/app/Shared/AuditLog';
 import { DatePipe } from '@angular/common';
+import { Access } from 'src/app/Shared/Access';
 
 @Component({
   selector: 'app-update-password',
@@ -47,13 +48,30 @@ export class UpdatePasswordComponent implements OnInit {
     name: '',
     description: ''
   }
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: false,
+    CanAccInv: false,
+    CanAccFin: false,
+    CanAccPro: false,
+    CanAccVen: false,
+    CanAccRep: false,
+    CanViewPenPro: false,
+    CanViewFlagPro: false,
+    CanViewFinPro: false,
+    CanAppVen: false,
+    CanEditVen: false,
+    CanDeleteVen: false,
+  }
 
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
-    profile_Picture: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
     role: this.rl
   }
