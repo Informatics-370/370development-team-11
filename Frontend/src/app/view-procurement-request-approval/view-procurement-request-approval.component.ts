@@ -92,6 +92,13 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
 
 
   ngOnInit() {
+
+    var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+    this.dataService.GetUserByUsername(User).subscribe(response => {
+      this.ProcurementRequestDetails.user.access = response.access
+      this.ProcurementNotification.user.access = response.access
+    })
+
     for (let i = 0; i < 3; i++) {
       this.FileDetails.push({ FileURL: "", FileName: "" })
     }

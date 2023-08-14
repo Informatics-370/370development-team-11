@@ -79,6 +79,13 @@ export class RequestDeleteComponent {
   //create api backend 1 for get and one for delete 
   OnboardRequestDetails: any[] = [];
   ngOnInit(): void {
+
+    var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+        this.dataService.GetUserByUsername(User).subscribe(response => {
+          this.Onboard_Request.users = response
+          this.Onboard_Request.users.access = response.access
+        })
+
     this.ActRoute.paramMap.subscribe({
       next: (params) => {
         const ID = this.data.ID;

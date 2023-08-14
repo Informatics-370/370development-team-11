@@ -115,6 +115,14 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
   // file:File[] = [null,null,null]
   FileDetails: any = [];
   ngOnInit() {
+
+    var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+    this.dataService.GetUserByUsername(User).subscribe(response => {
+      //this.EmployeeDetails.user.access = response.access
+      this.ProcurementNotification.user.access = response.access
+    })
+
+
     for (let i = 0; i < 2; i++) {
       this.FileDetails.push({ FileURL: "", FileName: "" })
     }

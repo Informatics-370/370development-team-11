@@ -139,7 +139,7 @@ namespace ProcionAPI.Models.Repositories
         }
 
         public async Task<Vendor> UpdateVendorStatusAsync(int VendorID, int VendorStatusID)
-        { //also see userid
+        { 
             var VendorUpdate = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Vendor_ID == VendorID);
 
             var existingVendorStatus = await _dbContext.Vendor_Status.FindAsync(VendorStatusID);
@@ -814,7 +814,7 @@ namespace ProcionAPI.Models.Repositories
 
 
         public async Task<Due_Dillegence> UpdateDueDiligenceAsync(int VendorID, Due_Dillegence VenDueDiligence)
-        { //also see userid
+        { 
             var ExistingDueDilligence = await _dbContext.Due_Dillegence.FirstOrDefaultAsync(x => x.Vendor_ID == VendorID);
 
 
@@ -944,7 +944,7 @@ namespace ProcionAPI.Models.Repositories
         //status change
 
         public async Task<Vendor> ChangeVendorStatusAsync(int statusID, int VendorID)
-        { //also see userid
+        {
             var ExistingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Vendor_ID == VendorID);
 
 
@@ -971,7 +971,7 @@ namespace ProcionAPI.Models.Repositories
 
 
         public async Task<Onboard_Request> ChangeOnboardStatusAsync(int statusID, int onboardRequestId,int VenID)
-        { //also see userid
+        { 
            // var ExistingOnboardRequest = await _dbContext.Onboard_Request.FirstOrDefaultAsync(x => (x.Vendor_ID == onboardRequestId) && (x.Vendor_ID == VenID));
             var ExistingOnboardRequest = await _dbContext.Onboard_Request.FirstOrDefaultAsync(x => (x.Onboard_Request_Id == onboardRequestId) && (x.Vendor_ID == VenID));
 
@@ -1032,11 +1032,12 @@ namespace ProcionAPI.Models.Repositories
                     newNotification.User_Id = 1;
                     newNotification.Name = "Performance review for " + ven.Name + " is needed.";
                     newNotification.Notification_Type_ID = 3;
-                    var existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == newNotification.User_Id);
+                    var existingUser = await _dbContext.User.Include(x=> x.Access).FirstOrDefaultAsync(x => x.User_Id == newNotification.User_Id);
 
                     if (existingUser != null)
                     {
                         newNotification.User = existingUser;
+                        newNotification.User.Access = existingUser.Access;
                     }
 
                     var existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 3);

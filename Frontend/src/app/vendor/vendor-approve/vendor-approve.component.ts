@@ -133,6 +133,14 @@ export class VendorApproveComponent implements OnInit {
   BEEbool = false;
 
   ngOnInit() {
+
+    var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+    this.dataService.GetUserByUsername(User).subscribe(response => {
+      this.usr = response
+      this.usr.access = response.access
+      this.VendorNotification.user.access = response.access
+    })
+
     this.vendorsRequest = []
     this.onboardRequest = [];
     this.FileDetails = [];

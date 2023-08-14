@@ -176,11 +176,18 @@ export class RequestUpdateComponent {
 
     this.ActRoute.paramMap.subscribe({
       next: (paramater) => {
+
+        var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+        this.dataService.GetUserByUsername(User).subscribe(response => {
+          this.usr = response;
+          this.usr.access = response.access
+          this.Onboard_Request.users = response
+          this.Onboard_Request.users.access = response.access
+        })
         
         let RequestID = paramater.get("RequestNo");
         this.dataService.GetRequestByID(Number(RequestID)).subscribe(result => {
           let RequestList: any[] = result
-          console.log(RequestList)
           RequestList.forEach((element) => {
             this.onboardRequest.push(element)
             const row = this._formBuilder.group({
