@@ -26,7 +26,7 @@ import * as moment from 'moment';
 export class ReportFilterMenuComponent implements OnInit{
 
   constructor(public dialogRef: MatDialogRef<ReportFilterMenuComponent>,private ActRoute: ActivatedRoute,private ReportService: DataService, private dialog:MatDialog,private router:Router,
-    @Inject(MAT_DIALOG_DATA) public data: { ID: number }) { }
+    @Inject(MAT_DIALOG_DATA) public data: { ID: number, sDownload:boolean}) { }
 
     currentYear = new Date().getFullYear()
     currentmonth = new Date().getMonth();
@@ -46,6 +46,8 @@ export class ReportFilterMenuComponent implements OnInit{
   minDate: Date;
   myBar:any;
   myPie:any;
+  bDownload=false;
+
   ngOnInit(): void {
     this.minDate = new Date(this.currentYear - 1, this.currentmonth, this.currentDay+1);
     this.convertImageToBase64()
@@ -67,9 +69,10 @@ export class ReportFilterMenuComponent implements OnInit{
     this.dialogRef.close();
   }
 
-  onConfirm(ID: number): void { 
+  onConfirm(ID: number,boolValue:boolean): void { 
     let DateTransf: any
     DateTransf = new DatePipe('en-ZA');
+    this.bDownload = boolValue;
     switch(ID) {
       case 2 : {
         this.ReportService.getBEESpendReport(DateTransf.transform(this.range.get("start")?.value, 'MM, d, y, hh:mm:ss'),DateTransf.transform(this.range.get("end")?.value, 'MM, d, y, hh:mm:ss')).subscribe(result => {
@@ -99,7 +102,7 @@ export class ReportFilterMenuComponent implements OnInit{
       this.BEESpendReportDetails = result;
       
       var User = this.ReportService.decodeUser(sessionStorage.getItem('token'))
-
+      let uniqueBranches =  this.BEESpendReportDetails.map(p => (p.branchName)).filter((name,index,currentval) => currentval.indexOf(name) === index)
       let content = [
         {table: {
           headerRows: 1,
@@ -227,448 +230,111 @@ export class ReportFilterMenuComponent implements OnInit{
       // Add space above the line
       margin: [0, 10]
     },
-    //MDA
-    {text:'MBA BEE Spend Summary',fontSize: 12,alignment: 'center',color: '#244688'},
-        { 
-        table: {headerRows: 1,
-        widths: ['*','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto'],
-        body:[[{text:'BEE Level',alignment: 'left',color: '#ffffff',fillColor: '#244688'},
-        {text:'1',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-        {text:'2',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-        {text:'3',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-        {text:'4',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-        {text:'5',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-        {text:'6',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-        {text:'7',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-        {text:'8',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-        {text:'Non-Compliant',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-        {text:'Total',alignment: 'center',color: '#ffffff',fillColor: '#244688'}],
-        [{ text: 'Procurement Spend', bold: true,alignment: 'left',color: '#ffffff',fillColor: '#244688' },
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 1) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 2) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 3) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 4) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 5) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 6) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 7) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 8) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 0) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x => x.branchName == "MBA").reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'}],
-        [{ text: 'Procurement %', bold: true ,alignment: 'left',color: '#ffffff',fillColor: '#244688'},
-        {text:'135%',alignment: 'center',fillColor: '#d9e2f3'},
-        {text:'125%',alignment: 'center',fillColor: '#d9e2f3'},
-        {text:'110%',alignment: 'center',fillColor: '#d9e2f3'},
-        {text:'100%',alignment: 'center',fillColor: '#d9e2f3'},
-        {text:'80%',alignment: 'center',fillColor: '#d9e2f3'},
-        {text:'60%',alignment: 'center',fillColor: '#d9e2f3'},
-        {text:'50%',alignment: 'center',fillColor: '#d9e2f3'},
-        {text:'10%',alignment: 'center',fillColor: '#d9e2f3'},{text:"",fillColor: '#d9e2f3'},{text:"",fillColor: '#d9e2f3'}],
-        [{ text: 'Procurement Entitlement', bold: true,alignment: 'left',color: '#ffffff',fillColor: '#244688' },
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 1) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 2) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 3) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 4) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 5) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 6) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 7) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 8) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 0) && (x.branchName == "MBA")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-        {text:this.getProcurementEntitlementTotal(this.BEESpendReportDetails.filter(x => x.branchName == "MBA")).toFixed(2),fillColor: '#b4c6e7'}]],
-        layout: {
-          hLineWidth: function (i, node) {
-            if (i === 0 || i === node.table.body.length || i === 1) {
-              
-              return 1;
-            }
-            else {
-              return 0;
-            }
+    ...(Number(this.BEESpendReportDetails.reduce((sum, p)=> (sum + 0), 0).toFixed(2)) != 0) ? [{text:'Column Chart for Total Procurement Entitlement Per BEE Level',fontSize: 12,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
+    {image:this.columnChartbasestring.toBase64Image('image/png'),fit:[550,700]},] : []
+  ]
+  console.log(uniqueBranches.length)
+  for(let a = 0;a < uniqueBranches.length; a++) {
+    console.log(a)
+    if(this.BEESpendReportDetails.filter(x => x.branchName == uniqueBranches[a]).length != 0) { 
+      let BranchName = this.BEESpendReportDetails.filter(x => x.branchName == uniqueBranches[a])[0].branchName
+      content.push(
+      {text: BranchName + ' BEE Spend Summary',fontSize: 12,alignment: 'center',color: '#244688'},
+      { 
+      table: {headerRows: 1,
+      widths: ['*','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto'],
+      body:[[{text:'BEE Level',alignment: 'left',color: '#ffffff',fillColor: '#244688'},
+      {text:'1',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
+      {text:'2',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
+      {text:'3',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
+      {text:'4',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
+      {text:'5',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
+      {text:'6',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
+      {text:'7',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
+      {text:'8',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
+      {text:'Non-Compliant',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
+      {text:'Total',alignment: 'center',color: '#ffffff',fillColor: '#244688'}],
+      [{ text: 'Procurement Spend', bold: true,alignment: 'left',color: '#ffffff',fillColor: '#244688' },
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 1) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 2) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 3) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 4) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 5) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 6) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 7) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 8) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 0) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x => x.branchName == BranchName).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'}],
+      [{ text: 'Procurement %', bold: true ,alignment: 'left',color: '#ffffff',fillColor: '#244688'},
+      {text:'135%',alignment: 'center',fillColor: '#d9e2f3'},
+      {text:'125%',alignment: 'center',fillColor: '#d9e2f3'},
+      {text:'110%',alignment: 'center',fillColor: '#d9e2f3'},
+      {text:'100%',alignment: 'center',fillColor: '#d9e2f3'},
+      {text:'80%',alignment: 'center',fillColor: '#d9e2f3'},
+      {text:'60%',alignment: 'center',fillColor: '#d9e2f3'},
+      {text:'50%',alignment: 'center',fillColor: '#d9e2f3'},
+      {text:'10%',alignment: 'center',fillColor: '#d9e2f3'},{text:"",fillColor: '#d9e2f3'},{text:"",fillColor: '#d9e2f3'}],
+      [{ text: 'Procurement Entitlement', bold: true,alignment: 'left',color: '#ffffff',fillColor: '#244688' },
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 1) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 2) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 3) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 4) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 5) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 6) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 7) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 8) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 0) && (x.branchName == BranchName)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
+      {text:this.getProcurementEntitlementTotal(this.BEESpendReportDetails.filter(x => x.branchName == BranchName)).toFixed(2),fillColor: '#b4c6e7'}]],
+      layout: {
+        hLineWidth: function (i, node) {
+          if (i === 0 || i === node.table.body.length || i === 1) {
             
-          },
-          vLineWidth: function (i) {
-            if (i === 0 || i === 2) {
-              return 1;
-            }
-            else {
-              return 0
-            }
-            
-          },
-          hLineColor: function (i) {
-              return i ? 'black' : '#000000'
-       
-          },
-          vLineColor: function (i) {
-              return i ? 'black' : '#000000'
-          },
+            return 1;
+          }
+          else {
+            return 0;
+          }
           
         },
-        margin:[0,0,0,15],
-      },
-
-    },
-    {
-      canvas: [
-        // Centered line with space above
-        { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
-      ],
-      // Add space above the line
-      margin: [0, 10]
-    },
-     //VEN
-     {text:'VEN BEE Spend Summary',fontSize: 12,alignment: 'center',color: '#244688'},
-     { 
-     table: {headerRows: 1,
-     widths: ['*','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto'],
-     body:[[{text:'BEE Level',alignment: 'left',color: '#ffffff',fillColor: '#244688'},
-     {text:'1',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'2',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'3',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'4',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'5',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'6',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'7',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'8',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'Non-Compliant',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'Total',alignment: 'center',color: '#ffffff',fillColor: '#244688'}],
-     [{ text: 'Procurement Spend', bold: true,alignment: 'left',color: '#ffffff',fillColor: '#244688' },
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 1) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 2) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 3) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 4) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 5) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 6) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 7) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 8) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 0) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x => x.branchName == "VEN").reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'}],
-     [{ text: 'Procurement %', bold: true ,alignment: 'left',color: '#ffffff',fillColor: '#244688'},
-     {text:'135%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'125%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'110%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'100%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'80%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'60%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'50%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'10%',alignment: 'center',fillColor: '#d9e2f3'},{text:"",fillColor: '#d9e2f3'},{text:"",fillColor: '#d9e2f3'}],
-     [{ text: 'Procurement Entitlement', bold: true,alignment: 'left',color: '#ffffff',fillColor: '#244688' },
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 1) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 2) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 3) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 4) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 5) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 6) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 7) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 8) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 0) && (x.branchName == "VEN")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.getProcurementEntitlementTotal(this.BEESpendReportDetails.filter(x => x.branchName == "VEN")).toFixed(2),fillColor: '#b4c6e7'}]],
-     layout: {
-       hLineWidth: function (i, node) {
-         if (i === 0 || i === node.table.body.length || i === 1) {
-           
-           return 1;
-         }
-         else {
-           return 0;
-         }
-         
-       },
-       vLineWidth: function (i) {
-         if (i === 0 || i === 2) {
-           return 1;
-         }
-         else {
-           return 0
-         }
-         
-       },
-       hLineColor: function (i) {
-           return i ? 'black' : '#000000'
-    
-       },
-       vLineColor: function (i) {
-           return i ? 'black' : '#000000'
-       },
-       
-     },
-     margin:[0,0,0,15],
-   },
-
- },
- {
-   canvas: [
-     // Centered line with space above
-     { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
-   ],
-   // Add space above the line
-   margin: [0, 10]
- },
-  //ENG
-     {text:'ENG BEE Spend Summary',fontSize: 12,alignment: 'center',color: '#244688'},
-     { 
-     table: {headerRows: 1,
-     widths: ['*','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto'],
-     body:[[{text:'BEE Level',alignment: 'left',color: '#ffffff',fillColor: '#244688'},
-     {text:'1',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'2',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'3',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'4',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'5',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'6',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'7',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'8',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'Non-Compliant',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'Total',alignment: 'center',color: '#ffffff',fillColor: '#244688'}],
-     [{ text: 'Procurement Spend', bold: true,alignment: 'left',color: '#ffffff',fillColor: '#244688' },
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 1) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 2) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 3) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 4) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 5) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 6) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 7) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 8) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 0) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x => x.branchName == "ENG").reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'}],
-     [{ text: 'Procurement %', bold: true ,alignment: 'left',color: '#ffffff',fillColor: '#244688'},
-     {text:'135%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'125%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'110%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'100%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'80%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'60%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'50%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'10%',alignment: 'center',fillColor: '#d9e2f3'},{text:"",fillColor: '#d9e2f3'},{text:"",fillColor: '#d9e2f3'}],
-     [{ text: 'Procurement Entitlement', bold: true,alignment: 'left',color: '#ffffff',fillColor: '#244688' },
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 1) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 2) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 3) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 4) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 5) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 6) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 7) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 8) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 0) && (x.branchName == "ENG")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.getProcurementEntitlementTotal(this.BEESpendReportDetails.filter(x => x.branchName == "ENG")).toFixed(2),fillColor: '#b4c6e7'}]],
-     layout: {
-       hLineWidth: function (i, node) {
-         if (i === 0 || i === node.table.body.length || i === 1) {
-           
-           return 1;
-         }
-         else {
-           return 0;
-         }
-         
-       },
-       vLineWidth: function (i) {
-         if (i === 0 || i === 2) {
-           return 1;
-         }
-         else {
-           return 0
-         }
-         
-       },
-       hLineColor: function (i) {
-           return i ? 'black' : '#000000'
-    
-       },
-       vLineColor: function (i) {
-           return i ? 'black' : '#000000'
-       },
-       
-     },
-     margin:[0,0,0,15],
-   },
-
- },
- {
-   canvas: [
-     // Centered line with space above
-     { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
-   ],
-   // Add space above the line
-   margin: [0, 10]
- },
-  //MTS
-     {text:'MTS BEE Spend Summary',fontSize: 12,alignment: 'center',color: '#244688'},
-     { 
-     table: {headerRows: 1,
-     widths: ['*','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto'],
-     body:[[{text:'BEE Level',alignment: 'left',color: '#ffffff',fillColor: '#244688'},
-     {text:'1',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'2',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'3',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'4',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'5',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'6',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'7',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'8',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'Non-Compliant',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-     {text:'Total',alignment: 'center',color: '#ffffff',fillColor: '#244688'}],
-     [{ text: 'Procurement Spend', bold: true,alignment: 'left',color: '#ffffff',fillColor: '#244688' },
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 1) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 2) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 3) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 4) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 5) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 6) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 7) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 8) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 0) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x => x.branchName == "MTS").reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'}],
-     [{ text: 'Procurement %', bold: true ,alignment: 'left',color: '#ffffff',fillColor: '#244688'},
-     {text:'135%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'125%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'110%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'100%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'80%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'60%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'50%',alignment: 'center',fillColor: '#d9e2f3'},
-     {text:'10%',alignment: 'center',fillColor: '#d9e2f3'},{text:"",fillColor: '#d9e2f3'},{text:"",fillColor: '#d9e2f3'}],
-     [{ text: 'Procurement Entitlement', bold: true,alignment: 'left',color: '#ffffff',fillColor: '#244688' },
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 1) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 2) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 3) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 4) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 5) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 6) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 7) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 8) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 0) && (x.branchName == "MTS")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-     {text:this.getProcurementEntitlementTotal(this.BEESpendReportDetails.filter(x => x.branchName == "MTS")).toFixed(2),fillColor: '#b4c6e7'}]],
-     layout: {
-       hLineWidth: function (i, node) {
-         if (i === 0 || i === node.table.body.length || i === 1) {
-           
-           return 1;
-         }
-         else {
-           return 0;
-         }
-         
-       },
-       vLineWidth: function (i) {
-         if (i === 0 || i === 2) {
-           return 1;
-         }
-         else {
-           return 0
-         }
-         
-       },
-       hLineColor: function (i) {
-           return i ? 'black' : '#000000'
-    
-       },
-       vLineColor: function (i) {
-           return i ? 'black' : '#000000'
-       },
-       
-     },
-     margin:[0,0,0,15],
-   },
-
- },
- {
-   canvas: [
-     // Centered line with space above
-     { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
-   ],
-   // Add space above the line
-   margin: [0, 10]
- },
-  //CPT
-  {text:'CPT BEE Spend Summary',fontSize: 12,alignment: 'center',color: '#244688'},
-  { 
-  table: {headerRows: 1,
-  widths: ['*','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto'],
-  body:[[{text:'BEE Level',alignment: 'left',color: '#ffffff',fillColor: '#244688'},
-  {text:'1',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-  {text:'2',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-  {text:'3',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-  {text:'4',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-  {text:'5',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-  {text:'6',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-  {text:'7',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-  {text:'8',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-  {text:'Non-Compliant',alignment: 'center',color: '#ffffff',fillColor: '#244688'},
-  {text:'Total',alignment: 'center',color: '#ffffff',fillColor: '#244688'}],
-  [{ text: 'Procurement Spend', bold: true,alignment: 'left',color: '#ffffff',fillColor: '#244688' },
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 1) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 2) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 3) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 4) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 5) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 6) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 7) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 8) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 0) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x => x.branchName == "CPT").reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'}],
-  [{ text: 'Procurement %', bold: true ,alignment: 'left',color: '#ffffff',fillColor: '#244688'},
-  {text:'135%',alignment: 'center',fillColor: '#d9e2f3'},
-  {text:'125%',alignment: 'center',fillColor: '#d9e2f3'},
-  {text:'110%',alignment: 'center',fillColor: '#d9e2f3'},
-  {text:'100%',alignment: 'center',fillColor: '#d9e2f3'},
-  {text:'80%',alignment: 'center',fillColor: '#d9e2f3'},
-  {text:'60%',alignment: 'center',fillColor: '#d9e2f3'},
-  {text:'50%',alignment: 'center',fillColor: '#d9e2f3'},
-  {text:'10%',alignment: 'center',fillColor: '#d9e2f3'},{text:"",fillColor: '#d9e2f3'},{text:"",fillColor: '#d9e2f3'}],
-  [{ text: 'Procurement Entitlement', bold: true,alignment: 'left',color: '#ffffff',fillColor: '#244688' },
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 1) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 2) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 3) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 4) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 5) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 6) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 7) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 8) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.BEESpendReportDetails.filter(x=> (x.beE_Level == 0) && (x.branchName == "CPT")).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2),fillColor: '#b4c6e7'},
-  {text:this.getProcurementEntitlementTotal(this.BEESpendReportDetails.filter(x => x.branchName == "CPT")).toFixed(2),fillColor: '#b4c6e7'}]],
-  layout: {
-    hLineWidth: function (i, node) {
-      if (i === 0 || i === node.table.body.length || i === 1) {
+        vLineWidth: function (i) {
+          if (i === 0 || i === 2) {
+            return 1;
+          }
+          else {
+            return 0
+          }
+          
+        },
+        hLineColor: function (i) {
+            return i ? 'black' : '#000000'
+     
+        },
+        vLineColor: function (i) {
+            return i ? 'black' : '#000000'
+        },
         
-        return 1;
-      }
-      else {
-        return 0;
-      }
-      
-    },
-    vLineWidth: function (i) {
-      if (i === 0 || i === 2) {
-        return 1;
-      }
-      else {
-        return 0
-      }
-      
-    },
-    hLineColor: function (i) {
-        return i ? 'black' : '#000000'
- 
-    },
-    vLineColor: function (i) {
-        return i ? 'black' : '#000000'
+      },
+      margin:[0,0,0,15],
     },
     
-  },
-  margin:[0,0,0,15],
-},
+    },
+    { 
+    canvas: [
+      // Centered line with space above
+      { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
+    ],margin: [0, 10]
+    },)
 
-},
-{ 
-canvas: [
-  // Centered line with space above
-  { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
-]
-},
-...(Number(this.BEESpendReportDetails.reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2)) != 0) ? [{text:'Column Chart for Total Procurement Entitlement Per BEE Level',fontSize: 12,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
-{image:this.columnChartbasestring.toBase64Image('image/png'),fit:[550,700]},] : []
+   
 
-  ]
+   }
+  }
+  content.push(
+    ...(Number(this.BEESpendReportDetails.reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2)) != 0) ? [{text:'Column Chart for Total Procurement Entitlement Per BEE Level',fontSize: 12,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
+    {image:this.columnChartbasestring.toBase64Image('image/png'),fit:[550,700]},] : []
+  )
+
+
   //fit: [550, 700]
   if(Number(this.BEESpendReportDetails.filter(x=> x.beE_Level == 0).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2)) != 0) {
     content.push(
@@ -714,7 +380,15 @@ canvas: [
       } 
       };   
       //docDefinition.push()
-      pdfMake.createPdf(docDefinition).open();
+      if(this.bDownload  == true) {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).download("Vendor Spent Report")
+      }
+      else {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).open();
+      }
+      //pdfMake.createPdf(docDefinition).open();
       content = undefined;
       if(this.myBar) {
         this.myBar.destroy();
@@ -841,20 +515,23 @@ canvas: [
   getPieChart(ReportsDetails: BEESpentReportVM[]){
     //var canvar_bar = document.createElement("canvas");
    
-    
+    let data:Number[] = []
+    let labels:string[] = []
     let total = Number(ReportsDetails.filter(x=> x.beE_Level == 0).reduce((sum, p)=> (sum + Number(p.totalSpend)),5).toFixed(2))
+    let uniqueBranches = ReportsDetails.map(p => (p.branchName)).filter((name,index,currentval) => currentval.indexOf(name) === index)
+    for(let a = 0;a < uniqueBranches.length; a++) {
+      data.push((Number(ReportsDetails.filter(x=> (x.branchName == uniqueBranches[a]) && (x.beE_Level == 0)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2))/total))
+      labels.push(uniqueBranches[a])
+    }
+    console.log(data)
+    console.log(labels)
     let percentPipe = new PercentPipe('en-ZA');
      this.myPie = new Chart('pie', {
       type: 'pie',
       data: {
-        labels: ["MBA","VEN","ENG","MTS","CPT"],
+        labels: labels,
         datasets: [{
-          data: [
-            (Number(ReportsDetails.filter(x=> (x.branchName == "MBA" ) && (x.beE_Level == 0)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2))/total),
-            (Number(ReportsDetails.filter(x=> (x.branchName == "VEN") && (x.beE_Level == 0)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2))/total),
-            (Number(ReportsDetails.filter(x=> (x.branchName == "ENG") && (x.beE_Level == 0)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2))/total),
-            (Number(ReportsDetails.filter(x=> (x.branchName == "MTS") && (x.beE_Level == 0)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2))/total),
-            (Number(ReportsDetails.filter(x=> (x.branchName == "CPT") && (x.beE_Level == 0)).reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2))/total)],
+          data: data,
           borderWidth: 2,
           borderColor:'black',
           backgroundColor: [

@@ -1,9 +1,11 @@
+import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/DataService/data-service';
 import { Access } from 'src/app/Shared/Access';
+import { AuditLog } from 'src/app/Shared/AuditLog';
 import { Role } from 'src/app/Shared/EmployeeRole';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
 import { Onboard_Status } from 'src/app/Shared/OnboardStatus';
@@ -61,7 +63,14 @@ export class RequestDeleteComponent {
     quotes: '',
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
+  
   showConfirmationDialog: boolean = true;
   showSuccessDialog: boolean = false;
 
@@ -112,11 +121,61 @@ export class RequestDeleteComponent {
             this.showConfirmationDialog = false;
             this.showSuccessDialog = true;
             setTimeout(() => {
+              if(this.OnboardRequestDetails.length - 1 == i) {
+                this.log.action = "Deleted Onboard Request #" + this.OnboardRequestDetails[i].onboard_Request_Id;
+                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.dataService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    //Action to take after log (Notification etc)
+                  }
+                })
+              }
+
+
               this.dialogRef.close();
             }, 1750);
           }
         });
       }
+   }
+   else {
+    let VendorID = this.OnboardRequestDetails[0].vendor.vendor_ID
+    if(this.OnboardRequestDetails[0].quotes != "None") {
+      let sFile = this.OnboardRequestDetails[0].quotes;
+      let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
+      console.log(RequestNo)
+      let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+      console.log(filename)
+      this.dataService.DeleteFile(RequestNo,filename).subscribe()
+      this.dataService.DeleteSoleSupplier(VendorID).subscribe(response => {
+        this.dataService.DeleteRequest(RequestId,VendorID).subscribe({
+          next: (response) => {
+            if(this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
+              this.dataService.DeleteVendor(VendorID).subscribe()
+            }
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.log.action = "Deleted Onboard Request #" + this.OnboardRequestDetails[0].onboard_Request_Id;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  //Action to take after log (Notification etc)
+                }
+              })
+
+              this.dialogRef.close();
+            }, 1750);
+          }
+        });
+      })
+      
     }
     else {
       let VendorID = this.OnboardRequestDetails[0].vendor.vendor_ID
@@ -147,25 +206,32 @@ export class RequestDeleteComponent {
         this.dataService.DeleteSoleSupplier(VendorID).subscribe(response => {
           this.dataService.DeleteRequest(RequestId, VendorID).subscribe({
             next: (response) => {
-              if (this.OnboardRequestDetails[0].vendor.vendor_Status_ID == 5 || this.OnboardRequestDetails[0].vendor_Status_ID == 1) {
-                this.dataService.DeleteVendor(VendorID).subscribe()
-              }
-              this.showConfirmationDialog = false;
-              this.showSuccessDialog = true;
-              setTimeout(() => {
-                this.dialogRef.close();
-              }, 1750);
-            }
-          });
-        })
-      }
-
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.log.action = "Deleted Onboard Request #" + this.OnboardRequestDetails[0].onboard_Request_Id;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  //Action to take after log (Notification etc)
+                }
+              })
+              this.dialogRef.close();
+            }, 1750);
+          }
+        });
+      })
     }
 
 
+    }
+  } 
   }
-
   onCancel(): void {
     this.dialogRef.close();
   }
+
 }

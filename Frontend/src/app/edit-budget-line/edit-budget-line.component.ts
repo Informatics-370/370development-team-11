@@ -59,7 +59,7 @@ export class EditBudgetLineComponent {
     action: "",
     actionTime: new Date(),
   }
-
+  Months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
   categories: BudgetCategory[] = []
   budgetLineForm: FormGroup = new FormGroup({});
   CatInUse: String;

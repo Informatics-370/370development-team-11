@@ -84,7 +84,7 @@
                   <mat-form-field appearance="fill" *ngIf="assetnames != undefined">
                     <input matInput formControlName="AssetName" [errorStateMatcher]="matcher" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete" >
-                      <mat-option *ngFor="let assets of filteredAssets | async " [value]="assets">
+                      <mat-option *ngFor="let assets of filteredAssets | async " [value]="assets" (click)="ChangeDescription(assets)">
                         {{assets}}
                       </mat-option>
                     </mat-autocomplete>
@@ -115,10 +115,15 @@
           <div class="col-7">
             <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length > 0">
               <mat-select formControlName="AccountCode" placeholder="Please Select an Account Code" style="display: contents;" [errorStateMatcher]="matcher">
-                <mat-option *ngFor="let codes of BudgetAllocationCode" [value]="codes.account_Code">{{codes.budget_Category.account_Name}}</mat-option>
+                <mat-optgroup *ngFor="let group of AccountCodeGroups" id="CBStyle" [label]="group.Month + ' - ' + group.Year" style="color: white;background-color: #244688;">
+                <mat-option *ngFor="let AccountCode of group.AccountDetails" [value]="AccountCode.AccountCodeValue">
+                {{AccountCode.AccountCodeName}}
+                </mat-option>
+                </mat-optgroup>
               </mat-select>
               <mat-error *ngIf="ProcurementFormGroup.controls['AccountCode'].hasError('required')">Please Select an Account Code</mat-error>
             </mat-form-field>
+
             <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length == 0">
               <mat-select formControlName="AccountCode" placeholder="No Account code exist on the system" style="display: contents;">
               </mat-select>

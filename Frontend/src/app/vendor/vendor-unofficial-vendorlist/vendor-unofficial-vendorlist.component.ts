@@ -68,9 +68,7 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
   ngOnInit() {
     this.iRole = ""
     this.rAdmin = ""
-    if(this.sFilter == undefined) {
-      this.sFilter = "1";
-    }
+    
 
     this.iRole = this.VendorService.decodeUserRole(sessionStorage.getItem("token"));
 
@@ -79,6 +77,17 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
     if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
+
+    if(this.sFilter == undefined) {
+      if(this.rAdmin == "true") {
+        this.sFilter = "4"
+      }
+      else {
+        this.sFilter = "1";
+      }
+      
+    }
+    
 
    this.VendorService.GetAllOnboardRequest().subscribe((result) => {
       this.SearchResults = []

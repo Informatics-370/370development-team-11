@@ -120,6 +120,22 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
     }
     this.route.paramMap.subscribe({
       next: (paramater) => {
+        
+       this.ProcurementDetailsID = Number(paramater.get("ProcurementDetailsID"));
+        
+       this.dataService.GetProcurementDetailsByID(this.ProcurementDetailsID).subscribe(response => {
+        this.ProcurementDetails = response;
+        console.log(this.ProcurementDetails)
+        console.log(response)
+        let dateChange: any
+        dateChange = new DatePipe('en-ZA');
+         this.ProcurementFormGroup.get("BuyerName")?.setValue(this.ProcurementDetails.buyer_Name);
+         this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.ProcurementDetails.buyer_Email);
+         //consumbleAssets
+         this.ProcurementFormGroup.get("ItemType")?.setValue(this.ProcurementDetails.item_Type);
+         this.getItemDetails(this.ProcurementDetails.item_Type);
+         
+         this.ProcurementFormGroup.get("AccountCode")?.setValue(this.ProcurementDetails.budget_Line.budget_Category.account_Name.toString());
 
         this.ProcurementDetailsID = Number(paramater.get("ProcurementDetailsID"));
 

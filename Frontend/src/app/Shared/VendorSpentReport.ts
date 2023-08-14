@@ -3,7 +3,7 @@ export interface VendorSpentReport {
     accountCode:number;
     accountName:string;
     budgetDepartment:string;
-    departmentName:string;
+    branchName:string;
     beE_Level:number;
     totalSpend:Number;
 }

@@ -12,7 +12,7 @@ export interface Procurement_Details {
      procurement_Request_ID:number;
      sign_Off_Status_ID :number;
      procurement_Payment_Status_ID:number;
-     account_Code:string;
+     BudgetLineId:number;
      procurement_Status_ID:number;
      payment_Method_ID:number;
      employee: Employee;

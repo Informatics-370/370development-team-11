@@ -50,8 +50,11 @@
                                     <label style=" color:black;">Month:</label>
                                     <br />
                                     <mat-form-field>
-                                        <input matInput type="text" placeholder="" formControlName="month" id="month"
-                                            [(ngModel)]="budgetLine.month" required>
+                                        <mat-select formControlName="month" placeholder="Select One" id="month" style="display: contents;" [(ngModel)]="budgetLine.month" required>
+                                            <mat-option *ngFor="let Mon of Months" [value]="Mon">
+                                            {{Mon}}
+                                            </mat-option>
+                                          </mat-select>
                                         <mat-error *ngIf="myError('month', 'pattern')">Month must be in
                                             numbers.</mat-error>
                                         <mat-error *ngIf="myError('month', 'maxlength')">Month must be 4 characters

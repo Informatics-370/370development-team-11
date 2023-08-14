@@ -60,7 +60,7 @@ export class CreateBudgetLineComponent {
     action: "",
     actionTime: new Date(),
   }
-
+  Months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
   categories: any[] = []
   budgetLineForm: FormGroup = new FormGroup({});
   constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder,
