@@ -18,6 +18,7 @@ namespace ProcionAPI.Models.Repositories
         Task<Delegation_Status> GetRevokeStatusAsync();
         Task<Temporary_Access[]> AddTempAccAsync(Temporary_Access TempAccAdd);
         Task<Temporary_Access> GetTempAccAsync(int delegationID);
+        Task<Temporary_Access> GetLoginTempAccAsync(int delegationID);
         Task<Temporary_Access> UpdateTempAccAsync(Temporary_Access UpdatedTempAcc, int tempAccID);
         void Delete<T>(T entity) where T : class;
         Task<bool> SaveChangesAsync();

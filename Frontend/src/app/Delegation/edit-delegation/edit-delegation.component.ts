@@ -299,35 +299,38 @@ export class EditDelegationComponent implements OnInit {
 
       this.dataService.EditDelegation(this.doa, this.delID).subscribe({
         next: (response) => {
+          this.dataService.EditTempAcc(this.ta, this.delID).subscribe({
+            next: (res) => {
+              this.dataService.CheckDelegation().subscribe({
+                next: (r) => {
+                  if (r) {
 
-          this.dataService.CheckDelegation().subscribe({
-            next: (r) => {
-              if (r) {
+                    this.log.action = "Edited Delegation for Request: " + this.delID;
+                    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                    let test: any
+                    test = new DatePipe('en-ZA');
+                    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                    this.dataService.AuditLogAdd(this.log).subscribe({
+                      next: (Log) => {
+                        var action = "EDIT";
+                        var title = "EDIT SUCCESSFUL";
+                        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
 
-                this.log.action = "Edited Delegation for Request: " + this.delID;
-                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-                let test: any
-                test = new DatePipe('en-ZA');
-                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-                this.dataService.AuditLogAdd(this.log).subscribe({
-                  next: (Log) => {
-                    var action = "EDIT";
-                    var title = "EDIT SUCCESSFUL";
-                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
+                        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                          disableClose: true,
+                          data: { action, title, message }
+                        });
 
-                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                      disableClose: true,
-                      data: { action, title, message }
-                    });
-
-                    const duration = 1750;
-                    setTimeout(() => {
-                      this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-                      dialogRef.close();
-                    }, duration);
+                        const duration = 1750;
+                        setTimeout(() => {
+                          this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
+                          dialogRef.close();
+                        }, duration);
+                      }
+                    })
                   }
-                })
-              }
+                }
+              })
             }
           })
         }

@@ -776,7 +776,7 @@ export class DataService {
   }
 
   loginWithTemp(username: string, password: string, tempacc: Temporary_Access, tempUsername: string) {
-    return this.httpClient.post(`${this.apiUrl}User/loginWithTemp/` + username + "/" + password + "/" + tempacc + "/" + tempUsername, this.httpOptions)
+    return this.httpClient.post(`${this.apiUrl}User/loginWithTemp/` + username + "/" + password + "/" + tempUsername, tempacc, this.httpOptions)
   }
 
   //--------------------------------------------------------------------------------------Budget Allocations--------------------------------------------------------------------------------------
@@ -1157,6 +1157,14 @@ export class DataService {
 
   GetTempAcc(delegationID: Number) {
     return this.httpClient.get(`${this.apiUrl}Delegation/GetTempAcc` + "/" + delegationID).pipe(map(result => result))
+  }
+
+  GetLoginTempAcc(delegationID: Number) {
+    return this.httpClient.get(`${this.apiUrl}Delegation/GetLoginTempAcc` + "/" + delegationID).pipe(map(result => result))
+  }
+
+  EditTempAcc(UpdatedTempAcc: Temporary_Access, tempAccID: number) {
+    return this.httpClient.put<Temporary_Access>(`${this.apiUrl}Delegation/EditTempAcc/` + tempAccID, UpdatedTempAcc, this.httpOptions)
   }
 
   InitiatRecurringJobDelegation() {

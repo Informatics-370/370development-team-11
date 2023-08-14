@@ -172,22 +172,23 @@ export class CreateDelegationComponent implements OnInit {
   getUsername() {
     this.dataService.GetUser(+this.route.snapshot.params['uid']).subscribe(result => {
       this.user = result;
+      this.ta.name = this.user.role.name;
+      this.ta.IsAdmin = this.user.access.isAdmin;
+      this.ta.CanAccInv = this.user.access.canAccInv;
+      this.ta.CanAccFin = this.user.access.canAccFin;
+      this.ta.CanAccPro = this.user.access.canAccPro;
+      this.ta.CanAccVen = this.user.access.canAccVen;
+      this.ta.CanAccRep = this.user.access.canAccRep;
+      this.ta.CanViewPenPro = this.user.access.canViewPenPro;
+      this.ta.CanViewFlagPro = this.user.access.canViewFlagPro;
+      this.ta.CanViewFinPro = this.user.access.canViewFinPro;
+      this.ta.CanAppVen = this.user.access.canAppVen;
+      this.ta.CanEditVen = this.user.access.canEditVen;
+      this.ta.CanDeleteVen = this.user.access.canDeleteVen;
       this.myForm.patchValue({
         DelegatingName: this.user.username
       })
-      this.ta.name = this.user.role.name;
-      this.ta.IsAdmin = this.usr.access.IsAdmin;
-      this.ta.CanAccInv = this.usr.access.CanAccInv;
-      this.ta.CanAccFin = this.usr.access.CanAccFin;
-      this.ta.CanAccPro = this.usr.access.CanAccPro;
-      this.ta.CanAccVen = this.usr.access.CanAccVen;
-      this.ta.CanAccRep = this.usr.access.CanAccRep;
-      this.ta.CanViewPenPro = this.usr.access.CanViewPenPro;
-      this.ta.CanViewFlagPro = this.usr.access.CanViewFlagPro;
-      this.ta.CanViewFinPro = this.usr.access.CanViewFinPro;
-      this.ta.CanAppVen = this.usr.access.CanAppVen;
-      this.ta.CanEditVen = this.usr.access.CanEditVen;
-      this.ta.CanDeleteVen = this.usr.access.CanDeleteVen;
+      
     })
   }
 
@@ -211,51 +212,51 @@ export class CreateDelegationComponent implements OnInit {
       this.doa.user = this.usr;
       this.doa.user_Id = 0;
 
-      if (this.ta.IsAdmin == "false" && this.usr.access.IsAdmin == "true") {
+      if (this.ta.IsAdmin == "false" && this.delegateID.access.isAdmin == "true") {
         this.ta.IsAdmin = "true";
       }
 
-      if (this.ta.CanAccFin == "false" && this.usr.access.CanAccFin == "true") {
+      if (this.ta.CanAccFin == "false" && this.delegateID.access.canAccFin == "true") {
         this.ta.CanAccFin = "true";
       }
 
-      if (this.ta.CanAccInv == "false" && this.usr.access.CanAccInv == "true") {
+      if (this.ta.CanAccInv == "false" && this.delegateID.access.canAccInv == "true") {
         this.ta.CanAccInv = "true";
       }
 
-      if (this.ta.CanAccPro == "false" && this.usr.access.CanAccPro == "true") {
+      if (this.ta.CanAccPro == "false" && this.delegateID.access.canAccPro == "true") {
         this.ta.CanAccPro = "true";
       }
 
-      if (this.ta.CanAccRep == "false" && this.usr.access.CanAccRep == "true") {
+      if (this.ta.CanAccRep == "false" && this.delegateID.access.canAccRep == "true") {
         this.ta.CanAccRep = "true";
       }
 
-      if (this.ta.CanAccVen == "false" && this.usr.access.CanAccVen == "true") {
+      if (this.ta.CanAccVen == "false" && this.delegateID.access.canAccVen == "true") {
         this.ta.CanAccVen = "true";
       }
 
-      if (this.ta.CanAppVen == "false" && this.usr.access.CanAppVen == "true") {
+      if (this.ta.CanAppVen == "false" && this.delegateID.access.canAppVen == "true") {
         this.ta.CanAppVen = "true";
       }
 
-      if (this.ta.CanDeleteVen == "false" && this.usr.access.CanDeleteVen == "true") {
+      if (this.ta.CanDeleteVen == "false" && this.delegateID.access.canDeleteVen == "true") {
         this.ta.CanDeleteVen = "true";
       }
 
-      if (this.ta.CanEditVen == "false" && this.usr.access.CanEditVen == "true") {
+      if (this.ta.CanEditVen == "false" && this.delegateID.access.canEditVen == "true") {
         this.ta.CanEditVen = "true";
       }
 
-      if (this.ta.CanViewFinPro == "false" && this.usr.access.CanViewFinPro == "true") {
+      if (this.ta.CanViewFinPro == "false" && this.delegateID.access.canViewFinPro == "true") {
         this.ta.CanViewFinPro = "true";
       }
 
-      if (this.ta.CanViewFlagPro == "false" && this.usr.access.CanViewFlagPro == "true") {
+      if (this.ta.CanViewFlagPro == "false" && this.delegateID.access.canViewFlagPro == "true") {
         this.ta.CanViewFlagPro = "true";
       }
 
-      if (this.ta.CanViewPenPro == "false" && this.usr.access.CanViewPenPro == "true") {
+      if (this.ta.CanViewPenPro == "false" && this.delegateID.access.canViewPenPro == "true") {
         this.ta.CanViewPenPro = "true";
       }
 
@@ -272,6 +273,7 @@ export class CreateDelegationComponent implements OnInit {
 
   onSubmit() {
     console.log(this.doa)
+    console.log(this.ta)
     this.doa.delegatingParty = this.myForm.get('DelegatingName')?.value;
     var name = "" + this.doa.delegatingParty;
 
@@ -304,6 +306,7 @@ export class CreateDelegationComponent implements OnInit {
           next: (response) => {
 
             this.ta.delegation_ID = response[0].delegation_ID;
+            
             this.dataService.AddTempAcc(this.ta).subscribe({
               next: (r) => {
 

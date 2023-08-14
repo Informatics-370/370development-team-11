@@ -138,7 +138,7 @@ namespace ProcionAPI.Controllers
 
         //-------------------------------------------------------------------------------------------------TEMP ACCESS LOGIN-------------------------------------------------------------------------------
 
-        [HttpPost("loginWithTemp/{UserName}/{Password}/{TempAcc}/{TempUsername}")]
+        [HttpPost("loginWithTemp/{UserName}/{Password}/{TempUsername}")]
         public async Task<IActionResult> LoginWithTemp([FromRoute] string UserName, [FromRoute] string Password, Temporary_Access TempAcc, [FromRoute] string TempUsername)
         {
             if (await _UserRepository.GetUserByUsername(UserName) != null)
