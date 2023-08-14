@@ -40,6 +40,9 @@ export class ViewBudgetCategoryComponent implements OnInit {
 
   BudgetLines: BudgetLine[] = [];
 
+  iRole: string;
+  iCanViewFinPro: string = "false";
+  canViewFinPro: string;
 
   OnInPutChange() {
     const Searchterm = this.searchWord.toLocaleLowerCase();
@@ -57,6 +60,13 @@ export class ViewBudgetCategoryComponent implements OnInit {
 
 
   ngOnInit() {
+    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iCanViewFinPro = this.dataService.decodeCanViewFinPro(sessionStorage.getItem("token"));
+
+    if (this.iRole == "Admin" || this.iCanViewFinPro == "true") {
+      this.canViewFinPro = "true";
+    }
+
     this.GetBudgetCategories();
   }
 

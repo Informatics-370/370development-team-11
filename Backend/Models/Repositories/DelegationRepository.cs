@@ -213,5 +213,25 @@ namespace ProcionAPI.Models.Repositories
 
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<Temporary_Access> UpdateTempAccAsync(Temporary_Access UpdatedTempAcc, int tempAccID)
+        {
+            var tempacc = await _dbContext.Temporary_Access.FindAsync(tempAccID);
+
+            tempacc.CanAccFin = UpdatedTempAcc.CanAccFin;
+            tempacc.CanAccPro = UpdatedTempAcc.CanAccPro;
+            tempacc.CanAccRep = UpdatedTempAcc.CanAccRep;
+            tempacc.CanAccVen = UpdatedTempAcc.CanAccVen;
+            tempacc.CanAccInv = UpdatedTempAcc.CanAccInv;
+            tempacc.CanAppVen = UpdatedTempAcc.CanAppVen;
+            tempacc.CanDeleteVen = UpdatedTempAcc.CanDeleteVen;
+            tempacc.CanEditVen = UpdatedTempAcc.CanEditVen;
+            tempacc.CanViewFinPro = UpdatedTempAcc.CanViewFinPro;
+            tempacc.CanViewFlagPro = UpdatedTempAcc.CanViewFlagPro;
+            tempacc.CanViewPenPro = UpdatedTempAcc.CanViewPenPro;
+            
+            await _dbContext.SaveChangesAsync();
+            return tempacc;
+        }
     }
 }

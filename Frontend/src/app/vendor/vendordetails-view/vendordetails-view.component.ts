@@ -187,12 +187,34 @@ export class VendordetailsViewComponent implements OnInit {
   VenDetails: VendorDetails[] = [];
   FileDetails:any[] = [];
   bValid = false;
+
+
+  iCanDeleteVen: string = "false";
+  canDeleteVen: string;
+
+  iCanEditVen: string = "false";
+  canEditVen: string;
+
+  
+
   ngOnInit(): void {
     this.convertImageToBase64('./assets/Images/CheckMarkBox.png')
     this.convertImageToBase64('./assets/Images/checkboxEmpty.png')
     let role = this.VendorService.decodeUserRole(sessionStorage.getItem("token"));
-    if(role == "GRC") {
-      this.bValid = true;
+    this.iCanDeleteVen = this.VendorService.decodeCanDeleteVen(sessionStorage.getItem("token"));
+    this.iCanEditVen = this.VendorService.decodeCanEditVen(sessionStorage.getItem("token"));
+
+    if (role == "GRC") {
+      this.canEditVen = "true";
+      this.canDeleteVen = "true";
+    }
+
+    if (this.iCanEditVen == "true") {
+      this.canEditVen = "true";
+    }
+
+    if (this.iCanDeleteVen == "true") {
+      this.canDeleteVen = "true";
     }
 
 

@@ -34,7 +34,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<User[]> GetAllUsersAsync()
         {
-            IQueryable<User> query = _dbContext.User.Include(c => c.Role);
+            IQueryable<User> query = _dbContext.User.Include(c => c.Role).Include(a => a.Access);
                 
 
 
@@ -179,7 +179,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<User> Login(string Username, string Password)
         {
-            IQueryable<User> query = _dbContext.User.Include(c => c.Role)
+            IQueryable<User> query = _dbContext.User.Include(c => c.Role).Include(a => a.Access)
                 .Where(w => w.Username == Username && w.Password == Password);
 
 
@@ -359,7 +359,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<User> GetUserByUsername(string username)
         {
-            var ExistingUser = _dbContext.User.Include(u => u.Role).FirstOrDefault(c => c.Username == username);
+            var ExistingUser = _dbContext.User.Include(u => u.Role).Include(a => a.Access).FirstOrDefault(c => c.Username == username);
             return ExistingUser;
         }
 

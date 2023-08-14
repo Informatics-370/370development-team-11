@@ -112,7 +112,7 @@ export class LoginComponent implements OnInit {
             next: (ta) => {
               this.tempAccess = ta;
 
-              this.dataService.loginWithTemp(this.userName, this.password, this.tempAccess.name, this.tempUsername).subscribe({
+              this.dataService.loginWithTemp(this.userName, this.password, this.tempAccess, this.tempUsername).subscribe({
                 next: (response) => {
                   if (response != null) {
                     console.log(response)

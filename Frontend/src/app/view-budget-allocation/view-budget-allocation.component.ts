@@ -58,6 +58,10 @@ export class ViewBudgetAllocationComponent {
     actionTime: new Date(),
   }
 
+  iRole: string;
+  iCanViewFinPro: string = "false";
+  canViewFinPro: string;
+
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService,
     private sanitizer: DomSanitizer) { }
 
@@ -77,6 +81,13 @@ export class ViewBudgetAllocationComponent {
   }
 
   ngOnInit() {
+    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iCanViewFinPro = this.dataService.decodeCanViewFinPro(sessionStorage.getItem("token"));
+
+    if (this.iRole == "Admin" || this.iCanViewFinPro == "true") {
+      this.canViewFinPro = "true";
+    }
+
     this.GetBudgetAllocations();
   }
 

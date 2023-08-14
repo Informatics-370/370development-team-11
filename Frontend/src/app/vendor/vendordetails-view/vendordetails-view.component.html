@@ -310,8 +310,8 @@
     </mat-tab-group>
    
    <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;">
-    <button *ngIf="this.bValid == true" mat-raised-button routerLink="/vendor-update/{{VendorDetail.vendor_Detail_ID}}" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Update </button>
-    <button *ngIf="this.bValid == true" id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" (click)="DeleteRequest(VendorDetail.vendor_Detail_ID)" > Delete </button>
+    <button *ngIf="canEditVen" mat-raised-button routerLink="/vendor-update/{{VendorDetail.vendor_Detail_ID}}" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Update </button>
+    <button *ngIf="canDeleteVen" id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" (click)="DeleteRequest(VendorDetail.vendor_Detail_ID)" > Delete </button>
    </div>
           
     </div>

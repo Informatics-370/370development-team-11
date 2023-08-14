@@ -37,18 +37,18 @@ export class ViewEmployeeComponent implements OnInit {
 
   Access: Access = {
     Access_ID: 0,
-    IsAdmin: false,
-    CanAccInv: false,
-    CanAccFin: false,
-    CanAccPro: false,
-    CanAccVen: false,
-    CanAccRep: false,
-    CanViewPenPro: false,
-    CanViewFlagPro: false,
-    CanViewFinPro: false,
-    CanAppVen: false,
-    CanEditVen: false,
-    CanDeleteVen: false,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
   }
 
   rl: Role = {

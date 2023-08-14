@@ -127,18 +127,18 @@ namespace ProcionAPI.Data
             new
             {
                 Access_ID = 1,
-                IsAdmin = true,
-                CanAccInv = true,
-                CanAccFin = true,
-                CanAccPro = true,
-                CanAccVen = true,
-                CanAccRep = true,
-                CanViewPenPro = true,
-                CanViewFlagPro = true,
-                CanViewFinPro = true,
-                CanAppVen = true,
-                CanEditVen = true,
-                CanDeleteVen = true
+                IsAdmin = "true",
+                CanAccInv = "true",
+                CanAccFin = "true",
+                CanAccPro = "true",
+                CanAccVen = "true",
+                CanAccRep = "true",
+                CanViewPenPro = "true",
+                CanViewFlagPro = "true",
+                CanViewFinPro = "true",
+                CanAppVen = "true",
+                CanEditVen = "true",
+                CanDeleteVen = "true"
             }
             );
 
@@ -164,7 +164,7 @@ namespace ProcionAPI.Data
                 User_Id = 1,
                 AdminName = "Admin",
                 AdminSurname = "Demo",
-                CellPhone_Num = "079 373 1393",
+                CellPhone_Num = "0793731393",
                 Email = "moyoemailservice@gmail.com"
 
             }

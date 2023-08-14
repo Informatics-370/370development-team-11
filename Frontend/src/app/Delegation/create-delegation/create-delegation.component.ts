@@ -37,18 +37,18 @@ export class CreateDelegationComponent implements OnInit {
   sPath = "";
   Access: Access = {
     Access_ID: 0,
-    IsAdmin: false,
-    CanAccInv: false,
-    CanAccFin: false,
-    CanAccPro: false,
-    CanAccVen: false,
-    CanAccRep: false,
-    CanViewPenPro: false,
-    CanViewFlagPro: false,
-    CanViewFinPro: false,
-    CanAppVen: false,
-    CanEditVen: false,
-    CanDeleteVen: false,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
   }
 
   rl: Role = {
@@ -104,7 +104,18 @@ export class CreateDelegationComponent implements OnInit {
     delegation_ID: 0,
     delegation_Of_Authority: this.doa,
     name: '',
-    description: '',
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
   }
 
   log: AuditLog = {
@@ -165,7 +176,18 @@ export class CreateDelegationComponent implements OnInit {
         DelegatingName: this.user.username
       })
       this.ta.name = this.user.role.name;
-      this.ta.description = this.user.role.description;
+      this.ta.IsAdmin = this.usr.access.IsAdmin;
+      this.ta.CanAccInv = this.usr.access.CanAccInv;
+      this.ta.CanAccFin = this.usr.access.CanAccFin;
+      this.ta.CanAccPro = this.usr.access.CanAccPro;
+      this.ta.CanAccVen = this.usr.access.CanAccVen;
+      this.ta.CanAccRep = this.usr.access.CanAccRep;
+      this.ta.CanViewPenPro = this.usr.access.CanViewPenPro;
+      this.ta.CanViewFlagPro = this.usr.access.CanViewFlagPro;
+      this.ta.CanViewFinPro = this.usr.access.CanViewFinPro;
+      this.ta.CanAppVen = this.usr.access.CanAppVen;
+      this.ta.CanEditVen = this.usr.access.CanEditVen;
+      this.ta.CanDeleteVen = this.usr.access.CanDeleteVen;
     })
   }
 
@@ -188,6 +210,55 @@ export class CreateDelegationComponent implements OnInit {
       this.usr = this.delegateID;
       this.doa.user = this.usr;
       this.doa.user_Id = 0;
+
+      if (this.ta.IsAdmin == "false" && this.usr.access.IsAdmin == "true") {
+        this.ta.IsAdmin = "true";
+      }
+
+      if (this.ta.CanAccFin == "false" && this.usr.access.CanAccFin == "true") {
+        this.ta.CanAccFin = "true";
+      }
+
+      if (this.ta.CanAccInv == "false" && this.usr.access.CanAccInv == "true") {
+        this.ta.CanAccInv = "true";
+      }
+
+      if (this.ta.CanAccPro == "false" && this.usr.access.CanAccPro == "true") {
+        this.ta.CanAccPro = "true";
+      }
+
+      if (this.ta.CanAccRep == "false" && this.usr.access.CanAccRep == "true") {
+        this.ta.CanAccRep = "true";
+      }
+
+      if (this.ta.CanAccVen == "false" && this.usr.access.CanAccVen == "true") {
+        this.ta.CanAccVen = "true";
+      }
+
+      if (this.ta.CanAppVen == "false" && this.usr.access.CanAppVen == "true") {
+        this.ta.CanAppVen = "true";
+      }
+
+      if (this.ta.CanDeleteVen == "false" && this.usr.access.CanDeleteVen == "true") {
+        this.ta.CanDeleteVen = "true";
+      }
+
+      if (this.ta.CanEditVen == "false" && this.usr.access.CanEditVen == "true") {
+        this.ta.CanEditVen = "true";
+      }
+
+      if (this.ta.CanViewFinPro == "false" && this.usr.access.CanViewFinPro == "true") {
+        this.ta.CanViewFinPro = "true";
+      }
+
+      if (this.ta.CanViewFlagPro == "false" && this.usr.access.CanViewFlagPro == "true") {
+        this.ta.CanViewFlagPro = "true";
+      }
+
+      if (this.ta.CanViewPenPro == "false" && this.usr.access.CanViewPenPro == "true") {
+        this.ta.CanViewPenPro = "true";
+      }
+
       //console.log(this.doa.user_Id)
     })
   }
