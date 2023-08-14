@@ -8,6 +8,7 @@ using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Transforms.TimeSeries;
 using Microsoft.ML.TimeSeries;
+using ProcionAPI.ViewModel;
 
 namespace ProcionAPI.Models.Repositories.Consumables
 {
@@ -328,6 +329,27 @@ namespace ProcionAPI.Models.Repositories.Consumables
                 Console.WriteLine(ex.Message);
                 throw;
             }
+        }
+
+        public async Task<ReportData> GetReportData(DateTime startDate, DateTime endDate)
+        {
+            var consumableIds = _dbContext.Consumable_History
+                         .Where(h => h.DateCaptured >= startDate && h.DateCaptured <= endDate)
+                         .Select(h => h.Consumable_ID)
+                         .Distinct()
+                         .ToList();
+
+            var consumables = _dbContext.Consumable
+                    .Where(c => consumableIds.Contains(c.Consumable_ID))
+                    .Include(c => c.Consumable_Category)
+                    .ToList();
+
+            var reportData = new ReportData
+            {
+                Consumables = consumables
+            };
+
+            return reportData;
         }
     }
 }

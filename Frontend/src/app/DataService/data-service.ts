@@ -56,6 +56,7 @@ import { AuditLog } from '../Shared/AuditLog';
 import { BEESpentReportVM } from '../Shared/BEESpentReportVM';
 import { VendorSpentReport } from '../Shared/VendorSpentReport';
 import * as FileSaver from 'file-saver';
+import { ReportData } from '../Shared/ConsumableReport';
 
 @Injectable({
   providedIn: 'root'
@@ -1410,7 +1411,7 @@ export class DataService {
     return this.httpClient.post<AuditLog>(`${this.apiUrl}User/AddLog`, LogToAdd, this.httpOptions).pipe(map(result => result))
   }
 
-  GetProcurementAccountCodeDetails(year: number,Month:number,department:string): Observable<any> {
+  GetProcurementAccountCodeDetails(year: number, Month: number, department: string): Observable<any> {
     return this.httpClient.get<BudgetLine[]>(`${this.apiUrl}ProcurementDetails/GetProcurementAccountCodeDetails/${year}/${Month}/${department}`, this.httpOptions).pipe(map(result => result))
   }
 
@@ -1436,6 +1437,13 @@ export class DataService {
   GetConsumableHistoryByID(consumableID: Number): Observable<Consumable_History> {
     console.log(consumableID)
     return this.httpClient.get<Consumable_History>(`${this.apiUrl}Consumable/GetConsumableHistoryByID/` + consumableID, this.httpOptions)
+  }
+  GetVarianceByDepartment(): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}BudgetAllocation/GetVarianceByDepartment`);
+  }
+
+  GetReportData(startDate: Date, endDate: Date): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}Consumable/GetConsumableManagementReport?startDate=${startDate}&endDate=${endDate}`);
   }
 }
 

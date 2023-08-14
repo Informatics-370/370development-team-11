@@ -92,6 +92,7 @@ import { ViewAuditLogComponent } from './view-audit-log/view-audit-log.component
 import { ReportsMainViewComponent } from './Reports/reports-main-view/reports-main-view.component';
 import { ReportFilterMenuComponent } from './Reports/report-filter-menu/report-filter-menu.component';
 
+import { BudgetVarianceReportComponent } from './budget-variance-report/budget-variance-report.component';
 const routes: Routes = [
   {
     path: "",
@@ -385,6 +386,10 @@ const routes: Routes = [
   {
     path: 'ViewAuditLog',
     component: ViewAuditLogComponent
+  },
+  {
+    path: 'VarianceReport',
+    component: BudgetVarianceReportComponent
   }
 
 

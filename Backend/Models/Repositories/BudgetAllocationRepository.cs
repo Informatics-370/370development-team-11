@@ -1,6 +1,7 @@
 ﻿using ProcionAPI.Data;
 using ProcionAPI.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.ML;
 
 namespace ProcionAPI.Models.Repositories
 {
@@ -149,6 +150,46 @@ namespace ProcionAPI.Models.Repositories
                 return null;
             }
         }
+        public async Task<Dictionary<string, (decimal variance, decimal actualAmt, decimal budgetedAmt)>> GetVarianceByDepartmentAsync()
+        {
+     
+            var budgetLines = await GetAllBudgetLinesAsync();
+
+            // Group by department's name and sum variances
+            var groupedByDepartment = budgetLines.GroupBy(bl => bl.Budget_Allocation.Department.Name)
+                                                .ToDictionary(
+                                             g => g.Key,
+                                             g => (
+                                                 g.Sum(bl => bl.Variance),
+                                                 g.Sum(bl => bl.ActualAmt),
+                                                 g.Sum(bl => bl.BudgetAmt)
+                                             ));
+            return groupedByDepartment;
+        }
+
+        public async Task<Dictionary<string, decimal>> GetYearlyTotalsForCategories(int year)
+        {
+            return _dbContext.Budget_Line
+                   .Include(b => b.Budget_Category)
+                   .Where(b => b.Budget_Allocation.Year == year)
+                   .GroupBy(b => b.Budget_Category.Account_Name)
+                   .ToDictionary(g => g.Key, g => g.Sum(b => b.ActualAmt));
+        }
+
+        public async Task<Dictionary<string, decimal>> GetMonthlyTotals(int year)
+        {
+            return _dbContext.Budget_Line
+                   .Where(b => b.Budget_Allocation.Year == year)
+                   .GroupBy(b => b.Month)
+                   .ToDictionary(g => g.Key.ToString(), g => g.Sum(b => b.ActualAmt));
+        }
+
+        public async Task <IEnumerable <Budget_Line>> GetMonthlyBudgetDataForCategory(int year)
+        {
+            return _dbContext.Budget_Line.Include(b => b.Budget_Category).Where(b => b.Budget_Allocation.Year == year).ToList();
+        }
+    
+
 
 
         public void Add<T>(T entity) where T : class { _dbContext.Add(entity); }

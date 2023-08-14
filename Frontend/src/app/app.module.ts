@@ -146,6 +146,8 @@ import { OTPComponent } from './otp/otp.component';
 import { ReportsMainViewComponent } from './Reports/reports-main-view/reports-main-view.component';
 import { ReportFilterMenuComponent } from './Reports/report-filter-menu/report-filter-menu.component';
 import { ViewAuditLogComponent } from './view-audit-log/view-audit-log.component';
+import { BudgetVarianceReportComponent } from './budget-variance-report/budget-variance-report.component';
+
 
 
 @NgModule({
@@ -256,7 +258,8 @@ import { ViewAuditLogComponent } from './view-audit-log/view-audit-log.component
     OTPComponent,
     ReportsMainViewComponent,
     ReportFilterMenuComponent,
-    ViewAuditLogComponent
+    ViewAuditLogComponent,
+    BudgetVarianceReportComponent,
   ],
   imports: [
     BrowserModule,

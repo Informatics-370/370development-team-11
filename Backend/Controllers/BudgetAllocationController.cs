@@ -459,6 +459,70 @@ namespace ProcionAPI.Controllers
 
             return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Budget Allocation - " + budgetline[0].Budget_Allocation.Department.Name + ".xlsx");
         }
+        [HttpGet]
+        [Route("GetVarianceByDepartment")]
+        public async Task<IActionResult> GetVarianceByDepartment()
+        {
+            try
+            {
+                var result = await _repository.GetVarianceByDepartmentAsync();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetMonthlyBudgetData/{year}")]
+        public async Task<IActionResult> GetMonthlyBudgetData([FromRoute] int year)
+        {
+            try
+            {
+                var result = await _repository.GetMonthlyBudgetDataForCategory(year);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetYearlyTotalsForCategory/{year}")]
+
+        public async Task<IActionResult> GetYearlyTotalsForCategory([FromRoute] int year)
+        {
+            try
+            {
+                var result = await _repository.GetYearlyTotalsForCategories(year);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetMonthlyTotals/{year}")]
+        public async Task<IActionResult> GetMonthlyTotals([FromRoute] int year)
+        {
+            try
+            {
+                var result = await _repository.GetMonthlyTotals(year);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+
+                return StatusCode(500, e.Message);
+            }
+        }
 
     }
 }
