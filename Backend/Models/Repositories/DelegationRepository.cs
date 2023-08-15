@@ -241,5 +241,57 @@ namespace ProcionAPI.Models.Repositories
             await _dbContext.SaveChangesAsync();
             return tempacc;
         }
+
+        public async Task<Notification[]> AddActiveNotificationaAsync(int userID, Notification newNotification, Delegation_Of_Authority delegation)
+        {
+            
+            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 19);
+            User existingUser = await _dbContext.User.FirstOrDefaultAsync(a => a.User_Id == userID);
+
+            if (existingNotificationType != null)
+            {
+                newNotification.Notification_Type = existingNotificationType;
+            }
+
+            if (existingUser != null)
+            {
+                newNotification.User = existingUser;
+                newNotification.User.No_Notifications = existingUser.No_Notifications + 1;
+            }
+
+            newNotification.Send_Date = DateTime.Now;
+            newNotification.Name = "Delegation of Authority for user " + delegation.DelegatingParty + " is active and valid until " + delegation.To_Date;
+
+            await _dbContext.Notification.AddAsync(newNotification);
+            await _dbContext.SaveChangesAsync();
+
+            return new Notification[] { newNotification };
+        }
+
+        public async Task<Notification[]> AddRevokeNotificationaAsync(int userID, Notification newNotification, Delegation_Of_Authority delegation)
+        {
+
+            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 20);
+            User existingUser = await _dbContext.User.FirstOrDefaultAsync(a => a.User_Id == userID);
+
+            if (existingNotificationType != null)
+            {
+                newNotification.Notification_Type = existingNotificationType;
+            }
+
+            if (existingUser != null)
+            {
+                newNotification.User = existingUser;
+                newNotification.User.No_Notifications = existingUser.No_Notifications + 1;
+            }
+
+            newNotification.Send_Date = DateTime.Now;
+            newNotification.Name = "Delegation of Authority for user " + delegation.DelegatingParty + " has been revoked.";
+
+            await _dbContext.Notification.AddAsync(newNotification);
+            await _dbContext.SaveChangesAsync();
+
+            return new Notification[] { newNotification };
+        }
     }
 }

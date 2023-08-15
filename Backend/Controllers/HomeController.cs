@@ -73,13 +73,20 @@ namespace ProcionAPI.Controllers
                     {
                         if (d.From_Date <= DateTime.Today)
                         {
+                            Notification newNotification = new Notification();
+                            
                             await _DelegationRepository.UpdateDelegationStatusAsync(activeID, d.Delegation_ID);
+                            await _DelegationRepository.AddActiveNotificationaAsync(d.User_Id, newNotification, d);
+
                             return Ok(doa);
 
                         }
                         else if (d.To_Date < DateTime.Today)
                         {
+                            Notification newNotification = new Notification();
+
                             await _DelegationRepository.UpdateDelegationStatusAsync(revokedID, d.Delegation_ID);
+                            await _DelegationRepository.AddRevokeNotificationaAsync(d.User_Id, newNotification, d);
 
                             var existingTempAcc = await _DelegationRepository.GetTempAccAsync(d.Delegation_ID);
                             if (existingTempAcc == null) return NotFound($"The temporary access does not exist");
@@ -93,7 +100,10 @@ namespace ProcionAPI.Controllers
                     {
                         if(d.To_Date < DateTime.Today)
                         {
-                           await _DelegationRepository.UpdateDelegationStatusAsync(revokedID, d.Delegation_ID);
+                            Notification newNotification = new Notification();
+
+                            await _DelegationRepository.UpdateDelegationStatusAsync(revokedID, d.Delegation_ID);
+                            await _DelegationRepository.AddRevokeNotificationaAsync(d.User_Id, newNotification, d);
 
                             var existingTempAcc = await _DelegationRepository.GetTempAccAsync(d.Delegation_ID);
                             if (existingTempAcc == null) return NotFound($"The temporary access does not exist");
