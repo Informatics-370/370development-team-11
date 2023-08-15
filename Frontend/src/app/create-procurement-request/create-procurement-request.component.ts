@@ -156,6 +156,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   originalBorderColor: string = 'solid #244688';
 
   ngOnInit(): void {
+    this.GetVendors();
     let usr = this.dataService.decodeUser(sessionStorage.getItem("token"));
     if (this.VendorType == "Approved") {
       this.myForm = this.formBuilder.group({
@@ -176,7 +177,7 @@ export class CreateProcurementRequestComponent implements OnInit {
           this.usr.role = this.rl;
         }
       })
-      this.GetVendors();
+
     }
 
     else {
@@ -199,7 +200,6 @@ export class CreateProcurementRequestComponent implements OnInit {
           this.usr.role = this.rl;
         }
       })
-      this.GetVendors();
 
       this.filteredVendors = this.VendorNameControl.valueChanges.pipe(
         startWith(''),
@@ -216,15 +216,11 @@ export class CreateProcurementRequestComponent implements OnInit {
 
     this.setVal(value)
     // If no vendors match the filter, return an array with a single element containing the entered value
-    this.myForm.get("VendorName").setValue(value)
     return this.vendors.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
   setVal(Name: String) {
-    console.log(Name)
     this.myForm.get("VendorName").setValue(Name)
-    this.myForm.get("VendorName").value;
-    console
   }
 
   onFile1UploadApproved(event: any) {
@@ -236,60 +232,60 @@ export class CreateProcurementRequestComponent implements OnInit {
 
   onFile1Upload(event: any) {
     document.getElementById("file1").style.border = this.originalBorderColor;
-    document.getElementById("Error1").style.visibility = "hidden"
+    document.getElementById("Error1").style.display = "none"
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[0] = this.fileToUpload;
       if (this.files[0].name == this.files[1].name || this.files[0].name == this.files[2].name) {
         document.getElementById("file1").style.border = "solid red";
-        document.getElementById("Error1").style.visibility = "visible"
+        document.getElementById("Error1").style.display = "block"
         this.files[0] = null;
         this.myForm.get("OtherQuote1").reset();
       }
       else {
         this.files[0] = this.fileToUpload;
         document.getElementById("file1").style.border = this.originalBorderColor;
-        document.getElementById("Error1").style.visibility = "hidden"
+        document.getElementById("Error1").style.display = "none"
       }
     }
   }
 
   onFile2Upload(event: any) {
     document.getElementById("file2").style.border = this.originalBorderColor;
-    document.getElementById("Error2").style.visibility = "hidden"
+    document.getElementById("Error2").style.display = "none"
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[1] = this.fileToUpload;
       if (this.files[1].name == this.files[0].name || this.files[1].name == this.files[2].name) {
         document.getElementById("file2").style.border = "solid red";
-        document.getElementById("Error2").style.visibility = "visible"
+        document.getElementById("Error2").style.display = "block"
         this.files[1] = null;
         this.myForm.get("OtherQuote2").reset();
       }
       else {
         this.files[1] = this.fileToUpload;
         document.getElementById("file2").style.border = this.originalBorderColor;
-        document.getElementById("Error2").style.visibility = "hidden"
+        document.getElementById("Error2").style.display = "none"
       }
     }
   }
 
   onFile3Upload(event: any) {
     document.getElementById("file3").style.border = this.originalBorderColor;
-    document.getElementById("Error3").style.visibility = "hidden"
+    document.getElementById("Error3").style.display = "none"
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[2] = this.fileToUpload;
       if (this.files[2].name == this.files[0].name || this.files[2].name == this.files[1].name) {
         document.getElementById("file3").style.border = "solid red";
-        document.getElementById("Error3").style.visibility = "visible"
+        document.getElementById("Error3").style.display = "block"
         this.files[2] = null;
         this.myForm.get("OtherQuote3").reset();
       }
       else {
         this.files[2] = this.fileToUpload;
         document.getElementById("file3").style.border = this.originalBorderColor;
-        document.getElementById("Error3").style.visibility = "hidden"
+        document.getElementById("Error3").style.display = "none"
       }
     }
   }
@@ -346,8 +342,8 @@ export class CreateProcurementRequestComponent implements OnInit {
 
         else {
           var action = "CREATE";
-          var title = "CREATE SUCCESSFUL";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
+          var title = "CREATE UNSUCCESSFUL";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has <strong style='color:green'> FAILED </strong>");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,
@@ -406,7 +402,7 @@ export class CreateProcurementRequestComponent implements OnInit {
       this.AddQuote()
     }
     else {
-      //Do Nothin
+      //Do Nothing
     }
 
 
@@ -416,15 +412,12 @@ export class CreateProcurementRequestComponent implements OnInit {
   AddQuote() {
     this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[0]).subscribe({
       next: (result1) => {
-        console.log(this.ProcurementQuotes[0])
         if (result1) {
           this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[1]).subscribe({
             next: (Result2) => {
-              console.log(this.ProcurementQuotes[1])
               if (Result2) {
                 this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[2]).subscribe({
                   next: (Result3) => {
-                    console.log(this.ProcurementQuotes[2])
                     if (Result3) {
                       this.ProcurementNotif.notification_Type_ID = 18;
                       let transVar: any
@@ -433,7 +426,7 @@ export class CreateProcurementRequestComponent implements OnInit {
                       this.ProcurementNotif.name = "A new procurement request for Vendor: " + this.Procurement_Request.vendor.name + " is awaiting your attention!";
                       this.ProcurementNotif.user_ID = 1;
                       this.dataService.ProcurementRequestAddNotification(this.ProcurementNotif).subscribe({
-                        next: (LowStock) => {
+                        next: (Notif) => {
                           this.DisplayNotif()
                         }
                       })
@@ -503,7 +496,17 @@ export class CreateProcurementRequestComponent implements OnInit {
 
               this.dataService.AddProcurementRequestQuote(this.Procurement_Request_Quote).subscribe({
                 next: (result) => {
-                  this.DisplayNotif();
+                  this.ProcurementNotif.notification_Type_ID = 18;
+                  let transVar: any
+                  transVar = new DatePipe('en-ZA');
+                  this.ProcurementNotif.send_Date = transVar.transform(new Date(), 'MM d, y, h:mm:ss a');
+                  this.ProcurementNotif.name = "A new procurement request for Vendor: " + this.Procurement_Request.vendor.name + " is awaiting your attention!";
+                  this.ProcurementNotif.user_ID = 1;
+                  this.dataService.ProcurementRequestAddNotification(this.ProcurementNotif).subscribe({
+                    next: (Notif) => {
+                      this.DisplayNotif()
+                    }
+                  })
                 }
               })
             }

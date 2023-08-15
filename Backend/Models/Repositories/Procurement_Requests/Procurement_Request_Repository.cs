@@ -60,7 +60,6 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
            else if (ExistingVendor == null)
             {
-                Console.WriteLine(ExistingVendor == null);
                 Vendor_Status Otherstatus = await _dbContext.Vendor_Status.FirstOrDefaultAsync(i => i.Vendor_Status_ID == 6);
                 Vendor NewOtherVendor = new Vendor() { 
                     Vendor_ID = 0,
@@ -74,7 +73,6 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
                 };
                 await _dbContext.Vendor.AddAsync(NewOtherVendor);
-                Console.WriteLine("Vendor Add Success");
 
                 RequestAdd.User = ExistingUser;
                 RequestAdd.User.Role = ExistingRole;
@@ -83,7 +81,6 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 RequestAdd.Requisition_Status = ExistingStatus;
 
                 await _dbContext.Procurement_Request.AddAsync(RequestAdd);
-                Console.WriteLine("Request Success");
                 await _dbContext.SaveChangesAsync();
 
                 return new Procurement_Request[] { RequestAdd };

@@ -78,7 +78,6 @@ export class DataService {
   }
 
   GetConsumableByID(consumableID: Number): Observable<Consumable> {
-    console.log(consumableID)
     return this.httpClient.get<Consumable>(`${this.apiUrl}Consumable/GetConsumableByID/` + consumableID, this.httpOptions)
   }
 
@@ -871,7 +870,6 @@ export class DataService {
       const tokenParts = token.split('.');
       const tokenPayload = tokenParts[1];
       const decodedPayload = JSON.parse(atob(tokenPayload));
-      console.log(decodedPayload)
 
       return decodedPayload.role;
 
@@ -928,7 +926,6 @@ export class DataService {
       const tokenParts = token.split('.');
       const tokenPayload = tokenParts[1];
       const decodedPayload = JSON.parse(atob(tokenPayload));
-      console.log(decodedPayload)
 
       return decodedPayload.CanAccInv;
 
@@ -1080,7 +1077,6 @@ export class DataService {
   GetConsumablePredictions(id: Number): Observable<{ Year: Number, Month: Number, ActualAmount: Number, PredictedAmount: Number }[]> {
     return this.httpClient.get<any[]>(`${this.apiUrl}Consumable/PredictConsumable/` + id).pipe(
       map(result => {
-        console.log(result); // Log the returned result
         return result.map(item => ({ Year: item.item1, Month: item.item2, ActualAmount: item.item3, PredictedAmount: item.item4 }));
       })
     );
@@ -1443,7 +1439,6 @@ export class DataService {
   }
 
   GetConsumableHistoryByID(consumableID: Number): Observable<Consumable_History> {
-    console.log(consumableID)
     return this.httpClient.get<Consumable_History>(`${this.apiUrl}Consumable/GetConsumableHistoryByID/` + consumableID, this.httpOptions)
   }
   GetVarianceByDepartment(): Observable<any> {

@@ -22,5 +22,7 @@ namespace ProcionAPI.Models.Repositories
         Task<Temporary_Access> UpdateTempAccAsync(Temporary_Access UpdatedTempAcc, int tempAccID);
         void Delete<T>(T entity) where T : class;
         Task<bool> SaveChangesAsync();
+        Task<Notification[]> AddActiveNotificationaAsync(int userID, Notification newNotification, Delegation_Of_Authority delegation);
+        Task<Notification[]> AddRevokeNotificationaAsync(int userID, Notification newNotification, Delegation_Of_Authority delegation);
     }
 }
