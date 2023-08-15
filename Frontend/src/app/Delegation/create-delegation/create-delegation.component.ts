@@ -27,7 +27,7 @@ export class CreateDelegationComponent implements OnInit {
   admin: any;
   iName: string;
 
-  myControl = new FormControl<string | User>('');
+  myControl = new FormControl<string | User>('', [Validators.minLength(2), Validators.required]);
   options: User[] = [];
   SearchedOptions: Observable<User[]>;
   delegateID: any
@@ -143,6 +143,7 @@ export class CreateDelegationComponent implements OnInit {
       this.doa.admin = this.adm;
       this.doa.admin_ID = 0;
     })
+
     this.getUsername();
 
     this.dataService.GetUsers().subscribe(r => {
@@ -198,6 +199,10 @@ export class CreateDelegationComponent implements OnInit {
 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
+  }
+
+  public myControlError = (errorName: string) => {
+    return this.myControl.hasError(errorName);
   }
 
   Close() {
