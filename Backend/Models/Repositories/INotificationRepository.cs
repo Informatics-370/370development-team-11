@@ -11,5 +11,7 @@ namespace ProcionAPI.Models.Repositories
         Task<Notification[]> GetTempInventoryNotificationsAsync(string tempUsername);
         Task<Notification[]> GetProcurementNotificationsAsync(string username);
         Task<Notification[]> GetTempProcurementNotificationsAsync(string tempUsername);
+        Task<Notification[]> GetDelegationNotificationsAsync(string username);
+        Task<Notification[]> GetTempDelegationNotificationsAsync(string tempUsername);
     }
 }

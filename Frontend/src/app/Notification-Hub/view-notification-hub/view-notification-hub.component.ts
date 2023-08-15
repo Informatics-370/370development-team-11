@@ -17,10 +17,12 @@ export class ViewNotificationHubComponent implements OnInit {
   dataSourceInventory = new MatTableDataSource<Notification>;
   dataSourceVendor = new MatTableDataSource<Notification>;
   dataSourceProcurement = new MatTableDataSource<Notification>;
+  dataSourceDelegation = new MatTableDataSource<Notification>;
 
   dataSourceTempInventory = new MatTableDataSource<Notification>;
   dataSourceTempVendor = new MatTableDataSource<Notification>;
   dataSourceTempProcurement = new MatTableDataSource<Notification>;
+  dataSourceTempDelegation = new MatTableDataSource<Notification>;
 
   iName: string;
   iTempUsername: string;
@@ -29,12 +31,18 @@ export class ViewNotificationHubComponent implements OnInit {
 
 
   todayDate: Date = new Date();
+
   VendorNotifications: Notification[] = [];
   TempVendorNotifications: Notification[] = [];
+
   InventoryNotifications: Notification[] = [];
   TempInventoryNotifications: Notification[] = [];
+
   ProcurementNotifications: Notification[] = [];
   TempProcurementNotifications: Notification[] = [];
+
+  DelegationNotifications: Notification[] = [];
+  TempDelegationNotifications: Notification[] = [];
 
   constructor(private router: Router, private dataService: DataService, private sanitizer: DomSanitizer, private http: HttpClient, private datePipe: DatePipe) { }
 
@@ -59,6 +67,11 @@ export class ViewNotificationHubComponent implements OnInit {
           this.dataService.GetTempProcurementNotifications(this.iTempUsername).subscribe(p => {
             this.TempProcurementNotifications = p;
             this.dataSourceTempProcurement = new MatTableDataSource(p);
+
+            this.dataService.GetTempDelegationNotifications(this.iTempUsername).subscribe(d => {
+              this.TempDelegationNotifications = d;
+              this.dataSourceTempDelegation = new MatTableDataSource(d);
+            })
           })
         })
       })
@@ -69,6 +82,7 @@ export class ViewNotificationHubComponent implements OnInit {
     this.GetVendorNotifications();
     this.GetInventoryNotifications();
     this.GetProcurementNotifications();
+    this.GetDelegationNotifications();
   }
 
   GetVendorNotifications() {
@@ -89,6 +103,13 @@ export class ViewNotificationHubComponent implements OnInit {
     this.dataService.GetProcurementNotifications(this.iName).subscribe(r => {
       this.ProcurementNotifications = r;
       this.dataSourceProcurement = new MatTableDataSource(r);
+    })
+  }
+
+  GetDelegationNotifications() {
+    this.dataService.GetDelegationNotifications(this.iName).subscribe(r => {
+      this.DelegationNotifications = r;
+      this.dataSourceDelegation = new MatTableDataSource(r);
     })
   }
 
