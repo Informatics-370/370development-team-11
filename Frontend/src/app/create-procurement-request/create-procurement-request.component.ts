@@ -32,7 +32,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   vendors: any[] = [];
   VendorType: String = 'Approved';
 
-  VendorNameControl = new FormControl('');
+  VendorNameControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]);
   filteredVendors: Observable<VendorOnboardRequest[]>
 
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
@@ -221,7 +221,10 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   setVal(Name: String) {
+    console.log(Name)
     this.myForm.get("VendorName").setValue(Name)
+    this.myForm.get("VendorName").value;
+    console
   }
 
   onFile1UploadApproved(event: any) {
@@ -531,6 +534,10 @@ export class CreateProcurementRequestComponent implements OnInit {
 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
+  }
+
+  public AutomyError = (controlName: string, errorName: string) => {
+    return this.VendorNameControl.hasError(errorName);
   }
 
   Close() {
