@@ -192,6 +192,13 @@ export class EditProcurementRequestComponent implements OnInit {
     }
   }
 
+  onFileAppUpload(event: any) {
+    this.fileToUpload = event.target.files[0];
+    if (this.fileToUpload != null) {
+      this.files[0] = this.fileToUpload;
+    }
+  }
+
   openPDFInNewTab(i: number): void {
     const url = this.FileDetails[i].FileURL;
     this.http.get(url, { responseType: 'blob' }).subscribe(response => {
@@ -389,7 +396,9 @@ export class EditProcurementRequestComponent implements OnInit {
       next: (response) => {
         console.log(this.Procurement_Request)
         console.log(response)
+        console.log(this.files[0])
         if (this.files[0] != null) {
+          console.log(this.files[0])
           this.ProcurementQuotes.forEach(element => {
             let sFile = element.path;
             console.log(sFile)
@@ -419,7 +428,7 @@ export class EditProcurementRequestComponent implements OnInit {
                         this.dataService.UpdateProcurementQuotes(this.Procurement_Request_Quote.quote_ID, this.Procurement_Request_Quote).subscribe({
                           next: (result) => {
                             console.log(result)
-
+                            this.DisplayNotif()
                           }
                         })
                       }
