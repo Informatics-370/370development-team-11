@@ -19,7 +19,7 @@ import { Procurement_Status } from '../Shared/ProcurementStatus';
 import { Payment_Method } from '../Shared/PaymentMethod';
 import { BudgetLine } from '../Shared/BudgetLine';
 import { BudgetCategory } from '../Shared/BudgetCategory';
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Deposit } from '../Shared/Deposit';
 import { Payment_Made } from '../Shared/PaymentMade';
 import { Proof_Of_Payment } from '../Shared/ProofOfPayment';
@@ -29,6 +29,8 @@ import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
+import { AuditLog } from '../Shared/AuditLog';
+import { Access } from '../Shared/Access';
 
 @Component({
   selector: 'app-sign-off-request',
@@ -70,9 +72,29 @@ export class SignOffRequestComponent {
     description: ''
   }
 
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
+
+
+
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -123,6 +145,8 @@ export class SignOffRequestComponent {
     user: {
       user_Id: 0,
       role_ID: 0,
+      access_ID: 0,
+      access: this.Access,
       username: "",
       password: "",
       profile_Picture: "",
@@ -181,7 +205,7 @@ export class SignOffRequestComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: 0,
+    account_Code: '',
     budget_Category: this.category,
     month: '',
     budgetAmt: 0,
@@ -195,7 +219,7 @@ export class SignOffRequestComponent {
     procurement_Request_ID: 0,
     sign_Off_Status_ID: 0,
     procurement_Payment_Status_ID: 0,
-    account_Code: 0,
+    BudgetLineId: 0,
     procurement_Status_ID: 0,
     payment_Method_ID: 0,
     employee: this.EmployeeDetails,
@@ -295,9 +319,20 @@ export class SignOffRequestComponent {
     asset: this.assets,
     vendor: this.Procurement_Request.vendor,
   }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   BudgetAllocationCode: BudgetLine[] = [];
   finalizationForm: FormGroup = new FormGroup({});
-  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder) { }
+
+  ActualAmountDisplay;
+  TotalAmountDisplay
+  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder, private currencyPipe: CurrencyPipe) { }
 
 
   ngOnInit(): void {
@@ -335,19 +370,34 @@ export class SignOffRequestComponent {
       //   this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe();
       // })
 
-      this.router.navigate(['/ViewProcurementDetails']);
+      this.log.action = "Procurement Sign-Off Completed for Request: " + this.ProcurementDetails.procurement_Details_ID;
+      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+      let test: any
+      test = new DatePipe('en-ZA');
+      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+      this.dataService.AuditLogAdd(this.log).subscribe({
+        next: (Log) => {
+          this.router.navigate(['/ViewProcurementDetails']);
+        }
+      })
+
+
     })
 
   }
 
   onCancel(): void {
     this.finalizationForm.reset();
-    this.router.navigate(['/ViewProcurementDetails']);
+    this.router.navigate(['/ViewUnapprovedRequests']);
   }
 
   GetProcurementDetails(id: number) {
     this.dataService.GetProcurementDetailsByID(id).subscribe(result => {
       this.ProcurementDetails = result;
+      this.ActualAmountDisplay = this.ProcurementDetails.budget_Line.actualAmt;
+      this.TotalAmountDisplay = this.ProcurementDetails.total_Amount;
+      this.ActualAmountDisplay = this.currencyPipe.transform(this.ActualAmountDisplay, 'R');
+      this.TotalAmountDisplay = this.currencyPipe.transform(this.TotalAmountDisplay, 'R');
       console.log(result)
     })
   }

@@ -52,6 +52,11 @@ import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
+import { AuditLog } from '../Shared/AuditLog';
+import { BEESpentReportVM } from '../Shared/BEESpentReportVM';
+import { VendorSpentReport } from '../Shared/VendorSpentReport';
+import * as FileSaver from 'file-saver';
+import { ReportData } from '../Shared/ConsumableReport';
 
 @Injectable({
   providedIn: 'root'
@@ -199,7 +204,7 @@ export class DataService {
   }
 
   HelpValidation(name: String): Observable<Help> {
-    return this.httpClient.get<Help>(`${this.apiUrl}Help/HelpValidation/` + name , this.httpOptions)
+    return this.httpClient.get<Help>(`${this.apiUrl}Help/HelpValidation/` + name, this.httpOptions)
   }
   EditHelpValidation(name: String, id: Number): Observable<Help> {
     return this.httpClient.get<Help>(`${this.apiUrl}Help/EditHelpValidation/` + name + '/' + id, this.httpOptions)
@@ -225,8 +230,8 @@ export class DataService {
     return this.httpClient.post<any>(`${this.apiUrl}Help/GetHelpVideoFiles/${HelpName}/${filename}`, this.httpOptions)
   }
 
-   //----------------------------------------------------------------------Backup&Restore-----------------------------------------------------------------------------
-   createBackup(): Observable<any> {
+  //----------------------------------------------------------------------Backup&Restore-----------------------------------------------------------------------------
+  createBackup(): Observable<any> {
     return this.httpClient.post<any>(`${this.apiUrl}Backup/CreateBackup`, this.httpOptions);
   }
   restoreDatabase(backupFile: File): Observable<any> {
@@ -651,6 +656,10 @@ export class DataService {
     return this.httpClient.post(`${this.apiUrl}Mail/ForgotPasswordEmail`, mail, this.httpOptions)
   }
 
+  SendOTP(mail: MailData) {
+    return this.httpClient.post(`${this.apiUrl}Mail/OTPEmail`, mail, this.httpOptions)
+  }
+
   UpdatePassword(UserID: Number, NewPassword: String) {
     return this.httpClient.put<User>(`${this.apiUrl}User/UpdatePassword/` + UserID + "/" + NewPassword, this.httpOptions)
   }
@@ -766,8 +775,8 @@ export class DataService {
     return this.httpClient.post(`${this.apiUrl}User/login/` + username + "/" + password, this.httpOptions)
   }
 
-  loginWithTemp(username: string, password: string, tempacc: string, tempUsername: string) {
-    return this.httpClient.post(`${this.apiUrl}User/loginWithTemp/` + username + "/" + password + "/" + tempacc + "/" + tempUsername, this.httpOptions)
+  loginWithTemp(username: string, password: string, tempacc: Temporary_Access, tempUsername: string) {
+    return this.httpClient.post(`${this.apiUrl}User/loginWithTemp/` + username + "/" + password + "/" + tempUsername, tempacc, this.httpOptions)
   }
 
   //--------------------------------------------------------------------------------------Budget Allocations--------------------------------------------------------------------------------------
@@ -845,15 +854,15 @@ export class DataService {
     return this.httpClient.post<BudgetLine>(`${this.apiUrl}BudgetAllocation/AddBudgetLine`, budgetLine, this.httpOptions)
   }
 
-  GetBudgetLine(accountCode: Number) {
+  GetBudgetLine(accountCode: String) {
     return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetLine` + '/' + accountCode).pipe(map(result => result))
   }
 
-  EditBudgetLine(accountCode: Number, budgetLine: BudgetLine) {
+  EditBudgetLine(accountCode: String, budgetLine: BudgetLine) {
     return this.httpClient.put<BudgetLine>(`${this.apiUrl}BudgetAllocation/EditBudgetLine/${accountCode}`, budgetLine, this.httpOptions)
   }
 
-  DeleteBudgetLine(accountCode: Number) {
+  DeleteBudgetLine(accountCode: String) {
     return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetLine` + "/" + accountCode, this.httpOptions)
   }
 
@@ -914,6 +923,156 @@ export class DataService {
     }
   }
 
+  decodeCanAccInv(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+      console.log(decodedPayload)
+
+      return decodedPayload.CanAccInv;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  decodeCanAccFin(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanAccFin;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  decodeCanAccPro(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanAccPro;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  decodeCanAccVen(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanAccVen;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  decodeCanAccRep(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanAccRep;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  decodeCanViewPenPro(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanViewPenPro;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  decodeCanViewFlagPro(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanViewFlagPro;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  decodeCanViewFinPro(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanViewFinPro;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  decodeCanAppVen(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanAppVen;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  decodeCanEditVen(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanEditVen;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+  decodeCanDeleteVen(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.CanDeleteVen;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
   UpdateStock(HistoryAdd: Consumable_History) {
     return this.httpClient.post<Consumable_History>(`${this.apiUrl}Consumable/UpdateStock`, HistoryAdd).pipe(map(result => result))
   }
@@ -925,6 +1084,12 @@ export class DataService {
         return result.map(item => ({ Year: item.item1, Month: item.item2, ActualAmount: item.item3, PredictedAmount: item.item4 }));
       })
     );
+  }
+
+  ExportExcel(id: Number, name: String) {
+    return this.httpClient.get(`${this.apiUrl}BudgetAllocation/ExportExcel/` + id, { 'responseType': 'blob' }).subscribe((x: Blob) => {
+      FileSaver.saveAs(x, 'Budget Allocation - ' + name + '.xlsx')
+    })
   }
   //--------------------------------------------------------------------------------------Delegation--------------------------------------------------------------------------------------
   GetDelegations(): Observable<any> {
@@ -994,6 +1159,14 @@ export class DataService {
     return this.httpClient.get(`${this.apiUrl}Delegation/GetTempAcc` + "/" + delegationID).pipe(map(result => result))
   }
 
+  GetLoginTempAcc(delegationID: Number) {
+    return this.httpClient.get(`${this.apiUrl}Delegation/GetLoginTempAcc` + "/" + delegationID).pipe(map(result => result))
+  }
+
+  EditTempAcc(UpdatedTempAcc: Temporary_Access, tempAccID: number) {
+    return this.httpClient.put<Temporary_Access>(`${this.apiUrl}Delegation/EditTempAcc/` + tempAccID, UpdatedTempAcc, this.httpOptions)
+  }
+
   InitiatRecurringJobDelegation() {
     return this.httpClient.get(`${this.apiUrl}Home/RecurringJobDelegation`, this.httpOptions)
   }
@@ -1034,7 +1207,7 @@ export class DataService {
   ResetNotif(username: string) {
     return this.httpClient.put<User>(`${this.apiUrl}User/ResetNotif/` + username, this.httpOptions)
   }
- 
+
 
   //----------------------------------------------------------------------Procurement Request-----------------------------------------------------------------------------
   GetProcurementRequests(): Observable<any> {
@@ -1206,12 +1379,6 @@ export class DataService {
   }
 
 
-  //Los Pls baas
-  // GetAppVendorsRequest() {
-  //   return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}OnboardRequest/GetAllApprovedVendor`).pipe(map(result => result))
-  // }
-
-
   GetUnfinalizedProcurements(): Observable<any> {
     return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetUnpaidProcurementDetails`).pipe(map(result => result))
   }
@@ -1223,7 +1390,9 @@ export class DataService {
   GetConsumablesForRequest(AssetID: Number): Observable<any> {
     return this.httpClient.get<Procurement_Consumable>(`${this.apiUrl}ProcurementDetails/GetConsumablesForRequest${AssetID}`).pipe(map(result => result))
   }
-
+  GetConsumablesForRequestConsRecieve(AssetID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Consumable>(`${this.apiUrl}ProcurementDetails/GetConsumableToRecieve/${AssetID}`).pipe(map(result => result))
+  }
   POPFileAdd(ProofName: string, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
@@ -1244,6 +1413,45 @@ export class DataService {
 
   GetUnapprovedRequests(): Observable<any> {
     return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/UnapprovedRequests`).pipe(map(result => result))
+  }
+
+  AuditLogAdd(LogToAdd: AuditLog): Observable<any> {
+    return this.httpClient.post<AuditLog>(`${this.apiUrl}User/AddLog`, LogToAdd, this.httpOptions).pipe(map(result => result))
+  }
+
+  GetProcurementAccountCodeDetails(year: number, Month: number, department: string): Observable<any> {
+    return this.httpClient.get<BudgetLine[]>(`${this.apiUrl}ProcurementDetails/GetProcurementAccountCodeDetails/${year}/${Month}/${department}`, this.httpOptions).pipe(map(result => result))
+  }
+
+  getAssets(): Observable<any> {
+    return this.httpClient.get<Asset[]>(`${this.apiUrl}ProcurementDetails/getAssets`, this.httpOptions).pipe(map(result => result))
+  }
+
+  //----------------------------------------------------------------------Reports-----------------------------------------------------------------------------
+
+  getBEESpendReport(StartDate: Date, EndDate: Date): Observable<any> {
+    return this.httpClient.get<BEESpentReportVM[]>(`${this.apiUrl}Reports/getBEESpendReport/${StartDate}/${EndDate}`).pipe(map(result => result))
+  }
+
+  getVendorSpentReport(): Observable<any> {
+    return this.httpClient.get<VendorSpentReport[]>(`${this.apiUrl}Reports/getVendorSpentReport`).pipe(map(result => result))
+  }
+
+
+  GetLogs(): Observable<any> {
+    return this.httpClient.get<AuditLog[]>(`${this.apiUrl}User/GetLogs`).pipe(map(result => result))
+  }
+
+  GetConsumableHistoryByID(consumableID: Number): Observable<Consumable_History> {
+    console.log(consumableID)
+    return this.httpClient.get<Consumable_History>(`${this.apiUrl}Consumable/GetConsumableHistoryByID/` + consumableID, this.httpOptions)
+  }
+  GetVarianceByDepartment(): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}BudgetAllocation/GetVarianceByDepartment`);
+  }
+
+  GetReportData(startDate: Date, endDate: Date): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}Consumable/GetConsumableManagementReport?startDate=${startDate}&endDate=${endDate}`);
   }
 }
 

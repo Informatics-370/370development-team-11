@@ -109,7 +109,7 @@ import { DeleteDelegationComponent } from './Delegation/delete-delegation/delete
 import { MatSortModule } from '@angular/material/sort';
 import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { AsyncPipe, DatePipe, NgFor } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DatePipe, NgFor } from '@angular/common';
 import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
 import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
 import { UpdatePasswordComponent } from './User/update-password/update-password.component';
@@ -141,6 +141,13 @@ import { UploadPayementFileComponent } from './upload-payement-file/upload-payem
 import { UploadInvoiceComponent } from './upload-invoice/upload-invoice.component';
 import { ViewUnapprovedRequestsComponent } from './view-unapproved-requests/view-unapproved-requests.component';
 import { SignOffRequestComponent } from './sign-off-request/sign-off-request.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { OTPComponent } from './otp/otp.component';
+import { ReportsMainViewComponent } from './Reports/reports-main-view/reports-main-view.component';
+import { ReportFilterMenuComponent } from './Reports/report-filter-menu/report-filter-menu.component';
+import { ViewAuditLogComponent } from './view-audit-log/view-audit-log.component';
+import { BudgetVarianceReportComponent } from './budget-variance-report/budget-variance-report.component';
+
 
 
 @NgModule({
@@ -247,7 +254,12 @@ import { SignOffRequestComponent } from './sign-off-request/sign-off-request.com
     UploadPayementFileComponent,
     UploadInvoiceComponent,
     ViewUnapprovedRequestsComponent,
-    SignOffRequestComponent
+    SignOffRequestComponent,
+    OTPComponent,
+    ReportsMainViewComponent,
+    ReportFilterMenuComponent,
+    ViewAuditLogComponent,
+    BudgetVarianceReportComponent,
   ],
   imports: [
     BrowserModule,
@@ -286,7 +298,8 @@ import { SignOffRequestComponent } from './sign-off-request/sign-off-request.com
     MatAutocompleteModule,
     ReactiveFormsModule,
     AsyncPipe,
-    NgFor
+    NgFor,
+    FlexLayoutModule
   ],
   providers: [
     //AppService,
@@ -300,7 +313,8 @@ import { SignOffRequestComponent } from './sign-off-request/sign-off-request.com
       useClass: AuthInterceptorComponent, // Add the AuthInterceptor as a provider
       multi: true
     },
-    DatePipe
+    DatePipe,
+    CurrencyPipe
 
   ],
   bootstrap: [AppComponent]

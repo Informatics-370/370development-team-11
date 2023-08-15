@@ -74,10 +74,12 @@ label {
 
 .col-7{
     display: inline-flex;
+    align-items: center;
 }
 
 .col-5{
     text-align: left;
+    align-self: center;
 }
 
 .row{
@@ -85,6 +87,14 @@ label {
     height: 70px;
 }
 
+#CBStyle {
+  font-weight: 500;
+}
+
+::ng-deep  .mat-mdc-optgroup-label:first-child{
+  color: white;
+  background-color: #244688;
+}
 
 
 
@@ -164,3 +174,5 @@ label {
       visibility: hidden;
     }
   
+
+ 

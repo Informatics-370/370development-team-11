@@ -8,6 +8,7 @@ using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Transforms.TimeSeries;
 using Microsoft.ML.TimeSeries;
+using ProcionAPI.ViewModel;
 
 namespace ProcionAPI.Models.Repositories.Consumables
 {
@@ -37,10 +38,27 @@ namespace ProcionAPI.Models.Repositories.Consumables
                 // Category already exists, assign its ID to the new consumable
                 ConsumableAdd.Consumable_Category = existingCategory;
             }
-
-            // Add the consumable to the database and save changes
             await _dbContext.AddAsync(ConsumableAdd);
             await _dbContext.SaveChangesAsync();
+
+            var HistData = new List<Consumable_History>();
+
+            var StockAmt = ConsumableAdd.On_Hand;
+            var DCap = DateTime.UtcNow;
+
+            var HistoryAdd = new Consumable_History
+            {
+                Consumable = ConsumableAdd,
+                StockAmt = StockAmt,
+                DateCaptured = DCap
+            };
+
+            HistData.Add(HistoryAdd);
+            await _dbContext.Consumable_History.AddRangeAsync(HistData);
+            await _dbContext.SaveChangesAsync();
+
+            // Add the consumable to the database and save changes
+            
 
             // Generate dummy data for Consumable_History
             var dummyData = new List<Consumable_History>();
@@ -92,6 +110,12 @@ namespace ProcionAPI.Models.Repositories.Consumables
         {
             Consumable ChosenConsumable = await _dbContext.Consumable.FirstOrDefaultAsync(x => x.Consumable_ID == id);
             return ChosenConsumable;
+        }
+
+        public async Task<Consumable_History> GetConsumableHistoryByIDAsync(int id)
+        {
+            Consumable_History ChosenHist = await _dbContext.Consumable_History.FirstOrDefaultAsync(x => x.Consumable_ID == id);
+            return ChosenHist;
         }
 
         public async Task<Consumable> DeleteConsumableAsync(int id)
@@ -305,6 +329,27 @@ namespace ProcionAPI.Models.Repositories.Consumables
                 Console.WriteLine(ex.Message);
                 throw;
             }
+        }
+
+        public async Task<ReportData> GetReportData(DateTime startDate, DateTime endDate)
+        {
+            var consumableIds = _dbContext.Consumable_History
+                         .Where(h => h.DateCaptured >= startDate && h.DateCaptured <= endDate)
+                         .Select(h => h.Consumable_ID)
+                         .Distinct()
+                         .ToList();
+
+            var consumables = _dbContext.Consumable
+                    .Where(c => consumableIds.Contains(c.Consumable_ID))
+                    .Include(c => c.Consumable_Category)
+                    .ToList();
+
+            var reportData = new ReportData
+            {
+                Consumables = consumables
+            };
+
+            return reportData;
         }
     }
 }

@@ -1,7 +1,9 @@
+import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../DataService/data-service';
+import { AuditLog } from '../Shared/AuditLog';
 import { Mandate_Limit } from '../Shared/MandateLimit';
 
 
@@ -17,6 +19,14 @@ export class DeleteMandateLimitComponent {
     ammount: 0,
     date: '2023-05-07T12:14:46.249'
   }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   showConfirmationDialog: boolean = true;
   showSuccessDialog: boolean = false;
 
@@ -42,12 +52,21 @@ export class DeleteMandateLimitComponent {
   onConfirm(id: number): void {
     this.dataService.DeleteMandateLimit(id).subscribe({
       next: () => {
-        this.showConfirmationDialog = false;
-        this.showSuccessDialog = true;
-        setTimeout(() => {
-          this.dialogRef.close();
-          location.reload();
-        }, 1750);
+        this.log.action = "Deleted Mandate Limit: " + id;
+        this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.dataService.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.dialogRef.close();
+              location.reload();
+            }, 1750);
+          }
+        })
       }
     });
   }

@@ -9,13 +9,13 @@
       </div>
       
         <br>
-          <mat-tab-group style="background-color: white;">
+          <mat-tab-group style="background-color: white;" >
             <mat-tab> 
             
               <ng-template  mat-tab-label > 
                 <label style="color:white; margin-right: 0;">Company Contact Info</label>
               </ng-template> 
-              <table style="margin-left: 1%;">
+              <table style="margin-left: 1%;" class="table">
                 <br>
               <tr>
                 <td><label  for="name" style="margin-right: 1%;">Company Name:</label></td>
@@ -94,7 +94,7 @@
       <ng-template  mat-tab-label > 
         <label style="color:white; margin-right: 0;">Company Overview</label>
       </ng-template> 
-      <table style="margin-left: 1%;">
+      <table style="margin-left: 1%;" class="table">
         <br>
       <tr>
         <td><label  for="name" style="margin-right: 1%;">Details Of Service Or Goods:</label></td>
@@ -196,7 +196,7 @@
       <ng-template  mat-tab-label > 
         <label style="color:white; margin-right: 0;">Bank Details</label>
       </ng-template> 
-      <table style="margin-left: 1%;">
+      <table style="margin-left: 1%;" class="table">
         <br>
       <tr>
         <td><label  for="name" style="margin-right: 1%;">Bank Name:</label></td>
@@ -268,27 +268,34 @@
     <ng-template  mat-tab-label > 
       <label style="color:white;margin-right: 0;">BEE & Due Dilligence</label>
     </ng-template> 
-    <table style="margin-left: 1%;" *ngIf="this.BeeDetails != undefined">
+    <table style="margin-left: 1%;" class="table">
       <br>
-    <tr>
+    <tr *ngIf="this.BeeDetails != undefined">
       <td><label  for="name" style="margin-right: 1%;">BEE Level:</label></td>
       <td> 
           {{this.BeeDetails.beE_Level}}
       </td>
   </tr>
-  <br>
-  <tr>
+  <br *ngIf="this.BeeDetails != undefined">
+  <tr *ngIf="this.BeeDetails != undefined">
       <td><label  for="name" style="margin-right: 1%;">BEE Certificate:</label></td>
       <td> 
         <a href="{{FileDetails[7].FileURL}}" download="{{FileDetails[7].FileName}}">{{FileDetails[7].FileName}}</a> 
       </td>
   </tr>
-  <br>
-  <tr>
+  <br *ngIf="this.BeeDetails != undefined">
+  <tr *ngIf="this.BeeDetails != undefined">
     <td><label  for="name" style="margin-right: 1%;">BEE Date:</label></td>
     <td> 
       {{this.BeeDetails.date}}
     </td>
+</tr>
+<br *ngIf="this.BeeDetails != undefined">
+<tr *ngIf="this.BeeDetails == undefined">
+  <td><label style="margin-right: 1%;">Vendor does not have any BEE Details</label></td>
+  <td >  
+    <button mat-raised-button style="width: 155px;background-color: #94CC5B;" > Add BEE Details </button>
+  </td>
 </tr>
 <br>
 <tr>
@@ -297,14 +304,14 @@
     <a id="btnLink" (click)="GenerateList()"  style="color: black;">Generate Checklist</a> 
   </td>
 </tr>
-</table> 
 
+</table> 
  </mat-tab>
     </mat-tab-group>
    
    <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;">
-    <button mat-raised-button routerLink="/vendor-update/{{VendorDetail.vendor_Detail_ID}}" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Update </button>
-    <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" (click)="DeleteRequest(VendorDetail.vendor_Detail_ID)" > Delete </button>
+    <button *ngIf="canEditVen" mat-raised-button routerLink="/vendor-update/{{VendorDetail.vendor_Detail_ID}}" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Update </button>
+    <button *ngIf="canDeleteVen" id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" (click)="DeleteRequest(VendorDetail.vendor_Detail_ID)" > Delete </button>
    </div>
           
     </div>

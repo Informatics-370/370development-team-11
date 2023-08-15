@@ -41,58 +41,6 @@
                             </td>
                         </tr>
                         <tr>
-                            <td style="width:100%;">
-                                <mat-card-content>
-                                    <label style=" color: black;">Category:</label>
-                                    <br />
-                                    <mat-form-field appearance="fill">
-                                        <mat-label>Select</mat-label>
-                                        <mat-select formControlName="ConsumableCategory" required>
-                                            <mat-option *ngFor="let Category of consumableCategories"
-                                                [value]="Category.name">{{Category.name}}</mat-option>
-                                        </mat-select>
-                                        <mat-error *ngIf="myError('ConsumableCategory', 'required')">The Category is
-                                            required</mat-error>
-                                    </mat-form-field>
-
-
-                                </mat-card-content>
-                            </td>
-                            <td style="width:100%;">
-                                <mat-card-content>
-                                    <label style=" color:black;">Minumum Reorder Quantity:</label>
-                                    <br />
-                                    <mat-form-field>
-                                        <input matInput type="number" placeholder=""
-                                            formControlName="Minimum_Reorder_Quantity" id="Email"
-                                            [(ngModel)]="ConsumableRequest.consumable.minimum_Reorder_Quantity"
-                                            required>
-                                        <mat-error *ngIf="myError('Minimum_Reorder_Quantity', 'required')">The minimum
-                                            amount is required</mat-error>
-                                        <mat-error *ngIf="myError('Minimum_Reorder_Quantity', 'pattern')">Value cannot
-                                            be negative</mat-error>
-                                    </mat-form-field>
-
-                                </mat-card-content>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="width:100%;">
-                                <mat-card-content>
-                                    <label style=" color:black;">Maximum Reorder Quantity:</label>
-                                    <br />
-                                    <mat-form-field>
-                                        <input matInput type="number" placeholder=""
-                                            formControlName="Maximum_Reorder_Quantity" id="Email"
-                                            [(ngModel)]="ConsumableRequest.consumable.maximum_Reorder_Quantity"
-                                            required>
-                                        <mat-error *ngIf="myError('Maximum_Reorder_Quantity', 'required')">The Maximum
-                                            amount is required</mat-error>
-                                        <mat-error *ngIf="myError('Maximum_Reorder_Quantity', 'pattern')">Value cannot
-                                            be negative</mat-error>
-                                    </mat-form-field>
-                                </mat-card-content>
-                            </td>
 
                             <td style="width:100%;">
                                 <mat-card-content>

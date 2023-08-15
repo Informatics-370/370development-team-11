@@ -9,6 +9,8 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatAutocomplete } from '@angular/material/autocomplete';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -36,6 +38,13 @@ export class EditConsumableComponent implements OnInit {
     consumable_Category_ID: 0,
     name: '',
     description: '',
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   consumableCategoryArray: ConsumableCategory[] = [];
@@ -96,21 +105,31 @@ export class EditConsumableComponent implements OnInit {
         if (Result == null) {
           this.dataService.UpdateConsumable(this.ConsumableToEdit.consumable_ID, this.ConsumableToEdit).subscribe({
             next: (response) => {
-              console.log(null)
-              var action = "Update";
-              var title = "UPDATE SUCCESSFUL";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+              this.log.action = "Edited Consumable: " + this.ConsumableToEdit.name;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  console.log(null)
+                  var action = "Update";
+                  var title = "UPDATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
 
-              const duration = 1750;
-              setTimeout(() => {
-                this.router.navigate(['/ViewConsumable']);
-                dialogRef.close();
-              }, duration);
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewConsumable']);
+                    dialogRef.close();
+                  }, duration);
+                }
+              })
+
 
             }
           });

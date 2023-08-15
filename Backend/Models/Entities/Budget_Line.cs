@@ -7,13 +7,14 @@ namespace ProcionAPI.Models.Entities
     {
         [Key]
         [Required]
-        public int Account_Code { get; set; }
+        public int BudgetLineId { get; set; }
 
-        [Key]
+        [Required]
+        public string Account_Code { get; set; }
+
         [Required]
         public int Budget_ID { get; set; }
 
-        [Key]
         [Required]
         public int Category_ID { get; set; }
 
@@ -22,6 +23,7 @@ namespace ProcionAPI.Models.Entities
 
         [ForeignKey("Category_ID")]
         public Budget_Category Budget_Category { get; set; }
+        
         public string Month { get; set; }
         public decimal BudgetAmt { get; set; }
         public decimal ActualAmt { get; set; }

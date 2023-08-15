@@ -1,0 +1,48 @@
+<table class="w-100">
+    <thead>
+        <tr>
+            <th>Department</th>
+            <th>Description</th>
+            <th>Account Code</th>
+            <th>Actual Amount</th>
+            <th>Budgeted Amount</th>
+            <th>Variance</th>
+            <th>Variance %</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-container *ngFor="let group of groupedBudgetLines">
+            <!-- Control Break for each new department -->
+            <tr class="control-break">
+                <td colspan="7">{{ group.department }}</td>
+            </tr>
+
+            <!-- Data rows for the department -->
+            <ng-container *ngFor="let line of group.lines">
+                <tr>
+                    <td></td> <!-- Empty cell for department in subsequent rows -->
+                    <td>{{ line.budget_Allocation.department.description }}</td>
+                    <td>{{line.account_Code}}</td>
+                    <td>{{ line.actualAmt | currency:'R' }}</td>
+                    <td>{{ line.budgetAmt | currency:'R' }}</td>
+                    <td>{{ line.variance | currency:'R' }}</td>
+                    <td>{{ (( line.budgetAmt- line.actualAmt) / line.budgetAmt) * 100 | number:'1.2-2' }}%
+                    </td>
+                </tr>
+            </ng-container>
+            <tr class="department-total">
+                <td colspan="2">Total for {{ group.department }}:</td>
+                <td></td> <!-- Empty cell for Account Code -->
+                <td>{{ getTotalActualAmount(group.lines) | currency:'R' }}</td>
+                <td>{{ getTotalBudgetedAmount(group.lines) | currency:'R' }}</td>
+                <td>{{ getTotalVariance(group.lines) | currency:'R' }}</td>
+                <td></td> <!-- Empty cell for Variance % -->
+            </tr>
+
+        </ng-container>
+    </tbody>
+</table>
+
+<div style="margin-top: 200px;">
+    <canvas #chartCanvas></canvas>
+</div>

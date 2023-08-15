@@ -84,17 +84,11 @@
    <div>
     
     <div style="display: -webkit-box;margin-top: 1%;">
-      <button mat-raised-button (click)="ReturnOnboardRequestStatus()" style="float:left; background-color:#244688; color:white;margin-right: 1%;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
-      <h1 *ngIf="onboardRequest[0] != undefined" style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;" >
-      Onboard Request #{{onboardRequest[0].onboard_Request_Id}}
+      <h1 *ngIf="onboardRequest[0] != undefined" style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;width: 700px;margin-left: 0px;" >
+        <button mat-raised-button (click)="ReturnOnboardRequestStatus()" style="float:left; background-color:#244688; color:white;margin-right: 1%;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
+        Onboard Request #{{onboardRequest[0].onboard_Request_Id}}
     </h1>
     </div>
-    <div>  
-    <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;">Please Approve or Reject the Request</label>
-    </div>
-  
-  
-    <br>
  
   <div>
       <div style="display: inline-block; text-align: left;position: relative;width: 700px;" > 
@@ -103,7 +97,7 @@
         <mat-tab > 
          <div>
           <ng-template  mat-tab-label > 
-            <label style="color:white" >Sole Supplier Request</label>
+            <label style="color:white" >Please Approve or Reject the Request</label>
           </ng-template> 
           <table style="margin-left: 1%;margin-bottom: 15px;">
             <br>

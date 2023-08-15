@@ -10,6 +10,8 @@ import { DeleteBudgetAllocationComponent } from '../delete-budget-allocation/del
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -28,8 +30,10 @@ export class ViewBudgetAllocationComponent {
   BudgetLines: BudgetLine[] = [];
   BudgetAllocations: BudgetAllocation[] = [];
   SearchedBudgetAllocations: BudgetAllocation[] = [];
+  ExportBudgetLine: BudgetLine[] = [];
+
   searchNumber: Number = 0;
-  displayedColumns: string[] = [ 'department', 'date', 'year', 'total', 'lines', 'action', 'delete'];
+  displayedColumns: string[] = ['department', 'date', 'year', 'total', 'lines', 'export', 'action', 'delete' ];
   dataSource = new MatTableDataSource<BudgetAllocation>();
 
   dep: Department = {
@@ -47,7 +51,16 @@ export class ViewBudgetAllocationComponent {
     department: this.dep
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
+  iRole: string;
+  iCanViewFinPro: string = "false";
+  canViewFinPro: string;
 
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService,
     private sanitizer: DomSanitizer) { }
@@ -68,6 +81,13 @@ export class ViewBudgetAllocationComponent {
   }
 
   ngOnInit() {
+    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iCanViewFinPro = this.dataService.decodeCanViewFinPro(sessionStorage.getItem("token"));
+
+    if (this.iRole == "Admin" || this.iCanViewFinPro == "true") {
+      this.canViewFinPro = "true";
+    }
+
     this.GetBudgetAllocations();
   }
 
@@ -77,6 +97,21 @@ export class ViewBudgetAllocationComponent {
       this.dataSource = new MatTableDataSource(this.BudgetAllocations);
     });
   }
+
+  exportExcel(id: Number, name: String) {
+    this.log.action = "Exported Budget Allocation";
+    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    let test: any
+    test = new DatePipe('en-ZA');
+    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+    this.dataService.AuditLogAdd(this.log).subscribe({
+      next: (Log) => {
+        this.dataService.ExportExcel(id, name)
+      }
+    })
+    
+  }
+
   DeleteBudgetAllocation(id: Number) {
     this.dataService.GetBudgetLines().subscribe({
       next: (result) => {

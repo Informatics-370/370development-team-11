@@ -14,6 +14,8 @@ import { OnboardRequest } from '../Shared/OnboardRequest';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
+import { CdkAccordion } from '@angular/cdk/accordion';
+import { Access } from '../Shared/Access';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -25,13 +27,30 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-employee',
   templateUrl: './view-employee.component.html',
   styleUrls: ['./view-employee.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewEmployeeComponent implements OnInit {
-  displayedColumns: string[] = [ 'name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete', 'delegation'];
+  displayedColumns: string[] = ['name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete', 'delegation'];
   dataSource = new MatTableDataSource<Employee>();
 
   userDelete: any
+
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
+
   rl: Role = {
     role_ID: 0,
     name: '',
@@ -41,6 +60,8 @@ export class ViewEmployeeComponent implements OnInit {
   UserToDelete: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -75,7 +96,7 @@ export class ViewEmployeeComponent implements OnInit {
 
   search() {
     const searchTerm = this.searchWord.toLocaleLowerCase();
-    
+
 
 
     if (searchTerm) {

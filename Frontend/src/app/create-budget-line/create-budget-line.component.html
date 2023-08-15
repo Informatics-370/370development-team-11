@@ -50,8 +50,11 @@
                                     <label style=" color:black;">Month:</label>
                                     <br />
                                     <mat-form-field>
-                                        <input matInput type="text" placeholder="" formControlName="month" id="month"
-                                            [(ngModel)]="budgetLine.month" required>
+                                        <mat-select formControlName="month" placeholder="Select One" id="month" style="display: contents;" [(ngModel)]="budgetLine.month" required>
+                                            <mat-option *ngFor="let Mon of Months" [value]="Mon">
+                                            {{Mon}}
+                                            </mat-option>
+                                          </mat-select>
                                         <mat-error *ngIf="myError('month', 'pattern')">Month must be in
                                             letters.</mat-error>
                                         <mat-error *ngIf="myError('month', 'maxlength')">Limit exceeded</mat-error>
@@ -62,7 +65,7 @@
                             </td>
                             <td>
                                 <mat-card-content>
-                                    <label style=" color:black;">Budgeted:</label>
+                                    <label style=" color:black;">Budgeted (R):</label>
                                     <br />
                                     <mat-form-field>
                                         <input matInput type="text" placeholder="" formControlName="budgetAmt"
@@ -82,7 +85,7 @@
                         <tr>
                             <td>
                                 <mat-card-content>
-                                    <label style=" color:black;">Actual:</label>
+                                    <label style=" color:black;">Actual (R):</label>
                                     <br />
                                     <mat-form-field>
                                         <input matInput type="text" placeholder="" formControlName="actualAmt"

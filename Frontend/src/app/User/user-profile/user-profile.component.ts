@@ -12,6 +12,7 @@ import { Department } from '../../Shared/Department';
 import { Mandate_Limit } from '../../Shared/MandateLimit';
 import { Employee } from '../../Shared/Employee';
 import { MainNavComponent } from '../../main-nav/main-nav.component';
+import { Access } from 'src/app/Shared/Access';
 
 @Component({
   selector: 'app-user-profile',
@@ -32,13 +33,29 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     name: '',
     description: ''
   }
-
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
-    profile_Picture: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
     role: this.rl
   }
@@ -95,14 +112,14 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
-    
 
-    
+
+
     if (this.iRole == "Admin") {
       this.rAdmin = "true";
       this.GetAdmin();
     } else {
-      this.GetEmployee();      
+      this.GetEmployee();
     }
   }
 
@@ -115,7 +132,16 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       this.employee = result
       this.emp.employeeName = this.employee.employeeName;
       this.emp.employeeSurname = this.employee.employeeSurname;
-      this.emp.cellPhone_Num = this.employee.cellPhone_Num;
+
+      let temp1 = this.employee.cellPhone_Num.substring(0, 3);
+      let temp2 = this.employee.cellPhone_Num.substring(3, 6);
+      let temp3 = this.employee.cellPhone_Num.substring(6, 10);
+      let t = temp1.concat(' ');
+      t = t.concat(temp2);
+      t = t.concat(' ');
+      t = t.concat(temp3);
+
+      this.emp.cellPhone_Num = t;
       this.emp.email = this.employee.email;
       this.rl.name = this.employee.user.role.name;
       this.rl.description = this.employee.user.role.description;
@@ -133,7 +159,14 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
       this.admin = result
       this.adm.adminName = this.admin.adminName;
       this.adm.adminSurname = this.admin.adminSurname;
-      this.adm.cellPhone_Num = this.admin.cellPhone_Num;
+      let temp1 = this.admin.cellPhone_Num.substring(0, 3);
+      let temp2 = this.admin.cellPhone_Num.substring(3, 6);
+      let temp3 = this.admin.cellPhone_Num.substring(6, 10);
+      let t = temp1.concat(' ');
+      t = t.concat(temp2);
+      t = t.concat(' ');
+      t = t.concat(temp3);
+      this.adm.cellPhone_Num = t;
       this.adm.email = this.admin.email;
       this.rl.name = this.admin.user.role.name;
       this.rl.description = this.admin.user.role.description;

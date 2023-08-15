@@ -1,8 +1,10 @@
+import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/DataService/data-service';
 import { Branch } from 'src/app/Shared/Branch';
+import { AuditLog } from '../../Shared/AuditLog';
 
 @Component({
   selector: 'app-delete-branch',
@@ -13,6 +15,13 @@ export class DeleteBranchComponent implements OnInit{
   Branch: any
   showConfirmationDialog: boolean = true;
   showSuccessDialog: boolean = false;
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   constructor(public dialogRef: MatDialogRef<DeleteBranchComponent>, private ActRoute: ActivatedRoute, private route: Router, private dataService: DataService,
     @Inject(MAT_DIALOG_DATA) public data: { branch_ID: number }) { }
@@ -37,13 +46,22 @@ export class DeleteBranchComponent implements OnInit{
   onConfirm(ID: number): void {
     this.dataService.DeleteBranch(ID).subscribe({
       next: (response) => {
-        this.showConfirmationDialog = false;
-        this.showSuccessDialog = true;
-        setTimeout(() => {
-          this.dialogRef.close();
-          this.route.navigate(['/ViewBranch'], { queryParams: { refresh: true } });
-          location.reload();
-        }, 1750);
+        this.log.action = "Deleted Branch: " + this.Branch.name;
+        this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.dataService.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.dialogRef.close();
+              this.route.navigate(['/ViewBranch'], { queryParams: { refresh: true } });
+              location.reload();
+            }, 1750);
+          }
+        }) 
       }
     });
   }

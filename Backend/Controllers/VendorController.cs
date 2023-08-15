@@ -16,6 +16,8 @@ using System.Net.Http.Headers;
 using Hangfire;
 using System.Reflection;
 using System.CodeDom;
+using System.Collections.Generic;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 
 namespace ProcionAPI.Controllers
 {
@@ -716,7 +718,7 @@ namespace ProcionAPI.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetVendorFiles/{FolderCategory}/{VendorNo}/{fileName}")]
         public IActionResult GetFile(string FolderCategory, string VendorNo, string fileName)
         {
@@ -1103,12 +1105,41 @@ namespace ProcionAPI.Controllers
         }
 
 
+        private void DeleteExistingJobs(int VendorID)
+        {
+            var monitor = JobStorage.Current.GetMonitoringApi();
+
+            var jobsProcessing = monitor.ProcessingJobs(0, int.MaxValue)
+                .Where(x => x.Value.Job.Method.Name == "getBEE");
+            foreach (var j in jobsProcessing)
+            {
+                var t = (int)j.Value.Job.Args[0];
+                if (t == VendorID)
+                {
+                    BackgroundJob.Delete(j.Key);
+                }
+            }
+
+            var jobsScheduled = monitor.ScheduledJobs(0, int.MaxValue)
+                .Where(x => x.Value.Job.Method.Name == "getBEE");
+            foreach (var j in jobsScheduled)
+            {
+                var t = (int)j.Value.Job.Args[0];
+                if (t == VendorID)
+                {
+                    BackgroundJob.Delete(j.Key);
+                }
+            }
+        }
 
 
         [HttpGet]
         [Route("DelayedJob/{VendorID}/{date}")]
         public string DelayedJob(int VendorID, DateTime date)
         {
+
+            DeleteExistingJobs(VendorID);
+
             var selectedDate = new DateTimeOffset(date, TimeSpan.Zero);
            // selectedDate = selectedDate.LocalDateTime(selectedDate);
             BackgroundJob.Schedule(() => getBEE(VendorID, date, 1), selectedDate.AddYears(1).AddDays(-21).ToLocalTime());

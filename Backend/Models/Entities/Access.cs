@@ -7,17 +7,19 @@ namespace ProcionAPI.Models.Entities
     {
         [Key]
         public int Access_ID { get; set; }
+        public string IsAdmin { get; set; }
+        public string CanAccInv { get; set; }
+        public string CanAccFin { get; set; }
+        public string CanAccPro { get; set; }
+        public string CanAccVen { get; set; }
+        public string CanAccRep { get; set; }
+        public string CanViewPenPro { get; set; }
+        public string CanViewFlagPro { get; set; }
+        public string CanViewFinPro { get; set; }
+        public string CanAppVen { get; set; }
+        public string CanEditVen { get; set; }
+        public string CanDeleteVen { get; set; }
 
-        [Required]
-        public int Temp_Access_ID { get; set; }
 
-        [ForeignKey("Temp_Access_ID")]
-        public Temporary_Access Temporary_Access { get; set; }
-
-        [MaxLength(32)]
-        public string Name { get; set; }
-
-        [MaxLength(50)]
-        public string Description { get; set; }
     }
 }

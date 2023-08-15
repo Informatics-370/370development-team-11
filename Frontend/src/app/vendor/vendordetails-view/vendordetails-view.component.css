@@ -1,20 +1,20 @@
-::ng-deep mat-tab-header {
+:host ::ng-deep mat-tab-header {
     background-color: #244688;
   }
 
-::ng-deep .mdc-tab-indicator__content--underline {
+:host ::ng-deep .mdc-tab-indicator__content--underline {
         --mdc-tab-indicator-active-indicator-color: white; 
 }
 
 
-::ng-deep .mdc-tab__text-label {
+:host ::ng-deep .mdc-tab__text-label {
     color: white;
     width: 160px;
     place-content: center;
    
 }
 
-::ng-deep .mat-tab-header {
+:host ::ng-deep .mat-tab-header {
     width: max-content!important;
 }
   
@@ -88,4 +88,19 @@ a:not([href]):not([class]), a:not([href]):not([class]):hover {
     text-decoration:underline;
     cursor: pointer!important;
     
+}
+
+a {
+    color: black;
+}
+
+table {
+    width: -webkit-fill-available!important;
+    margin-bottom: 1%;
+    margin-right: 1%;
+    
+}
+
+tr {
+    border-bottom:1px solid black;
 }

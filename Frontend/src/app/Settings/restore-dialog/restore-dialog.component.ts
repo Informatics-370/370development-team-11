@@ -16,11 +16,9 @@ import { HttpEventType } from '@angular/common/http';
 export class RestoreDialogComponent {
   isLoading: boolean;
   selectedFile: File | null = null;
-  showSuccessDialog: boolean = false;
-  showConfirmationDialog: boolean = true;
 
-  
-  constructor(public dialogRef: MatDialogRef<BackupComponent>,private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
+
+  constructor(public MydialogRef: MatDialogRef<BackupComponent>, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   onFileSelected(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
@@ -30,7 +28,7 @@ export class RestoreDialogComponent {
   }
 
   onConfirm(): void {
-  
+
     if (!this.selectedFile) {
       alert('Please select a backup file to restore the database.');
       return;
@@ -38,95 +36,50 @@ export class RestoreDialogComponent {
 
     this.isLoading = true;
 
-    
-        this.dataService.restoreDatabase(this.selectedFile).subscribe(
-          (response) => {
-            this.showConfirmationDialog = false;
-            this.showSuccessDialog = true;
-            this.isLoading = false;
-    
+
+    this.dataService.restoreDatabase(this.selectedFile).subscribe({
+      next: (Response) => {
+        if (Response) {
+          console.log(Response)
+          this.isLoading = false;
+          this.MydialogRef.close();
+
+          var action = 'RESTORE IN PROGRESS';
+          var title = 'RESTORE IN PROGRESS';
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
+            'Please wait <strong style="color:green">5 SECONDS</strong> for the restore to complete!'
+          );
+
+          const NotifdialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+
+
+          setTimeout(() => {
+            NotifdialogRef.close();
+
             var action = 'RESTORE SUCCESSFUL';
             var title = 'Restore Successful';
             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
               'The database has been <strong style="color:green">RESTORED</strong> successfully!'
             );
-    
-        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-          disableClose: true,
-          data: { action, title, message }
-        });
 
-        
-
-        setTimeout(() => {
-          this.dialogRef.close();
-        }, 1750);
-
-        },
-      (error) => {
-        this.isLoading = false;
-
-        var action = 'ERROR';
-        var title = 'Restore Failed';
-        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
-          "The <strong>RESTORE</strong> of the database has <strong style='color:red'>FAILED!</strong>"
-        );
-
-        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-          disableClose: true,
-          data: { action, title, message }
-        });
-        setTimeout(() => {
-          this.dialogRef.close();
-         
-        }, 1750);
+            const Success: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
+            setTimeout(() => {
+              Success.close();
+            }, 1750);
+          }, 5000);
+        }
       }
-    );
-    // this.dataService.restoreDatabase(this.selectedFile).subscribe(
-    //   (response) => {
-    //     this.showConfirmationDialog = false;
-    //     this.showSuccessDialog = true;
-    //     this.isLoading = false;
-
-    //     var action = 'RESTORE SUCCESSFUL';
-    //     var title = 'Restore Successful';
-    //     var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
-    //       'The database has been <strong style="color:green">RESTORED</strong> successfully!'
-    //     );
-    //     const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-    //       disableClose: true,
-    //       data: { action, title, message }
-    //     });
-
-        
-
-    //     setTimeout(() => {
-    //       this.dialogRef.close();
-          
-    //     }, 1750);
-    //   },
-    //   (error) => {
-    //     this.isLoading = false;
-
-    //     var action = 'ERROR';
-    //     var title = 'Restore Failed';
-    //     var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
-    //       "The <strong>RESTORE</strong> of the database has <strong style='color:red'>FAILED!</strong>"
-    //     );
-
-    //     const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-    //       disableClose: true,
-    //       data: { action, title, message }
-    //     });
-    //     setTimeout(() => {
-    //       this.dialogRef.close();
-         
-    //     }, 1750);
-    //   }
-    // );
+    });
   }
 
   onCancel(): void {
-    this.dialogRef.close();
+    this.MydialogRef.close();
   }
 }

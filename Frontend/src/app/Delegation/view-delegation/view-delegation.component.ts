@@ -38,7 +38,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 export class ViewDelegationComponent implements OnInit{
 
   
-  displayedColumnsAdmin: string[] = [ 'delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete'];
+  displayedColumnsAdmin: string[] = ['delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete', 'revoke'];
   dataSource = new MatTableDataSource<Delegation_Of_Authority>;
 
   userDelete: any

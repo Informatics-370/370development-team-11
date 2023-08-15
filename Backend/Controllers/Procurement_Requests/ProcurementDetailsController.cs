@@ -517,6 +517,22 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
         }
 
+        [HttpGet]
+        [Route("GetConsumableToRecieve/{procurementRequestID}")]
+
+        public async Task<IActionResult> GetConsumablesForRequestConsRecieve(int procurementRequestID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetConsumableForRequestConsRecieve(procurementRequestID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
         [HttpPut]
         [Route("FinalizeProcurementRequest{DetailsID}")]
         public async Task<IActionResult> FinalizeProcurementRequest(int DetailsID)
@@ -629,6 +645,40 @@ namespace ProcionAPI.Controllers.Procurement_Requests
 
             var PathSaved = Path.Combine(InvoiceName, file.FileName);
             return Ok(new { PathSaved });
+        }
+
+        [HttpGet]
+        [Route("GetProcurementAccountCodeDetails/{year}/{Month}/{department}")]
+
+        public async Task<IActionResult> GetProcurementAccountCodeDetails(int year, int Month, string department)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementAccountCodeDetailsAsync(year,Month,department);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500,"Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("getAssets")]
+
+        public async Task<IActionResult> getAssets()
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.getAssetsAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
         }
     }
 }

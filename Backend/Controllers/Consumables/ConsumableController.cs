@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Data;
@@ -153,6 +153,37 @@ namespace ProcionAPI.Controllers.Consumables
             try
             {
                 var result = await _consumableRepository.AddNotificationAsync(ConsumableNotif);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetConsumableHistoryByID/{id}")]
+        public async Task<IActionResult> GetConsumableHistoryByID([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _consumableRepository.GetConsumableHistoryByIDAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetConsumableManagementReport")]
+        public async Task<IActionResult> GetConsumableManagementReport([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+        {
+            try
+            {
+                var result = await _consumableRepository.GetReportData(startDate, endDate);
                 return Ok(result);
             }
             catch (Exception)

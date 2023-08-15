@@ -9,6 +9,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { MailData } from '../Shared/Mail';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
+import { Access } from '../Shared/Access';
 
 @Component({
   selector: 'app-create-admin',
@@ -17,6 +20,13 @@ import { MailData } from '../Shared/Mail';
 })
 export class CreateAdminComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   constructor(private router: Router, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
@@ -33,9 +43,27 @@ export class CreateAdminComponent implements OnInit {
     description: ''
   }
 
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: 'false',
+    CanAccInv: 'false',
+    CanAccFin: 'false',
+    CanAccPro: 'false',
+    CanAccVen: 'false',
+    CanAccRep: 'false',
+    CanViewPenPro: 'false',
+    CanViewFlagPro: 'false',
+    CanViewFinPro: 'false',
+    CanAppVen: 'false',
+    CanEditVen: 'false',
+    CanDeleteVen: 'false',
+  }
+
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -58,7 +86,7 @@ export class CreateAdminComponent implements OnInit {
       AdminName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       AdminSurname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
-      CellPhone_Num: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12), Validators.pattern("^[0-9 ]*$")]]
+      CellPhone_Num: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern("^[0-9]*$")]]
     })
   }
 
@@ -87,16 +115,31 @@ export class CreateAdminComponent implements OnInit {
     var name = this.myForm.get('AdminName')?.value;
     var surname = this.myForm.get('AdminSurname')?.value;
     var ts = name.concat(surname);
-    var username = ts.concat(cel.substring(4, 7));
+    var username = ts.concat(cel.substring(3, 6));
     username = username.replace(/\s/g, "");
 
     this.rl.role_ID = 0;
     this.rl.name = "Admin";
     this.rl.description = "Admin";
 
+    this.Access.IsAdmin = 'true';
+    this.Access.CanAccFin = 'true';
+    this.Access.CanAccInv = 'true';
+    this.Access.CanAccPro = 'true';
+    this.Access.CanAccRep = 'true';
+    this.Access.CanAccVen = 'true';
+    this.Access.CanAppVen = 'true';
+    this.Access.CanDeleteVen = 'true';
+    this.Access.CanEditVen = 'true';
+    this.Access.CanViewFinPro = 'true';
+    this.Access.CanViewFlagPro = 'true';
+    this.Access.CanViewPenPro = 'true';
+
+
     this.usr.username = username;
     this.usr.password = newPassword;
     this.usr.role = this.rl;
+    this.usr.access = this.Access;
 
     this.adm.adminName = this.myForm.get('AdminName')?.value;
     this.adm.adminSurname = this.myForm.get('AdminSurname')?.value;
@@ -128,20 +171,29 @@ export class CreateAdminComponent implements OnInit {
                     document.querySelector('button').classList.toggle("is_active");
                   }
 
-                  var action = "Create";
-                  var title = "CREATE SUCCESSFUL";
-                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The admin <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+                  this.log.action = "Created Admin: " + this.adm.adminName + " " + this.adm.adminSurname;
+                  this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                  let test: any
+                  test = new DatePipe('en-ZA');
+                  this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                  this.dataService.AuditLogAdd(this.log).subscribe({
+                    next: (Log) => {
+                      var action = "Create";
+                      var title = "CREATE SUCCESSFUL";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The admin <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                    disableClose: true,
-                    data: { action, title, message }
-                  });
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
 
-                  const duration = 1750;
-                  setTimeout(() => {
-                    this.router.navigate(['/ViewAdmin']);
-                    dialogRef.close();
-                  }, duration);
+                      const duration = 1750;
+                      setTimeout(() => {
+                        this.router.navigate(['/ViewAdmin']);
+                        dialogRef.close();
+                      }, duration);
+                    }
+                  })
                 }
               })
             })

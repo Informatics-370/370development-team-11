@@ -24,6 +24,8 @@ namespace ProcionAPI.Models.Repositories
                 .Include(d => d.Department)
                 .Include(m => m.Mandate_Limit)
                 .Include(u => u.User)
+                .ThenInclude(a => a.Access)
+                .Include(u => u.User)
                 .ThenInclude(r => r.Role);
 
 
@@ -32,7 +34,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<User[]> GetAllUsersAsync()
         {
-            IQueryable<User> query = _dbContext.User.Include(c => c.Role);
+            IQueryable<User> query = _dbContext.User.Include(c => c.Role).Include(a => a.Access);
                 
 
 
@@ -101,6 +103,8 @@ namespace ProcionAPI.Models.Repositories
                 .Include(m => m.Mandate_Limit)
                 .Include(u => u.User)
                 .ThenInclude(r => r.Role)
+                .Include(u => u.User)
+                .ThenInclude(a => a.Access)
                 .Where(w => w.User.User_Id == userID);
 
 
@@ -140,6 +144,8 @@ namespace ProcionAPI.Models.Repositories
                 .Include(m => m.Mandate_Limit)
                 .Include(u => u.User)
                 .ThenInclude(r => r.Role)
+                .Include(u => u.User)
+                .ThenInclude(a => a.Access)
                 .Where(w => w.User.Username == username);
 
 
@@ -153,7 +159,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<User> GetUserAsync(int userID)
         {
-            IQueryable<User> query = _dbContext.User.Include(c => c.Role)
+            IQueryable<User> query = _dbContext.User.Include(c => c.Role).Include(a => a.Access)
                 .Where(w => w.User_Id == userID);
 
 
@@ -164,6 +170,7 @@ namespace ProcionAPI.Models.Repositories
         {
             IQueryable<User> query = _dbContext.User
                 .Include(r => r.Role)
+                .Include(a => a.Access)
                 .Where(w => w.Username == username);
 
 
@@ -172,7 +179,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<User> Login(string Username, string Password)
         {
-            IQueryable<User> query = _dbContext.User.Include(c => c.Role)
+            IQueryable<User> query = _dbContext.User.Include(c => c.Role).Include(a => a.Access)
                 .Where(w => w.Username == Username && w.Password == Password);
 
 
@@ -190,7 +197,9 @@ namespace ProcionAPI.Models.Repositories
         {
             IQueryable<Admin> query = _dbContext.Admin
                 .Include(u => u.User)
-                .ThenInclude(r => r.Role);
+                .ThenInclude(r => r.Role)
+                .Include(u => u.User)
+                .ThenInclude(a => a.Access);
 
 
             return await query.ToArrayAsync();
@@ -201,6 +210,8 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Admin> query = _dbContext.Admin
                 .Include(u => u.User)
                 .ThenInclude(r => r.Role)
+                .Include(u => u.User)
+                .ThenInclude(a => a.Access)
                 .Where(w => w.User.User_Id == userID);
 
 
@@ -212,6 +223,8 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Admin> query = _dbContext.Admin
                 .Include(u => u.User)
                 .ThenInclude(r => r.Role)
+                .Include(u => u.User)
+                .ThenInclude(a => a.Access)
                 .Where(w => w.User.Username == username);
 
 
@@ -346,7 +359,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<User> GetUserByUsername(string username)
         {
-            var ExistingUser = _dbContext.User.Include(u => u.Role).FirstOrDefault(c => c.Username == username);
+            var ExistingUser = _dbContext.User.Include(u => u.Role).Include(a => a.Access).FirstOrDefault(c => c.Username == username);
             return ExistingUser;
         }
 
@@ -384,6 +397,23 @@ namespace ProcionAPI.Models.Repositories
 
             return user;
         }
+        public async Task<AuditLog[]> AddLogAsync(AuditLog LogAdd)
+        {
+
+
+            await _dbContext.AuditLog.AddAsync(LogAdd);
+            await _dbContext.SaveChangesAsync();
+
+            return new AuditLog[] { LogAdd };
+        }
+
+        public async Task<AuditLog[]> GetAllLogsAsync()
+        {
+            IQueryable<AuditLog> query = _dbContext.AuditLog;
+            query = query.OrderByDescending(log => log.ActionTime);
+            return await query.ToArrayAsync();
+        }
+
 
     }
 

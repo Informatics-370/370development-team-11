@@ -1,12 +1,12 @@
-import { Component,OnInit } from '@angular/core';
-import {FormBuilder,FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { DataService } from '../DataService/data-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Consumable } from '../Shared/Consumable';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
-import {Procurement_Details} from "../Shared/ProcurementDetails";
+import { Procurement_Details } from "../Shared/ProcurementDetails";
 import { Employee } from '../Shared/Employee';
 import { User } from '../Shared/User';
 import { Role } from '../Shared/EmployeeRole';
@@ -32,10 +32,27 @@ import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
-import {ErrorStateMatcher} from '@angular/material/core';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { Notification } from 'src/app/Shared/Notification';
 import { Notification_Type } from '../Shared/Notification_Type';
-import { catchError } from 'rxjs';
+import { catchError, map, startWith } from 'rxjs';
+import { AuditLog } from '../Shared/AuditLog';
+import { Observable } from 'rxjs';
+import { NgFor } from '@angular/common';
+import { Access } from '../Shared/Access';
+
+interface AccountCodeDisplay {
+  AccountCodeValue:number;
+  AccountCodeName: string;
+  Year: string;
+  Month: string;
+}
+
+interface AccountCodeDisplayGroup {
+  Year: string;
+  Month: string;
+  AccountDetails:AccountCodeDisplay[];
+}
 
 @Component({
   selector: 'app-place-procurement-request-create-details',
@@ -80,9 +97,27 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     description: ''
   }
 
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
+
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -133,6 +168,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     user: {
       user_Id: 0,
       role_ID: 0,
+      access_ID: 0,
+      access: this.Access,
       username: "",
       password: "",
       profile_Picture: "",
@@ -147,28 +184,28 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     description: ""
   }
 
-  SignOffStatus:Sign_Off_Status = {
-    sign_Off_Status_ID:0,
-    name:"",
-    description:"",
+  SignOffStatus: Sign_Off_Status = {
+    sign_Off_Status_ID: 0,
+    name: "",
+    description: "",
   }
 
-  Procurement_Payment_Status:Procurement_Payment_Status = {
-    procurement_Payment_Status_ID:0,
-    name:"",
-    description:"",
+  Procurement_Payment_Status: Procurement_Payment_Status = {
+    procurement_Payment_Status_ID: 0,
+    name: "",
+    description: "",
   }
 
-  Procurement_Status:Procurement_Status = {
-    procurement_Status_ID:0,
-    name:"",
-    description:"",
+  Procurement_Status: Procurement_Status = {
+    procurement_Status_ID: 0,
+    name: "",
+    description: "",
   }
 
-  Payment_Method:Payment_Method = {
-    payment_Method_ID:1,
-    name:"",
-    description:"",
+  Payment_Method: Payment_Method = {
+    payment_Method_ID: 1,
+    name: "",
+    description: "",
   }
 
   category: BudgetCategory = {
@@ -191,7 +228,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: 0,
+    account_Code: '',
     budget_Category: this.category,
     month: '',
     budgetAmt: 0,
@@ -199,55 +236,55 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     variance: 0
   }
 
-  ProcurementDetails:Procurement_Details = {
-    procurement_Details_ID:0,
-     employeeID:0, 
-     procurement_Request_ID:0,
-     sign_Off_Status_ID :0,
-     procurement_Payment_Status_ID:0,
-     account_Code:0,
-     procurement_Status_ID:0,
-     payment_Method_ID:0,
-     employee: this.EmployeeDetails,
-     procurement_Request: this.Procurement_Request,
-     sign_Off_Status: this.SignOffStatus, 
-     procurement_Payment_Status: this.Procurement_Payment_Status,
-     budget_Line: this.budgetLine,
-     procurement_Status: this.Procurement_Status,
-     payment_Method: this.Payment_Method,
-     item_Type:"Consumable",
-     buyer_Name:"",
-     buyer_Email: "",
-     deposit_Required:false, 
-     full_Payment_Due_Date:new Date(),
-     total_Amount:0,
-     payment_Made:false,
-     comment:"", 
-     proof_Of_Payment_Required:false,
+  ProcurementDetails: Procurement_Details = {
+    procurement_Details_ID: 0,
+    employeeID: 0,
+    procurement_Request_ID: 0,
+    sign_Off_Status_ID: 0,
+    procurement_Payment_Status_ID: 0,
+    BudgetLineId: 0,
+    procurement_Status_ID: 0,
+    payment_Method_ID: 0,
+    employee: this.EmployeeDetails,
+    procurement_Request: this.Procurement_Request,
+    sign_Off_Status: this.SignOffStatus,
+    procurement_Payment_Status: this.Procurement_Payment_Status,
+    budget_Line: this.budgetLine,
+    procurement_Status: this.Procurement_Status,
+    payment_Method: this.Payment_Method,
+    item_Type: "Consumable",
+    buyer_Name: "",
+    buyer_Email: "",
+    deposit_Required: false,
+    full_Payment_Due_Date: new Date(),
+    total_Amount: 0,
+    payment_Made: false,
+    comment: "",
+    proof_Of_Payment_Required: false,
   }
 
-  Deposit:Deposit = {
-    procurement_Deposit_ID:0,
-     procurement_Details_ID:0,
-     procurement_Details:this.ProcurementDetails,
-     deposit_Due_Date:new Date(),
-     deposit_Amount:0,
-     amount_Outstanding:0,
+  Deposit: Deposit = {
+    procurement_Deposit_ID: 0,
+    procurement_Details_ID: 0,
+    procurement_Details: this.ProcurementDetails,
+    deposit_Due_Date: new Date(),
+    deposit_Amount: 0,
+    amount_Outstanding: 0,
   }
 
-  PaymentMade:Payment_Made = {
-    payment_Made_ID:0,
-    procurement_Details_ID :0,
-    procurement_Details:this.ProcurementDetails,
-    paid_On_Date:new Date(),
-    receipt_Upload:"",
+  PaymentMade: Payment_Made = {
+    payment_Made_ID: 0,
+    procurement_Details_ID: 0,
+    procurement_Details: this.ProcurementDetails,
+    paid_On_Date: new Date(),
+    receipt_Upload: "",
   }
 
-  ProofOfPayment:Proof_Of_Payment = {
-    proof_Of_Payment_ID:0,
-    procurement_Details_ID:0,
-    procurement_Details:this.ProcurementDetails,
-    proof_Of_Payment_Doc:"",
+  ProofOfPayment: Proof_Of_Payment = {
+    proof_Of_Payment_ID: 0,
+    procurement_Details_ID: 0,
+    procurement_Details: this.ProcurementDetails,
+    proof_Of_Payment_Doc: "",
   }
 
   Consumables: Consumable = {
@@ -268,42 +305,42 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   }
 
   Procurement_Consumable: Procurement_Consumable = {
-    procurement_Consumable_ID:0,
-    procurement_Details_ID:0,
-    consumable_ID:0,
-    procurement_Details:this.ProcurementDetails,
-    consumable:this.Consumables,
-    quantity:0,
+    procurement_Consumable_ID: 0,
+    procurement_Details_ID: 0,
+    consumable_ID: 0,
+    procurement_Details: this.ProcurementDetails,
+    consumable: this.Consumables,
+    quantity: 0,
   }
 
-  Vendor_Consumable:Vendor_Consumable = {
-    vendor_Consumbale_ID:0,
-    consumable_ID:0,
-    vendor_ID:0,
-    consumable:this.Consumables,
-    vendor:this.Procurement_Request.vendor,
+  Vendor_Consumable: Vendor_Consumable = {
+    vendor_Consumbale_ID: 0,
+    consumable_ID: 0,
+    vendor_ID: 0,
+    consumable: this.Consumables,
+    vendor: this.Procurement_Request.vendor,
   }
 
-  assets:Asset = {
-    asset_ID:0,
-    name:'',
-    description:'',
+  assets: Asset = {
+    asset_ID: 0,
+    name: '',
+    description: '',
   }
 
-  procurment_assets:Procurement_Asset = {
-    procurement_Asset_ID:0,
-    procurement_Details_ID:0,
-    asset_ID:0,
-    procurement_Details:this.ProcurementDetails,
-    asset:this.assets,
+  procurment_assets: Procurement_Asset = {
+    procurement_Asset_ID: 0,
+    procurement_Details_ID: 0,
+    asset_ID: 0,
+    procurement_Details: this.ProcurementDetails,
+    asset: this.assets,
   }
 
-  vendor_asset:Vendor_Asset = {
-    vendor_Asset_ID:0,
-    asset_ID:0,
-    vendor_ID:0,
-    asset:this.assets,
-    vendor:this.Procurement_Request.vendor,
+  vendor_asset: Vendor_Asset = {
+    vendor_Asset_ID: 0,
+    asset_ID: 0,
+    vendor_ID: 0,
+    asset: this.assets,
+    vendor: this.Procurement_Request.vendor,
   }
 
   Notification_Type: Notification_Type = {
@@ -322,41 +359,82 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     notification_Type: this.Notification_Type,
   };
 
-  constructor(private _formBuilder: FormBuilder,private ProcureService: DataService,private route: ActivatedRoute ,private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) {}
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
+
+
+
+  constructor(private _formBuilder: FormBuilder, private ProcureService: DataService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ProcurementFormGroup = this._formBuilder.group({
-    BuyerName: ["",[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
-    BuyerEmail: ["",[Validators.required,Validators.maxLength(32), Validators.email]],
+    BuyerName: ["", [Validators.required, Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    BuyerEmail: ["", [Validators.required, Validators.maxLength(32), Validators.email]],
     ItemType: ["Consumable"],
-    ConsumableItem:["",[Validators.required]],
-    ConsumableQuantity: [null,[Validators.required, Validators.pattern(/^[0-9]*$/)]],
-    AssetName:["",[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
-    AssetDescription:["",[Validators.required,Validators.maxLength(50)]],
-    AccountCode:[null,[Validators.required]],
-    PaymentType: [null,[Validators.required]],
-    HasDeposit:[false],
-    DepositAmount: [null,[Validators.required, Validators.pattern(/^[0-9]*$/)]],
-    DepositDueDate: [Date.now(),[Validators.required]],
+    ConsumableItem: ["", [Validators.required]],
+    ConsumableQuantity: [null, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+    AssetName: ["", [Validators.required, Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    AssetDescription: ["", [Validators.required, Validators.maxLength(50)]],
+    AccountCode: ["", [Validators.required]],
+    PaymentType: [null, [Validators.required]],
+    HasDeposit: [false],
+    DepositAmount: [null, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+    DepositDueDate: [Date.now(), [Validators.required]],
     FullPaymentMade: false,
-    PaidOnDate:[Date.now(),[Validators.required]],
-    UploadReceiptDoc: ["",[Validators.required]],
-    ProofOfPayment:false,
-    ProofOfPaymentDoc: ["",[Validators.required]],
-    TotalAmount: [null,[Validators.required, Validators.pattern(/^[0-9]*$/)]],
-    TotalAmountDueDate:[Date.now(),[Validators.required]],
-    Comments:["",[Validators.maxLength(50)]],
+    PaidOnDate: [Date.now(), [Validators.required]],
+    UploadReceiptDoc: ["", [Validators.required]],
+    ProofOfPayment: false,
+    ProofOfPaymentDoc: ["", [Validators.required]],
+    TotalAmount: [null, [Validators.required, Validators.pattern(/^[0-9.]*$/)]],
+    TotalAmountDueDate: [Date.now(), [Validators.required]],
+    Comments: ["", [Validators.maxLength(50)]],
   });
 
 
-  ConsumableItems:Consumable[] = [];
-  BudgetAllocationCode:BudgetLine[] = [];
-  ConsumableChecked =true;
-  AssetChecked=false;
+  ConsumableItems: Consumable[] = [];
+  BudgetAllocationCode: any[] = [];
+  ConsumableChecked = true;
+  AssetChecked = false;
   ProcurementRequest_ID = 0;
-  MandateLimitAmount:0;
-  currentDate = Date.now()
+  MandateLimitAmount: 0;
+  currentYear = new Date().getFullYear();
+  currentmonth = new Date().getMonth();
+  currentDay = new Date().getDate();
+  currentDate: any;
+  sAssets: Asset[] = []
+  assetnames: string[] = [];
+  filteredAssets: Observable<string[]>;
 
-  ngOnInit() { 
+  AccountCodeDetails: AccountCodeDisplay[] = [];
+  AccountCodeGroups: AccountCodeDisplayGroup[] = [];
+  ngOnInit() {
+    var User = this.ProcureService.decodeUser(sessionStorage.getItem('token'))
+    this.ProcureService.GetUserByUsername(User).subscribe(response => {
+      this.EmployeeDetails.user.access = response.access
+      this.VendorNotification.user.access = response.access
+    })
+
+    this.ProcureService.getAssets().subscribe(r => {
+      console.log(r)
+      this.sAssets = r
+      console.log(this.sAssets)
+      this.sAssets.forEach(x=> this.assetnames.push(x.name));
+     //this.assetnames.push(r.name);
+      console.log(this.sAssets)
+      this.filteredAssets = this.ProcurementFormGroup.get("AssetName")?.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value)),
+      );
+      console.log(this.filteredAssets)
+    })
+
+
+
+    this.currentDate = new Date(this.currentYear, this.currentmonth, this.currentDay);
     this.ProcurementFormGroup.get("AssetName")?.disable();
     this.ProcurementFormGroup.get("AssetDescription")?.disable();
     this.ProcurementFormGroup.get("DepositAmount")?.disable();
@@ -369,61 +447,100 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     console.log(User)
     this.route.paramMap.subscribe({
       next: (paramater) => {
-        
-       this.ProcurementRequest_ID = Number(paramater.get("ProcurementRequestID"));
-       this.ProcureService.GetConsumables().subscribe(response => {
-        this.ConsumableItems = response
-        console.log(this.ConsumableItems)
-      })
-      this.ProcureService.GetBudgetLines().subscribe(response => {
-        this.BudgetAllocationCode = response;
-        console.log(this.BudgetAllocationCode)
-      })
-      //User
-      this.ProcureService.GetEmployeeByUsername(User).subscribe(result => {
-        console.log(result)
-        let employeeInfo:any = result;
-        this.EmployeeDetails = employeeInfo;
-        this.MandateLimitAmount = employeeInfo.mandate_Limit.ammount
-        console.log(this.EmployeeDetails);
-        console.log(this.MandateLimitAmount)
-      },
-      (error) => {
-        var action = "ERROR";
-        var title = "USER NOT AN EMPLOYEE";
-        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("User must be an <strong style='color:red'> EMPLOYEE </strong>!");
 
-      const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-        disableClose: true,
-        data: { action, title, message }
-      });
+        this.ProcurementRequest_ID = Number(paramater.get("ProcurementRequestID"));
+        this.ProcureService.GetConsumables().subscribe(response => {
+          this.ConsumableItems = response
+          console.log(this.ConsumableItems)
+        })
+        //User
+        this.ProcureService.GetEmployeeByUsername(User).subscribe(result => {
+          console.log(result)
+          let employeeInfo: any = result;
+          this.EmployeeDetails = employeeInfo;
+          this.MandateLimitAmount = employeeInfo.mandate_Limit.ammount
+          this.ProcurementFormGroup.get("BuyerName")?.setValue(this.EmployeeDetails.employeeName.toString())
+          this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.EmployeeDetails.email.toString())
+          let departmentname = this.EmployeeDetails.department.name
+          this.ProcureService.GetProcurementAccountCodeDetails(this.currentYear,this.currentmonth,departmentname.toString()).subscribe(response => {
+            console.log(response)
+            this.BudgetAllocationCode = response;
+            this.BudgetAllocationCode.forEach(t => {
+              let AccountInfo:AccountCodeDisplay = {
+                AccountCodeValue: t.budgetLineId,
+                AccountCodeName: t.budget_Category.account_Name.toString(),
+                Year: t.month.toString(),
+                Month: t.budget_Allocation.year.toString(),
+              };
+              this.AccountCodeDetails.push(AccountInfo);
+            })
 
-      const duration = 1750;
-      setTimeout(() => {
-        this.router.navigate(['/PlaceProcurementRequest']);
-        dialogRef.close();
-      }, duration);
+            this.AccountCodeDetails.forEach(b => {
+
+              if(this.AccountCodeGroups.filter(x=> (x.Month == b.Month) && (x.Year == b.Year) == null || this.AccountCodeDetails == undefined)) {
+                let AccountGroupInfo:AccountCodeDisplayGroup = {
+                  Year: b.Year,
+                  Month: b.Month,
+                  AccountDetails: this.AccountCodeDetails.filter(x=> (x.Month == b.Month) && (x.Year == b.Year)),
+                };
+                this.AccountCodeGroups.push(AccountGroupInfo)
+              }
+            })
+
+            console.log(this.AccountCodeGroups)
+           
+          })
+        },
+          (error) => {
+            var action = "ERROR";
+            var title = "USER NOT AN EMPLOYEE";
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("User must be an <strong style='color:red'> EMPLOYEE </strong>!");
+
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
+
+            const duration = 1750;
+            setTimeout(() => {
+              this.router.navigate(['/PlaceProcurementRequest']);
+              dialogRef.close();
+            }, duration);
+          }
+        )
+        this.ProcureService.GetProcurementRequestByID(this.ProcurementRequest_ID).subscribe(result => {
+          console.log(result)
+          this.Procurement_Request = result
+          console.log(this.Procurement_Request)
+        })
       }
-      )
-      this.ProcureService.GetProcurementRequestByID(this.ProcurementRequest_ID).subscribe(result => {
-        console.log(result)
-        this.Procurement_Request = result
-        console.log(this.Procurement_Request)
-      })
-      }})
-    
-    
+    })
   }
 
+  ChangeDescription(sName:string) {
+    let Description = this.sAssets.find(x=> x.name == sName).description
+    this.ProcurementFormGroup.get("AssetDescription")?.setValue(Description)
+  }
+
+  _normalizeValue(value: string): string {
+    return value.toLowerCase().replace(/\s/g, '');
+  }
+
+  _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.assetnames.filter(asset => this._normalizeValue(asset).toLowerCase().indexOf(filterValue) === 0);
+  }
+
+
   ConsumableCheckChange() {
-    if(this.ProcurementFormGroup.get("ItemType")?.value == "Consumable") {
+    if (this.ProcurementFormGroup.get("ItemType")?.value == "Consumable") {
       this.ProcurementFormGroup.get("ConsumableItem")?.enable();
       this.ProcurementFormGroup.get("ConsumableQuantity")?.enable();
       this.ConsumableChecked = true;
       this.AssetChecked = false;
       this.ProcurementFormGroup.get("AssetName")?.disable();
       this.ProcurementFormGroup.get("AssetDescription")?.disable();
-      
+
     }
     else {
       this.ProcurementFormGroup.get("AssetName")?.enable();
@@ -436,7 +553,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   }
 
   DepositChange() {
-    if(this.ProcurementFormGroup.get("HasDeposit")?.value == true) {
+    if (this.ProcurementFormGroup.get("HasDeposit")?.value == true) {
       this.ProcurementFormGroup.get("DepositAmount")?.enable();
       this.ProcurementFormGroup.get("DepositDueDate")?.enable();
     }
@@ -447,7 +564,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   }
 
   ProofOfPaymentChange() {
-    if(this.ProcurementFormGroup.get("ProofOfPayment")?.value == true) {
+    if (this.ProcurementFormGroup.get("ProofOfPayment")?.value == true) {
       this.ProcurementFormGroup.get("ProofOfPaymentDoc")?.enable();
     }
     else {
@@ -456,7 +573,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   }
 
   PaymentMadeChange() {
-    if(this.ProcurementFormGroup.get("FullPaymentMade")?.value == true) {
+    if (this.ProcurementFormGroup.get("FullPaymentMade")?.value == true) {
       this.ProcurementFormGroup.get("PaidOnDate")?.enable();
       this.ProcurementFormGroup.get("UploadReceiptDoc")?.enable();
     }
@@ -465,9 +582,9 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
       this.ProcurementFormGroup.get("UploadReceiptDoc")?.disable();
     }
   }
-  file:File[] = [null,null];
-  uploadFile(i:number,event:any) {
-    this.file[i] = event.target.files[0] ;
+  file: File[] = [null, null];
+  uploadFile(i: number, event: any) {
+    this.file[i] = event.target.files[0];
     console.log(this.file[i])
   }
 
@@ -489,16 +606,16 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
     this.ProcurementDetails.employeeID = this.EmployeeDetails.employeeID;
     //this.ProcurementDetails.employeeID = 2;
-   // this.ProcurementDetails.procurement_Request_ID = this.ProcurementRequest_ID;
+    // this.ProcurementDetails.procurement_Request_ID = this.ProcurementRequest_ID;
     this.ProcurementDetails.sign_Off_Status_ID = 1;
     //if statement
-    if(this.ProcurementDetails.payment_Made == true) {
+    if (this.ProcurementDetails.payment_Made == true) {
       this.ProcurementDetails.procurement_Payment_Status_ID = 1;
     }
     else {
       this.ProcurementDetails.procurement_Payment_Status_ID = 2;
     }
-    if(this.MandateLimitAmount < Number(this.ProcurementDetails.total_Amount)) {
+    if (this.MandateLimitAmount < Number(this.ProcurementDetails.total_Amount)) {
       this.ProcurementDetails.procurement_Status_ID = 3;
       this.VendorNotification.notification_Type_ID = 14;
       let transVar: any
@@ -508,20 +625,21 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
       this.VendorNotification.user_ID = 1;
       this.ProcureService.ProcurementAddNotification(this.VendorNotification).subscribe();
 
-    } 
+    }
     else {
       this.ProcurementDetails.procurement_Status_ID = 1;
     }
-    
 
-    this.ProcurementDetails.account_Code = this.ProcurementFormGroup.get("AccountCode")?.value;
+
+    this.ProcurementDetails.BudgetLineId = Number(this.ProcurementFormGroup.get("AccountCode")?.value);
+    this.ProcurementDetails.budget_Line.account_Code = this.ProcurementFormGroup.get("AccountCode")?.value;
     this.ProcurementDetails.payment_Method_ID = this.ProcurementFormGroup.get("PaymentType")?.value;
     this.ProcurementDetails.procurement_Request = this.Procurement_Request;
     this.ProcurementDetails.procurement_Request_ID = Number(this.Procurement_Request.procurement_Request_ID);
     console.log(this.ProcurementDetails)
     this.ProcureService.AddProcurementDetails(this.ProcurementDetails).subscribe(result => {
       console.log(result[0])
-      if(this.ProcurementDetails.deposit_Required == true) {
+      if (this.ProcurementDetails.deposit_Required == true) {
         this.Deposit.deposit_Amount = this.ProcurementFormGroup.get("DepositAmount")?.value;
         this.Deposit.amount_Outstanding = (Number(this.ProcurementFormGroup.get("TotalAmount")?.value) - Number(this.ProcurementFormGroup.get("DepositAmount")?.value))
         this.Deposit.procurement_Details = result[0];
@@ -533,13 +651,13 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.Deposit.deposit_Due_Date = dateChange.transform(this.ProcurementFormGroup.get("DepositDueDate")?.value, 'MM, dd, y');
         this.Deposit.procurement_Details_ID = result[0].procurement_Details_ID;
         //console.log(this.Deposit)
-        this.ProcureService.AddDeposit(this.Deposit).subscribe(check =>{console.log(check)})
+        this.ProcureService.AddDeposit(this.Deposit).subscribe(check => { console.log(check) })
       }
-      if(this.ProcurementDetails.proof_Of_Payment_Required == true) {
+      if (this.ProcurementDetails.proof_Of_Payment_Required == true) {
         let FolderCategory = "ProofOfPayment"
         let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`
         console.log(ProcurementRequest)
-        this.ProcureService.uploadProcureFile(FolderCategory,ProcurementRequest,this.file[1]).subscribe(response => {
+        this.ProcureService.uploadProcureFile(FolderCategory, ProcurementRequest, this.file[1]).subscribe(response => {
           this.ProofOfPayment.procurement_Details = result[0];
           this.ProofOfPayment.procurement_Details_ID = result[0].procurement_Details_ID;
           let Path: any = response
@@ -552,11 +670,11 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.ProcureService.AddProofOfPayment(this.ProofOfPayment).subscribe();
         })
       }
-      if(this.ProcurementDetails.payment_Made == true) {
+      if (this.ProcurementDetails.payment_Made == true) {
         let FolderCategory = "PaymentMade";
-        let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}` ;
+        let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`;
 
-        this.ProcureService.uploadProcureFile(FolderCategory,ProcurementRequest,this.file[0]).subscribe(response => {
+        this.ProcureService.uploadProcureFile(FolderCategory, ProcurementRequest, this.file[0]).subscribe(response => {
           let Path: any = response
           this.PaymentMade.receipt_Upload = Path.returnedPath.toString();
           this.PaymentMade.paid_On_Date = dateChange.transform(this.ProcurementFormGroup.get("PaidOnDate")?.value, 'MM, dd, y');
@@ -569,9 +687,9 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.PaymentMade.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category
           this.ProcureService.AddPaymentMade(this.PaymentMade).subscribe();
         })
-         
+
       }
-      if(this.ProcurementFormGroup.get("ItemType")?.value == "Consumable") {
+      if (this.ProcurementFormGroup.get("ItemType")?.value == "Consumable") {
         this.Procurement_Consumable.consumable_ID = Number(this.ProcurementFormGroup.get("ConsumableItem")?.value)
         this.Procurement_Consumable.procurement_Details_ID = result[0].procurement_Details_ID;
         this.Procurement_Consumable.procurement_Details = result[0]
@@ -581,29 +699,30 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.Procurement_Consumable.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
         this.Procurement_Consumable.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category
         this.Procurement_Consumable.quantity = Number(this.ProcurementFormGroup.get("ConsumableQuantity")?.value)
-        this.ConsumableItems.forEach(e=> {
-          if(e.consumable_Category_ID == Number(this.ProcurementFormGroup.get("ConsumableItem")?.value) ){
+        this.ConsumableItems.forEach(e => {
+          if (e.consumable_Category_ID == Number(this.ProcurementFormGroup.get("ConsumableItem")?.value)) {
             this.Procurement_Consumable.consumable = e
           }
         })
-        this.ProcureService.AddProcurementConsumable(this.Procurement_Consumable).subscribe(r => {console.log(r)})
+        console.log(this.Procurement_Consumable)
+        this.ProcureService.AddProcurementConsumable(this.Procurement_Consumable).subscribe(r => { console.log(r) })
         this.ProcureService.GetVendorConsumable().subscribe(b => {
           this.Vendor_Consumable.consumable_ID = Number(this.ProcurementFormGroup.get("ConsumableItem")?.value)
           console.log(b.length + 1)
-          this.ConsumableItems.forEach(e=> {
-          if(e.consumable_Category_ID == Number(this.ProcurementFormGroup.get("ConsumableItem")?.value) ){
-            console.log(e)
-            this.Vendor_Consumable.consumable = e
-            this.Vendor_Consumable.vendor = this.Procurement_Request.vendor;
-            this.Vendor_Consumable.vendor_ID = Number(this.Procurement_Request.vendor_ID);
-            this.Vendor_Consumable.vendor_Consumbale_ID = 0
-            console.log(this.Vendor_Consumable)
-            //(b.length + 1);
-            this.ProcureService.AddVendorConsumable(this.Vendor_Consumable).subscribe(r => {console.log(r)});
-          }
+          this.ConsumableItems.forEach(e => {
+            if (e.consumable_Category_ID == Number(this.ProcurementFormGroup.get("ConsumableItem")?.value)) {
+              console.log(e)
+              this.Vendor_Consumable.consumable = e
+              this.Vendor_Consumable.vendor = this.Procurement_Request.vendor;
+              this.Vendor_Consumable.vendor_ID = Number(this.Procurement_Request.vendor_ID);
+              this.Vendor_Consumable.vendor_Consumbale_ID = 0
+              console.log(this.Vendor_Consumable)
+              //(b.length + 1);
+              this.ProcureService.AddVendorConsumable(this.Vendor_Consumable).subscribe(r => { console.log(r) });
+            }
           })
         })
-        
+
       }
       else {
         this.assets.description = this.ProcurementFormGroup.get("AssetDescription")?.value;
@@ -611,7 +730,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.ProcureService.AddAsset(this.assets).subscribe(data => {
           console.log(data)
           this.assets.asset_ID = data[0].asset_ID;
-          
+
           this.procurment_assets.asset = data[0]
           this.procurment_assets.asset_ID = data[0].asset_ID;
           this.procurment_assets.procurement_Details = result[0]
@@ -625,35 +744,46 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.ProcureService.AddProcurementAsset(this.procurment_assets).subscribe(r => console.log(r));
 
           this.ProcureService.GetVendorAsset().subscribe(a => {
-           this.vendor_asset.asset= data[0]
-           this.vendor_asset.asset_ID = data[0].asset_ID;
-           this.vendor_asset.vendor = this.Procurement_Request.vendor;
-           this.vendor_asset.vendor_ID = Number(this.Procurement_Request.vendor_ID);
-           this.vendor_asset.asset_ID = (a.length + 1);
-           this.ProcureService.AddVendorAsset(this.vendor_asset).subscribe(r => console.log(r))
+            this.vendor_asset.asset = data[0]
+            this.vendor_asset.asset_ID = data[0].asset_ID;
+            this.vendor_asset.vendor = this.Procurement_Request.vendor;
+            this.vendor_asset.vendor_ID = Number(this.Procurement_Request.vendor_ID);
+            this.vendor_asset.asset_ID = (a.length + 1);
+            this.ProcureService.AddVendorAsset(this.vendor_asset).subscribe(r => console.log(r))
           })
-          
+
         })
       }
 
-      var action = "PLACED";
-      var title = "PLACED PROCUREMENT REQUEST";
-      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement details for procurement <strong>" + result[0].procurement_Request.name + "</strong> has been <strong style='color:green'> PLACED </strong> successfully!");
+      this.log.action = "Placed Procurement Request for: " + this.ProcurementDetails.procurement_Request.name;
+      this.log.user = this.ProcureService.decodeUser(sessionStorage.getItem("token"));
+      let test: any
+      test = new DatePipe('en-ZA');
+      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+      this.ProcureService.AuditLogAdd(this.log).subscribe({
+        next: (Log) => {
+          var action = "PLACED";
+          var title = "PLACED PROCUREMENT REQUEST";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement details for procurement <strong>" + result[0].procurement_Request.name + "</strong> has been <strong style='color:green'> PLACED </strong> successfully!");
 
-      const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-        disableClose: true,
-        data: { action, title, message }
-      });
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
 
-      const duration = 1750;
-      setTimeout(() => {
-        this.router.navigate(['/PlaceProcurementRequest']);
-        dialogRef.close();
-      }, duration);
+          const duration = 1750;
+          setTimeout(() => {
+            this.router.navigate(['/PlaceProcurementRequest']);
+            dialogRef.close();
+          }, duration);
+        }
+      })
+
+
 
     })
   }
-  
+
 
 }
 

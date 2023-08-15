@@ -86,7 +86,13 @@ import { SignOffRequestComponent } from './sign-off-request/sign-off-request.com
 
 import { BackupComponent } from './Settings/backup/backup.component';
 import { EditProcurementRequestComponent } from './edit-procurement-request/edit-procurement-request.component';
+import { AuditLog } from './Shared/AuditLog';
+import { ViewAuditLogComponent } from './view-audit-log/view-audit-log.component';
 
+import { ReportsMainViewComponent } from './Reports/reports-main-view/reports-main-view.component';
+import { ReportFilterMenuComponent } from './Reports/report-filter-menu/report-filter-menu.component';
+
+import { BudgetVarianceReportComponent } from './budget-variance-report/budget-variance-report.component';
 const routes: Routes = [
   {
     path: "",
@@ -216,11 +222,11 @@ const routes: Routes = [
     component: ViewHelpComponent
   },
   {
-    path: 'ViewHelpUser' ,canActivate:[AuthService],
+    path: 'ViewHelpUser', canActivate: [AuthService],
     component: ViewHelpuserComponent
   },
   {
-    path: 'CreateHelp' , canActivate: [AuthService],
+    path: 'CreateHelp', canActivate: [AuthService],
     component: CreateHelpComponent
   },
   {
@@ -368,6 +374,22 @@ const routes: Routes = [
   {
     path: 'SignOffRequest/:id',
     component: SignOffRequestComponent
+  },
+  {
+    path: 'ReportsMainView',
+    component: ReportsMainViewComponent
+  },
+  {
+    path: 'ReportFilterMenu',
+    component: ReportFilterMenuComponent
+  },
+  {
+    path: 'ViewAuditLog',
+    component: ViewAuditLogComponent
+  },
+  {
+    path: 'VarianceReport',
+    component: BudgetVarianceReportComponent
   }
 
 

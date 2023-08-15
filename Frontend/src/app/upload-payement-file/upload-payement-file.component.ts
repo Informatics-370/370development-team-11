@@ -33,6 +33,8 @@ import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
+import { AuditLog } from '../Shared/AuditLog';
+import { Access } from '../Shared/Access';
 
 @Component({
   selector: 'app-upload-payement-file',
@@ -78,10 +80,26 @@ export class UploadPayementFileComponent {
     name: '',
     description: ''
   }
-
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -132,6 +150,8 @@ export class UploadPayementFileComponent {
     user: {
       user_Id: 0,
       role_ID: 0,
+      access_ID: 0,
+      access: this.Access,
       username: "",
       password: "",
       profile_Picture: "",
@@ -190,7 +210,7 @@ export class UploadPayementFileComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: 0,
+    account_Code: '',
     budget_Category: this.category,
     month: '',
     budgetAmt: 0,
@@ -204,7 +224,7 @@ export class UploadPayementFileComponent {
     procurement_Request_ID: 0,
     sign_Off_Status_ID: 0,
     procurement_Payment_Status_ID: 0,
-    account_Code: 0,
+    BudgetLineId: 0,
     procurement_Status_ID: 0,
     payment_Method_ID: 0,
     employee: this.EmployeeDetails,
@@ -311,6 +331,12 @@ export class UploadPayementFileComponent {
     proof_Of_Payment_Doc: "string"
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, ID: Number }, private formBuilder: FormBuilder, private dataservice: DataService, private router: Router, private dialogRef: MatDialogRef<UploadPayementFileComponent>) { }
 
@@ -358,8 +384,20 @@ export class UploadPayementFileComponent {
         this.sPath = Path.pathSaved.toString()
         this.pop.proof_Of_Payment_Doc = this.sPath;
         this.pop.procurement_Details_ID = 1;
-        this.dialogRef.close();
-        this.router.navigate(['/ViewProcurementDetails'])
+
+        this.log.action = "Payment File Uploaded: " + this.data.name;
+        this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.dataservice.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            this.dialogRef.close();
+            this.router.navigate(['/ViewProcurementDetails'])
+          }
+        })
+
+
       })
     }
   }

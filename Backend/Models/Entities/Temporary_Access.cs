@@ -17,7 +17,29 @@ namespace ProcionAPI.Models.Entities
         [MaxLength(32)]
         public string Name { get; set; }
 
-        [MaxLength(50)]
-        public string Description { get; set; }
+        [Required]
+        public string IsAdmin { get; set; }
+        [Required]
+        public string CanAccInv { get; set; }
+        [Required]
+        public string CanAccFin { get; set; }
+        [Required]
+        public string CanAccPro { get; set; }
+        [Required]
+        public string CanAccVen { get; set; }
+        [Required]
+        public string CanAccRep { get; set; }
+        [Required]
+        public string CanViewPenPro { get; set; }
+        [Required]
+        public string CanViewFlagPro { get; set; }
+        [Required]
+        public string CanViewFinPro { get; set; }
+        [Required]
+        public string CanAppVen { get; set; }
+        [Required]
+        public string CanEditVen { get; set; }
+        [Required]
+        public string CanDeleteVen { get; set; }
     }
 }

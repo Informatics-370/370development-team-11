@@ -12,6 +12,9 @@ import { DelegationStatus } from '../../Shared/DelegationStatus';
 import { Role } from '../../Shared/EmployeeRole';
 import { User } from '../../Shared/User';
 import { DatePipe } from '@angular/common';
+import { AuditLog } from '../../Shared/AuditLog';
+import { Access } from 'src/app/Shared/Access';
+import { Temporary_Access } from '../../Shared/Temporary_Access';
 
 @Component({
   selector: 'app-edit-delegation',
@@ -24,9 +27,10 @@ export class EditDelegationComponent implements OnInit {
   admin: any;
   iName: string;
   delegation: any;
+  tempaccess: any;
   delID: number;
 
-  myControl = new FormControl<string | User>('');
+  myControl = new FormControl<string | User>('', [Validators.minLength(2), Validators.required]);
   options: User[] = [];
   SearchedOptions: Observable<User[]>;
   delegateID: any
@@ -40,10 +44,27 @@ export class EditDelegationComponent implements OnInit {
     name: '',
     description: ''
   }
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
 
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -81,6 +102,32 @@ export class EditDelegationComponent implements OnInit {
     delegation_Status: this.doas
   }
 
+  ta: Temporary_Access = {
+    temp_Access_ID: 0,
+    delegation_ID: 0,
+    delegation_Of_Authority: this.doa,
+    name: '',
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
@@ -92,6 +139,7 @@ export class EditDelegationComponent implements OnInit {
     })
 
     this.getDelegation();
+    this.getTempAccess();
 
     this.dataService.GetUsers().subscribe(r => {
       this.options = r
@@ -116,6 +164,8 @@ export class EditDelegationComponent implements OnInit {
     return this.options.filter(r => r.username.toLowerCase().includes(filterValue));
   }
 
+
+
   getDelegation() {
     this.dataService.GetDelegation(+this.route.snapshot.params['did']).subscribe(r => {
       this.delegation = r;
@@ -125,8 +175,8 @@ export class EditDelegationComponent implements OnInit {
         end: this.delegation.to_Date,
         DelegationFile: this.delegation.delegation_Document
       });
-      
-      
+
+
       this.delID = this.delegation.delegation_ID;
       this.doa.user_Id = this.delegation.user_Id;
       this.doa.admin_ID = this.delegation.admin_ID;
@@ -138,12 +188,35 @@ export class EditDelegationComponent implements OnInit {
     })
   }
 
+  getTempAccess() {
+    this.dataService.GetTempAcc(+this.route.snapshot.params['did']).subscribe(r => {
+      this.tempaccess = r;
+      this.ta.name = this.tempaccess.name;
+      this.ta.IsAdmin = this.tempaccess.isAdmin;
+      this.ta.CanAccInv = this.tempaccess.canAccInv;
+      this.ta.CanAccFin = this.tempaccess.canAccFin;
+      this.ta.CanAccPro = this.tempaccess.canAccPro;
+      this.ta.CanAccVen = this.tempaccess.canAccVen;
+      this.ta.CanAccRep = this.tempaccess.canAccRep;
+      this.ta.CanViewPenPro = this.tempaccess.canViewPenPro;
+      this.ta.CanViewFlagPro = this.tempaccess.canViewFlagPro;
+      this.ta.CanViewFinPro = this.tempaccess.canViewFinPro;
+      this.ta.CanAppVen = this.tempaccess.canAppVen;
+      this.ta.CanEditVen = this.tempaccess.canEditVen;
+      this.ta.CanDeleteVen = this.tempaccess.canDeleteVen;
+    })
+  }
+
   get f() {
     return this.myForm.controls;
   }
 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
+  }
+
+  public myControlError = (errorName: string) => {
+    return this.myControl.hasError(errorName);
   }
 
   Close() {
@@ -155,6 +228,54 @@ export class EditDelegationComponent implements OnInit {
     this.dataService.GetUserByUsername(username).subscribe(r => {
       this.delegateID = r;
       this.doa.user_Id = this.delegateID.user_Id;
+
+      if (this.ta.IsAdmin == "false" && this.delegateID.access.isAdmin == "true") {
+        this.ta.IsAdmin = "true";
+      }
+
+      if (this.ta.CanAccFin == "false" && this.delegateID.access.canAccFin == "true") {
+        this.ta.CanAccFin = "true";
+      }
+
+      if (this.ta.CanAccInv == "false" && this.delegateID.access.canAccInv == "true") {
+        this.ta.CanAccInv = "true";
+      }
+
+      if (this.ta.CanAccPro == "false" && this.delegateID.access.canAccPro == "true") {
+        this.ta.CanAccPro = "true";
+      }
+
+      if (this.ta.CanAccRep == "false" && this.delegateID.access.canAccRep == "true") {
+        this.ta.CanAccRep = "true";
+      }
+
+      if (this.ta.CanAccVen == "false" && this.delegateID.access.canAccVen == "true") {
+        this.ta.CanAccVen = "true";
+      }
+
+      if (this.ta.CanAppVen == "false" && this.delegateID.access.canAppVen == "true") {
+        this.ta.CanAppVen = "true";
+      }
+
+      if (this.ta.CanDeleteVen == "false" && this.delegateID.access.canDeleteVen == "true") {
+        this.ta.CanDeleteVen = "true";
+      }
+
+      if (this.ta.CanEditVen == "false" && this.delegateID.access.canEditVen == "true") {
+        this.ta.CanEditVen = "true";
+      }
+
+      if (this.ta.CanViewFinPro == "false" && this.delegateID.access.canViewFinPro == "true") {
+        this.ta.CanViewFinPro = "true";
+      }
+
+      if (this.ta.CanViewFlagPro == "false" && this.delegateID.access.canViewFlagPro == "true") {
+        this.ta.CanViewFlagPro = "true";
+      }
+
+      if (this.ta.CanViewPenPro == "false" && this.delegateID.access.canViewPenPro == "true") {
+        this.ta.CanViewPenPro = "true";
+      }
     })
   }
 
@@ -169,7 +290,7 @@ export class EditDelegationComponent implements OnInit {
     this.doa.delegatingParty = this.myForm.get('DelegatingName')?.value;
     var name = "" + this.doa.delegatingParty;
 
-    
+
 
     if (this.files[0] == "") {
       this.doa.delegationStatus_ID = 1;
@@ -181,34 +302,47 @@ export class EditDelegationComponent implements OnInit {
       let endDate: any
       endDate = new DatePipe('en-ZA');
       this.doa.to_Date = startDate.transform(this.myForm.get('end')?.value, 'MMM d, y, h:mm:ss a');
-      
+
       this.dataService.EditDelegation(this.doa, this.delID).subscribe({
         next: (response) => {
+          this.dataService.EditTempAcc(this.ta, this.delID).subscribe({
+            next: (res) => {
+              this.dataService.CheckDelegation().subscribe({
+                next: (r) => {
+                  if (r) {
 
-          this.dataService.CheckDelegation().subscribe({
-            next: (r) => {
-              if (r) {
-                var action = "EDIT";
-                var title = "EDIT SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
+                    this.log.action = "Edited Delegation for Request: " + this.delID;
+                    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                    let test: any
+                    test = new DatePipe('en-ZA');
+                    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                    this.dataService.AuditLogAdd(this.log).subscribe({
+                      next: (Log) => {
+                        var action = "EDIT";
+                        var title = "EDIT SUCCESSFUL";
+                        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
 
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
+                        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                          disableClose: true,
+                          data: { action, title, message }
+                        });
 
-                const duration = 1750;
-                setTimeout(() => {
-                  this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-                  dialogRef.close();
-                }, duration);
-              }
+                        const duration = 1750;
+                        setTimeout(() => {
+                          this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
+                          dialogRef.close();
+                        }, duration);
+                      }
+                    })
+                  }
+                }
+              })
             }
           })
         }
       })
     } else {
-      
+
       this.fileToUpload = this.files[0];
 
       if (this.fileToUpload != null) {
@@ -241,20 +375,32 @@ export class EditDelegationComponent implements OnInit {
                 this.dataService.CheckDelegation().subscribe({
                   next: (r) => {
                     if (r) {
-                      var action = "EDIT";
-                      var title = "EDIT SUCCESSFUL";
-                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
 
-                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                        disableClose: true,
-                        data: { action, title, message }
-                      });
+                      this.log.action = "Edited Delegation for Request: " + this.delID;
+                      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataService.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          var action = "EDIT";
+                          var title = "EDIT SUCCESSFUL";
+                          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
 
-                      const duration = 1750;
-                      setTimeout(() => {
-                        this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-                        dialogRef.close();
-                      }, duration);
+                          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                            disableClose: true,
+                            data: { action, title, message }
+                          });
+
+                          const duration = 1750;
+                          setTimeout(() => {
+                            this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
+                            dialogRef.close();
+                          }, duration);
+                        }
+                      })
+
+
                     }
                   }
                 })
@@ -263,11 +409,11 @@ export class EditDelegationComponent implements OnInit {
           })
         })
 
-        
-      } 
-    }
-    
 
-    
+      }
+    }
+
+
+
   }
 }

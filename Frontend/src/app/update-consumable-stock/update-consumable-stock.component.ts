@@ -14,6 +14,8 @@ import { Notification } from '../Shared/Notification';
 import { Notification_Type } from '../Shared/Notification_Type';
 import { User } from '../Shared/User';
 import { Role } from '../Shared/EmployeeRole';
+import { AuditLog } from '../Shared/AuditLog';
+import { Access } from '../Shared/Access';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -54,8 +56,8 @@ export class UpdateConsumableStockComponent implements OnInit {
   History: Consumable_History = {
     Consumable_ID: 0,
     history_ID: 0,
-    DateCaptured: new Date(),
-    StockAmt: 0,
+    dateCaptured: new Date(),
+    stockAmt: 0,
     consumable: {
       consumable_ID: 0,
       consumable_Category_ID: 0,
@@ -72,10 +74,27 @@ export class UpdateConsumableStockComponent implements OnInit {
     name: '',
     description: ''
   }
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
 
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -99,7 +118,12 @@ export class UpdateConsumableStockComponent implements OnInit {
     user: this.usr,
     notification_Type: this.Notification_Type,
   }
-
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   ngOnInit(): void {
     this.myForm = this.formBuilder.group({
@@ -195,11 +219,11 @@ export class UpdateConsumableStockComponent implements OnInit {
             this.Consumables.consumable_Category.name = result.name
             console.log(this.Consumables)
 
-            this.History.StockAmt = this.myForm.get('StockLevel')?.value;
+            this.History.stockAmt = this.myForm.get('StockLevel')?.value;
 
             let test: any
             test = new DatePipe('en-ZA');
-            this.History.DateCaptured = test.transform(this.History.DateCaptured, 'MMM d, y, h:mm:ss a');
+            this.History.dateCaptured = test.transform(this.History.dateCaptured, 'MMM d, y, h:mm:ss a');
 
             this.History.consumable = this.Consumables
 
@@ -217,9 +241,19 @@ export class UpdateConsumableStockComponent implements OnInit {
 
                   this.dataservice.ConsumableAddNotification(this.ComsumableNotif).subscribe({
                     next: (LowStock) => {
-                      document.querySelector('button').classList.toggle("is_active");
-                      this.dialogRef.close();
-                      this.router.navigate(['/ViewConsumable'])
+                      this.log.action = "Edited Procurement Request: " + this.Consumables.name;
+                      this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataservice.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          document.querySelector('button').classList.toggle("is_active");
+                          this.dialogRef.close();
+                          this.router.navigate(['/ViewConsumable'])
+                        }
+                      })
+
 
                     }
                   })

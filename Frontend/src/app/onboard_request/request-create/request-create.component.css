@@ -1,13 +1,13 @@
-::ng-deep mat-tab-header {
+:host ::ng-deep mat-tab-header {
     background-color: #244688;
   }
 
-::ng-deep .mdc-tab-indicator__content--underline {
+:host ::ng-deep .mdc-tab-indicator__content--underline {
         --mdc-tab-indicator-active-indicator-color: white; 
 }
 
 
-::ng-deep .mdc-tab__text-label {
+:host ::ng-deep .mdc-tab__text-label {
     color: white;
 }
 
@@ -24,8 +24,8 @@
 
 
 
-mat-mdc-tab-body ng-tns-c60-18 ng-star-inserted mat-mdc-tab-body-active {
-    height: 400px!important;
+:host ::ng-deep .mat-mdc-tab-body  {
+    height: 320px!important;
 }
 
 

@@ -20,7 +20,32 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
   searchWord: string = '';
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  iRole: string;
+
+  iCanViewFlagPro: string = "false";
+  canViewFlagPro: string;
+
+  iCanViewPenPro: string = "false";
+  canViewPenPro: string;
+
   ngOnInit() {
+    this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
+    this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
+
+    if (this.iRole == "Admin" || this.iRole == "MD") {
+      this.canViewFlagPro = "true";
+      this.canViewPenPro = "true";
+    }
+
+    if (this.iCanViewFlagPro == "true") {
+      this.canViewFlagPro = "true";
+    }
+
+    if (this.iCanViewPenPro == "true") {
+      this.canViewPenPro = "true";
+    }
+
     this.GetProcurementRequests();
     console.log(this.ProcurementRequests)
     console.log(this.SearchedPRequests)

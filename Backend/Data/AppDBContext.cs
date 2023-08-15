@@ -73,6 +73,7 @@ namespace ProcionAPI.Data
         public DbSet<Vendor_Asset> Vendor_Asset { get; set; }
         public DbSet<Procurement_Asset> Procurement_Asset { get; set; }
         public DbSet<Consumable_History> Consumable_History { get; set; }
+        public DbSet<AuditLog> AuditLog { get; set; }
 
         UserRepository userrep = new UserRepository();
 
@@ -81,7 +82,7 @@ namespace ProcionAPI.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Budget_Line>()
-                .HasKey(bl => new { bl.Account_Code, bl.Budget_ID, bl.Category_ID });
+                .HasKey(bl => new { bl.BudgetLineId });
 
             modelBuilder.Entity<Onboard_Request>()
                .HasKey(or => new {or.Onboard_Request_Id, or.User_Id, or.Vendor_ID });
@@ -121,6 +122,25 @@ namespace ProcionAPI.Data
 
             }
             );
+            modelBuilder.Entity<Access>()
+            .HasData(
+            new
+            {
+                Access_ID = 1,
+                IsAdmin = "true",
+                CanAccInv = "true",
+                CanAccFin = "true",
+                CanAccPro = "true",
+                CanAccVen = "true",
+                CanAccRep = "true",
+                CanViewPenPro = "true",
+                CanViewFlagPro = "true",
+                CanViewFinPro = "true",
+                CanAppVen = "true",
+                CanEditVen = "true",
+                CanDeleteVen = "true"
+            }
+            );
 
             modelBuilder.Entity<User>()
             .HasData(
@@ -128,9 +148,11 @@ namespace ProcionAPI.Data
             {
                 User_Id = 1,
                 Role_ID = 2,
+                Access_ID = 1,
                 Username = "Admin",
                 Password = userrep.HashPassword("Admin123"),
                 Profile_Picture = "test",
+                No_Notifications = 0
 
             }
             );
@@ -142,11 +164,12 @@ namespace ProcionAPI.Data
                 User_Id = 1,
                 AdminName = "Admin",
                 AdminSurname = "Demo",
-                CellPhone_Num = "079 373 1393",
+                CellPhone_Num = "0793731393",
                 Email = "moyoemailservice@gmail.com"
 
             }
             );
+
             modelBuilder.Entity<Role>()
             .HasData(
             new
@@ -161,6 +184,24 @@ namespace ProcionAPI.Data
                 Role_ID = 2,
                 Name = "Admin",
                 Description = "Admin",
+            },
+            new
+            {
+                Role_ID = 3,
+                Name = "GRC",
+                Description = "GRC",
+            },
+            new
+            {
+                Role_ID = 4,
+                Name = "Finance",
+                Description = "Finance",
+            },
+            new
+            {
+                Role_ID = 5,
+                Name = "Employee",
+                Description = "Employee",
             }
             );
 

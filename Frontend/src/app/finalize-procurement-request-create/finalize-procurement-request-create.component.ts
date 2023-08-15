@@ -19,7 +19,7 @@ import { Procurement_Status } from '../Shared/ProcurementStatus';
 import { Payment_Method } from '../Shared/PaymentMethod';
 import { BudgetLine } from '../Shared/BudgetLine';
 import { BudgetCategory } from '../Shared/BudgetCategory';
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Deposit } from '../Shared/Deposit';
 import { Payment_Made } from '../Shared/PaymentMade';
 import { Proof_Of_Payment } from '../Shared/ProofOfPayment';
@@ -29,6 +29,11 @@ import { Vendor_Consumable } from '../Shared/Vendor_Consumable';
 import { Asset } from '../Shared/Asset';
 import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { AuditLog } from '../Shared/AuditLog';
+import { Access } from '../Shared/Access';
 @Component({
   selector: 'app-finalize-procurement-request-create',
   templateUrl: './finalize-procurement-request-create.component.html',
@@ -70,9 +75,27 @@ export class FinalizeProcurementRequestCreateComponent {
     description: ''
   }
 
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
+
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -123,6 +146,8 @@ export class FinalizeProcurementRequestCreateComponent {
     user: {
       user_Id: 0,
       role_ID: 0,
+      access_ID: 0,
+      access: this.Access,
       username: "",
       password: "",
       profile_Picture: "",
@@ -181,7 +206,7 @@ export class FinalizeProcurementRequestCreateComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: 0,
+    account_Code: '',
     budget_Category: this.category,
     month: '',
     budgetAmt: 0,
@@ -195,7 +220,7 @@ export class FinalizeProcurementRequestCreateComponent {
     procurement_Request_ID: 0,
     sign_Off_Status_ID: 0,
     procurement_Payment_Status_ID: 0,
-    account_Code: 0,
+    BudgetLineId: 0,
     procurement_Status_ID: 0,
     payment_Method_ID: 0,
     employee: this.EmployeeDetails,
@@ -295,9 +320,19 @@ export class FinalizeProcurementRequestCreateComponent {
     asset: this.assets,
     vendor: this.Procurement_Request.vendor,
   }
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   BudgetAllocationCode: BudgetLine[] = [];
   finalizationForm: FormGroup = new FormGroup({});
-  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder) { }
+
+  ActualAmountDisplay;
+  TotalAmountDisplay;
+  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder, private currencyPipe: CurrencyPipe, private sanitizer: DomSanitizer, private dialog: MatDialog) { }
 
 
   ngOnInit(): void {
@@ -333,8 +368,41 @@ export class FinalizeProcurementRequestCreateComponent {
         this.ProofOfPayment.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
         this.ProofOfPayment.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category;
         this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe();
+
+        this.log.action = "Procurement Request " + this.route.snapshot.paramMap.get('id') + " Finalised";
+        this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.dataService.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            this.router.navigate(['/ViewBudgetAllocation']);
+          }
+        })
       })
-      this.router.navigate(['/ViewBudgetAllocation']);
+      this.log.action = "Finalised procurement request for: " + this.Procurement_Request.name;
+      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+      let test: any
+      test = new DatePipe('en-ZA');
+      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+      this.dataService.AuditLogAdd(this.log).subscribe({
+        next: (Log) => {
+          var action = "CREATE";
+          var title = "CREATE SUCCESSFUL";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> FINALISED! </strong> successfully!");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+            this.router.navigate(['/ViewBudgetAllocation']);
+          }, duration);
+        }
+      })
     })
 
   }
@@ -351,6 +419,10 @@ export class FinalizeProcurementRequestCreateComponent {
   GetProcurementDetails(id: number) {
     this.dataService.GetProcurementDetailsByID(id).subscribe(result => {
       this.ProcurementDetails = result;
+      this.ActualAmountDisplay = this.ProcurementDetails.budget_Line.actualAmt;
+      this.TotalAmountDisplay = this.ProcurementDetails.total_Amount;
+      this.ActualAmountDisplay = this.currencyPipe.transform(this.ActualAmountDisplay, 'R');
+      this.TotalAmountDisplay = this.currencyPipe.transform(this.TotalAmountDisplay, 'R');
       console.log(result)
     })
   }

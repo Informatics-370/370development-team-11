@@ -12,7 +12,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { MailData } from '../Shared/Mail';
-
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
+import { Access } from '../Shared/Access';
 
 
 @Component({
@@ -66,9 +68,26 @@ export class CreateEmployeeComponent implements OnInit {
     description: ''
   }
 
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: 'false',
+    CanAccInv: 'false',
+    CanAccFin: 'false',
+    CanAccPro: 'false',
+    CanAccVen: 'false',
+    CanAccRep: 'false',
+    CanViewPenPro: 'false',
+    CanViewFlagPro: 'false',
+    CanViewFinPro: 'false',
+    CanAppVen: 'false',
+    CanEditVen: 'false',
+    CanDeleteVen: 'false',
+  }
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -92,6 +111,13 @@ export class CreateEmployeeComponent implements OnInit {
     mandate_limit: this.ml
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   ngOnInit() {
 
     this.GetRoles();
@@ -103,7 +129,7 @@ export class CreateEmployeeComponent implements OnInit {
       EmployeeName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       EmployeeSurname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
-      CellPhone_Num: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12), Validators.pattern("^[0-9 ]*$")]],
+      CellPhone_Num: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern("^[0-9]*$")]],
       Role_ID: ['', [Validators.required]],
       Mandate_ID: ['', [Validators.required]],
       Department_ID: ['', [Validators.required]],
@@ -164,7 +190,7 @@ export class CreateEmployeeComponent implements OnInit {
     var name = this.myForm.get('EmployeeName')?.value;
     var surname = this.myForm.get('EmployeeSurname')?.value;
     var ts = name.concat(surname);
-    var username = ts.concat(cel.substring(4, 7));
+    var username = ts.concat(cel.substring(3, 6));
     username = username.replace(/\s/g, "");
 
 
@@ -172,9 +198,54 @@ export class CreateEmployeeComponent implements OnInit {
     this.rl = this.myForm.get('Role_ID')?.value;
     this.rl.role_ID = 0;
 
+    if (this.rl.name == "MD") {
+      this.Access.IsAdmin = 'true';
+      this.Access.CanAccFin = 'true';
+      this.Access.CanAccInv = 'true';
+      this.Access.CanAccPro = 'true';
+      this.Access.CanAccRep = 'true';
+      this.Access.CanAccVen = 'true';
+      this.Access.CanAppVen = 'true';
+      this.Access.CanDeleteVen = 'true';
+      this.Access.CanEditVen = 'true';
+      this.Access.CanViewFinPro = 'true';
+      this.Access.CanViewFlagPro = 'true';
+      this.Access.CanViewPenPro = 'true';
+    }
+    else if (this.rl.name == "GRC") {
+      this.Access.CanAccPro = 'true';
+      this.Access.CanAccRep = 'true';
+      this.Access.CanAccVen = 'true';
+      this.Access.CanAppVen = 'true';
+      this.Access.CanDeleteVen = 'true';
+      this.Access.CanEditVen = 'true';
+      this.Access.CanViewFinPro = 'true';
+      this.Access.CanViewFlagPro = 'true';
+      this.Access.CanViewPenPro = 'true';
+    }
+    else if (this.rl.name == "Finance") {
+      this.Access.CanAccFin = 'true';
+      this.Access.CanAccPro = 'true';
+      this.Access.CanAccRep = 'true';
+      this.Access.CanAccVen = 'true';
+      this.Access.CanViewFinPro = 'true';
+      this.Access.CanViewFlagPro = 'true';
+      this.Access.CanViewPenPro = 'true';
+    }
+    else if (this.rl.name == "FD") {
+      this.Access.CanAccFin = 'true';
+      this.Access.CanAccPro = 'true';
+      this.Access.CanAccRep = 'true';
+      this.Access.CanAccVen = 'true';
+      this.Access.CanViewFinPro = 'true';
+      this.Access.CanViewFlagPro = 'true';
+      this.Access.CanViewPenPro = 'true';
+    }
+
     this.usr.username = username;
     this.usr.password = newPassword;
     this.usr.role = this.rl;
+    this.usr.access = this.Access;
 
     this.br = this.myForm.get('Branch_ID')?.value;
     this.br.branch_ID = 0;
@@ -217,20 +288,31 @@ export class CreateEmployeeComponent implements OnInit {
                     document.querySelector('button').classList.toggle("is_active");
                   }
 
-                  var action = "Create";
-                  var title = "CREATE SUCCESSFUL";
-                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+                  this.log.action = "Created Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                  this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                  let test: any
+                  test = new DatePipe('en-ZA');
+                  this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                  this.dataService.AuditLogAdd(this.log).subscribe({
+                    next: (Log) => {
+                      var action = "Create";
+                      var title = "CREATE SUCCESSFUL";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                    disableClose: true,
-                    data: { action, title, message }
-                  });
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
 
-                  const duration = 1750;
-                  setTimeout(() => {
-                    this.router.navigate(['/ViewEmployee']);
-                    dialogRef.close();
-                  }, duration);
+                      const duration = 1750;
+                      setTimeout(() => {
+                        this.router.navigate(['/ViewEmployee']);
+                        dialogRef.close();
+                      }, duration);
+                    }
+                  })
+
+
                 }
               })
             })

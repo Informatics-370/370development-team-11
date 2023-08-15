@@ -6,7 +6,8 @@ import { BudgetLine } from '../Shared/BudgetLine';
 import { BudgetCategory } from '../Shared/BudgetCategory';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { Department } from '../Shared/Department';
-
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -41,7 +42,7 @@ export class DeleteBudgetLineComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: 0,
+    account_Code: '',
     budget_Category: this.category,
     month: '2023-05-07',
     budgetAmt: 0,
@@ -49,11 +50,18 @@ export class DeleteBudgetLineComponent {
     variance: 0
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   showConfirmationDialog: boolean = true;
   showSuccessDialog: boolean = false;
 
-  constructor(public dialogRef: MatDialogRef<DeleteBudgetLineComponent>, private route: ActivatedRoute, private routee: Router, private dataService: DataService,
-    @Inject(MAT_DIALOG_DATA) public data: { id2: number }) { }
+  constructor(public dialogRef: MatDialogRef<DeleteBudgetLineComponent>, private route: ActivatedRoute, private router: Router, private dataService: DataService,
+    @Inject(MAT_DIALOG_DATA) public data: { id2: string }) { }
 
   ngOnInit(): void {
 
@@ -71,15 +79,23 @@ export class DeleteBudgetLineComponent {
     });
   }
 
-  onConfirm(id: number): void {
+  onConfirm(id: string): void {
     this.dataService.DeleteBudgetLine(id).subscribe({
       next: () => {
-        this.showConfirmationDialog = false;
-        this.showSuccessDialog = true;
-        setTimeout(() => {
-          this.dialogRef.close('confirm');
-          location.reload();
-        }, 1750);
+        this.log.action = "Deleted Budget Line: " + this.budgetLine.account_Code;
+        this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.dataService.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.dialogRef.close('confirm');
+            }, 1750);
+          }
+        })
       }
     });
   }

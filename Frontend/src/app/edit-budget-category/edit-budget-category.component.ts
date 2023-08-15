@@ -3,6 +3,8 @@ import { DataService } from '../DataService/data-service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BudgetCategory } from '../Shared/BudgetCategory';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-edit-budget-category',
@@ -17,6 +19,13 @@ export class EditBudgetCategoryComponent {
     description: ''
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   budgetCategoryForm: FormGroup = new FormGroup({});
   constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder) { }
 
@@ -24,8 +33,8 @@ export class EditBudgetCategoryComponent {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.GetBudgetCategory(id);
     this.budgetCategoryForm = this.formBuilder.group({
-      account_Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
-      description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]]
+      account_Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 &:-]+")]],
+      description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 &:-]+")]]
     })
 
   }
@@ -45,7 +54,17 @@ export class EditBudgetCategoryComponent {
     this.dataService.EditBudgetCategory(this.currentBudgetCategory.category_ID, this.currentBudgetCategory).subscribe(result => {
       document.getElementById('cBtn').style.display = "none";
       document.querySelector('button').classList.toggle("is_active");
-      this.router.navigate(['/ViewBudgetCategory']);
+
+      this.log.action = "Edited Budget Category for: " + this.currentBudgetCategory.account_Name;
+      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+      let test: any
+      test = new DatePipe('en-ZA');
+      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+      this.dataService.AuditLogAdd(this.log).subscribe({
+        next: (Log) => {
+          this.router.navigate(['/ViewBudgetCategory']);
+        }
+      })
     });
   }
 

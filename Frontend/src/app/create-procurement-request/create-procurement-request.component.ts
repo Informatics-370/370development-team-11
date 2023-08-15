@@ -19,6 +19,8 @@ import { Notification } from '../Shared/Notification';
 import { Notification_Type } from '../Shared/Notification_Type';
 import { User } from '../Shared/User';
 import { Role } from '../Shared/EmployeeRole';
+import { AuditLog } from '../Shared/AuditLog';
+import { Access } from '../Shared/Access';
 
 @Component({
   selector: 'app-create-procurement-request',
@@ -30,10 +32,25 @@ export class CreateProcurementRequestComponent implements OnInit {
   vendors: any[] = [];
   VendorType: String = 'Approved';
 
-  VendorNameControl = new FormControl('');
+  VendorNameControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]);
   filteredVendors: Observable<VendorOnboardRequest[]>
 
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
 
   Procurement_Request: Procurement_Request = {
     procurement_Request_ID: 0,
@@ -62,6 +79,8 @@ export class CreateProcurementRequestComponent implements OnInit {
     user: {
       user_Id: 0,
       role_ID: 0,
+      access_ID: 0,
+      access: this.Access,
       username: "",
       password: "",
       profile_Picture: "",
@@ -94,6 +113,8 @@ export class CreateProcurementRequestComponent implements OnInit {
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -125,9 +146,17 @@ export class CreateProcurementRequestComponent implements OnInit {
   sPath = "";
   uploadedPathArray: any[] = []
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   originalBorderColor: string = 'solid #244688';
 
   ngOnInit(): void {
+    let usr = this.dataService.decodeUser(sessionStorage.getItem("token"));
     if (this.VendorType == "Approved") {
       this.myForm = this.formBuilder.group({
         Selection: ["Approved", [Validators.required]],
@@ -135,6 +164,17 @@ export class CreateProcurementRequestComponent implements OnInit {
         Vendor: [0, [Validators.required]],
         Description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
         Quote1: ['', [Validators.required]]
+      })
+
+
+      this.dataService.GetUserByUsername(usr).subscribe({
+        next: (Res) => {
+          this.rl = Res.role;
+          this.Access = Res.access;
+          this.usr = Res;
+          this.usr.access = this.Access;
+          this.usr.role = this.rl;
+        }
       })
       this.GetVendors();
     }
@@ -149,6 +189,15 @@ export class CreateProcurementRequestComponent implements OnInit {
         OtherQuote1: ['', [Validators.required]],
         OtherQuote2: ['', [Validators.required]],
         OtherQuote3: ['', [Validators.required]]
+      })
+      this.dataService.GetUserByUsername(usr).subscribe({
+        next: (Res) => {
+          this.rl = Res.role;
+          this.Access = Res.access;
+          this.usr = Res;
+          this.usr.access = this.Access;
+          this.usr.role = this.rl;
+        }
       })
       this.GetVendors();
 
@@ -167,11 +216,15 @@ export class CreateProcurementRequestComponent implements OnInit {
 
     this.setVal(value)
     // If no vendors match the filter, return an array with a single element containing the entered value
+    this.myForm.get("VendorName").setValue(value)
     return this.vendors.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
   setVal(Name: String) {
+    console.log(Name)
     this.myForm.get("VendorName").setValue(Name)
+    this.myForm.get("VendorName").value;
+    console
   }
 
   onFile1UploadApproved(event: any) {
@@ -256,9 +309,8 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   GetVendors() {
-    this.dataService.getAllApprovedVendors(2).subscribe({
+    this.dataService.getAllApprovedVendors(3).subscribe({
       next: (response) => {
-        console.log(response)
         let VendorList: any[] = response
         VendorList.forEach((element) => {
           this.vendors.push(element)
@@ -273,7 +325,7 @@ export class CreateProcurementRequestComponent implements OnInit {
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
     this.Procurement_Request.vendor.name = this.myForm.get("VendorName").value;
     this.Procurement_Request.vendor.email = this.myForm.get("Email").value;
-    this.Procurement_Request.user.username = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    this.Procurement_Request.user = this.usr;
 
     this.dataService.AddProcurementRequest(this.Procurement_Request).subscribe({
       next: (response) => {
@@ -335,7 +387,6 @@ export class CreateProcurementRequestComponent implements OnInit {
         //store
         this.Procurement_Request_Quote.procurement_Request.name = this.myForm.get("RequestName").value;
         this.Procurement_Request_Quote.path = UploadedPath
-        console.log(UploadedPath)
         let test: any
         test = new DatePipe('en-ZA');
         this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
@@ -351,8 +402,6 @@ export class CreateProcurementRequestComponent implements OnInit {
           this.ProcurementQuotes[a] = this.Procurement_Request_Quote
 
         }
-
-        console.log(this.ProcurementQuotes)
       }
       this.AddQuote()
     }
@@ -367,12 +416,15 @@ export class CreateProcurementRequestComponent implements OnInit {
   AddQuote() {
     this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[0]).subscribe({
       next: (result1) => {
+        console.log(this.ProcurementQuotes[0])
         if (result1) {
           this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[1]).subscribe({
             next: (Result2) => {
+              console.log(this.ProcurementQuotes[1])
               if (Result2) {
                 this.dataService.AddProcurementRequestQuote(this.ProcurementQuotes[2]).subscribe({
                   next: (Result3) => {
+                    console.log(this.ProcurementQuotes[2])
                     if (Result3) {
                       this.ProcurementNotif.notification_Type_ID = 18;
                       let transVar: any
@@ -398,27 +450,37 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   DisplayNotif() {
-    var action = "CREATE";
-    var title = "CREATE SUCCESSFUL";
-    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
+    this.log.action = "Created Procurement Request For: " + this.Procurement_Request.name;
+    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    let test: any
+    test = new DatePipe('en-ZA');
+    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+    this.dataService.AuditLogAdd(this.log).subscribe({
+      next: (Result) => {
+        var action = "CREATE";
+        var title = "CREATE SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
 
-    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-      disableClose: true,
-      data: { action, title, message }
-    });
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
 
-    const duration = 1750;
-    setTimeout(() => {
-      dialogRef.close();
-      this.router.navigate(['/ViewProcurementRequest']);
-    }, duration);
+        const duration = 1750;
+        setTimeout(() => {
+          dialogRef.close();
+          this.router.navigate(['/ViewProcurementRequest']);
+        }, duration);
+      }
+    })
+
   }
 
   AddProcurementRequestA() {
     this.Procurement_Request.name = this.myForm.get("Name").value;
     this.Procurement_Request.description = this.myForm.get("Description").value;
     this.Procurement_Request.vendor.name = this.myForm.get("Vendor").value;
-    this.Procurement_Request.user.username = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.Procurement_Request.user.username = this.dataService.decodeUser(sessionStorage.getItem("token"));
 
 
     this.dataService.AddProcurementRequest(this.Procurement_Request).subscribe({
@@ -441,20 +503,7 @@ export class CreateProcurementRequestComponent implements OnInit {
 
               this.dataService.AddProcurementRequestQuote(this.Procurement_Request_Quote).subscribe({
                 next: (result) => {
-                  var action = "CREATE";
-                  var title = "CREATE SUCCESSFUL";
-                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> ADDED </strong> successfully!");
-
-                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                    disableClose: true,
-                    data: { action, title, message }
-                  });
-
-                  const duration = 1750;
-                  setTimeout(() => {
-                    dialogRef.close();
-                    this.router.navigate(['/ViewProcurementRequest']);
-                  }, duration);
+                  this.DisplayNotif();
                 }
               })
             }
@@ -485,6 +534,10 @@ export class CreateProcurementRequestComponent implements OnInit {
 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
+  }
+
+  public AutomyError = (controlName: string, errorName: string) => {
+    return this.VendorNameControl.hasError(errorName);
   }
 
   Close() {

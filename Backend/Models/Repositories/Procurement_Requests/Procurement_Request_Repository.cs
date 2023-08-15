@@ -24,10 +24,11 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(u => u.Username == RequestAdd.User.Username);
             //Get User Role
             Role ExistingRole = await _dbContext.Role.FirstOrDefaultAsync(r => r.Role_ID == ExistingUser.Role_ID);
-            Console.WriteLine("Success 1");
+            //Get Access
+            Access ExistingAccess = await _dbContext.Access.FirstOrDefaultAsync(r => r.Access_ID == ExistingUser.Access_ID);
             //GetVendor
             Vendor ExistingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(v => v.Name.ToLower() == RequestAdd.Vendor.Name.ToLower());
-            Console.WriteLine("Success 2");
+
             //GetRequisition Status
             Requisition_Status ExistingStatus = await _dbContext.Requisition_Status.FirstOrDefaultAsync(c => c.Name == RequestAdd.Requisition_Status.Name);
 
@@ -37,6 +38,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 Vendor_Status ExistingVendorStatus = await _dbContext.Vendor_Status.FirstOrDefaultAsync(vs => vs.Vendor_Status_ID == ExistingVendor.Vendor_Status_ID);
                 RequestAdd.User = ExistingUser;
                 RequestAdd.User.Role = ExistingRole;
+                RequestAdd.User.Access = ExistingAccess;
                 RequestAdd.Vendor = ExistingVendor;
                 RequestAdd.Vendor.Vendor_Status = ExistingVendorStatus;
                 RequestAdd.Requisition_Status = ExistingStatus;
@@ -96,7 +98,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         public async Task<Procurement_Request_Quote[]> CreateProcurementQuoteAsync(Procurement_Request_Quote RequestAdd)
         {
             //Get Procurement Request
-            Procurement_Request ExistingPRRequest = await _dbContext.Procurement_Request.FirstOrDefaultAsync(PR => PR.Name == RequestAdd.Procurement_Request.Name);
+            Procurement_Request ExistingPRRequest = await _dbContext.Procurement_Request.FirstOrDefaultAsync(PR => PR.Procurement_Request_ID == RequestAdd.Procurement_Request.Procurement_Request_ID);
 
 
             if (ExistingPRRequest != null)
@@ -150,13 +152,14 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
         public async Task<Procurement_Request> GetRequestByIDAsync(int id)
         {
-            Procurement_Request ChosenRequest = await _dbContext.Procurement_Request.Include(u => u.User).ThenInclude(r => r.Role).Include(v => v.Vendor).ThenInclude(s => s.Vendor_Status).Include(r => r.Requisition_Status).FirstOrDefaultAsync(i => i.Procurement_Request_ID == id);
+            Procurement_Request ChosenRequest = await _dbContext.Procurement_Request.Include(u => u.User).ThenInclude(r => r.Role).Include(Ac => Ac.User.Access).Include(v => v.Vendor).ThenInclude(s => s.Vendor_Status).Include(r => r.Requisition_Status).FirstOrDefaultAsync(i => i.Procurement_Request_ID == id);
             return ChosenRequest;
         }
 
         public async Task<Procurement_Request> UpdateProcurementRequestAsync(int id, Procurement_Request Request)
         {
             var PRRequest = await _dbContext.Procurement_Request.FindAsync(id);
+
 
             PRRequest.Name = Request.Name;
             PRRequest.Description = Request.Description;
@@ -165,6 +168,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
             return PRRequest;
         }
+
         public async Task<Procurement_Request_Quote> UpdateProcurementRequestQuouteAsync(int id, Procurement_Request_Quote Request)
         {
             var PRRequest = await _dbContext.Procurement_Request_Quote.FindAsync(id);
@@ -182,17 +186,19 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         {
 
             Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == ProcurementNotif.Notification_Type_ID);
-
+            var existingUser = await _dbContext.User.Include(x => x.Access).FirstOrDefaultAsync(x => x.User_Id == ProcurementNotif.User_Id);
+            Access ExistingAccess = await _dbContext.Access.FirstOrDefaultAsync(r => r.Access_ID == existingUser.Access_ID);
             if (existingNotificationType != null)
             {
                 ProcurementNotif.Notification_Type = existingNotificationType;
             }
 
-            var existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == ProcurementNotif.User_Id);
+            
 
             if (existingUser != null)
             {
                 ProcurementNotif.User = existingUser;
+                ProcurementNotif.User.Access = ExistingAccess;
                 ProcurementNotif.User.No_Notifications = existingUser.No_Notifications + 1;
             }
 

@@ -34,9 +34,9 @@
               </td>
           </tr>
           <tr>
-              <td> <label>Basic Company Information:</label></td>
+              <td> <label>Basic Company Information: <span *ngIf="!FoundationaldocumentsFormGroup.get('BasicCompanyInfo').value" style="color: red;">(Required)</span> </label></td>
               <td>
-                  <mat-checkbox formControlName="BasicCompanyInfo" class="MandatorySelect" style="border-color: red;"></mat-checkbox> 
+                  <mat-checkbox formControlName="BasicCompanyInfo"></mat-checkbox> 
               </td>
           </tr>
           <tr>
@@ -46,9 +46,9 @@
               </td>
           </tr>
           <tr>
-              <td> <label>Income tax number:</label></td>
+              <td> <label>Income tax number:<span *ngIf="!FoundationaldocumentsFormGroup.get('IncomeTaxNumber').value" style="color: red;">(Required)</span></label></td>
               <td>
-                  <mat-checkbox formControlName="IncomeTaxNumber" class="MandatorySelect"></mat-checkbox>
+                  <mat-checkbox formControlName="IncomeTaxNumber"></mat-checkbox>
               </td>
           </tr>
           <tr>
@@ -204,7 +204,7 @@
           <tr>
               <td><label >General liability insurance:</label></td>
               <td> 
-                    <mat-checkbox formControlName="GeneralLiabilityInsurance"></mat-checkbox>
+                    <mat-checkbox formControlName="GeneralLiabilityInsurance" (click)="onInsuranceChecked()"></mat-checkbox>
               </td>
           </tr>
           <tr>
@@ -222,7 +222,7 @@
           <tr>
               <td> <label>Cyber insurance:</label></td>
               <td>
-                    <mat-checkbox formControlName="CyberInsurance"></mat-checkbox>    
+                    <mat-checkbox formControlName="CyberInsurance" (click)="onInsuranceChecked()"></mat-checkbox>    
               </td>
           </tr>
           <tr>
@@ -240,14 +240,14 @@
           <tr>
               <td><label>Professional indemnity insurance (if applicable):</label></td>
               <td>              
-                  <mat-checkbox formControlName="ProfessionalIndemnityInsurance"></mat-checkbox> 
+                  <mat-checkbox formControlName="ProfessionalIndemnityInsurance" (click)="onInsuranceChecked()"></mat-checkbox> 
               </td>
           </tr>
           <tr>
             <mat-expansion-panel hideToggle disabled expanded="{{InsuranceFormGroup.get('ProfessionalIndemnityInsurance').value}}" style="margin-left: 10px" >
                 <div class="row">
                   <div class="col-7">
-                    <label style="width: 450px;">Please add the Professional Indemnity Insurance Document:</label>
+                    <label style="width: 370px;">Please add the Professional Indemnity Insurance Document:</label>
                   </div>
                   <div class="col-5">
                       <input  id="file"  type="file" class="file-upload" (change)="FileAdd(3,$event)" formControlName="ProfessionalIndemnityInsuranceDoc" > 
@@ -258,7 +258,7 @@
           <tr>
             <td><label>Other specific insurance required per service/industry:</label></td>
             <td>              
-                <mat-checkbox formControlName="OtherInsurance"></mat-checkbox> 
+                <mat-checkbox formControlName="OtherInsurance" (click)="onInsuranceChecked()"></mat-checkbox> 
             </td>
         </tr>
         <tr>
@@ -276,7 +276,7 @@
       </table>  
       <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 810px;justify-content: center;">
           <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
-          <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
+          <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;"> Next </button>
          </div>      
       </form>
     </mat-step>
@@ -332,14 +332,14 @@
               </td>
           </tr>
           <tr>
-            <mat-expansion-panel hideToggle disabled expanded="{{POPIChecked}}" style="margin-left: 10px">
+            <mat-expansion-panel hideToggle disabled expanded="{{POPIChecked}}" style="margin-left: 10px;width: 740px;">
               <div>
               <div class="row">
                 <div class="col-9">
                   <label>Does the contract set out what personal data is used for what purpose?</label>
                 </div>
                 <div class="col-3">
-                  <mat-checkbox formControlName="Personal_Data_Purpose" class="MandatorySelect"></mat-checkbox>
+                  <span *ngIf="!InformationSecurityFormGroup.get('Personal_Data_Purpose')?.value" style="color: red;">(Required)</span><mat-checkbox formControlName="Personal_Data_Purpose"></mat-checkbox>
                 </div> 
               </div>
               <div class="row">
@@ -348,7 +348,7 @@
                 </div>
                 <div class="col-3">
                   <mat-form-field style="width: 200px;">
-                    <mat-select formControlName="Contracted_Partner_Type_ID" placeholder="<strong> Controller (C) </strong" style="font-size: 12px;font-weight: 400;">
+                    <mat-select formControlName="Contracted_Partner_Type_ID" placeholder="Controller (C)" style="font-size: 12px;font-weight: 400;">
                       <mat-option value="1">Controller (C)</mat-option>
                       <mat-option value="2">Joint Controller (JC)</mat-option>
                       <mat-option value="3">Processor (P)</mat-option>
@@ -362,7 +362,7 @@
                   <label>Depending on the controller/processor relationship, do you have a Data Processing Agreement or a Joint Controller Agreement in place?</label>
                 </div>
                 <div class="col-3">
-                  <mat-checkbox formControlName="DataProcessing_JointController_Agreement" class="MandatorySelect"></mat-checkbox>
+                  <span *ngIf="!InformationSecurityFormGroup.get('DataProcessing_JointController_Agreement')?.value" style="color: red;">(Required)</span><mat-checkbox formControlName="DataProcessing_JointController_Agreement" class="MandatorySelect"></mat-checkbox>
                 </div> 
               </div>
               <div class="row">
@@ -370,7 +370,7 @@
                   <label>Does the contract highlight the importance of confidentiality?</label>
                 </div>
                 <div class="col-3">
-                  <mat-checkbox formControlName="Confidentiality_Importance_Highlighted" class="MandatorySelect"></mat-checkbox>
+                  <span *ngIf="!InformationSecurityFormGroup.get('Confidentiality_Importance_Highlighted')?.value" style="color: red;">(Required)</span><mat-checkbox formControlName="Confidentiality_Importance_Highlighted" class="MandatorySelect"></mat-checkbox>
                 </div> 
               </div>
               <div class="row">
@@ -378,7 +378,7 @@
                   <label>Does the contract provide for audits and inspections?</label>
                 </div>
                 <div class="col-3">
-                  <mat-checkbox formControlName="Contract_Audits_Provisions_Provided" class="MandatorySelect"></mat-checkbox>
+                  <span *ngIf="!InformationSecurityFormGroup.get('Contract_Audits_Provisions_Provided')?.value" style="color: red;">(Required)</span><mat-checkbox formControlName="Contract_Audits_Provisions_Provided" class="MandatorySelect"></mat-checkbox>
                 </div> 
               </div>
               <div class="row">
@@ -386,7 +386,7 @@
                   <label>Is it clear who is accountable and liable for different activities?</label>
                 </div>
                 <div class="col-3">
-                  <mat-checkbox formControlName="Activity_Liability_Present" class="MandatorySelect"></mat-checkbox>
+                  <span *ngIf="!InformationSecurityFormGroup.get('Activity_Liability_Present')?.value" style="color: red;">(Required)</span><mat-checkbox formControlName="Activity_Liability_Present" class="MandatorySelect"></mat-checkbox>
                 </div> 
               </div>
               <div class="row">
@@ -394,7 +394,7 @@
                   <label>Is there a provision to cover third party processing of data?</label>
                 </div>
                 <div class="col-3">
-                  <mat-checkbox formControlName="Third_Party_Data_Processing_Provisioned" class="MandatorySelect"></mat-checkbox>
+                  <span *ngIf="!InformationSecurityFormGroup.get('Third_Party_Data_Processing_Provisioned')?.value" style="color: red;">(Required)</span><mat-checkbox formControlName="Third_Party_Data_Processing_Provisioned" class="MandatorySelect"></mat-checkbox>
                 </div> 
               </div>
               <div class="row">
@@ -402,7 +402,7 @@
                   <label>Does a process exist for managing data when the contract ends?</label>
                 </div>
                 <div class="col-3">
-                  <mat-checkbox formControlName="Contract_End_Data_Management_Provided" class="MandatorySelect"></mat-checkbox>
+                  <span *ngIf="!InformationSecurityFormGroup.get('Contract_End_Data_Management_Provided')?.value" style="color: red;">(Required)</span><mat-checkbox formControlName="Contract_End_Data_Management_Provided" class="MandatorySelect"></mat-checkbox>
                 </div> 
               </div>
               <div class="row">
@@ -410,7 +410,7 @@
                   <label>Is the personal data that's being processed detailed in your and their 'Record of Processing Activities'?</label>
                 </div>
                 <div class="col-3">
-                  <mat-checkbox formControlName="Personal_Data_Processing_Details_Present" class="MandatorySelect"></mat-checkbox>
+                  <span *ngIf="!InformationSecurityFormGroup.get('Personal_Data_Processing_Details_Present')?.value" style="color: red;">(Required)</span><mat-checkbox formControlName="Personal_Data_Processing_Details_Present" class="MandatorySelect"></mat-checkbox>
                 </div> 
               </div>
               <div class="row">
@@ -418,7 +418,7 @@
                   <label>Does the supplier hold any form of certification for their processing activities?</label>
                 </div>
                 <div class="col-3">
-                  <mat-checkbox formControlName="Processing_Activities_Certification_Held" class="MandatorySelect"></mat-checkbox>
+                  <span *ngIf="!InformationSecurityFormGroup.get('Processing_Activities_Certification_Held')?.value" style="color: red;">(Required)</span><mat-checkbox formControlName="Processing_Activities_Certification_Held" class="MandatorySelect"></mat-checkbox>
                 </div> 
               </div>
             </div>          

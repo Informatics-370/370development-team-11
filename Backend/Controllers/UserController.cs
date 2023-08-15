@@ -96,6 +96,7 @@ namespace ProcionAPI.Controllers
         }
         private string GenerateToken(User user)
         {
+            
             byte[] key;
             using (var randomNumberGenerator = new RNGCryptoServiceProvider())
             {
@@ -105,15 +106,27 @@ namespace ProcionAPI.Controllers
             string encodedKey = Convert.ToBase64String(key);
 
             var tokenHandler = new JwtSecurityTokenHandler();
-
+            
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, user.Role.Name),
-            new Claim("TemAccess", "No"),
-            new Claim("TempAccessUsername", "None")
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Role.Name),
+                    new Claim("CanAccInv", user.Access.CanAccInv),
+                    new Claim("CanAccFin", user.Access.CanAccFin),
+                    new Claim("CanAccPro", user.Access.CanAccPro),
+                    new Claim("CanAccVen", user.Access.CanAccVen),
+                    new Claim("CanAccRep", user.Access.CanAccRep),
+                    new Claim("CanViewPenPro", user.Access.CanViewPenPro),
+                    new Claim("CanViewFlagPro", user.Access.CanViewFlagPro),
+                    new Claim("CanViewFinPro", user.Access.CanViewFinPro),
+                    new Claim("CanAppVen", user.Access.CanAppVen),
+                    new Claim("CanEditVen", user.Access.CanEditVen),
+                    new Claim("CanDeleteVen", user.Access.CanDeleteVen),
+                    new Claim("TemAccess", "No"),
+                    new Claim("TempAccessUsername", "None"),
+            
                 }),
                 Expires = DateTime.UtcNow.AddHours(3), // Set token expiration time
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -125,8 +138,8 @@ namespace ProcionAPI.Controllers
 
         //-------------------------------------------------------------------------------------------------TEMP ACCESS LOGIN-------------------------------------------------------------------------------
 
-        [HttpPost("loginWithTemp/{UserName}/{Password}/{TempAcc}/{TempUsername}")]
-        public async Task<IActionResult> LoginWithTemp([FromRoute] string UserName, [FromRoute] string Password, [FromRoute] string TempAcc, [FromRoute] string TempUsername)
+        [HttpPost("loginWithTemp/{UserName}/{Password}/{TempUsername}")]
+        public async Task<IActionResult> LoginWithTemp([FromRoute] string UserName, [FromRoute] string Password, Temporary_Access TempAcc, [FromRoute] string TempUsername)
         {
             if (await _UserRepository.GetUserByUsername(UserName) != null)
             {
@@ -181,7 +194,7 @@ namespace ProcionAPI.Controllers
             return Unauthorized(new { error = "Invalid credentials" });
         }
 
-        private string GenerateTokenWithTemp(User user, string TempAcc, string TempUsername)
+        private string GenerateTokenWithTemp(User user, Temporary_Access TempAcc, string TempUsername)
         {
             byte[] key;
             using (var randomNumberGenerator = new RNGCryptoServiceProvider())
@@ -197,10 +210,21 @@ namespace ProcionAPI.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, user.Role.Name),
-            new Claim("TemAccess", TempAcc),
-            new Claim("TempAccessUsername", TempUsername)
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Role.Name),
+                    new Claim("TemAccessRole", TempAcc.Name),
+                    new Claim("CanAccInv", TempAcc.CanAccInv),
+                    new Claim("CanAccFin", TempAcc.CanAccFin),
+                    new Claim("CanAccPro", TempAcc.CanAccPro),
+                    new Claim("CanAccVen", TempAcc.CanAccVen),
+                    new Claim("CanAccRep", TempAcc.CanAccRep),
+                    new Claim("CanViewPenPro", TempAcc.CanViewPenPro),
+                    new Claim("CanViewFlagPro", TempAcc.CanViewFlagPro),
+                    new Claim("CanViewFinPro", TempAcc.CanViewFinPro),
+                    new Claim("CanAppVen", TempAcc.CanAppVen),
+                    new Claim("CanEditVen", TempAcc.CanEditVen),
+                    new Claim("CanDeleteVen", TempAcc.CanDeleteVen),
+                    new Claim("TempAccessUsername", TempUsername)
                 }),
                 Expires = DateTime.UtcNow.AddHours(3), // Set token expiration time
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -624,6 +648,37 @@ namespace ProcionAPI.Controllers
             catch (Exception)
             {
                 return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
+
+        [HttpPost]
+        [Route("AddLog")]
+        public async Task<IActionResult> AddLog(AuditLog LogAdd)
+        {
+            try
+            {
+                var result = await _UserRepository.AddLogAsync(LogAdd);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetLogs")]
+        public async Task<IActionResult> GetAllConsumables()
+        {
+            try
+            {
+                var result = await _UserRepository.GetAllLogsAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
     }

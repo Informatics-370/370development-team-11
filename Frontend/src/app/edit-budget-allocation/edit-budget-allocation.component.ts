@@ -4,6 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { Department } from '../Shared/Department';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-edit-budget-allocation',
@@ -27,6 +29,13 @@ export class EditBudgetAllocationComponent {
     department: this.dep
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   departments: any[] = []
 
   budgetAllocationForm: FormGroup = new FormGroup({});
@@ -46,9 +55,7 @@ export class EditBudgetAllocationComponent {
 
   onSubmit(): void {
 
-    this.dep = this.budgetAllocationForm.get('department_ID')?.value;
-    this.dep.department_ID = 0;
-    this.budgetAllocation.department = this.dep;
+    this.dep.department_ID = this.budgetAllocationForm.get('department_ID')?.value;
     this.budgetAllocation.date_Created = this.budgetAllocationForm.get('date_Created')?.value;
     this.budgetAllocation.year = this.budgetAllocationForm.get('year')?.value;
     this.budgetAllocation.total = this.budgetAllocationForm.get('total')?.value;
@@ -57,7 +64,17 @@ export class EditBudgetAllocationComponent {
     this.dataService.EditBudgetAllocation(this.budgetAllocation.budget_ID, this.budgetAllocation).subscribe(result => {
       document.getElementById('cBtn').style.display = "none";
       document.querySelector('button').classList.toggle("is_active");
-      this.router.navigate(['/ViewBudgetAllocation']);
+
+      this.log.action = "Edited Budget Allocation for: " + this.budgetAllocation.department.name;
+      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+      let test: any
+      test = new DatePipe('en-ZA');
+      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+      this.dataService.AuditLogAdd(this.log).subscribe({
+        next: (Log) => {
+          this.router.navigate(['/ViewBudgetAllocation']);
+        }
+      })
     });
   }
 
@@ -70,6 +87,15 @@ export class EditBudgetAllocationComponent {
   GetBudgetAllocation(id: number) {
     this.dataService.GetBudgetAllocation(id).subscribe((data: any) => {
       this.budgetAllocation = data;
+
+      console.log(this.budgetAllocation)
+      
+      this.budgetAllocationForm.patchValue({
+        department_ID: this.budgetAllocation.department_ID,
+        date_Created: this.budgetAllocation.date_Created,
+        year: this.budgetAllocation.year,
+        total: this.budgetAllocation.total
+      })
     })
   }
 

@@ -48,8 +48,7 @@ mat-error:first-child {
 
 
 
-
-::ng-deep .mat-expansion-panel:not([class*=mat-elevation-z]) {
+:host ::ng-deep .mat-expansion-panel:not([class*=mat-elevation-z]) {
     box-shadow:none!important;
 
 }
@@ -59,7 +58,7 @@ mat-error:first-child {
     width: 750px;
     margin-left: 1%;
 } */
-::ng-deep .mat-expansion-panel-body {
+:host ::ng-deep .mat-expansion-panel-body {
     padding:0!important;
     
 }
@@ -81,7 +80,7 @@ mat-error:first-child {
     width: 80%!important;
 }
 
-::ng-deep mat-tab-header {
+:host ::ng-deep mat-tab-header {
     background-color: #244688;
   }
 

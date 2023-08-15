@@ -9,7 +9,8 @@ import { Department } from '../Shared/Department';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-create-budget-line',
@@ -45,7 +46,7 @@ export class CreateBudgetLineComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: 0,
+    account_Code: '',
     budget_Category: this.category,
     month: '',
     budgetAmt: 0,
@@ -53,6 +54,13 @@ export class CreateBudgetLineComponent {
     variance: 0
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+  Months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
   categories: any[] = []
   budgetLineForm: FormGroup = new FormGroup({});
   constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder,
@@ -64,7 +72,7 @@ export class CreateBudgetLineComponent {
     this.GetCategories();
     this.budgetLineForm = this.formBuilder.group({
       category_ID: ['', [Validators.required]],
-      account_Code: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8), Validators.pattern("^[0-9]+$")]],
+      account_Code: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8), Validators.pattern("^[0-9 ,]+$")]],
       month: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(9), Validators.pattern("^[a-zA-Z ]+$")]],
       budgetAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],
       actualAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],
@@ -74,18 +82,22 @@ export class CreateBudgetLineComponent {
   onSubmit(): void {
     this.category = this.budgetLineForm.get('category_ID')?.value;
     this.budgetLine.budget_Category = this.category;
+    this.budgetLine.category_ID = this.category.category_ID;
     this.budgetLine.account_Code = this.budgetLineForm.get('account_Code')?.value;
     this.budgetLine.month = this.budgetLineForm.get('month')?.value;
-    this.budgetLine.budgetAmt = this.budgetLineForm.get('budgetAmt')?.value;
-    this.budgetLine.actualAmt = this.budgetLineForm.get('actualAmt')?.value;
+    this.budgetLine.budgetAmt = this.budgetLineForm.get('budgetAmt').value;
+    this.budgetLine.actualAmt = this.budgetLineForm.get('actualAmt').value;
     this.budgetLine.variance = Number(this.budgetLine.budgetAmt) - Number(this.budgetLine.actualAmt);
     this.budgetLine.budget_Allocation.budget_ID = this.id;
+    this.budgetLine.budget_ID = this.id;
     this.budgetLine.budget_Allocation.department_ID = 0;
     console.log(this.budgetLine);
 
     this.dataService.GetBudgetAllocation(this.id).subscribe((budgetAllocation: BudgetAllocation) => {
       this.dataService.GetBudgetLineItems(this.id).subscribe(budgetLineItems => {
         let totalBudgetLinesAmount = budgetLineItems.reduce((prev, cur) => prev + Number(cur.budgetAmt), 0);
+        totalBudgetLinesAmount = totalBudgetLinesAmount + Number(this.budgetLine.budgetAmt)
+        console.log(totalBudgetLinesAmount)
         if (totalBudgetLinesAmount + Number(this.budgetLine.budgetAmt) > budgetAllocation.total) {
           var action = "Error";
           var title = "Budget Over Allocation";
@@ -102,12 +114,38 @@ export class CreateBudgetLineComponent {
           }, duration);
         } else {
           this.dataService.AddBudgetLine(this.budgetLine).subscribe(result => {
-            if (result) {
+            if (result != null) {
               document.getElementById('cBtn').style.display = "none";
               document.querySelector('button').classList.toggle("is_active");
+
+              this.log.action = "Created Budget Line for: " + this.budgetLine.account_Code;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  this.router.navigate(['/ViewBudgetLines', this.id]);
+                }
+              })
+
+            } else {
+              var action = "Error";
+              var title = "Validation Error";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The budget line already exists.");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+
+              const duration = 1750;
+              setTimeout(() => {
+                dialogRef.close();
+              }, duration);
             }
 
-            this.router.navigate(['/ViewBudgetLines', this.id]);
+            
           });
         }
       });

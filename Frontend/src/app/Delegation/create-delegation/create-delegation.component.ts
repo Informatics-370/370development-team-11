@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,11 +8,13 @@ import { Observable, startWith, map } from 'rxjs';
 import { DataService } from '../../DataService/data-service';
 import { NotificationdisplayComponent } from '../../notificationdisplay/notificationdisplay.component';
 import { Admin } from '../../Shared/Admin';
+import { AuditLog } from '../../Shared/AuditLog';
 import { Delegation_Of_Authority } from '../../Shared/DelegationOfAuthority';
 import { DelegationStatus } from '../../Shared/DelegationStatus';
 import { Role } from '../../Shared/EmployeeRole';
 import { Temporary_Access } from '../../Shared/Temporary_Access';
 import { User } from '../../Shared/User';
+import { Access } from 'src/app/Shared/Access';
 
 @Component({
   selector: 'app-create-delegation',
@@ -25,7 +27,7 @@ export class CreateDelegationComponent implements OnInit {
   admin: any;
   iName: string;
 
-  myControl = new FormControl<string | User>('');
+  myControl = new FormControl<string | User>('', [Validators.minLength(2), Validators.required]);
   options: User[] = [];
   SearchedOptions: Observable<User[]>;
   delegateID: any
@@ -33,6 +35,21 @@ export class CreateDelegationComponent implements OnInit {
   fileToUpload: File | null = null;
   files: any[] = [''];
   sPath = "";
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
 
   rl: Role = {
     role_ID: 0,
@@ -43,6 +60,8 @@ export class CreateDelegationComponent implements OnInit {
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -85,7 +104,25 @@ export class CreateDelegationComponent implements OnInit {
     delegation_ID: 0,
     delegation_Of_Authority: this.doa,
     name: '',
-    description: '',
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
@@ -106,6 +143,7 @@ export class CreateDelegationComponent implements OnInit {
       this.doa.admin = this.adm;
       this.doa.admin_ID = 0;
     })
+
     this.getUsername();
 
     this.dataService.GetUsers().subscribe(r => {
@@ -135,11 +173,23 @@ export class CreateDelegationComponent implements OnInit {
   getUsername() {
     this.dataService.GetUser(+this.route.snapshot.params['uid']).subscribe(result => {
       this.user = result;
+      this.ta.name = this.user.role.name;
+      this.ta.IsAdmin = this.user.access.isAdmin;
+      this.ta.CanAccInv = this.user.access.canAccInv;
+      this.ta.CanAccFin = this.user.access.canAccFin;
+      this.ta.CanAccPro = this.user.access.canAccPro;
+      this.ta.CanAccVen = this.user.access.canAccVen;
+      this.ta.CanAccRep = this.user.access.canAccRep;
+      this.ta.CanViewPenPro = this.user.access.canViewPenPro;
+      this.ta.CanViewFlagPro = this.user.access.canViewFlagPro;
+      this.ta.CanViewFinPro = this.user.access.canViewFinPro;
+      this.ta.CanAppVen = this.user.access.canAppVen;
+      this.ta.CanEditVen = this.user.access.canEditVen;
+      this.ta.CanDeleteVen = this.user.access.canDeleteVen;
       this.myForm.patchValue({
         DelegatingName: this.user.username
       })
-      this.ta.name = this.user.role.name;
-      this.ta.description = this.user.role.description;
+      
     })
   }
 
@@ -149,6 +199,10 @@ export class CreateDelegationComponent implements OnInit {
 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
+  }
+
+  public myControlError = (errorName: string) => {
+    return this.myControl.hasError(errorName);
   }
 
   Close() {
@@ -162,6 +216,55 @@ export class CreateDelegationComponent implements OnInit {
       this.usr = this.delegateID;
       this.doa.user = this.usr;
       this.doa.user_Id = 0;
+
+      if (this.ta.IsAdmin == "false" && this.delegateID.access.isAdmin == "true") {
+        this.ta.IsAdmin = "true";
+      }
+
+      if (this.ta.CanAccFin == "false" && this.delegateID.access.canAccFin == "true") {
+        this.ta.CanAccFin = "true";
+      }
+
+      if (this.ta.CanAccInv == "false" && this.delegateID.access.canAccInv == "true") {
+        this.ta.CanAccInv = "true";
+      }
+
+      if (this.ta.CanAccPro == "false" && this.delegateID.access.canAccPro == "true") {
+        this.ta.CanAccPro = "true";
+      }
+
+      if (this.ta.CanAccRep == "false" && this.delegateID.access.canAccRep == "true") {
+        this.ta.CanAccRep = "true";
+      }
+
+      if (this.ta.CanAccVen == "false" && this.delegateID.access.canAccVen == "true") {
+        this.ta.CanAccVen = "true";
+      }
+
+      if (this.ta.CanAppVen == "false" && this.delegateID.access.canAppVen == "true") {
+        this.ta.CanAppVen = "true";
+      }
+
+      if (this.ta.CanDeleteVen == "false" && this.delegateID.access.canDeleteVen == "true") {
+        this.ta.CanDeleteVen = "true";
+      }
+
+      if (this.ta.CanEditVen == "false" && this.delegateID.access.canEditVen == "true") {
+        this.ta.CanEditVen = "true";
+      }
+
+      if (this.ta.CanViewFinPro == "false" && this.delegateID.access.canViewFinPro == "true") {
+        this.ta.CanViewFinPro = "true";
+      }
+
+      if (this.ta.CanViewFlagPro == "false" && this.delegateID.access.canViewFlagPro == "true") {
+        this.ta.CanViewFlagPro = "true";
+      }
+
+      if (this.ta.CanViewPenPro == "false" && this.delegateID.access.canViewPenPro == "true") {
+        this.ta.CanViewPenPro = "true";
+      }
+
       //console.log(this.doa.user_Id)
     })
   }
@@ -175,10 +278,11 @@ export class CreateDelegationComponent implements OnInit {
 
   onSubmit() {
     console.log(this.doa)
+    console.log(this.ta)
     this.doa.delegatingParty = this.myForm.get('DelegatingName')?.value;
     var name = "" + this.doa.delegatingParty;
 
-    
+
     this.fileToUpload = this.files[0];
 
     if (this.fileToUpload != null) {
@@ -207,6 +311,7 @@ export class CreateDelegationComponent implements OnInit {
           next: (response) => {
 
             this.ta.delegation_ID = response[0].delegation_ID;
+            
             this.dataService.AddTempAcc(this.ta).subscribe({
               next: (r) => {
 
@@ -214,27 +319,37 @@ export class CreateDelegationComponent implements OnInit {
                 this.dataService.CheckDelegation().subscribe({
                   next: (r) => {
                     if (r) {
-                      var action = "CREATE";
-                      var title = "CREATE SUCCESSFUL";
-                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].delegation_ID + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                        disableClose: true,
-                        data: { action, title, message }
-                      });
+                      this.log.action = "Created Delegation: " + response[0].delegation_ID;
+                      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataService.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          var action = "CREATE";
+                          var title = "CREATE SUCCESSFUL";
+                          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].delegation_ID + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-                      const duration = 1750;
-                      setTimeout(() => {
-                        this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-                        dialogRef.close();
-                      }, duration);
+                          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                            disableClose: true,
+                            data: { action, title, message }
+                          });
+
+                          const duration = 1750;
+                          setTimeout(() => {
+                            this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
+                            dialogRef.close();
+                          }, duration);
+                        }
+                      })
                     }
                   }
                 })
 
 
-                
- 
+
+
               }
             })
           }
@@ -243,7 +358,7 @@ export class CreateDelegationComponent implements OnInit {
     }
 
 
-    
+
 
 
     //this.adm.adminName = this.myForm.get('AdminName')?.value;

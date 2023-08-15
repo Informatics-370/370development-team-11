@@ -12,6 +12,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
+import { AuditLog } from '../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
+import { Access } from '../Shared/Access';
 
 @Component({
   selector: 'app-edit-employee',
@@ -58,9 +61,27 @@ export class EditEmployeeComponent implements OnInit {
     description: ''
   }
 
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
+
   usr: User = {
     user_Id: 0,
     role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
     username: '',
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
@@ -84,6 +105,13 @@ export class EditEmployeeComponent implements OnInit {
     mandate_limit: this.ml
   }
 
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
   ngOnInit() {
 
     this.GetRoles();
@@ -95,7 +123,7 @@ export class EditEmployeeComponent implements OnInit {
       Name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       Surname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z][a-zA-Z ]+")]],
       Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
-      CellPhone_Num: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(12), Validators.pattern("^[0-9 ]*$")]],
+      CellPhone_Num: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern("^[0-9]*$")]],
       Role: ['', [Validators.required]],
       Mandate: ['', [Validators.required]],
       Department: ['', [Validators.required]],
@@ -193,7 +221,7 @@ export class EditEmployeeComponent implements OnInit {
     var name = this.myForm.get('Name')?.value;
     var surname = this.myForm.get('Surname')?.value;
     var ts = name.concat(surname);
-    var username = ts.concat(cel.toString().substring(4, 7));
+    var username = ts.concat(cel.toString().substring(3, 6));
     username = username.replace(/\s/g, "");
 
 
@@ -201,30 +229,42 @@ export class EditEmployeeComponent implements OnInit {
     this.usr.role_ID = this.myForm.get('Role')?.value;
 
 
-    
+
     this.dataService.EditUserValidation(username, this.employee.user_Id).subscribe({
       next: (Result) => {
-        
         if (Result != null) {
           this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
             this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
               next: (response) => {
-                document.getElementById('cBtn').style.display = "none";
-                document.querySelector('button').classList.toggle("is_active");
-                var action = "Update";
-                var title = "UPDATE SUCCESSFUL";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
 
-                const duration = 1750;
-                setTimeout(() => {
-                  this.router.navigate(['/ViewEmployee']);
-                  dialogRef.close();
-                }, duration);
+                this.log.action = "Edited Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.dataService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    document.getElementById('cBtn').style.display = "none";
+                    document.querySelector('button').classList.toggle("is_active");
+                    var action = "Update";
+                    var title = "UPDATE SUCCESSFUL";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
+
+                    const duration = 1750;
+                    setTimeout(() => {
+                      this.router.navigate(['/ViewEmployee']);
+                      dialogRef.close();
+                    }, duration);
+                  }
+                })
+
+
               }
             })
           })

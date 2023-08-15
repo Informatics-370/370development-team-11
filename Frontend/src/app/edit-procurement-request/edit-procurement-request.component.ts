@@ -11,6 +11,8 @@ import { DatePipe, NgFor } from '@angular/common';
 import { Observable } from 'rxjs';
 import { VendorOnboardRequest } from '../Shared/VendorOnboardRequest';
 import { HttpClient } from '@angular/common/http';
+import { AuditLog } from '../Shared/AuditLog';
+import { Access } from '../Shared/Access';
 
 @Component({
   selector: 'app-edit-procurement-request',
@@ -26,6 +28,21 @@ export class EditProcurementRequestComponent implements OnInit {
   filteredVendors: Observable<VendorOnboardRequest[]>
 
   constructor(private formBuilder: FormBuilder, private dataService: DataService, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer, private ActRoute: ActivatedRoute, private http: HttpClient) { }
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
 
   Procurement_Request: Procurement_Request = {
     procurement_Request_ID: 0,
@@ -54,6 +71,8 @@ export class EditProcurementRequestComponent implements OnInit {
     user: {
       user_Id: 0,
       role_ID: 0,
+      access_ID: 0,
+      access: this.Access,
       username: "",
       password: "",
       profile_Picture: "",
@@ -66,6 +85,13 @@ export class EditProcurementRequestComponent implements OnInit {
     },
     name: "",
     description: ""
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
   Procurement_Request_Quote: Procurement_Request_Quote = {
@@ -91,9 +117,12 @@ export class EditProcurementRequestComponent implements OnInit {
 
     this.ActRoute.paramMap.subscribe({
       next: (paramater) => {
+        let usr = this.dataService.decodeUser(sessionStorage.getItem("token"));
         const id = paramater.get("procurement_Request_ID");
         this.VendorType = paramater.get("name");
         console.log(id)
+
+
 
         if (id) {
           this.dataService.GetPRRequestByID(Number(id)).subscribe({
@@ -160,6 +189,13 @@ export class EditProcurementRequestComponent implements OnInit {
         this.FileDetails[i].FileURL = ""
         this.FileDetails[i].FileName = sFile;
       }
+    }
+  }
+
+  onFileAppUpload(event: any) {
+    this.fileToUpload = event.target.files[0];
+    if (this.fileToUpload != null) {
+      this.files[0] = this.fileToUpload;
     }
   }
 
@@ -247,8 +283,6 @@ export class EditProcurementRequestComponent implements OnInit {
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
     console.log(this.Procurement_Request)
 
-    var CounterForNewFiles = 0;
-    var Counter = 0;
 
     this.dataService.UpdatPRRequest(this.Procurement_Request.procurement_Request_ID, this.Procurement_Request).subscribe({
       next: (response) => {
@@ -258,70 +292,66 @@ export class EditProcurementRequestComponent implements OnInit {
         // this.DisplayNotif();
         for (let i = 0; i <= this.files.length - 1; i++) {
 
-          if (this.files[i] != null) {
+          if (this.files[0] != null || this.files[1] != null || this.files[2] != null) {
+            if (this.files[i] != null) {
+              let sFile = this.ProcurementQuotes[i].path;
+              let VendorName = sFile.substring(0, sFile.indexOf("\\"))
+              let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
+              let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
+              this.dataService.DeleteProcurementRequestFiles(VendorName, RequestID, filename).subscribe({
+                next: (Result) => {
+                  let file: File = this.files[i]
+                  this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, "RequestID" + this.Procurement_Request.procurement_Request_ID.toString(), file).subscribe({
+                    next: (Response) => {
+                      let qPath = Response
+                      this.dataService.GetProcurementQuotesbyID(this.Procurement_Request.procurement_Request_ID).subscribe({
+                        next: (PRResult) => {
 
+                          if (i > 0) {
+                            this.ProcurementQuotes = PRResult
+                            console.log(this.ProcurementQuotes)
 
-            let sFile = this.ProcurementQuotes[i].path;
-            console.log(sFile)
-            let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-            let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
-            let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
-            this.dataService.DeleteProcurementRequestFiles(VendorName, RequestID, filename).subscribe({
-              next: (Result) => {
-                let file: File = this.files[i]
-                this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, "RequestID" + this.Procurement_Request.procurement_Request_ID.toString(), file).subscribe({
-                  next: (Response) => {
-                    let qPath = Response
-                    this.dataService.GetProcurementQuotesbyID(this.Procurement_Request.procurement_Request_ID).subscribe({
-                      next: (PRResult) => {
+                            this.ProcurementQuotes[i].procurement_Request = this.Procurement_Request
+                            this.ProcurementQuotes[i].path = qPath.pathSaved.toString();
+                            this.ProcurementQuotes[i].prefferedQuote = false;
 
-                        if (i > 0) {
-                          this.ProcurementQuotes = PRResult
-                          console.log(this.ProcurementQuotes)
+                            let test: any
+                            test = new DatePipe('en-ZA');
+                            this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+                            this.dataService.UpdateProcurementQuotes(this.ProcurementQuotes[i].quote_ID, this.ProcurementQuotes[i]).subscribe({
+                              next: (result) => {
+                                console.log(result)
+                                this.DisplayNotif();
+                              }
+                            })
+                          }
 
-                          this.ProcurementQuotes[i].procurement_Request = this.Procurement_Request
-                          this.ProcurementQuotes[i].path = qPath.pathSaved.toString();
-                          this.ProcurementQuotes[i].prefferedQuote = false;
+                          else {
+                            this.ProcurementQuotes = PRResult
+                            this.ProcurementQuotes[i].procurement_Request = this.Procurement_Request
+                            this.ProcurementQuotes[i].path = qPath.pathSaved.toString();
+                            this.ProcurementQuotes[i].prefferedQuote = true;
 
-                          let test: any
-                          test = new DatePipe('en-ZA');
-                          this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
-                          this.dataService.UpdateProcurementQuotes(this.ProcurementQuotes[i].quote_ID, this.ProcurementQuotes[i]).subscribe({
-                            next: (result) => {
-                              console.log(result)
-                              this.DisplayNotif();
-                              Counter = Counter + 1;
-                            }
-                          })
+                            let test: any
+                            test = new DatePipe('en-ZA');
+                            this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+                            this.dataService.UpdateProcurementQuotes(this.ProcurementQuotes[i].quote_ID, this.ProcurementQuotes[i]).subscribe({
+                              next: (result) => {
+                                console.log(result)
+                                this.DisplayNotif();
+                              }
+                            })
+                          }
                         }
-
-                        else {
-                          this.ProcurementQuotes = PRResult
-                          this.ProcurementQuotes[i].procurement_Request = this.Procurement_Request
-                          this.ProcurementQuotes[i].path = qPath.pathSaved.toString();
-                          this.ProcurementQuotes[i].prefferedQuote = true;
-
-                          let test: any
-                          test = new DatePipe('en-ZA');
-                          this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
-                          this.dataService.UpdateProcurementQuotes(this.ProcurementQuotes[i].quote_ID, this.ProcurementQuotes[i]).subscribe({
-                            next: (result) => {
-                              console.log(result)
-                              this.DisplayNotif();
-                              Counter = Counter + 1;
-                            }
-                          })
-                        }
-                      }
-                    })
-                  }
-                })
-              }
-            })
+                      })
+                    }
+                  })
+                }
+              })
+            }
           }
-
           else {
-            Counter = Counter + 1;
+            this.DisplayNotif()
           }
         };
       }
@@ -330,20 +360,30 @@ export class EditProcurementRequestComponent implements OnInit {
   }
 
   DisplayNotif() {
-    var action = "UPDATE";
-    var title = "UPDATE SUCCESSFUL";
-    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+    this.log.action = "Edited Procurement Request: " + this.Procurement_Request.name;
+    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    let test: any
+    test = new DatePipe('en-ZA');
+    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+    this.dataService.AuditLogAdd(this.log).subscribe({
+      next: (Log) => {
+        var action = "UPDATE";
+        var title = "UPDATE SUCCESSFUL";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-      disableClose: true,
-      data: { action, title, message }
-    });
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
 
-    const duration = 1750;
-    setTimeout(() => {
-      dialogRef.close();
-      this.router.navigate(['/ViewProcurementRequest']);
-    }, duration);
+        const duration = 1750;
+        setTimeout(() => {
+          dialogRef.close();
+          this.router.navigate(['/ViewProcurementRequest']);
+        }, duration);
+      }
+    })
+
   }
 
   EditProcurementRequestA() {
@@ -356,45 +396,52 @@ export class EditProcurementRequestComponent implements OnInit {
       next: (response) => {
         console.log(this.Procurement_Request)
         console.log(response)
-        this.ProcurementQuotes.forEach(element => {
-          let sFile = element.path;
-          console.log(sFile)
-          let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-          let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
-          let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
-          let file: File = this.fileToUpload;
-          this.dataService.DeleteProcurementRequestFiles(VendorName, RequestID, filename).subscribe({
-            next: (Result) => {
-              this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, "RequestID" + this.Procurement_Request.procurement_Request_ID.toString(), file).subscribe({
-                next: (Response) => {
-                  console.log(Response)
+        console.log(this.files[0])
+        if (this.files[0] != null) {
+          console.log(this.files[0])
+          this.ProcurementQuotes.forEach(element => {
+            let sFile = element.path;
+            console.log(sFile)
+            let VendorName = sFile.substring(0, sFile.indexOf("\\"))
+            let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
+            let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
+            let file: File = this.fileToUpload;
+            this.dataService.DeleteProcurementRequestFiles(VendorName, RequestID, filename).subscribe({
+              next: (Result) => {
+                this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, "RequestID" + this.Procurement_Request.procurement_Request_ID.toString(), file).subscribe({
+                  next: (Response) => {
+                    console.log(Response)
 
-                  this.dataService.GetProcurementQuotesbyID(this.Procurement_Request.procurement_Request_ID).subscribe({
-                    next: (PRResult) => {
-                      console.log(PRResult)
-                      this.Procurement_Request_Quote = PRResult[0]
-                      let qPath = Response
-                      this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-                      this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
-                      this.Procurement_Request_Quote.prefferedQuote = true;
+                    this.dataService.GetProcurementQuotesbyID(this.Procurement_Request.procurement_Request_ID).subscribe({
+                      next: (PRResult) => {
+                        console.log(PRResult)
+                        this.Procurement_Request_Quote = PRResult[0]
+                        let qPath = Response
+                        this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
+                        this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+                        this.Procurement_Request_Quote.prefferedQuote = true;
 
-                      let test: any
-                      test = new DatePipe('en-ZA');
-                      this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
+                        let test: any
+                        test = new DatePipe('en-ZA');
+                        this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
 
-                      this.dataService.UpdateProcurementQuotes(this.Procurement_Request_Quote.quote_ID, this.Procurement_Request_Quote).subscribe({
-                        next: (result) => {
-                          console.log(result)
-                          this.DisplayNotif()
-                        }
-                      })
-                    }
-                  })
-                }
-              })
-            }
-          })
-        });
+                        this.dataService.UpdateProcurementQuotes(this.Procurement_Request_Quote.quote_ID, this.Procurement_Request_Quote).subscribe({
+                          next: (result) => {
+                            console.log(result)
+                            this.DisplayNotif()
+                          }
+                        })
+                      }
+                    })
+                  }
+                })
+              }
+            })
+          });
+        }
+        else {
+          this.DisplayNotif()
+        }
       }
     })
   }

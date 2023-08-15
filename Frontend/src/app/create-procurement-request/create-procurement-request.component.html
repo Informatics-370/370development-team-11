@@ -200,25 +200,29 @@
                                         <label style=" color:black;">Vendor Name:</label>
                                         <br />
                                         <mat-form-field>
-                                            <input matInput type="text" placeholder="" formControlName="VendorName"
-                                                id="VendorName" [formControl]="VendorNameControl"
-                                                [matAutocomplete]="auto" required>
-                                            <mat-autocomplete #auto="matAutocomplete">
+                                            <input matInput type="text" placeholder="" id="VendorName"
+                                                [formControl]="VendorNameControl" [matAutocomplete]="auto" required>
+                                            <mat-autocomplete #auto="matAutocomplete"
+                                                (optionSelected)="setVal($event.option.value)">
                                                 <mat-option *ngFor="let option of filteredVendors | async"
-                                                    [value]="option.name" (click)="setVal(option.name)">
+                                                    [value]="option.name">
                                                     {{option.name}}
                                                 </mat-option>
                                             </mat-autocomplete>
                                             <mat-hint align="end">Not more then 32 characters long.</mat-hint>
-                                            <mat-error *ngIf="myError('VendorName', 'required')">Name is
+                                            <mat-error *ngIf="AutomyError('VendorNameControl', 'required')">Name is
                                                 required</mat-error>
-                                            <mat-error *ngIf="myError('VendorName', 'minlength')">Name must be 3 to 32
+                                            <mat-error *ngIf="AutomyError('VendorNameControl', 'minlength')">Name must
+                                                be 3
+                                                to 32
                                                 characters
                                                 long</mat-error>
-                                            <mat-error *ngIf="myError('VendorName', 'maxlength')">Limit
+                                            <mat-error *ngIf="AutomyError('VendorNameControl', 'maxlength')">Limit
                                                 exceed</mat-error>
-                                            <mat-error *ngIf="myError('VendorName', 'pattern')">Name can not contain
-                                                numbers</mat-error>
+                                            <mat-error *ngIf="AutomyError('VendorNameControl', 'pattern')">Name can not
+                                                contain
+                                                numbers/ symbols</mat-error>
+
                                         </mat-form-field>
                                     </mat-card-content>
                                 </td>

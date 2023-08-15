@@ -22,6 +22,7 @@ import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notifi
 import { DatePipe } from '@angular/common';
 import { Due_Dillegence } from 'src/app/Shared/DueDillegence';
 import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
+import { AuditLog } from 'src/app/Shared/AuditLog';
 @Component({
   selector: 'app-vendor-create',
   templateUrl: './vendor-create.component.html',
@@ -162,6 +163,13 @@ export class VendorCreateComponent implements OnInit{
     vendor_Detail_ID: 0,
     vendor_Detail: this.VendorDetail,
     proof_Of_Registration_Doc:"",
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
   }
 
 
@@ -617,7 +625,7 @@ export class VendorCreateComponent implements OnInit{
             })
             
           }
-          if(this.InsuranceCoverChecker == true && this.VendorDetail.insurance_Provided == false) {
+          if(this.InsuranceCoverChecker == true && this.fileName[4] != '') {
             FolderCategory = "Insurance";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let file:File = this.fileName[4]
@@ -648,6 +656,15 @@ export class VendorCreateComponent implements OnInit{
             }
             
             
+          }
+          else if(this.DueDilligenceDetail.general_Liability_Insurance_Present == true) {
+            FolderCategory = "Insurance";
+            VendorNo = "Vendor" + this.Vendor.vendor_ID
+            let file:File = this.fileName[4]
+            this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(result => { 
+              this.VendorService.DeleteInsuranceByID(Number(this.Vendor.vendor_ID),4).subscribe()
+            })
+
           }
           if(this.PaymentTermsChecker == true) {
             this.VendorPaymentTerms.payment_Terms = this.CompanyOverviewFormGroup.get("PaymentTerms")?.value
@@ -685,21 +702,31 @@ export class VendorCreateComponent implements OnInit{
             
             this.VendorService.GetVendorDetailByID(VendorList[0].vendor_Detail_ID).subscribe({
               next: (response) => {
-                var action = "CREATED";
-                var title = "SUCCESSFULLY CREATED";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Vendor <strong>" + this.Vendor.name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
-        
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
-        
-                 const duration = 1750;
-                 setTimeout(() => {
-                  this.VendorService.ChangeVendorStatus(3,this.Vendor.vendor_ID).subscribe()
-                  this.router.navigate(['/vendor-view']);
-                  dialogRef.close();
-                 }, duration);
+                this.log.action = "Created Vendor Details of " + response.vendor.name;
+                this.log.user = this.VendorService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.VendorService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    var action = "CREATED";
+                    var title = "SUCCESSFULLY CREATED";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Vendor <strong>" + this.Vendor.name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
+
+                    const duration = 1750;
+                    setTimeout(() => {
+                      this.VendorService.ChangeVendorStatus(3, this.Vendor.vendor_ID).subscribe()
+                      this.router.navigate(['/vendor-view']);
+                      dialogRef.close();
+                    }, duration);
+                  }
+                })
+                
               }
             }
 

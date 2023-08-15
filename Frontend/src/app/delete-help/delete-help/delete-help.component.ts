@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/DataService/data-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Help } from 'src/app/Shared/Help';
+import { AuditLog } from '../../Shared/AuditLog';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-delete-help',
@@ -15,6 +17,13 @@ export class DeleteHelpComponent  implements OnInit{
   Help: any
   showConfirmationDialog: boolean = true;
   showSuccessDialog: boolean = false;
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   constructor(public dialogRef: MatDialogRef<DeleteHelpComponent>, private ActRoute: ActivatedRoute, private router: Router, private dataService: DataService,
     @Inject(MAT_DIALOG_DATA) public data: { help_ID: number }) { }
@@ -77,13 +86,22 @@ export class DeleteHelpComponent  implements OnInit{
     this.dataService.DeleteHelpFile(vHelpName, vfilename).subscribe(d =>{
       this.dataService.DeleteHelp(id).subscribe({
         next: (response) => {
-          this.showConfirmationDialog = false;
-          this.showSuccessDialog = true;
-          setTimeout(() => {
-            this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
-            this.dialogRef.close();
-            
-          }, 1750);
+          this.log.action = "Deleted Help: " + id;
+          this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+          let test: any
+          test = new DatePipe('en-ZA');
+          this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+          this.dataService.AuditLogAdd(this.log).subscribe({
+            next: (Log) => {
+              this.showConfirmationDialog = false;
+              this.showSuccessDialog = true;
+              setTimeout(() => {
+                this.router.navigate(['/ViewHelp'], { queryParams: { refresh: true } });
+                this.dialogRef.close();
+
+              }, 1750);
+            }
+          })
         }
       })
     })

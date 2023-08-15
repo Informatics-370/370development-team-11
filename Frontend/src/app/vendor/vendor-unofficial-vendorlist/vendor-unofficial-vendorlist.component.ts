@@ -68,17 +68,26 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
   ngOnInit() {
     this.iRole = ""
     this.rAdmin = ""
-    if(this.sFilter == undefined) {
-      this.sFilter = "1";
-    }
+    
 
     this.iRole = this.VendorService.decodeUserRole(sessionStorage.getItem("token"));
 
    // console.log(this.iRole)
 
-    if (this.iRole == "Admin") {
+    if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
+
+    if(this.sFilter == undefined) {
+      if(this.rAdmin == "true") {
+        this.sFilter = "4"
+      }
+      else {
+        this.sFilter = "1";
+      }
+      
+    }
+    
 
    this.VendorService.GetAllOnboardRequest().subscribe((result) => {
       this.SearchResults = []
@@ -221,7 +230,7 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
      console.log(result)
     for (let a = 0; a < result.length;a++) {
       console.log(i)
-      if(result[a].vendor.vendor_Status_ID == 4) {
+      if(result[a].vendor.vendor_Status_ID == 4 || result[a].vendor.vendor_Status_ID == 3) {
         this.router.navigate(['/vendor-approve-edit/' + result[a].vendor_ID])
       }
       
