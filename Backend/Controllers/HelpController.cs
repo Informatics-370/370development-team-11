@@ -57,7 +57,6 @@ namespace ProcionAPI.Controllers
         {
             try
             {
-                Console.WriteLine("poes");
                 Console.WriteLine(AddHelp.Video);
                 Console.WriteLine(AddHelp.User_Manual);
                 var result = await _helpRepository.AddHelpAsync(AddHelp);

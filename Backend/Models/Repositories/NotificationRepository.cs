@@ -83,5 +83,25 @@ namespace ProcionAPI.Models.Repositories
 
             return await query.ToArrayAsync();
         }
+
+        public async Task<Notification[]> GetDelegationNotificationsAsync(string username)
+        {
+            IQueryable<Notification> query = _dbContext.Notification
+                .Include(nt => nt.Notification_Type).Include(u => u.User)
+                .Where(ui => ui.User.Username == username)
+                .Where(x => x.Notification_Type.Name.Contains("Delegation of Authority"));
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Notification[]> GetTempDelegationNotificationsAsync(string tempUsername)
+        {
+            IQueryable<Notification> query = _dbContext.Notification
+                .Include(nt => nt.Notification_Type).Include(u => u.User)
+                .Where(ui => ui.User.Username == tempUsername)
+                .Where(x => x.Notification_Type.Name.Contains("Delegation of Authority"));
+
+            return await query.ToArrayAsync();
+        }
     }
 }

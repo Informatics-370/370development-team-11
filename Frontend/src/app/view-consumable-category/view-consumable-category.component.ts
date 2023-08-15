@@ -41,6 +41,8 @@ export class ViewConsumableCategoryComponent implements OnInit {
     description: '',
   }
 
+
+
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router, private sanitizer: DomSanitizer, private dialog: MatDialog) { }
 
   searchWord: string = '';
