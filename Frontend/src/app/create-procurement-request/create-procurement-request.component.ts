@@ -232,60 +232,60 @@ export class CreateProcurementRequestComponent implements OnInit {
 
   onFile1Upload(event: any) {
     document.getElementById("file1").style.border = this.originalBorderColor;
-    document.getElementById("Error1").style.visibility = "hidden"
+    document.getElementById("Error1").style.display = "none"
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[0] = this.fileToUpload;
       if (this.files[0].name == this.files[1].name || this.files[0].name == this.files[2].name) {
         document.getElementById("file1").style.border = "solid red";
-        document.getElementById("Error1").style.visibility = "visible"
+        document.getElementById("Error1").style.display = "block"
         this.files[0] = null;
         this.myForm.get("OtherQuote1").reset();
       }
       else {
         this.files[0] = this.fileToUpload;
         document.getElementById("file1").style.border = this.originalBorderColor;
-        document.getElementById("Error1").style.visibility = "hidden"
+        document.getElementById("Error1").style.display = "none"
       }
     }
   }
 
   onFile2Upload(event: any) {
     document.getElementById("file2").style.border = this.originalBorderColor;
-    document.getElementById("Error2").style.visibility = "hidden"
+    document.getElementById("Error2").style.display = "none"
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[1] = this.fileToUpload;
       if (this.files[1].name == this.files[0].name || this.files[1].name == this.files[2].name) {
         document.getElementById("file2").style.border = "solid red";
-        document.getElementById("Error2").style.visibility = "visible"
+        document.getElementById("Error2").style.display = "block"
         this.files[1] = null;
         this.myForm.get("OtherQuote2").reset();
       }
       else {
         this.files[1] = this.fileToUpload;
         document.getElementById("file2").style.border = this.originalBorderColor;
-        document.getElementById("Error2").style.visibility = "hidden"
+        document.getElementById("Error2").style.display = "none"
       }
     }
   }
 
   onFile3Upload(event: any) {
     document.getElementById("file3").style.border = this.originalBorderColor;
-    document.getElementById("Error3").style.visibility = "hidden"
+    document.getElementById("Error3").style.display = "none"
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[2] = this.fileToUpload;
       if (this.files[2].name == this.files[0].name || this.files[2].name == this.files[1].name) {
         document.getElementById("file3").style.border = "solid red";
-        document.getElementById("Error3").style.visibility = "visible"
+        document.getElementById("Error3").style.display = "block"
         this.files[2] = null;
         this.myForm.get("OtherQuote3").reset();
       }
       else {
         this.files[2] = this.fileToUpload;
         document.getElementById("file3").style.border = this.originalBorderColor;
-        document.getElementById("Error3").style.visibility = "hidden"
+        document.getElementById("Error3").style.display = "none"
       }
     }
   }

@@ -101,47 +101,6 @@
                                     </mat-card-content>
                                 </td>
                             </tr>
-
-                            <!-- <tr>
-                                <td style="width:100%;">
-                                    <mat-card-content>
-                                        <label style=" color:black;">Preferred Quote:</label>
-                                        <br />
-
-                                        <input type="file" id="file1" placeholder="" formControlName="OtherQuote1"
-                                            style="border: solid #244688; border-radius: 5px; " accept=".pdf"
-                                            (change)="onFile1Upload($event)">
-
-                                    </mat-card-content>
-                                </td>
-
-                                <td style="width:100%;">
-                                    <mat-card-content>
-                                        <label style=" color:black;">Comparative Quote 1:</label>
-                                        <br />
-
-                                        <input type="file" id="file2" placeholder="" formControlName="OtherQuote2"
-                                            style="border: solid #244688; border-radius: 5px; " accept=".pdf"
-                                            (change)="onFile2Upload($event)">
-
-                                    </mat-card-content>
-                                </td>
-
-
-                            </tr>
-                            <tr>
-                                <td style="width:100%;">
-                                    <mat-card-content>
-                                        <label style=" color:black;">Comparative Quote 2:</label>
-                                        <br />
-
-                                        <input type="file" id="file3" placeholder="" formControlName="OtherQuote3"
-                                            style="border: solid #244688; border-radius: 5px; " accept=".pdf"
-                                            (change)="onFile3Upload($event)">
-
-                                    </mat-card-content>
-                                </td>
-                            </tr> -->
                         </table>
 
                         <table class="table">
@@ -167,7 +126,7 @@
                                             style="border: solid #244688; border-radius: 5px; " accept=".pdf"
                                             (change)="onFileUpload(i,$event)">
                                         <br>
-                                        <mat-hint id="Error{{i+1}}" style="color: red; visibility: hidden;">Duplicate
+                                        <mat-hint id="Error{{i+1}}" style="color: red; display: none;">Duplicate
                                             files
                                             not
                                             allowed!</mat-hint>
