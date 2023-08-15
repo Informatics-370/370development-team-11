@@ -34,9 +34,9 @@
                       </mat-option>
                     </mat-autocomplete>
                     <mat-hint align="end">Not more then 50 characters long.</mat-hint>
-                    
-                    <mat-error *ngIf="myError('DelegateName', 'maxlength')">Limit exceed</mat-error>
-                    <mat-error *ngIf="myError('DelegateName', 'minlength')">
+                    <mat-error *ngIf="myControlError('required')">Name is required</mat-error>
+                    <mat-error *ngIf="myControlError('maxlength')">Limit exceed</mat-error>
+                    <mat-error *ngIf="myControlError('minlength')">
                       Delegate name must be 2 to 50 characters
                       long
                     </mat-error>

@@ -30,7 +30,7 @@ export class EditDelegationComponent implements OnInit {
   tempaccess: any;
   delID: number;
 
-  myControl = new FormControl<string | User>('');
+  myControl = new FormControl<string | User>('', [Validators.minLength(2), Validators.required]);
   options: User[] = [];
   SearchedOptions: Observable<User[]>;
   delegateID: any
@@ -164,6 +164,8 @@ export class EditDelegationComponent implements OnInit {
     return this.options.filter(r => r.username.toLowerCase().includes(filterValue));
   }
 
+
+
   getDelegation() {
     this.dataService.GetDelegation(+this.route.snapshot.params['did']).subscribe(r => {
       this.delegation = r;
@@ -211,6 +213,10 @@ export class EditDelegationComponent implements OnInit {
 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
+  }
+
+  public myControlError = (errorName: string) => {
+    return this.myControl.hasError(errorName);
   }
 
   Close() {
