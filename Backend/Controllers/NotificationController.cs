@@ -128,5 +128,35 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
+        [HttpGet]
+        [Route("GetDelegationNotifications/{username}")]
+        public async Task<IActionResult> GetDelegationNotifications(string username)
+        {
+            try
+            {
+                var result = await _NotificationRepository.GetDelegationNotificationsAsync(username);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetTempDelegationNotifications/{tempUsername}")]
+        public async Task<IActionResult> GetTempDelegationNotifications(string tempUsername)
+        {
+            try
+            {
+                var result = await _NotificationRepository.GetTempDelegationNotificationsAsync(tempUsername);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
 }

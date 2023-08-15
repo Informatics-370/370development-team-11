@@ -57,7 +57,7 @@
                       <h1 style="font-size:20pt">{{row.notification_Type.name}}</h1>
                     </div>
                   </mat-card-title>
-                  <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date}}</mat-card-subtitle>
+                  <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date | date:'dd/MM/yyyy, h:mm a'}}</mat-card-subtitle>
                 </mat-card-title-group>
               </mat-card-header>
               <mat-card-content style="font-size:16pt; margin-top: 20px;">
@@ -120,6 +120,46 @@
 
     </mat-tab>
 
+    <mat-tab label="Delegation of Authority">
+
+      <table mat-table [dataSource]="dataSourceDelegation" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
+        <ng-container matColumnDef="id" style="width: 800px;">
+          <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
+          <td mat-cell *matCellDef="let row" style="width: 800px;">
+
+            <mat-card style="width: 800px; margin-bottom: 20px; margin-top: 20px;">
+              <mat-card-header style="border-bottom:solid 2px;">
+                <mat-card-title-group>
+                  <mat-card-title>
+                    <div mat-list-item style="display: flex; align-items: center; width:750px;">
+                      <mat-icon aria-hidden="false" aria-label="admin icon" fontIcon="mark_chat_unread"
+                                style="width:30px; height: 44px; margin-top: 2%;"></mat-icon>
+                      <h1 style="font-size:20pt">{{row.notification_Type.name}}</h1>
+                    </div>
+                  </mat-card-title>
+                  <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date | date:'dd/MM/yyyy, h:mm a'}}</mat-card-subtitle>
+                </mat-card-title-group>
+              </mat-card-header>
+              <mat-card-content style="font-size:16pt; margin-top: 20px;">
+                <p>{{row.name}}</p>
+                <br />
+                <p>{{row.notification_Type.description}}</p>
+
+              </mat-card-content>
+              <!--<mat-card-actions style="display: flex; justify-content: end; align-items: end; margin-top: 5%;">
+                <button mat-raised-button
+                        style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" routerLink="/ViewConsumable">
+                  <mat-icon matPrefix style="margin-right:10%;">visibility</mat-icon>View
+                </button>
+              </mat-card-actions>-->
+            </mat-card>
+          </td>
+        </ng-container>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="width: 800px; background-color: #ffffff00"></tr>
+      </table>
+
+    </mat-tab>
+
 
   </mat-tab-group>
 </div>
@@ -146,7 +186,7 @@
                           <h1 style="font-size:20pt">{{row.notification_Type.name}}</h1>
                         </div>
                       </mat-card-title>
-                      <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date}}</mat-card-subtitle>
+                      <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date | date:'dd/MM/yyyy, h:mm a'}}</mat-card-subtitle>
                     </mat-card-title-group>
                   </mat-card-header>
                   <mat-card-content style="font-size:16pt; margin-top: 20px;">
@@ -186,7 +226,7 @@
                           <h1 style="font-size:20pt">{{row.notification_Type.name}}</h1>
                         </div>
                       </mat-card-title>
-                      <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date}}</mat-card-subtitle>
+                      <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date | date:'dd/MM/yyyy, h:mm a'}}</mat-card-subtitle>
                     </mat-card-title-group>
                   </mat-card-header>
                   <mat-card-content style="font-size:16pt; margin-top: 20px;">
@@ -249,6 +289,45 @@
 
         </mat-tab>
 
+        <mat-tab label="Delegation of Authority">
+
+          <table mat-table [dataSource]="dataSourceDelegation" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
+            <ng-container matColumnDef="id" style="width: 800px;">
+              <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
+              <td mat-cell *matCellDef="let row" style="width: 800px;">
+
+                <mat-card style="width: 800px; margin-bottom: 20px; margin-top: 20px;">
+                  <mat-card-header style="border-bottom:solid 2px;">
+                    <mat-card-title-group>
+                      <mat-card-title>
+                        <div mat-list-item style="display: flex; align-items: center; width:750px;">
+                          <mat-icon aria-hidden="false" aria-label="admin icon" fontIcon="mark_chat_unread"
+                                    style="width:30px; height: 44px; margin-top: 2%;"></mat-icon>
+                          <h1 style="font-size:20pt">{{row.notification_Type.name}}</h1>
+                        </div>
+                      </mat-card-title>
+                      <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date | date:'dd/MM/yyyy, h:mm a'}}</mat-card-subtitle>
+                    </mat-card-title-group>
+                  </mat-card-header>
+                  <mat-card-content style="font-size:16pt; margin-top: 20px;">
+                    <p>{{row.name}}</p>
+                    <br />
+                    <p>{{row.notification_Type.description}}</p>
+
+                  </mat-card-content>
+                  <!--<mat-card-actions style="display: flex; justify-content: end; align-items: end; margin-top: 5%;">
+              <button mat-raised-button
+                      style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" routerLink="/ViewConsumable">
+                <mat-icon matPrefix style="margin-right:10%;">visibility</mat-icon>View
+              </button>
+            </mat-card-actions>-->
+                </mat-card>
+              </td>
+            </ng-container>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="width: 800px; background-color: #ffffff00"></tr>
+          </table>
+
+        </mat-tab>
 
       </mat-tab-group>
     </mat-tab>
@@ -311,7 +390,7 @@
                           <h1 style="font-size:20pt">{{row.notification_Type.name}}</h1>
                         </div>
                       </mat-card-title>
-                      <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date}}</mat-card-subtitle>
+                      <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date | date:'dd/MM/yyyy, h:mm a'}}</mat-card-subtitle>
                     </mat-card-title-group>
                   </mat-card-header>
                   <mat-card-content style="font-size:16pt; margin-top: 20px;">
@@ -374,6 +453,45 @@
 
         </mat-tab>
 
+        <mat-tab label="Delegation of Authority">
+
+          <table mat-table [dataSource]="dataSourceTempDelegation" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
+            <ng-container matColumnDef="id" style="width: 800px;">
+              <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
+              <td mat-cell *matCellDef="let row" style="width: 800px;">
+
+                <mat-card style="width: 800px; margin-bottom: 20px; margin-top: 20px;">
+                  <mat-card-header style="border-bottom:solid 2px;">
+                    <mat-card-title-group>
+                      <mat-card-title>
+                        <div mat-list-item style="display: flex; align-items: center; width:750px;">
+                          <mat-icon aria-hidden="false" aria-label="admin icon" fontIcon="mark_chat_unread"
+                                    style="width:30px; height: 44px; margin-top: 2%;"></mat-icon>
+                          <h1 style="font-size:20pt">{{row.notification_Type.name}}</h1>
+                        </div>
+                      </mat-card-title>
+                      <mat-card-subtitle style="margin-bottom:10px;">{{row.send_Date | date:'dd/MM/yyyy, h:mm a'}}</mat-card-subtitle>
+                    </mat-card-title-group>
+                  </mat-card-header>
+                  <mat-card-content style="font-size:16pt; margin-top: 20px;">
+                    <p>{{row.name}}</p>
+                    <br />
+                    <p>{{row.notification_Type.description}}</p>
+
+                  </mat-card-content>
+                  <!--<mat-card-actions style="display: flex; justify-content: end; align-items: end; margin-top: 5%;">
+              <button mat-raised-button
+                      style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" routerLink="/ViewConsumable">
+                <mat-icon matPrefix style="margin-right:10%;">visibility</mat-icon>View
+              </button>
+            </mat-card-actions>-->
+                </mat-card>
+              </td>
+            </ng-container>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="width: 800px; background-color: #ffffff00"></tr>
+          </table>
+
+        </mat-tab>
 
       </mat-tab-group>
     </mat-tab>

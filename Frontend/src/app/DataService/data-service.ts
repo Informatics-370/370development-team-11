@@ -1200,6 +1200,14 @@ export class DataService {
     return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetTempProcurementNotifications` + "/" + tempUsername).pipe(map(result => result))
   }
 
+  GetDelegationNotifications(username: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetDelegationNotifications` + "/" + username).pipe(map(result => result))
+  }
+
+  GetTempDelegationNotifications(tempUsername: string): Observable<any> {
+    return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetTempDelegationNotifications` + "/" + tempUsername).pipe(map(result => result))
+  }
+
   ResetNotif(username: string) {
     return this.httpClient.put<User>(`${this.apiUrl}User/ResetNotif/` + username, this.httpOptions)
   }
