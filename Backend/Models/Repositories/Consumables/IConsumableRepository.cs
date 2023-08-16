@@ -17,5 +17,6 @@ namespace ProcionAPI.Models.Repositories.Consumables
         Task<Notification[]> AddNotificationAsync(Notification ConsumableNotif);
         Task<Consumable_History> GetConsumableHistoryByIDAsync(int id);
         Task<ReportData> GetReportData(DateTime startDate, DateTime endDate);
+        Task<Procurement_Consumable> ValidateConsumableToDeleteAsync(int ID);
     }
 }

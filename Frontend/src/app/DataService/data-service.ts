@@ -1456,6 +1456,10 @@ export class DataService {
   GetReportData(startDate: Date, endDate: Date): Observable<any> {
     return this.httpClient.get<any>(`${this.apiUrl}Consumable/GetConsumableManagementReport?startDate=${startDate}&endDate=${endDate}`);
   }
+
+  ValidateConsumableToDelete(ID: Number): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}Consumable/ValidateConsumableToDelete/` + ID, this.httpOptions).pipe(map(result => result));
+  }
 }
 
 

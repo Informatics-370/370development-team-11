@@ -351,5 +351,13 @@ namespace ProcionAPI.Models.Repositories.Consumables
 
             return reportData;
         }
+
+        public async Task<Procurement_Consumable> ValidateConsumableToDeleteAsync(int ID)
+        {
+            Procurement_Consumable ExistingRecord = await _dbContext.Procurement_Consumable.FirstOrDefaultAsync(x => x.Consumable_ID == ID);
+
+
+            return ExistingRecord;
+        }
     }
 }
