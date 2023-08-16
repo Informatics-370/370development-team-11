@@ -23,6 +23,7 @@
                                             long</mat-error>
                                         <mat-error *ngIf="myError('total', 'maxlength')">Limit
                                             exceeded</mat-error>
+                                        <mat-error *ngIf="myError('total', 'required')"> Total is required </mat-error>
                                     </mat-form-field>
                                 </mat-card-content>
                             </td>
@@ -31,10 +32,24 @@
                                     <label style=" color:black;">Year:</label>
                                     <br />
                                     <mat-form-field>
-                                        <mat-label>Choose a year</mat-label>
-                                        <input matInput type="text" placeholder="" formControlName="year" id="year"
-                                            [(ngModel)]="budgetAllocation.year" required>
-                                    </mat-form-field>
+                                        <mat-label>Year</mat-label>
+                                        <input
+                                          matInput
+                                          placeholder="YYYY"
+                                          [matDatepicker]="datePicker"
+                                          formControlName="year"
+                                          (focus)="datePicker?.open()"
+                                          [(ngModel)]="budgetAllocation.year" required
+                                          id="year" [min]="minDate"
+                                        />
+                                        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+                                        <mat-datepicker
+                                          #datePicker
+                                          color="primary"
+                                          startView="multi-year"
+                                          (yearSelected)="onsYearSelected($event, datePicker)"
+                                        ></mat-datepicker>
+                               </mat-form-field>
                                 </mat-card-content>
                             </td>
                         </tr>
@@ -56,6 +71,7 @@
                                     </mat-form-field>
                                 </mat-card-content>
                             </td>
+                           
                         </tr>
                     </table>
                 </mat-card-subtitle>

@@ -6,11 +6,33 @@ import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { Department } from '../Shared/Department';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
+import { MatDatepicker } from '@angular/material/datepicker';
+import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+
+export const YEAR_ONLY_FORMAT = {
+  parse: { dateInput: 'YYYY' },
+  display: {
+    dateInput: 'YYYY',
+    monthYearLabel: 'YYYY',
+    dateA11yLabel: 'YYYY',
+    monthYearA11yLabel: 'YYYY',
+  },
+};
+
+export class YearOnlyDateAdapter extends NativeDateAdapter {
+  override format(date: Date, displayFormat: Object): string {
+    return date.getFullYear().toString();
+  }
+}
 
 @Component({
   selector: 'app-edit-budget-allocation',
   templateUrl: './edit-budget-allocation.component.html',
-  styleUrls: ['./edit-budget-allocation.component.css']
+  styleUrls: ['./edit-budget-allocation.component.css'],
+  providers: [
+    { provide: DateAdapter, useClass: YearOnlyDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: YEAR_ONLY_FORMAT }
+  ]
 })
 export class EditBudgetAllocationComponent {
 
@@ -37,18 +59,22 @@ export class EditBudgetAllocationComponent {
   }
 
   departments: any[] = []
-
+  minDate:any;
   budgetAllocationForm: FormGroup = new FormGroup({});
   constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
+    let currentYear = new Date().getFullYear()
+    let currentmonth = new Date().getMonth();
+    let currentDay = new Date().getDate();
+     this.minDate = new Date(currentYear - 1, currentmonth, currentDay);
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.GetBudgetAllocation(id);
     this.GetDepartments();
     this.budgetAllocationForm = this.formBuilder.group({
       department_ID: ['', [Validators.required]],
       date_Created: ['', [Validators.required]],
-      year: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern("^[0-9]+$")]],
+      year: [Date.now(), [Validators.required]],
       total: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]]
     })
   }
@@ -57,7 +83,8 @@ export class EditBudgetAllocationComponent {
 
     this.dep.department_ID = this.budgetAllocationForm.get('department_ID')?.value;
     this.budgetAllocation.date_Created = this.budgetAllocationForm.get('date_Created')?.value;
-    this.budgetAllocation.year = this.budgetAllocationForm.get('year')?.value;
+    let date = this.budgetAllocationForm.get('year')?.value
+    this.budgetAllocation.year = date.getFullYear();
     this.budgetAllocation.total = this.budgetAllocationForm.get('total')?.value;
     console.log(this.budgetAllocation);
 
@@ -89,11 +116,10 @@ export class EditBudgetAllocationComponent {
       this.budgetAllocation = data;
 
       console.log(this.budgetAllocation)
-      
       this.budgetAllocationForm.patchValue({
         department_ID: this.budgetAllocation.department_ID,
         date_Created: this.budgetAllocation.date_Created,
-        year: this.budgetAllocation.year,
+        year: new Date(Number(this.budgetAllocation.year), 12, 0),
         total: this.budgetAllocation.total
       })
     })
@@ -107,4 +133,12 @@ export class EditBudgetAllocationComponent {
   public myError = (controlName: string, errorName: string) => {
     return this.budgetAllocationForm.controls[controlName].hasError(errorName);
   }
+
+  public onsYearSelected(date: Date, datepicker: MatDatepicker<Date>) {
+    const normalizedYear = date.getFullYear();
+    //console.log(normalizedYear)
+    this.budgetAllocationForm.get("year").setValue(new Date(normalizedYear, 12, 0));
+    datepicker.close();
+  }
+  
 }

@@ -32,7 +32,7 @@ export class ViewBudgetAllocationComponent {
   SearchedBudgetAllocations: BudgetAllocation[] = [];
   ExportBudgetLine: BudgetLine[] = [];
 
-  searchNumber: Number = 0;
+  searchNumber: Number = null;
   displayedColumns: string[] = ['department', 'date', 'year', 'total', 'lines', 'export', 'action', 'delete' ];
   dataSource = new MatTableDataSource<BudgetAllocation>();
 
@@ -70,6 +70,7 @@ export class ViewBudgetAllocationComponent {
 
     if (Searchterm) {
       this.SearchedBudgetAllocations = this.BudgetAllocations.filter(budgetAllocation => budgetAllocation.year == Searchterm)
+      console.log(this.SearchedBudgetAllocations)
       this.dataSource = new MatTableDataSource(this.SearchedBudgetAllocations);
     }
     else if (Searchterm == 0) {
