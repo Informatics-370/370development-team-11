@@ -42,7 +42,7 @@ import { NgFor } from '@angular/common';
 import { Access } from '../Shared/Access';
 
 interface AccountCodeDisplay {
-  AccountCodeValue:number;
+  AccountCodeValue: number;
   AccountCodeName: string;
   Year: string;
   Month: string;
@@ -51,7 +51,7 @@ interface AccountCodeDisplay {
 interface AccountCodeDisplayGroup {
   Year: string;
   Month: string;
-  AccountDetails:AccountCodeDisplay[];
+  AccountDetails: AccountCodeDisplay[];
 }
 
 @Component({
@@ -422,8 +422,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
       console.log(r)
       this.sAssets = r
       console.log(this.sAssets)
-      this.sAssets.forEach(x=> this.assetnames.push(x.name));
-     //this.assetnames.push(r.name);
+      this.sAssets.forEach(x => this.assetnames.push(x.name));
+      //this.assetnames.push(r.name);
       console.log(this.sAssets)
       this.filteredAssets = this.ProcurementFormGroup.get("AssetName")?.valueChanges.pipe(
         startWith(''),
@@ -459,14 +459,15 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           let employeeInfo: any = result;
           this.EmployeeDetails = employeeInfo;
           this.MandateLimitAmount = employeeInfo.mandate_Limit.ammount
+          this.ProcurementDetails.employee.user.access = employeeInfo.user.access;
           this.ProcurementFormGroup.get("BuyerName")?.setValue(this.EmployeeDetails.employeeName.toString())
           this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.EmployeeDetails.email.toString())
           let departmentname = this.EmployeeDetails.department.name
-          this.ProcureService.GetProcurementAccountCodeDetails(this.currentYear,this.currentmonth,departmentname.toString()).subscribe(response => {
+          this.ProcureService.GetProcurementAccountCodeDetails(this.currentYear, this.currentmonth, departmentname.toString()).subscribe(response => {
             console.log(response)
             this.BudgetAllocationCode = response;
             this.BudgetAllocationCode.forEach(t => {
-              let AccountInfo:AccountCodeDisplay = {
+              let AccountInfo: AccountCodeDisplay = {
                 AccountCodeValue: t.budgetLineId,
                 AccountCodeName: t.budget_Category.account_Name.toString(),
                 Year: t.month.toString(),
@@ -477,18 +478,18 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
             this.AccountCodeDetails.forEach(b => {
 
-              if(this.AccountCodeGroups.filter(x=> (x.Month == b.Month) && (x.Year == b.Year) == null || this.AccountCodeDetails == undefined)) {
-                let AccountGroupInfo:AccountCodeDisplayGroup = {
+              if (this.AccountCodeGroups.filter(x => (x.Month == b.Month) && (x.Year == b.Year) == null || this.AccountCodeDetails == undefined)) {
+                let AccountGroupInfo: AccountCodeDisplayGroup = {
                   Year: b.Year,
                   Month: b.Month,
-                  AccountDetails: this.AccountCodeDetails.filter(x=> (x.Month == b.Month) && (x.Year == b.Year)),
+                  AccountDetails: this.AccountCodeDetails.filter(x => (x.Month == b.Month) && (x.Year == b.Year)),
                 };
                 this.AccountCodeGroups.push(AccountGroupInfo)
               }
             })
 
             console.log(this.AccountCodeGroups)
-           
+
           })
         },
           (error) => {
@@ -517,8 +518,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     })
   }
 
-  ChangeDescription(sName:string) {
-    let Description = this.sAssets.find(x=> x.name == sName).description
+  ChangeDescription(sName: string) {
+    let Description = this.sAssets.find(x => x.name == sName).description
     this.ProcurementFormGroup.get("AssetDescription")?.setValue(Description)
   }
 
@@ -698,6 +699,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.Procurement_Consumable.procurement_Details.procurement_Request.requisition_Status = this.Procurement_Request.requisition_Status;
         this.Procurement_Consumable.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
         this.Procurement_Consumable.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category
+        this.Procurement_Consumable.procurement_Details.employee.user.access = this.ProcurementDetails.employee.user.access
         this.Procurement_Consumable.quantity = Number(this.ProcurementFormGroup.get("ConsumableQuantity")?.value)
         this.ConsumableItems.forEach(e => {
           if (e.consumable_Category_ID == Number(this.ProcurementFormGroup.get("ConsumableItem")?.value)) {

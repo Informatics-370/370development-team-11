@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Consumable } from '../Shared/Consumable';
 import { DataService } from '../DataService/data-service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableDataSource } from '@angular/material/table';
 import { DeleteConsumableComponent } from '../delete-consumable/delete-consumable.component';
@@ -14,6 +14,9 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/
 import { MatPaginator } from '@angular/material/paginator';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
+import { Procurement_Details } from '../Shared/ProcurementDetails';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -35,10 +38,11 @@ export class ViewConsumableComponent implements OnInit {
   Consumables: Consumable[] = [];
   SearchedConsumables: Consumable[] = [];
   displayedColumns: string[] = ['Name', 'Description', 'On Hand', 'Minimum Reorder Quantity', 'Maximum Reorder Quantity', 'Category', 'action', 'update', 'delete'];
-  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
+  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router, private sanitizer: DomSanitizer) { }
   searchWord: string = '';
   dataSource: any;
   User: string = "";
+  ExistingProcurements: Procurement_Details[] = [];
 
   convertImageToBase64() {
     let filePath = "./assets/Images/moyo-full-logo2.png";
@@ -59,7 +63,6 @@ export class ViewConsumableComponent implements OnInit {
   }
 
   openDialog(name: string, ID: Number) {
-    console.log(name)
     this.Dialog.open(UpdateConsumableStockComponent, {
       data: { name, ID },
       disableClose: true
@@ -178,7 +181,6 @@ export class ViewConsumableComponent implements OnInit {
 
   ngOnInit() {
     this.GetConsumables();
-    console.log(this.Consumables)
     this.convertImageToBase64()
     this.User = this.dataService.decodeUser(sessionStorage.getItem('token'))
   }
@@ -193,7 +195,6 @@ export class ViewConsumableComponent implements OnInit {
       if (result) {
         hideloader();
       }
-
     });
 
     function hideloader() {
@@ -206,14 +207,41 @@ export class ViewConsumableComponent implements OnInit {
 
 
   DeleteConsumable(ID: Number) {
-    const confirm = this.Dialog.open(DeleteConsumableComponent, {
-      disableClose: true,
-      data: { ID }
-    });
+    this.dataService.ValidateConsumableToDelete(ID).subscribe({
+      next: (IsExist) => {
+        if (IsExist == null) {
+          const confirm = this.Dialog.open(DeleteConsumableComponent, {
+            disableClose: true,
+            data: { ID }
+          });
 
-    this.Dialog.afterAllClosed.subscribe({
-      next: (response) => {
-        this.ngOnInit();
+          this.Dialog.afterAllClosed.subscribe({
+            next: (response) => {
+              this.ngOnInit();
+            }
+          })
+        }
+
+        else {
+          this.dataService.GetConsumableByID(ID).subscribe({
+            next: (ConsToDelete) => {
+              var action = "ERROR";
+              var title = "ERROR: Consumable In Use";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Consumable <strong>" + ConsToDelete.name + " <strong style='color:red'>IS ASSOCIATED WITH A Procurement!!</strong><br>");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.Dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+
+              const duration = 4000;
+              setTimeout(() => {
+                dialogRef.close();
+              }, duration);
+            }
+          })
+        }
+
       }
     })
   }

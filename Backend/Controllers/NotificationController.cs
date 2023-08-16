@@ -158,5 +158,51 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
+        [HttpGet]
+        [Route("GetNotificationsByUserID/{userID}")]
+        public async Task<IActionResult> GetNotificationsByUserID(int userID)
+        {
+            try
+            {
+                var result = await _NotificationRepository.GetNotificationByUserIDAsync(userID);
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpDelete]
+        [Route("DeleteNotification/{userID}")]
+        public async Task<IActionResult> DeleteNotifications(int userID)
+        {
+            try
+            {
+                var existingNotification = await _NotificationRepository.GetNotificationByUserIDAsync(userID);
+
+                if (existingNotification.Length == 0)
+                {
+                    return Ok(existingNotification);
+                }
+
+                for(int s = 0; s <= existingNotification.Length; s++ )
+                {
+                    _NotificationRepository.Delete(existingNotification[s]);
+                }
+
+                if (await _NotificationRepository.SaveChangesAsync()) 
+                { 
+                    return Ok(existingNotification); 
+                }
+            }
+            catch
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+            return BadRequest("Your request is invalid");
+        }
     }
 }

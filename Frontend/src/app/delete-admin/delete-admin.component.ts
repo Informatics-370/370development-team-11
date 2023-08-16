@@ -25,12 +25,12 @@ export class DeleteAdminComponent implements OnInit {
   }
 
   constructor(public dialogRef: MatDialogRef<DeleteAdminComponent>, private ActRoute: ActivatedRoute, private route: Router, private dataService: DataService,
-    @Inject(MAT_DIALOG_DATA) public data: { id: number }) { }
+    @Inject(MAT_DIALOG_DATA) public data: { userID: number }) { }
 
   ngOnInit(): void {
     this.ActRoute.paramMap.subscribe({
       next: (params) => {
-        const ID = this.data.id;
+        const ID = this.data.userID;
 
 
         if (ID) {
@@ -46,25 +46,27 @@ export class DeleteAdminComponent implements OnInit {
 
   onConfirm(id: number): void {
     this.dataService.DeleteAdmin(id).subscribe(r => {
-      this.dataService.DeleteUser(id).subscribe({
-        next: (response) => {
-          this.log.action = "Exported Inventory Details";
-          this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-          let test: any
-          test = new DatePipe('en-ZA');
-          this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-          this.dataService.AuditLogAdd(this.log).subscribe({
-            next: (Log) => {
-              this.showConfirmationDialog = false;
-              this.showSuccessDialog = true;
-              setTimeout(() => {
-                this.dialogRef.close();
-              }, 1750);
-            }
-          })
+      this.dataService.DeleteNotifications(id).subscribe(nr => {
+        this.dataService.DeleteUser(id).subscribe({
+          next: (response) => {
+            this.log.action = "Exported Inventory Details";
+            this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+            let test: any
+            test = new DatePipe('en-ZA');
+            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+            this.dataService.AuditLogAdd(this.log).subscribe({
+              next: (Log) => {
+                this.showConfirmationDialog = false;
+                this.showSuccessDialog = true;
+                setTimeout(() => {
+                  this.dialogRef.close();
+                }, 1750);
+              }
+            })
 
-         
-        }
+
+          }
+        })
       })
     });
   }

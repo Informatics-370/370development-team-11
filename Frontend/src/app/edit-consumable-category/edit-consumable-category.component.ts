@@ -45,7 +45,6 @@ export class EditConsumableCategoryComponent implements OnInit {
     this.ActRoute.paramMap.subscribe({
       next: (paramater) => {
         const id = paramater.get("consumable_Category_ID");
-        console.log(id)
 
         if (id) {
           this.dataService.GetCategoryByID(Number(id)).subscribe({
@@ -66,8 +65,6 @@ export class EditConsumableCategoryComponent implements OnInit {
 
     this.dataService.CategoryValidation(this.CategoryToEdit.name).subscribe({
       next: (Result) => {
-        console.log(Result)
-        console.log(this.CategoryToEdit)
         if (Result == null) {
           this.dataService.UpdateCategory(this.CategoryToEdit.consumable_Category_ID, this.CategoryToEdit).subscribe({
             next: (response) => {

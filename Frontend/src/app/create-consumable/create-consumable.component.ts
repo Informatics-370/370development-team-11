@@ -68,7 +68,7 @@ export class CreateConsumableComponent implements OnInit {
       let CategoryList: any[] = result
       CategoryList.forEach((element) => {
         this.consumableCategories.push(element)
-        console.log(element)
+
       })
     })
   }

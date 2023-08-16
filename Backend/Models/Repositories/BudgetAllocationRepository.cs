@@ -58,6 +58,13 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Budget_Line> query = _dbContext.Budget_Line.Where(c => c.Account_Code == accountCode).Include(c => c.Budget_Category).Include(b => b.Budget_Allocation).ThenInclude(a => a.Department);
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<Budget_Line> GetBudgetLineByIDAsync(int budgetLineID)
+        {
+            IQueryable<Budget_Line> query = _dbContext.Budget_Line.Where(c => c.BudgetLineId == budgetLineID).Include(c => c.Budget_Category).Include(b => b.Budget_Allocation).ThenInclude(a => a.Department);
+            return await query.FirstOrDefaultAsync();
+        }
+
         public async Task<Budget_Allocation[]> AddBudgetAllocationAsync(Budget_Allocation budgetAllocation)
         {
             Department existingDepartment = await _dbContext.Department.FirstOrDefaultAsync(d => d.Name == budgetAllocation.Department.Name);
@@ -109,16 +116,29 @@ namespace ProcionAPI.Models.Repositories
         }
         public async Task<Budget_Line> UpdateBudgetLineAsync(Budget_Line budget_Line, string accountCode)
         {
-            //Cannot alter fields of composite key unless you delete the record and recreate it
-            Budget_Line existingBudgetLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(b => b.Account_Code == accountCode);
-            
-            if(existingBudgetLine != null) {
-                _dbContext.Remove(existingBudgetLine);
-                await _dbContext.SaveChangesAsync();
-            }
+            var budgetline = await _dbContext.Budget_Line.FindAsync(budget_Line.BudgetLineId);
 
-            Budget_Line[] newBudgetLine = await AddBudgetLineAsync(budget_Line);
-            return budget_Line;
+            budgetline.Account_Code = budget_Line.Account_Code;
+            budgetline.ActualAmt = budget_Line.ActualAmt;
+            budgetline.BudgetAmt = budget_Line.BudgetAmt;
+            budgetline.Budget_ID = budget_Line.Budget_ID;
+            budgetline.Category_ID = budget_Line.Category_ID;
+            budgetline.Month = budget_Line.Month;
+            budgetline.Variance = budget_Line.Variance;
+
+            budgetline.Budget_Allocation = new Budget_Allocation();
+            budgetline.Budget_Category = new Budget_Category();
+
+            Budget_Allocation existingBudgetAllocation = await _dbContext.Budget_Allocation.FirstOrDefaultAsync(ba => ba.Budget_ID == budget_Line.Budget_ID);
+            Budget_Category exsitingBudgetCategory = await _dbContext.Budget_Category.FirstOrDefaultAsync(bc => bc.Category_ID == budget_Line.Category_ID);
+
+            budgetline.Budget_Allocation = existingBudgetAllocation;
+            budgetline.Budget_Category = exsitingBudgetCategory;
+
+            await _dbContext.SaveChangesAsync();
+
+            
+            return budgetline;
         }
 
         public async Task<Budget_Category> BudgetCategoryValidationAsync(string name)

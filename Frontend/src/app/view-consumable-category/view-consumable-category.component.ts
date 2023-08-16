@@ -2,16 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Consumable } from '../Shared/Consumable';
 import { DataService } from '../DataService/data-service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableDataSource } from '@angular/material/table';
-import { DeleteConsumableComponent } from '../delete-consumable/delete-consumable.component';
 import { Router } from '@angular/router';
 import { ConsumableCategory } from '../Shared/ConsumableCategory';
 import { DeleteConsumableCategoryComponent } from '../delete-consumable-category/delete-consumable-category.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
-import { count } from 'rxjs';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -97,12 +94,10 @@ export class ViewConsumableCategoryComponent implements OnInit {
         ConsumableList.forEach((element) => {
           this.Consumables.push(element)
         });
-        console.log(this.Consumables)
         var Count: number = 0;
         this.Consumables.forEach(element => {
           if (element.consumable_Category_ID == ID) {
             Count = Count + 1;
-            console.log(Count)
           }
         });
 

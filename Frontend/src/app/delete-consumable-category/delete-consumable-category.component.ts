@@ -35,7 +35,6 @@ export class DeleteConsumableCategoryComponent implements OnInit {
     this.ActRoute.paramMap.subscribe({
       next: (params) => {
         const ID = this.data.ID;
-        console.log(ID);
 
         if (ID) {
           this.dataService.GetCategoryByID(ID).subscribe(result => {

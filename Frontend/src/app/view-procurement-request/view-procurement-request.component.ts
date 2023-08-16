@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
 import { Procurement_Request_Quote } from '../Shared/Procurement_Request_Quote';
@@ -10,6 +10,8 @@ import { DeleteConsumableComponent } from '../delete-consumable/delete-consumabl
 import { DeleteProcurementRequestComponent } from '../delete-procurement-request/delete-procurement-request.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
 @Component({
   selector: 'app-view-procurement-request',
@@ -29,7 +31,7 @@ export class ViewProcurementRequestComponent implements OnInit {
   ProcurementRequests: Procurement_Request[] = [];
   SearchedPRequests: Procurement_Request[] = [];
   displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'Status', 'action', 'delete'];
-  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router, private http: HttpClient) { }
+  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router, private http: HttpClient, private sanitizer: DomSanitizer) { }
   searchWord: string = '';
   ProcurementQuotes: Procurement_Request_Quote[] = [];
   expandedElement: Procurement_Request_Quote | undefined;
@@ -72,12 +74,8 @@ export class ViewProcurementRequestComponent implements OnInit {
 
     this.GetProcurementRequests();
     this.GetPRQuotes()
-    console.log(this.ProcurementRequests)
 
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
-
-
-    console.log(User)
   }
 
   openPDFInNewTab(i: number): void {
@@ -95,7 +93,6 @@ export class ViewProcurementRequestComponent implements OnInit {
       let procurementRequestList: any[] = result;
       this.ProcurementRequests = [...procurementRequestList];
       this.SearchedPRequests = [...procurementRequestList];
-      console.log(this.SearchedPRequests)
       this.dataSource = new MatTableDataSource(this.ProcurementRequests.filter((value, index, self) => self.map(x => x.procurement_Request_ID).indexOf(value.procurement_Request_ID) == index));
       this.dataSource.paginator = this.paginator
       if (result) {
@@ -125,7 +122,6 @@ export class ViewProcurementRequestComponent implements OnInit {
     this.dataService.GetProcurementQuotes().subscribe({
       next: (response) => {
         this.ProcurementQuotes = response;
-        console.log(response)
 
         for (let i = 0; i < this.ProcurementQuotes.length; i++) {
           this.FileDetails.push({ FileURL: "", FileName: "" })
@@ -152,27 +148,49 @@ export class ViewProcurementRequestComponent implements OnInit {
   getStatusColor(status: string): string {
     switch (status.toLowerCase()) {
       case 'approval required':
-        return 'orange'; // Set the color you want for 'Pending'
-      case 'accepted':
-        return 'green'; // Set the color you want for 'Approved'
+        return 'orange';
+      case 'accepted (ready to order)':
+        return 'green';
+      case 'done':
+        return 'green';
       case 'rejected':
-        return 'red'; // Set the color you want for 'Rejected'
-      // Add more cases for other status values if needed
+        return 'red';
+
       default:
-        return 'black'; // Default color if the status doesn't match any case
+        return 'black';
     }
   }
 
   DeleteRequest(ID: Number) {
-    console.log(ID)
-    const confirm = this.Dialog.open(DeleteProcurementRequestComponent, {
-      disableClose: true,
-      data: { ID }
-    });
+    this.dataService.ValidatePRRequestDelete(ID).subscribe({
+      next: (IsExist) => {
+        if (IsExist == null) {
+          const confirm = this.Dialog.open(DeleteProcurementRequestComponent, {
+            disableClose: true,
+            data: { ID }
+          });
 
-    this.Dialog.afterAllClosed.subscribe({
-      next: (response) => {
-        this.ngOnInit();
+          this.Dialog.afterAllClosed.subscribe({
+            next: (response) => {
+              this.ngOnInit();
+            }
+          })
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: Request In Use";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Procurement Request <strong style='color:red'>IS ASSOCIATED WITH A PROCUREMENT!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.Dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 4000;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
       }
     })
   }

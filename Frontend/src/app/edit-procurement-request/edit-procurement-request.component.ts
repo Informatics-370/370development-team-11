@@ -120,7 +120,6 @@ export class EditProcurementRequestComponent implements OnInit {
         let usr = this.dataService.decodeUser(sessionStorage.getItem("token"));
         const id = paramater.get("procurement_Request_ID");
         this.VendorType = paramater.get("name");
-        console.log(id)
 
 
 
@@ -133,7 +132,6 @@ export class EditProcurementRequestComponent implements OnInit {
               }
 
               else {
-                console.log(this.VendorType)
                 this.BuildFormApproved()
               }
             }
@@ -142,7 +140,6 @@ export class EditProcurementRequestComponent implements OnInit {
           this.dataService.GetProcurementQuotesbyID(Number(id)).subscribe({
             next: (response) => {
               this.ProcurementQuotes = response;
-              console.log(this.ProcurementQuotes)
               this.GetPRQuotes()
             }
           })
@@ -281,13 +278,10 @@ export class EditProcurementRequestComponent implements OnInit {
 
     this.Procurement_Request.name = this.myForm.get("RequestName").value;
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
-    console.log(this.Procurement_Request)
 
 
     this.dataService.UpdatPRRequest(this.Procurement_Request.procurement_Request_ID, this.Procurement_Request).subscribe({
       next: (response) => {
-        console.log(this.Procurement_Request)
-        console.log(response)
 
         // this.DisplayNotif();
         for (let i = 0; i <= this.files.length - 1; i++) {
@@ -309,7 +303,6 @@ export class EditProcurementRequestComponent implements OnInit {
 
                           if (i > 0) {
                             this.ProcurementQuotes = PRResult
-                            console.log(this.ProcurementQuotes)
 
                             this.ProcurementQuotes[i].procurement_Request = this.Procurement_Request
                             this.ProcurementQuotes[i].path = qPath.pathSaved.toString();
@@ -320,7 +313,6 @@ export class EditProcurementRequestComponent implements OnInit {
                             this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
                             this.dataService.UpdateProcurementQuotes(this.ProcurementQuotes[i].quote_ID, this.ProcurementQuotes[i]).subscribe({
                               next: (result) => {
-                                console.log(result)
                                 this.DisplayNotif();
                               }
                             })
@@ -337,7 +329,6 @@ export class EditProcurementRequestComponent implements OnInit {
                             this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
                             this.dataService.UpdateProcurementQuotes(this.ProcurementQuotes[i].quote_ID, this.ProcurementQuotes[i]).subscribe({
                               next: (result) => {
-                                console.log(result)
                                 this.DisplayNotif();
                               }
                             })
@@ -389,19 +380,13 @@ export class EditProcurementRequestComponent implements OnInit {
   EditProcurementRequestA() {
     this.Procurement_Request.name = this.myForm.get("Name").value;
     this.Procurement_Request.description = this.myForm.get("Description").value;
-    console.log(this.Procurement_Request)
 
 
     this.dataService.UpdatPRRequest(this.Procurement_Request.procurement_Request_ID, this.Procurement_Request).subscribe({
       next: (response) => {
-        console.log(this.Procurement_Request)
-        console.log(response)
-        console.log(this.files[0])
         if (this.files[0] != null) {
-          console.log(this.files[0])
           this.ProcurementQuotes.forEach(element => {
             let sFile = element.path;
-            console.log(sFile)
             let VendorName = sFile.substring(0, sFile.indexOf("\\"))
             let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
             let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
@@ -410,11 +395,9 @@ export class EditProcurementRequestComponent implements OnInit {
               next: (Result) => {
                 this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, "RequestID" + this.Procurement_Request.procurement_Request_ID.toString(), file).subscribe({
                   next: (Response) => {
-                    console.log(Response)
 
                     this.dataService.GetProcurementQuotesbyID(this.Procurement_Request.procurement_Request_ID).subscribe({
                       next: (PRResult) => {
-                        console.log(PRResult)
                         this.Procurement_Request_Quote = PRResult[0]
                         let qPath = Response
                         this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
@@ -427,7 +410,6 @@ export class EditProcurementRequestComponent implements OnInit {
 
                         this.dataService.UpdateProcurementQuotes(this.Procurement_Request_Quote.quote_ID, this.Procurement_Request_Quote).subscribe({
                           next: (result) => {
-                            console.log(result)
                             this.DisplayNotif()
                           }
                         })

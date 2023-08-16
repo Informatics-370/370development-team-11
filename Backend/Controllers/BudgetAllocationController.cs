@@ -116,6 +116,23 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
+        [Route("GetBudgetLineByID/{blID}")]
+        public async Task<IActionResult> GetBudgetLineByID(int blID)
+        {
+            try
+            {
+                var result = await _repository.GetBudgetLineByIDAsync(blID);
+                if (result == null) return NotFound("Budget Line does not exist");
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
         [Route("GetBudgetLinesForAllocation/{allocationId}")]
         public async Task<IActionResult> GetBudgetLinesForAllocation(int allocationId)
         {
@@ -295,12 +312,12 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteBudgetLine/{accountCode}")]
-        public async Task<IActionResult> DeleteBudgetLine(string accountCode)
+        [Route("DeleteBudgetLine/{blID}")]
+        public async Task<IActionResult> DeleteBudgetLine( [FromRoute] int blID)
         {
             try
             {
-                var existingBudgetLine = await _repository.GetBudgetLineAsync(accountCode);
+                var existingBudgetLine = await _repository.GetBudgetLineByIDAsync(blID);
 
                 if (existingBudgetLine == null) return NotFound("The budget line does not exist");
 

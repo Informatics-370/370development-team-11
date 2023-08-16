@@ -40,7 +40,6 @@ export class DeleteConsumableComponent implements OnInit {
     this.ActRoute.paramMap.subscribe({
       next: (params) => {
         const ID = this.data.ID;
-        console.log(ID);
 
         if (ID) {
           this.dataService.GetConsumableByID(ID).subscribe(result => {

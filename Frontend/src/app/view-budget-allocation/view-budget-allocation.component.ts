@@ -23,7 +23,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-budget-allocation',
   templateUrl: './view-budget-allocation.component.html',
   styleUrls: ['./view-budget-allocation.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewBudgetAllocationComponent {
 
@@ -32,8 +32,8 @@ export class ViewBudgetAllocationComponent {
   SearchedBudgetAllocations: BudgetAllocation[] = [];
   ExportBudgetLine: BudgetLine[] = [];
 
-  searchNumber: Number = 0;
-  displayedColumns: string[] = ['department', 'date', 'year', 'total', 'lines', 'export', 'action', 'delete' ];
+  searchNumber: Number;
+  displayedColumns: string[] = ['department', 'date', 'year', 'total', 'lines', 'export', 'action', 'delete'];
   dataSource = new MatTableDataSource<BudgetAllocation>();
 
   dep: Department = {
@@ -109,7 +109,7 @@ export class ViewBudgetAllocationComponent {
         this.dataService.ExportExcel(id, name)
       }
     })
-    
+
   }
 
   DeleteBudgetAllocation(id: Number) {
