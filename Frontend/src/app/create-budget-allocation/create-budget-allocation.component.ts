@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
@@ -13,6 +13,13 @@ import { AuditLog } from '../Shared/AuditLog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { Moment } from 'moment';
+//import * as moment from 'moment';
+import * as _moment from 'moment';
+import * as _rollupMoment from 'moment';
+
+const moment = _rollupMoment || _moment;
+
 
 export class YearOnlyDateAdapter extends NativeDateAdapter {
   override format(date: Date, displayFormat: Object): string {
@@ -53,7 +60,7 @@ export class CreateBudgetAllocationComponent {
     department_ID: 0,
     date_Created: '2023-05-07T12:14:46.249Z',
     year: 0,
-    total: 0,
+    total: null,
     department: this.dep
   }
 
@@ -65,8 +72,9 @@ export class CreateBudgetAllocationComponent {
   }
 
   @ViewChild('dp1') dp1: MatDatepicker<Date>;
-
-  currentDate = Date.now();
+  minDate:any;
+  
+    
   departments: any[] = []
 
   budgetAllocationForm: FormGroup = new FormGroup({});
@@ -74,14 +82,16 @@ export class CreateBudgetAllocationComponent {
   constructor(private router: Router, private dataService: DataService, private formBuilder: FormBuilder, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
-
-
+   let currentYear = new Date().getFullYear()
+   let currentmonth = new Date().getMonth();
+   let currentDay = new Date().getDate();
+    this.minDate = new Date(currentYear - 1, currentmonth, currentDay);
     this.GetDepartments();
     this.budgetAllocationForm = this.formBuilder.group({
       department_ID: ['', [Validators.required]],
       // date_Created: ['', [Validators.required]],
-      year: [0, [Validators.required]],
-      total: [0, [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]]
+      year: [Date.now(), [Validators.required]],
+      total: ["", [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]]
     })
   }
 
@@ -90,7 +100,8 @@ export class CreateBudgetAllocationComponent {
     this.dep.department_ID = 0;
     this.budgetAllocation.department = this.dep;
     this.budgetAllocation.date_Created = new Date().toISOString();
-    this.budgetAllocation.year = this.budgetAllocationForm.get('year')?.value;
+    let date = this.budgetAllocationForm.get('year')?.value
+    this.budgetAllocation.year = date.getFullYear();
     this.budgetAllocation.total = this.budgetAllocationForm.get('total')?.value;
     console.log(this.budgetAllocation.department.name)
     this.dataService.BudgetAllocationValidation(this.budgetAllocation.department.name, this.budgetAllocation.year).subscribe({
@@ -161,14 +172,7 @@ export class CreateBudgetAllocationComponent {
     this.budgetAllocationForm.reset();
     this.router.navigate(['/ViewBudgetAllocation']);
   }
-  // chosenYearHandler(normalizedYear: any, datepicker: MatDatepicker<any>) {
-  //   const chosenYear = normalizedYear.getFullYear();
-  //   this.budgetAllocation.year = chosenYear;
-  //   console.log(this.budgetAllocation.year)
-  //   this.budgetAllocationForm.get('year')?.setValue(chosenYear);
-  //   datepicker.close();
-  // }
-
+ 
   onYearSelected(event: any) {
     // Set only the year to the form control
     this.budgetAllocationForm.get('year').setValue(event.getFullYear());
@@ -184,4 +188,14 @@ export class CreateBudgetAllocationComponent {
   public myError = (controlName: string, errorName: string) => {
     return this.budgetAllocationForm.controls[controlName].hasError(errorName);
   }
+
+  public onsYearSelected(date: Date, datepicker: MatDatepicker<Date>) {
+    const normalizedYear = date.getFullYear();
+    //console.log(normalizedYear)
+    this.budgetAllocationForm.get("year").setValue(new Date(normalizedYear, 12, 0));
+    //console.log(this.budgetAllocationForm.get("year").value())
+    datepicker.close();
+  }
+
+
 }
