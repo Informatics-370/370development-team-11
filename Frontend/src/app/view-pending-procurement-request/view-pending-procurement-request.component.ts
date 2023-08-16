@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -14,9 +14,9 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class ViewPendingProcurementRequestComponent implements OnInit {
   ProcurementRequests: Procurement_Request[] = [];
-  SearchedPRequests:any;
+  SearchedPRequests: any;
   displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'View'];
-  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) { }
+  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
   searchWord: string = '';
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -101,7 +101,7 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
     switch (status.toLowerCase()) {
       case 'approval required':
         return 'orange'; // Set the color you want for 'approval required'
-      case 'accepted':
+      case 'accepted (ready to order)':
         return 'green'; // Set the color you want for 'Approved'
       case 'rejected':
         return 'red'; // Set the color you want for 'Rejected'

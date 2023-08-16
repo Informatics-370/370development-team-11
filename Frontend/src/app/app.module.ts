@@ -139,7 +139,6 @@ import { ViewHelpuserComponent } from './view-helpuser/view-helpuser/view-helpus
 import { RestoreDialogComponent } from './Settings/restore-dialog/restore-dialog.component';
 import { UploadPayementFileComponent } from './upload-payement-file/upload-payement-file.component';
 import { UploadInvoiceComponent } from './upload-invoice/upload-invoice.component';
-import { ViewUnapprovedRequestsComponent } from './view-unapproved-requests/view-unapproved-requests.component';
 import { SignOffRequestComponent } from './sign-off-request/sign-off-request.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { OTPComponent } from './otp/otp.component';
@@ -253,7 +252,6 @@ import { BudgetVarianceReportComponent } from './budget-variance-report/budget-v
     RestoreDialogComponent,
     UploadPayementFileComponent,
     UploadInvoiceComponent,
-    ViewUnapprovedRequestsComponent,
     SignOffRequestComponent,
     OTPComponent,
     ReportsMainViewComponent,

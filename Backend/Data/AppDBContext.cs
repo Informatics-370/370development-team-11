@@ -610,7 +610,7 @@ namespace ProcionAPI.Data
             new
             {
                 Requisition_Status_ID = 1,
-                Name = "Accepted",
+                Name = "Accepted (Ready to order)",
                 Description = "Accepted",
 
             },
@@ -626,6 +626,13 @@ namespace ProcionAPI.Data
                 Requisition_Status_ID = 3,
                 Name = "Approval Required",
                 Description = "Approval Required",
+
+            },
+            new
+            {
+                Requisition_Status_ID = 4,
+                Name = "Done",
+                Description = "Request Finalised",
 
             }
             );
@@ -662,7 +669,7 @@ namespace ProcionAPI.Data
            new
            {
                Procurement_Status_ID = 1,
-               Name = "Placed",
+               Name = "Awaiting Delivery",
                Description = "Procurement Details are placed",
 
            },
