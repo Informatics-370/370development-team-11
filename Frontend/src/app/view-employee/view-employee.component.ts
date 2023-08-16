@@ -125,34 +125,122 @@ export class ViewEmployeeComponent implements OnInit {
 
 
 
-  DeleteEmployee(id: Number) {
-    this.dataService.GetAllOnboardRequest().subscribe({
-      next: (result) => {
-        let UserList: any[] = result
-        UserList.forEach((element) => {
-          this.OnboardRequests.push(element)
-        });
-        var Count: number = 0;
-        this.OnboardRequests.forEach(element => {
-          if (element.user_Id == id) {
-            Count = Count + 1;
-          }
-        });
-        if (Count == 0) {
-          const confirm = this.dialog.open(DeleteEmployeeComponent, {
-            disableClose: true,
-            data: { id }
-          });
+  DeleteEmployee(userID: Number, empID: Number, username: string) {
+    
 
-          this.dialog.afterAllClosed.subscribe({
-            next: (response) => {
-              this.ngOnInit();
+    this.dataService.UserDeleteDelegationValidation(userID, username).subscribe({
+      next: (dResult) => {
+        if (dResult == null) {
+
+          this.dataService.UserDeleteOnboardRequestValidation(userID).subscribe({
+            next: (oResult) => {
+              if (oResult == null) {
+
+                this.dataService.UserDeleteProcurementRequestValidation(userID).subscribe({
+                  next: (pResult) => {
+                    if (pResult == null) {
+
+                      this.dataService.EmployeeDeleteProcurementDetailsValidation(empID).subscribe({
+                        next: (pdResult) => {
+                          if (pdResult == null) {
+
+                            const confirm = this.dialog.open(DeleteEmployeeComponent, {
+                              disableClose: true,
+                              data: { userID }
+                            });
+
+                            this.dialog.afterAllClosed.subscribe({
+                              next: (response) => {
+                                this.ngOnInit();
+                              }
+                            })
+                          }
+                          else {
+                            this.dataService.GetUser(userID).subscribe(UserRecieved => {
+                              this.userDelete = UserRecieved
+                              this.UserToDelete.role_ID = this.userDelete.role_ID;
+                              this.UserToDelete.username = this.userDelete.username;
+                              this.UserToDelete.password = this.userDelete.password;
+                              this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
+                              this.UserToDelete.user_Id = this.userDelete.user_Id;
+                              this.UserToDelete.role = this.userDelete.role;
+                            });
+
+                            var action = "ERROR";
+                            var title = "ERROR: User In Use";
+                            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A PROCUREMENT REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
+
+                            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                              disableClose: true,
+                              data: { action, title, message }
+                            });
+
+                            const duration = 4000;
+                            setTimeout(() => {
+                              dialogRef.close();
+                            }, duration);
+                          }
+                        }
+                      })
+                    }
+                    else {
+                      this.dataService.GetUser(userID).subscribe(UserRecieved => {
+                        this.userDelete = UserRecieved
+                        this.UserToDelete.role_ID = this.userDelete.role_ID;
+                        this.UserToDelete.username = this.userDelete.username;
+                        this.UserToDelete.password = this.userDelete.password;
+                        this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
+                        this.UserToDelete.user_Id = this.userDelete.user_Id;
+                        this.UserToDelete.role = this.userDelete.role;
+                      });
+
+                      var action = "ERROR";
+                      var title = "ERROR: User In Use";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A PROCUREMENT REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
+
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
+
+                      const duration = 4000;
+                      setTimeout(() => {
+                        dialogRef.close();
+                      }, duration);
+                    }
+                  }
+                })
+              }
+              else {
+                this.dataService.GetUser(userID).subscribe(UserRecieved => {
+                  this.userDelete = UserRecieved
+                  this.UserToDelete.role_ID = this.userDelete.role_ID;
+                  this.UserToDelete.username = this.userDelete.username;
+                  this.UserToDelete.password = this.userDelete.password;
+                  this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
+                  this.UserToDelete.user_Id = this.userDelete.user_Id;
+                  this.UserToDelete.role = this.userDelete.role;
+                });
+
+                var action = "ERROR";
+                var title = "ERROR: User In Use";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A ONBOARD REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
+
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 4000;
+                setTimeout(() => {
+                  dialogRef.close();
+                }, duration);
+              }
             }
           })
         }
         else {
-
-          this.dataService.GetUser(id).subscribe(UserRecieved => {
+          this.dataService.GetUser(userID).subscribe(UserRecieved => {
             this.userDelete = UserRecieved
             this.UserToDelete.role_ID = this.userDelete.role_ID;
             this.UserToDelete.username = this.userDelete.username;
@@ -163,8 +251,8 @@ export class ViewEmployeeComponent implements OnInit {
           });
 
           var action = "ERROR";
-          var title = "ERROR: Role In Use";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A USER!</strong><br> Please remove the user from associated tables to continue with deletion.");
+          var title = "ERROR: User In Use";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A DELEGATION REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,
@@ -178,6 +266,60 @@ export class ViewEmployeeComponent implements OnInit {
         }
       }
     })
+
+
+    //this.dataService.GetAllOnboardRequest().subscribe({
+    //  next: (result) => {
+    //    let UserList: any[] = result
+    //    UserList.forEach((element) => {
+    //      this.OnboardRequests.push(element)
+    //    });
+    //    var Count: number = 0;
+    //    this.OnboardRequests.forEach(element => {
+    //      if (element.user_Id == id) {
+    //        Count = Count + 1;
+    //      }
+    //    });
+    //    if (Count == 0) {
+    //      const confirm = this.dialog.open(DeleteEmployeeComponent, {
+    //        disableClose: true,
+    //        data: { id }
+    //      });
+
+    //      this.dialog.afterAllClosed.subscribe({
+    //        next: (response) => {
+    //          this.ngOnInit();
+    //        }
+    //      })
+    //    }
+    //    else {
+
+    //      this.dataService.GetUser(id).subscribe(UserRecieved => {
+    //        this.userDelete = UserRecieved
+    //        this.UserToDelete.role_ID = this.userDelete.role_ID;
+    //        this.UserToDelete.username = this.userDelete.username;
+    //        this.UserToDelete.password = this.userDelete.password;
+    //        this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
+    //        this.UserToDelete.user_Id = this.userDelete.user_Id;
+    //        this.UserToDelete.role = this.userDelete.role;
+    //      });
+
+    //      var action = "ERROR";
+    //      var title = "ERROR: User In Use";
+    //      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A ONBOARD REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
+
+    //      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+    //        disableClose: true,
+    //        data: { action, title, message }
+    //      });
+
+    //      const duration = 4000;
+    //      setTimeout(() => {
+    //        dialogRef.close();
+    //      }, duration);
+    //    }
+    //  }
+    //})
   }
 
 

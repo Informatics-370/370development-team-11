@@ -667,7 +667,29 @@ export class DataService {
     return this.httpClient.get(`${this.apiUrl}User/VerifyCredentials/` + UserName + "/" + Password, this.httpOptions)
   }
 
+  AdminDeleteDelegationValidation(id: Number): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiUrl}User/AdminDeleteDelegationValidation/` + id, this.httpOptions)
+  }
 
+  EmployeeDeleteProcurementDetailsValidation(id: Number): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiUrl}User/EmployeeDeleteProcurementDetailsValidation/` + id, this.httpOptions)
+  }
+
+  UserDeleteOnboardRequestValidation(id: Number): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiUrl}User/UserDeleteOnboardRequestValidation/` + id, this.httpOptions)
+  }
+
+  UserDeleteProcurementRequestValidation(id: Number): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiUrl}User/UserDeleteProcurementRequestValidation/` + id, this.httpOptions)
+  }
+
+  UserDeleteDelegationValidation(id: Number, username: string): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiUrl}User/UserDeleteDelegationValidation/` + id + "/" + username, this.httpOptions)
+  }
+
+  UserDeleteNotificationValidation(id: Number): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiUrl}User/UserDeleteNotificationValidation/` + id, this.httpOptions)
+  }
 
   //ProfilePhotoAdd(file: File): Observable<any> {
   //  const formData = new FormData();
@@ -857,12 +879,16 @@ export class DataService {
     return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetLine` + '/' + accountCode).pipe(map(result => result))
   }
 
+  GetBudgetLineByID(blID: Number) {
+    return this.httpClient.get(`${this.apiUrl}BudgetAllocation/GetBudgetLineByID` + '/' + blID).pipe(map(result => result))
+  }
+
   EditBudgetLine(accountCode: String, budgetLine: BudgetLine) {
     return this.httpClient.put<BudgetLine>(`${this.apiUrl}BudgetAllocation/EditBudgetLine/${accountCode}`, budgetLine, this.httpOptions)
   }
 
-  DeleteBudgetLine(accountCode: String) {
-    return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetLine` + "/" + accountCode, this.httpOptions)
+  DeleteBudgetLine(blID: Number) {
+    return this.httpClient.delete<string>(`${this.apiUrl}BudgetAllocation/DeleteBudgetLine` + "/" + blID, this.httpOptions)
   }
 
   decodeUserRole(token: string): any {
@@ -1171,6 +1197,14 @@ export class DataService {
     return this.httpClient.put(`${this.apiUrl}Home/CheckDelegation`, this.httpOptions)
   }
 
+  CreateDelegationValidation(name: string): Observable<Delegation_Of_Authority> {
+    return this.httpClient.get<Delegation_Of_Authority>(`${this.apiUrl}Delegation/CreateDelegationValidation/` + name, this.httpOptions)
+  }
+
+  EditDelegationValidation(name: string): Observable<Delegation_Of_Authority> {
+    return this.httpClient.get<Delegation_Of_Authority>(`${this.apiUrl}Delegation/EditDelegationValidation/` + name, this.httpOptions)
+  }
+
   //--------------------------------------------------------------------------------------Notifications--------------------------------------------------------------------------------------
   GetNotifications(username: string): Observable<any> {
     return this.httpClient.get<Notification[]>(`${this.apiUrl}Notification/GetNotifications` + "/" + username).pipe(map(result => result))
@@ -1212,6 +1246,9 @@ export class DataService {
     return this.httpClient.put<User>(`${this.apiUrl}User/ResetNotif/` + username, this.httpOptions)
   }
 
+  DeleteNotifications(userID: number) {
+    return this.httpClient.delete<string>(`${this.apiUrl}Notification/DeleteNotification` + "/" + userID, this.httpOptions)
+  }
 
   //----------------------------------------------------------------------Procurement Request-----------------------------------------------------------------------------
   GetProcurementRequests(): Observable<any> {

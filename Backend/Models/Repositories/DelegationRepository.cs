@@ -293,5 +293,43 @@ namespace ProcionAPI.Models.Repositories
 
             return new Notification[] { newNotification };
         }
+
+        public async Task<Delegation_Of_Authority> CreateDelegationValidationAsync(string name)
+        {
+            Delegation_Of_Authority ExistingActiveDelegation = await _dbContext.Delegation_Of_Authority.FirstOrDefaultAsync(x => x.DelegatingParty == name && x.Delegation_Status.Name == "Active");
+            Delegation_Of_Authority ExistingInactiveDelegation = await _dbContext.Delegation_Of_Authority.FirstOrDefaultAsync(x => x.DelegatingParty == name && x.Delegation_Status.Name == "Inactive");
+
+            if (ExistingActiveDelegation != null)
+            {
+                return ExistingActiveDelegation;
+            }
+            else if (ExistingInactiveDelegation != null)
+            {
+                return ExistingInactiveDelegation;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Delegation_Of_Authority> EditDelegationValidationAsync(string name)
+        {
+            Delegation_Of_Authority ExistingActiveDelegation = await _dbContext.Delegation_Of_Authority.FirstOrDefaultAsync(x => x.DelegatingParty == name && x.Delegation_Status.Name == "Active");
+            Delegation_Of_Authority ExistingInactiveDelegation = await _dbContext.Delegation_Of_Authority.FirstOrDefaultAsync(x => x.DelegatingParty == name && x.Delegation_Status.Name == "Inactive");
+
+            if (ExistingActiveDelegation != null)
+            {
+                return ExistingActiveDelegation;
+            }
+            else if (ExistingInactiveDelegation != null)
+            {
+                return ExistingInactiveDelegation;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

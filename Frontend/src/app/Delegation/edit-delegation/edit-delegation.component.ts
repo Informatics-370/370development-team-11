@@ -288,78 +288,14 @@ export class EditDelegationComponent implements OnInit {
 
   onSubmit() {
     this.doa.delegatingParty = this.myForm.get('DelegatingName')?.value;
-    var name = "" + this.doa.delegatingParty;
+    this.dataService.EditDelegationValidation(this.myForm.get('DelegatingName')?.value).subscribe({
+      next: (vResult) => {
+        if (vResult == null) {
+          var name = "" + this.doa.delegatingParty;
 
 
 
-    if (this.files[0] == "") {
-      this.doa.delegationStatus_ID = 1;
-
-      let startDate: any
-      startDate = new DatePipe('en-ZA');
-      this.doa.from_Date = startDate.transform(this.myForm.get('start')?.value, 'MMM d, y, h:mm:ss a');
-
-      let endDate: any
-      endDate = new DatePipe('en-ZA');
-      this.doa.to_Date = startDate.transform(this.myForm.get('end')?.value, 'MMM d, y, h:mm:ss a');
-
-      this.dataService.EditDelegation(this.doa, this.delID).subscribe({
-        next: (response) => {
-          this.dataService.EditTempAcc(this.ta, this.delID).subscribe({
-            next: (res) => {
-              this.dataService.CheckDelegation().subscribe({
-                next: (r) => {
-                  if (r) {
-
-                    this.log.action = "Edited Delegation for Request: " + this.delID;
-                    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-                    let test: any
-                    test = new DatePipe('en-ZA');
-                    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-                    this.dataService.AuditLogAdd(this.log).subscribe({
-                      next: (Log) => {
-                        var action = "EDIT";
-                        var title = "EDIT SUCCESSFUL";
-                        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
-
-                        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                          disableClose: true,
-                          data: { action, title, message }
-                        });
-
-                        const duration = 1750;
-                        setTimeout(() => {
-                          this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-                          dialogRef.close();
-                        }, duration);
-                      }
-                    })
-                  }
-                }
-              })
-            }
-          })
-        }
-      })
-    } else {
-
-      this.fileToUpload = this.files[0];
-
-      if (this.fileToUpload != null) {
-
-        let sFile = this.doa.delegation_Document;
-        let DelegateName = sFile.substring(0, sFile.indexOf("\\"))
-        let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-
-        this.dataService.DeleteDelegationFile(DelegateName, filename).subscribe(r => {
-          let DelegateName: string = name
-
-          let file: File = this.fileToUpload
-
-          this.dataService.DelegateFileAdd(DelegateName, file).subscribe(response => {
-            let Path: any = response
-            this.sPath = Path.pathSaved.toString()
-            this.doa.delegation_Document = this.sPath;
+          if (this.files[0] == "") {
             this.doa.delegationStatus_ID = 1;
 
             let startDate: any
@@ -372,46 +308,134 @@ export class EditDelegationComponent implements OnInit {
 
             this.dataService.EditDelegation(this.doa, this.delID).subscribe({
               next: (response) => {
-                this.dataService.CheckDelegation().subscribe({
-                  next: (r) => {
-                    if (r) {
+                this.dataService.EditTempAcc(this.ta, this.delID).subscribe({
+                  next: (res) => {
+                    this.dataService.CheckDelegation().subscribe({
+                      next: (r) => {
+                        if (r) {
 
-                      this.log.action = "Edited Delegation for Request: " + this.delID;
-                      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-                      let test: any
-                      test = new DatePipe('en-ZA');
-                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-                      this.dataService.AuditLogAdd(this.log).subscribe({
-                        next: (Log) => {
-                          var action = "EDIT";
-                          var title = "EDIT SUCCESSFUL";
-                          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
+                          this.log.action = "Edited Delegation for Request: " + this.delID;
+                          this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                          let test: any
+                          test = new DatePipe('en-ZA');
+                          this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                          this.dataService.AuditLogAdd(this.log).subscribe({
+                            next: (Log) => {
+                              var action = "EDIT";
+                              var title = "EDIT SUCCESSFUL";
+                              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
 
-                          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                            disableClose: true,
-                            data: { action, title, message }
-                          });
+                              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                                disableClose: true,
+                                data: { action, title, message }
+                              });
 
-                          const duration = 1750;
-                          setTimeout(() => {
-                            this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-                            dialogRef.close();
-                          }, duration);
+                              const duration = 1750;
+                              setTimeout(() => {
+                                this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
+                                dialogRef.close();
+                              }, duration);
+                            }
+                          })
                         }
-                      })
-
-
-                    }
+                      }
+                    })
                   }
                 })
               }
             })
-          })
-        })
+          } else {
+
+            this.fileToUpload = this.files[0];
+
+            if (this.fileToUpload != null) {
+
+              let sFile = this.doa.delegation_Document;
+              let DelegateName = sFile.substring(0, sFile.indexOf("\\"))
+              let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+
+              this.dataService.DeleteDelegationFile(DelegateName, filename).subscribe(r => {
+                let DelegateName: string = name
+
+                let file: File = this.fileToUpload
+
+                this.dataService.DelegateFileAdd(DelegateName, file).subscribe(response => {
+                  let Path: any = response
+                  this.sPath = Path.pathSaved.toString()
+                  this.doa.delegation_Document = this.sPath;
+                  this.doa.delegationStatus_ID = 1;
+
+                  let startDate: any
+                  startDate = new DatePipe('en-ZA');
+                  this.doa.from_Date = startDate.transform(this.myForm.get('start')?.value, 'MMM d, y, h:mm:ss a');
+
+                  let endDate: any
+                  endDate = new DatePipe('en-ZA');
+                  this.doa.to_Date = startDate.transform(this.myForm.get('end')?.value, 'MMM d, y, h:mm:ss a');
+
+                  this.dataService.EditDelegation(this.doa, this.delID).subscribe({
+                    next: (response) => {
+                      this.dataService.CheckDelegation().subscribe({
+                        next: (r) => {
+                          if (r) {
+
+                            this.log.action = "Edited Delegation for Request: " + this.delID;
+                            this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                            let test: any
+                            test = new DatePipe('en-ZA');
+                            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                            this.dataService.AuditLogAdd(this.log).subscribe({
+                              next: (Log) => {
+                                var action = "EDIT";
+                                var title = "EDIT SUCCESSFUL";
+                                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + this.delID + "</strong> has been <strong style='color:green'> EDITED </strong> successfully!");
+
+                                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                                  disableClose: true,
+                                  data: { action, title, message }
+                                });
+
+                                const duration = 1750;
+                                setTimeout(() => {
+                                  this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
+                                  dialogRef.close();
+                                }, duration);
+                              }
+                            })
 
 
+                          }
+                        }
+                      })
+                    }
+                  })
+                })
+              })
+
+
+            }
+          }
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: Delegation Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There already exists a Active or Inactive <strong style='color:red'> DELEGATION REQUEST </strong> for user <strong>" + this.doa.delegatingParty + " <strong style='color:red'>!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
       }
-    }
+    })
+
+
+    
 
 
 

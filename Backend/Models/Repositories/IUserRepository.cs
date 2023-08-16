@@ -19,10 +19,7 @@ namespace ProcionAPI.Models.Repositories {
         Task<User> UpdateUserAsync(User UserEdit, int userID);
         Task<Employee> UpdateEmployeeAsync(Employee EmpEdit, int userID);
         Task<Admin> UpdateAdminAsync(Admin AdminEdit, int userID);
-        Task<User> EditUserValidationAsync(string name, int id);
-        Task<User> CreateUserValidationAsync(string name);
         Task<User> Login(string Username, string Password);
-        Task<bool> VerifyCredentials(string UserName, string Password);
         Task<User> GetUserByUsername(string username);
         Task<Employee> GetEmployeeByEmailAsync(string Email);
         Task<User> UpdateUserPassword(int userID, string NewPassword);
@@ -30,5 +27,17 @@ namespace ProcionAPI.Models.Repositories {
         Task<User> ResetNumNotifications(string username);
         Task<AuditLog[]> AddLogAsync(AuditLog LogAdd);
         Task<AuditLog[]> GetAllLogsAsync();
+
+        //---------------------------------------------------------------------------VALIDATION------------------------------------------------------------------------------------
+        Task<User> EditUserValidationAsync(string name, int id);
+        Task<User> CreateUserValidationAsync(string name);
+        Task<bool> VerifyCredentials(string UserName, string Password);
+        Task<Delegation_Of_Authority> AdminDeleteDelegationValidationAsync(int id);
+        Task<Procurement_Details> EmployeeDeleteProcurementDetailsValidationAsync(int id);
+        Task<Onboard_Request> UserDeleteOnboardRequestValidationAsync(int id);
+        Task<Procurement_Request> UserDeleteProcurementRequestValidationAsync(int id);
+        Task<Delegation_Of_Authority> UserDeleteDelegationValidationAsync(int id, string username);
+        Task<Notification> UserDeleteNotificationValidationAsync(int id);
+
     }
 }

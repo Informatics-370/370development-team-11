@@ -13,5 +13,8 @@ namespace ProcionAPI.Models.Repositories
         Task<Notification[]> GetTempProcurementNotificationsAsync(string tempUsername);
         Task<Notification[]> GetDelegationNotificationsAsync(string username);
         Task<Notification[]> GetTempDelegationNotificationsAsync(string tempUsername);
+        Task<Notification[]> GetNotificationByUserIDAsync(int userID);
+        Task<bool> SaveChangesAsync();
+        void Delete<T>(T entity) where T : class;
     }
 }

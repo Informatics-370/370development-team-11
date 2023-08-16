@@ -332,5 +332,37 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support");
             }
         }
+
+        [HttpGet]
+        [Route("CreateDelegationValidation/{name}")]
+        public async Task<IActionResult> CreateDelegationValidation([FromRoute] string name)
+        {
+            try
+            {
+                var result = await _DelegationRepository.CreateDelegationValidationAsync(name);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("EditDelegationValidation/{name}")]
+        public async Task<IActionResult> EditDelegationValidation([FromRoute] string name)
+        {
+            try
+            {
+                var result = await _DelegationRepository.EditDelegationValidationAsync(name);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
 }
