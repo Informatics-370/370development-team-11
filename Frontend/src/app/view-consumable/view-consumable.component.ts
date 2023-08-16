@@ -63,7 +63,6 @@ export class ViewConsumableComponent implements OnInit {
   }
 
   openDialog(name: string, ID: Number) {
-    console.log(name)
     this.Dialog.open(UpdateConsumableStockComponent, {
       data: { name, ID },
       disableClose: true
@@ -182,7 +181,6 @@ export class ViewConsumableComponent implements OnInit {
 
   ngOnInit() {
     this.GetConsumables();
-    console.log(this.Consumables)
     this.convertImageToBase64()
     this.User = this.dataService.decodeUser(sessionStorage.getItem('token'))
   }
@@ -197,7 +195,6 @@ export class ViewConsumableComponent implements OnInit {
       if (result) {
         hideloader();
       }
-
     });
 
     function hideloader() {
@@ -212,7 +209,6 @@ export class ViewConsumableComponent implements OnInit {
   DeleteConsumable(ID: Number) {
     this.dataService.ValidateConsumableToDelete(ID).subscribe({
       next: (IsExist) => {
-        console.log(IsExist)
         if (IsExist == null) {
           const confirm = this.Dialog.open(DeleteConsumableComponent, {
             disableClose: true,

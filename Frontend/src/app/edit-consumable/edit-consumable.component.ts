@@ -66,7 +66,6 @@ export class EditConsumableComponent implements OnInit {
     this.ActRoute.paramMap.subscribe({
       next: (paramater) => {
         const id = paramater.get("consumable_ID");
-        console.log(id)
 
         if (id) {
           this.dataService.GetConsumableByID(Number(id)).subscribe({
@@ -99,8 +98,6 @@ export class EditConsumableComponent implements OnInit {
 
     this.dataService.ConsumableValidation(this.ConsumableToEdit.name, this.ConsumableToEdit.consumable_Category.name).subscribe({
       next: (Result) => {
-        console.log(Result)
-        console.log(this.ConsumableToEdit)
 
         if (Result == null) {
           this.dataService.UpdateConsumable(this.ConsumableToEdit.consumable_ID, this.ConsumableToEdit).subscribe({
@@ -112,7 +109,6 @@ export class EditConsumableComponent implements OnInit {
               this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
               this.dataService.AuditLogAdd(this.log).subscribe({
                 next: (Log) => {
-                  console.log(null)
                   var action = "Update";
                   var title = "UPDATE SUCCESSFUL";
                   var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -145,7 +141,6 @@ export class EditConsumableComponent implements OnInit {
 
                 document.getElementById('cBtn').style.display = "none";
                 document.querySelector('button').classList.toggle("is_active");
-                console.log("Some other")
                 var action = "Update";
                 var title = "UPDATE SUCCESSFUL";
                 var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -173,7 +168,6 @@ export class EditConsumableComponent implements OnInit {
             Result.maximum_Reorder_Quantity === this.ConsumableToEdit.maximum_Reorder_Quantity &&
             Result.minimum_Reorder_Quantity === this.ConsumableToEdit.minimum_Reorder_Quantity &&
             Result.on_Hand === this.ConsumableToEdit.on_Hand) {
-            console.log("No Changes")
             var action = "NOTIFICATION";
             var title = "NOTIFICATION: NO CHANGES MADE";
             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to the consumable: <strong>" + this.ConsumableToEdit.name + "</strong>");
@@ -194,7 +188,6 @@ export class EditConsumableComponent implements OnInit {
             Result.maximum_Reorder_Quantity === this.ConsumableToEdit.maximum_Reorder_Quantity &&
             Result.minimum_Reorder_Quantity === this.ConsumableToEdit.minimum_Reorder_Quantity &&
             Result.on_Hand === this.ConsumableToEdit.on_Hand)) {
-            console.log("Error")
             var action = "ERROR";
             var title = "ERROR: Consumable Exists";
             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -223,7 +216,6 @@ export class EditConsumableComponent implements OnInit {
       let CategoryList: any[] = result
       CategoryList.forEach((element) => {
         this.consumableCategoryArray.push(element)
-        console.log(element)
       })
     })
   }

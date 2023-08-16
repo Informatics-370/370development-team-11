@@ -103,7 +103,6 @@ export class DeleteProcurementRequestComponent implements OnInit {
     this.ActRoute.paramMap.subscribe({
       next: (params) => {
         const ID = this.data.ID;
-        console.log(ID);
 
         if (ID) {
           this.dataService.GetPRRequestByID(ID).subscribe(result => {
@@ -113,7 +112,6 @@ export class DeleteProcurementRequestComponent implements OnInit {
           this.dataService.GetProcurementQuotesbyID(ID).subscribe({
             next: (response) => {
               this.ProcurementQuotes = response;
-              console.log(this.ProcurementQuotes)
 
 
             }
@@ -137,8 +135,6 @@ export class DeleteProcurementRequestComponent implements OnInit {
 
               if (element.procurement_Request_ID == id) {
                 let sFile = element.path;
-                console.log(element.procurement_Request_ID == id)
-                console.log(sFile)
                 let VendorName = sFile.substring(0, sFile.indexOf("\\"))
                 let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
                 let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)

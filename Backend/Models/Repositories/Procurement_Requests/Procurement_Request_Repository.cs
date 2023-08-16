@@ -205,5 +205,11 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
             return new Notification[] { ProcurementNotif };
         }
+
+        public async Task<Procurement_Details> ValidatePRRequestDeleteAsync(int id)
+        {
+            Procurement_Details ChosenDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Request_ID == id);
+            return ChosenDetails;
+        }
     }
 }

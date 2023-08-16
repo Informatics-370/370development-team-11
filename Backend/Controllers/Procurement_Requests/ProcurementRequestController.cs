@@ -265,6 +265,21 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+        [HttpGet]
+        [Route("ValidatePRRequestDelete/{id}")]
+        public async Task<IActionResult> ValidatePRRequestDelete([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _Procurement_Request_Repository.ValidatePRRequestDeleteAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
 
 
     }

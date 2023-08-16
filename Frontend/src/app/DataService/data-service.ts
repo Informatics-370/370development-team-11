@@ -1460,6 +1460,10 @@ export class DataService {
   ValidateConsumableToDelete(ID: Number): Observable<any> {
     return this.httpClient.get<any>(`${this.apiUrl}Consumable/ValidateConsumableToDelete/` + ID, this.httpOptions).pipe(map(result => result));
   }
+
+  ValidatePRRequestDelete(ProcurementRequestID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementRequest/ValidatePRRequestDelete/${ProcurementRequestID}`).pipe(map(result => result))
+  }
 }
 
 
