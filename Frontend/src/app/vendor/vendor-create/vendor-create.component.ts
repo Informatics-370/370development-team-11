@@ -241,6 +241,9 @@ export class VendorCreateComponent implements OnInit{
      }
 
   ngOnInit(): void {
+
+    
+
     console.log(this.fileName)
     this.route.paramMap.subscribe({
       next: (paramater) => {
