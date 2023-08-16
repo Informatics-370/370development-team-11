@@ -61,7 +61,7 @@ export class DeleteBudgetLineComponent {
   showSuccessDialog: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<DeleteBudgetLineComponent>, private route: ActivatedRoute, private router: Router, private dataService: DataService,
-    @Inject(MAT_DIALOG_DATA) public data: { id2: string }) { }
+    @Inject(MAT_DIALOG_DATA) public data: { id2: Number }) { }
 
   ngOnInit(): void {
 
@@ -71,7 +71,7 @@ export class DeleteBudgetLineComponent {
         console.log(ID);
 
         if (ID) {
-          this.dataService.GetBudgetLine(ID).subscribe(result => {
+          this.dataService.GetBudgetLineByID(ID).subscribe(result => {
             this.budgetLine = result as BudgetLine;
           });
         }
@@ -79,10 +79,10 @@ export class DeleteBudgetLineComponent {
     });
   }
 
-  onConfirm(id: string): void {
+  onConfirm(id: Number): void {
     this.dataService.DeleteBudgetLine(id).subscribe({
       next: () => {
-        this.log.action = "Deleted Budget Line: " + this.budgetLine.account_Code;
+        this.log.action = "Deleted Budget Line: " + this.budgetLine.account_Code + " for month: " + this.budgetLine.month;
         this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
         let test: any
         test = new DatePipe('en-ZA');

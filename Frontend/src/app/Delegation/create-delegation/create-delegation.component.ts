@@ -27,7 +27,7 @@ export class CreateDelegationComponent implements OnInit {
   admin: any;
   iName: string;
 
-  myControl = new FormControl<string | User>('', [Validators.minLength(2), Validators.required]);
+  myControl = new FormControl<string | User>('', [Validators.minLength(2), Validators.required, Validators.maxLength(32), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9]+")]);
   options: User[] = [];
   SearchedOptions: Observable<User[]>;
   delegateID: any
@@ -124,6 +124,8 @@ export class CreateDelegationComponent implements OnInit {
     action: "",
     actionTime: new Date(),
   }
+
+  minDate: Date = new Date()
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
@@ -277,85 +279,107 @@ export class CreateDelegationComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.doa)
-    console.log(this.ta)
     this.doa.delegatingParty = this.myForm.get('DelegatingName')?.value;
-    var name = "" + this.doa.delegatingParty;
+
+    this.dataService.CreateDelegationValidation(this.myForm.get('DelegatingName')?.value).subscribe({
+      next: (vResult) => {
+        if (vResult == null) {
+          var name = "" + this.doa.delegatingParty;
 
 
-    this.fileToUpload = this.files[0];
+          this.fileToUpload = this.files[0];
 
-    if (this.fileToUpload != null) {
-      let DelegateName: string = name
+          if (this.fileToUpload != null) {
+            let DelegateName: string = name
 
-      let file: File = this.fileToUpload
+            let file: File = this.fileToUpload
 
-      this.dataService.DelegateFileAdd(DelegateName, file).subscribe(response => {
-        let Path: any = response
-        this.sPath = Path.pathSaved.toString()
-        this.doa.delegation_Document = this.sPath;
-        this.doa.delegationStatus_ID = 1;
+            this.dataService.DelegateFileAdd(DelegateName, file).subscribe(response => {
+              let Path: any = response
+              this.sPath = Path.pathSaved.toString()
+              this.doa.delegation_Document = this.sPath;
+              this.doa.delegationStatus_ID = 1;
 
-        let startDate: any
-        startDate = new DatePipe('en-ZA');
-        this.doa.from_Date = startDate.transform(this.myForm.get('start')?.value, 'MMM d, y, h:mm:ss a');
+              let startDate: any
+              startDate = new DatePipe('en-ZA');
+              this.doa.from_Date = startDate.transform(this.myForm.get('start')?.value, 'MMM d, y, h:mm:ss a');
 
-        let endDate: any
-        endDate = new DatePipe('en-ZA');
-        this.doa.to_Date = startDate.transform(this.myForm.get('end')?.value, 'MMM d, y, h:mm:ss a');
+              let endDate: any
+              endDate = new DatePipe('en-ZA');
+              this.doa.to_Date = startDate.transform(this.myForm.get('end')?.value, 'MMM d, y, h:mm:ss a');
 
-        //this.doa.from_Date = this.myForm.get('start')?.value;
-        /*this.doa.to_Date = this.myForm.get('end')?.value;*/
+              //this.doa.from_Date = this.myForm.get('start')?.value;
+              /*this.doa.to_Date = this.myForm.get('end')?.value;*/
 
-        this.dataService.AddDelegation(this.doa).subscribe({
-          next: (response) => {
+              this.dataService.AddDelegation(this.doa).subscribe({
+                next: (response) => {
 
-            this.ta.delegation_ID = response[0].delegation_ID;
-            
-            this.dataService.AddTempAcc(this.ta).subscribe({
-              next: (r) => {
+                  this.ta.delegation_ID = response[0].delegation_ID;
 
-                this.dataService.InitiatRecurringJobDelegation()
-                this.dataService.CheckDelegation().subscribe({
-                  next: (r) => {
-                    if (r) {
+                  this.dataService.AddTempAcc(this.ta).subscribe({
+                    next: (r) => {
 
-                      this.log.action = "Created Delegation: " + response[0].delegation_ID;
-                      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-                      let test: any
-                      test = new DatePipe('en-ZA');
-                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-                      this.dataService.AuditLogAdd(this.log).subscribe({
-                        next: (Log) => {
-                          var action = "CREATE";
-                          var title = "CREATE SUCCESSFUL";
-                          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].delegation_ID + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+                      this.dataService.InitiatRecurringJobDelegation()
+                      this.dataService.CheckDelegation().subscribe({
+                        next: (r) => {
+                          if (r) {
 
-                          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                            disableClose: true,
-                            data: { action, title, message }
-                          });
+                            this.log.action = "Created Delegation: " + response[0].delegation_ID;
+                            this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                            let test: any
+                            test = new DatePipe('en-ZA');
+                            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                            this.dataService.AuditLogAdd(this.log).subscribe({
+                              next: (Log) => {
+                                var action = "CREATE";
+                                var title = "CREATE SUCCESSFUL";
+                                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].delegation_ID + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-                          const duration = 1750;
-                          setTimeout(() => {
-                            this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
-                            dialogRef.close();
-                          }, duration);
+                                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                                  disableClose: true,
+                                  data: { action, title, message }
+                                });
+
+                                const duration = 1750;
+                                setTimeout(() => {
+                                  this.router.navigate(['/Delegation'], { queryParams: { refresh: true } });
+                                  dialogRef.close();
+                                }, duration);
+                              }
+                            })
+                          }
                         }
                       })
+
+
+
+
                     }
-                  }
-                })
-
-
-
-
-              }
+                  })
+                }
+              })
             })
           }
-        })
-      })
-    }
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: Delegation Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There already exists a Active or Inactive <strong style='color:red'> DELEGATION REQUEST </strong> for user <strong>" + this.doa.delegatingParty + " <strong style='color:red'>!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
+      }
+    })
+    
+    
 
 
 

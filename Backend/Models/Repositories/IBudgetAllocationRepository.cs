@@ -11,6 +11,7 @@ namespace ProcionAPI.Models.Repositories
         Task<Budget_Line[]> GetAllBudgetLinesAsync();
         Task<Budget_Line[]> GetBudgetLinesForAllocationAsync(int budgetAllocationId);
         Task<Budget_Line> GetBudgetLineAsync(string accountCode);
+        Task<Budget_Line> GetBudgetLineByIDAsync(int budgetLineID);
         Task<Budget_Allocation[]> AddBudgetAllocationAsync(Budget_Allocation budget_Allocation);
         Task<Budget_Line[]> AddBudgetLineAsync(Budget_Line budget_Line);
         Task<Budget_Line> UpdateBudgetLineAsync(Budget_Line budget_Line, string accountCode);

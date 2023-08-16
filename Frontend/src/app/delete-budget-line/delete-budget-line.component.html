@@ -1,7 +1,7 @@
 <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;"
     *ngIf="showConfirmationDialog == true">DELETE BUDGET LINE</h1>
 <div mat-dialog-content *ngIf="showConfirmationDialog == true">
-    <p>You are about to delete the Budget Line: <strong>{{budgetLine.account_Code}}</strong></p>
+  <p>You are about to delete the Budget Line: <strong>{{budgetLine.account_Code}}</strong> for month <strong>{{budgetLine.month}}</strong></p>
     <p>Are you sure you want to continue?</p>
 </div>
 <div mat-dialog-actions align="end" *ngIf="showConfirmationDialog == true">
@@ -13,7 +13,7 @@
 <ng-container *ngIf="showSuccessDialog == true">
     <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;">DELETE SUCCESSFUL</h1>
     <div mat-dialog-content>
-        <p>The budget line <strong>{{ budgetLine.account_Code }}</strong> has been <strong
+        <p>The budget line <strong>{{ budgetLine.account_Code }}</strong> for month <strong>{{budgetLine.month}}</strong> has been <strong
                 style="color:red">DELETED</strong>
             successfully!</p>
     </div>

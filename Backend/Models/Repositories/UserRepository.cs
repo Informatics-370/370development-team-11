@@ -414,6 +414,92 @@ namespace ProcionAPI.Models.Repositories
             return await query.ToArrayAsync();
         }
 
+        public async Task<Notification> UserDeleteNotificationValidationAsync(int id)
+        {
+            Notification ExistingUser = await _dbContext.Notification.FirstOrDefaultAsync(x => x.User_Id == id);
+            if (ExistingUser != null)
+            {
+                return ExistingUser;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Delegation_Of_Authority> UserDeleteDelegationValidationAsync(int id, string username)
+        {
+            Delegation_Of_Authority ExistingDelegateUser = await _dbContext.Delegation_Of_Authority.FirstOrDefaultAsync(x => x.User_Id == id);
+            Delegation_Of_Authority ExistingDelegatingUser = await _dbContext.Delegation_Of_Authority.FirstOrDefaultAsync(x => x.DelegatingParty == username);
+            if (ExistingDelegateUser != null)
+            {
+                return ExistingDelegateUser;
+            }
+            else if (ExistingDelegatingUser != null)
+            {
+                return ExistingDelegatingUser;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Procurement_Request> UserDeleteProcurementRequestValidationAsync(int id)
+        {
+            Procurement_Request ExistingUser = await _dbContext.Procurement_Request.FirstOrDefaultAsync(x => x.User_ID == id);
+            if (ExistingUser != null)
+            {
+                return ExistingUser;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Onboard_Request> UserDeleteOnboardRequestValidationAsync(int id)
+        {
+            Onboard_Request ExistingUser = await _dbContext.Onboard_Request.FirstOrDefaultAsync(x => x.User_Id == id);
+            if (ExistingUser != null)
+            {
+                return ExistingUser;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Procurement_Details> EmployeeDeleteProcurementDetailsValidationAsync(int id)
+        {
+            Procurement_Details ExistingUser = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.EmployeeID == id);
+            if (ExistingUser != null)
+            {
+                return ExistingUser;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Delegation_Of_Authority> AdminDeleteDelegationValidationAsync(int id)
+        {
+            Delegation_Of_Authority ExistingUser = await _dbContext.Delegation_Of_Authority.FirstOrDefaultAsync(x => x.Admin_ID == id);
+            if (ExistingUser != null)
+            {
+                return ExistingUser;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
 
     }
 

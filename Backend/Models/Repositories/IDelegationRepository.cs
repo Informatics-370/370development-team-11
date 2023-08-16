@@ -24,5 +24,7 @@ namespace ProcionAPI.Models.Repositories
         Task<bool> SaveChangesAsync();
         Task<Notification[]> AddActiveNotificationaAsync(int userID, Notification newNotification, Delegation_Of_Authority delegation);
         Task<Notification[]> AddRevokeNotificationaAsync(int userID, Notification newNotification, Delegation_Of_Authority delegation);
+        Task<Delegation_Of_Authority> CreateDelegationValidationAsync(string name);
+        Task<Delegation_Of_Authority> EditDelegationValidationAsync(string name);
     }
 }

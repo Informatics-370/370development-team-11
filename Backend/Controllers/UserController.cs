@@ -681,5 +681,101 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
+        [HttpGet]
+        [Route("UserDeleteNotificationValidation/{id}")]
+        public async Task<IActionResult> UserDeleteNotificationValidation([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _UserRepository.UserDeleteNotificationValidationAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("UserDeleteDelegationValidation/{id}/{username}")]
+        public async Task<IActionResult> UserDeleteDelegationValidation([FromRoute] int id, [FromRoute] string username)
+        {
+            try
+            {
+                var result = await _UserRepository.UserDeleteDelegationValidationAsync(id, username);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("UserDeleteProcurementRequestValidation/{id}")]
+        public async Task<IActionResult> UserDeleteProcurementRequestValidation([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _UserRepository.UserDeleteProcurementRequestValidationAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("UserDeleteOnboardRequestValidation/{id}")]
+        public async Task<IActionResult> UserDeleteOnboardRequestValidation([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _UserRepository.UserDeleteOnboardRequestValidationAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("EmployeeDeleteProcurementDetailsValidation/{id}")]
+        public async Task<IActionResult> EmployeeDeleteProcurementDetailsValidation([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _UserRepository.EmployeeDeleteProcurementDetailsValidationAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("AdminDeleteDelegationValidation/{id}")]
+        public async Task<IActionResult> AdminDeleteDelegationValidation([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _UserRepository.AdminDeleteDelegationValidationAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
 }

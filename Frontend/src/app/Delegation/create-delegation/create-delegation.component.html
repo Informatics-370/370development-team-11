@@ -40,6 +40,7 @@
                       Delegate name must be 2 to 50 characters
                       long
                     </mat-error>
+                    <mat-error *ngIf="myControlError('pattern')">Name can not contain special characters</mat-error>
                   </mat-form-field>
                 </mat-card-content>
               </td>
@@ -51,7 +52,7 @@
                   <label style=" color:black;">Date Range:</label>
                   <br />
                   <mat-form-field>
-                    <mat-date-range-input [formGroup]="myForm" [rangePicker]="picker">
+                    <mat-date-range-input [formGroup]="myForm" [rangePicker]="picker" [min]="minDate">
                       <input matStartDate formControlName="start" placeholder="Start date">
                       <input matEndDate formControlName="end" placeholder="End date">
                     </mat-date-range-input>

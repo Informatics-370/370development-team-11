@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeleteAdminComponent } from '../delete-admin/delete-admin.component';
@@ -9,6 +9,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
+import { Access } from '../Shared/Access';
+import { Role } from '../Shared/EmployeeRole';
+import { User } from '../Shared/User';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -26,7 +31,43 @@ export class ViewAdminComponent implements OnInit {
   displayedColumns: string[] = ['name', 'surname', 'email', 'phone', 'role', 'action', 'delete'];
   dataSource = new MatTableDataSource<Admin>();
 
-  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService) { }
+  userDelete: any
+
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
+
+  rl: Role = {
+    role_ID: 0,
+    name: '',
+    description: '',
+  }
+
+  UserToDelete: User = {
+    user_Id: 0,
+    role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
+    username: '',
+    password: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
+    no_Notifications: 0,
+    role: this.rl
+  }
+
+  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer) { }
 
   Admins: Admin[] = [];
   SearchedAdmin: Admin[] = [];
@@ -76,17 +117,152 @@ export class ViewAdminComponent implements OnInit {
     }
   }
 
-  DeleteAdmin(id: Number) {
-    const confirm = this.dialog.open(DeleteAdminComponent, {
-      disableClose: true,
-      data: { id }
-    });
+  DeleteAdmin(userID: Number, adminID: Number, username: string) {
+    
 
-    this.dialog.afterAllClosed.subscribe({
-      next: (response) => {
-        this.ngOnInit();
+    this.dataService.UserDeleteDelegationValidation(userID, username).subscribe({
+      next: (dResult) => {
+        if (dResult == null) {
+
+          this.dataService.UserDeleteOnboardRequestValidation(userID).subscribe({
+            next: (oResult) => {
+              if (oResult == null) {
+
+                this.dataService.UserDeleteProcurementRequestValidation(userID).subscribe({
+                  next: (pResult) => {
+                    if (pResult == null) {
+
+                      this.dataService.AdminDeleteDelegationValidation(adminID).subscribe({
+                        next: (adResult) => {
+                          if (adResult == null) {
+
+                            const confirm = this.dialog.open(DeleteAdminComponent, {
+                              disableClose: true,
+                              data: { userID }
+                            });
+
+                            this.dialog.afterAllClosed.subscribe({
+                              next: (response) => {
+                                this.ngOnInit();
+                              }
+                            })
+                          }
+                          else {
+                            this.dataService.GetUser(userID).subscribe(UserRecieved => {
+                              this.userDelete = UserRecieved
+                              this.UserToDelete.role_ID = this.userDelete.role_ID;
+                              this.UserToDelete.username = this.userDelete.username;
+                              this.UserToDelete.password = this.userDelete.password;
+                              this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
+                              this.UserToDelete.user_Id = this.userDelete.user_Id;
+                              this.UserToDelete.role = this.userDelete.role;
+                            });
+
+                            var action = "ERROR";
+                            var title = "ERROR: User In Use";
+                            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A PROCUREMENT REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
+
+                            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                              disableClose: true,
+                              data: { action, title, message }
+                            });
+
+                            const duration = 4000;
+                            setTimeout(() => {
+                              dialogRef.close();
+                            }, duration);
+                          }
+                        }
+                      })
+                    }
+                    else {
+                      this.dataService.GetUser(userID).subscribe(UserRecieved => {
+                        this.userDelete = UserRecieved
+                        this.UserToDelete.role_ID = this.userDelete.role_ID;
+                        this.UserToDelete.username = this.userDelete.username;
+                        this.UserToDelete.password = this.userDelete.password;
+                        this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
+                        this.UserToDelete.user_Id = this.userDelete.user_Id;
+                        this.UserToDelete.role = this.userDelete.role;
+                      });
+
+                      var action = "ERROR";
+                      var title = "ERROR: User In Use";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A PROCUREMENT REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
+
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
+
+                      const duration = 4000;
+                      setTimeout(() => {
+                        dialogRef.close();
+                      }, duration);
+                    }
+                  }
+                })
+              }
+              else {
+                this.dataService.GetUser(userID).subscribe(UserRecieved => {
+                  this.userDelete = UserRecieved
+                  this.UserToDelete.role_ID = this.userDelete.role_ID;
+                  this.UserToDelete.username = this.userDelete.username;
+                  this.UserToDelete.password = this.userDelete.password;
+                  this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
+                  this.UserToDelete.user_Id = this.userDelete.user_Id;
+                  this.UserToDelete.role = this.userDelete.role;
+                });
+
+                var action = "ERROR";
+                var title = "ERROR: User In Use";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A ONBOARD REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
+
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 4000;
+                setTimeout(() => {
+                  dialogRef.close();
+                }, duration);
+              }
+            }
+          })
+        }
+        else {
+          this.dataService.GetUser(userID).subscribe(UserRecieved => {
+            this.userDelete = UserRecieved
+            this.UserToDelete.role_ID = this.userDelete.role_ID;
+            this.UserToDelete.username = this.userDelete.username;
+            this.UserToDelete.password = this.userDelete.password;
+            this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
+            this.UserToDelete.user_Id = this.userDelete.user_Id;
+            this.UserToDelete.role = this.userDelete.role;
+          });
+
+          var action = "ERROR";
+          var title = "ERROR: User In Use";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A DELEGATION REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 4000;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
       }
     })
+        
+
+
+
+    
   }
 
 

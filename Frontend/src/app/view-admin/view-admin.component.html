@@ -115,7 +115,7 @@
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let Admins" style="width:140px;">
 
-            <button class="noselect" (click)="DeleteAdmin(Admins.user_Id)">
+            <button class="noselect" (click)="DeleteAdmin(Admins.user_Id, Admins.admin_ID, Admins.user.username)">
               <span class='text'>Delete</span>
               <span class="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" height="1em"

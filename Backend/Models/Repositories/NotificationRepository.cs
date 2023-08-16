@@ -103,5 +103,24 @@ namespace ProcionAPI.Models.Repositories
 
             return await query.ToArrayAsync();
         }
+
+        public async Task<Notification[]> GetNotificationByUserIDAsync(int userID)
+        {
+            IQueryable<Notification> query = _dbContext.Notification
+                .Include(nt => nt.Notification_Type).Include(u => u.User)
+                .Where(ui => ui.User_Id == userID);
+
+            return await query.ToArrayAsync();
+        }
+
+        public void Delete<T>(T entity) where T : class
+        {
+            _dbContext.Remove(entity);
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return await _dbContext.SaveChangesAsync() > 0;
+        }
     }
 }
