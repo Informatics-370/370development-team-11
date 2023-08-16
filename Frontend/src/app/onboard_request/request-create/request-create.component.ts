@@ -188,7 +188,6 @@ export class RequestCreateComponent implements OnInit {
 
   radioButtonChange(Supplier: MatRadioChange) {
     this.selectedOption = Supplier.value
-
   }
   //  : { target: { files: (File | null)[]; }; }
   onFileUpload(i: number, event: any) {

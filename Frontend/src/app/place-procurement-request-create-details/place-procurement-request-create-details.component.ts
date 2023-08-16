@@ -459,6 +459,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           let employeeInfo: any = result;
           this.EmployeeDetails = employeeInfo;
           this.MandateLimitAmount = employeeInfo.mandate_Limit.ammount
+          this.ProcurementDetails.employee.user.access = employeeInfo.user.access;
           this.ProcurementFormGroup.get("BuyerName")?.setValue(this.EmployeeDetails.employeeName.toString())
           this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.EmployeeDetails.email.toString())
           let departmentname = this.EmployeeDetails.department.name
@@ -698,6 +699,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.Procurement_Consumable.procurement_Details.procurement_Request.requisition_Status = this.Procurement_Request.requisition_Status;
         this.Procurement_Consumable.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
         this.Procurement_Consumable.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category
+        this.Procurement_Consumable.procurement_Details.employee.user.access = this.ProcurementDetails.employee.user.access
         this.Procurement_Consumable.quantity = Number(this.ProcurementFormGroup.get("ConsumableQuantity")?.value)
         this.ConsumableItems.forEach(e => {
           if (e.consumable_Category_ID == Number(this.ProcurementFormGroup.get("ConsumableItem")?.value)) {
