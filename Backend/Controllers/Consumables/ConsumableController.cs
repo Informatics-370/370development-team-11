@@ -49,6 +49,21 @@ namespace ProcionAPI.Controllers.Consumables
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+        [HttpGet]
+        [Route("ValidateConsumableToDelete/{ID}")]
+        public async Task<IActionResult> ValidateConsumableToDelete([FromRoute] int ID)
+        {
+            try
+            {
+                var result = await _consumableRepository.ValidateConsumableToDeleteAsync(ID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
 
         [HttpGet]
         [Route("GetConsumableByID/{id}")]
