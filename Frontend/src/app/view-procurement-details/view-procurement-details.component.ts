@@ -120,8 +120,8 @@ export class ViewProcurementDetailsComponent {
     switch (status.toLowerCase()) {
       case 'finished':
         return 'blue'; // Set the color you want for 'Pending'
-      case 'placed':
-        return 'green'; // Set the color you want for 'Approved'
+      case 'awaiting delivery':
+        return 'orange'; // Set the color you want for 'Approved'
       default:
         return 'black'; // Default color if the status doesn't match any case
     }

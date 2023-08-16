@@ -148,14 +148,16 @@ export class ViewProcurementRequestComponent implements OnInit {
   getStatusColor(status: string): string {
     switch (status.toLowerCase()) {
       case 'approval required':
-        return 'orange'; // Set the color you want for 'Pending'
-      case 'accepted':
-        return 'green'; // Set the color you want for 'Approved'
+        return 'orange';
+      case 'accepted (ready to order)':
+        return 'green';
+      case 'done':
+        return 'green';
       case 'rejected':
-        return 'red'; // Set the color you want for 'Rejected'
-      // Add more cases for other status values if needed
+        return 'red';
+
       default:
-        return 'black'; // Default color if the status doesn't match any case
+        return 'black';
     }
   }
 
