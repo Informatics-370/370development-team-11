@@ -226,7 +226,7 @@ export class UploadInvoiceComponent {
     procurement_Request_ID: 0,
     sign_Off_Status_ID: 0,
     procurement_Payment_Status_ID: 0,
-    BudgetLineId:0,
+    BudgetLineId: 0,
     procurement_Status_ID: 0,
     payment_Method_ID: 0,
     employee: this.EmployeeDetails,
@@ -326,11 +326,12 @@ export class UploadInvoiceComponent {
     asset: this.assets,
     vendor: this.Procurement_Request.vendor,
   }
-  pop: Proof_Of_Payment = {
-    proof_Of_Payment_ID: 0,
+  pop: Payment_Made = {
+    payment_Made_ID: 0,
     procurement_Details_ID: 0,
     procurement_Details: this.ProcurementDetails,
-    proof_Of_Payment_Doc: "string"
+    paid_On_Date: new Date(),
+    receipt_Upload: "",
   }
 
   log: AuditLog = {
@@ -340,7 +341,7 @@ export class UploadInvoiceComponent {
     actionTime: new Date(),
   }
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, ID: Number }, private formBuilder: FormBuilder, private dataservice: DataService, private router: Router, private dialogRef: MatDialogRef<UploadInvoiceComponent>) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, ID: number }, private formBuilder: FormBuilder, private dataservice: DataService, private router: Router, private dialogRef: MatDialogRef<UploadInvoiceComponent>) { }
 
   File = this.data.name
   Data: any[];
@@ -348,6 +349,7 @@ export class UploadInvoiceComponent {
   myTempRef!: ElementRef;
 
   ngOnInit(): void {
+    console.log(this.data.ID)
     this.myForm = this.formBuilder.group({
       FileAdded: ["", [Validators.required]],
     });
@@ -364,9 +366,9 @@ export class UploadInvoiceComponent {
   }
 
   onFileUpload(event: any) {
-    console.log('Event:', event); // Log the entire event object
-    console.log('Event Target:', event.target); // Log the target element
-    console.log('Files:', event.target.files); // Log the FileList object
+    console.log('Event:', event);
+    console.log('Event Target:', event.target);
+    console.log('Files:', event.target.files);
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[0] = this.fileToUpload;
@@ -384,8 +386,8 @@ export class UploadInvoiceComponent {
       this.dataservice.InvoiceFileAdd(InvoiceName, file).subscribe(response => {
         let Path: any = response
         this.sPath = Path.pathSaved.toString()
-        this.pop.proof_Of_Payment_Doc = this.sPath;
-        this.pop.procurement_Details_ID = 1;
+        this.pop.receipt_Upload = this.sPath;
+        this.pop.procurement_Details_ID = this.data.ID;
 
         this.log.action = "Invoice Uploaded for: " + this.data.name;
         this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
@@ -398,7 +400,6 @@ export class UploadInvoiceComponent {
             this.router.navigate(['/ViewProcurementDetails'])
           }
         })
-
 
       })
     }

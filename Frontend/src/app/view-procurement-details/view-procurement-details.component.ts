@@ -10,15 +10,16 @@ import { UploadPayementFileComponent } from '../upload-payement-file/upload-paye
 import { UploadInvoiceComponent } from '../upload-invoice/upload-invoice.component';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { Procurement_Details } from '../Shared/ProcurementDetails';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 @Component({
   selector: 'app-view-procurement-details',
   templateUrl: './view-procurement-details.component.html',
   styleUrls: ['./view-procurement-details.component.css']
 })
-export class ViewProcurementDetailsComponent {
-  ProcurementRequests: Procurement_Request[] = [];
-  SearchedPRequests: Procurement_Request[] = [];
+export class ViewProcurementDetailsComponent implements OnInit {
+  ProcurementRequests: Procurement_Details[] = [];
+  SearchedPRequests: Procurement_Details[] = [];
   displayedColumns: string[] = ['Name', 'Description', 'Vendor', 'Status', 'POP', 'Inv', 'View'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
@@ -31,11 +32,9 @@ export class ViewProcurementDetailsComponent {
   iCanViewPenPro: string = "false";
   canViewPenPro: string;
 
-  // fileToUpload: File | null = null;
-  // files: any[] = [''];
-  // sPath = "";
 
   ngOnInit() {
+    this.GetProcurementDetails();
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
     this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
     this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
@@ -52,8 +51,6 @@ export class ViewProcurementDetailsComponent {
     if (this.iCanViewPenPro == "true") {
       this.canViewPenPro = "true";
     }
-
-    this.GetProcurementDetails();
   }
 
   GetProcurementDetails() {
@@ -102,19 +99,13 @@ export class ViewProcurementDetailsComponent {
     const Searchterm = this.searchWord.toLocaleLowerCase();
 
     if (Searchterm) {
-      this.SearchedPRequests = this.ProcurementRequests.filter(PR => PR.name.toLocaleLowerCase().includes(Searchterm))
+      this.SearchedPRequests = this.ProcurementRequests.filter(PR => PR.procurement_Request.name.toLocaleLowerCase().includes(Searchterm))
     }
     else if (Searchterm == "") {
       this.SearchedPRequests = [...this.ProcurementRequests];
     }
   }
 
-  // onFileUpload(event: any) {
-  //   this.fileToUpload = event.target.files[0];
-  //   if (this.fileToUpload != null) {
-  //     this.files[0] = this.fileToUpload;
-  //   }
-  // }
 
   getStatusColor(status: string): string {
     switch (status.toLowerCase()) {
@@ -122,7 +113,7 @@ export class ViewProcurementDetailsComponent {
         return 'green'; // Set the color you want for 'Pending'
       case 'awaiting delivery':
         return 'orange';
-      case 'Item Received and checked':
+      case 'item received and checked':
         return 'blue'; // Set the color you want for 'Approved'
       default:
         return 'black'; // Default color if the status doesn't match any case

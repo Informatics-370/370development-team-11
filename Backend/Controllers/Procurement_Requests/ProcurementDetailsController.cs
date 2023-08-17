@@ -103,8 +103,9 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 var results = await _ProcurementDetailsRepository.AddProofOfPaymentAsync(AddPOP);
                 return Ok(results);
             }
-            catch(Exception)
+            catch(Exception  ex)
             {
+                Console.WriteLine(ex.Message);
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }

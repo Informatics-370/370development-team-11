@@ -78,9 +78,6 @@ export class ReceiveProcurementItemComponent {
       Description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
       On_Hand: [0, [Validators.required, Validators.pattern("^[0-9]+$")]]
     })
-
-
-
   }
 
   GetConsumable(id: number) {
@@ -116,7 +113,7 @@ export class ReceiveProcurementItemComponent {
 
                 this.dataService.UpdateStock(this.History).subscribe({
                   next: (response) => {
-                    this.dataService.UpdateProcurementStatus(2, this.ProcurementID).subscribe({
+                    this.dataService.UpdateProcurementStatus(5, this.ProcurementID).subscribe({
                       next: (Result) => {
                         this.router.navigate(['/ViewProcurementDetails'])
                       }
