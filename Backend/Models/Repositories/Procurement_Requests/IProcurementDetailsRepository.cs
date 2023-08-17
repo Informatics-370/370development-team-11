@@ -38,6 +38,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         Task<Procurement_Consumable> GetConsumableForRequestConsRecieve(int ProcurementDetailsID);
         Task<Budget_Line[]> GetProcurementAccountCodeDetailsAsync(int year, int Month, string department);
         Task<Asset[]> getAssetsAsync();
+        Task<Procurement_Details> UpdateProcurementDetailsStatusAsync(int StatusID, int ProcurementID);
     }
 }
 

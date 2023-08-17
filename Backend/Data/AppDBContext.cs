@@ -676,7 +676,7 @@ namespace ProcionAPI.Data
            new
            {
                Procurement_Status_ID = 2,
-               Name = "Finished",
+               Name = "Done",
                Description = "Procurement has been finialized",
 
            },
@@ -692,6 +692,13 @@ namespace ProcionAPI.Data
                Procurement_Status_ID = 4,
                Name = "Rejected",
                Description = "Request was Rejected",
+
+           },
+           new
+           {
+               Procurement_Status_ID = 5,
+               Name = "Item Received and checked",
+               Description = "Received and Checked",
 
            });
 

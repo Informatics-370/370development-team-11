@@ -1501,6 +1501,10 @@ export class DataService {
   ValidatePRRequestDelete(ProcurementRequestID: Number): Observable<any> {
     return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementRequest/ValidatePRRequestDelete/${ProcurementRequestID}`).pipe(map(result => result))
   }
+
+  UpdateProcurementStatus(StatusID: Number, ProcurementID: Number): Observable<any> {
+    return this.httpClient.put(`${this.apiUrl}ProcurementDetails/UpdateProcurementDetailsStatus/${StatusID}` + "/" + ProcurementID, this.httpOptions).pipe(map(result => result))
+  }
 }
 
 
