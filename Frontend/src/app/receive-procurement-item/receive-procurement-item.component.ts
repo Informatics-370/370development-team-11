@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Procurement_Consumable } from '../Shared/Procurement_Consumable';
 import { DatePipe } from '@angular/common';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { Procurement_Details } from '../Shared/ProcurementDetails';
 
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
@@ -28,6 +29,7 @@ export class ReceiveProcurementItemComponent {
   myForm: FormGroup = new FormGroup({});
   consumableCategories: any[] = [];
   ConsumableRequest: Procurement_Consumable;
+  Details: Procurement_Details;
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private dataService: DataService, private router: Router, private sanitizer: DomSanitizer) { }
 
@@ -63,13 +65,13 @@ export class ReceiveProcurementItemComponent {
       consumable_Category: { consumable_Category_ID: 0, name: "", description: "" }
     }
   }
-
   HistAmt: Number = 0;
+  ProcurementID: Number = 0;
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.ProcurementID = id;
     this.GetConsumable(id);
-    console.log(this.GetConsumable(id))
 
     this.myForm = this.formBuilder.group({
       Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
@@ -84,7 +86,8 @@ export class ReceiveProcurementItemComponent {
   GetConsumable(id: number) {
     this.dataService.GetConsumablesForRequestConsRecieve(id).subscribe(result => {
       this.ConsumableRequest = result;
-      console.log(result)
+      this.Details = result.procurement_Details
+      console.log(this.Details)
     })
   }
 
@@ -113,8 +116,12 @@ export class ReceiveProcurementItemComponent {
 
                 this.dataService.UpdateStock(this.History).subscribe({
                   next: (response) => {
-                    console.log(response)
-                    this.router.navigate(['/ViewProcurementDetails'])
+                    this.dataService.UpdateProcurementStatus(2, this.ProcurementID).subscribe({
+                      next: (Result) => {
+                        this.router.navigate(['/ViewProcurementDetails'])
+                      }
+                    })
+
 
                   }
                 })

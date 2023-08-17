@@ -680,5 +680,19 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+        [HttpPut]
+        [Route("UpdateProcurementDetailsStatus/{StatusID}/{ProcurementID}")]
+        public async Task<IActionResult> UpdateProcurementRequestStatus(int StatusID, int ProcurementID)
+        {
+            try
+            {
+                var results = await _ProcurementDetailsRepository.UpdateProcurementDetailsStatusAsync(StatusID, ProcurementID);
+                return Ok(results);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
 }
