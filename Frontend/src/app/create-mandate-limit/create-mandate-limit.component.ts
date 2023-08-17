@@ -8,10 +8,18 @@ import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
 
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-create-mandate-limit',
   templateUrl: './create-mandate-limit.component.html',
-  styleUrls: ['./create-mandate-limit.component.css']
+  styleUrls: ['./create-mandate-limit.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class CreateMandateLimitComponent {
   mandateLimit: Mandate_Limit = {
@@ -68,5 +76,13 @@ export class CreateMandateLimitComponent {
 
   public myError = (controlName: string, errorName: string) => {
     return this.mandateLimitForm.controls[controlName].hasError(errorName);
+  }
+
+
+
+
+  openCreateMandateTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

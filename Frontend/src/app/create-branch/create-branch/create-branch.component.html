@@ -3,6 +3,8 @@
       <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px" (ngSubmit)="onSubmit()">
         <mat-card-header>
           <mat-card-title style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align: center;">Create Branch</mat-card-title>
+          <mat-icon (click)="openCreateBranchTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+          style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
           <mat-card-subtitle style="justify-content: center; align-items: center;">
   
             <table style="width:100%;" cellspacing="0">

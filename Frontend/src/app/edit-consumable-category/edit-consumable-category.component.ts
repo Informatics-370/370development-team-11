@@ -12,10 +12,19 @@ import { MatAutocomplete } from '@angular/material/autocomplete';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-edit-consumable-category',
   templateUrl: './edit-consumable-category.component.html',
-  styleUrls: ['./edit-consumable-category.component.css']
+  styleUrls: ['./edit-consumable-category.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class EditConsumableCategoryComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
@@ -171,4 +180,11 @@ export class EditConsumableCategoryComponent implements OnInit {
     this.router.navigate(['/ViewConsumableCategory']);
   }
 
+
+
+
+  openEditConCatTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }

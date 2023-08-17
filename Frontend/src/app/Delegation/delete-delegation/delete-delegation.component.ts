@@ -5,10 +5,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../../DataService/data-service';
 import { AuditLog } from '../../Shared/AuditLog';
 
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-delete-delegation',
   templateUrl: './delete-delegation.component.html',
-  styleUrls: ['./delete-delegation.component.css']
+  styleUrls: ['./delete-delegation.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class DeleteDelegationComponent implements OnInit{
 
@@ -97,5 +104,12 @@ export class DeleteDelegationComponent implements OnInit{
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+
+
+  openDeleteDelegationTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

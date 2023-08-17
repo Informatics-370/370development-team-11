@@ -16,10 +16,17 @@ import { AuditLog } from '../../Shared/AuditLog';
 import { Access } from 'src/app/Shared/Access';
 import { Temporary_Access } from '../../Shared/Temporary_Access';
 
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-edit-delegation',
   templateUrl: './edit-delegation.component.html',
-  styleUrls: ['./edit-delegation.component.css']
+  styleUrls: ['./edit-delegation.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class EditDelegationComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
@@ -406,5 +413,11 @@ export class EditDelegationComponent implements OnInit {
 
 
 
+  }
+
+
+  openEditDelegationTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

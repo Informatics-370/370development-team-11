@@ -22,6 +22,7 @@ import { RejectDelegationComponent } from '../reject-delegation/reject-delegatio
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
+import { DelegationIFrameComponent } from 'src/app/HelpIFrames/DelegationIFrame/delegation-iframe/delegation-iframe.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -206,6 +207,18 @@ export class ViewDelegationComponent implements OnInit{
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  openDelegationIFrameTab(): void {
+    const dialogRef = this.dialog.open(DelegationIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
     });
   }
 }

@@ -7,10 +7,19 @@ import { Department } from '../Shared/Department';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-edit-budget-allocation',
   templateUrl: './edit-budget-allocation.component.html',
-  styleUrls: ['./edit-budget-allocation.component.css']
+  styleUrls: ['./edit-budget-allocation.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class EditBudgetAllocationComponent {
 
@@ -106,5 +115,13 @@ export class EditBudgetAllocationComponent {
 
   public myError = (controlName: string, errorName: string) => {
     return this.budgetAllocationForm.controls[controlName].hasError(errorName);
+  }
+
+
+
+
+  openEditBATab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

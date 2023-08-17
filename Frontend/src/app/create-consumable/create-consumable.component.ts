@@ -10,10 +10,20 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-create-consumable',
   templateUrl: './create-consumable.component.html',
-  styleUrls: ['./create-consumable.component.css']
+  styleUrls: ['./create-consumable.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class CreateConsumableComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
@@ -147,5 +157,14 @@ export class CreateConsumableComponent implements OnInit {
 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
+  }
+
+
+
+
+
+  openCreateConTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

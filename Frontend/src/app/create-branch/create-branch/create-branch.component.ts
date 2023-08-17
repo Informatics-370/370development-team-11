@@ -9,10 +9,20 @@ import { Branch } from 'src/app/Shared/Branch';
 import { AuditLog } from '../../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-create-branch',
   templateUrl: './create-branch.component.html',
-  styleUrls: ['./create-branch.component.css']
+  styleUrls: ['./create-branch.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class CreateBranchComponent {
   myForm: FormGroup = new FormGroup({});
@@ -107,5 +117,14 @@ export class CreateBranchComponent {
   Close() {
     this.myForm.reset();
     this.router.navigateByUrl('ViewBranch');
+  }
+
+
+
+
+
+  openCreateBranchTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

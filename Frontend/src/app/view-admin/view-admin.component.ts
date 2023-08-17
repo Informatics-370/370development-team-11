@@ -6,10 +6,15 @@ import { DeleteAdminComponent } from '../delete-admin/delete-admin.component';
 import { Admin } from '../Shared/Admin';
 import { DataService } from '../DataService/data-service';
 import { MatTableDataSource } from '@angular/material/table';
-import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+
 import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
+import { AdminIFrameComponent } from '../HelpIFrames/AdminIFrame/admin-iframe/admin-iframe.component';
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -103,6 +108,18 @@ export class ViewAdminComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  openAdminIFrameTab(): void {
+    const dialogRef = this.dialog.open(AdminIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
     });
   }
 }

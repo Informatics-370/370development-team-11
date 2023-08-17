@@ -1,6 +1,9 @@
-<h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;"
+<h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center; display: flex; justify-content: space-between;"
     *ngIf="showConfirmationDialog == true">
   DELETE ROLE
+  <mat-icon (click)="openDeleteRoleTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+        style="font-size:30pt; height: 37px; width: 37px; cursor: pointer;" [ngStyle]="{'color':'white'}" matTooltip="Need help? Click me!"></mat-icon>
+
 </h1>
 <div mat-dialog-content *ngIf="showConfirmationDialog == true">
   <p>You are about to delete the role: <strong>{{Role.name}}</strong></p>

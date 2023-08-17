@@ -6,10 +6,18 @@ import { DataService } from 'src/app/DataService/data-service';
 import { Branch } from 'src/app/Shared/Branch';
 import { AuditLog } from '../../Shared/AuditLog';
 
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-delete-branch',
   templateUrl: './delete-branch.component.html',
-  styleUrls: ['./delete-branch.component.css']
+  styleUrls: ['./delete-branch.component.css'], 
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class DeleteBranchComponent implements OnInit{
   Branch: any
@@ -68,6 +76,14 @@ export class DeleteBranchComponent implements OnInit{
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+
+
+
+  openDeleteBranchTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 
 }

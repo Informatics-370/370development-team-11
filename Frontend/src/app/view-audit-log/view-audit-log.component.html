@@ -31,6 +31,8 @@
     <mat-sidenav-content class="Main-content">
         <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
             View Audit Log
+            <mat-icon (click)="openViewAuditLogIFrameTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+            style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
         </h1>
         <mat-form-field appearance="fill" id="FVal"
             style=" float:right; font-size: 12px; width: 200px; margin-top:0.5%; margin-right:1%;">

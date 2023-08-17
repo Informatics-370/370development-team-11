@@ -14,6 +14,7 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/
 import { MatPaginator } from '@angular/material/paginator';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
+import { ConsumableIFrameComponent } from '../HelpIFrames/ConsumableIFrame/consumable-iframe/consumable-iframe.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -186,5 +187,20 @@ export class ViewConsumableComponent implements OnInit {
         this.ngOnInit();
       }
     })
+  }
+
+
+
+
+  openConsumableIFrameTab(): void {
+    const dialogRef = this.Dialog.open(ConsumableIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
   }
 }

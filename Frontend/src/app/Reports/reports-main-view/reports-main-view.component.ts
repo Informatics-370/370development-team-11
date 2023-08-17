@@ -14,13 +14,21 @@ import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { VendorSpentReport } from 'src/app/Shared/VendorSpentReport';
 import { ReportFilterMenuComponent } from '../report-filter-menu/report-filter-menu.component';
 import { identifierName } from '@angular/compiler';
+import { ReportsIFrameComponent } from 'src/app/HelpIFrames/ReportsIFrame/reports-iframe/reports-iframe.component';
 
 
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-reports-main-view',
   templateUrl: './reports-main-view.component.html',
-  styleUrls: ['./reports-main-view.component.css']
+  styleUrls: ['./reports-main-view.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ReportsMainViewComponent implements OnInit{
 
@@ -1193,6 +1201,25 @@ export class ReportsMainViewComponent implements OnInit{
         this.ngOnInit();
       }
     })
+  }
+
+
+
+
+
+
+
+
+  openReportsIFrameTab(): void {
+    const dialogRef = this.dialog.open(ReportsIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
   }
   
 }

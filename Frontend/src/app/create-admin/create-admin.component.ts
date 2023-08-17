@@ -13,10 +13,19 @@ import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 import { Access } from '../Shared/Access';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-create-admin',
   templateUrl: './create-admin.component.html',
-  styleUrls: ['./create-admin.component.css']
+  styleUrls: ['./create-admin.component.css'],  
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class CreateAdminComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
@@ -221,5 +230,10 @@ export class CreateAdminComponent implements OnInit {
         .style.display = 'none';
     }
 
+  }
+
+  openCreateAdminTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }
