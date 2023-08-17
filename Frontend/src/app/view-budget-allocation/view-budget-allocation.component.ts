@@ -12,6 +12,7 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
+import { BudgetAllocationIFrameComponent } from '../HelpIFrames/BudgetAllocationIFrame/budget-allocation-iframe/budget-allocation-iframe.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -158,5 +159,18 @@ export class ViewBudgetAllocationComponent {
         }
       }
     })
+  }
+
+
+  openBudgetAllocationIFrameTab(): void {
+    const dialogRef = this.dialog.open(BudgetAllocationIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
   }
 }

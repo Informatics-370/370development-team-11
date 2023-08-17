@@ -8,11 +8,20 @@ import { BackupComponent } from '../Settings/backup/backup.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { AuditLogIFrameComponent } from '../HelpIFrames/AuditLogIFrame/audit-log-iframe/audit-log-iframe.component';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 
 @Component({
   selector: 'app-view-audit-log',
   templateUrl: './view-audit-log.component.html',
-  styleUrls: ['./view-audit-log.component.css']
+  styleUrls: ['./view-audit-log.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewAuditLogComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -127,4 +136,16 @@ export class ViewAuditLogComponent implements OnInit {
     });
   }
 
+
+  openViewAuditLogIFrameTab(): void {
+    const dialogRef = this.Dialog.open(AuditLogIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
+  }
 }

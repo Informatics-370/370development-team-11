@@ -9,10 +9,19 @@ import { Department } from 'src/app/Shared/Department';
 import { AuditLog } from '../../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-create-department',
   templateUrl: './create-department.component.html',
-  styleUrls: ['./create-department.component.css']
+  styleUrls: ['./create-department.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class CreateDepartmentComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
@@ -105,5 +114,12 @@ export class CreateDepartmentComponent implements OnInit {
   Close() {
     this.myForm.reset();
     this.router.navigateByUrl('ViewDepartment');
+  }
+
+
+
+  openCreateDepartmentTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

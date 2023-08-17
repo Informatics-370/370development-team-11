@@ -10,10 +10,19 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-create-consumable-category',
   templateUrl: './create-consumable-category.component.html',
-  styleUrls: ['./create-consumable-category.component.css']
+  styleUrls: ['./create-consumable-category.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class CreateConsumableCategoryComponent implements OnInit {
 
@@ -115,5 +124,12 @@ export class CreateConsumableCategoryComponent implements OnInit {
   Close() {
     this.myForm.reset();
     this.router.navigate(['/ViewConsumableCategory']);
+  }
+
+
+
+  openCreateConCatTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

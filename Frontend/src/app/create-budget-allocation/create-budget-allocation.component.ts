@@ -21,6 +21,15 @@ import * as _rollupMoment from 'moment';
 const moment = _rollupMoment || _moment;
 
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 export class YearOnlyDateAdapter extends NativeDateAdapter {
   override format(date: Date, displayFormat: Object): string {
     return date.getFullYear().toString();
@@ -43,8 +52,10 @@ export const YEAR_ONLY_FORMAT = {
   styleUrls: ['./create-budget-allocation.component.css'],
   providers: [
     { provide: DateAdapter, useClass: YearOnlyDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: YEAR_ONLY_FORMAT }
+    { provide: MAT_DATE_FORMATS, useValue: YEAR_ONLY_FORMAT },
+    { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }
   ]
+ 
 })
 
 export class CreateBudgetAllocationComponent {
@@ -198,4 +209,9 @@ export class CreateBudgetAllocationComponent {
   }
 
 
+
+  openCreateBATab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }

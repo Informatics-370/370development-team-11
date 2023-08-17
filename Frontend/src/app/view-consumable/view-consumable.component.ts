@@ -17,6 +17,7 @@ import { DatePipe } from '@angular/common';
 import { Procurement_Details } from '../Shared/ProcurementDetails';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { ConsumableIFrameComponent } from '../HelpIFrames/ConsumableIFrame/consumable-iframe/consumable-iframe.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -244,5 +245,20 @@ export class ViewConsumableComponent implements OnInit {
 
       }
     })
+  }
+
+
+
+
+  openConsumableIFrameTab(): void {
+    const dialogRef = this.Dialog.open(ConsumableIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
   }
 }

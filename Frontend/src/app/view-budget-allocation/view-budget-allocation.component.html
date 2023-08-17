@@ -19,6 +19,8 @@
   <mat-sidenav-content class="Main-content">
     <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
       Manage Budget Allocations
+      <mat-icon (click)="openBudgetAllocationIFrameTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+      style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
     </h1>
 
     <div mat-list-item style="margin-left: 0.5%; display: flex;  align-items: center; ">
@@ -80,6 +82,7 @@
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let BudgetAllocations" style="width:100px;">
             <button mat-raised-button
+            matTooltip="This will allow you to Export this specific Budget Allocation With all its Budget Lines into a Excel file that will donwload on your device."
               (click)="exportExcel(BudgetAllocations.budget_ID, BudgetAllocations.department.name)"
               style="margin-right: 5%; display: flex; align-items: center; font-weight: bold; width: 157px; margin-top: 0.5%; background-color: #94CC5B;"
               type="button">

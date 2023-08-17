@@ -10,10 +10,19 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-edit-employee-role',
   templateUrl: './edit-employee-role.component.html',
-  styleUrls: ['./edit-employee-role.component.css']
+  styleUrls: ['./edit-employee-role.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class EditEmployeeRoleComponent implements OnInit {
   public myForm !: FormGroup;
@@ -116,6 +125,13 @@ export class EditEmployeeRoleComponent implements OnInit {
 
 
 
+  }
+
+
+
+  openEditRoleTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }
 

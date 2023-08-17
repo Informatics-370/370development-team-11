@@ -13,10 +13,20 @@ import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 import { Access } from '../Shared/Access';
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-edit-admin',
   templateUrl: './edit-admin.component.html',
-  styleUrls: ['./edit-admin.component.css']
+  styleUrls: ['./edit-admin.component.css'], 
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class EditAdminComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
@@ -209,5 +219,11 @@ export class EditAdminComponent implements OnInit {
         }
       }
     })
+  }
+
+
+  openEditAdminTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

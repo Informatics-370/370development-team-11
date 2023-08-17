@@ -6,10 +6,19 @@ import { DataService } from '../DataService/data-service';
 import { DatePipe } from '@angular/common';
 import { AuditLog } from '../Shared/AuditLog';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-delete-consumable-category',
   templateUrl: './delete-consumable-category.component.html',
-  styleUrls: ['./delete-consumable-category.component.css']
+  styleUrls: ['./delete-consumable-category.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class DeleteConsumableCategoryComponent implements OnInit {
 
@@ -72,4 +81,9 @@ export class DeleteConsumableCategoryComponent implements OnInit {
     this.dialogRef.close();
   }
 
+
+  openDeleteConCatTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }

@@ -13,6 +13,7 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
+import { RoleIFrameComponent } from '../HelpIFrames/RoleIFrame/role-iframe/role-iframe.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -159,4 +160,18 @@ export class ViewEmployeeRoleComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
     });
   }
+
+
+  openRoleIFrameTab(): void {
+    const dialogRef = this.dialog.open(RoleIFrameComponent, {
+    //   width: '800px', // Set the desired width
+    //  height: '600%', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
+  }
+  
 }

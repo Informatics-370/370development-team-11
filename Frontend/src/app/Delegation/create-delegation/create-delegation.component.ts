@@ -16,10 +16,18 @@ import { Temporary_Access } from '../../Shared/Temporary_Access';
 import { User } from '../../Shared/User';
 import { Access } from 'src/app/Shared/Access';
 
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-create-delegation',
   templateUrl: './create-delegation.component.html',
-  styleUrls: ['./create-delegation.component.css']
+  styleUrls: ['./create-delegation.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class CreateDelegationComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
@@ -449,5 +457,14 @@ export class CreateDelegationComponent implements OnInit {
     //    }
     //  }
     //})
+  }
+
+
+
+
+
+  openCreateDelegationTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

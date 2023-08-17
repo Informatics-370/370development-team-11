@@ -66,8 +66,10 @@
       <div class="content">
         <div style="border: #244688 solid 1px;background-color: #244688;">
         <div style="width: 750px;margin-bottom: 1%;">
-          <h1 style="margin-bottom: 0px;color: #ffffff; font-weight:700; font-size:32pt;background-color: #244688;border: #244688 solid 10px;border-bottom: #244688 solid 20px;text-align: center;">
-            Reports
+          <h1 style="margin-bottom: 0px;color: #ffffff; font-weight:700; font-size:32pt;background-color: #244688;border: #244688 solid 10px;border-bottom: #244688 solid 20px;text-align: center; display: flex; justify-content: space-between;">
+            <span style="flex: 1; text-align: center;">Reports</span>
+            <mat-icon (click)="openReportsIFrameTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+            style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'white'}" matTooltip="Need help? Click me!"></mat-icon>
           </h1>
         </div>
         <div style="width: 750px;">
@@ -141,7 +143,7 @@
 
 <mat-menu #menu="matMenu" xPosition="before">
 	<button (click)="CorrectRouting(false)" mat-menu-item >
-   <span style="font-weight: 500;">View Report</span>
+   <span style="font-weight: 500;">Generate Report</span>
   </button>
 	<button (click)="CorrectRouting(true)" mat-menu-item>
     <span style="font-weight: 500;">Download Report</span>

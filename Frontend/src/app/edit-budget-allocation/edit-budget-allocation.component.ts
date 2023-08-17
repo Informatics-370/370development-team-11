@@ -25,13 +25,22 @@ export class YearOnlyDateAdapter extends NativeDateAdapter {
   }
 }
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-edit-budget-allocation',
   templateUrl: './edit-budget-allocation.component.html',
   styleUrls: ['./edit-budget-allocation.component.css'],
   providers: [
     { provide: DateAdapter, useClass: YearOnlyDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: YEAR_ONLY_FORMAT }
+    { provide: MAT_DATE_FORMATS, useValue: YEAR_ONLY_FORMAT },
+    { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }
   ]
 })
 export class EditBudgetAllocationComponent {
@@ -141,4 +150,11 @@ export class EditBudgetAllocationComponent {
     datepicker.close();
   }
   
+
+
+
+  openEditBATab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }

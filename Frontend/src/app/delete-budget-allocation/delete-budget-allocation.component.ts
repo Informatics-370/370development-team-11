@@ -7,10 +7,20 @@ import { Department } from '../Shared/Department';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-delete-budget-allocation',
   templateUrl: './delete-budget-allocation.component.html',
-  styleUrls: ['./delete-budget-allocation.component.css']
+  styleUrls: ['./delete-budget-allocation.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class DeleteBudgetAllocationComponent {
 
@@ -86,4 +96,13 @@ export class DeleteBudgetAllocationComponent {
     this.dialogRef.close();
   }
 
+
+
+
+
+
+  openDeleteBATab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }

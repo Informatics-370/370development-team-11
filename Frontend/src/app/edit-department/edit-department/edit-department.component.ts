@@ -10,10 +10,18 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { AuditLog } from '../../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-edit-department',
   templateUrl: './edit-department.component.html',
-  styleUrls: ['./edit-department.component.css']
+  styleUrls: ['./edit-department.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class EditDepartmentComponent implements OnInit{
   public myForm !: FormGroup;
@@ -210,4 +218,9 @@ export class EditDepartmentComponent implements OnInit{
 
 
  
+
+  openEditDepartmentTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }
