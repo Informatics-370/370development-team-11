@@ -238,6 +238,7 @@ export class SignOffRequestComponent {
     payment_Made: false,
     comment: "",
     proof_Of_Payment_Required: false,
+    itemReceived: false
   }
 
   Deposit: Deposit = {

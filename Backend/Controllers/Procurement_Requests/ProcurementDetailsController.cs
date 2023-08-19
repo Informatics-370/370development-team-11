@@ -111,6 +111,22 @@ namespace ProcionAPI.Controllers.Procurement_Requests
         }
 
         [HttpPost]
+        [Route("AddInvoice")]
+        public async Task<IActionResult> AddInvoice(Procurement_Invoice AddINV)
+        {
+            try
+            {
+                var results = await _ProcurementDetailsRepository.AddInvoiceAsync(AddINV);
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPost]
         [Route("AddProcurementConsumable")]
         public async Task<IActionResult> AddProcurementConsumable(Procurement_Consumable AddProcurementConsumable)
         {
@@ -688,6 +704,21 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             try
             {
                 var results = await _ProcurementDetailsRepository.UpdateProcurementDetailsStatusAsync(StatusID, ProcurementID);
+                return Ok(results);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdatePaymentStatus/{StatusID}/{ProcurementID}")]
+        public async Task<IActionResult> UpdatePaymentStatus(int StatusID, int ProcurementID)
+        {
+            try
+            {
+                var results = await _ProcurementDetailsRepository.UpdatePaymentStatusAsync(StatusID, ProcurementID);
                 return Ok(results);
             }
             catch (Exception)

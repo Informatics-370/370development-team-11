@@ -57,6 +57,7 @@ import { BEESpentReportVM } from '../Shared/BEESpentReportVM';
 import { VendorSpentReport } from '../Shared/VendorSpentReport';
 import * as FileSaver from 'file-saver';
 import { ReportData } from '../Shared/ConsumableReport';
+import { Procurement_Invoice } from '../Shared/Procurement_Invoice';
 
 @Injectable({
   providedIn: 'root'
@@ -1506,6 +1507,14 @@ export class DataService {
 
   UpdateProcurementStatus(StatusID: Number, ProcurementID: Number): Observable<any> {
     return this.httpClient.put(`${this.apiUrl}ProcurementDetails/UpdateProcurementDetailsStatus/${StatusID}` + "/" + ProcurementID, this.httpOptions).pipe(map(result => result))
+  }
+
+  UpdatePaymentStatus(StatusID: Number, ProcurementID: Number): Observable<any> {
+    return this.httpClient.put(`${this.apiUrl}ProcurementDetails/UpdatePaymentStatus/${StatusID}` + "/" + ProcurementID, this.httpOptions).pipe(map(result => result))
+  }
+
+  AddInvoice(AddINV: Procurement_Invoice): Observable<any> {
+    return this.httpClient.post<Proof_Of_Payment>(`${this.apiUrl}ProcurementDetails/AddInvoice`, AddINV, this.httpOptions).pipe(map(result => result))
   }
 }
 
