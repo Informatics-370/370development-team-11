@@ -20,6 +20,7 @@ import { AdminIFrameComponent } from '../HelpIFrames/AdminIFrame/admin-iframe/ad
 
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { MainNavComponent } from '../main-nav/main-nav.component';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -30,7 +31,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-admin',
   templateUrl: './view-admin.component.html',
   styleUrls: ['./view-admin.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }, MainNavComponent]
 })
 export class ViewAdminComponent implements OnInit {
   displayedColumns: string[] = ['name', 'surname', 'email', 'phone', 'role', 'action', 'delete'];
@@ -72,7 +73,7 @@ export class ViewAdminComponent implements OnInit {
     role: this.rl
   }
 
-  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer, private nav: MainNavComponent) { }
 
   Admins: Admin[] = [];
   SearchedAdmin: Admin[] = [];
@@ -83,6 +84,7 @@ export class ViewAdminComponent implements OnInit {
   rAdmin: string;
 
   ngOnInit() {
+    this.nav.reload();
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
     if (this.iRole == "Admin" || this.iRole == "MD") {
@@ -91,6 +93,7 @@ export class ViewAdminComponent implements OnInit {
 
     this.RoleToUse = localStorage.getItem("Role")
     this.GetAdmins();
+    
   }
 
   search() {
