@@ -261,6 +261,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     payment_Made: false,
     comment: "",
     proof_Of_Payment_Required: false,
+    itemReceived: false
   }
 
   Deposit: Deposit = {

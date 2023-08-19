@@ -11,6 +11,6 @@ namespace ProcionAPI.Models.Entities
         public DateTime Date_Uploaded { get; set; }
         public int Procurement_Details_ID { get; set; }
         [ForeignKey("Procurement_Details_ID")]
-        public Procurement_Details Procurement_Details { get; set; };
+        public Procurement_Details Procurement_Details { get; set; }
     }
 }

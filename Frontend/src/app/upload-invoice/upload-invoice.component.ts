@@ -35,6 +35,7 @@ import { Procurement_Asset } from '../Shared/Procurement_Asset';
 import { Vendor_Asset } from '../Shared/Vendor_Asset';
 import { AuditLog } from '../Shared/AuditLog';
 import { Access } from '../Shared/Access';
+import { Procurement_Invoice } from '../Shared/Procurement_Invoice';
 
 @Component({
   selector: 'app-upload-invoice',
@@ -245,6 +246,7 @@ export class UploadInvoiceComponent {
     payment_Made: false,
     comment: "",
     proof_Of_Payment_Required: false,
+    itemReceived: false
   }
 
   Deposit: Deposit = {
@@ -297,14 +299,6 @@ export class UploadInvoiceComponent {
     quantity: 0,
   }
 
-  // Vendor_Consumable: Vendor_Consumable = {
-  //   vendor_Consumbale_ID: 0,
-  //   consumable_ID: 0,
-  //   vendor_ID: 0,
-  //   consumables: this.Consumables,
-  //   vendor: this.Procurement_Request.vendor,
-  // }
-
   assets: Asset = {
     asset_ID: 0,
     name: '',
@@ -341,6 +335,15 @@ export class UploadInvoiceComponent {
     actionTime: new Date(),
   }
 
+  Invoice: Procurement_Invoice = {
+    invoice_ID: 0,
+    path: "",
+    date_Uploaded: new Date(),
+    procurement_Details_ID: 0,
+    procurement_Details: this.ProcurementDetails
+  }
+  User: String = "";
+
   constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, ID: number }, private formBuilder: FormBuilder, private dataservice: DataService, private router: Router, private dialogRef: MatDialogRef<UploadInvoiceComponent>) { }
 
   File = this.data.name
@@ -353,6 +356,20 @@ export class UploadInvoiceComponent {
     this.myForm = this.formBuilder.group({
       FileAdded: ["", [Validators.required]],
     });
+
+    this.dataservice.GetProcurementDetailsByID(this.data.ID).subscribe({
+      next: (Response) => {
+        this.ProcurementDetails = Response;
+      }
+    })
+
+    this.User = this.dataservice.decodeUser(sessionStorage.getItem("token"))
+
+    this.dataservice.GetUserByUsername(this.User.toString()).subscribe({
+      next: (Response) => {
+        this.usr = Response;
+      }
+    })
   }
 
   onTabChange(event: MatTabChangeEvent): void {
@@ -386,21 +403,32 @@ export class UploadInvoiceComponent {
       this.dataservice.InvoiceFileAdd(InvoiceName, file).subscribe(response => {
         let Path: any = response
         this.sPath = Path.pathSaved.toString()
-        this.pop.receipt_Upload = this.sPath;
-        this.pop.procurement_Details_ID = this.data.ID;
+        this.Invoice.path = this.sPath;
+        this.Invoice.procurement_Details_ID = this.data.ID;
+        this.Invoice.procurement_Details.procurement_Request.user = this.usr;
+        this.Invoice.procurement_Details.procurement_Request.vendor = this.ProcurementDetails.procurement_Request.vendor;
+        this.Invoice.procurement_Details.procurement_Request.requisition_Status = this.ProcurementDetails.procurement_Request.requisition_Status;
+        this.Invoice.procurement_Details.budget_Line.budget_Allocation = this.ProcurementDetails.budget_Line.budget_Allocation
+        this.Invoice.procurement_Details.budget_Line.budget_Category = this.ProcurementDetails.budget_Line.budget_Category
+        this.Invoice.procurement_Details.budget_Line.account_Code = this.ProcurementDetails.budget_Line.account_Code
+        this.Invoice.procurement_Details.procurement_Request.name = this.ProcurementDetails.procurement_Request.name
+        this.Invoice.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
 
-        this.log.action = "Invoice Uploaded for: " + this.data.name;
-        this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
-        let test: any
-        test = new DatePipe('en-ZA');
-        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-        this.dataservice.AuditLogAdd(this.log).subscribe({
-          next: (Log) => {
-            this.dialogRef.close();
-            this.router.navigate(['/ViewProcurementDetails'])
+        this.dataservice.AddInvoice(this.Invoice).subscribe({
+          next: (Resp) => {
+            this.log.action = "Invoice Uploaded for: " + this.data.name;
+            this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
+            let test: any
+            test = new DatePipe('en-ZA');
+            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+            this.dataservice.AuditLogAdd(this.log).subscribe({
+              next: (Log) => {
+                this.dialogRef.close();
+                this.router.navigate(['/ViewProcurementDetails'])
+              }
+            })
           }
         })
-
       })
     }
   }

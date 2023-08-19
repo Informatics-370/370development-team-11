@@ -54,5 +54,6 @@ namespace ProcionAPI.Models.Entities
         public string Comment { get; set; }
 
         public bool Proof_Of_Payment_Required { get; set; }
+        public bool ItemReceived { get; set; }
     }
 }

@@ -135,7 +135,13 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
             if (existingProcurementDetails != null)
             {
-                AddPOP.Procurement_Details = existingProcurementDetails;
+                if (existingProcurementDetails.Payment_Made == false)
+                {
+                    existingProcurementDetails.Payment_Made = true;
+                    await _dbContext.SaveChangesAsync();
+                    AddPOP.Procurement_Details = existingProcurementDetails;
+                }
+                
             }
 
 
@@ -144,6 +150,25 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             await _dbContext.SaveChangesAsync();
 
             return new Proof_Of_Payment[] { AddPOP };
+        }
+
+        public async Task<Procurement_Invoice[]> AddInvoiceAsync(Procurement_Invoice AddINV)
+        {
+
+
+            Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Details_ID == AddINV.Procurement_Details_ID);
+
+            if (existingProcurementDetails != null)
+            {
+                AddINV.Procurement_Details = existingProcurementDetails;
+            }
+
+
+
+            await _dbContext.Procurement_Invoice.AddAsync(AddINV);
+            await _dbContext.SaveChangesAsync();
+
+            return new Procurement_Invoice[] { AddINV };
         }
 
         public async Task<Procurement_Consumable[]> AddProcurementConsumableAsync(Procurement_Consumable AddProcurementConsumable)
@@ -580,19 +605,48 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         public async Task<Procurement_Details> UpdateProcurementDetailsStatusAsync(int StatusID, int ProcurementID)
         {
             Procurement_Details ExistingPD = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Details_ID == ProcurementID);
-            
+            if (StatusID == 5)
+            {
+                ExistingPD.ItemReceived = true;
+                await _dbContext.SaveChangesAsync();
+                ExistingPD.Procurement_Status = new Procurement_Status();
 
-            ExistingPD.Procurement_Status = new Procurement_Status();
+                Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == StatusID);
 
-            Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == StatusID);
+                ExistingPD.Procurement_Status = ExistingStatus;
 
-            ExistingPD.Procurement_Status = ExistingStatus;
+                await _dbContext.SaveChangesAsync();
+
+            }
+
+            else
+            {
+                ExistingPD.Procurement_Status = new Procurement_Status();
+
+                Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == StatusID);
+
+                ExistingPD.Procurement_Status = ExistingStatus;
+
+                await _dbContext.SaveChangesAsync();
+            }
+
+            return ExistingPD;
+        }
+        public async Task<Procurement_Details> UpdatePaymentStatusAsync(int StatusID, int ProcurementID)
+        {
+            Procurement_Details ExistingPD = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Details_ID == ProcurementID);
+
+
+            ExistingPD.Procurement_Payment_Status = new Procurement_Payment_Status();
+
+            Procurement_Payment_Status ExistingStatus = await _dbContext.Procurement_Payment_Status.FirstOrDefaultAsync(x => x.Procurement_Payment_Status_ID == StatusID);
+
+            ExistingPD.Procurement_Payment_Status = ExistingStatus;
 
             await _dbContext.SaveChangesAsync();
 
             return ExistingPD;
         }
-
 
 
     }

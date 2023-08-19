@@ -663,7 +663,7 @@ namespace ProcionAPI.Data
            {
                Procurement_Status_ID = 2,
                Name = "Done",
-               Description = "Procurement has been finialized",
+               Description = "Procurement has been finalized",
 
            },
            new
@@ -693,7 +693,7 @@ namespace ProcionAPI.Data
             new
             {
                 Procurement_Payment_Status_ID = 1,
-                Name = "Payed",
+                Name = "Paid",
                 Description = "Procurement has been paid",
 
             },

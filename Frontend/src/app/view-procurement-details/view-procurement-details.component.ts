@@ -77,6 +77,7 @@ export class ViewProcurementDetailsComponent implements OnInit {
 
     this.Dialog.afterAllClosed.subscribe({
       next: (response) => {
+        this.ngOnInit()
         console.log(response)
       }
     })
@@ -91,6 +92,7 @@ export class ViewProcurementDetailsComponent implements OnInit {
 
     this.Dialog.afterAllClosed.subscribe({
       next: (response) => {
+        this.ngOnInit()
         console.log(response)
       }
     })
