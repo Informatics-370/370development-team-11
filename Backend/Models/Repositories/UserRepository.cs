@@ -286,10 +286,26 @@ namespace ProcionAPI.Models.Repositories
         {
             var user = await _dbContext.User.FindAsync(userID);
 
+
             user.Username = UserEdit.Username;
             user.Password = UserEdit.Password;
             user.Role_ID = UserEdit.Role_ID;
             user.Profile_Picture = UserEdit.Profile_Picture;
+
+            user.Access_ID = UserEdit.Access_ID;
+            user.Access = UserEdit.Access;
+
+            //user.Access.CanAccFin = UserEdit.Access.CanAccFin;
+            //user.Access.CanAccInv = UserEdit.Access.CanAccInv;
+            //user.Access.CanAccPro = UserEdit.Access.CanAccPro;
+            //user.Access.CanAccRep = UserEdit.Access.CanAccRep;
+            //user.Access.CanAccVen = UserEdit.Access.CanAccVen;
+            //user.Access.CanAppVen = UserEdit.Access.CanAppVen;
+            //user.Access.CanDeleteVen = UserEdit.Access.CanDeleteVen;
+            //user.Access.CanEditVen = UserEdit.Access.CanEditVen;
+            //user.Access.CanViewFinPro = UserEdit.Access.CanViewFinPro;
+            //user.Access.CanViewFlagPro = UserEdit.Access.CanViewFlagPro;
+            //user.Access.CanViewPenPro = UserEdit.Access.CanViewPenPro;
 
             user.Role = new Role();
 

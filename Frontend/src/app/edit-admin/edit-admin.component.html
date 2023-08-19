@@ -1,108 +1,381 @@
 <div style="display: flex; justify-content: center; align-items: center;">
+  <mat-tab-group>
+    <mat-tab label="Admin Information">
   <mat-card style="width: 600px; margin-top: 1%; align-items: center; ">
     <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px"
       (ngSubmit)="onSubmit()">
       <mat-card-header>
         <mat-card-title
           style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">Edit
-          Admin</mat-card-title>
+          Admin Information</mat-card-title>
           <mat-icon (click)="openEditAdminTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
           style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
           <mat-card-subtitle>
 
-          <table style="width:100%;" cellspacing="0">
-            <tr>
-              <td style="width:100%;">
-                <mat-card-content>
-                  <label style=" color:black;" for="AdminName">Name:</label>
-                  <br />
-                  <mat-form-field>
-                    <input matInput type="text" placeholder="" formControlName="AdminName" id="AdminName" required>
-                    <mat-hint align="end">Not more then 32 characters long.</mat-hint>
-                    <mat-error *ngIf="myError('AdminName', 'required')">Name is required</mat-error>
-                    <mat-error *ngIf="myError('AdminName', 'maxlength')">Limit exceed</mat-error>
-                    <mat-error *ngIf="myError('AdminName', 'minlength')">Name must be 3 to 32 characters
-                      long</mat-error>
-                    <mat-error *ngIf="myError('AdminName', 'pattern')">Name can not contain numbers</mat-error>
-                  </mat-form-field>
-                </mat-card-content>
-              </td>
-              <td style="width:100%;">
-                <mat-card-content>
-                  <label style=" color: black;">Surname:</label>
-                  <br />
-                  <mat-form-field>
-                    <input matInput type="text" placeholder="" formControlName="AdminSurname" id="AdminSurname"
-                      required>
-                    <mat-hint align="end">Not more then 50 characters long.</mat-hint>
-                    <mat-error *ngIf="myError('AdminSurname', 'required')">Surname is required</mat-error>
-                    <mat-error *ngIf="myError('AdminSurname', 'maxlength')">Limit exceed</mat-error>
-                    <mat-error *ngIf="myError('AdminSurname', 'pattern')">Surname can not contain numbers</mat-error>
-                    <mat-error *ngIf="myError('AdminSurname', 'minlength')">Surname must be 3 to 50 characters
-                      long</mat-error>
-                  </mat-form-field>
-                </mat-card-content>
-              </td>
-            </tr>
-            <tr>
-              <td style="width:100%;">
-                <mat-card-content>
-                  <label style=" color:black;">Email:</label>
-                  <br />
-                  <mat-form-field>
-                    <input matInput type="email" placeholder="" formControlName="Email" id="Email" required>
-                    <mat-error *ngIf="myError('Email', 'required')">Email is required</mat-error>
-                    <mat-error *ngIf="myError('Email', 'maxlength')">Limit exceed</mat-error>
-                    <mat-error *ngIf="myError('Email', 'email')">Enter a valid email</mat-error>
-                  </mat-form-field>
-                </mat-card-content>
-              </td>
-              <td style="width:100%;">
-                <mat-card-content>
-                  <label style=" color:black;">Phone Number:</label>
-                  <br />
-                  <mat-form-field>
-                    <input matInput type="text" placeholder="" formControlName="CellPhone_Num" id="CellPhone_Num"
-                      required>
-                    <mat-error *ngIf="myError('CellPhone_Num', 'required')">Phone is required</mat-error>
-                    <mat-error *ngIf="myError('CellPhone_Num', 'maxlength')">Limit exceed</mat-error>
-                    <mat-error *ngIf="myError('CellPhone_Num', 'minlength')">Phone number must be 10 numbers</mat-error>
-                    <mat-error *ngIf="myError('CellPhone_Num', 'pattern')">Please enter a valid phone number</mat-error>
-                  </mat-form-field>
-                </mat-card-content>
-              </td>
-            </tr>
-          </table>
+              <table style="width:100%;" cellspacing="0">
+                <tr>
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color:black;" for="AdminName">Name:</label>
+                      <br />
+                      <mat-form-field>
+                        <input matInput type="text" placeholder="" formControlName="AdminName" id="AdminName" required>
+                        <mat-hint align="end">Not more then 32 characters long.</mat-hint>
+                        <mat-error *ngIf="myError('AdminName', 'required')">Name is required</mat-error>
+                        <mat-error *ngIf="myError('AdminName', 'maxlength')">Limit exceed</mat-error>
+                        <mat-error *ngIf="myError('AdminName', 'minlength')">
+                          Name must be 3 to 32 characters
+                          long
+                        </mat-error>
+                        <mat-error *ngIf="myError('AdminName', 'pattern')">Name can not contain numbers</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color: black;">Surname:</label>
+                      <br />
+                      <mat-form-field>
+                        <input matInput type="text" placeholder="" formControlName="AdminSurname" id="AdminSurname"
+                               required>
+                        <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+                        <mat-error *ngIf="myError('AdminSurname', 'required')">Surname is required</mat-error>
+                        <mat-error *ngIf="myError('AdminSurname', 'maxlength')">Limit exceed</mat-error>
+                        <mat-error *ngIf="myError('AdminSurname', 'pattern')">Surname can not contain numbers</mat-error>
+                        <mat-error *ngIf="myError('AdminSurname', 'minlength')">
+                          Surname must be 3 to 50 characters
+                          long
+                        </mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color:black;">Email:</label>
+                      <br />
+                      <mat-form-field>
+                        <input matInput type="email" placeholder="" formControlName="Email" id="Email" required>
+                        <mat-error *ngIf="myError('Email', 'required')">Email is required</mat-error>
+                        <mat-error *ngIf="myError('Email', 'maxlength')">Limit exceed</mat-error>
+                        <mat-error *ngIf="myError('Email', 'email')">Enter a valid email</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color:black;">Phone Number:</label>
+                      <br />
+                      <mat-form-field>
+                        <input matInput type="text" placeholder="" formControlName="CellPhone_Num" id="CellPhone_Num"
+                               required>
+                        <mat-error *ngIf="myError('CellPhone_Num', 'required')">Phone is required</mat-error>
+                        <mat-error *ngIf="myError('CellPhone_Num', 'maxlength')">Limit exceed</mat-error>
+                        <mat-error *ngIf="myError('CellPhone_Num', 'minlength')">Phone number must be 10 numbers</mat-error>
+                        <mat-error *ngIf="myError('CellPhone_Num', 'pattern')">Please enter a valid phone number</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+                </tr>
+              </table>
 
 
-        </mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
 
-        <div class="wrapper">
-          <button class="" type="submit" [disabled]="!myForm.valid">
-            <span>Save</span>
-            <div class="success">
-              <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
-              <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
-                </svg>
+            <div class="wrapper">
+              <button class="" type="submit" [disabled]="!myForm.valid">
+                <span>Save</span>
+                <div class="success">
+                  <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
+                  <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+            </svg>
+                </div>
+              </button>
             </div>
-          </button>
-        </div>
 
-        <button mat-raised-button id="cBtn"
-                style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688; "
-                (click)="Close()">
-          Cancel
-        </button>
+            <button mat-raised-button id="cBtn"
+                    style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688; "
+                    (click)="Close()">
+              Cancel
+            </button>
 
-        <!--<button mat-raised-button type="submit"
+            <!--<button mat-raised-button type="submit"
           style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color:#94CC5B; color: white;"
           [disabled]="!myForm.valid">Save</button>
         <button mat-raised-button
           style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color:#244688; color:white;"
           (click)="Close()">Cancel</button>-->
-      </mat-card-actions>
-    </form>
-  </mat-card>
+          </mat-card-actions>
+        </form>
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Admin Access">
+      <mat-card style="width: 600px; margin-top: 1%; align-items: center; ">
+        <form [formGroup]="accForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px">
+          <mat-card-header>
+            <mat-card-title style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">Edit Admin Access</mat-card-title>
+            <mat-card-subtitle>
+
+              <table style="width:100%;" cellspacing="0">
+                <tr>
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color:black;" for="Name">Can Acces Inventory:</label>
+                      <br />
+                      <mat-form-field>
+                        <mat-label>Choose one</mat-label>
+                        <mat-select formControlName="canAccInv" required>
+                          <div *ngIf="cAccInv; else cAccInvF">
+                            <mat-option [value]="admin.user.access.canAccInv">True</mat-option>
+                            <mat-option [value]="false">False</mat-option>
+                          </div>
+                          <ng-template #cAccInvF>
+                            <mat-option [value]="true">True</mat-option>
+                            <mat-option [value]="admin.user.access.canAccInv">False</mat-option>
+                          </ng-template>
+
+                        </mat-select>
+                        <mat-error *ngIf="accError('canAccInv', 'required')">Please select admin access</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color: black;">Can Access Finance:</label>
+                      <br />
+                      <mat-form-field>
+                        <mat-label>Choose one</mat-label>
+                        <mat-select formControlName="canAccFin" required>
+                          <div *ngIf="cAccFin; else cAccFinF">
+                            <mat-option [value]="admin.user.access.canAccFin">True</mat-option>
+                            <mat-option [value]="false">False</mat-option>
+                          </div>
+                          <ng-template #cAccFinF>
+                            <mat-option [value]="true">True</mat-option>
+                            <mat-option [value]="admin.user.access.canAccFin">False</mat-option>
+                          </ng-template>
+                        </mat-select>
+                        <mat-error *ngIf="accError('canAccFin', 'required')">Please select admin access</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color:black;">Can Access Procurement:</label>
+                      <br />
+                      <mat-form-field>
+                        <mat-label>Choose one</mat-label>
+                        <mat-select formControlName="canAccPro" required>
+                          <div *ngIf="cAccPro; else cAccProF">
+                            <mat-option [value]="admin.user.access.canAccPro">True</mat-option>
+                            <mat-option [value]="false">False</mat-option>
+                          </div>
+                          <ng-template #cAccProF>
+                            <mat-option [value]="'true'">True</mat-option>
+                            <mat-option [value]="admin.user.access.canAccPro">False</mat-option>
+                          </ng-template>
+                        </mat-select>
+                        <mat-error *ngIf="accError('canAccPro', 'required')">Please select admin access</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color:black;">Can Access Vendor:</label>
+                      <br />
+                      <mat-form-field>
+                        <mat-label>Choose one</mat-label>
+                        <mat-select formControlName="canAccVen" required>
+                          <div *ngIf="cAccVen; else cAccVenF">
+                            <mat-option [value]="admin.user.access.canAccVen">True</mat-option>
+                            <mat-option [value]="false">False</mat-option>
+                          </div>
+                          <ng-template #cAccVenF>
+                            <mat-option [value]="true">True</mat-option>
+                            <mat-option [value]="admin.user.access.canAccVen">False</mat-option>
+                          </ng-template>
+                        </mat-select>
+                        <mat-error *ngIf="accError('canAccVen', 'required')">Please select admin access</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color:black;">Can Access Reports:</label>
+                      <br />
+                      <mat-form-field>
+                        <mat-label>Choose one</mat-label>
+                        <mat-select formControlName="canAccRep" required>
+                          <div *ngIf="cAccRep; else cAccRepF">
+                            <mat-option [value]="admin.user.access.canAccRep">True</mat-option>
+                            <mat-option [value]="false">False</mat-option>
+                          </div>
+                          <ng-template #cAccRepF>
+                            <mat-option [value]="true">True</mat-option>
+                            <mat-option [value]="admin.user.access.canAccRep">False</mat-option>
+                          </ng-template>
+                        </mat-select>
+                        <mat-error *ngIf="accError('canAccRep', 'required')">Please select admin access</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color:black;">Can Approve Vendors:</label>
+                      <br />
+                      <mat-form-field>
+                        <mat-label>Choose one</mat-label>
+                        <mat-select formControlName="canAppVen" required>
+                          <div *ngIf="cAppVen; else cAppVenF">
+                            <mat-option [value]="admin.user.access.canAppVen">True</mat-option>
+                            <mat-option [value]="false">False</mat-option>
+                          </div>
+                          <ng-template #cAppVenF>
+                            <mat-option [value]="true">True</mat-option>
+                            <mat-option [value]="admin.user.access.canAppVen">False</mat-option>
+                          </ng-template>
+                        </mat-select>
+                        <mat-error *ngIf="accError('canAppVen', 'required')">Please select admin access</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+
+                </tr>
+
+                <tr>
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color:black;">Can Edit Vendors:</label>
+                      <br />
+                      <mat-form-field>
+                        <mat-label>Choose one</mat-label>
+                        <mat-select formControlName="canEditVen" required>
+                          <div *ngIf="cEditVen; else cEditVenF">
+                            <mat-option [value]="admin.user.access.canEditVen">True</mat-option>
+                            <mat-option [value]="false">False</mat-option>
+                          </div>
+                          <ng-template #cEditVenF>
+                            <mat-option [value]="true">True</mat-option>
+                            <mat-option [value]="admin.user.access.canEditVen">False</mat-option>
+                          </ng-template>
+                        </mat-select>
+                        <mat-error *ngIf="accError('canEditVen', 'required')">Please select admin access</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color:black;">Can Delete Vendors:</label>
+                      <br />
+                      <mat-form-field>
+                        <mat-label>Choose one</mat-label>
+                        <mat-select formControlName="canDeleteVen" required>
+                          <div *ngIf="cDeleteVen; else cDeleteVenF">
+                            <mat-option [value]="admin.user.access.canDeleteVen">True</mat-option>
+                            <mat-option [value]="false">False</mat-option>
+                          </div>
+                          <ng-template #cDeleteVenF>
+                            <mat-option [value]="true">True</mat-option>
+                            <mat-option [value]="admin.user.access.canDeleteVen">False</mat-option>
+                          </ng-template>
+                        </mat-select>
+                        <mat-error *ngIf="accError('canDeleteVen', 'required')">Please select admin access</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+
+
+                </tr>
+
+                <tr>
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color: black; width: 90%;">Can View Pending Procurement Requests:</label>
+                      <br />
+                      <mat-form-field>
+                        <mat-label>Choose one</mat-label>
+                        <mat-select formControlName="canViewPenPro" required>
+                          <div *ngIf="cViewPenPro; else cViewPenProF">
+                            <mat-option [value]="admin.user.access.canViewPenPro">True</mat-option>
+                            <mat-option [value]="false">False</mat-option>
+                          </div>
+                          <ng-template #cViewPenProF>
+                            <mat-option [value]="true">True</mat-option>
+                            <mat-option [value]="admin.user.access.canViewPenPro">False</mat-option>
+                          </ng-template>
+                        </mat-select>
+                        <mat-error *ngIf="accError('canViewPenPro', 'required')">Please select admin access</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color: black; width: 90%;">Can View Flagged Procurement Requests:</label>
+                      <br />
+                      <mat-form-field>
+                        <mat-label>Choose one</mat-label>
+                        <mat-select formControlName="canViewFlagPro" required>
+                          <div *ngIf="cViewFlagPro; else cViewFlagProF">
+                            <mat-option [value]="admin.user.access.canViewFlagPro">True</mat-option>
+                            <mat-option [value]="false">False</mat-option>
+                          </div>
+                          <ng-template #cViewFlagProF>
+                            <mat-option [value]="true">True</mat-option>
+                            <mat-option [value]="admin.user.access.canViewFlagPro">False</mat-option>
+                          </ng-template>
+                        </mat-select>
+                        <mat-error *ngIf="accError('canViewFlagPro', 'required')">Please select admin access</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+
+                </tr>
+
+                <tr>
+                  <td style="width:100%;">
+                    <mat-card-content>
+                      <label style=" color: black; width: 90%;">Can View Finalised Procurement Requests:</label>
+                      <br />
+                      <mat-form-field>
+                        <mat-label>Choose one</mat-label>
+                        <mat-select formControlName="canViewFinPro" required>
+                          <div *ngIf="cViewFinPro; else cViewFinProF">
+                            <mat-option [value]="admin.user.access.canViewFinPro">True</mat-option>
+                            <mat-option [value]="false">False</mat-option>
+                          </div>
+                          <ng-template #cViewFinProF>
+                            <mat-option [value]="true">True</mat-option>
+                            <mat-option [value]="admin.user.access.canViewFinPro">False</mat-option>
+                          </ng-template>
+                        </mat-select>
+                        <mat-error *ngIf="accError('canViewFinPro', 'required')">Please select admin access</mat-error>
+                      </mat-form-field>
+                    </mat-card-content>
+                  </td>
+                </tr>
+              </table>
+
+
+            </mat-card-subtitle>
+          </mat-card-header>
+        </form>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+    
 </div>
