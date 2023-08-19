@@ -19,6 +19,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import { EmployeeIFrameComponent } from '../HelpIFrames/EmployeeIFrame/employee-iframe/employee-iframe.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { MainNavComponent } from '../main-nav/main-nav.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -30,7 +31,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-employee',
   templateUrl: './view-employee.component.html',
   styleUrls: ['./view-employee.component.css'],
-  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }, MainNavComponent]
 })
 export class ViewEmployeeComponent implements OnInit {
   displayedColumns: string[] = ['name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete', 'delegation'];
@@ -76,7 +77,7 @@ export class ViewEmployeeComponent implements OnInit {
   iRole: string;
   rAdmin: string;
 
-  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer, private nav: MainNavComponent) { }
 
   DeleteEmployees: Employee[] = [];
   Employees: Employee[] = [];
@@ -95,6 +96,7 @@ export class ViewEmployeeComponent implements OnInit {
     }
 
     this.GetEmployees();
+    this.nav.reload();
   }
 
   search() {
