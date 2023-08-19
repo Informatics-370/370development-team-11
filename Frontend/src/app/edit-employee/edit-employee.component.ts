@@ -23,6 +23,7 @@ import { Access } from '../Shared/Access';
 })
 export class EditEmployeeComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
+  accForm: FormGroup = new FormGroup({});
 
   employee: any
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
@@ -112,6 +113,18 @@ export class EditEmployeeComponent implements OnInit {
     actionTime: new Date(),
   }
 
+  cAccInv: string;
+  cAccFin: string;
+  cAccPro: string;
+  cAccVen: string;
+  cAccRep: string;
+  cViewPenPro: string;
+  cViewFlagPro: string;
+  cViewFinPro: string;
+  cAppVen: string;
+  cEditVen: string;
+  cDeleteVen: string;
+
   ngOnInit() {
 
     this.GetRoles();
@@ -128,6 +141,20 @@ export class EditEmployeeComponent implements OnInit {
       Mandate: ['', [Validators.required]],
       Department: ['', [Validators.required]],
       Branch: ['', [Validators.required]]
+    })
+
+    this.accForm = this.formBuilder.group({
+      canAccInv: ['', [Validators.required]],
+      canAccFin: ['', [Validators.required]],
+      canAccPro: ['', [Validators.required]],
+      canAccVen: ['', [Validators.required]],
+      canAccRep: ['', [Validators.required]],
+      canViewPenPro: ['', [Validators.required]],
+      canViewFlagPro: ['', [Validators.required]],
+      canViewFinPro: ['', [Validators.required]],
+      canAppVen: ['', [Validators.required]],
+      canEditVen: ['', [Validators.required]],
+      canDeleteVen: ['', [Validators.required]]
     })
 
     this.GetEmployee();
@@ -178,6 +205,23 @@ export class EditEmployeeComponent implements OnInit {
         Branch: this.employee.branch.branch_ID,
 
       });
+
+      this.accForm.patchValue({
+        canAccInv: this.employee.user.access.canAccInv,
+        canAccFin: this.employee.user.access.canAccFin,
+        canAccPro: this.employee.user.access.canAccPro,
+        canAccVen: this.employee.user.access.canAccVen,
+        canAccRep: this.employee.user.access.canAccRep,
+        canViewPenPro: this.employee.user.access.canViewPenPro,
+        canViewFlagPro: this.employee.user.access.canViewFlagPro,
+        canViewFinPro: this.employee.user.access.canViewFinPro,
+        canAppVen: this.employee.user.access.canAppVen,
+        canEditVen: this.employee.user.access.canEditVen,
+        canDeleteVen: this.employee.user.access.canDeleteVen
+
+      });
+
+      this.Access = this.employee.user.access;
       this.emp.employeeName = this.employee.employeeName;
       this.emp.employeeSurname = this.employee.employeeSurname;
       this.emp.cellPhone_Num = this.employee.cellPhone_Num;
@@ -186,9 +230,54 @@ export class EditEmployeeComponent implements OnInit {
       this.emp.department_ID = this.employee.department.department_ID;
       this.emp.mandate_ID = this.employee.mandate_Limit.mandate_ID;
 
+      this.usr.access.IsAdmin = this.employee.user.access.isAdmin;
       this.usr.role_ID = this.employee.user.role.role_ID;
+      this.usr.access_ID = this.employee.user.access.access_ID;
       this.usr.password = this.employee.user.password;
 
+      if (this.employee.user.access.canAccInv == "true") {
+        this.cAccInv = "true";
+      }
+
+      if (this.employee.user.access.canAccFin == "true") {
+        this.cAccFin = "true";
+      }
+
+      if (this.employee.user.access.canAccPro == "true") {
+        this.cAccPro = "true";
+      }
+
+      if (this.employee.user.access.canAccVen == "true") {
+        this.cAccVen = "true";
+      }
+
+      if (this.employee.user.access.canAccRep == "true") {
+        this.cAccRep = "true";
+      }
+
+      if (this.employee.user.access.canViewPenPro == "true") {
+        this.cViewPenPro = "true";
+      }
+
+      if (this.employee.user.access.canViewFlagPro == "true") {
+        this.cViewFlagPro = "true";
+      }
+
+      if (this.employee.user.access.canViewFinPro == "true") {
+        this.cViewFinPro = "true";
+      }
+
+      if (this.employee.user.access.canAppVen == "true") {
+        this.cAppVen = "true";
+      }
+
+      if (this.employee.user.access.canEditVen == "true") {
+        this.cEditVen = "true";
+      }
+
+      if (this.employee.user.access.canDeleteVen == "true") {
+        this.cDeleteVen = "true";
+      }
 
     })
   }
@@ -203,8 +292,17 @@ export class EditEmployeeComponent implements OnInit {
     return this.myForm.controls[controlName].hasError(errorName);
   }
 
+  get af() {
+    return this.accForm.controls;
+  }
+
+  public accError = (controlName: string, errorName: string) => {
+    return this.accForm.controls[controlName].hasError(errorName);
+  }
+
   Close() {
     this.myForm.reset();
+    this.accForm.reset();
     this.router.navigateByUrl('ViewEmployee');
   }
 
@@ -228,7 +326,21 @@ export class EditEmployeeComponent implements OnInit {
     this.usr.username = username;
     this.usr.role_ID = this.myForm.get('Role')?.value;
 
+    this.usr.access.CanAccFin = this.accForm.get('canAccFin')?.value;
+    this.usr.access.CanAccInv = this.accForm.get('canAccInv')?.value;
+    this.usr.access.CanAccPro = this.accForm.get('canAccPro')?.value;
+    this.usr.access.CanAccRep = this.accForm.get('canAccRep')?.value;
+    this.usr.access.CanAccVen = this.accForm.get('canAccVen')?.value;
+    this.usr.access.CanAppVen = this.accForm.get('canAppVen')?.value;
+    this.usr.access.CanDeleteVen = this.accForm.get('canDeleteVen')?.value;
+    this.usr.access.CanEditVen = this.accForm.get('canEditVen')?.value;
+    this.usr.access.CanViewFinPro = this.accForm.get('canViewFinPro')?.value;
+    this.usr.access.CanViewFlagPro = this.accForm.get('canViewFlagPro')?.value;
+    this.usr.access.CanViewPenPro = this.accForm.get('canViewPenPro')?.value;
 
+    
+
+    console.log(this.usr)
 
     this.dataService.EditUserValidation(username, this.employee.user_Id).subscribe({
       next: (Result) => {
@@ -287,4 +399,6 @@ export class EditEmployeeComponent implements OnInit {
       }
     })
   }
+
+  
 }

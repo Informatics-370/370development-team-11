@@ -633,6 +633,8 @@ export class DataService {
   }
 
   EditUser(usr: User, userID: number) {
+    console.log(usr)
+
     return this.httpClient.put<User>(`${this.apiUrl}User/EditUser/` + userID, usr, this.httpOptions)
   }
 

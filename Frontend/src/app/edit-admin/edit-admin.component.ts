@@ -20,6 +20,7 @@ import { Access } from '../Shared/Access';
 })
 export class EditAdminComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
+  accForm: FormGroup = new FormGroup({});
 
   admin: any
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
@@ -78,6 +79,18 @@ export class EditAdminComponent implements OnInit {
     actionTime: new Date(),
   }
 
+  cAccInv: string;
+  cAccFin: string;
+  cAccPro: string;
+  cAccVen: string;
+  cAccRep: string;
+  cViewPenPro: string;
+  cViewFlagPro: string;
+  cViewFinPro: string;
+  cAppVen: string;
+  cEditVen: string;
+  cDeleteVen: string;
+
   ngOnInit() {
 
     this.GetRoles();
@@ -89,6 +102,20 @@ export class EditAdminComponent implements OnInit {
       Email: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
       CellPhone_Num: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern("^[0-9]*$")]],
       Role: ['', [Validators.required]],
+    })
+
+    this.accForm = this.formBuilder.group({
+      canAccInv: ['', [Validators.required]],
+      canAccFin: ['', [Validators.required]],
+      canAccPro: ['', [Validators.required]],
+      canAccVen: ['', [Validators.required]],
+      canAccRep: ['', [Validators.required]],
+      canViewPenPro: ['', [Validators.required]],
+      canViewFlagPro: ['', [Validators.required]],
+      canViewFinPro: ['', [Validators.required]],
+      canAppVen: ['', [Validators.required]],
+      canEditVen: ['', [Validators.required]],
+      canDeleteVen: ['', [Validators.required]]
     })
 
     this.GetAdmin();
@@ -114,6 +141,69 @@ export class EditAdminComponent implements OnInit {
         CellPhone_Num: this.admin.cellPhone_Num,
         Role: this.admin.user.role.role_ID
       });
+
+      this.accForm.patchValue({
+        canAccInv: this.admin.user.access.canAccInv,
+        canAccFin: this.admin.user.access.canAccFin,
+        canAccPro: this.admin.user.access.canAccPro,
+        canAccVen: this.admin.user.access.canAccVen,
+        canAccRep: this.admin.user.access.canAccRep,
+        canViewPenPro: this.admin.user.access.canViewPenPro,
+        canViewFlagPro: this.admin.user.access.canViewFlagPro,
+        canViewFinPro: this.admin.user.access.canViewFinPro,
+        canAppVen: this.admin.user.access.canAppVen,
+        canEditVen: this.admin.user.access.canEditVen,
+        canDeleteVen: this.admin.user.access.canDeleteVen
+
+      });
+
+      this.Access = this.admin.user.access;
+      this.usr.access.IsAdmin = this.admin.user.access.isAdmin;
+      this.usr.access_ID = this.admin.user.access.access_ID;
+
+      if (this.admin.user.access.canAccInv == "true") {
+        this.cAccInv = "true";
+      }
+
+      if (this.admin.user.access.canAccFin == "true") {
+        this.cAccFin = "true";
+      }
+
+      if (this.admin.user.access.canAccPro == "true") {
+        this.cAccPro = "true";
+      }
+
+      if (this.admin.user.access.canAccVen == "true") {
+        this.cAccVen = "true";
+      }
+
+      if (this.admin.user.access.canAccRep == "true") {
+        this.cAccRep = "true";
+      }
+
+      if (this.admin.user.access.canViewPenPro == "true") {
+        this.cViewPenPro = "true";
+      }
+
+      if (this.admin.user.access.canViewFlagPro == "true") {
+        this.cViewFlagPro = "true";
+      }
+
+      if (this.admin.user.access.canViewFinPro == "true") {
+        this.cViewFinPro = "true";
+      }
+
+      if (this.admin.user.access.canAppVen == "true") {
+        this.cAppVen = "true";
+      }
+
+      if (this.admin.user.access.canEditVen == "true") {
+        this.cEditVen = "true";
+      }
+
+      if (this.admin.user.access.canDeleteVen == "true") {
+        this.cDeleteVen = "true";
+      }
     })
   }
 
@@ -127,8 +217,17 @@ export class EditAdminComponent implements OnInit {
     return this.myForm.controls[controlName].hasError(errorName);
   }
 
+  get af() {
+    return this.accForm.controls;
+  }
+
+  public accError = (controlName: string, errorName: string) => {
+    return this.accForm.controls[controlName].hasError(errorName);
+  }
+
   Close() {
     this.myForm.reset();
+    this.accForm.reset();
     this.router.navigateByUrl('ViewAdmin');
   }
 
@@ -144,6 +243,18 @@ export class EditAdminComponent implements OnInit {
     var ts = name.concat(surname);
     var username = ts.concat(cel.toString().substring(3, 6));
     username = username.replace(/\s/g, "");
+
+    this.usr.access.CanAccFin = this.accForm.get('canAccFin')?.value;
+    this.usr.access.CanAccInv = this.accForm.get('canAccInv')?.value;
+    this.usr.access.CanAccPro = this.accForm.get('canAccPro')?.value;
+    this.usr.access.CanAccRep = this.accForm.get('canAccRep')?.value;
+    this.usr.access.CanAccVen = this.accForm.get('canAccVen')?.value;
+    this.usr.access.CanAppVen = this.accForm.get('canAppVen')?.value;
+    this.usr.access.CanDeleteVen = this.accForm.get('canDeleteVen')?.value;
+    this.usr.access.CanEditVen = this.accForm.get('canEditVen')?.value;
+    this.usr.access.CanViewFinPro = this.accForm.get('canViewFinPro')?.value;
+    this.usr.access.CanViewFlagPro = this.accForm.get('canViewFlagPro')?.value;
+    this.usr.access.CanViewPenPro = this.accForm.get('canViewPenPro')?.value;
 
     this.usr.username = username;
     var id = this.usr.user_Id;
