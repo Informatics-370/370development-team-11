@@ -74,6 +74,7 @@ namespace ProcionAPI.Data
         public DbSet<Procurement_Asset> Procurement_Asset { get; set; }
         public DbSet<Consumable_History> Consumable_History { get; set; }
         public DbSet<AuditLog> AuditLog { get; set; }
+        public DbSet<Procurement_Invoice> Procurement_Invoice { get; set; }
 
         UserRepository userrep = new UserRepository();
 
@@ -96,21 +97,6 @@ namespace ProcionAPI.Data
             modelBuilder.Entity<Vendor_Consumable>()
                 .HasKey(vc => new { vc.Vendor_Consumbale_ID, vc.Consumable_ID, vc.Vendor_ID });
 
-
-            modelBuilder.Entity<Consumable>()
-            .HasData(
-            new
-            {
-                Consumable_ID = 1,
-                Consumable_Category_ID = 1,
-                Name = "Water",
-                Description = "Bonaqua",
-                On_Hand = 2,
-                Minimum_Reorder_Quantity = 50,
-                Maximum_Reorder_Quantity = 100
-
-            }
-            );
 
             modelBuilder.Entity<Consumable_Category>()
             .HasData(
