@@ -21,6 +21,8 @@ import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notifi
 import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 import { Vendor_Insurance } from 'src/app/Shared/VendorDetailsInsurance';
 import { AuditLog } from 'src/app/Shared/AuditLog';
+import { VendorDetails } from 'src/app/Shared/VendorDetails';
+import { filter } from 'rxjs';
 
 
 
@@ -568,7 +570,7 @@ Create() {
     next: (paramater) => {
       
       let VendorID = paramater.get("VendorID");
-      
+
       if(this.FoundationaldocumentsFormGroup.get("BBBEECertificate")?.value == true && this.DueDilligenceData.b_BBEE_Certificate_Provided == true) {
        // this.VenBEEDetails.vendor = this.Vendor;
        
@@ -803,6 +805,28 @@ Create() {
           this.VendorService.DeleteInsuranceByID(Number(VendorID),4).subscribe()
         })
       }
+
+      if(this.DueDilligenceData.cyber_Insurance_Present == true || this.DueDilligenceData.other_Insurance_Required == true || this.DueDilligenceData.general_Liability_Insurance_Present == true || this.DueDilligenceData.proffesional_Indemnity_Insurance_Present == true) {
+        this.VendorService.GetAllVendorDetails().subscribe(result => {
+          let value:VendorDetails[] = result
+          let filterValue = value.find(x=> x.vendor_ID == Number(VendorID))
+          filterValue.insurance_Provided = true
+          this.VendorService.UpdateVendorDetails(filterValue.vendor_Detail_ID,filterValue).subscribe(result => {
+  
+          })
+        })
+      }
+      else {
+        this.VendorService.GetAllVendorDetails().subscribe(result => {
+          let value:VendorDetails[] = result
+          let filterValue = value.find(x=> x.vendor_ID == Number(VendorID))
+          filterValue.insurance_Provided = false
+          this.VendorService.UpdateVendorDetails(filterValue.vendor_Detail_ID,filterValue).subscribe(result => {
+  
+          })
+        })
+      }
+      
 
       //licensesorprofessional
       this.DueDilligenceDetails.licenses_Required= this.LicensesOrProfessionalAccreditationFormGroup.get("LicensesRequired")?.value

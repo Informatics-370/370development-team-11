@@ -363,17 +363,6 @@ export class VendorCreateComponent implements OnInit{
       }
     }
 
-    // InsuranceCoverChange() {
-    //   this.InsuranceCoverChecker = this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.value
-    //   if(this.InsuranceCoverChecker == true) {
-    //     this.CompanyContactInfoFormGroup.get('InsuranceCoverDoc')?.addValidators(Validators.required)
-    //     this.CompanyContactInfoFormGroup.get('InsuranceCoverDoc')?.enable()
-    //   }
-    //   else {
-    //     this.CompanyContactInfoFormGroup.get('InsuranceCoverDoc')?.disable();   
-    //   }
-    // }
-
     PaymentTermsChange() {
       this.PaymentTermsChecker = this.CompanyOverviewFormGroup.get("PaymentTermsCheck")?.value
       if(this.PaymentTermsChecker == true) {
@@ -543,7 +532,7 @@ export class VendorCreateComponent implements OnInit{
     this.VendorDetail.vatRegistered =  this.VatRegistrationChecker
     this.VendorDetail.income_Tax_Num_Provided = true
     this.VendorDetail.signed_Agreement_Provided = this.SignedAgreementChecker
-    //this.VendorDetail.insurance_Provided = this.InsuranceCoverChecker
+    this.VendorDetail.insurance_Provided = this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.value;
     this.VendorDetail.payment_Terms_Provided = this.PaymentTermsChecker
     this.VendorDetail.license_Num_Provided = this.LicenseOrAccreditationChecker
     
@@ -632,47 +621,6 @@ export class VendorCreateComponent implements OnInit{
             })
             
           }
-          // if(this.InsuranceCoverChecker == true && this.fileName[4] != '') {
-          //   FolderCategory = "Insurance";
-          //   VendorNo = "Vendor" + this.Vendor.vendor_ID
-          //   let file:File = this.fileName[4]
-          //   if(this.FileDetails == undefined) {
-          //     this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
-          //       let Path: any = response
-          //       this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
-          //       this.VendorInsurance.vendor_Insurance_Type_ID = 4;
-          //       this.VendorInsurance.vendor_ID =  Number(this.VendorID)
-          //      // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
-          //       this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
-          //     })
-          //   }
-          //   else {
-          //     FolderCategory = "Insurance";
-          //     VendorNo = "Vendor" + Number(this.VendorID)
-
-          //     this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(result => {
-          //       this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
-          //         let Path: any = response
-          //         this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
-          //         this.VendorInsurance.vendor_Insurance_Type_ID = 4;
-          //         this.VendorInsurance.vendor_ID =  Number(this.VendorID)
-          //        // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
-          //         this.VendorService.UpdateInsurance(Number(this.VendorID),this.VendorInsurance).subscribe()
-          //       })
-          //     })
-          //   }
-            
-            
-          // }
-          // else if(this.DueDilligenceDetail.general_Liability_Insurance_Present == true) {
-          //   FolderCategory = "Insurance";
-          //   VendorNo = "Vendor" + this.Vendor.vendor_ID
-          //   let file:File = this.fileName[4]
-          //   this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(result => { 
-          //     this.VendorService.DeleteInsuranceByID(Number(this.Vendor.vendor_ID),4).subscribe()
-          //   })
-
-          // }
 
 
           if(this.PaymentTermsChecker == true) {
@@ -755,24 +703,7 @@ export class VendorCreateComponent implements OnInit{
 
   FileDetails:any[] = []
 
-  getInsuranceDetails(ID:number) {
-    this.FileDetails.push({FileURL:"",FileName:""})
-    this.VendorService.GetInsuranceByID(ID).subscribe(response => {
-      response.forEach(e => { 
-        if(e.vendor_Insurance_Type_ID == 4) {
-          let sFile = e.confirmation_Doc;
-          let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
-          sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-          let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
-          let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-          this.FileDetails[0].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
-          this.FileDetails[0].FileName = filename
-        }
-      })
-     
-    })
-  
-}
+
 
 
 

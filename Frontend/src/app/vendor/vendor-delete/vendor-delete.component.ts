@@ -211,9 +211,7 @@ OnboardRequestDetails: any[] = [];
               if(this.VendorDetail.signed_Agreement_Provided == true) {
                 this.getAgreement(this.VendorDetail.vendor_Detail_ID)
               }
-              if(this.VendorDetail.insurance_Provided == true) {
-                this.getInsurance(this.VendorDetail.vendor_Detail_ID)
-              }
+
               if(this.VendorDetail.payment_Terms_Provided == true) {
                 this.getPaymentTerms(this.VendorDetail.vendor_Detail_ID)
               }
@@ -273,13 +271,6 @@ OnboardRequestDetails: any[] = [];
       fileName =  this.FileDetails[3].FileName
       this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
       this.VendorService.DeleteAgreementByID(this.VendorAgreement.agreement_ID).subscribe(response => {console.log(response)})
-    }
-    if(this.VendorDetail.insurance_Provided == true) {
-      FolderCategory = "InsuranceCover";
-      VendorNo = "Vendor" + this.Vendor.vendor_ID
-      fileName =  this.FileDetails[4].FileName
-      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
-     // this.VendorService.DeleteInsuranceByID(this.VendorInsurance.insurance_ID).subscribe(response => {console.log(response)})
     }
     if(this.VendorDetail.payment_Terms_Provided == true) {
       this.VendorService.DeletePaymentTerms(this.VendorPaymentTerms.payment_Terms_ID).subscribe(response => {console.log(response)})
@@ -374,14 +365,6 @@ OnboardRequestDetails: any[] = [];
      this.VendorAgreement = result
      let sFilePath = this.VendorAgreement.signed_Agreement_Doc
      this.getFileDetails(sFilePath,3)
-    })
-    }
-    
-    getInsurance(InsuranceID:number) {
-     this.VendorService.GetInsuranceByID(InsuranceID).subscribe(result => {
-     this.VendorInsurance = result
-     let sFilePath = this.VendorInsurance.confirmation_Doc
-     this.getFileDetails(sFilePath,4)
     })
     }
     
