@@ -331,25 +331,40 @@ namespace ProcionAPI.Models.Repositories.Consumables
             }
         }
 
-        public async Task<ReportData> GetReportData(DateTime startDate, DateTime endDate)
+        public async Task<ReportData> GetReportData(string startDate, string endDate)
         {
-            var consumableIds = _dbContext.Consumable_History
-                         .Where(h => h.DateCaptured >= startDate && h.DateCaptured <= endDate)
-                         .Select(h => h.Consumable_ID)
-                         .Distinct()
-                         .ToList();
+            DateTime startDateTime = DateTime.Parse(startDate);
+            DateTime endDateTime = DateTime.Parse(endDate);
 
-            var consumables = _dbContext.Consumable
+            var consumableIds = _dbContext.Consumable_History
+                             .Where(h => h.DateCaptured >= startDateTime && h.DateCaptured <= endDateTime)
+                             .Select(h => h.Consumable_ID)
+                             .Distinct()
+                             .ToList();
+
+            var consumablesWithHistory = _dbContext.Consumable
                     .Where(c => consumableIds.Contains(c.Consumable_ID))
-                    .Include(c => c.Consumable_Category)
+                    .Select(c => new {
+                        Consumable = c,
+                        History = _dbContext.Consumable_History
+                                   .Where(h => h.Consumable_ID == c.Consumable_ID && h.DateCaptured >= startDateTime && h.DateCaptured <= endDateTime)
+                                   .ToList()
+                    })
                     .ToList();
 
             var reportData = new ReportData
             {
-                Consumables = consumables
+                Consumables = consumablesWithHistory.Select(cwh => new ConsumableWithHistory
+                {
+                    Consumable = cwh.Consumable,
+                    History = cwh.History
+                }).ToList()
             };
 
             return reportData;
         }
+
+
+
     }
 }

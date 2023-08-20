@@ -1442,9 +1442,23 @@ export class DataService {
     return this.httpClient.get<any>(`${this.apiUrl}BudgetAllocation/GetVarianceByDepartment`);
   }
 
-  GetReportData(startDate: Date, endDate: Date): Observable<any> {
-    return this.httpClient.get<any>(`${this.apiUrl}Consumable/GetConsumableManagementReport?startDate=${startDate}&endDate=${endDate}`);
+  GetReportData(startDate: string, endDate: string): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}Consumable/GetConsumableManagementReport/${startDate}/${endDate}`);
   }
+
+  GetMonthlyBudgetDataForCategory(year: Number): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}BudgetAllocation/GetMonthlyBudgetData/${year}`);
+  }
+
+  GetYearlyTotalsForCategory(year: Number): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}BudgetAllocation/GetYearlyTotalsForCategory/${year}`);
+  }
+
+  GetMonthlyTotals(year: Number): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}BudgetAllocation/GetMonthlyTotals/${year}`);
+  }
+
+
 }
 
 
