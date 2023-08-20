@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/DataService/data-service';
 import { VendorOnboardRequest } from 'src/app/Shared/VendorOnboardRequest';
+import { Subscription } from 'rxjs';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -71,6 +72,9 @@ export class ReportsMainViewComponent implements OnInit {
   budgetVarianceBarChartImageBase64: String;
   monthlyAverageLineChartImageBase64: String;
 
+  private dialogClosedSubscriptionBudgetVariance: Subscription;
+  private dialogClosedSubscriptionBusinessUnit: Subscription;
+  private dialogClosedSubscriptionConsumableManagement: Subscription;
 
   ApprovedVendorDetails: VendorOnboardRequest[] = [];
   BEESpendReportDetails: BEESpentReportVM[] = [];
@@ -109,16 +113,16 @@ export class ReportsMainViewComponent implements OnInit {
     // this.pieChartBaseString = this.getPieChart(this.BEESpendReportDetails);
     // console.log(this.columnChartbasestring.toBase64Image('image/png'))
     // })
-    this.ReportService.dialogClosed$.subscribe(() => {
+    this.dialogClosedSubscriptionConsumableManagement = this.ReportService.dialogClosed$.subscribe(() => {
       this.generateConsumableManagementReport();
     });
 
-    this.ReportService.yearDialogClosed$.subscribe(() => {
+    this.dialogClosedSubscriptionBudgetVariance = this.ReportService.yearDialogClosed$.subscribe(() => {
       this.generateBudgetVarianceReport();
     }
     );
 
-    this.ReportService.yearDialogClosed2$.subscribe(() => {
+    this.dialogClosedSubscriptionBusinessUnit = this.ReportService.yearDialogClosed2$.subscribe(() => {
       this.generateBusinessUnitAllocationReport();
     }
     );
@@ -126,6 +130,13 @@ export class ReportsMainViewComponent implements OnInit {
 
 
   }
+
+  ngOnDestroy(): void {
+    this.dialogClosedSubscriptionBudgetVariance.unsubscribe();
+    this.dialogClosedSubscriptionBusinessUnit.unsubscribe();
+    this.dialogClosedSubscriptionConsumableManagement.unsubscribe();
+  }
+
 
   convertImageToBase64() {
     let filePath = "./assets/Images/moyo-full-logo2.png";
@@ -1011,6 +1022,7 @@ export class ReportsMainViewComponent implements OnInit {
         this.budgetVarianceBarChartImageBase64 = this.barChart.toBase64Image();
         // this.showCanvas = false;  // Hide the canvas
       }, 500);
+      this.barChart.destroy();
     });
 
 
@@ -1276,7 +1288,6 @@ export class ReportsMainViewComponent implements OnInit {
     });
     this.dialog.afterAllClosed.subscribe({
       next: (response) => {
-        this.ngOnInit();
       }
     })
   }
@@ -1289,7 +1300,6 @@ export class ReportsMainViewComponent implements OnInit {
     });
     this.dialog.afterAllClosed.subscribe({
       next: (response) => {
-        this.ngOnInit();
       }
     })
   }
