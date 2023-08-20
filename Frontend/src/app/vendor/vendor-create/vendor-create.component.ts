@@ -199,7 +199,6 @@ export class VendorCreateComponent implements OnInit{
     SignedAgreementCheck: false,
     SignedAgreementDoc: null,
     InsuranceCoverCheck: false,
-    InsuranceCoverDoc: null,
     PaymentTermsCheck: false,
     PaymentTerms: ['',Validators.maxLength(50)],
     LicenseOrAccreditationCheck: false,
@@ -256,7 +255,7 @@ export class VendorCreateComponent implements OnInit{
           this.CompanyContactInfoFormGroup.get('CompanyName').disable()
           this.CompanyContactInfoFormGroup.get('CompanyEmail')?.setValue(this.Vendor.email);
           this.CompanyContactInfoFormGroup.get('CompanyEmail').disable()
-
+          
           if(this.Vendor.sole_Supplier_Provided == false) {
             this.VendorDetail.vendor_Category_ID = 1;
           }
@@ -271,13 +270,17 @@ export class VendorCreateComponent implements OnInit{
             this.VendorDetail.pOPIA_Provided = this.DueDilligenceDetail.popI_Present;
             this.VendorDetail.dueDIllegenceRequired = true;
             this.VendorDetail.income_Tax_Num_Provided = this.DueDilligenceDetail.income_Tax_Number_Provided;
+            if(this.DueDilligenceDetail.cyber_Insurance_Present == true || this.DueDilligenceDetail.other_Insurance_Required == true || this.DueDilligenceDetail.general_Liability_Insurance_Present == true || this.DueDilligenceDetail.proffesional_Indemnity_Insurance_Present == true) {
+              this.VendorDetail.insurance_Provided == true;
+              this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.setValue(true);
+            }
             //construction
             this.VendorDetail.vatRegistered = this.DueDilligenceDetail.vat_Reg_Certificate_Provided;
             if(this.VendorDetail.vatRegistered == true) {
               this.CompanyOverviewFormGroup.get("VatRegistrationCheck")?.setValue(true);
               this.VatRegistrationChange();
             }
-
+            this.CompanyOverviewFormGroup.get('InsuranceCoverCheck')?.disable();
             this.VendorDetail.registration_Provided = this.DueDilligenceDetail.company_Reg_Doc_Provided;
             //construction
             this.VendorDetail.license_Num_Provided = this.DueDilligenceDetail.licenses_Required;
@@ -285,15 +288,6 @@ export class VendorCreateComponent implements OnInit{
               this.CompanyOverviewFormGroup.get("LicenseOrAccreditationCheck")?.setValue(true);
               this.LicenseOrAccreditationChange();
             }
-            //construction
-            this.VendorDetail.insurance_Provided = this.DueDilligenceDetail.general_Liability_Insurance_Present;
-            if(this.VendorDetail.insurance_Provided == true) {
-             this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.setValue(true);
-             this.InsuranceCoverChecker = this.VendorDetail.insurance_Provided
-            this.getInsuranceDetails(Number(this.VendorID));
-            }
-
-
           })
           
 
@@ -359,16 +353,16 @@ export class VendorCreateComponent implements OnInit{
       }
     }
 
-    InsuranceCoverChange() {
-      this.InsuranceCoverChecker = this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.value
-      if(this.InsuranceCoverChecker == true) {
-        this.CompanyContactInfoFormGroup.get('InsuranceCoverDoc')?.addValidators(Validators.required)
-        this.CompanyContactInfoFormGroup.get('InsuranceCoverDoc')?.enable()
-      }
-      else {
-        this.CompanyContactInfoFormGroup.get('InsuranceCoverDoc')?.disable();   
-      }
-    }
+    // InsuranceCoverChange() {
+    //   this.InsuranceCoverChecker = this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.value
+    //   if(this.InsuranceCoverChecker == true) {
+    //     this.CompanyContactInfoFormGroup.get('InsuranceCoverDoc')?.addValidators(Validators.required)
+    //     this.CompanyContactInfoFormGroup.get('InsuranceCoverDoc')?.enable()
+    //   }
+    //   else {
+    //     this.CompanyContactInfoFormGroup.get('InsuranceCoverDoc')?.disable();   
+    //   }
+    // }
 
     PaymentTermsChange() {
       this.PaymentTermsChecker = this.CompanyOverviewFormGroup.get("PaymentTermsCheck")?.value
@@ -539,7 +533,7 @@ export class VendorCreateComponent implements OnInit{
     this.VendorDetail.vatRegistered =  this.VatRegistrationChecker
     this.VendorDetail.income_Tax_Num_Provided = true
     this.VendorDetail.signed_Agreement_Provided = this.SignedAgreementChecker
-    this.VendorDetail.insurance_Provided = this.InsuranceCoverChecker
+    //this.VendorDetail.insurance_Provided = this.InsuranceCoverChecker
     this.VendorDetail.payment_Terms_Provided = this.PaymentTermsChecker
     this.VendorDetail.license_Num_Provided = this.LicenseOrAccreditationChecker
     
@@ -628,47 +622,49 @@ export class VendorCreateComponent implements OnInit{
             })
             
           }
-          if(this.InsuranceCoverChecker == true && this.fileName[4] != '') {
-            FolderCategory = "Insurance";
-            VendorNo = "Vendor" + this.Vendor.vendor_ID
-            let file:File = this.fileName[4]
-            if(this.FileDetails == undefined) {
-              this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
-                let Path: any = response
-                this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
-                this.VendorInsurance.vendor_Insurance_Type_ID = 4;
-                this.VendorInsurance.vendor_ID =  Number(this.VendorID)
-               // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
-                this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
-              })
-            }
-            else {
-              FolderCategory = "Insurance";
-              VendorNo = "Vendor" + Number(this.VendorID)
+          // if(this.InsuranceCoverChecker == true && this.fileName[4] != '') {
+          //   FolderCategory = "Insurance";
+          //   VendorNo = "Vendor" + this.Vendor.vendor_ID
+          //   let file:File = this.fileName[4]
+          //   if(this.FileDetails == undefined) {
+          //     this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
+          //       let Path: any = response
+          //       this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+          //       this.VendorInsurance.vendor_Insurance_Type_ID = 4;
+          //       this.VendorInsurance.vendor_ID =  Number(this.VendorID)
+          //      // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
+          //       this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
+          //     })
+          //   }
+          //   else {
+          //     FolderCategory = "Insurance";
+          //     VendorNo = "Vendor" + Number(this.VendorID)
 
-              this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(result => {
-                this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
-                  let Path: any = response
-                  this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
-                  this.VendorInsurance.vendor_Insurance_Type_ID = 4;
-                  this.VendorInsurance.vendor_ID =  Number(this.VendorID)
-                 // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
-                  this.VendorService.UpdateInsurance(Number(this.VendorID),this.VendorInsurance).subscribe()
-                })
-              })
-            }
+          //     this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(result => {
+          //       this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
+          //         let Path: any = response
+          //         this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+          //         this.VendorInsurance.vendor_Insurance_Type_ID = 4;
+          //         this.VendorInsurance.vendor_ID =  Number(this.VendorID)
+          //        // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
+          //         this.VendorService.UpdateInsurance(Number(this.VendorID),this.VendorInsurance).subscribe()
+          //       })
+          //     })
+          //   }
             
             
-          }
-          else if(this.DueDilligenceDetail.general_Liability_Insurance_Present == true) {
-            FolderCategory = "Insurance";
-            VendorNo = "Vendor" + this.Vendor.vendor_ID
-            let file:File = this.fileName[4]
-            this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(result => { 
-              this.VendorService.DeleteInsuranceByID(Number(this.Vendor.vendor_ID),4).subscribe()
-            })
+          // }
+          // else if(this.DueDilligenceDetail.general_Liability_Insurance_Present == true) {
+          //   FolderCategory = "Insurance";
+          //   VendorNo = "Vendor" + this.Vendor.vendor_ID
+          //   let file:File = this.fileName[4]
+          //   this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(result => { 
+          //     this.VendorService.DeleteInsuranceByID(Number(this.Vendor.vendor_ID),4).subscribe()
+          //   })
 
-          }
+          // }
+
+
           if(this.PaymentTermsChecker == true) {
             this.VendorPaymentTerms.payment_Terms = this.CompanyOverviewFormGroup.get("PaymentTerms")?.value
             this.VendorPaymentTerms.vendor_Detail_ID = this.VD_ID 

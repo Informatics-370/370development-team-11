@@ -133,7 +133,7 @@ export class VendorApproveComponent implements OnInit {
   BEEbool = false;
 
   ngOnInit() {
-
+    this.convertLogoToBase64()
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
     this.dataService.GetUserByUsername(User).subscribe(response => {
       this.usr = response
@@ -499,8 +499,21 @@ export class VendorApproveComponent implements OnInit {
 
   boxCheckedTrue: any
   boxCheckedFalse: any
+  logoImageBase64:any;
+
+  convertLogoToBase64() {
+    let filePath = "./assets/Images/moyo-full-logo2.png";
+    const response = fetch(filePath).then((res) => res.blob()).then((blob) => {
+      const reader = new FileReader();
+      reader.onloadend = () => { 
+        this.logoImageBase64 = reader.result   
+      };
+      reader.readAsDataURL(blob);
+  });
+  }
 
   GenerateList(i: number) {
+
     this.dataService.GetDueDiligence(i).subscribe(result => {
       this.DueDilligenceDetails = result;
       if (this.DueDilligenceDetails.popI_Present == true) {
@@ -512,8 +525,36 @@ export class VendorApproveComponent implements OnInit {
             info: {
               title: `Due Dilligence Checklist for ${this.DueDilligenceDetails.vendor.name}`,
             },
-            content: [{ text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#ffffff', background: '#002060', margin: [0, 0, 0, 15] },
-
+            content: [
+              {table: {
+                headerRows: 0,
+                widths: [ '*', 'auto' ],
+                body: [
+                  [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 150, height: 50,margin:[5,5,0,5]}, {} ],
+                ]
+              },
+              layout: 'noBorders',margin:[0,0,0,10]},
+              { text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#002060', margin: [0, 0, 0, 15] },
+              {
+                text: 'Created By: ' + this.usr.username,
+                fontSize: 12,
+                alignment: 'center',
+                bold:true,
+              },
+              {
+                text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
+                fontSize: 12,
+                alignment: 'center',
+                bold:true,
+              },
+              {
+                canvas: [
+                  // Centered line with space above
+                  { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
+                ],
+                // Add space above the line
+                margin: [0, 10]
+              },
             {
               //layout: 'noBorders',
               table: {
@@ -680,7 +721,7 @@ export class VendorApproveComponent implements OnInit {
                 },
 
               },
-              margin: [0, 0, 0, 15],
+              pageBreak: 'after',
             },
             {
               table: {
@@ -720,7 +761,7 @@ export class VendorApproveComponent implements OnInit {
                 },
 
               },
-              pageBreak: 'after'
+              margin: [0, 0, 0, 15],
             },
             {
               table: {
@@ -906,8 +947,36 @@ export class VendorApproveComponent implements OnInit {
           info: {
             title: `Due Dilligence Checklist for ${this.DueDilligenceDetails.vendor.name}`,
           },
-          content: [{ text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#ffffff', background: '#002060', margin: [0, 0, 0, 15] },
-
+          content: [
+            {table: {
+              headerRows: 0,
+              widths: [ '*', 'auto' ],
+              body: [
+                [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 150, height: 50,margin:[5,5,0,5]}, {} ],
+              ]
+            },
+            layout: 'noBorders',margin:[0,0,0,10]},
+            { text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#002060', margin: [0, 0, 0, 15] },
+            {
+              text: 'Created By: ' + this.usr.username,
+              fontSize: 12,
+              alignment: 'center',
+              bold:true,
+            },
+            {
+              text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
+              fontSize: 12,
+              alignment: 'center',
+              bold:true,
+            },
+            {
+              canvas: [
+                // Centered line with space above
+                { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
+              ],
+              // Add space above the line
+              margin: [0, 10]
+            },
           {
 
             table: {
@@ -1074,8 +1143,9 @@ export class VendorApproveComponent implements OnInit {
               },
 
             },
-            margin: [0, 0, 0, 15],
+            pageBreak: 'after',
           },
+          
           {
             table: {
               headerRows: 0,
@@ -1114,7 +1184,7 @@ export class VendorApproveComponent implements OnInit {
               },
 
             },
-            pageBreak: 'after'
+            margin: [0, 0, 0, 15],
           },
           {
             table: {

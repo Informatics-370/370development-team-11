@@ -713,6 +713,23 @@ namespace ProcionAPI.Controllers.Procurement_Requests
         }
 
         [HttpPut]
+        [Route("UpdateBudgetLineAmount/{ActualAmount}")]
+
+        public async Task<IActionResult> UpdateBudgetLineAmount(decimal ActualAmount, Budget_Line budget_Line)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.UpdateBudgetLineAmountAsync(budget_Line, ActualAmount);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
         [Route("UpdatePaymentStatus/{StatusID}/{ProcurementID}")]
         public async Task<IActionResult> UpdatePaymentStatus(int StatusID, int ProcurementID)
         {

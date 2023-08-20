@@ -41,6 +41,9 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         Task<Procurement_Details> UpdateProcurementDetailsStatusAsync(int StatusID, int ProcurementID);
         Task<Procurement_Details> UpdatePaymentStatusAsync(int StatusID, int ProcurementID);
         Task<Procurement_Invoice[]> AddInvoiceAsync(Procurement_Invoice AddINV);
+        Task<Budget_Line> UpdateBudgetLineAmountAsync(Budget_Line budget_Line, decimal ActualAmount);
+
+        
     }
 }
 

@@ -94,6 +94,7 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
   ngOnInit() {
 
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+    console.log(User)
     this.dataService.GetUserByUsername(User).subscribe(response => {
       this.ProcurementRequestDetails.user.access = response.access
       this.ProcurementNotification.user.access = response.access

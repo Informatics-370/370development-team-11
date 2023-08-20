@@ -7,6 +7,7 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { useAnimation } from '@angular/animations';
 @Component({
   selector: 'app-view-pending-procurement-request',
   templateUrl: './view-pending-procurement-request.component.html',
@@ -49,16 +50,20 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
     this.GetProcurementRequests();
     console.log(this.ProcurementRequests)
     console.log(this.SearchedPRequests)
-    var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
-    console.log(User)
+    
+    //console.log(User)
   }
 
   GetProcurementRequests() {
+    
+    var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+    //console.log(User)
     this.dataService.GetProcurementRequests().subscribe(result => {
       let procurementRequestList: any[] = result;
       procurementRequestList.forEach(e => {
-        //console.log(e)
-        if (e.requisition_Status_ID == 3) {
+       // console.log(e.user.username)
+       // console.log(User.username)
+        if (e.requisition_Status_ID == 3 && User != e.user.username) {
           this.ProcurementRequests.push(e)
           //this.SearchedPRequests.push(e)
         }
@@ -94,6 +99,29 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
       this.SearchedPRequests.paginator.firstPage();
     }
   }
+
+  // ViewValidation(cName:string) {
+  //   var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+  //   if(cName == User.username){
+  //     var action = "ERROR";
+  //   var title = "USER NOT AN EMPLOYEE";
+  //   var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("User must be an <strong style='color:red'> EMPLOYEE </strong>!");
+
+  //   const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+  //     disableClose: true,
+  //     data: { action, title, message }
+  //   });
+
+  //   const duration = 1750;
+  //   setTimeout(() => {
+  //     this.router.navigate(['/PlaceProcurementRequest']);
+  //     dialogRef.close();
+  //   }, duration);
+  //   }
+
+
+    
+  // }
 
 
 

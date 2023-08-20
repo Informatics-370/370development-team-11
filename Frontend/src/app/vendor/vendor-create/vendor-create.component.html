@@ -89,7 +89,7 @@
                         <input matInput placeholder="Contact Person Name" formControlName="ContactPersonName" [errorStateMatcher]="matcher">
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonName'].hasError('required')">Contact person name is required</mat-error>
                         <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonName'].hasError('maxlength')">Contact person name cannot be more than 32 characters long</mat-error>
-                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonName'].hasError('pattern')">Contact person name cannot contain numbers or other unique characters</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonName'].hasError('pattern')">Contact person name can only contain characters</mat-error>
                       </mat-form-field>
                 </td>
             </tr>
@@ -207,19 +207,18 @@
             </tr>
             <br>
             <tr style="margin-bottom: 15px;">
-                <td><label>Insurance Cover Document:</label></td>
+                <td><label>Insurance Cover:</label></td>
                 <td>
-                    <mat-checkbox formControlName="InsuranceCoverCheck" (click)="InsuranceCoverChange()">Add Insurance Cover Document?</mat-checkbox> <br>  
-                    <input  id="file" formControlName="InsuranceCoverDoc" type="file" class="file-upload" *ngIf="InsuranceCoverChecker === true;" (change)="FileStorage(4,$event)">            
+                    <mat-checkbox formControlName="InsuranceCoverCheck" [disabled]="true"></mat-checkbox>            
                 </td>
             </tr>
-            <tr *ngIf="InsuranceCoverChecker == true && FileDetails[0] != undefined">
+            <!-- <tr *ngIf="InsuranceCoverChecker == true && FileDetails[0] != undefined">
                 <td><label for="file" style="margin-right: 1%;" >Current Insurance Cover Document: </label></td> 
                 <td >  
                     <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}">{{FileDetails[0].FileName}}</a>    
                 </td>
               </tr>
-            <tr>
+            <tr> -->
             <br>
             <tr>
                 <td> <label>Payment Terms:</label></td>
@@ -341,7 +340,7 @@
                     <mat-form-field appearance="fill">
                         <input matInput placeholder="Bank Contact Phone Number" formControlName="BankContactPhoneNumber" [errorStateMatcher]="matcher">
                         <mat-error *ngIf="BankDetailsFormGroup.controls['BankContactPhoneNumber'].hasError('required')">Bank contact phone number is required</mat-error>
-                        <mat-error *ngIf="BankDetailsFormGroup.controls['BankContactPhoneNumber'].hasError('maxlength')">Bank contact phone number cannot be more than 10 numbers long</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BankContactPhoneNumber'].hasError('maxlength')">Phone number cannot be more than 10 numbers long</mat-error>
                         <mat-error *ngIf="BankDetailsFormGroup.controls['BankContactPhoneNumber'].hasError('pattern')">Bank contact phone number can only contain numbers</mat-error>
                         <mat-error *ngIf="BankDetailsFormGroup.controls['BankContactPhoneNumber'].hasError('minlength')">Bank contact phone number should be 10 numbers</mat-error>
                       </mat-form-field>

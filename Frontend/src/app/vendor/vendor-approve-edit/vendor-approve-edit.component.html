@@ -89,7 +89,7 @@
                     </div>
                     <div class="col-5">
                       <mat-form-field appearance="outline">
-                        <input matInput type="number" formControlName="BEELevel" max="5" min="1" >
+                        <input matInput type="number" formControlName="BEELevel" max="8" min="1" >
                       </mat-form-field> 
                     </div>
                   </div>
@@ -393,7 +393,7 @@
                     </div>
                     <div class="col-3" *ngIf="POPIDetails.contracted_Partner_Type.name != ''">
                       <mat-form-field style="width: 200px;font-size: 12px;font-weight: 400;">
-                        <mat-select formControlName="Contracted_Partner_Type_ID" placeholder="{{POPIDetails.contracted_Partner_Type.name}}" style="font-size: 12px;font-weight: 400;" >
+                        <mat-select formControlName="Contracted_Partner_Type_ID" placeholder="{{POPIDetails.contracted_Partner_Type.name}}" style="font-size: 12px;font-weight: 400;">
                           <mat-option value="1">Controller (C)</mat-option>
                           <mat-option value="2">Joint Controller (JC)</mat-option>
                           <mat-option value="3">Processor (P)</mat-option>
@@ -403,7 +403,7 @@
                     </div> 
                     <div class="col-3" *ngIf="POPIDetails.contracted_Partner_Type.name == ''">
                       <mat-form-field style="width: 200px;">
-                        <mat-select formControlName="Contracted_Partner_Type_ID" placeholder="Controller (C)" style="font-size: 12px;font-weight: 400;" >
+                        <mat-select formControlName="Contracted_Partner_Type_ID" placeholder="Controller (C)" style="font-size: 12px;font-weight: 400;">
                           <mat-option value="1">Controller (C)</mat-option>
                           <mat-option value="2">Joint Controller (JC)</mat-option>
                           <mat-option value="3">Processor (P)</mat-option>
