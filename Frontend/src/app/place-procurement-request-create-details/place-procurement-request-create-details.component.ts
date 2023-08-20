@@ -41,6 +41,15 @@ import { Observable } from 'rxjs';
 import { NgFor } from '@angular/common';
 import { Access } from '../Shared/Access';
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 interface AccountCodeDisplay {
   AccountCodeValue: number;
   AccountCodeName: string;
@@ -57,7 +66,8 @@ interface AccountCodeDisplayGroup {
 @Component({
   selector: 'app-place-procurement-request-create-details',
   templateUrl: './place-procurement-request-create-details.component.html',
-  styleUrls: ['./place-procurement-request-create-details.component.css']
+  styleUrls: ['./place-procurement-request-create-details.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
@@ -820,6 +830,15 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     })
   }
 
+
+
+
+
+
+  openPPRDTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 
 }
 

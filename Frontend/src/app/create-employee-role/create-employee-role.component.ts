@@ -10,10 +10,23 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+
+
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-create-employee-role',
   templateUrl: './create-employee-role.component.html',
-  styleUrls: ['./create-employee-role.component.css']
+  styleUrls: ['./create-employee-role.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class CreateEmployeeRoleComponent implements OnInit {
   public myForm !: FormGroup;
@@ -105,4 +118,13 @@ export class CreateEmployeeRoleComponent implements OnInit {
 
   }
 
+
+
+
+
+
+  openCreateRoleTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }

@@ -5,10 +5,18 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/DataService/data-service';
 
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-vendor-create-choice',
   templateUrl: './vendor-create-choice.component.html',
-  styleUrls: ['./vendor-create-choice.component.css']
+  styleUrls: ['./vendor-create-choice.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 
 export class VendorCreateChoiceComponent {
@@ -59,7 +67,10 @@ export class VendorCreateChoiceComponent {
 
 
 
-
+  openAvailableVendorTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }
 
 

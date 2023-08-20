@@ -10,10 +10,19 @@ import { MatTableDataSource } from '@angular/material/table';
 
 
 
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { FlaggerProcDetailIFrameComponent } from '../HelpIFrames/FlaggedProcDetailIFrame/flagger-proc-detail-iframe/flagger-proc-detail-iframe.component';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-view-flagged-procurement-request',
   templateUrl: './view-flagged-procurement-request.component.html',
-  styleUrls: ['./view-flagged-procurement-request.component.css']
+  styleUrls: ['./view-flagged-procurement-request.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewFlaggedProcurementRequestComponent implements OnInit {
 
@@ -105,5 +114,19 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
       default:
         return 'black'; // Default color if the status doesn't match any case
     }
+  }
+
+
+
+  openFPRIFrameTab(): void {
+    const dialogRef = this.Dialog.open(FlaggerProcDetailIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
   }
 }

@@ -21,10 +21,21 @@ import { DatePipe } from '@angular/common';
 import { Notification_Type } from 'src/app/Shared/Notification_Type';
 import { Access } from 'src/app/Shared/Access';
 import { AuditLog } from 'src/app/Shared/AuditLog';
+
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-request-create',
   templateUrl: './request-create.component.html',
-  styleUrls: ['./request-create.component.css']
+  styleUrls: ['./request-create.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class RequestCreateComponent implements OnInit {
 
@@ -557,6 +568,10 @@ export class RequestCreateComponent implements OnInit {
 
 
 
+  openCreateOnboardRequestTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }//addrequest 
 
 
@@ -565,4 +580,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
+
+
+
 }

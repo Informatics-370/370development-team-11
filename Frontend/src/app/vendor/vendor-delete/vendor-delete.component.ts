@@ -20,10 +20,18 @@ import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 import { VendorOnboardRequest } from 'src/app/Shared/VendorOnboardRequest';
 import { VendorStatus } from 'src/app/Shared/VendorStatus';
 
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-vendor-delete',
   templateUrl: './vendor-delete.component.html',
-  styleUrls: ['./vendor-delete.component.css']
+  styleUrls: ['./vendor-delete.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class VendorDeleteComponent {
 
@@ -407,7 +415,16 @@ OnboardRequestDetails: any[] = [];
   }
   
    
+
+
+
+
+
+  openDeleteVendorTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
+}
 
   
 

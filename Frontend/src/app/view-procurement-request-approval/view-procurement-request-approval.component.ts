@@ -15,10 +15,19 @@ import { User } from '../Shared/User';
 import { Access } from '../Shared/Access';
 
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-view-procurement-request-approval',
   templateUrl: './view-procurement-request-approval.component.html',
-  styleUrls: ['./view-procurement-request-approval.component.css']
+  styleUrls: ['./view-procurement-request-approval.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewProcurementRequestApprovalComponent implements OnInit {
 
@@ -227,6 +236,20 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
       const fileURL = URL.createObjectURL(response);
       window.open(fileURL, '_blank');
     });
+  }
+
+
+
+
+
+
+  openPPROtherTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
+  openPPRNOTOtherTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 
 }

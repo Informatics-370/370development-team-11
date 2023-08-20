@@ -12,10 +12,23 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { Procurement_Details } from '../Shared/ProcurementDetails';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { ProcDetailIFrameComponent } from '../HelpIFrames/ProcDetailIFrame/proc-detail-iframe/proc-detail-iframe.component';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-view-procurement-details',
   templateUrl: './view-procurement-details.component.html',
-  styleUrls: ['./view-procurement-details.component.css']
+  styleUrls: ['./view-procurement-details.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewProcurementDetailsComponent implements OnInit {
   ProcurementRequests: Procurement_Details[] = [];
@@ -140,4 +153,18 @@ export class ViewProcurementDetailsComponent implements OnInit {
     }
   }
 
+
+
+
+  openPRDIFrameTab(): void {
+    const dialogRef = this.Dialog.open(ProcDetailIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
+  }
 }

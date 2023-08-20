@@ -2,6 +2,8 @@
   <div style="display: inline-block; text-align: left;position: relative;width: 700px;">
   <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
     Update Vendor Onboard Request
+    <mat-icon (click)="openEditOnboardRequestTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
   </h1>
 
   <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="VendorType == true ;Sole" #General>

@@ -23,10 +23,18 @@ import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 import { AuditLog } from 'src/app/Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-vendor-update',
   templateUrl: './vendor-update.component.html',
-  styleUrls: ['./vendor-update.component.css']
+  styleUrls: ['./vendor-update.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class VendorUpdateComponent {
 
@@ -1152,6 +1160,12 @@ this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.setValue(this.VendorTax.in
 
 
    
+
+
+openEditVendorTab(): void {
+  const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+  window.open(userManualUrl, '_blank');
+}
 }
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {

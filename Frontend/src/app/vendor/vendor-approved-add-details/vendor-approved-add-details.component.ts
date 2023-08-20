@@ -30,10 +30,19 @@ import { Access } from 'src/app/Shared/Access';
 import { AuditLog } from 'src/app/Shared/AuditLog';
 
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-vendor-approved-add-details',
   templateUrl: './vendor-approved-add-details.component.html',
-  styleUrls: ['./vendor-approved-add-details.component.css']
+  styleUrls: ['./vendor-approved-add-details.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class VendorApprovedAddDetailsComponent implements OnInit {
 
@@ -751,6 +760,13 @@ onInsuranceChecked() {
   }
 
 
+
+
+
+  openAddDueDillTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }
 
 

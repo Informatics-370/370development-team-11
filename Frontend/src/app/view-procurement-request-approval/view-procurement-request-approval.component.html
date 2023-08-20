@@ -2,7 +2,9 @@
   <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="ProcurementRequestDetails.vendor.vendor_Status_ID == 6;">
     <h1 style="margin: 1%;margin-left: 0px;  color: #244688; font-weight:700; font-size:24pt;" >
         <button  mat-raised-button routerLink="/ViewPendingProcurementRequest" style="float:left; background-color:#244688; color:white;margin-right: 1%;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
-        Procurement Request For {{ProcurementRequestDetails.vendor.name}}
+        Procurement Request For {{ProcurementRequestDetails.vendor.name}} 
+        <mat-icon (click)="openPPROtherTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+                    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
       </h1>
     <div>  
   <div>
@@ -103,7 +105,9 @@
 <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="ProcurementRequestDetails.vendor.vendor_Status_ID != 6" >
   <h1 style="margin: 1%;margin-left: 0px;  color: #244688; font-weight:700; font-size:20pt;" >
     <button  mat-raised-button routerLink="/ViewPendingProcurementRequest" style="float:left; background-color:#244688; color:white;margin-right: 1%;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
-    Procurement Request For {{ProcurementRequestDetails.vendor.name}}
+     Procurement Request For {{ProcurementRequestDetails.vendor.name}}
+    <mat-icon (click)="openPPRNOTOtherTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+                    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
   </h1>
   <div>  
 <div>
