@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef,AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/DataService/data-service';
 import { VendorOnboardRequest } from 'src/app/Shared/VendorOnboardRequest';
+import { Subscription } from 'rxjs';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -33,7 +34,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   styleUrls: ['./reports-main-view.component.css'],
   providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
-export class ReportsMainViewComponent implements OnInit, AfterViewInit {
+export class ReportsMainViewComponent implements OnInit {
   @ViewChild('barCanvas', { static: false }) barCanvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('expensesChart', { static: false }) expensesChart: ElementRef<HTMLCanvasElement>;
 
@@ -71,6 +72,9 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
   budgetVarianceBarChartImageBase64: String;
   monthlyAverageLineChartImageBase64: String;
 
+  private dialogClosedSubscriptionBudgetVariance: Subscription;
+  private dialogClosedSubscriptionBusinessUnit: Subscription;
+  private dialogClosedSubscriptionConsumableManagement: Subscription;
 
   ApprovedVendorDetails: VendorOnboardRequest[] = [];
   BEESpendReportDetails: BEESpentReportVM[] = [];
@@ -79,25 +83,13 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
   logoImageBase64: any;
   pieChartBaseString: any;
 
-  GeneralConsumableMangementSelected:boolean = false;
-  GenerateBusinessUnitallocationSelected:boolean = false;
-  GenerateBudgetVarianceReportSelected:boolean = false;
+  GeneralConsumableMangementSelected: boolean = false;
   myBar: any;
 
   barChart: any;
   //splitButtons = document.getElementsByClassName('gui-split-button')
   //popupButtons = document.getElementsByClassName('gui-popup-button')
   ngOnInit(): void {
-   
-    
-
-    this.convertImageToBase64()
-
-  }
-
-  
-
-  ngAfterViewInit() {
     this.ReportService.filter$.subscribe(filter => {
       this.filter = filter;
     });
@@ -116,31 +108,36 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
       this.initializeBarChart();
       this.initializeLineChart();
     });
-    console.log(this.GeneralConsumableMangementSelected)
-    this.ReportService.dialogClosed$.subscribe(() => {
-      if(this.GeneralConsumableMangementSelected == true) {
-        this.GeneralConsumableMangementSelected = false
-        this.generateConsumableManagementReport();
-      }
-      
+    //this.ReportService.getBEESpendReport().subscribe(result => {
+    // this.BEESpendReportDetails = result;
+    this.convertImageToBase64()
+    // this.columnChartbasestring = this.getColumnChart(this.BEESpendReportDetails);
+    // this.pieChartBaseString = this.getPieChart(this.BEESpendReportDetails);
+    // console.log(this.columnChartbasestring.toBase64Image('image/png'))
+    // })
+    this.dialogClosedSubscriptionConsumableManagement = this.ReportService.dialogClosed$.subscribe(() => {
+      this.generateConsumableManagementReport();
     });
 
-    this.ReportService.yearDialogClosed$.subscribe(() => {
-      if(this.GenerateBudgetVarianceReportSelected == true) {
-        this.generateBudgetVarianceReport();
-      }
-      
+    this.dialogClosedSubscriptionBudgetVariance = this.ReportService.yearDialogClosed$.subscribe(() => {
+      this.generateBudgetVarianceReport();
     }
     );
 
-    this.ReportService.yearDialogClosed2$.subscribe(() => {
-      if(this.GenerateBusinessUnitallocationSelected == true) {
-        this.generateBusinessUnitAllocationReport();
-      }
-     
+    this.dialogClosedSubscriptionBusinessUnit = this.ReportService.yearDialogClosed2$.subscribe(() => {
+      this.generateBusinessUnitAllocationReport();
     }
     );
+
   }
+
+
+  ngOnDestroy(): void {
+    this.dialogClosedSubscriptionBudgetVariance.unsubscribe();
+    this.dialogClosedSubscriptionBusinessUnit.unsubscribe();
+    this.dialogClosedSubscriptionConsumableManagement.unsubscribe();
+  }
+
 
   convertImageToBase64() {
     let filePath = "./assets/Images/moyo-full-logo2.png";
@@ -699,7 +696,7 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
 
   initializeChart(): void {
 
-   
+
 
     let ctx = this.chartCanvas.nativeElement.getContext('2d');
 
@@ -998,7 +995,7 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
     var currYear = Number(sessionStorage.getItem('year'));
     let ctxBar = this.barCanvas.nativeElement.getContext('2d');
 
-   
+
 
     this.ReportService.GetYearlyTotalsForCategory(currYear).subscribe(data => {
       let categories = Object.keys(data);
@@ -1035,7 +1032,7 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
         // this.showCanvas = false;  // Hide the canvas
       }, 500);
 
-      
+
     });
 
     if (this.barChart) {
@@ -1050,7 +1047,7 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
 
     let ctxLine = this.expensesChart.nativeElement.getContext('2d');
 
-    
+
     // Call the GetMonthlyTotals function to get the monthly totals
     this.ReportService.GetMonthlyTotals(currYear).subscribe(data => {
       let dataArray = Array.isArray(data) ? data : Object.entries(data).map(([month, total]) => ({ month, total }));
@@ -1091,12 +1088,12 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
         // this.showCanvas = false;  // Hide the canvas
       }, 500);
 
-      
+
     });
     if (this.lineChart) {
       this.lineChart.destroy();
     }
-    
+
   }
 
   generateConsumableManagementReport(): void {
@@ -1274,41 +1271,41 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
         this.GenerateApprovedReport()
         break;
       }
-        
+
       case 2: {
         this.ViewFilter(2, boolValue)
         break;
       }
-       
+
       case 3: {
         this.bDownload = boolValue;
         this.GenerateVendorSpentReport()
         break;
       }
-        
+
       case 4: {
         this.bDownload = boolValue;
         this.ViewFilter(4, boolValue)
         break;
       }
-        
+
       case 5: {
         this.bDownload = boolValue;
         this.ViewFilter2(5, boolValue)
         break;
       }
-        
+
       case 6: {
         this.bDownload = boolValue;
         this.ViewFilter2(6, boolValue)
-      break;
+        break;
       }
     }
   }
 
   ViewFilter(ID: Number, sDownload: boolean) {
 
-    if(ID == 4) {
+    if (ID == 4) {
       this.GeneralConsumableMangementSelected = true
     }
     else {
@@ -1323,21 +1320,12 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
     });
     this.dialog.afterAllClosed.subscribe({
       next: (response) => {
-        this.ngOnInit();
       }
     })
   }
 
   ViewFilter2(ID: Number, sDownload: boolean) {
 
-    if(ID == 5) {
-      this.GenerateBusinessUnitallocationSelected == true;
-      this.GenerateBudgetVarianceReportSelected = false
-    }
-    else if(ID == 6) {
-      this.GenerateBudgetVarianceReportSelected = true
-      this.GenerateBusinessUnitallocationSelected == false;
-    }
 
     const confirm = this.dialog.open(YearPickerComponent, {
       disableClose: true,
@@ -1346,7 +1334,6 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
     });
     this.dialog.afterAllClosed.subscribe({
       next: (response) => {
-        this.ngOnInit();
       }
     })
   }
