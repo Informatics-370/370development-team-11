@@ -140,7 +140,7 @@ export class ViewConsumableComponent implements OnInit {
               { text: 'On-Hand', fillColor: '#244688', color: "white" }],
               ...this.Consumables.map(p => ([p.name, p.consumable_Category.name, p.minimum_Reorder_Quantity, p.maximum_Reorder_Quantity, p.on_Hand]))
             ],
-            // Add space after the table
+
             margin: [0, 10]
           }
         },
@@ -158,6 +158,7 @@ export class ViewConsumableComponent implements OnInit {
           margin: [0, 10]
         }
       ],
+      pageMargins: [40, 80, 40, 60],
       styles: {
         sectionHeader: {
           bold: true,
