@@ -47,7 +47,8 @@
           <tr>
             <td><label>Generate Consumable Inventory management report:</label></td>
             <td>
-              <button mat-raised-button (click)="GenerateVendorSpentReport()" class="split-button-left"> Generate Report
+              <button mat-raised-button (click)="generateConsumableManagementReport()" class="split-button-left">
+                Generate Report
               </button>
               <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu"
                 (click)="value(4)">
@@ -58,7 +59,8 @@
           <tr>
             <td><label>Generate Business Unit allocation Report:</label></td>
             <td>
-              <button mat-raised-button (click)="GenerateVendorSpentReport()" class="split-button-left"> Generate Report
+              <button mat-raised-button (click)="generateBusinessUnitAllocationReport()" class="split-button-left">
+                Generate Report
               </button>
               <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu"
                 (click)="value(5)">
@@ -69,7 +71,8 @@
           <tr>
             <td><label>Generate Budget Variance Report:</label></td>
             <td>
-              <button mat-raised-button (click)="GenerateVendorSpentReport()" class="split-button-left"> Generate Report
+              <button mat-raised-button (click)="generateBudgetVarianceReport()" class="split-button-left"> Generate
+                Report
               </button>
               <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu"
                 (click)="value(6)">
@@ -102,6 +105,6 @@
 
 <canvas id="bar" hidden="true"></canvas>
 <canvas id="pie" hidden="true"></canvas>
-<canvas #chartCanvas *ngIf="showCanvas"></canvas>
+<canvas #chartCanvas hidden="true"></canvas>
 <canvas #barCanvas hidden="true"></canvas>
 <canvas #expensesChart hidden="true"></canvas>
