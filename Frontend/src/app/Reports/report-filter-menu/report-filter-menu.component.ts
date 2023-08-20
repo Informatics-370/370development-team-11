@@ -327,7 +327,7 @@ export class ReportFilterMenuComponent implements OnInit{
    }
   }
   content.push(
-    ...(Number(this.BEESpendReportDetails.reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2)) != 0) ? [{text:'Column Chart for Total Procurement Entitlement Per BEE Level',fontSize: 12,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
+    ...(Number(this.BEESpendReportDetails.reduce((sum, p)=> (sum + Number(p.totalSpend)), 0).toFixed(2)) != 0) ? [{text:'Column Chart for Total Procurement Entitlement Per BEE Level',fontSize: 12,alignment: 'center',color: '#244688',margin:[0, 50,0,10],pageBreak: 'before'},
     {image:this.columnChartbasestring.toBase64Image('image/png'),fit:[550,700]},] : []
   )
 
@@ -341,9 +341,9 @@ export class ReportFilterMenuComponent implements OnInit{
           { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
         ],
         // Add space above the line
-        margin: [0, 10,0,450]
+        margin: [0, 10,0,0]
         },  
-    {text:'Non-Compliance Amount Per Entity',fontSize: 12,alignment: 'center',color: '#244688'}, 
+    {text:'Non-Compliance Amount Per Entity',fontSize: 12,alignment: 'center',color: '#244688',margin:[0, 50,0,10],pageBreak: 'before'}, 
     {image:this.pieChartBaseString.toBase64Image('image/png'),fit:[550,550]},
     { 
       canvas: [
@@ -373,15 +373,16 @@ export class ReportFilterMenuComponent implements OnInit{
       const docDefinition = {
         footer: function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
         header: {
-          margin:[0,0,0,150],
           table: {
             headerRows: 0,
             widths: [ '*', 'auto' ],
             body: [
               [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 200, height: 55,margin:[5,5,0,5]}, {text:"",fillColor:"#244688",alignment:'right'} ],
-            ]
+            
+            ],
           },
           layout: 'noBorders',
+          margin:[0,0,0,200],
           
       },
         content: content,

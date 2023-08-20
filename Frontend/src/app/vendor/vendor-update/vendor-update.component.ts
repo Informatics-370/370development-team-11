@@ -22,6 +22,7 @@ import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notifi
 import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 import { AuditLog } from 'src/app/Shared/AuditLog';
 import { DatePipe } from '@angular/common';
+import { Due_Dillegence } from 'src/app/Shared/DueDillegence';
 
 @Component({
   selector: 'app-vendor-update',
@@ -196,7 +197,6 @@ export class VendorUpdateComponent {
     SignedAgreementCheck: false,
     SignedAgreementDoc: null,
     InsuranceCoverCheck: false,
-    InsuranceCoverDoc: null,
     PaymentTermsCheck: false,
     PaymentTerms: ['',Validators.maxLength(50)],
     LicenseOrAccreditationCheck: false,
@@ -221,7 +221,7 @@ export class VendorUpdateComponent {
   InsuranceCoverChecker:any;
   PaymentTermsChecker:any;
   LicenseOrAccreditationChecker:any;
-
+  DueDilligenceDetail:Due_Dillegence;
   matcher = new MyErrorStateMatcher()
 
   constructor(private _formBuilder: FormBuilder,private VendorService: DataService,private route: ActivatedRoute ,private router: Router,private dialog:MatDialog, private sanitizer:DomSanitizer) {}
@@ -289,9 +289,6 @@ export class VendorUpdateComponent {
           if(this.VendorDetail.signed_Agreement_Provided == true) {
             this.getAgreement(this.VendorDetail.vendor_Detail_ID)
           }
-          if(this.VendorDetail.insurance_Provided == true) {
-            this.getInsurance(this.VendorID)
-          }
           if(this.VendorDetail.payment_Terms_Provided == true) {
             this.getPaymentTerms(this.VendorDetail.vendor_Detail_ID)
           }
@@ -320,7 +317,7 @@ export class VendorUpdateComponent {
           this.CompanyOverviewFormGroup.get("SignedAgreementCheck")?.setValue(this.VendorDetail.signed_Agreement_Provided)
           this.SignedAgreementChecker = this.VendorDetail.signed_Agreement_Provided
           this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.setValue(this.VendorDetail.insurance_Provided )
-          this.InsuranceCoverChecker = this.VendorDetail.insurance_Provided 
+          this.CompanyOverviewFormGroup.get('InsuranceCoverCheck')?.disable();
           this.CompanyOverviewFormGroup.get("PaymentTermsCheck")?.setValue(this.VendorDetail.payment_Terms_Provided)
           this.PaymentTermsChecker = this.VendorDetail.payment_Terms_Provided
           this.CompanyOverviewFormGroup.get("LicenseOrAccreditationCheck")?.setValue(this.VendorDetail.license_Num_Provided)
@@ -339,7 +336,6 @@ export class VendorUpdateComponent {
           this.CompanyFaxChange();
           this.VatRegistrationChange();
           this.SignedAgreementChange();
-          this.InsuranceCoverChange();
           this.PaymentTermsChange();
           this.LicenseOrAccreditationChange();
         })
@@ -405,21 +401,6 @@ export class VendorUpdateComponent {
       }
       else if(this.SignedAgreementChecker == false) {
         this.CompanyOverviewFormGroup.get('SignedAgreementDoc')?.disable();   
-      }
-    }
-
-    InsuranceCoverChange() {
-      this.InsuranceCoverChecker = this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.value
-      console.log(this.InsuranceCoverChecker)
-      if(this.InsuranceCoverChecker == true ) {
-        if (this.VendorDetail.insurance_Provided == false) {
-        this.CompanyOverviewFormGroup.get('InsuranceCoverDoc')?.addValidators(Validators.required)
-        }
-        this.CompanyOverviewFormGroup.get('InsuranceCoverDoc')?.enable()
-        
-      }
-      else {
-        this.CompanyOverviewFormGroup.get('InsuranceCoverDoc')?.disable();   
       }
     }
 
@@ -604,7 +585,6 @@ export class VendorUpdateComponent {
     this.VendorDetail.vatRegistered =  this.VatRegistrationChecker
     this.VendorDetail.income_Tax_Num_Provided = true
     this.VendorDetail.signed_Agreement_Provided = this.SignedAgreementChecker
-    this.VendorDetail.insurance_Provided = this.InsuranceCoverChecker
     this.VendorDetail.payment_Terms_Provided = this.PaymentTermsChecker
     this.VendorDetail.license_Num_Provided = this.LicenseOrAccreditationChecker
     
@@ -886,47 +866,6 @@ CreateContinue(VenDetailsID:number) {
             }})
            
           }//signedagreement
-
-         // this.VendorInsurance.vendor_Detail = this.VendorDetail
-          if(this.InsuranceCoverChecker == true && this.VendorInsurance.insurance_ID == 0 ) {
-            FolderCategory = "InsuranceCover";
-            VendorNo = "Vendor" + this.Vendor.vendor_ID
-            let file:File = this.fileName[4]
-            this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
-              let Path: any = response
-              this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
-              this.VendorInsurance.vendor_ID = this.VendorID 
-              this.VendorInsurance.vendor_Insurance_Type_ID = 4
-              this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
-            })
-            
-          }
-          else if(this.InsuranceCoverChecker == true && this.fileName[4] != "" && this.fileName[4] != undefined) {
-            FolderCategory = "InsuranceCover";
-            VendorNo = "Vendor" + this.Vendor.vendor_ID
-            let fileName =  this.FileDetails[4].FileName
-            if(this.fileName[4] != "" && this.fileName[4] != undefined) {
-              this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName)!
-              let file:File = this.fileName[4]
-              this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
-              let Path: any = response
-              this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString(); 
-             // this.VendorInsurance.vendor_Detail_ID = this.VD_ID
-              this.VendorService.UpdateInsurance(this.VendorInsurance.insurance_ID,this.VendorInsurance).subscribe(response => 
-                {
-                  console.log("success")
-                })
-              })
-            }
-          }
-          else if(this.InsuranceCoverChecker == false && this.VendorInsurance.insurance_ID != 0){
-            FolderCategory = "InsuranceCover";
-            VendorNo = "Vendor" + this.Vendor.vendor_ID
-            let fileName =  this.FileDetails[4].FileName
-            this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe({next: (Response) => {
-            this.VendorService.DeleteInsuranceByID(this.VendorID,this.VendorInsurance.insurance_ID).subscribe()
-            }})
-          }//insurance
           
           this.VendorPaymentTerms.vendor_Detail = this.VendorDetail
           if(this.PaymentTermsChecker == true && this.VendorPaymentTerms.payment_Terms_ID == 0 ) {
@@ -1113,18 +1052,6 @@ this.getFileDetails(sFilePath,3)
 })
 }
 
-getInsurance(VendorID:number) {
-this.VendorService.GetInsuranceByID(VendorID).subscribe(result => {
-  result.forEach(e => {
-    if(e.vendor_Insurance_Type_ID == 4) {
-      this.VendorInsurance = e
-      let sFilePath = e.confirmation_Doc
-      this.getFileDetails(sFilePath,4)
-    }
-  })
-
-})
-}
 
 getPaymentTerms(PaymentTermsID:number) {
 this.VendorService.GetPaymentTerms(PaymentTermsID).subscribe(result => {

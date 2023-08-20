@@ -23,7 +23,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Vendor_Detail[]> GetAllVendorDetailstAsync()
         {
-            IQueryable<Vendor_Detail> query = _dbContext.Vendor_Detail.Include(x => x.Vendor).Include(x => x.Vendor_Category);
+            IQueryable<Vendor_Detail> query = _dbContext.Vendor_Detail.Include(x => x.Vendor).ThenInclude(x=> x.Vendor_Status).Include(x => x.Vendor_Category);
             
             return await query.ToArrayAsync();
         }

@@ -351,7 +351,7 @@ export class ReportsMainViewComponent implements OnInit{
       const docDefinition = {
         footer: function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
         header: {
-          margin:[0,0,0,150],
+          margin:[0,0,0,0],
           table: {
             headerRows: 0,
             widths: [ '*', 'auto' ],
