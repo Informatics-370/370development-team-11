@@ -80,6 +80,8 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
   pieChartBaseString: any;
 
   GeneralConsumableMangementSelected:boolean = false;
+  GenerateBusinessUnitallocationSelected:boolean = false;
+  GenerateBudgetVarianceReportSelected:boolean = false;
   myBar: any;
 
   barChart: any;
@@ -1279,9 +1281,6 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
       }
         
       case 4: {
-        console.log(this.GeneralConsumableMangementSelected)
-        this.GeneralConsumableMangementSelected = true
-        console.log("hy")
         this.bDownload = boolValue;
         this.ViewFilter(4, boolValue)
         break;
@@ -1324,6 +1323,16 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
   }
 
   ViewFilter2(ID: Number, sDownload: boolean) {
+
+    if(ID == 5) {
+      this.GenerateBusinessUnitallocationSelected == true;
+      this.GenerateBudgetVarianceReportSelected = false
+    }
+    else if(ID == 6) {
+      this.GenerateBudgetVarianceReportSelected = true
+      this.GenerateBusinessUnitallocationSelected == false;
+    }
+
     const confirm = this.dialog.open(YearPickerComponent, {
       disableClose: true,
       data: { ID, sDownload }
@@ -1335,13 +1344,6 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
       }
     })
   }
-
-
-
-
-
-
-
 
 
   openReportsIFrameTab(): void {
