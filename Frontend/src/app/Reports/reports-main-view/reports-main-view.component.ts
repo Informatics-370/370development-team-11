@@ -126,12 +126,18 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
     });
 
     this.ReportService.yearDialogClosed$.subscribe(() => {
-      this.generateBudgetVarianceReport();
+      if(this.GenerateBudgetVarianceReportSelected == true) {
+        this.generateBudgetVarianceReport();
+      }
+      
     }
     );
 
     this.ReportService.yearDialogClosed2$.subscribe(() => {
-      this.generateBusinessUnitAllocationReport();
+      if(this.GenerateBusinessUnitallocationSelected == true) {
+        this.generateBusinessUnitAllocationReport();
+      }
+     
     }
     );
   }
