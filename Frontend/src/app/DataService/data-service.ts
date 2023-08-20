@@ -1257,6 +1257,9 @@ export class DataService {
   GetProcurementRequests(): Observable<any> {
     return this.httpClient.get<Procurement_Request[]>(`${this.apiUrl}ProcurementRequest/GetProcurementRequests`).pipe(map(result => result))
   }
+  GetProcurementRequestsForUser(Username: String): Observable<any> {
+    return this.httpClient.get<Procurement_Request[]>(`${this.apiUrl}ProcurementRequest/GetProcurementRequestsPerUser/` + Username).pipe(map(result => result))
+  }
 
   AddProcurementRequest(AddProcurementRequest: Procurement_Request) {
     return this.httpClient.post<Procurement_Request>(`${this.apiUrl}ProcurementRequest/CreateProcurementRequest`, AddProcurementRequest).pipe(map(result => result))
