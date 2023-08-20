@@ -47,7 +47,7 @@
           <tr>
             <td><label>Generate Consumable Inventory management report:</label></td>
             <td>
-              <button mat-raised-button (click)="generateConsumableManagementReport()" class="split-button-left">
+              <button mat-raised-button (click)="ViewFilter(4,false)" class="split-button-left">
                 Generate Report
               </button>
               <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu"
@@ -59,7 +59,7 @@
           <tr>
             <td><label>Generate Business Unit allocation Report:</label></td>
             <td>
-              <button mat-raised-button (click)="generateBusinessUnitAllocationReport()" class="split-button-left">
+              <button mat-raised-button (click)="ViewFilter2(5,false)" class="split-button-left">
                 Generate Report
               </button>
               <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu"
@@ -71,7 +71,7 @@
           <tr>
             <td><label>Generate Budget Variance Report:</label></td>
             <td>
-              <button mat-raised-button (click)="generateBudgetVarianceReport()" class="split-button-left"> Generate
+              <button mat-raised-button (click)="ViewFilter2(6, false)" class="split-button-left"> Generate
                 Report
               </button>
               <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu"

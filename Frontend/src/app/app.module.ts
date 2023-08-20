@@ -169,6 +169,7 @@ import { ProcReqPendingIFrameComponent } from './HelpIFrames/ProcReqPendingIFram
 import { PlaceProcDetailIFrameComponent } from './HelpIFrames/PlaceProcDetailIFrame/place-proc-detail-iframe/place-proc-detail-iframe.component';
 import { FlaggerProcDetailIFrameComponent } from './HelpIFrames/FlaggedProcDetailIFrame/flagger-proc-detail-iframe/flagger-proc-detail-iframe.component';
 import { ProcDetailIFrameComponent } from './HelpIFrames/ProcDetailIFrame/proc-detail-iframe/proc-detail-iframe.component';
+import { YearPickerComponent } from './year-picker/year-picker.component';
 
 
 
@@ -304,6 +305,7 @@ import { ProcDetailIFrameComponent } from './HelpIFrames/ProcDetailIFrame/proc-d
     PlaceProcDetailIFrameComponent,
     FlaggerProcDetailIFrameComponent,
     ProcDetailIFrameComponent,
+    YearPickerComponent,
   ],
   imports: [
     BrowserModule,

@@ -72,6 +72,23 @@ export class DataService {
     })
   }
 
+  filter = new Subject<{ startDate: string, endDate: string }>();
+  yearFilter = new Subject<string>();
+
+  dialogClosedSource = new Subject<void>();
+  dialogClosed$ = this.dialogClosedSource.asObservable();
+
+  yearDialogClosedSource = new Subject<void>();
+  yearDialogClosed$ = this.yearDialogClosedSource.asObservable();
+
+  yearDialogClosed2Source = new Subject<void>();
+  yearDialogClosed2$ = this.yearDialogClosed2Source.asObservable();
+
+
+
+  filter$ = this.filter.asObservable();
+  yearFilter$ = this.yearFilter.asObservable();
+
   constructor(private httpClient: HttpClient) { }
   //--------------------------------------------------------------------------------------Consumables--------------------------------------------------------------------------------------
   GetConsumables(): Observable<any> {
@@ -1532,6 +1549,25 @@ export class DataService {
 
   GetMonthlyTotals(year: Number): Observable<any> {
     return this.httpClient.get<any>(`${this.apiUrl}BudgetAllocation/GetMonthlyTotals/${year}`);
+  }
+
+  setFilter(newFilter: { startDate: string, endDate: string }) {
+    this.filter.next(newFilter);
+  }
+
+  setYearFilter(year: string) {
+    this.yearFilter.next(year);
+  }
+  notifyDialogClosed() {
+    this.dialogClosedSource.next();
+  }
+
+  notifyYearDialogClosed() {
+    this.yearDialogClosedSource.next();
+  }
+
+  notifyYearDialogClosed2() {
+    this.yearDialogClosed2Source.next();
   }
 
 

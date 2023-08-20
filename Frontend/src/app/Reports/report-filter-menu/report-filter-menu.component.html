@@ -1,27 +1,29 @@
-<form style="width: 400px;" >
-<h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;">SELECT FILTER CRITERIA</h1>
-<div align="center">
-    <h2>Please provide the following details:</h2>
-    <div style="display: inline-flex;flex-direction: column;">
-        <mat-form-field>
-            <mat-label>Enter a date range</mat-label>
-            <mat-date-range-input [formGroup]="range" [rangePicker]="picker" [max]="MaxDate">
-              <input matStartDate formControlName="start" readonly placeholder="Start date" (click)="picker.open()" >
-              <input matEndDate formControlName="end" readonly placeholder="End date" (click)="picker.open()" >
-            </mat-date-range-input>
-            <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
-          
-            <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
-            <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
-        </mat-form-field>
+<form style="width: 400px;">
+    <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;">SELECT FILTER CRITERIA
+    </h1>
+    <div align="center">
+        <h2>Please provide the following details:</h2>
+        <div style="display: inline-flex;flex-direction: column;">
+            <mat-form-field>
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input [formGroup]="range" [rangePicker]="picker" [max]="MaxDate">
+                    <input matStartDate formControlName="start" readonly placeholder="Start date"
+                        (click)="picker.open()">
+                    <input matEndDate formControlName="end" readonly placeholder="End date" (click)="picker.open()">
+                </mat-date-range-input>
+                <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+
+                <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+            </mat-form-field>
+        </div>
     </div>
-</div>
-<div mat-dialog-actions align="center">
-    <button mat-raised-button (click)="onConfirm(data.ID, data.sDownload)" style="color: white; background-color: #94CC5B;" [disabled]="!range.valid">Generate</button>
-    <button mat-raised-button (click)="onCancel()" style="color: white; background-color: #244688;">Cancel</button>
-</div>
+    <div mat-dialog-actions align="center">
+        <button mat-raised-button (click)="onConfirm(data.ID, data.sDownload)"
+            style="color: white; background-color: #94CC5B;" [disabled]="!range.valid">Generate</button>
+        <button mat-raised-button (click)="onCancel()" style="color: white; background-color: #244688;">Cancel</button>
+    </div>
 
 </form>
-

@@ -17,6 +17,7 @@ import { identifierName } from '@angular/compiler';
 import { BudgetAllocation } from 'src/app/Shared/BudgetAllocation';
 import { BudgetCategory } from 'src/app/Shared/BudgetCategory';
 import { ReportsIFrameComponent } from 'src/app/HelpIFrames/ReportsIFrame/reports-iframe/reports-iframe.component';
+import { YearPickerComponent } from 'src/app/year-picker/year-picker.component';
 
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
@@ -36,7 +37,8 @@ export class ReportsMainViewComponent implements OnInit {
   @ViewChild('barCanvas', { static: false }) barCanvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('expensesChart', { static: false }) expensesChart: ElementRef<HTMLCanvasElement>;
 
-
+  yearFilter: any;
+  filter: any;
   lineChart: any;
   public showCanvas: boolean = true;
   constructor(private ReportService: DataService, private dialog: MatDialog, private router: Router, private cdRef: ChangeDetectorRef) { }
@@ -67,6 +69,7 @@ export class ReportsMainViewComponent implements OnInit {
   businessUnitAllocationChartImageBase64: string;
   budgetVarianceLineChartImageBase64: String;
   budgetVarianceBarChartImageBase64: String;
+  monthlyAverageLineChartImageBase64: String;
 
 
   ApprovedVendorDetails: VendorOnboardRequest[] = [];
@@ -81,7 +84,9 @@ export class ReportsMainViewComponent implements OnInit {
   //splitButtons = document.getElementsByClassName('gui-split-button')
   //popupButtons = document.getElementsByClassName('gui-popup-button')
   ngOnInit(): void {
-
+    this.ReportService.filter$.subscribe(filter => {
+      this.filter = filter;
+    });
     this.ReportService.GetVarianceByDepartment().subscribe(data => {
       console.log(data)
       this.detailedVariancesByDepartment = Object.keys(data).map(key => {
@@ -104,6 +109,22 @@ export class ReportsMainViewComponent implements OnInit {
     // this.pieChartBaseString = this.getPieChart(this.BEESpendReportDetails);
     // console.log(this.columnChartbasestring.toBase64Image('image/png'))
     // })
+    this.ReportService.dialogClosed$.subscribe(() => {
+      this.generateConsumableManagementReport();
+    });
+
+    this.ReportService.yearDialogClosed$.subscribe(() => {
+      this.generateBudgetVarianceReport();
+    }
+    );
+
+    this.ReportService.yearDialogClosed2$.subscribe(() => {
+      this.generateBusinessUnitAllocationReport();
+    }
+    );
+
+
+
   }
 
   convertImageToBase64() {
@@ -445,7 +466,9 @@ export class ReportsMainViewComponent implements OnInit {
   }
 
   generateBusinessUnitAllocationReport(): void {
-    this.ReportService.GetBudgetLines().subscribe(data => {
+    var currYear = Number(sessionStorage.getItem('year'));
+
+    this.ReportService.GetMonthlyBudgetDataForCategory(currYear).subscribe(data => {
 
       var ReportData = data;
       var User = this.ReportService.decodeUser(sessionStorage.getItem('token'))
@@ -510,8 +533,8 @@ export class ReportsMainViewComponent implements OnInit {
             },
           }
         },
-        ...(Number(ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[0]).reduce((sum, p) => sum + 0, 0).toFixed(2)) != 0) ? [{text:'Bar Chart Showing Business Unit Allocations',fontSize: 18,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
-            {image:this.budgetVarianceBarChartImageBase64,fit:[550,700]},] : []
+        ...(Number(ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[0]).reduce((sum, p) => sum + 0, 0).toFixed(2)) != 0) ? [{ text: 'Bar Chart Showing Business Unit Allocations', fontSize: 18, alignment: 'center', color: '#244688', margin: [0, 0, 0, 10], pageBreak: 'before' },
+        { image: this.budgetVarianceBarChartImageBase64, fit: [550, 700] },] : []
 
       ]
       for (let i = 1; i < uniqueDepartments.length; i++) {
@@ -611,20 +634,20 @@ export class ReportsMainViewComponent implements OnInit {
           // Add space above the line
           margin: [0, 5, 0, 10]
         },
-      ...(Number(ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[0]).reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)) != 0) ? [{text:'Bar Chart Showing Business Unit Allocations',fontSize: 18,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
-            {image:this.businessUnitAllocationChartImageBase64,fit:[550,700]},] : [],
-  
+        ...(Number(ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[0]).reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)) != 0) ? [{ text: 'Bar Chart Showing Business Unit Allocations', fontSize: 18, alignment: 'center', color: '#244688', margin: [0, 0, 0, 10], pageBreak: 'before' },
+        { image: this.businessUnitAllocationChartImageBase64, fit: [550, 700] },] : [],
 
-            {
-              canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }],
-              // Add space above the line
-              margin: [0, 5, 0, 10]
-            },
-            { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true, }
+
+        {
+          canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }],
+          // Add space above the line
+          margin: [0, 5, 0, 10]
+        },
+        { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true, }
 
       )
 
-      
+
       const docDefinition = {
         footer: function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
         header: {
@@ -647,7 +670,14 @@ export class ReportsMainViewComponent implements OnInit {
       };
 
 
-      pdfMake.createPdf(docDefinition).open();
+      if (this.bDownload == true) {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).download("Business Unit Allocation Report")
+      }
+      else {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).open();
+      }
 
     });
   }
@@ -697,19 +727,21 @@ export class ReportsMainViewComponent implements OnInit {
     setTimeout(() => {
       this.businessUnitAllocationChartImageBase64 = this.chart.toBase64Image();
       this.showCanvas = false;  // Hide the canvas
+      this.chart.destroy();    // Destroy the chart so it can be re-rendered as an image
     }, 10);
   }
 
   generateBudgetVarianceReport(): void {
-    this.ReportService.GetMonthlyBudgetDataForCategory(2023).subscribe(data => {
+    var currYear = Number(sessionStorage.getItem('year'));
+
+
+    this.ReportService.GetMonthlyBudgetDataForCategory(currYear).subscribe(data => {
 
       var ReportData = data;
-      console.log(ReportData)
       var User = this.ReportService.decodeUser(sessionStorage.getItem('token'))
       var CurrencyTransform = new CurrencyPipe('en-ZA')
       let uniqueCategories = data.map(p => p.budget_Category.account_Name).filter((name, index, currentval) => currentval.indexOf(name) === index);
-      console.log(uniqueCategories)
-      console.log(ReportData[0].budget_Category.account_Name == uniqueCategories[0]);
+
       let content = [
         {
           text: 'Budget Variance Report',
@@ -726,6 +758,12 @@ export class ReportsMainViewComponent implements OnInit {
         },
         {
           text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
+          fontSize: 12,
+          alignment: 'center',
+          bold: true
+        },
+        {
+          text: 'For Year: ' + currYear,
           fontSize: 12,
           alignment: 'center',
           bold: true
@@ -772,8 +810,8 @@ export class ReportsMainViewComponent implements OnInit {
             },
           }
         },
-        ...(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + 0, 0).toFixed(2)) != 0) ? [{text:'Bar Chart Showing Total Expenses For Different Categories',fontSize: 18,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
-            {image:this.budgetVarianceBarChartImageBase64,fit:[550,700]},] : []
+        ...(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + 0, 0).toFixed(2)) != 0) ? [{ text: 'Bar Chart Showing Total Expenses For Different Categories', fontSize: 18, alignment: 'center', color: '#244688', margin: [0, 0, 0, 10], pageBreak: 'before' },
+        { image: this.budgetVarianceBarChartImageBase64, fit: [550, 700] },] : []
 
       ]
       for (let i = 1; i < uniqueCategories.length; i++) {
@@ -874,8 +912,8 @@ export class ReportsMainViewComponent implements OnInit {
         // Add space above the line
         margin: [0, 10, 0, 10]
       },
-      ...(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)) != 0) ? [{text:'Bar Chart Showing Total Expenses For Different Categories',fontSize: 18,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
-      {image:this.budgetVarianceBarChartImageBase64,fit:[550,700]},] : []
+        ...(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)) != 0) ? [{ text: 'Bar Chart Showing Total Expenses For Different Categories', fontSize: 18, alignment: 'center', color: '#244688', margin: [0, 0, 0, 10], pageBreak: 'before' },
+        { image: this.budgetVarianceBarChartImageBase64, fit: [550, 700] },] : []
 
 
 
@@ -887,17 +925,17 @@ export class ReportsMainViewComponent implements OnInit {
         // Add space above the line
         margin: [0, 10, 0, 10]
       },
-      ...(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)) != 0) ? [{text:'Line Chart Showing Monthly Expenditure',fontSize: 18,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
-      {image:this.budgetVarianceLineChartImageBase64,fit:[550,700]},] : [],
-      { 
-        canvas: [
-          // Centered line with space above
-          { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
-        ],
-        // Add space above the line
-        margin: [0, 10]
+        ...(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)) != 0) ? [{ text: 'Line Chart Showing Monthly Expenditure', fontSize: 18, alignment: 'center', color: '#244688', margin: [0, 0, 0, 10], pageBreak: 'before' },
+        { image: this.budgetVarianceLineChartImageBase64, fit: [550, 700] },] : [],
+        {
+          canvas: [
+            // Centered line with space above
+            { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
+          ],
+          // Add space above the line
+          margin: [0, 10]
         },
-        {text:'**End of Report**',fontSize: 12,alignment: 'center',bold:true,}
+        { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true, }
       )
 
 
@@ -923,16 +961,23 @@ export class ReportsMainViewComponent implements OnInit {
       };
 
 
-      pdfMake.createPdf(docDefinition).open();
+      if (this.bDownload == true) {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).download("Budget Variance Report")
+      }
+      else {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).open();
+      }
 
     });
   }
 
   initializeBarChart(): void {
-
+    var currYear = Number(sessionStorage.getItem('year'));
     let ctxBar = this.barCanvas.nativeElement.getContext('2d');
 
-    this.ReportService.GetYearlyTotalsForCategory(2023).subscribe(data => {
+    this.ReportService.GetYearlyTotalsForCategory(currYear).subscribe(data => {
       let categories = Object.keys(data);
       let yearlyTotals = Object.values(data);
 
@@ -964,7 +1009,6 @@ export class ReportsMainViewComponent implements OnInit {
       setTimeout(() => {
 
         this.budgetVarianceBarChartImageBase64 = this.barChart.toBase64Image();
-
         // this.showCanvas = false;  // Hide the canvas
       }, 500);
     });
@@ -975,11 +1019,12 @@ export class ReportsMainViewComponent implements OnInit {
   initializeLineChart(): void {
     const monthOrder = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+    var currYear = Number(sessionStorage.getItem('year'));
 
     let ctxLine = this.expensesChart.nativeElement.getContext('2d');
 
     // Call the GetMonthlyTotals function to get the monthly totals
-    this.ReportService.GetMonthlyTotals(2023).subscribe(data => {
+    this.ReportService.GetMonthlyTotals(currYear).subscribe(data => {
       let dataArray = Array.isArray(data) ? data : Object.entries(data).map(([month, total]) => ({ month, total }));
 
       // Sort the dataArray based on the month order
@@ -1014,7 +1059,7 @@ export class ReportsMainViewComponent implements OnInit {
       setTimeout(() => {
 
         this.budgetVarianceLineChartImageBase64 = this.lineChart.toBase64Image();
-
+        this.lineChart.destroy();
         // this.showCanvas = false;  // Hide the canvas
       }, 500);
     });
@@ -1024,8 +1069,11 @@ export class ReportsMainViewComponent implements OnInit {
 
   generateConsumableManagementReport(): void {
 
-    let startDate = '2007-08-14';
-    let endDate = '2023-08-16'
+    this.ReportService.filter$.subscribe(filter => {
+      this.filter = filter;
+    });
+    let startDate = this.filter.startDate;
+    let endDate = this.filter.endDate;
     this.ReportService.GetReportData(startDate, endDate).subscribe(data => {
 
       const grouped = data.consumables.map(item => {
@@ -1051,11 +1099,6 @@ export class ReportsMainViewComponent implements OnInit {
           monthlyAverages: monthlyAverages
         };
       });
-
-
-
-
-      console.log(grouped);
 
 
       // var ReportData = data;
@@ -1169,7 +1212,14 @@ export class ReportsMainViewComponent implements OnInit {
       };
 
 
-      pdfMake.createPdf(docDefinition).open();
+      if (this.bDownload == true) {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).download("Consumable Inventory Management Report")
+      }
+      else {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).open();
+      }
 
     });
   }
@@ -1200,6 +1250,20 @@ export class ReportsMainViewComponent implements OnInit {
         this.GenerateVendorSpentReport()
       }
         break;
+      case 4: {
+        this.bDownload = boolValue;
+        this.ViewFilter(4, boolValue)
+      }
+        break;
+      case 5: {
+        this.bDownload = boolValue;
+        this.ViewFilter2(5, boolValue)
+      }
+        break;
+      case 6: {
+        this.bDownload = boolValue;
+        this.ViewFilter2(6, boolValue)
+      }
     }
   }
 
@@ -1216,6 +1280,20 @@ export class ReportsMainViewComponent implements OnInit {
       }
     })
   }
+
+  ViewFilter2(ID: Number, sDownload: boolean) {
+    const confirm = this.dialog.open(YearPickerComponent, {
+      disableClose: true,
+      data: { ID, sDownload }
+
+    });
+    this.dialog.afterAllClosed.subscribe({
+      next: (response) => {
+        this.ngOnInit();
+      }
+    })
+  }
+
 
 
 
