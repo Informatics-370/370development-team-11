@@ -21,11 +21,23 @@ import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notifi
 import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 import { Vendor_Insurance } from 'src/app/Shared/VendorDetailsInsurance';
 import { AuditLog } from 'src/app/Shared/AuditLog';
+import { VendorDetails } from 'src/app/Shared/VendorDetails';
+import { filter } from 'rxjs';
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-vendor-approve-edit',
   templateUrl: './vendor-approve-edit.component.html',
-  styleUrls: ['./vendor-approve-edit.component.css']
+  styleUrls: ['./vendor-approve-edit.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class VendorApproveEditComponent implements OnInit{
 
@@ -158,7 +170,7 @@ export class VendorApproveEditComponent implements OnInit{
     DirectorsInfo: false,
     CompanyResolutionAgreement: false,
     BEELevel: 0,
-    BEECertificateDoc:['',[Validators.required]],
+    BEECertificateDoc:[''],
     BEEValidatityDate:[Date.now(),[Validators.required]],
   });
 
@@ -199,7 +211,7 @@ export class VendorApproveEditComponent implements OnInit{
     DataSecurityBreachesPresent:false,
     SiteVisitsPresent:false,
     Personal_Data_Purpose: [false,[Validators.requiredTrue]],
-    Contracted_Partner_Type_ID:0,
+    Contracted_Partner_Type_ID:1,
     DataProcessing_JointController_Agreement: [false,[Validators.requiredTrue]],
     Confidentiality_Importance_Highlighted:[false,[Validators.requiredTrue]],
     Contract_Audits_Provisions_Provided:[false,[Validators.requiredTrue]],
@@ -232,7 +244,7 @@ export class VendorApproveEditComponent implements OnInit{
     action: "",
     actionTime: new Date(),
   }
-
+  
   FileDetails:any = [];
   DueDilligenceData:any;
   ngOnInit() {
@@ -378,10 +390,11 @@ export class VendorApproveEditComponent implements OnInit{
             })
           }
           else {
+            this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID").setValue(1);
             this.FoundationaldocumentsFormGroup.get("BEECertificateDoc").disable();
             this.FoundationaldocumentsFormGroup.get("BEEValidatityDate").disable();
             this.InformationSecurityFormGroup.get("Personal_Data_Purpose").disable();
-            this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID").disable();
+            //this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID").disable();
             this.InformationSecurityFormGroup.get("DataProcessing_JointController_Agreement").disable();
             this.InformationSecurityFormGroup.get("Confidentiality_Importance_Highlighted").disable();
             this.InformationSecurityFormGroup.get("Contract_Audits_Provisions_Provided").disable();
@@ -399,6 +412,7 @@ export class VendorApproveEditComponent implements OnInit{
                 this.FoundationaldocumentsFormGroup.get("BEELevel")?.enable();
                 this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.enable();
                 this.FoundationaldocumentsFormGroup.get("BEECertificateDoc")?.enable();
+                
                 console.log(response)
                 this.FoundationaldocumentsFormGroup.get("BEELevel")?.setValue(response.beE_Level);
                 this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.setValue(response.date);
@@ -448,6 +462,7 @@ onPOPIChecked(stepper: MatStepper) {
   if(this.POPIChecked == false) {
     this.POPIChecked = true;
     this.setFocus(stepper)
+    this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID").setValue(1);
     this.InformationSecurityFormGroup.get("Personal_Data_Purpose").enable();
     this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID").enable();
     this.InformationSecurityFormGroup.get("DataProcessing_JointController_Agreement").enable();
@@ -465,7 +480,7 @@ onPOPIChecked(stepper: MatStepper) {
   {
     this.POPIChecked = false;
     this.InformationSecurityFormGroup.get("Personal_Data_Purpose").disable();
-    this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID").disable();
+    //this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID").disable();
     this.InformationSecurityFormGroup.get("DataProcessing_JointController_Agreement").disable();
     this.InformationSecurityFormGroup.get("Confidentiality_Importance_Highlighted").disable();
     this.InformationSecurityFormGroup.get("Contract_Audits_Provisions_Provided").disable();
@@ -522,13 +537,22 @@ onBEEChecked() {
   
   if(this.BEEChecked == false) {
     this.BEEChecked = true;
+    
     this.FoundationaldocumentsFormGroup.get("BEELevel")?.enable();
-    this.FoundationaldocumentsFormGroup.get("BEECertificateDoc").enable();
+    
     this.FoundationaldocumentsFormGroup.get("BEEValidatityDate").enable();
+    this.FoundationaldocumentsFormGroup.get("BEECertificateDoc").enable();
+
+    if(this.DueDilligenceDetails.b_BBEE_Certificate_Provided != true) {
+      this.FoundationaldocumentsFormGroup.get("BEECertificateDoc")?.addValidators(Validators.required);
+    }
+    
+
   }
   else if(this.BEEChecked == true) 
   {
     this.BEEChecked = false;
+    this.FoundationaldocumentsFormGroup.get("BEECertificateDoc")?.removeValidators;
     this.FoundationaldocumentsFormGroup.get("BEELevel")?.disable();
     this.FoundationaldocumentsFormGroup.get("BEECertificateDoc").disable();
     this.FoundationaldocumentsFormGroup.get("BEEValidatityDate").disable();
@@ -542,12 +566,11 @@ onBEEChecked() {
 
 
 Create() {
- 
   this.route.paramMap.subscribe({
     next: (paramater) => {
       
       let VendorID = paramater.get("VendorID");
-      
+
       if(this.FoundationaldocumentsFormGroup.get("BBBEECertificate")?.value == true && this.DueDilligenceData.b_BBEE_Certificate_Provided == true) {
        // this.VenBEEDetails.vendor = this.Vendor;
        
@@ -783,6 +806,28 @@ Create() {
         })
       }
 
+      if(this.DueDilligenceData.cyber_Insurance_Present == true || this.DueDilligenceData.other_Insurance_Required == true || this.DueDilligenceData.general_Liability_Insurance_Present == true || this.DueDilligenceData.proffesional_Indemnity_Insurance_Present == true) {
+        this.VendorService.GetAllVendorDetails().subscribe(result => {
+          let value:VendorDetails[] = result
+          let filterValue = value.find(x=> x.vendor_ID == Number(VendorID))
+          filterValue.insurance_Provided = true
+          this.VendorService.UpdateVendorDetails(filterValue.vendor_Detail_ID,filterValue).subscribe(result => {
+  
+          })
+        })
+      }
+      else {
+        this.VendorService.GetAllVendorDetails().subscribe(result => {
+          let value:VendorDetails[] = result
+          let filterValue = value.find(x=> x.vendor_ID == Number(VendorID))
+          filterValue.insurance_Provided = false
+          this.VendorService.UpdateVendorDetails(filterValue.vendor_Detail_ID,filterValue).subscribe(result => {
+  
+          })
+        })
+      }
+      
+
       //licensesorprofessional
       this.DueDilligenceDetails.licenses_Required= this.LicensesOrProfessionalAccreditationFormGroup.get("LicensesRequired")?.value
       this.DueDilligenceDetails.accreditation_Required = this.LicensesOrProfessionalAccreditationFormGroup.get("AccreditationRequired")?.value
@@ -812,7 +857,8 @@ Create() {
       this.VendorService.UpdateDueDiligence(this.DueDilligenceDetails.vendor_ID,this.DueDilligenceDetails).subscribe(response => {
         console.log(response)
         if(this.POPIChecked == true) {
-          this.POPIDetails.contracted_Partner_Type_ID = this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID")?.value
+          if(this.DueDilligenceData.popI_Present == true) {
+            this.POPIDetails.contracted_Partner_Type_ID = this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID")?.value
           this.POPIDetails.due_Diligence_ID = response.due_Diligence_ID
           this.POPIDetails.due_Dillegence = response
           this.POPIDetails.due_Dillegence.vendor = response.vendor
@@ -826,19 +872,34 @@ Create() {
           this.POPIDetails.contract_End_Data_Management_Provided = this.InformationSecurityFormGroup.get("Contract_End_Data_Management_Provided")?.value 
           this.POPIDetails.personal_Data_Processing_Details_Present = this.InformationSecurityFormGroup.get("Personal_Data_Processing_Details_Present")?.value 
           this.POPIDetails.processing_Activities_Certification_Held = this.InformationSecurityFormGroup.get("Processing_Activities_Certification_Held")?.value 
-          console.log(this.POPIDetails)
-          if(this.DueDilligenceData.popI_Present == true) {
             this.VendorService.UpdatePOPI(response.due_Diligence_ID,this.POPIDetails).subscribe(response => {console.log(response)})
           }
           else {
-            this.VendorService.GetPOPI(response.due_Diligence_ID).subscribe(response => {
-              console.log(response)
-              this.VendorService.DeletePOPI(response.popI_ID).subscribe(next => {
-                this.VendorService.AddPOPI(this.POPIDetails).subscribe(response => {console.log(response)})
-              })
-            })
+            this.POPIDetails.contracted_Partner_Type_ID = this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID")?.value
+          this.POPIDetails.due_Diligence_ID = response.due_Diligence_ID
+          this.POPIDetails.due_Dillegence = response
+          this.POPIDetails.due_Dillegence.vendor = response.vendor
+          this.POPIDetails.due_Dillegence.vendor.vendor_Status = response.vendor.vendor_Status
+          this.POPIDetails.personal_Data_Purpose = this.InformationSecurityFormGroup.get("Personal_Data_Purpose")?.value 
+          this.POPIDetails.dataProcessing_JointController_Agreement = this.InformationSecurityFormGroup.get("DataProcessing_JointController_Agreement")?.value 
+          this.POPIDetails.confidentiality_Importance_Highlighted = this.InformationSecurityFormGroup.get("Confidentiality_Importance_Highlighted")?.value 
+          this.POPIDetails.contract_Audits_Provisions_Provided = this.InformationSecurityFormGroup.get("Contract_Audits_Provisions_Provided")?.value 
+          this.POPIDetails.activity_Liability_Present = this.InformationSecurityFormGroup.get("Activity_Liability_Present")?.value 
+          this.POPIDetails.third_Party_Data_Processing_Provisioned = this.InformationSecurityFormGroup.get("Third_Party_Data_Processing_Provisioned")?.value 
+          this.POPIDetails.contract_End_Data_Management_Provided = this.InformationSecurityFormGroup.get("Contract_End_Data_Management_Provided")?.value 
+          this.POPIDetails.personal_Data_Processing_Details_Present = this.InformationSecurityFormGroup.get("Personal_Data_Processing_Details_Present")?.value 
+          this.POPIDetails.processing_Activities_Certification_Held = this.InformationSecurityFormGroup.get("Processing_Activities_Certification_Held")?.value 
+            this.VendorService.AddPOPI(this.POPIDetails).subscribe(response => {console.log(response)})
           }
           
+        }
+        else if(this.DueDilligenceData.popI_Present == true){
+          this.VendorService.GetPOPI(response.due_Diligence_ID).subscribe(response => {
+            console.log(response)
+            this.VendorService.DeletePOPI(response.popI_ID).subscribe(next => {
+              
+            })
+          })
         }  
       })
         
@@ -896,6 +957,14 @@ validationLinear() {
 
 
 
+
+
+
+
+openEditDueDillTab(): void {
+  const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+  window.open(userManualUrl, '_blank');
+}
 }
 
 

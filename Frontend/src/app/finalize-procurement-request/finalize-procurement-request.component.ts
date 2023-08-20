@@ -3,11 +3,21 @@ import { DataService } from '../DataService/data-service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Procurement_Request } from '../Shared/Procurement_Request';
+import { FinalizeProcReqIFrameComponent } from '../HelpIFrames/FinalizeProcReqIFrame/finalize-proc-req-iframe/finalize-proc-req-iframe.component';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-finalize-procurement-request',
   templateUrl: './finalize-procurement-request.component.html',
-  styleUrls: ['./finalize-procurement-request.component.css']
+  styleUrls: ['./finalize-procurement-request.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class FinalizeProcurementRequestComponent {
   ProcurementRequests: Procurement_Request[] = [];
@@ -53,5 +63,19 @@ export class FinalizeProcurementRequestComponent {
       default:
         return 'black'; // Default color if the status doesn't match any case
     }
+  }
+
+
+
+  openFPRIFrameTab(): void {
+    const dialogRef = this.Dialog.open(FinalizeProcReqIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
   }
 }

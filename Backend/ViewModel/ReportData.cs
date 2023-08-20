@@ -4,6 +4,12 @@ namespace ProcionAPI.ViewModel
 {
     public class ReportData
     {
-        public List<Consumable> Consumables { get; set; }
+        public List<ConsumableWithHistory> Consumables { get; set; }
+    }
+
+    public class ConsumableWithHistory
+    {
+        public Consumable Consumable { get; set; }
+        public List<Consumable_History> History { get; set; }
     }
 }

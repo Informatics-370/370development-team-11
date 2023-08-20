@@ -7,6 +7,7 @@ import { BudgetLine } from '../Shared/BudgetLine';
 import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { DeleteBudgetLineComponent } from '../delete-budget-line/delete-budget-line.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { BudgetLineIFrameComponent } from '../HelpIFrames/BudgetLineIFrame/budget-line-iframe/budget-line-iframe.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -76,6 +77,20 @@ export class ViewBudgetLinesComponent {
     });
     confirm.afterClosed().subscribe(result => {
       this.ngOnInit()
+    });
+  }
+
+
+
+  openBudgetLineIFrameTab(): void {
+    const dialogRef = this.dialog.open(BudgetLineIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
     });
   }
 }

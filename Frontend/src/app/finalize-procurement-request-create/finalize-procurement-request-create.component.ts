@@ -34,10 +34,22 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { AuditLog } from '../Shared/AuditLog';
 import { Access } from '../Shared/Access';
+
+
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-finalize-procurement-request-create',
   templateUrl: './finalize-procurement-request-create.component.html',
-  styleUrls: ['./finalize-procurement-request-create.component.css']
+  styleUrls: ['./finalize-procurement-request-create.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class FinalizeProcurementRequestCreateComponent {
 
@@ -239,6 +251,7 @@ export class FinalizeProcurementRequestCreateComponent {
     payment_Made: false,
     comment: "",
     proof_Of_Payment_Required: false,
+    itemReceived: false
   }
 
   Deposit: Deposit = {
@@ -332,12 +345,14 @@ export class FinalizeProcurementRequestCreateComponent {
 
   ActualAmountDisplay;
   TotalAmountDisplay;
+  User: String = "";
+  id: number = 0;
   constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder, private currencyPipe: CurrencyPipe, private sanitizer: DomSanitizer, private dialog: MatDialog) { }
 
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.GetProcurementDetails(id);
+    this.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.GetProcurementDetails(this.id);
     this.finalizationForm = this.formBuilder.group({
       mandateLimit: ['', [Validators.required]],
       total: ['', [Validators.required]],
@@ -350,63 +365,74 @@ export class FinalizeProcurementRequestCreateComponent {
       this.BudgetAllocationCode = response;
       console.log(this.BudgetAllocationCode)
     })
+
+    this.User = this.dataService.decodeUser(sessionStorage.getItem("token"))
+
+    this.dataService.GetUserByUsername(this.User.toString()).subscribe({
+      next: (Response) => {
+        this.usr = Response;
+      }
+    })
   }
 
   onSubmit(): void {
-    this.dataService.FinalizeProcurementRequest(this.ProcurementDetails.procurement_Details_ID).subscribe(result => {
-      let FolderCategory = "ProofOfPayment"
-      let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`
-      console.log(ProcurementRequest)
-      this.dataService.uploadProcureFile(FolderCategory, ProcurementRequest, this.file[1]).subscribe(response => {
-        this.ProofOfPayment.procurement_Details = result[0];
-        this.ProofOfPayment.procurement_Details_ID = result[0].procurement_Details_ID;
-        let Path: any = response
-        this.ProofOfPayment.proof_Of_Payment_Doc = Path.returnedPath.toString()
-        this.ProofOfPayment.procurement_Details.procurement_Request.user = this.Procurement_Request.user;
-        this.ProofOfPayment.procurement_Details.procurement_Request.vendor = this.Procurement_Request.vendor;
-        this.ProofOfPayment.procurement_Details.procurement_Request.requisition_Status = this.Procurement_Request.requisition_Status;
-        this.ProofOfPayment.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
-        this.ProofOfPayment.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category;
-        this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe();
+    let ProcurementRequest = `ProcurementDetails${this.id}`
+    let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString();
+    console.log(ProcurementRequest)
+    this.dataService.POPFileAdd(ProofName, this.file[0]).subscribe(response => {
 
-        this.log.action = "Procurement Request " + this.route.snapshot.paramMap.get('id') + " Finalised";
-        this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-        let test: any
-        test = new DatePipe('en-ZA');
-        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-        this.dataService.AuditLogAdd(this.log).subscribe({
-          next: (Log) => {
-            this.router.navigate(['/ViewBudgetAllocation']);
-          }
-        })
-      })
-      this.log.action = "Finalised procurement request for: " + this.Procurement_Request.name;
-      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-      let test: any
-      test = new DatePipe('en-ZA');
-      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-      this.dataService.AuditLogAdd(this.log).subscribe({
-        next: (Log) => {
-          var action = "CREATE";
-          var title = "CREATE SUCCESSFUL";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> FINALISED! </strong> successfully!");
+      console.log(response)
+      let Path: any = response.pathSaved.toString()
+      this.ProofOfPayment.proof_Of_Payment_Doc = Path;
+      this.ProofOfPayment.procurement_Details_ID = Number(this.id);
+      this.ProofOfPayment.procurement_Details.procurement_Request.user = this.usr;
+      this.ProofOfPayment.procurement_Details.procurement_Request.vendor = this.ProcurementDetails.procurement_Request.vendor;
+      this.ProofOfPayment.procurement_Details.procurement_Request.requisition_Status = this.ProcurementDetails.procurement_Request.requisition_Status;
+      this.ProofOfPayment.procurement_Details.budget_Line.budget_Allocation = this.ProcurementDetails.budget_Line.budget_Allocation
+      this.ProofOfPayment.procurement_Details.budget_Line.budget_Category = this.ProcurementDetails.budget_Line.budget_Category
+      this.ProofOfPayment.procurement_Details.budget_Line.account_Code = this.ProcurementDetails.budget_Line.account_Code
+      this.ProofOfPayment.procurement_Details.procurement_Request.name = this.ProcurementDetails.procurement_Request.name
+      this.ProofOfPayment.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
+      this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe({
+        next: (res) => {
+          this.dataService.FinalizeProcurementRequest(this.ProcurementDetails.procurement_Details_ID).subscribe(result => {
+            this.dataService.UpdateProcurementStatus(2, this.id).subscribe({
+              next: (Result) => {
+                this.log.action = "Finalised procurement request for: " + this.Procurement_Request.name;
+                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                let test: any
+                test = new DatePipe('en-ZA');
+                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                this.dataService.AuditLogAdd(this.log).subscribe({
+                  next: (Log) => {
+                    var action = "CREATE";
+                    var title = "CREATE SUCCESSFUL";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> FINALISED! </strong> successfully!");
 
-          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-            disableClose: true,
-            data: { action, title, message }
-          });
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
 
-          const duration = 1750;
-          setTimeout(() => {
-            dialogRef.close();
-            this.router.navigate(['/ViewBudgetAllocation']);
-          }, duration);
+                    const duration = 1750;
+                    setTimeout(() => {
+                      dialogRef.close();
+                      this.router.navigate(['/ViewBudgetAllocation']);
+                    }, duration);
+                  }
+                })
+              }
+            })
+
+          })
+
         }
-      })
+      });
     })
 
+
   }
-  file: File[] = [null, null];
+  file: File[] = [null];
   uploadFile(i: number, event: any) {
     this.file[i] = event.target.files[0];
     console.log(this.file[i])
@@ -419,6 +445,7 @@ export class FinalizeProcurementRequestCreateComponent {
   GetProcurementDetails(id: number) {
     this.dataService.GetProcurementDetailsByID(id).subscribe(result => {
       this.ProcurementDetails = result;
+      console.log(this.ProcurementDetails.procurement_Details_ID)
       this.ActualAmountDisplay = this.ProcurementDetails.budget_Line.actualAmt;
       this.TotalAmountDisplay = this.ProcurementDetails.total_Amount;
       this.ActualAmountDisplay = this.currencyPipe.transform(this.ActualAmountDisplay, 'R');
@@ -429,5 +456,14 @@ export class FinalizeProcurementRequestCreateComponent {
 
   public myError = (controlName: string, errorName: string) => {
     return this.finalizationForm.controls[controlName].hasError(errorName);
+  }
+
+
+
+
+
+  openFinalizeProcReqTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

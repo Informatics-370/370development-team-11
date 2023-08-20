@@ -6,10 +6,19 @@ import { BudgetCategory } from '../Shared/BudgetCategory';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-edit-budget-category',
   templateUrl: './edit-budget-category.component.html',
-  styleUrls: ['./edit-budget-category.component.css']
+  styleUrls: ['./edit-budget-category.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class EditBudgetCategoryComponent {
 
@@ -76,4 +85,11 @@ export class EditBudgetCategoryComponent {
     return this.budgetCategoryForm.controls[controlName].hasError(errorName);
   }
 
+
+
+
+  openEditBCTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }

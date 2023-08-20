@@ -10,15 +10,29 @@ import { UploadPayementFileComponent } from '../upload-payement-file/upload-paye
 import { UploadInvoiceComponent } from '../upload-invoice/upload-invoice.component';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { Procurement_Details } from '../Shared/ProcurementDetails';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { ProcDetailIFrameComponent } from '../HelpIFrames/ProcDetailIFrame/proc-detail-iframe/proc-detail-iframe.component';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-view-procurement-details',
   templateUrl: './view-procurement-details.component.html',
-  styleUrls: ['./view-procurement-details.component.css']
+  styleUrls: ['./view-procurement-details.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
-export class ViewProcurementDetailsComponent {
-  ProcurementRequests: Procurement_Request[] = [];
-  SearchedPRequests: Procurement_Request[] = [];
+export class ViewProcurementDetailsComponent implements OnInit {
+  ProcurementRequests: Procurement_Details[] = [];
+  SearchedPRequests: Procurement_Details[] = [];
   displayedColumns: string[] = ['Name', 'Description', 'Vendor', 'Status', 'POP', 'Inv', 'View'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
@@ -31,19 +45,17 @@ export class ViewProcurementDetailsComponent {
   iCanViewPenPro: string = "false";
   canViewPenPro: string;
 
-  // fileToUpload: File | null = null;
-  // files: any[] = [''];
-  // sPath = "";
 
   ngOnInit() {
+    this.GetProcurementDetails();
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
     this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
     this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin" || this.iRole == "MD") {
-      this.canViewFlagPro = "true";
-      this.canViewPenPro = "true";
-    }
+    // if (this.iRole == "Admin" || this.iRole == "MD") {
+    //   this.canViewFlagPro = "true";
+    //   this.canViewPenPro = "true";
+    // }
 
     if (this.iCanViewFlagPro == "true") {
       this.canViewFlagPro = "true";
@@ -52,14 +64,11 @@ export class ViewProcurementDetailsComponent {
     if (this.iCanViewPenPro == "true") {
       this.canViewPenPro = "true";
     }
-
-    this.GetProcurementDetails();
   }
 
   GetProcurementDetails() {
     this.dataService.GetProcurementRequestDetails().subscribe(result => {
       this.ProcurementRequests = result;
-      console.log(result)
       if (result) {
         hideloader();
       }
@@ -80,6 +89,7 @@ export class ViewProcurementDetailsComponent {
 
     this.Dialog.afterAllClosed.subscribe({
       next: (response) => {
+        this.ngOnInit()
         console.log(response)
       }
     })
@@ -94,6 +104,7 @@ export class ViewProcurementDetailsComponent {
 
     this.Dialog.afterAllClosed.subscribe({
       next: (response) => {
+        this.ngOnInit()
         console.log(response)
       }
     })
@@ -102,26 +113,22 @@ export class ViewProcurementDetailsComponent {
     const Searchterm = this.searchWord.toLocaleLowerCase();
 
     if (Searchterm) {
-      this.SearchedPRequests = this.ProcurementRequests.filter(PR => PR.name.toLocaleLowerCase().includes(Searchterm))
+      this.SearchedPRequests = this.ProcurementRequests.filter(PR => PR.procurement_Request.name.toLocaleLowerCase().includes(Searchterm))
     }
     else if (Searchterm == "") {
       this.SearchedPRequests = [...this.ProcurementRequests];
     }
   }
 
-  // onFileUpload(event: any) {
-  //   this.fileToUpload = event.target.files[0];
-  //   if (this.fileToUpload != null) {
-  //     this.files[0] = this.fileToUpload;
-  //   }
-  // }
 
   getStatusColor(status: string): string {
     switch (status.toLowerCase()) {
-      case 'finished':
-        return 'blue'; // Set the color you want for 'Pending'
+      case 'done':
+        return 'green'; // Set the color you want for 'Pending'
       case 'awaiting delivery':
-        return 'orange'; // Set the color you want for 'Approved'
+        return 'orange';
+      case 'item received and checked':
+        return 'blue'; // Set the color you want for 'Approved'
       default:
         return 'black'; // Default color if the status doesn't match any case
     }
@@ -145,4 +152,18 @@ export class ViewProcurementDetailsComponent {
     }
   }
 
+
+
+
+  openPRDIFrameTab(): void {
+    const dialogRef = this.Dialog.open(ProcDetailIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
+  }
 }

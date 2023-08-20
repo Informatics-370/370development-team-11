@@ -41,6 +41,15 @@ import { Observable } from 'rxjs';
 import { NgFor } from '@angular/common';
 import { Access } from '../Shared/Access';
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 interface AccountCodeDisplay {
   AccountCodeValue: number;
   AccountCodeName: string;
@@ -57,7 +66,8 @@ interface AccountCodeDisplayGroup {
 @Component({
   selector: 'app-place-procurement-request-create-details',
   templateUrl: './place-procurement-request-create-details.component.html',
-  styleUrls: ['./place-procurement-request-create-details.component.css']
+  styleUrls: ['./place-procurement-request-create-details.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
@@ -261,6 +271,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     payment_Made: false,
     comment: "",
     proof_Of_Payment_Required: false,
+    itemReceived: false
   }
 
   Deposit: Deposit = {
@@ -589,6 +600,37 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     console.log(this.file[i])
   }
 
+  Validation() {
+    let maxValue = this.ConsumableItems.filter(y=> y.consumable_ID == Number(this.ProcurementFormGroup.get("ConsumableItem").value))
+    let value =  Number(maxValue[0].maximum_Reorder_Quantity) - Number(maxValue[0].minimum_Reorder_Quantity)
+    if(Number(this.ProcurementFormGroup.get("ConsumableQuantity").value) <= value) {
+      this.Create();
+    }
+    else {
+      var action = "ERROR";
+      var title = "CONSUMABLE QUANTITY EXCEEDED";
+      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Consumable Quantity has exceeded max limit of <strong style='color:red'>" + value + "</strong>!");
+
+      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+        disableClose: true,
+        data: { action, title, message }
+      });
+
+      const duration = 1750;
+      setTimeout(() => {
+        dialogRef.close();
+      }, duration);
+    }
+
+
+
+    console.log(Number(maxValue[0].maximum_Reorder_Quantity))
+    this.ProcurementFormGroup.get("ConsumableItem").setValidators(Validators.max(Number(maxValue[0].maximum_Reorder_Quantity)))
+  }
+
+
+
+
 
   Create() {
     let dateChange: any
@@ -625,7 +667,6 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
       this.VendorNotification.name = this.Procurement_Request.name + " has been flagged for exceeded mandate limit";
       this.VendorNotification.user_ID = 1;
       this.ProcureService.ProcurementAddNotification(this.VendorNotification).subscribe();
-
     }
     else {
       this.ProcurementDetails.procurement_Status_ID = 1;
@@ -640,6 +681,9 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     console.log(this.ProcurementDetails)
     this.ProcureService.AddProcurementDetails(this.ProcurementDetails).subscribe(result => {
       console.log(result[0])
+      if(result[0].procurement_Status_ID != 3) {
+        this.ProcureService.UpdateBudgetLineAmount(this.ProcurementDetails.total_Amount,result[0].budget_Line).subscribe();
+      }
       if (this.ProcurementDetails.deposit_Required == true) {
         this.Deposit.deposit_Amount = this.ProcurementFormGroup.get("DepositAmount")?.value;
         this.Deposit.amount_Outstanding = (Number(this.ProcurementFormGroup.get("TotalAmount")?.value) - Number(this.ProcurementFormGroup.get("DepositAmount")?.value))
@@ -786,6 +830,15 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     })
   }
 
+
+
+
+
+
+  openPPRDTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 
 }
 

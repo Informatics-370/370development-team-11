@@ -1,7 +1,9 @@
 <div class="content">
   <div style="text-align: left;position: relative;width: 500px;">
 <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
-  Due Diligence Checklist
+  <span style="flex: 1; text-align: center;">Due Diligence Checklist</span>
+  <mat-icon (click)="openAddDueDillTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+  style="font-size:30pt; height: 37px; width: 37px; "  [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
 </h1>
 <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;width: 330px;">Please fill in the following details:</label>
 </div>
@@ -85,7 +87,7 @@
                   </div>
                   <div class="col-5">
                     <mat-form-field appearance="outline">
-                      <input matInput type="number" formControlName="BEELevel" max="5" min="1" >
+                      <input matInput type="number" formControlName="BEELevel" max="8" min="1" >
                     </mat-form-field> 
                   </div>
                 </div>

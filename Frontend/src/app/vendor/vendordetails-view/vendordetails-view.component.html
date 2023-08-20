@@ -5,6 +5,8 @@
        
         <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
           Vendor Details
+          <mat-icon (click)="openVendorDetailsTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+          style="font-size:30pt; height: 40px; width: 37px; "  [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
         </h1> 
       </div>
       
@@ -157,14 +159,32 @@
     <td *ngIf="VendorDetail.signed_Agreement_Provided == false">None provided</td>
   </tr>
   <br>
-  <tr >
-    <td><label for="file" style="margin-right: 1%;">Insurance Cover document:</label></td>
-    <td  *ngIf="VendorDetail.insurance_Provided == true">  
-      <a href="{{FileDetails[4].FileURL}}" download="{{FileDetails[4].FileName}}" matTooltip="This will download the Insurance Cover document on your device">{{FileDetails[4].FileName}}</a>  
-    </td>
-    <td  *ngIf="VendorDetail.insurance_Provided == false">None provided</td>
+  <tr *ngIf="FileDetails[4].FileName != ''">
+    <td><label>General liability Insurance Document:</label></td>
+    <td><a href="{{FileDetails[4].FileURL}}" download="{{FileDetails[4].FileName}}"
+        matTooltip="This will download the General liability Insurance Document on your device">{{FileDetails[4].FileName}}</a> </td>
   </tr>
-  <br>
+  <br *ngIf="FileDetails[4].FileName != ''">
+  <tr *ngIf="FileDetails[5].FileName != ''">
+    <td><label>Cyber Insurance Document:</label></td>
+    <td><a href="{{FileDetails[5].FileURL}}" download="{{FileDetails[5].FileName}}"
+        matTooltip="This will download the Cyber Insurance Document on your device">{{FileDetails[5].FileName}}</a> </td>
+  </tr>
+  <br *ngIf="FileDetails[5].FileName != ''">
+  <tr *ngIf="FileDetails[6].FileName != ''">
+    <td><label>Professional Indemnity Insurance Document:</label></td>
+    <td>
+      <a href="{{FileDetails[6].FileURL}}" download="{{FileDetails[6].FileName}}"
+        matTooltip="This will download the Professional Indemnity Insurance Document on your device">{{FileDetails[6].FileName}}</a> 
+      </td>
+  </tr>
+  <br *ngIf="FileDetails[6].FileName != ''">
+  <tr *ngIf="FileDetails[7].FileName != ''">
+    <td><label>Other specific insurance Document:</label></td>
+    <td><a href="{{FileDetails[7].FileURL}}" download="{{FileDetails[7].FileName}}"
+        matTooltip="This will download the Other specific insurance Document on your device">{{FileDetails[7].FileName}}</a> </td>
+  </tr>
+  <br *ngIf="FileDetails[7].FileName != ''">
   <tr >
      <td><label for="file" style="margin-right: 1%;" >Payment Terms: </label></td>
      <td *ngIf="VendorDetail.payment_Terms_Provided == true">  
@@ -184,7 +204,7 @@
   <tr>
      <td><label for="file" style="margin-right: 1%;" >License Or Accreditation document: </label></td>
      <td *ngIf="VendorDetail.license_Num_Provided == true">  
-      <a href="{{FileDetails[5].FileURL}}" download="{{FileDetails[5].FileName}}" matTooltip="This will download the License Or Accreditation document on your device">{{FileDetails[5].FileName}}</a> 
+      <a href="{{FileDetails[8].FileURL}}" download="{{FileDetails[8].FileName}}" matTooltip="This will download the License Or Accreditation document on your device">{{FileDetails[8].FileName}}</a> 
      </td>
      <td *ngIf="VendorDetail.license_Num_Provided == false">None provided</td>
   </tr>
@@ -250,14 +270,7 @@
   <tr>
     <td><label for="file" style="margin-right: 1%;">Bank Stamped Confirmation Letter: </label></td>
     <td >  
-      <a href="{{FileDetails[6].FileURL}}" download="{{FileDetails[6].FileName}}" matTooltip="This will download the Bank Stamped Confirmation Letter on your device">{{FileDetails[6].FileName}}</a> 
-    </td>
-  </tr>
-  <br>
-  <tr>
-    <td><label for="file" style="margin-right: 1%;">Date Accepted: </label></td>
-    <td >  
-        {{VendorDetail.dateAccepted  }}
+      <a href="{{FileDetails[9].FileURL}}" download="{{FileDetails[9].FileName}}" matTooltip="This will download the Bank Stamped Confirmation Letter on your device">{{FileDetails[9].FileName}}</a> 
     </td>
   </tr>
   </table> 
@@ -280,7 +293,7 @@
   <tr *ngIf="this.BeeDetails != undefined">
       <td><label  for="name" style="margin-right: 1%;">BEE Certificate:</label></td>
       <td> 
-        <a href="{{FileDetails[7].FileURL}}" download="{{FileDetails[7].FileName}}">{{FileDetails[7].FileName}}</a> 
+        <a href="{{FileDetails[10].FileURL}}" download="{{FileDetails[10].FileName}}">{{FileDetails[10].FileName}}</a> 
       </td>
   </tr>
   <br *ngIf="this.BeeDetails != undefined">
@@ -294,10 +307,10 @@
 <tr *ngIf="this.BeeDetails == undefined">
   <td><label style="margin-right: 1%;">Vendor does not have any BEE Details</label></td>
   <td >  
-    <button mat-raised-button style="width: 155px;background-color: #94CC5B;" > Add BEE Details </button>
+    <button mat-raised-button style="width: 155px;background-color: #94CC5B;" routerLink="/vendor-approve-edit/{{VendorDetail.vendor_ID}}" > Add BEE Details </button>
   </td>
 </tr>
-<br>
+<br *ngIf="this.BeeDetails == undefined">
 <tr>
   <td><label for="file" style="margin-right: 1%;">Due Dilligence Checklist</label></td>
   <td >  

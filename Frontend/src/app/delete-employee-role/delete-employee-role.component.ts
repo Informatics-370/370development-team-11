@@ -7,10 +7,18 @@ import { Role } from '../Shared/EmployeeRole';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-delete-employee-role',
   templateUrl: './delete-employee-role.component.html',
-  styleUrls: ['./delete-employee-role.component.css']
+  styleUrls: ['./delete-employee-role.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class DeleteEmployeeRoleComponent implements OnInit {
 
@@ -76,5 +84,12 @@ export class DeleteEmployeeRoleComponent implements OnInit {
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+
+
+  openDeleteRoleTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

@@ -17,6 +17,7 @@ import { DatePipe } from '@angular/common';
 import { Procurement_Details } from '../Shared/ProcurementDetails';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { ConsumableIFrameComponent } from '../HelpIFrames/ConsumableIFrame/consumable-iframe/consumable-iframe.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -77,17 +78,28 @@ export class ViewConsumableComponent implements OnInit {
 
   ExportInventoryDetails() {
     let docDefinition = {
-      content: [
-        {
-          table: {
-            headerRows: 0,
-            widths: ['*', 'auto'],
-            body: [
-              [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 150, height: 50, margin: [5, 5, 0, 5] }, {}],
-            ]
-          },
-          layout: 'noBorders', margin: [0, 0, 0, 10]
+      footer:
+        function (currentPage, pageCount) {
+          return {
+            text: currentPage.toString() + ' of ' + pageCount,
+            alignment: 'center',
+            fontSize: 7
+          };
+
         },
+      header: {
+        margin: [0, 0, 0, 150],
+        table: {
+          headerRows: 0,
+          widths: ['*', 'auto'],
+          body: [
+            [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
+          ]
+        },
+        layout: 'noBorders',
+
+      },
+      content: [
         {
           text: 'Consumable Inventory Details Report',
           fontSize: 20,
@@ -128,7 +140,7 @@ export class ViewConsumableComponent implements OnInit {
               { text: 'On-Hand', fillColor: '#244688', color: "white" }],
               ...this.Consumables.map(p => ([p.name, p.consumable_Category.name, p.minimum_Reorder_Quantity, p.maximum_Reorder_Quantity, p.on_Hand]))
             ],
-            // Add space after the table
+
             margin: [0, 10]
           }
         },
@@ -146,6 +158,7 @@ export class ViewConsumableComponent implements OnInit {
           margin: [0, 10]
         }
       ],
+      pageMargins: [40, 80, 40, 60],
       styles: {
         sectionHeader: {
           bold: true,
@@ -244,5 +257,20 @@ export class ViewConsumableComponent implements OnInit {
 
       }
     })
+  }
+
+
+
+
+  openConsumableIFrameTab(): void {
+    const dialogRef = this.Dialog.open(ConsumableIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
   }
 }

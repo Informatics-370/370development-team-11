@@ -11,6 +11,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { MatPaginator } from '@angular/material/paginator';
+import { ConsumableCategoryIFrameComponent } from '../HelpIFrames/ConsumableCategoryIFrame/consumable-category-iframe/consumable-category-iframe.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -133,4 +134,18 @@ export class ViewConsumableCategoryComponent implements OnInit {
 
   }
 
+
+
+
+  openConsumableCategoryIFrameTab(): void {
+    const dialogRef = this.Dialog.open(ConsumableCategoryIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
+  }
 }

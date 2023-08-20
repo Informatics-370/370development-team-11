@@ -1,0 +1,25 @@
+<form [formGroup]="yearPick" style="width: 400px;">
+    <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;">SELECT FILTER CRITERIA
+    </h1>
+    <div align="center">
+        <h2>Please provide the following details:</h2>
+        <div style="display: inline-flex;flex-direction: column;">
+            <mat-form-field>
+                <mat-label>Enter a year</mat-label>
+                <input matInput placeholder="YYYY" [(ngModel)]="Year.year" required [matDatepicker]="datePicker"
+                    formControlName="year" [formGroup]="yearPick" id="year" />
+                <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+                <mat-datepicker #datePicker color="primary" startView="multi-year"
+                    (yearSelected)="onsYearSelected($event, datePicker)"></mat-datepicker>
+
+                <mat-error *ngIf="yearPick.controls.year.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div mat-dialog-actions align="center">
+        <button mat-raised-button (click)="onConfirm(data.ID, data.sDownload)"
+            style="color: white; background-color: #94CC5B;" [disabled]="!yearPick.valid">Generate</button>
+        <button mat-raised-button (click)="onCancel()" style="color: white; background-color: #244688;">Cancel</button>
+    </div>
+
+</form>

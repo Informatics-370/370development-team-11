@@ -8,10 +8,19 @@ import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notifi
 import { FormBuilder } from '@angular/forms';
 import { HttpEventType } from '@angular/common/http';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-restore-dialog',
   templateUrl: './restore-dialog.component.html',
-  styleUrls: ['./restore-dialog.component.css']
+  styleUrls: ['./restore-dialog.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class RestoreDialogComponent {
   isLoading: boolean;
@@ -81,5 +90,12 @@ export class RestoreDialogComponent {
 
   onCancel(): void {
     this.MydialogRef.close();
+  }
+
+
+
+  openRestoreTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

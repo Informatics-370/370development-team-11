@@ -12,10 +12,19 @@ import { Onboard_Status } from 'src/app/Shared/OnboardStatus';
 import { VendorStatus } from 'src/app/Shared/VendorStatus';
 
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-request-delete',
   templateUrl: './request-delete.component.html',
-  styleUrls: ['./request-delete.component.css']
+  styleUrls: ['./request-delete.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class RequestDeleteComponent {
 
@@ -241,4 +250,12 @@ export class RequestDeleteComponent {
     this.dialogRef.close();
   }
 
+
+
+
+
+  openDeleteOnboardRequestTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }

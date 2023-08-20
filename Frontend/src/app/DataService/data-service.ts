@@ -57,6 +57,7 @@ import { BEESpentReportVM } from '../Shared/BEESpentReportVM';
 import { VendorSpentReport } from '../Shared/VendorSpentReport';
 import * as FileSaver from 'file-saver';
 import { ReportData } from '../Shared/ConsumableReport';
+import { Procurement_Invoice } from '../Shared/Procurement_Invoice';
 
 @Injectable({
   providedIn: 'root'
@@ -70,6 +71,23 @@ export class DataService {
       ContentType: 'application/json'
     })
   }
+
+  filter = new Subject<{ startDate: string, endDate: string }>();
+  yearFilter = new Subject<string>();
+
+  dialogClosedSource = new Subject<void>();
+  dialogClosed$ = this.dialogClosedSource.asObservable();
+
+  yearDialogClosedSource = new Subject<void>();
+  yearDialogClosed$ = this.yearDialogClosedSource.asObservable();
+
+  yearDialogClosed2Source = new Subject<void>();
+  yearDialogClosed2$ = this.yearDialogClosed2Source.asObservable();
+
+
+
+  filter$ = this.filter.asObservable();
+  yearFilter$ = this.yearFilter.asObservable();
 
   constructor(private httpClient: HttpClient) { }
   //--------------------------------------------------------------------------------------Consumables--------------------------------------------------------------------------------------
@@ -633,6 +651,8 @@ export class DataService {
   }
 
   EditUser(usr: User, userID: number) {
+    console.log(usr)
+
     return this.httpClient.put<User>(`${this.apiUrl}User/EditUser/` + userID, usr, this.httpOptions)
   }
 
@@ -1254,6 +1274,9 @@ export class DataService {
   GetProcurementRequests(): Observable<any> {
     return this.httpClient.get<Procurement_Request[]>(`${this.apiUrl}ProcurementRequest/GetProcurementRequests`).pipe(map(result => result))
   }
+  GetProcurementRequestsForUser(Username: String): Observable<any> {
+    return this.httpClient.get<Procurement_Request[]>(`${this.apiUrl}ProcurementRequest/GetProcurementRequestsPerUser/` + Username).pipe(map(result => result))
+  }
 
   AddProcurementRequest(AddProcurementRequest: Procurement_Request) {
     return this.httpClient.post<Procurement_Request>(`${this.apiUrl}ProcurementRequest/CreateProcurementRequest`, AddProcurementRequest).pipe(map(result => result))
@@ -1468,6 +1491,9 @@ export class DataService {
     return this.httpClient.get<Asset[]>(`${this.apiUrl}ProcurementDetails/getAssets`, this.httpOptions).pipe(map(result => result))
   }
 
+  UpdateBudgetLineAmount(ActualAmount: Number, budget_Line: BudgetLine): Observable<any> {
+    return this.httpClient.put<BudgetLine>(`${this.apiUrl}ProcurementDetails/UpdateBudgetLineAmount/${ActualAmount}`, budget_Line, this.httpOptions).pipe(map(result => result))
+  }
   //----------------------------------------------------------------------Reports-----------------------------------------------------------------------------
 
   getBEESpendReport(StartDate: Date, EndDate: Date): Observable<any> {
@@ -1490,8 +1516,8 @@ export class DataService {
     return this.httpClient.get<any>(`${this.apiUrl}BudgetAllocation/GetVarianceByDepartment`);
   }
 
-  GetReportData(startDate: Date, endDate: Date): Observable<any> {
-    return this.httpClient.get<any>(`${this.apiUrl}Consumable/GetConsumableManagementReport?startDate=${startDate}&endDate=${endDate}`);
+  GetReportData(startDate: string, endDate: string): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}Consumable/GetConsumableManagementReport/${startDate}/${endDate}`);
   }
 
   ValidateConsumableToDelete(ID: Number): Observable<any> {
@@ -1501,6 +1527,50 @@ export class DataService {
   ValidatePRRequestDelete(ProcurementRequestID: Number): Observable<any> {
     return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementRequest/ValidatePRRequestDelete/${ProcurementRequestID}`).pipe(map(result => result))
   }
+
+  UpdateProcurementStatus(StatusID: Number, ProcurementID: Number): Observable<any> {
+    return this.httpClient.put(`${this.apiUrl}ProcurementDetails/UpdateProcurementDetailsStatus/${StatusID}` + "/" + ProcurementID, this.httpOptions).pipe(map(result => result))
+  }
+
+  UpdatePaymentStatus(StatusID: Number, ProcurementID: Number): Observable<any> {
+    return this.httpClient.put(`${this.apiUrl}ProcurementDetails/UpdatePaymentStatus/${StatusID}` + "/" + ProcurementID, this.httpOptions).pipe(map(result => result))
+  }
+
+  AddInvoice(AddINV: Procurement_Invoice): Observable<any> {
+    return this.httpClient.post<Proof_Of_Payment>(`${this.apiUrl}ProcurementDetails/AddInvoice`, AddINV, this.httpOptions).pipe(map(result => result))
+  }
+  GetMonthlyBudgetDataForCategory(year: Number): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}BudgetAllocation/GetMonthlyBudgetData/${year}`);
+  }
+
+  GetYearlyTotalsForCategory(year: Number): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}BudgetAllocation/GetYearlyTotalsForCategory/${year}`);
+  }
+
+  GetMonthlyTotals(year: Number): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}BudgetAllocation/GetMonthlyTotals/${year}`);
+  }
+
+  setFilter(newFilter: { startDate: string, endDate: string }) {
+    this.filter.next(newFilter);
+  }
+
+  setYearFilter(year: string) {
+    this.yearFilter.next(year);
+  }
+  notifyDialogClosed() {
+    this.dialogClosedSource.next();
+  }
+
+  notifyYearDialogClosed() {
+    this.yearDialogClosedSource.next();
+  }
+
+  notifyYearDialogClosed2() {
+    this.yearDialogClosed2Source.next();
+  }
+
+
 }
 
 

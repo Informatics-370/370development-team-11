@@ -6,7 +6,7 @@ import { DeleteAdminComponent } from '../delete-admin/delete-admin.component';
 import { Admin } from '../Shared/Admin';
 import { DataService } from '../DataService/data-service';
 import { MatTableDataSource } from '@angular/material/table';
-import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+
 import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
 import { Access } from '../Shared/Access';
@@ -14,7 +14,13 @@ import { Role } from '../Shared/EmployeeRole';
 import { User } from '../Shared/User';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+import { AdminIFrameComponent } from '../HelpIFrames/AdminIFrame/admin-iframe/admin-iframe.component';
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { MainNavComponent } from '../main-nav/main-nav.component';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -25,7 +31,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-admin',
   templateUrl: './view-admin.component.html',
   styleUrls: ['./view-admin.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }, MainNavComponent]
 })
 export class ViewAdminComponent implements OnInit {
   displayedColumns: string[] = ['name', 'surname', 'email', 'phone', 'role', 'action', 'delete'];
@@ -67,7 +73,7 @@ export class ViewAdminComponent implements OnInit {
     role: this.rl
   }
 
-  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer, private nav: MainNavComponent) { }
 
   Admins: Admin[] = [];
   SearchedAdmin: Admin[] = [];
@@ -78,6 +84,7 @@ export class ViewAdminComponent implements OnInit {
   rAdmin: string;
 
   ngOnInit() {
+    this.nav.reload();
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
     if (this.iRole == "Admin" || this.iRole == "MD") {
@@ -86,6 +93,7 @@ export class ViewAdminComponent implements OnInit {
 
     this.RoleToUse = localStorage.getItem("Role")
     this.GetAdmins();
+    
   }
 
   search() {
@@ -279,6 +287,18 @@ export class ViewAdminComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  openAdminIFrameTab(): void {
+    const dialogRef = this.dialog.open(AdminIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
     });
   }
 }

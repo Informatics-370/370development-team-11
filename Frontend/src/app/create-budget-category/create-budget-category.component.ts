@@ -9,10 +9,19 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-create-budget-category',
   templateUrl: './create-budget-category.component.html',
-  styleUrls: ['./create-budget-category.component.css']
+  styleUrls: ['./create-budget-category.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class CreateBudgetCategoryComponent {
   budgetCategory: BudgetCategory = {
@@ -108,5 +117,11 @@ export class CreateBudgetCategoryComponent {
 
   public myError = (controlName: string, errorName: string) => {
     return this.budgetCategoryForm.controls[controlName].hasError(errorName);
+  }
+
+
+  openCreateBCTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

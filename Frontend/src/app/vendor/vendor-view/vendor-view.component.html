@@ -14,6 +14,8 @@
       
       <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
         Manage Vendor
+        <mat-icon (click)="openManageVendorIFrameTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+        style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
       </h1>
       
       <div mat-list-item style="margin-left: 1%; margin-top:1%; display: flex;  align-items: center; ">
@@ -48,19 +50,17 @@
                 <td mat-cell *matCellDef="let element"> {{element.telephone_Num}} </td>
             </ng-container>
 
+            <ng-container matColumnDef="Date">
+              <th mat-header-cell *matHeaderCellDef style="color: white; font-weight: 600;"> Date Created </th>
+                <td mat-cell *matCellDef="let element"> {{element.dateAccepted }} </td>
+            </ng-container>
+
             <ng-container matColumnDef="View">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let element" style="width:100px;">
                 <button mat-raised-button routerLink="/vendororderdetails-view/{{element.vendor_Detail_ID}}" style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;background-color: #94CC5B;" matTooltip="This will direct you to view the Vendor Details page, with the following details: Company contact information, Overview, Bank details, Update and Delete button, for this specific Vendor"><mat-icon>search</mat-icon>View</button>
               </td>
             </ng-container>
-    
-            <!-- <ng-container matColumnDef="delete">
-              <th mat-header-cell *matHeaderCellDef></th>
-              <td mat-cell *matCellDef="let element" style="width:140px;">
-                <button mat-raised-button style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 110px; margin-top: 0.5%;"><mat-icon matPrefix style="margin-right:10%;">delete</mat-icon>Delete</button>
-              </td>
-            </ng-container> -->
           
             <tr mat-header-row *matHeaderRowDef="displayedColumns" style="background-color:#244688;"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

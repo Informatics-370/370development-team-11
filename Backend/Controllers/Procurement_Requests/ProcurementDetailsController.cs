@@ -103,8 +103,25 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 var results = await _ProcurementDetailsRepository.AddProofOfPaymentAsync(AddPOP);
                 return Ok(results);
             }
-            catch(Exception)
+            catch(Exception  ex)
             {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPost]
+        [Route("AddInvoice")]
+        public async Task<IActionResult> AddInvoice(Procurement_Invoice AddINV)
+        {
+            try
+            {
+                var results = await _ProcurementDetailsRepository.AddInvoiceAsync(AddINV);
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
@@ -677,6 +694,52 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             catch (Exception)
             {
 
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+        [HttpPut]
+        [Route("UpdateProcurementDetailsStatus/{StatusID}/{ProcurementID}")]
+        public async Task<IActionResult> UpdateProcurementRequestStatus(int StatusID, int ProcurementID)
+        {
+            try
+            {
+                var results = await _ProcurementDetailsRepository.UpdateProcurementDetailsStatusAsync(StatusID, ProcurementID);
+                return Ok(results);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateBudgetLineAmount/{ActualAmount}")]
+
+        public async Task<IActionResult> UpdateBudgetLineAmount(decimal ActualAmount, Budget_Line budget_Line)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.UpdateBudgetLineAmountAsync(budget_Line, ActualAmount);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdatePaymentStatus/{StatusID}/{ProcurementID}")]
+        public async Task<IActionResult> UpdatePaymentStatus(int StatusID, int ProcurementID)
+        {
+            try
+            {
+                var results = await _ProcurementDetailsRepository.UpdatePaymentStatusAsync(StatusID, ProcurementID);
+                return Ok(results);
+            }
+            catch (Exception)
+            {
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }

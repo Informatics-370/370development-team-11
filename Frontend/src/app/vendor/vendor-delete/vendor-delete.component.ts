@@ -20,10 +20,18 @@ import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 import { VendorOnboardRequest } from 'src/app/Shared/VendorOnboardRequest';
 import { VendorStatus } from 'src/app/Shared/VendorStatus';
 
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-vendor-delete',
   templateUrl: './vendor-delete.component.html',
-  styleUrls: ['./vendor-delete.component.css']
+  styleUrls: ['./vendor-delete.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class VendorDeleteComponent {
 
@@ -203,9 +211,7 @@ OnboardRequestDetails: any[] = [];
               if(this.VendorDetail.signed_Agreement_Provided == true) {
                 this.getAgreement(this.VendorDetail.vendor_Detail_ID)
               }
-              if(this.VendorDetail.insurance_Provided == true) {
-                this.getInsurance(this.VendorDetail.vendor_Detail_ID)
-              }
+
               if(this.VendorDetail.payment_Terms_Provided == true) {
                 this.getPaymentTerms(this.VendorDetail.vendor_Detail_ID)
               }
@@ -265,13 +271,6 @@ OnboardRequestDetails: any[] = [];
       fileName =  this.FileDetails[3].FileName
       this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
       this.VendorService.DeleteAgreementByID(this.VendorAgreement.agreement_ID).subscribe(response => {console.log(response)})
-    }
-    if(this.VendorDetail.insurance_Provided == true) {
-      FolderCategory = "InsuranceCover";
-      VendorNo = "Vendor" + this.Vendor.vendor_ID
-      fileName =  this.FileDetails[4].FileName
-      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
-     // this.VendorService.DeleteInsuranceByID(this.VendorInsurance.insurance_ID).subscribe(response => {console.log(response)})
     }
     if(this.VendorDetail.payment_Terms_Provided == true) {
       this.VendorService.DeletePaymentTerms(this.VendorPaymentTerms.payment_Terms_ID).subscribe(response => {console.log(response)})
@@ -369,14 +368,6 @@ OnboardRequestDetails: any[] = [];
     })
     }
     
-    getInsurance(InsuranceID:number) {
-     this.VendorService.GetInsuranceByID(InsuranceID).subscribe(result => {
-     this.VendorInsurance = result
-     let sFilePath = this.VendorInsurance.confirmation_Doc
-     this.getFileDetails(sFilePath,4)
-    })
-    }
-    
     getPaymentTerms(PaymentTermsID:number) {
      this.VendorService.GetPaymentTerms(PaymentTermsID).subscribe(result => {
      this.VendorPaymentTerms = result
@@ -407,7 +398,16 @@ OnboardRequestDetails: any[] = [];
   }
   
    
+
+
+
+
+
+  openDeleteVendorTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
+}
 
   
 

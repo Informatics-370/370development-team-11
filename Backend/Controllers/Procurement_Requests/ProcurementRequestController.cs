@@ -31,6 +31,22 @@ namespace ProcionAPI.Controllers.Procurement_Requests
         }
 
         [HttpGet]
+        [Route("GetProcurementRequestsPerUser/{Username}")]
+        public async Task<IActionResult> GetProcurementRequestsPerUser([FromRoute] string Username)
+        {
+            try
+            {
+                var result = await _Procurement_Request_Repository.GetProcurementRequestsForUserAsync(Username);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
         [Route("GetProcurementQuotes")]
         public async Task<IActionResult> GetProcurementQuotes()
         {

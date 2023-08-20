@@ -195,11 +195,12 @@ export class VendordetailsViewComponent implements OnInit {
   iCanEditVen: string = "false";
   canEditVen: string;
 
-  
+  DisplayBool= false;
 
   ngOnInit(): void {
     this.convertImageToBase64('./assets/Images/CheckMarkBox.png')
     this.convertImageToBase64('./assets/Images/checkboxEmpty.png')
+    this.convertLogoToBase64()
     let role = this.VendorService.decodeUserRole(sessionStorage.getItem("token"));
     this.iCanDeleteVen = this.VendorService.decodeCanDeleteVen(sessionStorage.getItem("token"));
     this.iCanEditVen = this.VendorService.decodeCanEditVen(sessionStorage.getItem("token"));
@@ -218,7 +219,7 @@ export class VendordetailsViewComponent implements OnInit {
     }
 
 
-   for(let i = 0;i < 8;i++) {
+   for(let i = 0;i < 11;i++) {
       this.FileDetails.push({FileURL:"",FileName:""})
    }
    console.log(this.FileDetails)
@@ -238,7 +239,7 @@ export class VendordetailsViewComponent implements OnInit {
           this.VendorDetail.dateAccepted = test.transform(this.VendorDetail.dateAccepted, 'MMM d, y, h:mm:ss a');
           
           let sFilePath = this.VendorDetail.bankStampedConfirtmation
-          this.getFileDetails(sFilePath,6)
+          this.getFileDetails(sFilePath,9)
           console.log(this.VendorDetail.vendor_Detail_ID)  
           if(this.VendorDetail.faxProvided == true ) {
             this.getFax(this.VendorDetail.vendor_Detail_ID)
@@ -278,10 +279,11 @@ export class VendordetailsViewComponent implements OnInit {
               if(this.DueDilligenceDetails.b_BBEE_Certificate_Provided == true) {
                 this.VendorService.GetBEEDetails(this.VendorDetail.vendor_ID).subscribe(value => {
                   this.BeeDetails = value;
+                  this.BeeDetails.date = test.transform(this.BeeDetails.date, 'MMM d, y');
                   console.log(this.BeeDetails)
                   let sFilePath = value.beE_Certificate
                   //console.log(sFilePath)
-                  this.getFileDetails(sFilePath,7)
+                  this.getFileDetails(sFilePath,10)
                   //console.log(this.BeeDetails)
                 })
               }
@@ -329,7 +331,7 @@ export class VendordetailsViewComponent implements OnInit {
     this.VendorService.GetLicenseByID(LicenseID).subscribe(result => {
       this.VendorLicense = result
       let sFilePath = this.VendorLicense.license_Doc_Upload
-      this.getFileDetails(sFilePath,5)
+      this.getFileDetails(sFilePath,8)
     })
   }
 
@@ -345,10 +347,31 @@ export class VendordetailsViewComponent implements OnInit {
   getInsurance(VendorID:number) {
     this.VendorService.GetInsuranceByID(VendorID).subscribe(result => {
       result.forEach(e=> {
-        if(e.vendor_Insurance_Type_ID == 4) {
-          this.VendorInsurance = e
-          let sFilePath = this.VendorInsurance.confirmation_Doc
-          this.getFileDetails(sFilePath,4)
+        switch(e.vendor_Insurance_Type_ID) {
+          case 1: {
+            this.VendorInsurance = e
+            let sFilePath = this.VendorInsurance.confirmation_Doc
+            this.getFileDetails(sFilePath, 4)
+            break;
+          }
+          case 2: {
+            this.VendorInsurance = e
+            let sFilePath = this.VendorInsurance.confirmation_Doc
+            this.getFileDetails(sFilePath, 5)
+            break;
+          }
+          case 3: {
+            this.VendorInsurance = e
+            let sFilePath = this.VendorInsurance.confirmation_Doc
+            this.getFileDetails(sFilePath, 6)
+            break;
+          }
+          case 4: {
+            this.VendorInsurance = e
+            let sFilePath = this.VendorInsurance.confirmation_Doc
+            this.getFileDetails(sFilePath, 7)
+            break;
+          }
         }
       })
       
@@ -376,6 +399,14 @@ export class VendordetailsViewComponent implements OnInit {
     })
   }
 
+  ChangeDisplayOption() {
+    if(this.DisplayBool == true) {
+      this.DisplayBool = false
+    }
+    else {
+      this.DisplayBool = true
+    }
+  }
 
   DeleteRequest(ID: Number) {
     const confirm = this.dialog.open(VendorDeleteComponent, {
@@ -391,6 +422,19 @@ export class VendordetailsViewComponent implements OnInit {
 
   boxCheckedTrue:any
 boxCheckedFalse:any
+logoImageBase64:any;
+
+
+convertLogoToBase64() {
+  let filePath = "./assets/Images/moyo-full-logo2.png";
+  const response = fetch(filePath).then((res) => res.blob()).then((blob) => {
+    const reader = new FileReader();
+    reader.onloadend = () => { 
+      this.logoImageBase64 = reader.result   
+    };
+    reader.readAsDataURL(blob);
+});
+}
 
 GenerateList() {
 
@@ -399,14 +443,41 @@ GenerateList() {
   if(this.DueDilligenceDetails.popI_Present == true) {
     this.VendorService.GetPOPI(this.DueDilligenceDetails.due_Diligence_ID).subscribe(response => {
       this.POPIDetails = response;
-      console.log(this.DueDilligenceDetails)
-      console.log(this.POPIDetails)
+      let user = this.VendorService.decodeUser(sessionStorage.getItem('token'))
       const docDefinition = {
         info: {
         title:`Due Dilligence Checklist for ${this.DueDilligenceDetails.vendor.name}`,
         },
-        content: [{text:'Vendor Due Diligence Checklist',fontSize: 20,alignment: 'center',color: '#ffffff',background:'#002060',margin: [0, 0 ,0, 15]},
-          
+        content: [
+          {table: {
+            headerRows: 0,
+            widths: [ '*', 'auto' ],
+            body: [
+              [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 150, height: 50,margin:[5,5,0,5]}, {} ],
+            ]
+          },
+          layout: 'noBorders',margin:[0,0,0,10]},
+          { text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#002060', margin: [0, 0, 0, 15] },
+          {
+            text: 'Created By: ' + user,
+            fontSize: 12,
+            alignment: 'center',
+            bold:true,
+          },
+          {
+            text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
+            fontSize: 12,
+            alignment: 'center',
+            bold:true,
+          },
+          {
+            canvas: [
+              // Centered line with space above
+              { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
+            ],
+            // Add space above the line
+            margin: [0, 10]
+          },
           {
           //layout: 'noBorders',
           table: {headerRows: 0,
@@ -566,7 +637,7 @@ GenerateList() {
           },
           
         },
-        margin:[0,0,0,15],
+        pageBreak: 'after',
         },
           {table: {headerRows: 0,
           widths: ['*','auto'],
@@ -604,7 +675,6 @@ GenerateList() {
           },
           
         },
-        pageBreak: 'after'
         },
           {table: {headerRows: 0,
           widths: ['*','auto'],
@@ -778,12 +848,41 @@ GenerateList() {
       } ) 
   }
   else{
+    let user = this.VendorService.decodeUser(sessionStorage.getItem('token'))
     const docDefinition = {
       info: {
         title:`Due Dilligence Checklist for ${this.DueDilligenceDetails.vendor.name}`,
         },
-      content: [{text:'Vendor Due Diligence Checklist',fontSize: 20,alignment: 'center',color: '#ffffff',background:'#002060',margin: [0, 0 ,0, 15]},
-        
+      content: [
+        {table: {
+          headerRows: 0,
+          widths: [ '*', 'auto' ],
+          body: [
+            [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 150, height: 50,margin:[5,5,0,5]}, {} ],
+          ]
+        },
+        layout: 'noBorders',margin:[0,0,0,10]},
+        { text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#002060', margin: [0, 0, 0, 15] },
+        {
+          text: 'Created By: ' + user,
+          fontSize: 12,
+          alignment: 'center',
+          bold:true,
+        },
+        {
+          text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
+          fontSize: 12,
+          alignment: 'center',
+          bold:true,
+        },
+        {
+          canvas: [
+            // Centered line with space above
+            { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
+          ],
+          // Add space above the line
+          margin: [0, 10]
+        },
         {
         
         table: {headerRows: 0,
@@ -943,7 +1042,7 @@ GenerateList() {
         },
         
       },
-      margin:[0,0,0,15],
+      pageBreak: 'after',
       },
         {table: {headerRows: 0,
         widths: ['*','auto'],
@@ -981,7 +1080,6 @@ GenerateList() {
         },
         
       },
-      pageBreak: 'after'
       },
         {table: {headerRows: 0,
         widths: ['*','auto'],
@@ -1161,5 +1259,13 @@ convertImageToBase64(filePath: string) {
 }
 
 
+
+
+
+
+openVendorDetailsTab(): void {
+  const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+  window.open(userManualUrl, '_blank');
+}
 }
 

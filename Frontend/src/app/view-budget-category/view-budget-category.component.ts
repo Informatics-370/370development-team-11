@@ -9,6 +9,7 @@ import { DeleteBudgetCategoryComponent } from '../delete-budget-category/delete-
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { BudgetCategoryIFrameComponent } from '../HelpIFrames/BudgetCategoryIFrame/budget-category-iframe/budget-category-iframe.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -121,6 +122,19 @@ export class ViewBudgetCategoryComponent implements OnInit {
         }
       }
     })
+  }
+
+
+  openBudgetCategoryIFrameTab(): void {
+    const dialogRef = this.dialog.open(BudgetCategoryIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
   }
 
 }

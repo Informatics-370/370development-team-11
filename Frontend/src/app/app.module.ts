@@ -146,6 +146,30 @@ import { ReportsMainViewComponent } from './Reports/reports-main-view/reports-ma
 import { ReportFilterMenuComponent } from './Reports/report-filter-menu/report-filter-menu.component';
 import { ViewAuditLogComponent } from './view-audit-log/view-audit-log.component';
 import { BudgetVarianceReportComponent } from './budget-variance-report/budget-variance-report.component';
+import { EmployeeIFrameComponent } from './HelpIFrames/EmployeeIFrame/employee-iframe/employee-iframe.component';
+import { BranchIFrameComponent } from './HelpIFrames/BranchIFrame/branch-iframe/branch-iframe.component';
+import { AdminIFrameComponent } from './HelpIFrames/AdminIFrame/admin-iframe/admin-iframe.component';
+import { AuditLogIFrameComponent } from './HelpIFrames/AuditLogIFrame/audit-log-iframe/audit-log-iframe.component';
+import { DepartmentIFrameComponent } from './HelpIFrames/DepartmentIFrame/department-iframe/department-iframe.component';
+import { RoleIFrameComponent } from './HelpIFrames/RoleIFrame/role-iframe/role-iframe.component';
+import { MandateIFrameComponent } from './HelpIFrames/MandateIFrame/mandate-iframe/mandate-iframe.component';
+import { DelegationIFrameComponent } from './HelpIFrames/DelegationIFrame/delegation-iframe/delegation-iframe.component';
+import { ReportsIFrameComponent } from './HelpIFrames/ReportsIFrame/reports-iframe/reports-iframe.component';
+import { ConsumableIFrameComponent } from './HelpIFrames/ConsumableIFrame/consumable-iframe/consumable-iframe.component';
+import { ConsumableCategoryIFrameComponent } from './HelpIFrames/ConsumableCategoryIFrame/consumable-category-iframe/consumable-category-iframe.component';
+import { BudgetCategoryIFrameComponent } from './HelpIFrames/BudgetCategoryIFrame/budget-category-iframe/budget-category-iframe.component';
+import { BudgetAllocationIFrameComponent } from './HelpIFrames/BudgetAllocationIFrame/budget-allocation-iframe/budget-allocation-iframe.component';
+import { BudgetLineIFrameComponent } from './HelpIFrames/BudgetLineIFrame/budget-line-iframe/budget-line-iframe.component';
+import { FinalizeProcReqIFrameComponent } from './HelpIFrames/FinalizeProcReqIFrame/finalize-proc-req-iframe/finalize-proc-req-iframe.component';
+import { OnboardRequestIFrameComponent } from './HelpIFrames/OnboardRequestIFrame/onboard-request-iframe/onboard-request-iframe.component';
+import { ManageVendorIFrameComponent } from './HelpIFrames/ManageVendorIFrame/manage-vendor-iframe/manage-vendor-iframe.component';
+import { ApproveVendorIFrameComponent } from './HelpIFrames/ApproveVendorIFrame/approve-vendor-iframe/approve-vendor-iframe.component';
+import { ProcReqIFrameComponent } from './HelpIFrames/ProcReqIFrame/proc-req-iframe/proc-req-iframe.component';
+import { ProcReqPendingIFrameComponent } from './HelpIFrames/ProcReqPendingIFrame/proc-req-pending-iframe/proc-req-pending-iframe.component';
+import { PlaceProcDetailIFrameComponent } from './HelpIFrames/PlaceProcDetailIFrame/place-proc-detail-iframe/place-proc-detail-iframe.component';
+import { FlaggerProcDetailIFrameComponent } from './HelpIFrames/FlaggedProcDetailIFrame/flagger-proc-detail-iframe/flagger-proc-detail-iframe.component';
+import { ProcDetailIFrameComponent } from './HelpIFrames/ProcDetailIFrame/proc-detail-iframe/proc-detail-iframe.component';
+import { YearPickerComponent } from './year-picker/year-picker.component';
 
 
 
@@ -258,6 +282,30 @@ import { BudgetVarianceReportComponent } from './budget-variance-report/budget-v
     ReportFilterMenuComponent,
     ViewAuditLogComponent,
     BudgetVarianceReportComponent,
+    EmployeeIFrameComponent,
+    BranchIFrameComponent,
+    AdminIFrameComponent,
+    AuditLogIFrameComponent,
+    DepartmentIFrameComponent,
+    RoleIFrameComponent,
+    MandateIFrameComponent,
+    DelegationIFrameComponent,
+    ReportsIFrameComponent,
+    ConsumableIFrameComponent,
+    ConsumableCategoryIFrameComponent,
+    BudgetCategoryIFrameComponent,
+    BudgetAllocationIFrameComponent,
+    BudgetLineIFrameComponent,
+    FinalizeProcReqIFrameComponent,
+    OnboardRequestIFrameComponent,
+    ManageVendorIFrameComponent,
+    ApproveVendorIFrameComponent,
+    ProcReqIFrameComponent,
+    ProcReqPendingIFrameComponent,
+    PlaceProcDetailIFrameComponent,
+    FlaggerProcDetailIFrameComponent,
+    ProcDetailIFrameComponent,
+    YearPickerComponent,
   ],
   imports: [
     BrowserModule,

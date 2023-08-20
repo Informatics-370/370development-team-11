@@ -23,10 +23,20 @@ import { DatePipe } from '@angular/common';
 import { Due_Dillegence } from 'src/app/Shared/DueDillegence';
 import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 import { AuditLog } from 'src/app/Shared/AuditLog';
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-vendor-create',
   templateUrl: './vendor-create.component.html',
-  styleUrls: ['./vendor-create.component.css']
+  styleUrls: ['./vendor-create.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 
 
@@ -199,7 +209,6 @@ export class VendorCreateComponent implements OnInit{
     SignedAgreementCheck: false,
     SignedAgreementDoc: null,
     InsuranceCoverCheck: false,
-    InsuranceCoverDoc: null,
     PaymentTermsCheck: false,
     PaymentTerms: ['',Validators.maxLength(50)],
     LicenseOrAccreditationCheck: false,
@@ -256,7 +265,7 @@ export class VendorCreateComponent implements OnInit{
           this.CompanyContactInfoFormGroup.get('CompanyName').disable()
           this.CompanyContactInfoFormGroup.get('CompanyEmail')?.setValue(this.Vendor.email);
           this.CompanyContactInfoFormGroup.get('CompanyEmail').disable()
-
+          
           if(this.Vendor.sole_Supplier_Provided == false) {
             this.VendorDetail.vendor_Category_ID = 1;
           }
@@ -271,13 +280,17 @@ export class VendorCreateComponent implements OnInit{
             this.VendorDetail.pOPIA_Provided = this.DueDilligenceDetail.popI_Present;
             this.VendorDetail.dueDIllegenceRequired = true;
             this.VendorDetail.income_Tax_Num_Provided = this.DueDilligenceDetail.income_Tax_Number_Provided;
+            if(this.DueDilligenceDetail.cyber_Insurance_Present == true || this.DueDilligenceDetail.other_Insurance_Required == true || this.DueDilligenceDetail.general_Liability_Insurance_Present == true || this.DueDilligenceDetail.proffesional_Indemnity_Insurance_Present == true) {
+              this.VendorDetail.insurance_Provided == true;
+              this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.setValue(true);
+            }
             //construction
             this.VendorDetail.vatRegistered = this.DueDilligenceDetail.vat_Reg_Certificate_Provided;
             if(this.VendorDetail.vatRegistered == true) {
               this.CompanyOverviewFormGroup.get("VatRegistrationCheck")?.setValue(true);
               this.VatRegistrationChange();
             }
-
+            this.CompanyOverviewFormGroup.get('InsuranceCoverCheck')?.disable();
             this.VendorDetail.registration_Provided = this.DueDilligenceDetail.company_Reg_Doc_Provided;
             //construction
             this.VendorDetail.license_Num_Provided = this.DueDilligenceDetail.licenses_Required;
@@ -285,15 +298,6 @@ export class VendorCreateComponent implements OnInit{
               this.CompanyOverviewFormGroup.get("LicenseOrAccreditationCheck")?.setValue(true);
               this.LicenseOrAccreditationChange();
             }
-            //construction
-            this.VendorDetail.insurance_Provided = this.DueDilligenceDetail.general_Liability_Insurance_Present;
-            if(this.VendorDetail.insurance_Provided == true) {
-             this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.setValue(true);
-             this.InsuranceCoverChecker = this.VendorDetail.insurance_Provided
-            this.getInsuranceDetails(Number(this.VendorID));
-            }
-
-
           })
           
 
@@ -356,17 +360,6 @@ export class VendorCreateComponent implements OnInit{
       }
       else {
         this.CompanyContactInfoFormGroup.get('SignedAgreementDoc')?.disable();   
-      }
-    }
-
-    InsuranceCoverChange() {
-      this.InsuranceCoverChecker = this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.value
-      if(this.InsuranceCoverChecker == true) {
-        this.CompanyContactInfoFormGroup.get('InsuranceCoverDoc')?.addValidators(Validators.required)
-        this.CompanyContactInfoFormGroup.get('InsuranceCoverDoc')?.enable()
-      }
-      else {
-        this.CompanyContactInfoFormGroup.get('InsuranceCoverDoc')?.disable();   
       }
     }
 
@@ -539,7 +532,7 @@ export class VendorCreateComponent implements OnInit{
     this.VendorDetail.vatRegistered =  this.VatRegistrationChecker
     this.VendorDetail.income_Tax_Num_Provided = true
     this.VendorDetail.signed_Agreement_Provided = this.SignedAgreementChecker
-    this.VendorDetail.insurance_Provided = this.InsuranceCoverChecker
+    this.VendorDetail.insurance_Provided = this.CompanyOverviewFormGroup.get("InsuranceCoverCheck")?.value;
     this.VendorDetail.payment_Terms_Provided = this.PaymentTermsChecker
     this.VendorDetail.license_Num_Provided = this.LicenseOrAccreditationChecker
     
@@ -628,47 +621,8 @@ export class VendorCreateComponent implements OnInit{
             })
             
           }
-          if(this.InsuranceCoverChecker == true && this.fileName[4] != '') {
-            FolderCategory = "Insurance";
-            VendorNo = "Vendor" + this.Vendor.vendor_ID
-            let file:File = this.fileName[4]
-            if(this.FileDetails == undefined) {
-              this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
-                let Path: any = response
-                this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
-                this.VendorInsurance.vendor_Insurance_Type_ID = 4;
-                this.VendorInsurance.vendor_ID =  Number(this.VendorID)
-               // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
-                this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
-              })
-            }
-            else {
-              FolderCategory = "Insurance";
-              VendorNo = "Vendor" + Number(this.VendorID)
 
-              this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(result => {
-                this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
-                  let Path: any = response
-                  this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
-                  this.VendorInsurance.vendor_Insurance_Type_ID = 4;
-                  this.VendorInsurance.vendor_ID =  Number(this.VendorID)
-                 // this.VendorInsurance.vendor_Detail_ID = this.VD_ID 
-                  this.VendorService.UpdateInsurance(Number(this.VendorID),this.VendorInsurance).subscribe()
-                })
-              })
-            }
-            
-            
-          }
-          else if(this.DueDilligenceDetail.general_Liability_Insurance_Present == true) {
-            FolderCategory = "Insurance";
-            VendorNo = "Vendor" + this.Vendor.vendor_ID
-            let file:File = this.fileName[4]
-            this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(result => { 
-              this.VendorService.DeleteInsuranceByID(Number(this.Vendor.vendor_ID),4).subscribe()
-            })
 
-          }
           if(this.PaymentTermsChecker == true) {
             this.VendorPaymentTerms.payment_Terms = this.CompanyOverviewFormGroup.get("PaymentTerms")?.value
             this.VendorPaymentTerms.vendor_Detail_ID = this.VD_ID 
@@ -749,24 +703,7 @@ export class VendorCreateComponent implements OnInit{
 
   FileDetails:any[] = []
 
-  getInsuranceDetails(ID:number) {
-    this.FileDetails.push({FileURL:"",FileName:""})
-    this.VendorService.GetInsuranceByID(ID).subscribe(response => {
-      response.forEach(e => { 
-        if(e.vendor_Insurance_Type_ID == 4) {
-          let sFile = e.confirmation_Doc;
-          let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
-          sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-          let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
-          let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-          this.FileDetails[0].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
-          this.FileDetails[0].FileName = filename
-        }
-      })
-     
-    })
-  
-}
+
 
 
 
@@ -774,6 +711,20 @@ export class VendorCreateComponent implements OnInit{
     this.VendorService.ChangeVendorStatus(4,this.Vendor.vendor_ID).subscribe(result => {
       this.router.navigate([`/vendor-view`]);
     })
+  }
+
+
+
+
+
+
+
+
+
+
+  openCreateVendorTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }
 

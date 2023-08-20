@@ -9,10 +9,18 @@ import { Department } from '../Shared/Department';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-edit-budget-line',
   templateUrl: './edit-budget-line.component.html',
-  styleUrls: ['./edit-budget-line.component.css']
+  styleUrls: ['./edit-budget-line.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class EditBudgetLineComponent {
 
@@ -145,5 +153,12 @@ export class EditBudgetLineComponent {
 
   public myError = (controlName: string, errorName: string) => {
     return this.budgetLineForm.controls[controlName].hasError(errorName);
+  }
+
+
+
+  openEditBLTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

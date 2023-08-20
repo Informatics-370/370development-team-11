@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { OnboardRequestIFrameComponent } from 'src/app/HelpIFrames/OnboardRequestIFrame/onboard-request-iframe/onboard-request-iframe.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -237,4 +238,28 @@ export class RequestViewComponent implements OnInit {
   displayedColumns : string[] = ['ID','name','Status','action','delete'];
   //dataSource = this.OnboardRequest;
   expandedElement: VendorOnboardRequest | undefined;
+
+
+
+
+
+
+
+
+
+
+
+
+
+  openOnboardRequestIFrameTab(): void {
+    const dialogRef = this.dialog.open(OnboardRequestIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
+  }
 }

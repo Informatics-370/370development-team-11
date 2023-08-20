@@ -18,6 +18,8 @@
     <mat-sidenav-content class="Main-content">
         <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
             View Unfinalized Procurement Requests
+            <mat-icon (click)="openFPRIFrameTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+            style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
         </h1>
 
         <div mat-list-item style="margin-left: 0.5%; display: flex;  align-items: center; ">
@@ -69,7 +71,7 @@
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Status
                     </th>
                     <td mat-cell *matCellDef="let procurement">
-                        <span [style.color]="getStatusColor(procurement.procurement_Payment_Status.name)">
+                        <span [style.color]="getStatusColor(procurement.procurement_Payment_Status.name)" matTooltip="Status of Finalized Procurement Request">
                             {{procurement.procurement_Payment_Status.name}}
                         </span>
                     </td>
@@ -80,6 +82,7 @@
                     <td mat-cell *matCellDef="let procurement" style="width:100px;">
 
                         <button class="noselect" type="button" style="background-color: #94CC5B;"
+                            matTooltip="This will direct you to the Finalize Procurement Request Page, there you will be able to fianlize the procurement request."
                             routerLink="/FinalizeProcurementRequestCreate/{{procurement.procurement_Details_ID}}">
                             <span class='text'>View</span>
                             <span class="icon" style="border-left: 1px solid #94CC5B; ">

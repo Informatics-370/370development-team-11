@@ -8,6 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import { Subscription, buffer, elementAt, groupBy } from 'rxjs';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { DatePipe } from '@angular/common';
+import { ManageVendorIFrameComponent } from 'src/app/HelpIFrames/ManageVendorIFrame/manage-vendor-iframe/manage-vendor-iframe.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -45,7 +47,12 @@ export class VendorViewComponent implements OnInit  {
 
    this.VendorService.GetAllVendorDetails().subscribe((result) => {
     let VendorDetails:any[] = result 
-    VendorDetails.forEach(element => this.VenDetails.push(element))
+    VendorDetails.forEach(element => 
+    {
+      let test = new DatePipe('en-ZA');
+      element.dateAccepted = test.transform(element.dateAccepted, 'MMM d, y, h:mm:ss a');
+      this.VenDetails.push(element)
+    })
     this.VendorSearch =  new MatTableDataSource(result)
     this.VendorSearch.paginator = this.paginator;
     console.log(VendorDetails)
@@ -90,5 +97,24 @@ export class VendorViewComponent implements OnInit  {
 
 
 
-  displayedColumns : string[] = ["name", "Email","Telephone","View"];
+  displayedColumns : string[] = ["name", "Email","Telephone","Date","View"];
+
+
+
+
+
+
+
+
+  openManageVendorIFrameTab(): void {
+    const dialogRef = this.dialog.open(ManageVendorIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
+  }
 }

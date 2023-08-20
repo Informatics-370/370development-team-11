@@ -243,6 +243,7 @@ export class UploadPayementFileComponent {
     payment_Made: false,
     comment: "",
     proof_Of_Payment_Required: false,
+    itemReceived: false
   }
 
   Deposit: Deposit = {
@@ -260,13 +261,6 @@ export class UploadPayementFileComponent {
     procurement_Details: this.ProcurementDetails,
     paid_On_Date: new Date(),
     receipt_Upload: "",
-  }
-
-  ProofOfPayment: Proof_Of_Payment = {
-    proof_Of_Payment_ID: 0,
-    procurement_Details_ID: 0,
-    procurement_Details: this.ProcurementDetails,
-    proof_Of_Payment_Doc: "",
   }
 
   Consumables: Consumable = {
@@ -294,15 +288,6 @@ export class UploadPayementFileComponent {
     consumable: this.Consumables,
     quantity: 0,
   }
-
-  // Vendor_Consumable: Vendor_Consumable = {
-  //   vendor_Consumbale_ID: 0,
-  //   consumable_ID: 0,
-  //   vendor_ID: 0,
-  //   consumables: this.Consumables,
-  //   vendor: this.Procurement_Request.vendor,
-  // }
-
   assets: Asset = {
     asset_ID: 0,
     name: '',
@@ -328,7 +313,7 @@ export class UploadPayementFileComponent {
     proof_Of_Payment_ID: 0,
     procurement_Details_ID: 0,
     procurement_Details: this.ProcurementDetails,
-    proof_Of_Payment_Doc: "string"
+    proof_Of_Payment_Doc: ""
   }
 
   log: AuditLog = {
@@ -338,7 +323,9 @@ export class UploadPayementFileComponent {
     actionTime: new Date(),
   }
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, ID: Number }, private formBuilder: FormBuilder, private dataservice: DataService, private router: Router, private dialogRef: MatDialogRef<UploadPayementFileComponent>) { }
+  User: String = "";
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, ID: number }, private formBuilder: FormBuilder, private dataservice: DataService, private router: Router, private dialogRef: MatDialogRef<UploadPayementFileComponent>) { }
 
   File = this.data.name
   Data: any[];
@@ -349,6 +336,20 @@ export class UploadPayementFileComponent {
     this.myForm = this.formBuilder.group({
       FileAdded: ["", [Validators.required]],
     });
+
+    this.dataservice.GetProcurementDetailsByID(this.data.ID).subscribe({
+      next: (Response) => {
+        this.ProcurementDetails = Response;
+      }
+    })
+
+    this.User = this.dataservice.decodeUser(sessionStorage.getItem("token"))
+
+    this.dataservice.GetUserByUsername(this.User.toString()).subscribe({
+      next: (Response) => {
+        this.usr = Response;
+      }
+    })
   }
 
   onTabChange(event: MatTabChangeEvent): void {
@@ -362,20 +363,17 @@ export class UploadPayementFileComponent {
   }
 
   onFileUpload(event: any) {
-    console.log('Event:', event); // Log the entire event object
-    console.log('Event Target:', event.target); // Log the target element
-    console.log('Files:', event.target.files); // Log the FileList object
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[0] = this.fileToUpload;
     }
   }
 
-  onSubmit() {
+  onSubmitA() {
     this.fileToUpload = this.files[0];
     var name = "" + this.data.name
     if (this.fileToUpload != null) {
-      let ProofName: string = name
+      let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString();
 
       let file: File = this.fileToUpload
 
@@ -383,25 +381,131 @@ export class UploadPayementFileComponent {
         let Path: any = response
         this.sPath = Path.pathSaved.toString()
         this.pop.proof_Of_Payment_Doc = this.sPath;
-        this.pop.procurement_Details_ID = 1;
+        this.pop.procurement_Details_ID = this.data.ID
+        this.pop.procurement_Details.procurement_Request.user = this.usr;
+        this.pop.procurement_Details.procurement_Request.vendor = this.ProcurementDetails.procurement_Request.vendor;
+        this.pop.procurement_Details.procurement_Request.requisition_Status = this.ProcurementDetails.procurement_Request.requisition_Status;
+        this.pop.procurement_Details.budget_Line.budget_Allocation = this.ProcurementDetails.budget_Line.budget_Allocation
+        this.pop.procurement_Details.budget_Line.budget_Category = this.ProcurementDetails.budget_Line.budget_Category
+        this.pop.procurement_Details.budget_Line.account_Code = this.ProcurementDetails.budget_Line.account_Code
+        this.pop.procurement_Details.procurement_Request.name = this.ProcurementDetails.procurement_Request.name
+        this.pop.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
 
-        this.log.action = "Payment File Uploaded: " + this.data.name;
-        this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
-        let test: any
-        test = new DatePipe('en-ZA');
-        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-        this.dataservice.AuditLogAdd(this.log).subscribe({
-          next: (Log) => {
-            this.dialogRef.close();
-            this.router.navigate(['/ViewProcurementDetails'])
+
+
+        this.dataservice.AddProofOfPayment(this.pop).subscribe({
+          next: (Response) => {
+            this.dataservice.UpdatePaymentStatus(1, this.data.ID).subscribe({
+              next: (r) => {
+                if (this.ProcurementDetails.itemReceived == false) {
+                  this.dataservice.UpdateProcurementStatus(1, this.data.ID).subscribe({
+                    next: (Result) => {
+                      this.log.action = "Payment File Uploaded: " + this.data.name;
+                      this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataservice.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          this.dialogRef.close();
+                          this.router.navigate(['/ViewProcurementDetails'])
+                        }
+                      })
+                    }
+                  })
+                }
+                else {
+                  this.dataservice.UpdateProcurementStatus(2, this.data.ID).subscribe({
+                    next: (Result) => {
+                      this.log.action = "Payment File Uploaded: " + this.data.name;
+                      this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataservice.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          this.dialogRef.close();
+                          this.router.navigate(['/ViewProcurementDetails'])
+                        }
+                      })
+                    }
+                  })
+                }
+              }
+            })
           }
         })
-
-
       })
     }
   }
+  onSubmitB() {
+    this.fileToUpload = this.files[0];
+    if (this.fileToUpload != null) {
+      let ProofName: string = "Receipt/" + this.ProcurementDetails.procurement_Request.name.toString();
 
+      let file: File = this.fileToUpload
+
+      this.dataservice.POPFileAdd(ProofName, file).subscribe(response => {
+        let Path: any = response
+        this.sPath = Path.pathSaved.toString()
+        this.PaymentMade.receipt_Upload = this.sPath;
+        this.PaymentMade.procurement_Details_ID = this.data.ID
+        this.PaymentMade.procurement_Details.procurement_Request.user = this.ProcurementDetails.employee.user;
+        this.PaymentMade.procurement_Details.procurement_Request.vendor = this.ProcurementDetails.procurement_Request.vendor;
+        this.PaymentMade.procurement_Details.procurement_Request.requisition_Status = this.ProcurementDetails.procurement_Request.requisition_Status;
+        this.PaymentMade.procurement_Details.budget_Line.budget_Allocation = this.ProcurementDetails.budget_Line.budget_Allocation
+        this.PaymentMade.procurement_Details.budget_Line.budget_Category = this.ProcurementDetails.budget_Line.budget_Category
+        this.PaymentMade.procurement_Details.budget_Line.account_Code = this.ProcurementDetails.budget_Line.account_Code
+        this.PaymentMade.procurement_Details.procurement_Request.name = this.ProcurementDetails.procurement_Request.name
+        this.PaymentMade.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
+
+
+
+        this.dataservice.AddPaymentMade(this.PaymentMade).subscribe({
+          next: (Response) => {
+            this.dataservice.UpdatePaymentStatus(1, this.data.ID).subscribe({
+              next: (r) => {
+                if (this.ProcurementDetails.itemReceived == false) {
+                  this.dataservice.UpdateProcurementStatus(1, this.data.ID).subscribe({
+                    next: (Result) => {
+                      this.log.action = "Payment File Uploaded for: " + this.ProcurementDetails.procurement_Request.name;
+                      this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataservice.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          this.dialogRef.close();
+                          this.router.navigate(['/ViewProcurementDetails'])
+                        }
+                      })
+                    }
+                  })
+                }
+                else {
+                  this.dataservice.UpdateProcurementStatus(2, this.data.ID).subscribe({
+                    next: (Result) => {
+                      this.log.action = "Payment File Uploaded for: " + this.ProcurementDetails.procurement_Request.name;
+                      this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataservice.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          this.dialogRef.close();
+                          this.router.navigate(['/ViewProcurementDetails'])
+                        }
+                      })
+                    }
+                  })
+                }
+              }
+            })
+          }
+        })
+      })
+    }
+  }
 
   Close() {
     this.dialogRef.close()

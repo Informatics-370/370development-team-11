@@ -1,136 +1,90 @@
-
-
-
-    <!-- <div class="content">
-      <div style="border: #244688 solid 1px;background-color: #ffffff;">
-      <div style="width: 750px;margin-bottom: 1%;">
-        <h1 style="margin-bottom: 0px;color: #ffffff; font-weight:700; font-size:32pt;background-color: #244688;border: #244688 solid 10px;border-bottom: #244688 solid 20px;text-align: center;">
-          Reports
-        </h1>
-      </div>
-      <div style="width: 750px;">
-        <div class="row">
-          <div class="col-6">
-            <label >Generate Approved Vendor List Report:</label>
-          </div>
-          <div class="col">
-              <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" (click)="GenerateApprovedReport()">Generate?</button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6">
-            <label >Generate BEE Spent Report:</label>
-          </div>
-          <div class="col">
-            <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" (click)="ViewFilter(2,false)">Generate?</button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6">
-            <label >Generate Vendor Spent Report:</label>
-          </div>
-          <div class="col">
-            <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" (click)="GenerateVendorSpentReport()">Generate?</button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6">
-            <label >Generate Consumable Inventory management report:</label>
-          </div>
-          <div class="col">
-            <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" (click)="GenerateVendorSpentReport()">Generate?</button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6">
-            <label >Generate Business Unit allocation Report:</label>
-          </div>
-          <div class="col">
-            <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" (click)="GenerateVendorSpentReport()">Generate?</button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6">
-            <label >Generate Budget Variance Report:</label>
-          </div>
-          <div class="col">
-            <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" (click)="GenerateVendorSpentReport()">Generate?</button>
-          </div>
-        </div>
-      </div>
+<div class="content">
+  <div style="border: #244688 solid 1px;background-color: #244688;">
+    <div style="width: 750px;margin-bottom: 1%;">
+      <h1
+        style="margin-bottom: 0px;color: #ffffff; font-weight:700; font-size:32pt;background-color: #244688;border: #244688 solid 10px;border-bottom: #244688 solid 20px;text-align: center; display: flex; justify-content: space-between;">
+        <span style="flex: 1; text-align: center;">Reports</span>
+        <mat-icon (click)="openReportsIFrameTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+          style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'white'}"
+          matTooltip="Need help? Click me!"></mat-icon>
+      </h1>
     </div>
-    </div> -->
-    
-
-
-      <div class="content">
-        <div style="border: #244688 solid 1px;background-color: #244688;">
-        <div style="width: 750px;margin-bottom: 1%;">
-          <h1 style="margin-bottom: 0px;color: #ffffff; font-weight:700; font-size:32pt;background-color: #244688;border: #244688 solid 10px;border-bottom: #244688 solid 20px;text-align: center;">
-            Reports
-          </h1>
-        </div>
-        <div style="width: 750px;">
-          <table class="table table-striped">
-            <tbody>
-            <tr>
-              <td><label >Generate Approved Vendor List Report:</label></td>
-              <td>
-                <button mat-raised-button (click)="GenerateApprovedReport()" class="split-button-left"> Generate Report </button>
-                <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu" (click)="value(1)">
-                  <mat-icon aria-hidden="false" aria-label="Example home icon" style="margin: 1%;">expand_more</mat-icon>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td><label >Generate BEE Spent Report:</label></td>
-              <td>
-                <button mat-raised-button (click)="ViewFilter(2,false)" class="split-button-left"> Generate Report </button>
-                <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu" (click)="value(2)">
-                  <mat-icon aria-hidden="false" aria-label="Example home icon" style="margin: 1%;">expand_more</mat-icon>
-                </button>
-            </tr>
-            <tr>
-              <td><label >Generate Vendor Spent Report:</label></td>
-              <td>
-                <button mat-raised-button (click)="GenerateVendorSpentReport()" class="split-button-left"> Generate Report </button>
-                <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu" (click)="value(3)">
-                  <mat-icon aria-hidden="false" aria-label="Example home icon" style="margin: 1%;">expand_more</mat-icon>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td><label >Generate Consumable Inventory management report:</label></td>
-              <td>
-                <button mat-raised-button (click)="GenerateVendorSpentReport()" class="split-button-left"> Generate Report </button>
-                <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu" (click)="value(4)">
-                  <mat-icon aria-hidden="false" aria-label="Example home icon" style="margin: 1%;">expand_more</mat-icon>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td><label >Generate Business Unit allocation Report:</label></td>
-              <td>
-                <button mat-raised-button (click)="GenerateVendorSpentReport()" class="split-button-left"> Generate Report </button>
-                <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu" (click)="value(5)">
-                  <mat-icon aria-hidden="false" aria-label="Example home icon" style="margin: 1%;">expand_more</mat-icon>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td><label >Generate Budget Variance Report:</label></td>
-              <td>
-                <button mat-raised-button (click)="GenerateVendorSpentReport()" class="split-button-left"> Generate Report </button>
-                <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu" (click)="value(6)">
-                  <mat-icon aria-hidden="false" aria-label="Example home icon" style="margin: 1%;">expand_more</mat-icon>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-          </table>
-        </div>
-      </div>
-      </div>
+    <div style="width: 750px;">
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <td><label>Generate Approved Vendor List Report:</label></td>
+            <td>
+              <button mat-raised-button (click)="GenerateApprovedReport()" class="split-button-left"> Generate Report
+              </button>
+              <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu"
+                (click)="value(1)">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" style="margin: 1%;">expand_more</mat-icon>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td><label>Generate BEE Spent Report:</label></td>
+            <td>
+              <button mat-raised-button (click)="ViewFilter(2,false)" class="split-button-left"> Generate Report
+              </button>
+              <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu"
+                (click)="value(2)">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" style="margin: 1%;">expand_more</mat-icon>
+              </button>
+          </tr>
+          <tr>
+            <td><label>Generate Vendor Spent Report:</label></td>
+            <td>
+              <button mat-raised-button (click)="GenerateVendorSpentReport()" class="split-button-left"> Generate Report
+              </button>
+              <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu"
+                (click)="value(3)">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" style="margin: 1%;">expand_more</mat-icon>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td><label>Generate Consumable Inventory management report:</label></td>
+            <td>
+              <button mat-raised-button (click)="ViewFilter(4,false)" class="split-button-left">
+                Generate Report
+              </button>
+              <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu"
+                (click)="value(4)">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" style="margin: 1%;">expand_more</mat-icon>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td><label>Generate Business Unit allocation Report:</label></td>
+            <td>
+              <button mat-raised-button (click)="ViewFilter2(5,false)" class="split-button-left">
+                Generate Report
+              </button>
+              <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu"
+                (click)="value(5)">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" style="margin: 1%;">expand_more</mat-icon>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td><label>Generate Budget Variance Report:</label></td>
+            <td>
+              <button mat-raised-button (click)="ViewFilter2(6, false)" class="split-button-left"> Generate
+                Report
+              </button>
+              <button mat-raised-button color="primary" class="split-button-right" [matMenuTriggerFor]="menu"
+                (click)="value(6)">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" style="margin: 1%;">expand_more</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 
 
@@ -140,10 +94,10 @@
 
 
 <mat-menu #menu="matMenu" xPosition="before">
-	<button (click)="CorrectRouting(false)" mat-menu-item >
-   <span style="font-weight: 500;">View Report</span>
+  <button (click)="CorrectRouting(false)" mat-menu-item>
+    <span style="font-weight: 500;">Generate Report</span>
   </button>
-	<button (click)="CorrectRouting(true)" mat-menu-item>
+  <button (click)="CorrectRouting(true)" mat-menu-item>
     <span style="font-weight: 500;">Download Report</span>
   </button>
 </mat-menu>
@@ -151,3 +105,6 @@
 
 <canvas id="bar" hidden="true"></canvas>
 <canvas id="pie" hidden="true"></canvas>
+<canvas #chartCanvas hidden="true"></canvas>
+<canvas #barCanvas hidden="true"></canvas>
+<canvas #expensesChart hidden="true"></canvas>

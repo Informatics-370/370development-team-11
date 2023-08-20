@@ -4,6 +4,8 @@
 <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:20pt;">
   <button  mat-raised-button routerLink="/ViewFlaggedProcurementRequest" style="float:left; background-color:#244688; color:white;margin-right: 1%;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
     Procurement Details for {{ProcurementDetails.procurement_Request.vendor.name}}
+    <mat-icon (click)="openFPDTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+                    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
   </h1>
   <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:14pt;">Please Accept Or Reject the following request:</label>
 </div>

@@ -23,6 +23,8 @@
     <mat-sidenav-content class="Main-content">
         <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
             View Procurement Request Details
+            <mat-icon (click)="openPRDIFrameTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+            style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
         </h1>
 
         <div mat-list-item style="margin-left: 0.5%; display: flex;  align-items: center; ">
@@ -69,7 +71,7 @@
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Status
                     </th>
                     <td mat-cell *matCellDef="let procurement">
-                        <span [style.color]="getStatusColor(procurement.procurement_Status.name)">
+                        <span [style.color]="getStatusColor(procurement.procurement_Status.name)" matTooltip="Status of this procurment Request details.">
                             {{procurement.procurement_Status.name}}
                         </span>
                     </td>
@@ -79,12 +81,21 @@
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Upload Proof of Payment
                     </th>
                     <td mat-cell *matCellDef="let procurement" style="width:100px;">
-                        <button mat-raised-button
-                            (click)="openDialog(procurement.buyer_Name, procurement.procurement_Request_ID)"
+                        <button mat-raised-button matTooltip="This will direct you to the Upload Proof of Payment Page, there you will be able to upload the receipt file and/or upload teh credit card payment file."
+                            (click)="openDialog(procurement.buyer_Name, procurement.procurement_Details_ID)"
                             type="button"
-                            style="margin-right: 5%; display: flex; align-items: center; font-weight:bold ; width: 180px; margin-top: 0.5%; background-color: #94CC5B;">
+                            style="margin-right: 5%; display: flex; align-items: center; font-weight:bold ; width: 180px; margin-top: 0.5%; background-color: rgba(148, 204, 91, 0.5);"
+                            *ngIf="procurement.payment_Made == true; else NotDisabled" disabled>
                             Proof of Payment
                         </button>
+                        <ng-template #NotDisabled>
+                            <button mat-raised-button
+                                (click)="openDialog(procurement.buyer_Name, procurement.procurement_Details_ID)"
+                                type="button"
+                                style="margin-right: 5%; display: flex; align-items: center; font-weight:bold ; width: 180px; margin-top: 0.5%; background-color: #94CC5B;">
+                                Proof of Payment
+                            </button>
+                        </ng-template>
                     </td>
                 </ng-container>
 
@@ -93,8 +104,8 @@
                         Invoice
                     </th>
                     <td mat-cell *matCellDef="let procurement" style="width:100px;">
-                        <button mat-raised-button
-                            (click)="openInvDialog(procurement.buyer_Name, procurement.procurement_Request_ID)"
+                        <button mat-raised-button matTooltip="This will direct you to the Upload Invoice Page, there you will be able to upload the Invoice file."
+                            (click)="openInvDialog(procurement.buyer_Name, procurement.procurement_Details_ID)"
                             type="button"
                             style="margin-right: 5%; display: flex; align-items: center; font-weight: bold; width: 133px; margin-top: 0.5%; background-color: #94CC5B;">
                             Invoice
@@ -107,17 +118,24 @@
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let procurement" style="width:100px;">
 
-                        <button *ngIf="!getFlagged(procurement.procurement_Status.name) " class="noselect" type="button"
-                            style="background-color: #94CC5B;"
-                            routerLink="/ReceiveProcurementItem/{{procurement.procurement_Details_ID}}">
-                            <span class='text'>Receive</span>
-                            <span class="icon" style="border-left: 1px solid #94CC5B;">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
-                                    <path
-                                        d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
-                                </svg>
-                            </span>
+                        <button *ngIf="procurement.itemReceived == true; else NoIssue" class="disabled" type="button" 
+                            style="background-color: rgba(148, 204, 91, 0.5);"
+                            routerLink="/ReceiveProcurementItem/{{procurement.procurement_Details_ID}}" disabled>
+                            <span class='text' style="color: gray;">Receive</span>
                         </button>
+                        <ng-template #NoIssue>
+                            <button class="noselect" type="button" style="background-color: #94CC5B;"
+                                matTooltip="This will direct you to the Receive Consumable Page, there you will be able to set the amount of consumables received."
+                                routerLink="/ReceiveProcurementItem/{{procurement.procurement_Details_ID}}">
+                                <span class='text'>Receive</span>
+                                <span class="icon" style="border-left: 1px solid #94CC5B;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                                        <path
+                                            d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
+                                    </svg>
+                                </span>
+                            </button>
+                        </ng-template>
                     </td>
 
                 </ng-container>

@@ -206,7 +206,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task <IEnumerable <Budget_Line>> GetMonthlyBudgetDataForCategory(int year)
         {
-            return _dbContext.Budget_Line.Include(b => b.Budget_Category).Where(b => b.Budget_Allocation.Year == year).ToList();
+            return _dbContext.Budget_Line.Include(b => b.Budget_Category).Include(b => b.Budget_Allocation).ThenInclude(b => b.Department).Where(b => b.Budget_Allocation.Year == year).ToList();
         }
     
 

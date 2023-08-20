@@ -18,10 +18,20 @@ import { Notification_Type } from '../Shared/Notification_Type';
 import { Notification } from '../Shared/Notification';
 import { Access } from '../Shared/Access';
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-view-flagged-procurement-details',
   templateUrl: './view-flagged-procurement-details.component.html',
-  styleUrls: ['./view-flagged-procurement-details.component.css']
+  styleUrls: ['./view-flagged-procurement-details.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewFlaggedProcurementDetailsComponent implements OnInit {
 
@@ -269,6 +279,7 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
   AcceptRequest() {
     this.dataService.UpdateProcurementDetailsStatus(1, this.ProcurementDetails).subscribe({
       next: (response) => {
+        this.dataService.UpdateBudgetLineAmount(this.ProcurementDetails.total_Amount,this.ProcurementDetails.budget_Line).subscribe();
         this.ProcurementNotification.notification_Type_ID = 16;
         let transVar: any
         transVar = new DatePipe('en-ZA');
@@ -331,5 +342,13 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
       const fileURL = URL.createObjectURL(response);
       window.open(fileURL, '_blank');
     });
+  }
+
+
+
+
+  openFPDTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }
