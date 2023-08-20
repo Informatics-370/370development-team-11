@@ -34,10 +34,10 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
     this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
     this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin" || this.iRole == "MD") {
-      this.canViewFlagPro = "true";
-      this.canViewPenPro = "true";
-    }
+    // if (this.iRole == "Admin" || this.iRole == "MD") {
+    //   this.canViewFlagPro = "true";
+    //   this.canViewPenPro = "true";
+    // }
 
     if (this.iCanViewFlagPro == "true") {
       this.canViewFlagPro = "true";
@@ -50,19 +50,19 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
     this.GetProcurementRequests();
     console.log(this.ProcurementRequests)
     console.log(this.SearchedPRequests)
-    
+
     //console.log(User)
   }
 
   GetProcurementRequests() {
-    
+
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
     //console.log(User)
     this.dataService.GetProcurementRequests().subscribe(result => {
       let procurementRequestList: any[] = result;
       procurementRequestList.forEach(e => {
-       // console.log(e.user.username)
-       // console.log(User.username)
+        // console.log(e.user.username)
+        // console.log(User.username)
         if (e.requisition_Status_ID == 3 && User != e.user.username) {
           this.ProcurementRequests.push(e)
           //this.SearchedPRequests.push(e)
@@ -120,7 +120,7 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
   //   }
 
 
-    
+
   // }
 
 

@@ -78,17 +78,28 @@ export class ViewConsumableComponent implements OnInit {
 
   ExportInventoryDetails() {
     let docDefinition = {
-      content: [
-        {
-          table: {
-            headerRows: 0,
-            widths: ['*', 'auto'],
-            body: [
-              [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 150, height: 50, margin: [5, 5, 0, 5] }, {}],
-            ]
-          },
-          layout: 'noBorders', margin: [0, 0, 0, 10]
+      footer:
+        function (currentPage, pageCount) {
+          return {
+            text: currentPage.toString() + ' of ' + pageCount,
+            alignment: 'center',
+            fontSize: 7
+          };
+
         },
+      header: {
+        margin: [0, 0, 0, 150],
+        table: {
+          headerRows: 0,
+          widths: ['*', 'auto'],
+          body: [
+            [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
+          ]
+        },
+        layout: 'noBorders',
+
+      },
+      content: [
         {
           text: 'Consumable Inventory Details Report',
           fontSize: 20,

@@ -32,11 +32,6 @@ export class PlaceProcurementRequestComponent implements OnInit {
     this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
     this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin" || this.iRole == "MD") {
-      this.canViewFlagPro = "true";
-      this.canViewPenPro = "true";
-    }
-
     if (this.iCanViewFlagPro == "true") {
       this.canViewFlagPro = "true";
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -15,10 +15,10 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './view-flagged-procurement-request.component.html',
   styleUrls: ['./view-flagged-procurement-request.component.css']
 })
-export class ViewFlaggedProcurementRequestComponent implements OnInit{
+export class ViewFlaggedProcurementRequestComponent implements OnInit {
 
   ProcurementRequests: Procurement_Request[] = [];
-  SearchedPDetails:any;
+  SearchedPDetails: any;
   displayedColumns: string[] = ['name', 'employee', 'mandateTotal', 'Total', 'PaymentDue', 'View'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
@@ -37,10 +37,10 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit{
     this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
     this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin" || this.iRole == "MD") {
-      this.canViewFlagPro = "true";
-      this.canViewPenPro = "true";
-    }
+    // if (this.iRole == "Admin" || this.iRole == "MD") {
+    //   this.canViewFlagPro = "true";
+    //   this.canViewPenPro = "true";
+    // }
 
     if (this.iCanViewFlagPro == "true") {
       this.canViewFlagPro = "true";
@@ -56,13 +56,13 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit{
     console.log(User)
   }
 
-  ProcurementDetails:Procurement_Details[] = [];
+  ProcurementDetails: Procurement_Details[] = [];
   GetProcurementDetails() {
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
     this.dataService.GetProcurementRequestDetails().subscribe(result => {
       result.forEach(e => {
-        if(e.procurement_Status_ID == 3 && User != e.user.username)
-        this.ProcurementDetails.push(e);
+        if (e.procurement_Status_ID == 3 && User != e.user.username)
+          this.ProcurementDetails.push(e);
       })
 
       this.SearchedPDetails = new MatTableDataSource(this.ProcurementDetails);
