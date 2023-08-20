@@ -18,6 +18,11 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             IQueryable<Procurement_Request> query = _dbContext.Procurement_Request.Include(r => r.Requisition_Status).Include(u => u.User).Include(v => v.Vendor).ThenInclude(s => s.Vendor_Status); ;
             return await query.ToArrayAsync();
         }
+        public async Task<Procurement_Request[]> GetProcurementRequestsForUserAsync(string Username)
+        {
+            IQueryable<Procurement_Request> query = _dbContext.Procurement_Request.Include(r => r.Requisition_Status).Include(u => u.User).Include(v => v.Vendor).ThenInclude(s => s.Vendor_Status).Where(u => u.User.Username == Username); ;
+            return await query.ToArrayAsync();
+        }
         public async Task<Procurement_Request[]> AddProcurementRequestAsync(Procurement_Request RequestAdd)
         {
             //Get User

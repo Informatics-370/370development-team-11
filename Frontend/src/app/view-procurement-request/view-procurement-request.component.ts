@@ -87,9 +87,11 @@ export class ViewProcurementRequestComponent implements OnInit {
     });
     // window.open(url, '_blank');
   }
+  User: String = this.dataService.decodeUser(sessionStorage.getItem("token"));
 
   GetProcurementRequests() {
-    this.dataService.GetProcurementRequests().subscribe(result => {
+    this.dataService.GetProcurementRequestsForUser(this.User).subscribe(result => {
+      console.log(result)
       let procurementRequestList: any[] = result;
       this.ProcurementRequests = [...procurementRequestList];
       this.SearchedPRequests = [...procurementRequestList];

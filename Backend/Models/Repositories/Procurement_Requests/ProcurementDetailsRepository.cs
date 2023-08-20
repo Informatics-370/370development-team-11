@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Crypto.Agreement;
 using ProcionAPI.Data;
@@ -611,11 +612,22 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 await _dbContext.SaveChangesAsync();
                 ExistingPD.Procurement_Status = new Procurement_Status();
 
-                Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == StatusID);
+                if (ExistingPD.Payment_Made = true)
+                {
+                    Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == 2);
 
-                ExistingPD.Procurement_Status = ExistingStatus;
+                    ExistingPD.Procurement_Status = ExistingStatus;
 
-                await _dbContext.SaveChangesAsync();
+                    await _dbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == StatusID);
+
+                    ExistingPD.Procurement_Status = ExistingStatus;
+
+                    await _dbContext.SaveChangesAsync();
+                }
 
             }
 

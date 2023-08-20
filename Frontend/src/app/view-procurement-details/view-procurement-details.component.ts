@@ -56,7 +56,6 @@ export class ViewProcurementDetailsComponent implements OnInit {
   GetProcurementDetails() {
     this.dataService.GetProcurementRequestDetails().subscribe(result => {
       this.ProcurementRequests = result;
-      console.log(result)
       if (result) {
         hideloader();
       }

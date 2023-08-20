@@ -83,7 +83,7 @@
                             (click)="openDialog(procurement.buyer_Name, procurement.procurement_Details_ID)"
                             type="button"
                             style="margin-right: 5%; display: flex; align-items: center; font-weight:bold ; width: 180px; margin-top: 0.5%; background-color: rgba(148, 204, 91, 0.5);"
-                            *ngIf="procurement.procurement_Status_ID == 2; else NotDisabled" disabled>
+                            *ngIf="procurement.payment_Made == true; else NotDisabled" disabled>
                             Proof of Payment
                         </button>
                         <ng-template #NotDisabled>
