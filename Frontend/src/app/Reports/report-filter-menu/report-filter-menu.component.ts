@@ -69,6 +69,11 @@ export class ReportFilterMenuComponent implements OnInit {
 
   onCancel(): void {
     this.dialogRef.close();
+
+  }
+
+  notifyDialogClosed() {
+    this.dialogRef.close();
     this.dialogRef.afterClosed().subscribe(result => {
       this.ReportService.notifyDialogClosed();
     });
@@ -99,7 +104,7 @@ export class ReportFilterMenuComponent implements OnInit {
 
           console.log("why")
           this.onCancel()
-          
+
         })
         break;
       }
@@ -107,7 +112,7 @@ export class ReportFilterMenuComponent implements OnInit {
 
       case 4: {
 
-        this.onCancel()
+        this.notifyDialogClosed()
         break;
       }
     }
