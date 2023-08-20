@@ -92,6 +92,7 @@ a:not([href]):not([class]), a:not([href]):not([class]):hover {
 
 a {
     color: black;
+    padding-left: 0px;
 }
 
 table {
@@ -104,3 +105,4 @@ table {
 tr {
     border-bottom:1px solid black;
 }
+

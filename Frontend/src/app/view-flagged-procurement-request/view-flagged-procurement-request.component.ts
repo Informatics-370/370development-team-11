@@ -58,9 +58,10 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit{
 
   ProcurementDetails:Procurement_Details[] = [];
   GetProcurementDetails() {
+    var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
     this.dataService.GetProcurementRequestDetails().subscribe(result => {
       result.forEach(e => {
-        if(e.procurement_Status_ID == 3)
+        if(e.procurement_Status_ID == 3 && User != e.user.username)
         this.ProcurementDetails.push(e);
       })
 

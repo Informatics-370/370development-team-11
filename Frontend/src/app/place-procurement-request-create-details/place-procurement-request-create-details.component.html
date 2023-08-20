@@ -49,7 +49,7 @@
               </div>
               <div class="col-7">
                   <mat-form-field appearance="fill" *ngIf="ConsumableItems.length > 0">
-                      <mat-select formControlName="ConsumableItem" placeholder="Please Select a Consumable" style="display: contents;" [errorStateMatcher]="matcher">
+                      <mat-select formControlName="ConsumableItem" placeholder="Please Select a Consumable" style="display: contents;" [errorStateMatcher]="matcher" >
                         <mat-option *ngFor="let Consumable of ConsumableItems" [value]="Consumable.consumable_ID">{{Consumable.name}}</mat-option>
                       </mat-select>
                       <mat-error *ngIf="ProcurementFormGroup.controls['ConsumableItem'].hasError('required')">No Consumable was selected</mat-error>
@@ -283,7 +283,7 @@
         <br>
         <div  style="background-color: white;display: flex;align-items: center;margin: 1%;place-content: center;">
           <div class="wrapper">
-            <button class="" (click)="Create()" [disabled]="ProcurementFormGroup.invalid">
+            <button class="" (click)="Validation()" [disabled]="ProcurementFormGroup.invalid">
               <span>Place</span>
               <div class="success">
                 <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">

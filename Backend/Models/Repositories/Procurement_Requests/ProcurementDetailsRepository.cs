@@ -62,7 +62,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 ProcurementDetails.Procurement_Payment_Status = existingProcurementPaymentStatus;
             }
 
-            Budget_Line existingBudgetLine = await _dbContext.Budget_Line.Include(x => x.Budget_Category).Include(x => x.Budget_Allocation).FirstOrDefaultAsync(x => x.BudgetLineId == ProcurementDetails.BudgetLineId);
+            Budget_Line existingBudgetLine = await _dbContext.Budget_Line.Include(x => x.Budget_Category).Include(x => x.Budget_Allocation).ThenInclude(x=> x.Department).FirstOrDefaultAsync(x => x.BudgetLineId == ProcurementDetails.BudgetLineId);
 
             if (existingBudgetLine != null)
             {
@@ -548,6 +548,34 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             IQueryable<Asset> query = _dbContext.Asset;
 
             return await query.ToArrayAsync();
+        }
+
+        public async Task<Budget_Line> UpdateBudgetLineAmountAsync(Budget_Line budget_Line,decimal ActualAmount)
+        {
+            var budgetline = await _dbContext.Budget_Line.FindAsync(budget_Line.BudgetLineId);
+
+            budgetline.Account_Code = budget_Line.Account_Code;
+            budgetline.ActualAmt = budget_Line.ActualAmt + ActualAmount;
+            budgetline.BudgetAmt = budget_Line.BudgetAmt;
+            budgetline.Budget_ID = budget_Line.Budget_ID;
+            budgetline.Category_ID = budget_Line.Category_ID;   
+            budgetline.Month = budget_Line.Month;
+            budgetline.Variance = budget_Line.BudgetAmt - (budget_Line.ActualAmt + ActualAmount); 
+
+            budgetline.Budget_Allocation = new Budget_Allocation();
+            budgetline.Budget_Category = new Budget_Category();
+
+            Budget_Allocation existingBudgetAllocation = await _dbContext.Budget_Allocation.Include(x=> x.Department).FirstOrDefaultAsync(ba => ba.Budget_ID == budget_Line.Budget_ID);
+            Budget_Category exsitingBudgetCategory = await _dbContext.Budget_Category.FirstOrDefaultAsync(bc => bc.Category_ID == budget_Line.Category_ID);
+
+
+            budgetline.Budget_Allocation = existingBudgetAllocation;
+            budgetline.Budget_Category = exsitingBudgetCategory;
+
+            await _dbContext.SaveChangesAsync();
+
+
+            return budgetline;
         }
 
 

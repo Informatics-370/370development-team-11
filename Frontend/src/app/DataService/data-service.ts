@@ -1468,6 +1468,9 @@ export class DataService {
     return this.httpClient.get<Asset[]>(`${this.apiUrl}ProcurementDetails/getAssets`, this.httpOptions).pipe(map(result => result))
   }
 
+  UpdateBudgetLineAmount(ActualAmount: Number, budget_Line: BudgetLine): Observable<any> {
+    return this.httpClient.put<BudgetLine>(`${this.apiUrl}ProcurementDetails/UpdateBudgetLineAmount/${ActualAmount}`, budget_Line, this.httpOptions).pipe(map(result => result))
+  }
   //----------------------------------------------------------------------Reports-----------------------------------------------------------------------------
 
   getBEESpendReport(StartDate: Date, EndDate: Date): Observable<any> {

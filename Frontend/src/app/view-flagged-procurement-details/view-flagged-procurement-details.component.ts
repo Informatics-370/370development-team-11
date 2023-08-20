@@ -269,6 +269,7 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
   AcceptRequest() {
     this.dataService.UpdateProcurementDetailsStatus(1, this.ProcurementDetails).subscribe({
       next: (response) => {
+        this.dataService.UpdateBudgetLineAmount(this.ProcurementDetails.total_Amount,this.ProcurementDetails.budget_Line).subscribe();
         this.ProcurementNotification.notification_Type_ID = 16;
         let transVar: any
         transVar = new DatePipe('en-ZA');

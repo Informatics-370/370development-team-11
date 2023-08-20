@@ -43,13 +43,15 @@ export class ReportFilterMenuComponent implements OnInit{
   columnChartbasestring:any;
   logoImageBase64:any;
   pieChartBaseString:any;
-  minDate: Date;
+  MaxDate: Date;
   myBar:any;
   myPie:any;
   bDownload=false;
 
+  
+
   ngOnInit(): void {
-    this.minDate = new Date(this.currentYear - 1, this.currentmonth, this.currentDay+1);
+    this.MaxDate = new Date(this.currentYear, this.currentmonth, this.currentDay);
     this.convertImageToBase64()
     
   }
@@ -103,37 +105,32 @@ export class ReportFilterMenuComponent implements OnInit{
       
       var User = this.ReportService.decodeUser(sessionStorage.getItem('token'))
       let uniqueBranches =  this.BEESpendReportDetails.map(p => (p.branchName)).filter((name,index,currentval) => currentval.indexOf(name) === index)
-      let content = [
-        {table: {
-          headerRows: 1,
-          widths: [ '*', 'auto' ],
-          body: [
-            [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 150, height: 50,margin:[5,5,0,5]}, {} ],
-          ]
-        },
-        layout: 'noBorders',margin:[0,0,0,10]},
-        
+      let content = [ 
         {
           text: 'BEE Spent Report',
           fontSize: 18,
           alignment: 'center',
           color: '#244688',
-          bold: true
+          bold: true,
+          margin:[0,50,0,0]
         },
         {
           text: 'Created By: ' + User,
           fontSize: 12,
           alignment: 'center',
+          bold:true,
         },
         {
           text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
           fontSize: 12,
           alignment: 'center',
+          bold:true,
         },
         {
           text: 'Period: ' + DateTransf.transform(this.range.get("start")?.value, 'MM/dd/y') + ' - ' + DateTransf.transform(this.range.get("end")?.value, 'MM/dd/y'),
           fontSize: 12,
           alignment: 'center',
+          bold:true,
         },
         {
           canvas: [
@@ -356,7 +353,7 @@ export class ReportFilterMenuComponent implements OnInit{
       // Add space above the line
       margin: [0, 10]
       },
-      {text:'**End of Report**',fontSize: 12,alignment: 'center'}
+      {text:'**End of Report**',fontSize: 12,alignment: 'center',bold:true,}
       )
     }
     else {
@@ -368,12 +365,25 @@ export class ReportFilterMenuComponent implements OnInit{
         // Add space above the line
         margin: [0, 10,0,10]
         },
-        {text:'**End of Report**',fontSize: 12,alignment: 'center'})
+        {text:'**End of Report**',fontSize: 12,alignment: 'center',bold:true})
     }
 
        
 
       const docDefinition = {
+        footer: function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
+        header: {
+          margin:[0,0,0,150],
+          table: {
+            headerRows: 0,
+            widths: [ '*', 'auto' ],
+            body: [
+              [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 200, height: 55,margin:[5,5,0,5]}, {text:"",fillColor:"#244688",alignment:'right'} ],
+            ]
+          },
+          layout: 'noBorders',
+          
+      },
         content: content,
       defaultStyle: {
         fontSize: 6,alignment: 'center'
