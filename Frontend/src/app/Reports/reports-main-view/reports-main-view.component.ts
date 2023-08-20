@@ -130,7 +130,6 @@ export class ReportsMainViewComponent implements OnInit {
             alignment: 'center',
             color: '#244688',
             bold: true,
-            margin:[0,50,0,0]
           },
           {
             text: 'Created By: ' + User,
@@ -206,7 +205,6 @@ export class ReportsMainViewComponent implements OnInit {
       const docDefinition = {
         footer: function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
         header: {
-          margin:[0,0,0,150],
           table: {
             headerRows: 0,
             widths: [ '*', 'auto' ],
@@ -215,10 +213,10 @@ export class ReportsMainViewComponent implements OnInit {
             ]
           },
           layout: 'noBorders',
-          
       },
        
         content: content,
+        pageMargins: [40, 80, 40, 60],
       defaultStyle: {
         fontSize: 7,alignment: 'center'
       } 
@@ -250,7 +248,6 @@ export class ReportsMainViewComponent implements OnInit {
           alignment: 'center',
           color: '#244688',
           bold: true,
-          margin:[0,50,0,0]
         },
         {
           text: 'Created By: ' + User,
@@ -415,6 +412,7 @@ export class ReportsMainViewComponent implements OnInit {
           
       },
         content: content,
+        pageMargins: [40, 80, 40, 60],
       defaultStyle: {
         fontSize: 7,alignment: 'center'
       } 

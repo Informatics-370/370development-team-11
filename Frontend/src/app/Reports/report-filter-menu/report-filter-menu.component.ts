@@ -112,7 +112,6 @@ export class ReportFilterMenuComponent implements OnInit{
           alignment: 'center',
           color: '#244688',
           bold: true,
-          margin:[0,50,0,0]
         },
         {
           text: 'Created By: ' + User,
@@ -382,10 +381,10 @@ export class ReportFilterMenuComponent implements OnInit{
             ],
           },
           layout: 'noBorders',
-          margin:[0,0,0,200],
           
       },
         content: content,
+        pageMargins: [40, 80, 40, 60],
       defaultStyle: {
         fontSize: 6,alignment: 'center'
       } 
