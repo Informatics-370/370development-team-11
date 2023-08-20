@@ -13,6 +13,16 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { ProcReqIFrameComponent } from '../HelpIFrames/ProcReqIFrame/proc-req-iframe/proc-req-iframe.component';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-view-procurement-request',
   templateUrl: './view-procurement-request.component.html',
@@ -24,6 +34,7 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewProcurementRequestComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -196,4 +207,18 @@ export class ViewProcurementRequestComponent implements OnInit {
   }
 
 
+
+
+
+  openPRIFrameTab(): void {
+    const dialogRef = this.Dialog.open(ProcReqIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
+  }
 }

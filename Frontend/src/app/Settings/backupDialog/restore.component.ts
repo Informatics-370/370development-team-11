@@ -12,10 +12,18 @@ import { FormBuilder } from '@angular/forms';
 
 
 
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-restore',
   templateUrl: './restore.component.html',
   styleUrls: ['./restore.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
   
 })
 export class RestoreComponent {
@@ -77,5 +85,13 @@ export class RestoreComponent {
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+
+
+
+  openBackupTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

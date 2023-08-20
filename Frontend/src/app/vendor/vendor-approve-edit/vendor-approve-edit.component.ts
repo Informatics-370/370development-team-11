@@ -22,10 +22,20 @@ import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 import { Vendor_Insurance } from 'src/app/Shared/VendorDetailsInsurance';
 import { AuditLog } from 'src/app/Shared/AuditLog';
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-vendor-approve-edit',
   templateUrl: './vendor-approve-edit.component.html',
-  styleUrls: ['./vendor-approve-edit.component.css']
+  styleUrls: ['./vendor-approve-edit.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class VendorApproveEditComponent implements OnInit{
 
@@ -896,6 +906,14 @@ validationLinear() {
 
 
 
+
+
+
+
+openEditDueDillTab(): void {
+  const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+  window.open(userManualUrl, '_blank');
+}
 }
 
 

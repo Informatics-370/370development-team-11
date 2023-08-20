@@ -20,10 +20,21 @@ import { AuditLog } from 'src/app/Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 import { Access } from 'src/app/Shared/Access';
 
+
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-request-update',
   templateUrl: './request-update.component.html',
-  styleUrls: ['./request-update.component.css']
+  styleUrls: ['./request-update.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 
 
@@ -628,6 +639,14 @@ onPreferredChecked(i:number) {
 }
 
 
+
+
+
+
+openEditOnboardRequestTab(): void {
+  const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+  window.open(userManualUrl, '_blank');
+}
 }
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {

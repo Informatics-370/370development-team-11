@@ -143,4 +143,13 @@ export class ReceiveProcurementItemComponent {
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
   }
+
+
+
+
+
+  openRecieveConsumableTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }

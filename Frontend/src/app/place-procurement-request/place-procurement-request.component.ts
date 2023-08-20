@@ -6,10 +6,20 @@ import { Procurement_Request } from '../Shared/Procurement_Request';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { PlaceProcDetailIFrameComponent } from '../HelpIFrames/PlaceProcDetailIFrame/place-proc-detail-iframe/place-proc-detail-iframe.component';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-place-procurement-request',
   templateUrl: './place-procurement-request.component.html',
-  styleUrls: ['./place-procurement-request.component.css']
+  styleUrls: ['./place-procurement-request.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class PlaceProcurementRequestComponent implements OnInit {
   ProcurementRequests: Procurement_Request[] = [];
@@ -114,5 +124,19 @@ export class PlaceProcurementRequestComponent implements OnInit {
       default:
         return 'black'; // Default color if the status doesn't match any case
     }
+  }
+
+
+
+  openPPRIFrameTab(): void {
+    const dialogRef = this.Dialog.open(PlaceProcDetailIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
   }
 }

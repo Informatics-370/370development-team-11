@@ -1161,5 +1161,13 @@ convertImageToBase64(filePath: string) {
 }
 
 
+
+
+
+
+openVendorDetailsTab(): void {
+  const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+  window.open(userManualUrl, '_blank');
+}
 }
 

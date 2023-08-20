@@ -161,6 +161,14 @@ import { BudgetCategoryIFrameComponent } from './HelpIFrames/BudgetCategoryIFram
 import { BudgetAllocationIFrameComponent } from './HelpIFrames/BudgetAllocationIFrame/budget-allocation-iframe/budget-allocation-iframe.component';
 import { BudgetLineIFrameComponent } from './HelpIFrames/BudgetLineIFrame/budget-line-iframe/budget-line-iframe.component';
 import { FinalizeProcReqIFrameComponent } from './HelpIFrames/FinalizeProcReqIFrame/finalize-proc-req-iframe/finalize-proc-req-iframe.component';
+import { OnboardRequestIFrameComponent } from './HelpIFrames/OnboardRequestIFrame/onboard-request-iframe/onboard-request-iframe.component';
+import { ManageVendorIFrameComponent } from './HelpIFrames/ManageVendorIFrame/manage-vendor-iframe/manage-vendor-iframe.component';
+import { ApproveVendorIFrameComponent } from './HelpIFrames/ApproveVendorIFrame/approve-vendor-iframe/approve-vendor-iframe.component';
+import { ProcReqIFrameComponent } from './HelpIFrames/ProcReqIFrame/proc-req-iframe/proc-req-iframe.component';
+import { ProcReqPendingIFrameComponent } from './HelpIFrames/ProcReqPendingIFrame/proc-req-pending-iframe/proc-req-pending-iframe.component';
+import { PlaceProcDetailIFrameComponent } from './HelpIFrames/PlaceProcDetailIFrame/place-proc-detail-iframe/place-proc-detail-iframe.component';
+import { FlaggerProcDetailIFrameComponent } from './HelpIFrames/FlaggedProcDetailIFrame/flagger-proc-detail-iframe/flagger-proc-detail-iframe.component';
+import { ProcDetailIFrameComponent } from './HelpIFrames/ProcDetailIFrame/proc-detail-iframe/proc-detail-iframe.component';
 
 
 
@@ -288,6 +296,14 @@ import { FinalizeProcReqIFrameComponent } from './HelpIFrames/FinalizeProcReqIFr
     BudgetAllocationIFrameComponent,
     BudgetLineIFrameComponent,
     FinalizeProcReqIFrameComponent,
+    OnboardRequestIFrameComponent,
+    ManageVendorIFrameComponent,
+    ApproveVendorIFrameComponent,
+    ProcReqIFrameComponent,
+    ProcReqPendingIFrameComponent,
+    PlaceProcDetailIFrameComponent,
+    FlaggerProcDetailIFrameComponent,
+    ProcDetailIFrameComponent,
   ],
   imports: [
     BrowserModule,

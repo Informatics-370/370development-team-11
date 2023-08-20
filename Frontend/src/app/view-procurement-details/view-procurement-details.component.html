@@ -23,6 +23,8 @@
     <mat-sidenav-content class="Main-content">
         <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
             View Procurement Request Details
+            <mat-icon (click)="openPRDIFrameTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+            style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
         </h1>
 
         <div mat-list-item style="margin-left: 0.5%; display: flex;  align-items: center; ">
@@ -69,7 +71,7 @@
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Status
                     </th>
                     <td mat-cell *matCellDef="let procurement">
-                        <span [style.color]="getStatusColor(procurement.procurement_Status.name)">
+                        <span [style.color]="getStatusColor(procurement.procurement_Status.name)" matTooltip="Status of this procurment Request details.">
                             {{procurement.procurement_Status.name}}
                         </span>
                     </td>
@@ -79,7 +81,7 @@
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Upload Proof of Payment
                     </th>
                     <td mat-cell *matCellDef="let procurement" style="width:100px;">
-                        <button mat-raised-button
+                        <button mat-raised-button matTooltip="This will direct you to the Upload Proof of Payment Page, there you will be able to upload the receipt file and/or upload teh credit card payment file."
                             (click)="openDialog(procurement.buyer_Name, procurement.procurement_Request_ID)"
                             type="button"
                             style="margin-right: 5%; display: flex; align-items: center; font-weight:bold ; width: 180px; margin-top: 0.5%; background-color: #94CC5B;">
@@ -93,7 +95,7 @@
                         Invoice
                     </th>
                     <td mat-cell *matCellDef="let procurement" style="width:100px;">
-                        <button mat-raised-button
+                        <button mat-raised-button matTooltip="This will direct you to the Upload Invoice Page, there you will be able to upload the Invoice file."
                             (click)="openInvDialog(procurement.buyer_Name, procurement.procurement_Request_ID)"
                             type="button"
                             style="margin-right: 5%; display: flex; align-items: center; font-weight: bold; width: 133px; margin-top: 0.5%; background-color: #94CC5B;">
@@ -108,6 +110,7 @@
                     <td mat-cell *matCellDef="let procurement" style="width:100px;">
 
                         <button *ngIf="!getFlagged(procurement.procurement_Status.name) " class="noselect" type="button"
+                            matTooltip="This will direct you to the Receive Consumable Page, there you will be able to set the amount of consumables received."
                             style="background-color: #94CC5B;"
                             routerLink="/ReceiveProcurementItem/{{procurement.procurement_Details_ID}}">
                             <span class='text'>Receive</span>

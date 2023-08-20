@@ -34,10 +34,22 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { AuditLog } from '../Shared/AuditLog';
 import { Access } from '../Shared/Access';
+
+
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-finalize-procurement-request-create',
   templateUrl: './finalize-procurement-request-create.component.html',
-  styleUrls: ['./finalize-procurement-request-create.component.css']
+  styleUrls: ['./finalize-procurement-request-create.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class FinalizeProcurementRequestCreateComponent {
 
@@ -429,5 +441,14 @@ export class FinalizeProcurementRequestCreateComponent {
 
   public myError = (controlName: string, errorName: string) => {
     return this.finalizationForm.controls[controlName].hasError(errorName);
+  }
+
+
+
+
+
+  openFinalizeProcReqTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

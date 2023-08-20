@@ -22,10 +22,20 @@ import { Role } from '../Shared/EmployeeRole';
 import { AuditLog } from '../Shared/AuditLog';
 import { Access } from '../Shared/Access';
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-create-procurement-request',
   templateUrl: './create-procurement-request.component.html',
-  styleUrls: ['./create-procurement-request.component.css']
+  styleUrls: ['./create-procurement-request.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class CreateProcurementRequestComponent implements OnInit {
   myForm: FormGroup = new FormGroup({});
@@ -546,5 +556,13 @@ export class CreateProcurementRequestComponent implements OnInit {
   Close() {
     this.myForm.reset();
     this.router.navigate(['/ViewProcurementRequest']);
+  }
+
+
+
+
+  openCreatePRTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

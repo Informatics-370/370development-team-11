@@ -10,6 +10,7 @@ import { Subscription, buffer, elementAt, groupBy } from 'rxjs';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
 import { TestScheduler } from 'rxjs/testing';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { ApproveVendorIFrameComponent } from 'src/app/HelpIFrames/ApproveVendorIFrame/approve-vendor-iframe/approve-vendor-iframe.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -334,4 +335,17 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
 
 
 
+
+
+  openApproveVendorIFrameTab(): void {
+    const dialogRef = this.dialog.open(ApproveVendorIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
+  }
 }

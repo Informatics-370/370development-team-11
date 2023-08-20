@@ -28,10 +28,20 @@ import { Access } from 'src/app/Shared/Access';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-vendor-approve',
   templateUrl: './vendor-approve.component.html',
-  styleUrls: ['./vendor-approve.component.css']
+  styleUrls: ['./vendor-approve.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class VendorApproveComponent implements OnInit {
 
@@ -1332,7 +1342,26 @@ export class VendorApproveComponent implements OnInit {
 
 
 
+
+
+
+  openOnboard3QuotesTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
+  openApproveRejectSoleTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
+
+  openOnboardRequestCleanTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
+ 
+
 }
+
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {

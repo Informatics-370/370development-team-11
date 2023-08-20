@@ -2,6 +2,8 @@
     <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="onboardRequest.length > 1 && (onboardRequest[0].status_ID == 5 || onboardRequest[0].status_ID == 1);Sole" #General >
       <h1 *ngIf="onboardRequest[0] != undefined" style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;" >
         Onboard Request #{{onboardRequest[1].onboard_Request_Id}}
+        <mat-icon (click)="openOnboard3QuotesTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+        style="font-size:30pt; height: 37px; width: 37px; "  [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
       </h1>
       <div>  
       <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;">Please select one of the {{onboardRequest.length}} options:</label>
@@ -87,6 +89,8 @@
       <h1 *ngIf="onboardRequest[0] != undefined" style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;width: 700px;margin-left: 0px;" >
         <button mat-raised-button (click)="ReturnOnboardRequestStatus()" style="float:left; background-color:#244688; color:white;margin-right: 1%;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
         Onboard Request #{{onboardRequest[0].onboard_Request_Id}}
+        <mat-icon (click)="openApproveRejectSoleTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+        style="font-size:30pt; height: 37px; width: 37px; "  [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
     </h1>
     </div>
  
@@ -200,6 +204,8 @@
   <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;" >
     <button  mat-raised-button routerLink="/vendor-unofficial-vendorlist" style="float:left; background-color:#244688; color:white;margin-right: 1%;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
     Onboard Request #{{onboardRequestSelectedData.onboard_Request_Id}}
+    <mat-icon (click)="openOnboardRequestCleanTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+    style="font-size:30pt; height: 37px; width: 37px; "  [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
   </h1>
   <div>  
   <br>

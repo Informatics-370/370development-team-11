@@ -23,10 +23,20 @@ import { DatePipe } from '@angular/common';
 import { Due_Dillegence } from 'src/app/Shared/DueDillegence';
 import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 import { AuditLog } from 'src/app/Shared/AuditLog';
+
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-vendor-create',
   templateUrl: './vendor-create.component.html',
-  styleUrls: ['./vendor-create.component.css']
+  styleUrls: ['./vendor-create.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 
 
@@ -774,6 +784,20 @@ export class VendorCreateComponent implements OnInit{
     this.VendorService.ChangeVendorStatus(4,this.Vendor.vendor_ID).subscribe(result => {
       this.router.navigate([`/vendor-view`]);
     })
+  }
+
+
+
+
+
+
+
+
+
+
+  openCreateVendorTab(): void {
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }
 
