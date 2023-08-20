@@ -207,7 +207,6 @@ export class ReportsMainViewComponent implements OnInit {
       const docDefinition = {
         footer: function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
         header: {
-          margin: [0, 0, 0, 150],
           table: {
             headerRows: 0,
             widths: ['*', 'auto'],
@@ -253,7 +252,6 @@ export class ReportsMainViewComponent implements OnInit {
           alignment: 'center',
           color: '#244688',
           bold: true,
-          margin: [0, 50, 0, 0]
         },
         {
           text: 'Created By: ' + User,
@@ -425,6 +423,7 @@ export class ReportsMainViewComponent implements OnInit {
           layout: 'noBorders',
 
         },
+        pageMargins: [40, 80, 40, 60],
         content: content,
         defaultStyle: {
           fontSize: 7, alignment: 'center'
@@ -453,16 +452,6 @@ export class ReportsMainViewComponent implements OnInit {
       var CurrencyTransform = new CurrencyPipe('en-ZA')
       let uniqueDepartments = data.map(p => p.budget_Allocation.department.name).filter((name, index, currentval) => currentval.indexOf(name) === index);
       let content = [
-        {
-          table: {
-            headerRows: 1,
-            widths: ['*', 'auto'],
-            body: [
-              [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 150, height: 50, margin: [5, 5, 0, 5] }, {}],
-            ]
-          },
-          layout: 'noBorders', margin: [0, 0, 0, 10]
-        },
         {
           text: 'Business Unit Allocation Report',
           fontSize: 18,
@@ -521,7 +510,8 @@ export class ReportsMainViewComponent implements OnInit {
             },
           }
         },
-
+        ...(Number(ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[0]).reduce((sum, p) => sum + 0, 0).toFixed(2)) != 0) ? [{text:'Bar Chart Showing Business Unit Allocations',fontSize: 18,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
+            {image:this.budgetVarianceBarChartImageBase64,fit:[550,700]},] : []
 
       ]
       for (let i = 1; i < uniqueDepartments.length; i++) {
@@ -582,7 +572,6 @@ export class ReportsMainViewComponent implements OnInit {
 
             },
           );//push statement
-          content.push()
           content.push(
             {
               table: {
@@ -616,36 +605,41 @@ export class ReportsMainViewComponent implements OnInit {
       }
 
 
-      content.push({
-
-        canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }],
-        // Add space above the line
-        margin: [0, 10, 0, 10]
-      },
+      content.push(
         {
-          text: 'Bar Chart Showing Business Unit Allocations',
-          fontSize: 18,
-          alignment: 'center',
-          color: '#244688',
-          bold: true
+          canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }],
+          // Add space above the line
+          margin: [0, 5, 0, 10]
         },
-        {
-          table: {
-            headerRows: 1,
-            widths: ['*', 'auto'],
-            body: [
-              [{ image: this.businessUnitAllocationChartImageBase64, alignment: 'center', fillColor: "white", width: 550, height: 350, margin: [5, 5, 0, 5] }, {}],
-            ]
-          },
-          layout: 'noBorders', margin: [0, 0, 0, 10]
-        },
+      ...(Number(ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[0]).reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)) != 0) ? [{text:'Bar Chart Showing Business Unit Allocations',fontSize: 18,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
+            {image:this.businessUnitAllocationChartImageBase64,fit:[550,700]},] : [],
+  
 
-        { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true },
+            {
+              canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }],
+              // Add space above the line
+              margin: [0, 5, 0, 10]
+            },
+            { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true, }
 
       )
 
-
+      
       const docDefinition = {
+        footer: function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
+        header: {
+          margin: [0, 0, 0, 0],
+          table: {
+            headerRows: 0,
+            widths: ['*', 'auto'],
+            body: [
+              [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
+            ]
+          },
+          layout: 'noBorders',
+
+        },
+        pageMargins: [40, 80, 40, 60],
         content: content,
         defaultStyle: {
           fontSize: 7, alignment: 'center'
@@ -714,18 +708,9 @@ export class ReportsMainViewComponent implements OnInit {
       var User = this.ReportService.decodeUser(sessionStorage.getItem('token'))
       var CurrencyTransform = new CurrencyPipe('en-ZA')
       let uniqueCategories = data.map(p => p.budget_Category.account_Name).filter((name, index, currentval) => currentval.indexOf(name) === index);
+      console.log(uniqueCategories)
       console.log(ReportData[0].budget_Category.account_Name == uniqueCategories[0]);
       let content = [
-        {
-          table: {
-            headerRows: 1,
-            widths: ['*', 'auto'],
-            body: [
-              [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 150, height: 50, margin: [5, 5, 0, 5] }, {}],
-            ]
-          },
-          layout: 'noBorders', margin: [0, 0, 0, 10]
-        },
         {
           text: 'Budget Variance Report',
           fontSize: 18,
@@ -787,7 +772,8 @@ export class ReportsMainViewComponent implements OnInit {
             },
           }
         },
-
+        ...(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + 0, 0).toFixed(2)) != 0) ? [{text:'Bar Chart Showing Total Expenses For Different Categories',fontSize: 18,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
+            {image:this.budgetVarianceBarChartImageBase64,fit:[550,700]},] : []
 
       ]
       for (let i = 1; i < uniqueCategories.length; i++) {
@@ -886,25 +872,10 @@ export class ReportsMainViewComponent implements OnInit {
 
         canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }],
         // Add space above the line
-        margin: [0, 300, 0, 10]
+        margin: [0, 10, 0, 10]
       },
-        {
-          text: 'Bar Chart Showing Total Expenses For Different Categories ',
-          fontSize: 18,
-          alignment: 'center',
-          color: '#244688',
-          bold: true
-        },
-        {
-          table: {
-            headerRows: 1,
-            widths: ['*', 'auto'],
-            body: [
-              [{ image: this.budgetVarianceBarChartImageBase64, alignment: 'center', fillColor: "white", width: 550, height: 350, margin: [5, 5, 0, 5] }, {}],
-            ]
-          },
-          layout: 'noBorders', margin: [0, 0, 0, 10]
-        },
+      ...(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)) != 0) ? [{text:'Bar Chart Showing Total Expenses For Different Categories',fontSize: 18,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
+      {image:this.budgetVarianceBarChartImageBase64,fit:[550,700]},] : []
 
 
 
@@ -914,30 +885,37 @@ export class ReportsMainViewComponent implements OnInit {
 
         canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }],
         // Add space above the line
-        margin: [0, 400, 0, 10]
+        margin: [0, 10, 0, 10]
       },
-        {
-          text: 'Line Chart Showing Monthly Expenditure',
-          fontSize: 18,
-          alignment: 'center',
-          color: '#244688',
-          bold: true
+      ...(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)) != 0) ? [{text:'Line Chart Showing Monthly Expenditure',fontSize: 18,alignment: 'center',color: '#244688',margin:[0, 0,0,10],pageBreak: 'before'},
+      {image:this.budgetVarianceLineChartImageBase64,fit:[550,700]},] : [],
+      { 
+        canvas: [
+          // Centered line with space above
+          { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
+        ],
+        // Add space above the line
+        margin: [0, 10]
         },
-        {
-          table: {
-            headerRows: 1,
-            widths: ['*', 'auto'],
-            body: [
-              [{ image: this.budgetVarianceLineChartImageBase64, alignment: 'center', fillColor: "white", width: 550, height: 350, margin: [5, 5, 0, 5] }, {}],
-            ]
-          },
-          layout: 'noBorders', margin: [0, 0, 0, 10]
-        },
-        { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true },
+        {text:'**End of Report**',fontSize: 12,alignment: 'center',bold:true,}
       )
 
 
       const docDefinition = {
+        footer: function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
+        header: {
+          margin: [0, 0, 0, 0],
+          table: {
+            headerRows: 0,
+            widths: ['*', 'auto'],
+            body: [
+              [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
+            ]
+          },
+          layout: 'noBorders',
+
+        },
+        pageMargins: [40, 80, 40, 60],
         content: content,
         defaultStyle: {
           fontSize: 7, alignment: 'center'
@@ -1091,7 +1069,6 @@ export class ReportsMainViewComponent implements OnInit {
           alignment: 'center',
           color: '#244688',
           bold: true,
-          margin: [0, 50, 0, 0]
         },
         {
           text: 'Created By: ' + User,
@@ -1184,6 +1161,7 @@ export class ReportsMainViewComponent implements OnInit {
           layout: 'noBorders',
 
         },
+        pageMargins: [40, 80, 40, 60],
         content: content,
         defaultStyle: {
           fontSize: 7, alignment: 'center'
