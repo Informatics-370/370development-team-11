@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Net.Http.Headers;
+using System.Runtime.Intrinsics.Arm;
 
 namespace ProcionAPI.Controllers
 {
@@ -42,6 +43,8 @@ namespace ProcionAPI.Controllers
         [HttpPost("login/{UserName}/{Password}")]
         public async Task<IActionResult> Login([FromRoute] string UserName, [FromRoute] string Password)
         {
+            var dep = "";
+
             if (await _UserRepository.GetUserByUsername(UserName) != null)
             {
                 bool isCredentialsValid = await _UserRepository.VerifyCredentials(UserName, Password);
@@ -49,8 +52,21 @@ namespace ProcionAPI.Controllers
                 {
                     User user = await _UserRepository.GetUserByUsername(UserName);
 
+                    if(user.Role.Name == "Admin")
+                    {
+                        Admin adm = await _UserRepository.GetAdminByUserNameAsync(UserName);
+                        dep = "All";
+                    }
+                    else
+                    {
+                        Employee emp = await _UserRepository.GetEmployeeByUserNameAsync(UserName);
+                        dep = emp.Department.Name;
+                    }
+
+                    
+
                     // Generate token
-                    var token = GenerateToken(user);
+                    var token = GenerateToken(user, dep);
 
                     // Return the token as a response to the Angular frontend
                     return Ok(new { token });
@@ -65,9 +81,10 @@ namespace ProcionAPI.Controllers
                 if (isCredentialsValid == true)
                 {
                     User user = await _UserRepository.GetUserByUsername(MyUsername);
+                    dep = "All";
 
                     // Generate token
-                    var token = GenerateToken(user);
+                    var token = GenerateToken(user, dep);
 
                     // Return the token as a response to the Angular frontend
                     return Ok(new { token });
@@ -82,9 +99,11 @@ namespace ProcionAPI.Controllers
                 if (isCredentialsValid == true)
                 {
                     User user = await _UserRepository.GetUserByUsername(MyUsername);
+                    Employee emp = await _UserRepository.GetEmployeeByUserNameAsync(UserName);
+                    dep = emp.Department.Name;
 
                     // Generate token
-                    var token = GenerateToken(user);
+                    var token = GenerateToken(user, dep);
 
                     // Return the token as a response to the Angular frontend
                     return Ok(new { token });
@@ -94,7 +113,7 @@ namespace ProcionAPI.Controllers
 
             return Unauthorized(new { error = "Invalid credentials" });
         }
-        private string GenerateToken(User user)
+        private string GenerateToken(User user, string dep)
         {
             
             byte[] key;
@@ -113,6 +132,7 @@ namespace ProcionAPI.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, user.Role.Name),
+                    new Claim("Department", dep),
                     new Claim("CanAccInv", user.Access.CanAccInv),
                     new Claim("CanAccFin", user.Access.CanAccFin),
                     new Claim("CanAccPro", user.Access.CanAccPro),
@@ -141,15 +161,27 @@ namespace ProcionAPI.Controllers
         [HttpPost("loginWithTemp/{UserName}/{Password}/{TempUsername}")]
         public async Task<IActionResult> LoginWithTemp([FromRoute] string UserName, [FromRoute] string Password, Temporary_Access TempAcc, [FromRoute] string TempUsername)
         {
+            var dep = "";
+
             if (await _UserRepository.GetUserByUsername(UserName) != null)
             {
                 bool isCredentialsValid = await _UserRepository.VerifyCredentials(UserName, Password);
                 if (isCredentialsValid == true)
                 {
                     User user = await _UserRepository.GetUserByUsername(UserName);
+                    if (user.Role.Name == "Admin")
+                    {
+                        Admin adm = await _UserRepository.GetAdminByUserNameAsync(UserName);
+                        dep = "All";
+                    }
+                    else
+                    {
+                        Employee emp = await _UserRepository.GetEmployeeByUserNameAsync(UserName);
+                        dep = emp.Department.Name;
+                    }
 
                     // Generate token
-                    var token = GenerateTokenWithTemp(user, TempAcc, TempUsername);
+                    var token = GenerateTokenWithTemp(user, TempAcc, TempUsername, dep);
 
                     // Return the token as a response to the Angular frontend
                     return Ok(new { token });
@@ -164,9 +196,10 @@ namespace ProcionAPI.Controllers
                 if (isCredentialsValid == true)
                 {
                     User user = await _UserRepository.GetUserByUsername(MyUsername);
+                    dep = "All";
 
                     // Generate token
-                    var token = GenerateTokenWithTemp(user, TempAcc, TempUsername);
+                    var token = GenerateTokenWithTemp(user, TempAcc, TempUsername, dep);
 
                     // Return the token as a response to the Angular frontend
                     return Ok(new { token });
@@ -181,9 +214,11 @@ namespace ProcionAPI.Controllers
                 if (isCredentialsValid == true)
                 {
                     User user = await _UserRepository.GetUserByUsername(MyUsername);
+                    Employee emp = await _UserRepository.GetEmployeeByUserNameAsync(UserName);
+                    dep = emp.Department.Name;
 
                     // Generate token
-                    var token = GenerateTokenWithTemp(user, TempAcc, TempUsername);
+                    var token = GenerateTokenWithTemp(user, TempAcc, TempUsername, dep);
 
                     // Return the token as a response to the Angular frontend
                     return Ok(new { token });
@@ -194,7 +229,7 @@ namespace ProcionAPI.Controllers
             return Unauthorized(new { error = "Invalid credentials" });
         }
 
-        private string GenerateTokenWithTemp(User user, Temporary_Access TempAcc, string TempUsername)
+        private string GenerateTokenWithTemp(User user, Temporary_Access TempAcc, string TempUsername, string dep)
         {
             byte[] key;
             using (var randomNumberGenerator = new RNGCryptoServiceProvider())
@@ -212,6 +247,7 @@ namespace ProcionAPI.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, user.Role.Name),
+                    new Claim("Department", dep),
                     new Claim("TemAccessRole", TempAcc.Name),
                     new Claim("CanAccInv", TempAcc.CanAccInv),
                     new Claim("CanAccFin", TempAcc.CanAccFin),
@@ -578,6 +614,22 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
+        [Route("CreateUserRoleValidation/{department}/{role}")]
+        public async Task<IActionResult> CreateUserRoleValidation([FromRoute] string department, [FromRoute] string role)
+        {
+            try
+            {
+                var result = await _UserRepository.CreateUserRoleValidationAsync(department, role);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
         [Route("EditUserValidation/{name}/{id}")]
         public async Task<IActionResult> EditUserValidation([FromRoute] string name, int id)
         {
@@ -592,6 +644,7 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
 
         [HttpPost, DisableRequestSizeLimit]
         [Route("uploadPhoto")]
@@ -668,7 +721,7 @@ namespace ProcionAPI.Controllers
 
         [HttpGet]
         [Route("GetLogs")]
-        public async Task<IActionResult> GetAllConsumables()
+        public async Task<IActionResult> GetAllLogs()
         {
             try
             {
