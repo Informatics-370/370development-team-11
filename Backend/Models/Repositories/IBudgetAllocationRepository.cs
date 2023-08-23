@@ -7,6 +7,7 @@ namespace ProcionAPI.Models.Repositories
         Task<Budget_Category[]> GetAllBudgetCategoriesAsync();
         Task<Budget_Category> GetBudgetCategoryAsync(int budgetCategoryId);
         Task<Budget_Allocation[]> GetAllBudgetAllocationsAsync();
+        Task<Budget_Allocation[]> GetDepBudgetAllocationAsync(string dep);
         Task<Budget_Allocation> GetBudgetAllocationAsync(int budgetAllocationId);
         Task<Budget_Line[]> GetAllBudgetLinesAsync();
         Task<Budget_Line[]> GetBudgetLinesForAllocationAsync(int budgetAllocationId);
@@ -18,6 +19,9 @@ namespace ProcionAPI.Models.Repositories
         Task<Budget_Category> BudgetCategoryValidationAsync(string name);
         Task<Budget_Allocation> BudgetAllocationValidationAsync(string departmentName, int year);
         Task<Budget_Line[]> GetBudgetAllocationExportAsync(int budgetAllocationId);
+        Task<Budget_Line[]> GetBudgetAllocationExportForMonthAsync(int budgetAllocationId, string month);
+        Task<Budget_Line> BudgetAllocationMonthExportValidationAsync(int budgetAllocationId, string month);
+        Task<Budget_Line> BudgetAllocationExportValidationAsync(int budgetAllocationId);
         Task<Dictionary<string, (decimal variance, decimal actualAmt, decimal budgetedAmt)>> GetVarianceByDepartmentAsync();
         Task<IEnumerable<Budget_Line>> GetMonthlyBudgetDataForCategory(int year);
         Task<Dictionary<string, decimal>> GetYearlyTotalsForCategories(int year);

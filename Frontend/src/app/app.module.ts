@@ -170,6 +170,7 @@ import { PlaceProcDetailIFrameComponent } from './HelpIFrames/PlaceProcDetailIFr
 import { FlaggerProcDetailIFrameComponent } from './HelpIFrames/FlaggedProcDetailIFrame/flagger-proc-detail-iframe/flagger-proc-detail-iframe.component';
 import { ProcDetailIFrameComponent } from './HelpIFrames/ProcDetailIFrame/proc-detail-iframe/proc-detail-iframe.component';
 import { YearPickerComponent } from './year-picker/year-picker.component';
+import { ExportBaPickerComponent } from './export-ba-picker/export-ba-picker.component';
 
 
 
@@ -306,6 +307,7 @@ import { YearPickerComponent } from './year-picker/year-picker.component';
     FlaggerProcDetailIFrameComponent,
     ProcDetailIFrameComponent,
     YearPickerComponent,
+    ExportBaPickerComponent,
   ],
   imports: [
     BrowserModule,
