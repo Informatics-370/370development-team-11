@@ -28,7 +28,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-procurement-details',
   templateUrl: './view-procurement-details.component.html',
   styleUrls: ['./view-procurement-details.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewProcurementDetailsComponent implements OnInit {
   ProcurementRequests: Procurement_Details[] = [];
@@ -51,6 +51,7 @@ export class ViewProcurementDetailsComponent implements OnInit {
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
     this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
     this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
+
 
     // if (this.iRole == "Admin" || this.iRole == "MD") {
     //   this.canViewFlagPro = "true";
@@ -165,5 +166,17 @@ export class ViewProcurementDetailsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       // Handle any dialog close actions if needed
     });
+  }
+
+  Receive(Procurement: string, ID: Number) {
+    console.log(Procurement)
+    console.log(ID)
+    if (Procurement == "Consumable") {
+      this.router.navigate(["/ReceiveProcurementItem/" + ID])
+    }
+
+    else if (Procurement == "Assets") {
+      this.router.navigate(["/ReceiveAsset/" + ID])
+    }
   }
 }

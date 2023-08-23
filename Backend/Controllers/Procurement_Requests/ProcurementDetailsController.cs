@@ -743,5 +743,22 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
+        [HttpGet]
+        [Route("getAssetStatuses")]
+
+        public async Task<IActionResult> getAssetStatuses()
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetAssetStatusesAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
 }

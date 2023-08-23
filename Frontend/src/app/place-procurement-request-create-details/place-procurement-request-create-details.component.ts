@@ -601,31 +601,36 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   }
 
   Validation() {
-    let maxValue = this.ConsumableItems.filter(y=> y.consumable_ID == Number(this.ProcurementFormGroup.get("ConsumableItem").value))
-    let value =  Number(maxValue[0].maximum_Reorder_Quantity) - Number(maxValue[0].minimum_Reorder_Quantity)
-    if(Number(this.ProcurementFormGroup.get("ConsumableQuantity").value) <= value) {
-      this.Create();
+    if (this.ConsumableChecked == true) {
+      let maxValue = this.ConsumableItems.filter(y => y.consumable_ID == Number(this.ProcurementFormGroup.get("ConsumableItem").value))
+      let value = Number(maxValue[0].maximum_Reorder_Quantity) - Number(maxValue[0].minimum_Reorder_Quantity)
+      if (Number(this.ProcurementFormGroup.get("ConsumableQuantity").value) <= value) {
+        this.Create();
+      }
+      else {
+        var action = "ERROR";
+        var title = "CONSUMABLE QUANTITY EXCEEDED";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Consumable Quantity has exceeded max limit of <strong style='color:red'>" + value + "</strong>!");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 1750;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
+      }
+
+
+
+      console.log(Number(maxValue[0].maximum_Reorder_Quantity))
+      this.ProcurementFormGroup.get("ConsumableItem").setValidators(Validators.max(Number(maxValue[0].maximum_Reorder_Quantity)))
     }
-    else {
-      var action = "ERROR";
-      var title = "CONSUMABLE QUANTITY EXCEEDED";
-      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Consumable Quantity has exceeded max limit of <strong style='color:red'>" + value + "</strong>!");
-
-      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-        disableClose: true,
-        data: { action, title, message }
-      });
-
-      const duration = 1750;
-      setTimeout(() => {
-        dialogRef.close();
-      }, duration);
+    else if (this.AssetChecked == true) {
+      this.Create()
     }
-
-
-
-    console.log(Number(maxValue[0].maximum_Reorder_Quantity))
-    this.ProcurementFormGroup.get("ConsumableItem").setValidators(Validators.max(Number(maxValue[0].maximum_Reorder_Quantity)))
   }
 
 
@@ -681,8 +686,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     console.log(this.ProcurementDetails)
     this.ProcureService.AddProcurementDetails(this.ProcurementDetails).subscribe(result => {
       console.log(result[0])
-      if(result[0].procurement_Status_ID != 3) {
-        this.ProcureService.UpdateBudgetLineAmount(this.ProcurementDetails.total_Amount,result[0].budget_Line).subscribe();
+      if (result[0].procurement_Status_ID != 3) {
+        this.ProcureService.UpdateBudgetLineAmount(this.ProcurementDetails.total_Amount, result[0].budget_Line).subscribe();
       }
       if (this.ProcurementDetails.deposit_Required == true) {
         this.Deposit.deposit_Amount = this.ProcurementFormGroup.get("DepositAmount")?.value;
@@ -836,7 +841,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
 
   openPPRDTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 
