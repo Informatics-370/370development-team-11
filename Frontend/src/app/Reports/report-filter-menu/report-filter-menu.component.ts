@@ -97,18 +97,16 @@ export class ReportFilterMenuComponent implements OnInit {
           }
           this.GenerateBEESpendtReport();
 
-          console.log("why")
-          this.onCancel()
-          
-        })
-        break;
-      }
 
+          this.onCancel()
+        })
+
+      }
+        break;
 
       case 4: {
 
         this.onCancel()
-        break;
       }
     }
   }

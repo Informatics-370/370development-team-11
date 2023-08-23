@@ -133,7 +133,6 @@ export class YearPickerComponent {
   }
 
   notifyYearDialogClosed() {
-    this.dialogRef.close();
     this.dialogRef.afterClosed().subscribe(result => {
       this.ReportService.notifyYearDialogClosed();
     });

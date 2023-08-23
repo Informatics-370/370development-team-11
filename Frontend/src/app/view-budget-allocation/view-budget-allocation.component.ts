@@ -13,6 +13,7 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 import { BudgetAllocationIFrameComponent } from '../HelpIFrames/BudgetAllocationIFrame/budget-allocation-iframe/budget-allocation-iframe.component';
+import { ExportBaPickerComponent } from '../export-ba-picker/export-ba-picker.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -60,6 +61,7 @@ export class ViewBudgetAllocationComponent {
   }
 
   iRole: string;
+  iDep: string;
   iCanViewFinPro: string = "false";
   canViewFinPro: string;
 
@@ -84,13 +86,20 @@ export class ViewBudgetAllocationComponent {
 
   ngOnInit() {
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iDep = this.dataService.decodeUserDep(sessionStorage.getItem("token"));
     this.iCanViewFinPro = this.dataService.decodeCanViewFinPro(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin" || this.iCanViewFinPro == "true") {
+    if (this.iRole == "Admin" || this.iRole == "MD") {
       this.canViewFinPro = "true";
+      this.GetBudgetAllocations();
+    } else if (this.iCanViewFinPro == "true") {
+      this.canViewFinPro = "true";
+      this.GetDepBudgetAllocation();
+    } else {
+      this.GetDepBudgetAllocation();
     }
 
-    this.GetBudgetAllocations();
+    
   }
 
   GetBudgetAllocations() {
@@ -100,17 +109,48 @@ export class ViewBudgetAllocationComponent {
     });
   }
 
+  GetDepBudgetAllocation() {
+    this.dataService.GetDepBudgetAllocation(this.iDep).subscribe(r => {
+      this.BudgetAllocations = r;
+      this.dataSource = new MatTableDataSource(this.BudgetAllocations);
+    })
+  }
+
   exportExcel(id: Number, name: String) {
-    this.log.action = "Exported Budget Allocation";
-    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-    let test: any
-    test = new DatePipe('en-ZA');
-    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-    this.dataService.AuditLogAdd(this.log).subscribe({
-      next: (Log) => {
-        this.dataService.ExportExcel(id, name)
+
+    this.dataService.BudgetAllocationExportValidation(id).subscribe(r => {
+      console.log(r);
+      if (r != null) {
+        const confirm = this.dialog.open(ExportBaPickerComponent, {
+          disableClose: true,
+          data: { id, name }
+        });
+
+        this.dialog.afterAllClosed.subscribe({
+          next: (response) => {
+            this.ngOnInit();
+          }
+        })
+      } else {
+        var action = "ERROR";
+        var title = "ERROR: No Budget Line exists";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Budget Lines exists for the Budget Allocation <strong>" + name + "<strong>!</strong>");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 1750;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
       }
     })
+
+    
+
+    
 
   }
 

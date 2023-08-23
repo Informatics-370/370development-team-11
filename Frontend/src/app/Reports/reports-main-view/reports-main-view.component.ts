@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef,AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DataService } from 'src/app/DataService/data-service';
@@ -33,7 +33,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   styleUrls: ['./reports-main-view.component.css'],
   providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
-export class ReportsMainViewComponent implements OnInit, AfterViewInit {
+export class ReportsMainViewComponent implements OnInit {
   @ViewChild('barCanvas', { static: false }) barCanvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('expensesChart', { static: false }) expensesChart: ElementRef<HTMLCanvasElement>;
 
@@ -78,24 +78,12 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
   columnChartbasestring: any;
   logoImageBase64: any;
   pieChartBaseString: any;
-
-  GeneralConsumableMangementSelected:boolean = false;
   myBar: any;
 
   barChart: any;
   //splitButtons = document.getElementsByClassName('gui-split-button')
   //popupButtons = document.getElementsByClassName('gui-popup-button')
   ngOnInit(): void {
-   
-    
-
-    this.convertImageToBase64()
-
-  }
-
-  
-
-  ngAfterViewInit() {
     this.ReportService.filter$.subscribe(filter => {
       this.filter = filter;
     });
@@ -114,13 +102,15 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
       this.initializeBarChart();
       this.initializeLineChart();
     });
-    console.log(this.GeneralConsumableMangementSelected)
+    //this.ReportService.getBEESpendReport().subscribe(result => {
+    // this.BEESpendReportDetails = result;
+    this.convertImageToBase64()
+    // this.columnChartbasestring = this.getColumnChart(this.BEESpendReportDetails);
+    // this.pieChartBaseString = this.getPieChart(this.BEESpendReportDetails);
+    // console.log(this.columnChartbasestring.toBase64Image('image/png'))
+    // })
     this.ReportService.dialogClosed$.subscribe(() => {
-      if(this.GeneralConsumableMangementSelected == true) {
-        this.GeneralConsumableMangementSelected = false
-        this.generateConsumableManagementReport();
-      }
-      
+      this.generateConsumableManagementReport();
     });
 
     this.ReportService.yearDialogClosed$.subscribe(() => {
@@ -132,6 +122,9 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
       this.generateBusinessUnitAllocationReport();
     }
     );
+
+
+
   }
 
   convertImageToBase64() {
@@ -691,13 +684,7 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
 
   initializeChart(): void {
 
-   
-
     let ctx = this.chartCanvas.nativeElement.getContext('2d');
-
-    if (this.chart) {
-      this.chart.destroy();
-    }
 
     let labels = this.detailedVariancesByDepartment.map(d => d.department);
     let varianceData = this.detailedVariancesByDepartment.map(d => d.variance);
@@ -990,8 +977,6 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
     var currYear = Number(sessionStorage.getItem('year'));
     let ctxBar = this.barCanvas.nativeElement.getContext('2d');
 
-   
-
     this.ReportService.GetYearlyTotalsForCategory(currYear).subscribe(data => {
       let categories = Object.keys(data);
       let yearlyTotals = Object.values(data);
@@ -1026,13 +1011,9 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
         this.budgetVarianceBarChartImageBase64 = this.barChart.toBase64Image();
         // this.showCanvas = false;  // Hide the canvas
       }, 500);
-
-      
     });
 
-    if (this.barChart) {
-      this.barChart.destroy();
-    }
+
   }
 
   initializeLineChart(): void {
@@ -1042,7 +1023,6 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
 
     let ctxLine = this.expensesChart.nativeElement.getContext('2d');
 
-    
     // Call the GetMonthlyTotals function to get the monthly totals
     this.ReportService.GetMonthlyTotals(currYear).subscribe(data => {
       let dataArray = Array.isArray(data) ? data : Object.entries(data).map(([month, total]) => ({ month, total }));
@@ -1082,13 +1062,9 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
         this.lineChart.destroy();
         // this.showCanvas = false;  // Hide the canvas
       }, 500);
-
-      
     });
-    if (this.lineChart) {
-      this.lineChart.destroy();
-    }
-    
+
+
   }
 
   generateConsumableManagementReport(): void {
@@ -1259,57 +1235,39 @@ export class ReportsMainViewComponent implements OnInit, AfterViewInit {
 
   CorrectRouting(boolValue: boolean) {
     let ID = this.iVal
-    console.log(ID)
     switch (ID) {
       case 1: {
         this.bDownload = boolValue;
         this.GenerateApprovedReport()
-        break;
       }
-        
+        break;
       case 2: {
         this.ViewFilter(2, boolValue)
-        break;
       }
-       
+        break;
       case 3: {
         this.bDownload = boolValue;
         this.GenerateVendorSpentReport()
-        break;
       }
-        
+        break;
       case 4: {
-        console.log(this.GeneralConsumableMangementSelected)
-        this.GeneralConsumableMangementSelected = true
-        console.log("hy")
         this.bDownload = boolValue;
         this.ViewFilter(4, boolValue)
-        break;
       }
-        
+        break;
       case 5: {
         this.bDownload = boolValue;
         this.ViewFilter2(5, boolValue)
-        break;
       }
-        
+        break;
       case 6: {
         this.bDownload = boolValue;
         this.ViewFilter2(6, boolValue)
-      break;
       }
     }
   }
 
   ViewFilter(ID: Number, sDownload: boolean) {
-
-    if(ID == 4) {
-      this.GeneralConsumableMangementSelected = true
-    }
-    else {
-      this.GeneralConsumableMangementSelected = false
-    }
-
 
     const confirm = this.dialog.open(ReportFilterMenuComponent, {
       disableClose: true,
