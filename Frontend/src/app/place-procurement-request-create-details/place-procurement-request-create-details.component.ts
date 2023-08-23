@@ -601,40 +601,31 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   }
 
   Validation() {
-    if (this.ConsumableChecked == true) {
-      let maxValue = this.ConsumableItems.filter(y => y.consumable_ID == Number(this.ProcurementFormGroup.get("ConsumableItem").value))
-      let value = Number(maxValue[0].maximum_Reorder_Quantity) - Number(maxValue[0].minimum_Reorder_Quantity)
-      if (Number(this.ProcurementFormGroup.get("ConsumableQuantity").value) <= value) {
-        this.Create();
-      }
-      else {
-        var action = "ERROR";
-        var title = "CONSUMABLE QUANTITY EXCEEDED";
-        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Consumable Quantity has exceeded max limit of <strong style='color:red'>" + value + "</strong>!");
-
-        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-          disableClose: true,
-          data: { action, title, message }
-        });
-
-        const duration = 1750;
-        setTimeout(() => {
-          dialogRef.close();
-        }, duration);
-      }
-
-
-
-      console.log(Number(maxValue[0].maximum_Reorder_Quantity))
-      this.ProcurementFormGroup.get("ConsumableItem").setValidators(Validators.max(Number(maxValue[0].maximum_Reorder_Quantity)))
-
-    }
-    else if (this.AssetChecked == true) {
+    let maxValue = this.ConsumableItems.filter(y=> y.consumable_ID == Number(this.ProcurementFormGroup.get("ConsumableItem").value))
+    let value =  Number(maxValue[0].maximum_Reorder_Quantity) - Number(maxValue[0].minimum_Reorder_Quantity)
+    if(Number(this.ProcurementFormGroup.get("ConsumableQuantity").value) <= value) {
       this.Create();
     }
+    else {
+      var action = "ERROR";
+      var title = "CONSUMABLE QUANTITY EXCEEDED";
+      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Consumable Quantity has exceeded max limit of <strong style='color:red'>" + value + "</strong>!");
+
+      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+        disableClose: true,
+        data: { action, title, message }
+      });
+
+      const duration = 1750;
+      setTimeout(() => {
+        dialogRef.close();
+      }, duration);
+    }
 
 
-    
+
+    console.log(Number(maxValue[0].maximum_Reorder_Quantity))
+    this.ProcurementFormGroup.get("ConsumableItem").setValidators(Validators.max(Number(maxValue[0].maximum_Reorder_Quantity)))
   }
 
 

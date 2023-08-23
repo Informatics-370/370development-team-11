@@ -7,10 +7,10 @@ namespace ProcionAPI.Models.Entities
         [Key]
         public int Category_ID { get; set; }
 
-        [MaxLength(150)]
+        [MaxLength(50)]
         public string Account_Name { get; set; }
 
-        [MaxLength(200)]
+        [MaxLength(100)]
         public string Description { get; set; }
     }
 }

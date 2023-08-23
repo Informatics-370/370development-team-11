@@ -257,22 +257,6 @@ namespace ProcionAPI.Models.Repositories
         public async Task<User> CreateUserValidationAsync(string name)
         {
             User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.Username == name);
-
-            if (ExistingUser != null)
-            {
-                return ExistingUser;
-            }
-
-            else
-            {
-                return null;
-            }
-        }
-
-        public async Task<Employee> CreateUserRoleValidationAsync(string department, string role)
-        {
-            Employee ExistingUser = await _dbContext.Employee.FirstOrDefaultAsync(x => x.User.Role.Name == role && x.Department.Name == department);
-
             if (ExistingUser != null)
             {
                 return ExistingUser;
@@ -394,8 +378,6 @@ namespace ProcionAPI.Models.Repositories
             var ExistingUser = _dbContext.User.Include(u => u.Role).Include(a => a.Access).FirstOrDefault(c => c.Username == username);
             return ExistingUser;
         }
-
-        
 
         public async Task<bool> VerifyCredentials(string UserName, string Password)
         {
