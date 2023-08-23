@@ -30,11 +30,6 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Budget_Allocation> query = _dbContext.Budget_Allocation.Include(c => c.Department);
             return await query.ToArrayAsync();
         }
-        public async Task<Budget_Allocation[]> GetDepBudgetAllocationAsync(string dep)
-        {
-            IQueryable<Budget_Allocation> query = _dbContext.Budget_Allocation.Include(c => c.Department).Where(d => d.Department.Name == dep);
-            return await query.ToArrayAsync();
-        }
         public async Task<Budget_Allocation> GetBudgetAllocationAsync(int budgetAllocationId)
         {
             IQueryable<Budget_Allocation> query = _dbContext.Budget_Allocation.Include(c => c.Department).Where(c => c.Budget_ID == budgetAllocationId);
@@ -55,12 +50,6 @@ namespace ProcionAPI.Models.Repositories
         public async Task<Budget_Line[]> GetBudgetAllocationExportAsync(int budgetAllocationId)
         {
             IQueryable<Budget_Line> query = _dbContext.Budget_Line.Where(b => b.Budget_Allocation.Budget_ID == budgetAllocationId).Include(c => c.Budget_Category).Include(a => a.Budget_Allocation).ThenInclude(a => a.Department).OrderBy(m => m.Month);
-            return await query.ToArrayAsync();
-        }
-
-        public async Task<Budget_Line[]> GetBudgetAllocationExportForMonthAsync(int budgetAllocationId, string month)
-        {
-            IQueryable<Budget_Line> query = _dbContext.Budget_Line.Where(b => b.Budget_Allocation.Budget_ID == budgetAllocationId && b.Month == month).Include(c => c.Budget_Category).Include(a => a.Budget_Allocation).ThenInclude(a => a.Department).OrderBy(m => m.Month);
             return await query.ToArrayAsync();
         }
 
@@ -95,7 +84,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Budget_Line[]> AddBudgetLineAsync(Budget_Line budgetLine)
         {
-            Budget_Line existingLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(d => d.Budget_Category.Account_Name == budgetLine.Budget_Category.Account_Name && d.Month == budgetLine.Month && d.Budget_ID == budgetLine.Budget_ID);
+            Budget_Line existingLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(d => d.Budget_Category.Account_Name == budgetLine.Budget_Category.Account_Name && d.Month == budgetLine.Month);
             
             if (existingLine != null)
             {
@@ -181,37 +170,6 @@ namespace ProcionAPI.Models.Repositories
                 return null;
             }
         }
-
-        public async Task<Budget_Line> BudgetAllocationMonthExportValidationAsync(int budgetAllocationId, string month)
-        {
-            Budget_Line ExistingAllocation = await _dbContext.Budget_Line.FirstOrDefaultAsync(x => x.Budget_ID == budgetAllocationId && x.Month == month);
-
-            if (ExistingAllocation != null)
-            {
-                return ExistingAllocation;
-            }
-
-            else
-            {
-                return null;
-            }
-        }
-
-        public async Task<Budget_Line> BudgetAllocationExportValidationAsync(int budgetAllocationId)
-        {
-            Budget_Line ExistingAllocation = await _dbContext.Budget_Line.FirstOrDefaultAsync(x => x.Budget_ID == budgetAllocationId);
-
-            if (ExistingAllocation != null)
-            {
-                return ExistingAllocation;
-            }
-
-            else
-            {
-                return null;
-            }
-        }
-
         public async Task<Dictionary<string, (decimal variance, decimal actualAmt, decimal budgetedAmt)>> GetVarianceByDepartmentAsync()
         {
      
