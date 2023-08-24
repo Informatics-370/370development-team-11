@@ -94,7 +94,7 @@ export class EditEmployeeComponent implements OnInit {
     access: this.Access,
     username: '',
     password: '',
-    profile_Picture: './assets/Images/Default_Profile.jpg',
+    profile_Picture: '',
     no_Notifications: 0,
     role: this.rl
   }
@@ -243,6 +243,7 @@ export class EditEmployeeComponent implements OnInit {
       this.usr.role_ID = this.employee.user.role.role_ID;
       this.usr.access_ID = this.employee.user.access.access_ID;
       this.usr.password = this.employee.user.password;
+      this.usr.profile_Picture = this.employee.user.profile_Picture;
 
       if (this.employee.user.access.canAccInv == "true") {
         this.cAccInv = "true";
@@ -347,7 +348,7 @@ export class EditEmployeeComponent implements OnInit {
     this.usr.access.CanViewFlagPro = this.accForm.get('canViewFlagPro')?.value;
     this.usr.access.CanViewPenPro = this.accForm.get('canViewPenPro')?.value;
 
-    
+
 
     console.log(this.usr)
 
@@ -413,9 +414,9 @@ export class EditEmployeeComponent implements OnInit {
 
 
 
-  
+
   openEditEmployeeTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

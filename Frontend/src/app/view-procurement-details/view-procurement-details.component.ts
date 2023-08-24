@@ -129,7 +129,13 @@ export class ViewProcurementDetailsComponent implements OnInit {
       case 'awaiting delivery':
         return 'orange';
       case 'item received and checked':
-        return 'blue'; // Set the color you want for 'Approved'
+        return 'blue';
+      case 'item received and checked':
+        return 'blue';
+      case 'asset registered':
+        return 'blue';// Set the color you want for 'Approved'
+      case 'asset to be registered':
+        return 'blue';
       default:
         return 'black'; // Default color if the status doesn't match any case
     }

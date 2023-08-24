@@ -76,7 +76,7 @@ export class UserProfileEditComponent {
     access: this.Access,
     username: '',
     password: '',
-    profile_Picture: './assets/Images/Default_Profile.jpg',
+    profile_Picture: '',
     no_Notifications: 0,
     role: this.rl
   }
@@ -192,7 +192,7 @@ export class UserProfileEditComponent {
       this.emp.mandate_ID = this.employee.mandate_Limit.mandate_ID;
 
       this.usr.role_ID = this.employee.user.role.role_ID;
-      this.usr.access_ID = this.employee.user.access.access_ID;
+      this.usr.access = this.employee.user.access;
       this.usr.password = this.employee.user.password;
       this.usr.profile_Picture = this.employee.user.profile_Picture;
       this.cropImgPreview = this.employee.user.profile_Picture;
@@ -214,7 +214,7 @@ export class UserProfileEditComponent {
     this.dataService.GetAdminByUsername(this.iName).subscribe(result => {
       this.admin = result
       this.usr.role_ID = this.admin.user.role.role_ID
-      this.usr.access_ID = this.admin.user.access.access_ID;
+      this.usr.access = this.admin.user.access;
       console.log(this.admin.user.access.access_ID)
       this.usr.password = this.admin.user.password;
       this.usr.profile_Picture = this.admin.user.profile_Picture;
