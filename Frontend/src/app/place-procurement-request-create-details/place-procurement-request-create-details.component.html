@@ -115,7 +115,7 @@
             <label style="width: 450px;">Account Code:</label>
           </div>
           <div class="col-7">
-            <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length > 0">
+            <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length != 0">
               <mat-select formControlName="AccountCode" placeholder="Please Select an Account Code" style="display: contents;" [errorStateMatcher]="matcher">
                 <mat-optgroup *ngFor="let group of AccountCodeGroups" id="CBStyle" [label]="group.Month + ' - ' + group.Year" style="color: white;background-color: #244688;">
                 <mat-option *ngFor="let AccountCode of group.AccountDetails" [value]="AccountCode.AccountCodeValue">

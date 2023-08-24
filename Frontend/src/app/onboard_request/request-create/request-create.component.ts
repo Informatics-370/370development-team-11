@@ -168,8 +168,14 @@ export class RequestCreateComponent implements OnInit {
   selectedIndex = 0;
   removeTab(index: number) {
 
+    
+    if(this.rows.controls[index].get('PrefferedVendor')?.value == true) {
+      this.rows.controls[index].get('PrefferedVendor')?.setValue(false);
+      this.CheckPrev = undefined
+    }
     this.rows.removeAt(index);
     this.selectedIndex = index - 1;
+
   }
 
   ngOnInit() {
@@ -547,8 +553,9 @@ export class RequestCreateComponent implements OnInit {
   PreferredChecked = false;
   CheckPrev: any;
   onPreferredChecked(i: number) {
+   
+    if (this.CheckPrev != undefined && this.CheckPrev != i && this.rows.controls[this.CheckPrev].get('PrefferedVendor').value != undefined) {
 
-    if (this.CheckPrev != undefined && this.CheckPrev != i) {
       this.rows.controls[this.CheckPrev].get('PrefferedVendor')?.setValue(false);
     }
 

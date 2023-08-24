@@ -91,7 +91,7 @@ label {
   font-weight: 500;
 }
 
-::ng-deep  .mat-mdc-optgroup-label:first-child{
+:host ::ng-deep  .mat-mdc-optgroup-label:first-child{
   color: white;
   background-color: #244688;
 }

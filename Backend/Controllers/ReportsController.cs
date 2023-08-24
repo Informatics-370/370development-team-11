@@ -48,12 +48,12 @@ namespace ProcionAPI.Controllers
 
         
         [HttpGet]
-        [Route("getVendorSpentReport")]
-        public async Task<IActionResult> getVendorSpentReport()
+        [Route("getVendorSpentReport/{StartDate}/{EndDate}")]
+        public async Task<IActionResult> getVendorSpentReport(DateTime StartDate, DateTime EndDate)
         {
             try
             {
-                var result = await _ReportsRepository.getVendorSpentReportAsync();
+                var result = await _ReportsRepository.getVendorSpentReportAsync(StartDate, EndDate);
                 return Ok(result);
             }
             catch (Exception)
