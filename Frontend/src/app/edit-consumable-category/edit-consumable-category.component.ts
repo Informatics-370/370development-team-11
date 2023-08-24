@@ -84,8 +84,8 @@ export class EditConsumableCategoryComponent implements OnInit {
               this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
               this.dataService.AuditLogAdd(this.log).subscribe({
                 next: (Log) => {
+                  document.getElementById('AnimationBtn').classList.toggle("is_active");
                   document.getElementById('cBtn').style.display = "none";
-                  document.querySelector('button').classList.toggle("is_active");
                   var action = "Update";
                   var title = "UPDATE SUCCESSFUL";
                   var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The category <strong>" + this.CategoryToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -146,6 +146,8 @@ export class EditConsumableCategoryComponent implements OnInit {
           && Result.consumable_Category_ID == this.CategoryToEdit.consumable_Category_ID) {
           this.dataService.UpdateCategory(this.CategoryToEdit.consumable_Category_ID, this.CategoryToEdit).subscribe({
             next: (response) => {
+              document.getElementById('AnimationBtn').classList.toggle("is_active");
+              document.getElementById('cBtn').style.display = "none";
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The category <strong>" + this.CategoryToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");

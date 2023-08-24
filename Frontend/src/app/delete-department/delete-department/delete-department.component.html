@@ -3,7 +3,7 @@
       *ngIf="showConfirmationDialog == true">
     DELETE DEPARTMENT
   </h1>
-  <mat-icon (click)="openDeleteDepartmentTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+  <mat-icon (click)="openDeleteDepartmentTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help" *ngIf="showConfirmationDialog == true"
             style="font-size: 24pt; height: 37px; width: 37px; margin-bottom: 5px; cursor: pointer;" [ngStyle]="{'color':'white'}" matTooltip="Need help? Click me!"></mat-icon>
 </div>
 

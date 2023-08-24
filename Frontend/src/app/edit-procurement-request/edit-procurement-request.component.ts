@@ -322,6 +322,8 @@ export class EditProcurementRequestComponent implements OnInit {
                             this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
                             this.dataService.UpdateProcurementQuotes(this.ProcurementQuotes[i].quote_ID, this.ProcurementQuotes[i]).subscribe({
                               next: (result) => {
+                                document.getElementById('AnimationBtn').classList.toggle("is_active");
+                                document.getElementById('cBtn').style.display = "none";
                                 this.DisplayNotif();
                               }
                             })
@@ -338,6 +340,8 @@ export class EditProcurementRequestComponent implements OnInit {
                             this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
                             this.dataService.UpdateProcurementQuotes(this.ProcurementQuotes[i].quote_ID, this.ProcurementQuotes[i]).subscribe({
                               next: (result) => {
+                                document.getElementById('AnimationBtn').classList.toggle("is_active");
+                                document.getElementById('cBtn').style.display = "none";
                                 this.DisplayNotif();
                               }
                             })
@@ -419,6 +423,8 @@ export class EditProcurementRequestComponent implements OnInit {
 
                         this.dataService.UpdateProcurementQuotes(this.Procurement_Request_Quote.quote_ID, this.Procurement_Request_Quote).subscribe({
                           next: (result) => {
+                            document.getElementById('AnimationBtn').classList.toggle("is_active");
+                            document.getElementById('cBtn').style.display = "none";
                             this.DisplayNotif()
                           }
                         })
@@ -431,6 +437,8 @@ export class EditProcurementRequestComponent implements OnInit {
           });
         }
         else {
+          document.getElementById('AnimationBtn').classList.toggle("is_active");
+          document.getElementById('cBtn').style.display = "none";
           this.DisplayNotif()
         }
       }

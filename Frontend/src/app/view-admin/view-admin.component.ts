@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,6 +21,7 @@ import { AdminIFrameComponent } from '../HelpIFrames/AdminIFrame/admin-iframe/ad
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { MainNavComponent } from '../main-nav/main-nav.component';
+import { MatPaginator } from '@angular/material/paginator';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -34,8 +35,9 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }, MainNavComponent]
 })
 export class ViewAdminComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = ['name', 'surname', 'email', 'phone', 'role', 'action', 'delete'];
-  dataSource = new MatTableDataSource<Admin>();
+  dataSource : any;
 
   userDelete: any
 
@@ -98,25 +100,26 @@ export class ViewAdminComponent implements OnInit {
 
   search() {
     const searchTerm = this.searchWord.toLocaleLowerCase();
-    console.log(searchTerm);
-    console.log(this.Admins)
-
 
     if (searchTerm) {
-      this.SearchedAdmin = this.Admins.filter(r => r.adminName.toLocaleLowerCase().includes(searchTerm))
+      this.dataSource = this.Admins.filter(r => r.adminName.toLocaleLowerCase().includes(searchTerm))
     }
     else if (searchTerm == "") {
-      this.SearchedAdmin = [...this.Admins]
+      this.GetAdmins();
     }
   }
 
   GetAdmins() {
     this.dataService.GetAdmins().subscribe(result => {
+      let employeeList: any[] = result;
+      this.Admins = [...employeeList];
+      this.SearchedAdmin = [...employeeList];
+      this.dataSource = new MatTableDataSource(this.Admins.filter((value, index, self) => self.map(x => x.admin_ID).indexOf(value.admin_ID) == index));
+      this.dataSource.paginator = this.paginator
+
       if (result) {
         hideloader();
       }
-      this.Admins = result;
-      this.SearchedAdmin = this.Admins;
     });
     function hideloader() {
       document.getElementById('loading')

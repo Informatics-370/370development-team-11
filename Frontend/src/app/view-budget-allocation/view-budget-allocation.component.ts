@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DataService } from '../DataService/data-service';
@@ -14,6 +14,7 @@ import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 import { BudgetAllocationIFrameComponent } from '../HelpIFrames/BudgetAllocationIFrame/budget-allocation-iframe/budget-allocation-iframe.component';
 import { ExportBaPickerComponent } from '../export-ba-picker/export-ba-picker.component';
+import { MatPaginator } from '@angular/material/paginator';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -36,7 +37,8 @@ export class ViewBudgetAllocationComponent {
 
   searchNumber: Number = null;
   displayedColumns: string[] = ['department', 'date', 'year', 'total', 'lines', 'export', 'action', 'delete' ];
-  dataSource = new MatTableDataSource<BudgetAllocation>();
+  dataSource : any;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   dep: Department = {
     department_ID: 0,
@@ -72,13 +74,14 @@ export class ViewBudgetAllocationComponent {
     const Searchterm = this.searchNumber;
 
     if (Searchterm) {
-      this.SearchedBudgetAllocations = this.BudgetAllocations.filter(budgetAllocation => budgetAllocation.year == Searchterm)
-      console.log(this.SearchedBudgetAllocations)
-      this.dataSource = new MatTableDataSource(this.SearchedBudgetAllocations);
+      this.dataSource = this.BudgetAllocations.filter(budgetAllocation => budgetAllocation.year == Searchterm)
     }
     else if (Searchterm == 0) {
-      this.SearchedBudgetAllocations = [...this.BudgetAllocations];
-      this.dataSource = new MatTableDataSource(this.SearchedBudgetAllocations);
+      if (this.iRole == "Admin" || this.iRole == "MD") {
+        this.GetBudgetAllocations();
+      } else {
+        this.GetDepBudgetAllocation();
+      }
     }
 
     this.dataSource = new MatTableDataSource<BudgetAllocation>(this.SearchedBudgetAllocations);
@@ -104,15 +107,21 @@ export class ViewBudgetAllocationComponent {
 
   GetBudgetAllocations() {
     this.dataService.GetBudgetAllocations().subscribe(result => {
-      this.BudgetAllocations = result;
-      this.dataSource = new MatTableDataSource(this.BudgetAllocations);
+      let employeeList: any[] = result;
+      this.BudgetAllocations = [...employeeList];
+      this.SearchedBudgetAllocations = [...employeeList];
+      this.dataSource = new MatTableDataSource(this.BudgetAllocations.filter((value, index, self) => self.map(x => x.budget_ID).indexOf(value.budget_ID) == index));
+      this.dataSource.paginator = this.paginator
     });
   }
 
   GetDepBudgetAllocation() {
     this.dataService.GetDepBudgetAllocation(this.iDep).subscribe(r => {
-      this.BudgetAllocations = r;
-      this.dataSource = new MatTableDataSource(this.BudgetAllocations);
+      let employeeList: any[] = r;
+      this.BudgetAllocations = [...employeeList];
+      this.SearchedBudgetAllocations = [...employeeList];
+      this.dataSource = new MatTableDataSource(this.BudgetAllocations.filter((value, index, self) => self.map(x => x.budget_ID).indexOf(value.budget_ID) == index));
+      this.dataSource.paginator = this.paginator
     })
   }
 

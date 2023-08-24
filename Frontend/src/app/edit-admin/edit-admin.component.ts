@@ -67,7 +67,7 @@ export class EditAdminComponent implements OnInit {
     access: this.Access,
     username: '',
     password: '',
-    profile_Picture: './assets/Images/Default_Profile.jpg',
+    profile_Picture: '',
     no_Notifications: 0,
     role: this.rl
   }
@@ -281,8 +281,8 @@ export class EditAdminComponent implements OnInit {
           this.dataService.EditUser(this.usr, this.admin.user_Id).subscribe(result => {
             this.dataService.EditAdmin(this.adm, this.admin.admin_ID).subscribe({
               next: (response) => {
+                document.getElementById('AnimationBtn').classList.toggle("is_active");
                 document.getElementById('cBtn').style.display = "none";
-                document.querySelector('button').classList.toggle("is_active");
 
                 this.log.action = "Edited Admin: " + this.adm.adminName;
                 this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));

@@ -235,6 +235,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
 
   budgetLine: BudgetLine = {
+    budgetLineId: 0,
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
@@ -805,7 +806,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
         })
       }
-
+      document.getElementById('AnimationBtn').classList.toggle("is_active");
+      document.getElementById('cBtn').style.display = "none";
       this.log.action = "Placed Procurement Request for: " + this.ProcurementDetails.procurement_Request.name;
       this.log.user = this.ProcureService.decodeUser(sessionStorage.getItem("token"));
       let test: any

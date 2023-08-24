@@ -34,6 +34,8 @@ export class ReceiveAssetComponent implements OnInit {
   onSubmit() {
     let StatusID = this.myForm.get("Status")?.value;
     console.log(StatusID)
+    document.getElementById('AnimationBtn').classList.toggle("is_active");
+    document.getElementById('cBtn').style.display = "none";
     this.dataService.UpdateProcurementStatus(StatusID, this.id).subscribe({
       next: (Result) => {
         this.router.navigate(['/ViewProcurementDetails'])

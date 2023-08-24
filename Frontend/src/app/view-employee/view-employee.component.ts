@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,6 +20,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { EmployeeIFrameComponent } from '../HelpIFrames/EmployeeIFrame/employee-iframe/employee-iframe.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { MainNavComponent } from '../main-nav/main-nav.component';
+import { MatPaginator } from '@angular/material/paginator';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -34,8 +35,9 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }, MainNavComponent]
 })
 export class ViewEmployeeComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = ['name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete', 'delegation'];
-  dataSource = new MatTableDataSource<Employee>();
+  dataSource: any;
 
   userDelete: any
 
@@ -105,21 +107,28 @@ export class ViewEmployeeComponent implements OnInit {
 
 
     if (searchTerm) {
-      this.SearchedEmployee = this.Employees.filter(r => r.employeeName.toLocaleLowerCase().includes(searchTerm))
+      this.dataSource = this.Employees.filter(r => r.employeeName.toLocaleLowerCase().includes(searchTerm))
     }
     else if (searchTerm == "") {
-      this.SearchedEmployee = [...this.Employees]
+      this.GetEmployees();
     }
   }
 
   GetEmployees() {
     this.dataService.GetEmployees().subscribe(result => {
+      let employeeList: any[] = result;
+      this.Employees = [...employeeList];
+      this.SearchedEmployee = [...employeeList];
+      this.dataSource = new MatTableDataSource(this.Employees.filter((value, index, self) => self.map(x => x.employeeID).indexOf(value.employeeID) == index));
+      this.dataSource.paginator = this.paginator
+
+
       if (result) {
         hideloader();
       }
-      this.Employees = result;
-      this.SearchedEmployee = this.Employees;
-      console.log(result)
+      //this.Employees = result;
+      //this.SearchedEmployee = this.Employees;
+      //console.log(result)
     });
     function hideloader() {
       document.getElementById('loading')

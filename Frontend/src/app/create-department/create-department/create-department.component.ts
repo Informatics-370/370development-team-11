@@ -54,8 +54,8 @@ export class CreateDepartmentComponent implements OnInit {
           this.dataService.AddDepartments(this.myForm.value).subscribe({
             next: (response) => {
               if (response) {
+                document.getElementById('AnimationBtn').classList.toggle("is_active");
                 document.getElementById('cBtn').style.display = "none";
-                document.querySelector('button').classList.toggle("is_active");
               }
 
               this.log.action = "Created Department: " + name;

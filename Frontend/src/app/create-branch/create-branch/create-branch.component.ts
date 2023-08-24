@@ -61,7 +61,7 @@ export class CreateBranchComponent {
 
               if (response) {
                 document.getElementById('cBtn').style.display = "none";
-                document.querySelector('button').classList.toggle("is_active");
+                document.getElementById('AnimationBtn').classList.toggle("is_active");
               }
 
               this.log.action = "Created Branch: " + this.myForm.get('name')?.value;

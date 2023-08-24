@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -8,6 +8,8 @@ import { FinalizeProcReqIFrameComponent } from '../HelpIFrames/FinalizeProcReqIF
 
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -20,6 +22,8 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class FinalizeProcurementRequestComponent {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  dataSource: any;
   ProcurementRequests: Procurement_Request[] = [];
   SearchedPRequests: Procurement_Request[] = [];
   displayedColumns: string[] = ['Name', 'Description', 'User', 'Vendor', 'Status', 'View'];
@@ -32,8 +36,11 @@ export class FinalizeProcurementRequestComponent {
 
   GetUnfinalizedProcurementRequests() {
     this.dataService.GetUnfinalizedProcurements().subscribe(result => {
-      this.ProcurementRequests = result;
-      console.log(result)
+      let procurementList: any[] = result;
+      this.ProcurementRequests = [...procurementList];
+      this.SearchedPRequests = [...procurementList];
+      this.dataSource = new MatTableDataSource(this.ProcurementRequests.filter((value, index, self) => self.map(x => x.procurement_Request_ID).indexOf(value.procurement_Request_ID) == index));
+      this.dataSource.paginator = this.paginator
       if (result) {
         hideloader();
       }
@@ -48,10 +55,10 @@ export class FinalizeProcurementRequestComponent {
     const Searchterm = this.searchWord.toLocaleLowerCase();
 
     if (Searchterm) {
-      this.SearchedPRequests = this.ProcurementRequests.filter(PR => PR.name.toLocaleLowerCase().includes(Searchterm))
+      this.dataSource = this.ProcurementRequests.filter(PR => PR.name.toLocaleLowerCase().includes(Searchterm))
     }
     else if (Searchterm == "") {
-      this.SearchedPRequests = [...this.ProcurementRequests];
+      this.GetUnfinalizedProcurementRequests();
     }
   }
   getStatusColor(status: string): string {

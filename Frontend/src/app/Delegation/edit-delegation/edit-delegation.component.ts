@@ -320,7 +320,8 @@ export class EditDelegationComponent implements OnInit {
                     this.dataService.CheckDelegation().subscribe({
                       next: (r) => {
                         if (r) {
-
+                          document.getElementById('AnimationBtn').classList.toggle("is_active");
+                          document.getElementById('cBtn').style.display = "none";
                           this.log.action = "Edited Delegation for Request: " + this.delID;
                           this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
                           let test: any
@@ -385,7 +386,8 @@ export class EditDelegationComponent implements OnInit {
                       this.dataService.CheckDelegation().subscribe({
                         next: (r) => {
                           if (r) {
-
+                            document.getElementById('AnimationBtn').classList.toggle("is_active");
+                            document.getElementById('cBtn').style.display = "none";
                             this.log.action = "Edited Delegation for Request: " + this.delID;
                             this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
                             let test: any
