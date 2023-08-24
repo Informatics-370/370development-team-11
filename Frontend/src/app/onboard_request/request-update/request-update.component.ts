@@ -151,7 +151,7 @@ export class RequestUpdateComponent {
       CompanyName: ['', [Validators.required, Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
       CompanyEmail: ['', [Validators.required, Validators.maxLength(32), Validators.email]],
       CompanyQuote: ['',[Validators.required]],
-      PrefferedVendor: [false],
+      PreferedVendor: [false],
     });
     this.rows.push(row);
     this.files.push('');
@@ -159,6 +159,11 @@ export class RequestUpdateComponent {
   //add delete dataservice
   removeTab(index: number) {
     
+    if(this.rows.controls[index].get('PreferedVendor')?.value == true) {
+      this.rows.controls[index].get('PreferedVendor')?.setValue(false);
+      this.CheckPrev = undefined
+    }
+
     this.rows.removeAt(index);
     this.selectedIndex = index-1; 
 
@@ -178,7 +183,7 @@ export class RequestUpdateComponent {
       CompanyName: ['',[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
       CompanyEmail: ['',[Validators.required,Validators.maxLength(32), Validators.email]],
       CompanyQuote: '',
-      PrefferedVendor: [false],
+      PreferedVendor: [false],
     });
     this.rows.push(row);
     this.fileToUpload = this.files[0]
@@ -200,13 +205,18 @@ export class RequestUpdateComponent {
         this.dataService.GetRequestByID(Number(RequestID)).subscribe(result => {
           let RequestList: any[] = result
           RequestList.forEach((element) => {
+            console.log(element)
             this.onboardRequest.push(element)
+            if(element.vendor.preferedVendor == true) {
+              this.CheckPrev = this.onboardRequest.length-1;
+             // console.log(this.CheckPrev)
+            }
             const row = this._formBuilder.group({
               tab: [this.onboardRequest.length],
               CompanyName: ['',[Validators.required,Validators.maxLength(32), Validators.pattern(/^[a-zA-Z\s]*$/)]],
               CompanyEmail: ['',[Validators.required,Validators.maxLength(32), Validators.email]],
               CompanyQuote: '',
-              PrefferedVendor: [false],
+              PreferedVendor: [false],
             });
             this.rows.push(row);
             this.files.push('');
@@ -220,7 +230,7 @@ export class RequestUpdateComponent {
             this.FileDetails.push({FileURL:"",FileName:""})
             this.rows.controls[i].get('CompanyName')?.setValue(this.onboardRequest[i].vendor.name);
             this.rows.controls[i].get('CompanyEmail')?.setValue(this.onboardRequest[i].vendor.email);
-            this.rows.controls[i].get('PrefferedVendor')?.setValue(this.onboardRequest[i].vendor.preferedVendor);
+            this.rows.controls[i].get('PreferedVendor')?.setValue(this.onboardRequest[i].vendor.preferedVendor);
             let sFile = this.onboardRequest[i].quotes;
             let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
             let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
@@ -369,8 +379,10 @@ export class RequestUpdateComponent {
           this.Vendor.preferedVendor = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].PreferedVendor;
           this.Vendor.vendor_Status_ID = 1;
           this.Vendor.number_Of_Times_Used = 0;
-          this.Onboard_Request.vendor = this.Vendor
-          console.log(i)
+          this.Onboard_Request.vendor = this.Vendor 
+          this.Onboard_Request.users = this.onboardRequest[i].users
+          this.Onboard_Request.user_Id = Number(this.onboardRequest[0].users.user_Id);
+          //console.log(i)
           this.dataService.UpdateOnboardRequest(this.onboardRequest[i].onboard_Request_Id,this.Onboard_Request).subscribe({
             next: (response) => {
               console.log(response);
@@ -397,6 +409,7 @@ export class RequestUpdateComponent {
       else {
         if (this.onboardRequest[i] != undefined) {
           console.log("if statement 2")
+          
           this.Onboard_Request.quotes = this.onboardRequest[i].quotes
           this.Vendor = this.onboardRequest[i].vendor
           this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
@@ -405,7 +418,12 @@ export class RequestUpdateComponent {
           this.Vendor.vendor_Status_ID = 1;
           this.Vendor.number_Of_Times_Used = 0;
           this.Onboard_Request.vendor = this.Vendor;
-          console.log(i)
+          this.Onboard_Request.users = this.onboardRequest[i].users
+          this.Onboard_Request.user_Id = Number(this.onboardRequest[0].users.user_Id);
+          //console.log(this.Vendor)
+          //console.log(this.CompanyContactInfoFormGroup.controls.RequestData.value[i].PreferedVendor)
+          this.Onboard_Request.vendor.preferedVendor = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].PreferedVendor;
+          //console.log(this.onboardRequest)
           this.dataService.UpdateOnboardRequest(this.onboardRequest[i].onboard_Request_Id,this.Onboard_Request).subscribe({
             next: (response) => {
               console.log(response);
@@ -420,7 +438,7 @@ export class RequestUpdateComponent {
     
               const duration = 1750;
               setTimeout(() => {
-                this.router.navigate(['/request-view'], {queryParams: {refresh: true}});
+                this.router.navigate(['/request-view']);
                 
                 dialogRef.close();
               }, duration);
@@ -440,7 +458,8 @@ export class RequestUpdateComponent {
           this.Onboard_Request.vendor.vendor_Status_ID = 1;
           this.Onboard_Request.vendor.number_Of_Times_Used = 0;
           this.Onboard_Request.vendor.vendor_ID = 0;
-          console.log(this.Onboard_Request)
+          this.Onboard_Request.users = this.onboardRequest[0].users
+        this.Onboard_Request.user_Id = Number(this.onboardRequest[0].users.user_Id);
           this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
             next: (response) => {
               var action = "Update";
@@ -468,6 +487,7 @@ export class RequestUpdateComponent {
     }//for loop
 
     if(this.onboardRequest.length >  this.CompanyContactInfoFormGroup.controls.RequestData.value.length) {
+      console.log("why")
       for (let i = this.CompanyContactInfoFormGroup.controls.RequestData.value.length; i < this.onboardRequest.length; i++) {
         let sFile = this.onboardRequest[i].quotes;
         let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
@@ -511,7 +531,7 @@ export class RequestUpdateComponent {
   if(this.VendorType == false) {
     //this.onboardRequest[0].users.role = this.rl;
     this.onboardRequest[0].vendor.vendor_Status = this.VStatus
-    this.onboardRequest[0].user_Id = 1
+    //this.onboardRequest[0].user_Id = 1
    // console.log(this.onboardRequest)
     //console.log(this.files[0])
     this.fileToUpload = this.files[0]
@@ -536,7 +556,7 @@ export class RequestUpdateComponent {
 
       }
    
-  
+      
       let RequestNo = "Request" + this.Onboard_Request.onboard_Request_Id 
       this.dataService.OnboardFileAdd(RequestNo,this.fileToUpload).subscribe(response => {
         let Path: any = response
@@ -544,6 +564,8 @@ export class RequestUpdateComponent {
         this.sPath = Path.pathSaved.toString()
         this.Onboard_Request.quotes = this.sPath
         this.Onboard_Request.vendor.sole_Supplier_Provided = true;
+        this.Onboard_Request.users = this.onboardRequest[0].users
+        this.Onboard_Request.user_Id = Number(this.onboardRequest[0].users.user_Id);
         this.dataService.UpdateOnboardRequest(this.Onboard_Request.onboard_Request_Id ,this.Onboard_Request).subscribe(
           (RequestAdded) => {
             this.SoleSupply.vendor_ID = RequestAdded.vendor_ID
@@ -573,10 +595,9 @@ export class RequestUpdateComponent {
      this.Onboard_Request.vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value;
       console.log(this.Onboard_Request)
      // this.SoleSupply.vendor = this.Onboard_Request.vendor  
-      console.log(this.SoleSupply)  
+     this.Onboard_Request.users = this.onboardRequest[0].users
+     this.Onboard_Request.user_Id = Number(this.onboardRequest[0].users.user_Id);
       this.Onboard_Request.quotes = this.onboardRequest[0].quotes 
-        console.log(this.Onboard_Request.vendor_ID)
-        console.log(this.Onboard_Request)
         this.dataService.UpdateOnboardRequest(this.onboardRequest[0].onboard_Request_Id, this.Onboard_Request).subscribe(
           (RequestAdded) => {
             console.log(RequestAdded)
@@ -624,17 +645,26 @@ export class RequestUpdateComponent {
 
 PreferredChecked = false;
 CheckPrev:any;
-onPreferredChecked(i:number) {
-  
-  if(this.CheckPrev != undefined) {
-    this.rows.controls[this.CheckPrev].get('PrefferedVendor')?.setValue(false);
+onPreferredChecked(i: number) {
+   //console.log(this.CheckPrev)
+  // console.log(this.rows.controls[this.CheckPrev].get('PreferedVendor').value)
+   console.log(i)
+  if ((this.CheckPrev != undefined) && (this.CheckPrev != i) && (this.rows.controls[this.CheckPrev].get('PreferedVendor').value != undefined)) {
+
+    this.rows.controls[this.CheckPrev].get('PreferedVendor')?.setValue(false);
   }
 
   this.CheckPrev = i
-  if(this.PreferredChecked == false) {
+
+  if (this.PreferredChecked == false) {
     this.PreferredChecked = true;
-    this.rows.controls[i].get('PrefferedVendor')?.setValue(this.PreferredChecked);
+    this.rows.controls[i].get('PreferedVendor')?.setValue(this.PreferredChecked);
   }
+  else {
+    this.PreferredChecked = false;
+  }
+
+
 
 }
 

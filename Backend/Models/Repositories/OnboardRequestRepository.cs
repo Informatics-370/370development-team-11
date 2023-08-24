@@ -180,23 +180,24 @@ namespace ProcionAPI.Models.Repositories
         //, int VendorID
         public async Task<Onboard_Request> EditRequestAsync(int RequestID, Onboard_Request UpdatedRequest)
         { //also see userid
-            var ReqUpdt = await _dbContext.Onboard_Request.FirstOrDefaultAsync(x => (x.Onboard_Request_Id == RequestID) && (x.Vendor_ID == UpdatedRequest.Vendor.Vendor_ID));
+            var ReqUpdt = await _dbContext.Onboard_Request.Include(x=> x.Onboard_Status).FirstOrDefaultAsync(x => (x.Onboard_Request_Id == RequestID) && (x.Vendor_ID == UpdatedRequest.Vendor.Vendor_ID));
 
             // var existingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Name.ToLower().Trim() == UpdatedRequest.Vendor.Name.ToLower().Trim());
+          //  Console.WriteLine(ReqUpdt);
 
+            //  ReqUpdt.Users.Role = new Role();
 
-          //  ReqUpdt.Users.Role = new Role();
+            // Role existingRole = await _dbContext.Role.FirstOrDefaultAsync(x => x.Role_ID == UpdatedRequest.Users.Role_ID);
 
-           // Role existingRole = await _dbContext.Role.FirstOrDefaultAsync(x => x.Role_ID == UpdatedRequest.Users.Role_ID);
-         
             //   ReqUpdt.Users.Role = existingRole;
 
 
             ReqUpdt.Users = new User();
-
-            User existingUser = await _dbContext.User.Include(x=> x.Access).FirstOrDefaultAsync(x => x.User_Id == UpdatedRequest.User_Id);
+            ReqUpdt.User_Id = UpdatedRequest.User_Id;
+            User existingUser = await _dbContext.User.Include(x=> x.Access).Include(x=> x.Role).FirstOrDefaultAsync(x => x.User_Id == UpdatedRequest.User_Id);
 
             ReqUpdt.Users = existingUser;
+            
 
             ReqUpdt.Vendor = new Vendor();
 
@@ -206,7 +207,9 @@ namespace ProcionAPI.Models.Repositories
             {
                 //existingVendor.Sole_Supplier_Provided = UpdatedRequest.Vendor.Sole_Supplier_Provided;
                 existingVendor.Email = UpdatedRequest.Vendor.Email;
+                existingVendor.PreferedVendor = UpdatedRequest.Vendor.PreferedVendor;
                 ReqUpdt.Vendor = existingVendor;
+               
             }
             else
             {
@@ -214,6 +217,7 @@ namespace ProcionAPI.Models.Repositories
                // existingVendor.Sole_Supplier_Provided = UpdatedRequest.Vendor.Sole_Supplier_Provided;
                 existingVendor.Name = UpdatedRequest.Vendor.Name;
                 existingVendor.Email = UpdatedRequest.Vendor.Email;
+                existingVendor.PreferedVendor = UpdatedRequest.Vendor.PreferedVendor;
                 ReqUpdt.Vendor = existingVendor;
                
                
@@ -227,7 +231,7 @@ namespace ProcionAPI.Models.Repositories
             ReqUpdt.Quotes = UpdatedRequest.Quotes;
 
             await _dbContext.SaveChangesAsync();
-
+            //Console.WriteLine(ReqUpdt);
             return  ReqUpdt;
         }
 

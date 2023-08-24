@@ -313,7 +313,7 @@ OnboardRequestDetails: any[] = [];
             this.showSuccessDialog = true;
             setTimeout(() => {
               this.dialogRef.close();
-              this.VendorService.ChangeVendorStatus(2,this.Vendor.vendor_ID).subscribe(result => {
+              this.VendorService.ChangeVendorStatus(4,this.Vendor.vendor_ID).subscribe(result => {
                this.router.navigate(['/vendor-view']);
               });
             }, 1750);

@@ -92,7 +92,7 @@ export class ReportFilterMenuComponent implements OnInit {
     this.bDownload = boolValue;
     switch (ID) {
       case 2: {
-        this.ReportService.getBEESpendReport(DateTransf.transform(this.range.get("start")?.value, 'MM, d, y, hh:mm:ss'), DateTransf.transform(this.range.get("end")?.value, 'MM, d, y, hh:mm:ss')).subscribe(result => {
+        this.ReportService.getBEESpendReport(DateTransf.transform(this.range.get("start")?.value, 'MM, d, y'), DateTransf.transform(this.range.get("end")?.value, 'MM, d, y')).subscribe(result => {
           this.BEESpendReportDetails = result;
           if (Number(this.BEESpendReportDetails.reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2)) != 0) {
             this.columnChartbasestring = this.getColumnChart(this.BEESpendReportDetails);
@@ -100,16 +100,19 @@ export class ReportFilterMenuComponent implements OnInit {
           if (Number(this.BEESpendReportDetails.filter(x => x.beE_Level == 0).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2)) != 0) {
             this.pieChartBaseString = this.getPieChart(this.BEESpendReportDetails);
           }
-          this.GenerateBEESpendtReport();
-
-          console.log("why")
+          this.GenerateBEESpentReport();
           this.onCancel()
 
         })
         break;
       }
+      case 3: {
 
 
+        this.GenerateVendorSpentReport();
+        this.onCancel()
+        break;
+      }
       case 4: {
 
         this.notifyDialogClosed()
@@ -120,10 +123,11 @@ export class ReportFilterMenuComponent implements OnInit {
 
 
 
-  GenerateBEESpendtReport() {
+  GenerateBEESpentReport() {
     let DateTransf: any
     DateTransf = new DatePipe('en-ZA');
-    this.ReportService.getBEESpendReport(DateTransf.transform(this.range.get("start")?.value, 'MM, d, y, hh:mm:ss'), DateTransf.transform(this.range.get("end")?.value, 'MM, d, y, hh:mm:ss')).subscribe(result => {
+    console.log(DateTransf.transform(this.range.get("end")?.value, 'MM, d, y')  )
+    this.ReportService.getBEESpendReport(DateTransf.transform(this.range.get("start")?.value, 'MM, d, y'), DateTransf.transform(this.range.get("end")?.value, 'MM, d, y')).subscribe(result => {
       this.BEESpendReportDetails = result;
 
       var User = this.ReportService.decodeUser(sessionStorage.getItem('token'))
@@ -179,16 +183,16 @@ export class ReportFilterMenuComponent implements OnInit {
             { text: 'Non-Compliant', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
             { text: 'Total', alignment: 'center', color: '#ffffff', fillColor: '#244688' }],
             [{ text: 'Procurement Spend', bold: true, alignment: 'left', color: '#ffffff', fillColor: '#244688' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 3).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 8).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 0).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' }],
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 3).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 8).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 0).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' }],
             [{ text: 'Procurement %', bold: true, alignment: 'left', color: '#ffffff', fillColor: '#244688' },
             { text: '135%', alignment: 'center', fillColor: '#d9e2f3' },
             { text: '125%', alignment: 'center', fillColor: '#d9e2f3' },
@@ -199,16 +203,16 @@ export class ReportFilterMenuComponent implements OnInit {
             { text: '50%', alignment: 'center', fillColor: '#d9e2f3' },
             { text: '10%', alignment: 'center', fillColor: '#d9e2f3' }, { text: "", fillColor: '#d9e2f3' }, { text: "", fillColor: '#d9e2f3' }],
             [{ text: 'Procurement Entitlement', bold: true, alignment: 'left', color: '#ffffff', fillColor: '#244688' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 3).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 8).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.BEESpendReportDetails.filter(x => x.beE_Level == 0).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text: this.getProcurementEntitlementTotal(this.BEESpendReportDetails).toFixed(2), fillColor: '#b4c6e7' }]],
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 3).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 8).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 0).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text:"R" + this.getProcurementEntitlementTotal(this.BEESpendReportDetails).toFixed(2), fillColor: '#b4c6e7' }]],
             layout: {
               hLineWidth: function (i, node) {
                 if (i === 0 || i === node.table.body.length || i === 1) {
@@ -276,16 +280,16 @@ export class ReportFilterMenuComponent implements OnInit {
                 { text: 'Non-Compliant', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
                 { text: 'Total', alignment: 'center', color: '#ffffff', fillColor: '#244688' }],
                 [{ text: 'Procurement Spend', bold: true, alignment: 'left', color: '#ffffff', fillColor: '#244688' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 1) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 2) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 3) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 4) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 5) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 6) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 7) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 8) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 0) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => x.branchName == BranchName).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' }],
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 1) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 2) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 3) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 4) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 5) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 6) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 7) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 8) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 0) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => x.branchName == BranchName).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' }],
                 [{ text: 'Procurement %', bold: true, alignment: 'left', color: '#ffffff', fillColor: '#244688' },
                 { text: '135%', alignment: 'center', fillColor: '#d9e2f3' },
                 { text: '125%', alignment: 'center', fillColor: '#d9e2f3' },
@@ -296,16 +300,16 @@ export class ReportFilterMenuComponent implements OnInit {
                 { text: '50%', alignment: 'center', fillColor: '#d9e2f3' },
                 { text: '10%', alignment: 'center', fillColor: '#d9e2f3' }, { text: "", fillColor: '#d9e2f3' }, { text: "", fillColor: '#d9e2f3' }],
                 [{ text: 'Procurement Entitlement', bold: true, alignment: 'left', color: '#ffffff', fillColor: '#244688' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 1) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 2) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 3) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 4) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 5) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 6) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 7) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 8) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.BEESpendReportDetails.filter(x => (x.beE_Level == 0) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text: this.getProcurementEntitlementTotal(this.BEESpendReportDetails.filter(x => x.branchName == BranchName)).toFixed(2), fillColor: '#b4c6e7' }]],
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 1) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 2) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 3) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 4) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 5) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 6) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 7) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 8) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 0) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text:"R" + this.getProcurementEntitlementTotal(this.BEESpendReportDetails.filter(x => x.branchName == BranchName)).toFixed(2), fillColor: '#b4c6e7' }]],
                 layout: {
                   hLineWidth: function (i, node) {
                     if (i === 0 || i === node.table.body.length || i === 1) {
@@ -351,7 +355,7 @@ export class ReportFilterMenuComponent implements OnInit {
         }
       }
       content.push(
-        ...(Number(this.BEESpendReportDetails.reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2)) != 0) ? [{ text: 'Column Chart for Total Procurement Entitlement Per BEE Level', fontSize: 12, alignment: 'center', color: '#244688', margin: [0, 50, 0, 10], pageBreak: 'before' },
+        ...(Number(this.BEESpendReportDetails.reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2)) != 0) ? [{ text: 'Column Chart for Total Procurement Entitlement Per BEE Level', fontSize: 20, alignment: 'center', color: '#244688', margin: [0, 50, 0, 10], pageBreak: 'before' },
         { image: this.columnChartbasestring.toBase64Image('image/png'), fit: [550, 700] },] : []
       )
 
@@ -367,7 +371,7 @@ export class ReportFilterMenuComponent implements OnInit {
             // Add space above the line
             margin: [0, 10, 0, 0]
           },
-          { text: 'Non-Compliance Amount Per Entity', fontSize: 12, alignment: 'center', color: '#244688', margin: [0, 50, 0, 10], pageBreak: 'before' },
+          { text: 'Non-Compliance Amount Per Entity', fontSize: 20, alignment: 'center', color: '#244688', margin: [0, 50, 0, 10], pageBreak: 'before' },
           { image: this.pieChartBaseString.toBase64Image('image/png'), fit: [550, 550] },
           {
             canvas: [
@@ -466,32 +470,65 @@ export class ReportFilterMenuComponent implements OnInit {
     this.myBar = new Chart('bar', {
       type: 'bar',
       data: {
-        labels: ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8"],
+        labels: ["BEE Levels"],
         datasets: [{
-          data: [
-            ReportsDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2),
-            ReportsDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2),
-            ReportsDetails.filter(x => x.beE_Level == 3).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2),
-            ReportsDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2),
-            ReportsDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2),
-            ReportsDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2),
-            ReportsDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2),
-            ReportsDetails.filter(x => x.beE_Level == 8).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2),
-            ReportsDetails.filter(x => x.beE_Level == 0).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2)],
-          borderWidth: 2,
-          borderColor: 'black',
-          backgroundColor: [
-            '#4472c4',
-            '#ed7d31',
-            '#a5a5a5',
-            '#ffc000',
-            '#5b9bd5',
-            '#8cba6d',
-            '#2b487c',
-            '#a2521a',
-          ],
-        }
+            label: "Level 1",
+            backgroundColor: "#4472c4",
+            data: [ReportsDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 100).toFixed(2)],
+            borderWidth: 2,
+            borderColor: 'black',
+            },
+            {
+              label: "Level 2",
+              backgroundColor: "#ed7d31",
+              data: [ReportsDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 150).toFixed(2)],
+              borderWidth: 2,
+              borderColor: 'black',
+            },
+            {
+              label: "Level 3",
+              backgroundColor: "#a5a5a5",
+              data: [ReportsDetails.filter(x => x.beE_Level == 3).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2)],
+              borderWidth: 2,
+              borderColor: 'black',
+            },
+            {
+              label: "Level 4",
+              backgroundColor: "#ffc000",
+              data: [ReportsDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 1).toFixed(2)],
+              borderWidth: 2,
+              borderColor: 'black',
+            },
+            {
+              label: "Level 5",
+              backgroundColor: "#5b9bd5",
+              data: [ReportsDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 140).toFixed(2)],
+              borderWidth: 2,
+              borderColor: 'black',
+            },
+            {
+              label: "Level 6",
+              backgroundColor: "#8cba6d",
+              data: [ReportsDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 260).toFixed(2)],
+              borderWidth: 2,
+              borderColor: 'black',
+            },
+            {
+              label: "Level 7",
+              backgroundColor: "#2b487c",
+              data: [ReportsDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 300).toFixed(2)],
+              borderWidth: 2,
+              borderColor: 'black',
+            },
+            {
+              label: "Level 8",
+              backgroundColor: "#a2521a",
+              data: [ReportsDetails.filter(x => x.beE_Level == 8).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2)],
+              borderWidth: 2,
+              borderColor: 'black',
+            },
         ]
+        
       },
       options: {
         animation: {
@@ -501,16 +538,24 @@ export class ReportFilterMenuComponent implements OnInit {
           title: {
             display: true,
             text: "Total Procurement Entitlement Per BEE Level",
-            font: { weight: 'bold', size: 14 },
+            font: { weight: 'bold', size: 20 },
             color: 'black'
           },
           legend: {
-            display: false
+            display: true,
+            position: 'bottom',
+            labels: {
+              font: {
+                  size: 16
+              },
+              color: 'black'
+            }
           },
           datalabels: {
             anchor: 'end',
             align: 'top',
             color: 'black',
+            font: {size: 16},
             formatter: (value, ctx) => {
               const datapoints = ctx.chart.data.datasets[0].data
               return "R " + Number(value).toFixed(2);
@@ -523,7 +568,7 @@ export class ReportFilterMenuComponent implements OnInit {
             {
               text: "Procurement Entitlement (R)",
               display: true,
-              font: { weight: 'bold', size: 14 },
+              font: { weight: 'bold', size: 20 },
               color: 'black'
             },
             beginAtZero: true
@@ -532,7 +577,7 @@ export class ReportFilterMenuComponent implements OnInit {
             title: {
               text: "Procurement Entitlement Per BEE Level",
               display: true,
-              font: { weight: 'bold', size: 14 },
+              font: { weight: 'bold', size: 20 },
               color: 'black'
             }
           }
@@ -589,16 +634,23 @@ export class ReportFilterMenuComponent implements OnInit {
             display: true,
             text: "Non-Compliance Amount Per Entity (R)",
             color: 'black',
-            font: { weight: 'bold', size: 14 }
+            font: { weight: 'bold', size: 20 }
           },
           legend: {
-            position: 'bottom'
+            position: 'bottom',
+            labels: {
+              font: {
+                  size: 16
+              },
+              color: 'black'
+            }
           },
 
           datalabels: {
             color: 'black',
             anchor: 'center',
             align: 'end',
+            font: {size: 16},
             formatter: (value, ctx) => {
               const datapoints = ctx.chart.data.datasets[0].data
               const total = datapoints.reduce((total, datapoint) => Number(total) + Number(datapoint), 0)
@@ -616,6 +668,240 @@ export class ReportFilterMenuComponent implements OnInit {
     return this.myPie
   }
 
+  GenerateVendorSpentReport() {
+    let DateTransf: any
+    DateTransf = new DatePipe('en-ZA');
+    this.ReportService.getVendorSpentReport(DateTransf.transform(this.range.get("start")?.value, 'MM, d, y, hh:mm:ss'), DateTransf.transform(this.range.get("end")?.value, 'MM, d, y, hh:mm:ss')).subscribe(result => {
+      this.VendorSpentReportDetails = result;
+      var User = this.ReportService.decodeUser(sessionStorage.getItem('token'))
+      var CurrencyTransform = new CurrencyPipe('en-ZA')
+      let uniqueBranches = this.VendorSpentReportDetails.map(p => (p.branchName)).filter((name, index, currentval) => currentval.indexOf(name) === index)
+      console.log(this.VendorSpentReportDetails)
+      let content = [
+        {
+          text: 'Vendor Spent Report',
+          fontSize: 18,
+          alignment: 'center',
+          color: '#244688',
+          bold: true,
+        },
+        {
+          text: 'Created By: ' + User,
+          fontSize: 12,
+          alignment: 'center',
+          bold: true,
+        },
+        {
+          text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
+          fontSize: 12,
+          alignment: 'center',
+          bold: true,
+        },
+        {
+          canvas: [
+            // Centered line with space above
+            { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
+          ],
+          // Add space above the line
+          margin: [0, 10]
+        },
+        {
+          table: {
+            headerRows: 0,
+            widths: [62, 54, 96, 54, 50, 40, 70],
+            body: [[
+              { text: 'Supplier', color: '#ffffff', fillColor: '#244688' },
+              { text: 'Account Code', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
+              { text: 'Account Name (Budget Line)', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
+              { text: 'Budget (Department)', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
+              { text: 'Company (Branch)', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
+              { text: 'BEE Level', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
+              { text: 'Amount Spend', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
+            ],
+            ...this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[0]).map(p => ([{ text: p.supplierName, fillColor: '#b4c6e7' }, { text: p.accountCode, fillColor: '#b4c6e7' }, { text: p.accountName, fillColor: '#b4c6e7' }, { text: p.budgetDepartment, fillColor: '#b4c6e7' }, { text: p.branchName, fillColor: '#b4c6e7' }, { text: p.beE_Level, fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.totalSpend), 'R'), fillColor: '#b4c6e7' }])),
+            [{ text: 'Total Amount for the ' + uniqueBranches[0], colSpan: 6, fillColor: '#d9e2f3' }, {}, {}, {}, {}, {}, { text: CurrencyTransform.transform(Number(this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[0]).reduce((sum, p) => sum + Number(p.totalSpend), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }],
+            [{ text: ' ', colSpan: 7, fillColor: "#244688" }, {}, {}, {}, {}, {}],
+            ],
+
+          },
+          layout: {
+            hLineWidth: function (i, node) {
+              return (i === 0 || i === node.table.body.length || i === 1) ? 2 : 1;
+            },
+            vLineWidth: function (i, node) {
+              return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+            },
+            hLineColor: function (i, node) {
+              return (i === 0 || i === node.table.body.length) ? 'black' : 'black';
+            },
+            vLineColor: function (i, node) {
+              return (i === 0 || i === node.table.widths.length) ? 'black' : 'black';
+            },
+          }
+        },
+
+      ]
+
+      // content.push({text:'test',fontSize:12,alignment:'left',color:'blue',bold:false},)
+      console.log(uniqueBranches.length);
+      for (let i = 1; i < uniqueBranches.length; i++) {
+
+        console.log(i)
+        console.log(uniqueBranches[i])
+        console.log(uniqueBranches.length);
+        if (this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[i]).length != 0) {
+          content.push(
+            {
+              table: {
+                headerRows: 0,
+                widths: [62, 54, 96, 54, 50, 40, 70],
+                body: [
+                  ...this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[i]).map(p => ([{ text: p.supplierName, fillColor: '#b4c6e7' }, { text: p.accountCode, fillColor: '#b4c6e7' }, { text: p.accountName, fillColor: '#b4c6e7' }, { text: p.budgetDepartment, fillColor: '#b4c6e7' }, { text: p.branchName, fillColor: '#b4c6e7' }, { text: p.beE_Level, fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.totalSpend), 'R'), fillColor: '#b4c6e7' }])),
+                ],
+              },
+              layout: {
+                hLineWidth: function (i, node) {
+                  return (i === node.table.body.length) ? null : 1;
+                },
+                vLineWidth: function (i, node) {
+                  return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+                },
+                hLineColor: function (i, node) {
+                  return (i === 0 || i === node.table.body.length) ? 'black' : 'black';
+                },
+                vLineColor: function (i, node) {
+                  return (i === 0 || i === node.table.widths.length) ? 'black' : 'black';
+                },
+              }
+
+            },
+          );//push statement 
+
+          content.push(
+            {
+              table: {
+                headerRows: 0,
+                widths: [401, 70],
+                body: [
+                  [{ text: 'Total Amount for the ' + uniqueBranches[i], alignment: 'center', color: 'black', fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[i]).reduce((sum, p) => sum + Number(p.totalSpend), 0).toFixed(2)), 'R'), alignment: 'center', color: 'black', fillColor: '#d9e2f3' }],
+                ],
+              },
+              layout: {
+                hLineWidth: function (i, node) {
+                  return (i === node.table.body.length) ? null : 1;
+                },
+                vLineWidth: function (i, node) {
+                  return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+                },
+                hLineColor: function (i, node) {
+                  return (i === 0 || i === node.table.body.length) ? 'black' : 'black';
+                },
+                vLineColor: function (i, node) {
+                  return (i === 0 || i === node.table.widths.length) ? 'black' : 'black';
+                },
+              }
+
+            },
+          );//push statement
+          content.push()
+          content.push(
+            {
+              table: {
+                headerRows: 0,
+                widths: [480],
+                body: [
+                  [{ text: ' ', fillColor: "#244688" }],
+                ],
+              },
+              layout: {
+                hLineWidth: function (i, node) {
+                  return (i === node.table.body.length) ? 2 : 1;
+                },
+                vLineWidth: function (i, node) {
+                  return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+                },
+                hLineColor: function (i, node) {
+                  return (i === 0 || i === node.table.body.length) ? 'black' : 'black';
+                },
+                vLineColor: function (i, node) {
+                  return (i === 0 || i === node.table.widths.length) ? 'black' : 'black';
+                },
+              }
+
+            },
+          );//push statement
+        }//if statement 
+
+      }
+
+      content.push(
+        {
+          table: {
+            headerRows: 0,
+            widths: [401, 70],
+            body: [
+              [{ text: 'Total Amount for all Branches', alignment: 'center', color: 'black', fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(this.VendorSpentReportDetails.reduce((sum, p) => sum + Number(p.totalSpend), 0).toFixed(2)), 'R'), alignment: 'center', color: 'black', fillColor: '#d9e2f3' }],
+            ],
+          },
+          layout: {
+            hLineWidth: function (i, node) {
+              return (i === node.table.body.length) ? 2 : 1;
+            },
+            vLineWidth: function (i, node) {
+              return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+            },
+            hLineColor: function (i, node) {
+              return (i === 0 || i === node.table.body.length) ? 'black' : 'black';
+            },
+            vLineColor: function (i, node) {
+              return (i === 0 || i === node.table.widths.length) ? 'black' : 'black';
+            },
+          }
+
+        },
+      );//push statement
+
+      content.push({
+        canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }],
+        // Add space above the line
+        margin: [0, 10, 0, 10]
+      },
+        { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true })
+
+      const docDefinition = {
+        footer: function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
+        header: {
+          margin: [0, 0, 0, 0],
+          table: {
+            headerRows: 0,
+            widths: ['*', 'auto'],
+            body: [
+              [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
+            ]
+          },
+          layout: 'noBorders',
+
+        },
+        pageMargins: [40, 80, 40, 60],
+        content: content,
+        defaultStyle: {
+          fontSize: 7, alignment: 'center'
+        }
+      };
+      //docDefinition.push()
+
+      if (this.bDownload == true) {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).download("Vendor Spent Report")
+      }
+      else {
+        this.bDownload = false;
+        pdfMake.createPdf(docDefinition).open();
+      }
+
+
+    })
+  }
 
 
 

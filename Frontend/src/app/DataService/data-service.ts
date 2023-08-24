@@ -1544,8 +1544,8 @@ export class DataService {
     return this.httpClient.get<BEESpentReportVM[]>(`${this.apiUrl}Reports/getBEESpendReport/${StartDate}/${EndDate}`).pipe(map(result => result))
   }
 
-  getVendorSpentReport(): Observable<any> {
-    return this.httpClient.get<VendorSpentReport[]>(`${this.apiUrl}Reports/getVendorSpentReport`).pipe(map(result => result))
+  getVendorSpentReport(StartDate: Date, EndDate: Date): Observable<any> {
+    return this.httpClient.get<VendorSpentReport[]>(`${this.apiUrl}Reports/getVendorSpentReport/${StartDate}/${EndDate}`).pipe(map(result => result))
   }
 
 

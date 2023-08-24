@@ -271,211 +271,6 @@ export class ReportsMainViewComponent implements OnInit {
 
   }
 
-  GenerateVendorSpentReport() {
-    this.ReportService.getVendorSpentReport().subscribe(result => {
-      this.VendorSpentReportDetails = result;
-      var User = this.ReportService.decodeUser(sessionStorage.getItem('token'))
-      var CurrencyTransform = new CurrencyPipe('en-ZA')
-      let uniqueBranches = this.VendorSpentReportDetails.map(p => (p.branchName)).filter((name, index, currentval) => currentval.indexOf(name) === index)
-      console.log(this.VendorSpentReportDetails)
-      let content = [
-        {
-          text: 'Vendor Spent Report',
-          fontSize: 18,
-          alignment: 'center',
-          color: '#244688',
-          bold: true,
-        },
-        {
-          text: 'Created By: ' + User,
-          fontSize: 12,
-          alignment: 'center',
-          bold: true,
-        },
-        {
-          text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
-          fontSize: 12,
-          alignment: 'center',
-          bold: true,
-        },
-        {
-          canvas: [
-            // Centered line with space above
-            { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
-          ],
-          // Add space above the line
-          margin: [0, 10]
-        },
-        {
-          table: {
-            headerRows: 0,
-            widths: [62, 54, 96, 54, 50, 40, 70],
-            body: [[
-              { text: 'Supplier', color: '#ffffff', fillColor: '#244688' },
-              { text: 'Account Code', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
-              { text: 'Account Name (Budget Line)', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
-              { text: 'Budget (Department)', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
-              { text: 'Company (Branch)', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
-              { text: 'BEE Level', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
-              { text: 'Amount Spend', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
-            ],
-            ...this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[0]).map(p => ([{ text: p.supplierName, fillColor: '#b4c6e7' }, { text: p.accountCode, fillColor: '#b4c6e7' }, { text: p.accountName, fillColor: '#b4c6e7' }, { text: p.budgetDepartment, fillColor: '#b4c6e7' }, { text: p.branchName, fillColor: '#b4c6e7' }, { text: p.beE_Level, fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.totalSpend), 'R'), fillColor: '#b4c6e7' }])),
-            [{ text: 'Total Amount for the ' + uniqueBranches[0], colSpan: 6, fillColor: '#d9e2f3' }, {}, {}, {}, {}, {}, { text: CurrencyTransform.transform(Number(this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[0]).reduce((sum, p) => sum + Number(p.totalSpend), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }],
-            [{ text: ' ', colSpan: 7, fillColor: "#244688" }, {}, {}, {}, {}, {}],
-            ],
-
-          },
-          layout: {
-            hLineWidth: function (i, node) {
-              return (i === 0 || i === node.table.body.length || i === 1) ? 2 : 1;
-            },
-            vLineWidth: function (i, node) {
-              return (i === 0 || i === node.table.widths.length) ? 2 : 1;
-            },
-            hLineColor: function (i, node) {
-              return (i === 0 || i === node.table.body.length) ? 'black' : 'black';
-            },
-            vLineColor: function (i, node) {
-              return (i === 0 || i === node.table.widths.length) ? 'black' : 'black';
-            },
-          }
-        },
-
-      ]
-
-      // content.push({text:'test',fontSize:12,alignment:'left',color:'blue',bold:false},)
-      console.log(uniqueBranches.length);
-      for (let i = 1; i < uniqueBranches.length; i++) {
-
-        console.log(i)
-        console.log(uniqueBranches[i])
-        console.log(uniqueBranches.length);
-        if (this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[i]).length != 0) {
-          content.push(
-            {
-              table: {
-                headerRows: 0,
-                widths: [62, 54, 96, 54, 50, 40, 70],
-                body: [
-                  ...this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[i]).map(p => ([{ text: p.supplierName, fillColor: '#b4c6e7' }, { text: p.accountCode, fillColor: '#b4c6e7' }, { text: p.accountName, fillColor: '#b4c6e7' }, { text: p.budgetDepartment, fillColor: '#b4c6e7' }, { text: p.branchName, fillColor: '#b4c6e7' }, { text: p.beE_Level, fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.totalSpend), 'R'), fillColor: '#b4c6e7' }])),
-                ],
-              },
-              layout: {
-                hLineWidth: function (i, node) {
-                  return (i === node.table.body.length) ? null : 1;
-                },
-                vLineWidth: function (i, node) {
-                  return (i === 0 || i === node.table.widths.length) ? 2 : 1;
-                },
-                hLineColor: function (i, node) {
-                  return (i === 0 || i === node.table.body.length) ? 'black' : 'black';
-                },
-                vLineColor: function (i, node) {
-                  return (i === 0 || i === node.table.widths.length) ? 'black' : 'black';
-                },
-              }
-
-            },
-          );//push statement 
-
-          content.push(
-            {
-              table: {
-                headerRows: 0,
-                widths: [401, 70],
-                body: [
-                  [{ text: 'Total Amount for the ' + uniqueBranches[i], alignment: 'center', color: 'black', fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[i]).reduce((sum, p) => sum + Number(p.totalSpend), 0).toFixed(2)), 'R'), alignment: 'center', color: 'black', fillColor: '#d9e2f3' }],
-                ],
-              },
-              layout: {
-                hLineWidth: function (i, node) {
-                  return (i === node.table.body.length) ? null : 1;
-                },
-                vLineWidth: function (i, node) {
-                  return (i === 0 || i === node.table.widths.length) ? 2 : 1;
-                },
-                hLineColor: function (i, node) {
-                  return (i === 0 || i === node.table.body.length) ? 'black' : 'black';
-                },
-                vLineColor: function (i, node) {
-                  return (i === 0 || i === node.table.widths.length) ? 'black' : 'black';
-                },
-              }
-
-            },
-          );//push statement
-          content.push()
-          content.push(
-            {
-              table: {
-                headerRows: 0,
-                widths: [480],
-                body: [
-                  [{ text: ' ', fillColor: "#244688" }],
-                ],
-              },
-              layout: {
-                hLineWidth: function (i, node) {
-                  return (i === node.table.body.length) ? 2 : 1;
-                },
-                vLineWidth: function (i, node) {
-                  return (i === 0 || i === node.table.widths.length) ? 2 : 1;
-                },
-                hLineColor: function (i, node) {
-                  return (i === 0 || i === node.table.body.length) ? 'black' : 'black';
-                },
-                vLineColor: function (i, node) {
-                  return (i === 0 || i === node.table.widths.length) ? 'black' : 'black';
-                },
-              }
-
-            },
-          );//push statement
-        }//if statement 
-
-      }
-
-      content.push({
-        canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }],
-        // Add space above the line
-        margin: [0, 10, 0, 10]
-      },
-        { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true })
-
-      const docDefinition = {
-        footer: function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
-        header: {
-          margin: [0, 0, 0, 0],
-          table: {
-            headerRows: 0,
-            widths: ['*', 'auto'],
-            body: [
-              [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
-            ]
-          },
-          layout: 'noBorders',
-
-        },
-        pageMargins: [40, 80, 40, 60],
-        content: content,
-        defaultStyle: {
-          fontSize: 7, alignment: 'center'
-        }
-      };
-      //docDefinition.push()
-
-      if (this.bDownload == true) {
-        this.bDownload = false;
-        pdfMake.createPdf(docDefinition).download("Vendor Spent Report")
-      }
-      else {
-        this.bDownload = false;
-        pdfMake.createPdf(docDefinition).open();
-      }
-
-
-    })
-  }
 
   generateBusinessUnitAllocationReport(): void {
     var currYear = Number(sessionStorage.getItem('year'));
@@ -639,6 +434,32 @@ export class ReportsMainViewComponent implements OnInit {
 
       }
 
+      content.push(
+        {
+          table: {
+            headerRows: 0,
+            widths: [125, 96, 96, 50],
+            body: [
+              [{ text: 'Total Amount for all Departments', alignment: 'center', color: 'black', fillColor: '#d9e2f3' },{ text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)), 'R'), alignment: 'center', color: 'black', fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.budgetAmt), 0).toFixed(2)), 'R'), alignment: 'center', color: 'black', fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.variance), 0).toFixed(2)), 'R'), alignment: 'center', color: 'black', fillColor: '#d9e2f3' }],
+            ],
+          },
+          layout: {
+            hLineWidth: function (i, node) {
+              return (i === node.table.body.length) ? 2 : 1;
+            },
+            vLineWidth: function (i, node) {
+              return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+            },
+            hLineColor: function (i, node) {
+              return (i === 0 || i === node.table.body.length) ? 'black' : 'black';
+            },
+            vLineColor: function (i, node) {
+              return (i === 0 || i === node.table.widths.length) ? 'black' : 'black';
+            },
+          }
+
+        },
+      );//push statement
 
       content.push(
         {
@@ -716,37 +537,84 @@ export class ReportsMainViewComponent implements OnInit {
         datasets: [{
           label: 'Variance',
           data: varianceData,
-          backgroundColor: 'rgba(255, 99, 132, 0.5)'
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+          borderWidth: 2,
+          borderColor: 'black',
         }, {
           label: 'Actual Amount',
           data: actualData,
-          backgroundColor: 'rgba(75, 192, 192, 0.5)'
+          backgroundColor: 'rgba(75, 192, 192, 0.5)',
+          borderWidth: 2,
+          borderColor: 'black',
         }, {
           label: 'Budgeted Amount',
           data: budgetedData,
-          backgroundColor: 'rgba(255, 206, 86, 0.5)'
+          backgroundColor: 'rgba(255, 206, 86, 0.5)',
+          borderWidth: 2,
+          borderColor: 'black',
         }]
       },
       options: {
+        animation: {
+          duration: 0
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: "Business Unit Allocation for Departments",
+            font: { weight: 'bold', size: 20 },
+            color: 'black'
+          },
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              font: {
+                  size: 16,
+              },
+              color: 'black'
+            }
+          },
+          datalabels: {
+            anchor: 'end',
+            align: 'top',
+            color: 'black',
+            font: {size: 16},
+            formatter: (value, ctx) => {
+              const datapoints = ctx.chart.data.datasets[0].data
+              return "R " + Number(value).toFixed(2);
+            },
+          }
+        },
         responsive: true,
         scales: {
           x: {
+            title: {
+              text: "Departments",
+              display: true,
+              font: { weight: 'bold', size: 20 },
+              color: 'black'
+            },
             type: 'category',
             stacked: false
           },
           y: {
+            title:  
+              {
+                text: "Business Unit Allocation Pricing (R)",
+                display: true,
+                font: { weight: 'bold', size: 20 },
+                color: 'black'
+              },
+              beginAtZero: true,
             type: 'linear',
             stacked: false
           }
         }
-      }
+      }, 
+      plugins: [ChartDataLabels]
     });
-
-    setTimeout(() => {
-      this.businessUnitAllocationChartImageBase64 = this.chart.toBase64Image();
-      this.showCanvas = false;  // Hide the canvas
-      this.chart.destroy();    // Destroy the chart so it can be re-rendered as an image
-    }, 10);
+    this.businessUnitAllocationChartImageBase64 = this.chart.toBase64Image();
   }
 
   generateBudgetVarianceReport(): void {
@@ -808,7 +676,7 @@ export class ReportsMainViewComponent implements OnInit {
               { text: 'Variance (%)', alignment: 'center', color: '#ffffff', fillColor: '#244688' }
             ],
             ...data.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).map(p => ([{ text: p.month, fillColor: '#b4c6e7' }, { text: p.budget_Category.account_Name, fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.budgetAmt), 'R'), fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.actualAmt), 'R'), fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.variance), 'R'), fillColor: '#b4c6e7' }, { text: (p.variance / p.budgetAmt * 100).toFixed(2) + '%', fillColor: '#b4c6e7' }])),
-            [{ text: 'Total Amount for ' + uniqueCategories[0], colSpan: 2, fillColor: '#d9e2f3' }, {}, { text: CurrencyTransform.transform(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + Number(p.budgetAmt), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + Number(p.variance), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: '', fillColor: '#d9e2f3' }],
+            [{ text: 'Total Amount for ' + uniqueCategories[0], colSpan: 2, fillColor: '#d9e2f3' }, {}, { text: CurrencyTransform.transform(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + Number(p.budgetAmt), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.filter(x => x.budget_Category.account_Name == uniqueCategories[0]).reduce((sum, p) => sum + Number(p.variance), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: '', fillColor: '#d9e2f3' }],
             [{ text: ' ', colSpan: 6, fillColor: "#244688" }, {}, {}, {}, {}],
             ],
 
@@ -875,7 +743,7 @@ export class ReportsMainViewComponent implements OnInit {
               },
               layout: {
                 hLineWidth: function (i, node) {
-                  return (i === node.table.body.length) ? null : 1;
+                  return (i === node.table.body.length) ? 2 : 1;
                 },
                 vLineWidth: function (i, node) {
                   return (i === 0 || i === node.table.widths.length) ? 2 : 1;
@@ -923,6 +791,32 @@ export class ReportsMainViewComponent implements OnInit {
 
       }
 
+      content.push(
+        {
+          table: {
+            headerRows: 0,
+            widths: [125, 96, 96, 50, 50, 60],
+            body: [
+              [{ text: 'Total Amount for all Categories', alignment: 'center', color: 'black', fillColor: '#d9e2f3' },{ text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.budgetAmt), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.variance), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: '', fillColor: '#d9e2f3' }],
+            ],
+          },
+          layout: {
+            hLineWidth: function (i, node) {
+              return (i === node.table.body.length) ? 2 : 1;
+            },
+            vLineWidth: function (i, node) {
+              return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+            },
+            hLineColor: function (i, node) {
+              return (i === 0 || i === node.table.body.length) ? 'black' : 'black';
+            },
+            vLineColor: function (i, node) {
+              return (i === 0 || i === node.table.widths.length) ? 'black' : 'black';
+            },
+          }
+
+        },
+      );//push statement
 
       content.push({
 
@@ -1008,30 +902,72 @@ export class ReportsMainViewComponent implements OnInit {
           datasets: [{
             label: 'Yearly Totals',
             data: yearlyTotals,
-            backgroundColor: 'rgba(255, 99, 132, 0.5)'
+            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            borderWidth: 2,
+            borderColor: 'black',
           }]
         },
         options: {
+          animation: {
+            duration: 0
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: "Total Expenses for Categories",
+              font: { weight: 'bold', size: 20 },
+              color: 'black'
+            },
+            legend: {
+              display: true,
+              position: 'bottom',
+              labels: {
+                font: {
+                    size: 16
+                },
+                color: 'black'
+              }
+            },
+            datalabels: {
+              anchor: 'end',
+              align: 'top',
+              color: 'black',
+              font: {size: 16},
+              formatter: (value, ctx) => {
+                const datapoints = ctx.chart.data.datasets[0].data
+                return "R " + Number(value).toFixed(2);
+              },
+            }
+          },
           responsive: true,
           scales: {
             x: {
+              title: {
+                text: "Categories",
+                display: true,
+                font: { weight: 'bold', size: 20 },
+                color: 'black'
+              },
               type: 'category',
               stacked: false
             },
             y: {
+              title:  
+              {
+                text: "Total Category Expense (R)",
+                display: true,
+                font: { weight: 'bold', size: 20 },
+                color: 'black'
+              },
+              beginAtZero: true,
               type: 'linear',
               stacked: false
             }
           }
-        }
+        },
+        plugins: [ChartDataLabels]
       });
-
-      setTimeout(() => {
-
-        this.budgetVarianceBarChartImageBase64 = this.barChart.toBase64Image();
-        // this.showCanvas = false;  // Hide the canvas
-      }, 500);
-
+      this.budgetVarianceBarChartImageBase64 = this.barChart.toBase64Image();
 
     });
 
@@ -1057,7 +993,7 @@ export class ReportsMainViewComponent implements OnInit {
 
       let months = dataArray.map(monthData => monthData.month);
       let monthlyTotals = dataArray.map(monthData => monthData.total);
-
+      console.log(monthlyTotals)
       this.lineChart = new Chart(ctxLine, {
         type: 'line',
         data: {
@@ -1070,23 +1006,71 @@ export class ReportsMainViewComponent implements OnInit {
           }]
         },
         options: {
+          animation: {
+            duration: 0
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: "Monthly Expenditure Per Month",
+              font: { weight: 'bold', size: 20 },
+              color: 'black'
+            },
+            legend: {
+              display: true,
+              position: 'bottom',
+              labels: {
+                font: {
+                    size: 16
+                },
+                color: 'black'
+              }
+            },
+            datalabels: {
+              anchor: 'end',
+              align: 'top',
+              color: 'black',
+              font: {size: 16},
+              formatter: (value, ctx) => {
+                const datapoints = ctx.chart.data.datasets[0].data
+                return "R " + Number(value).toFixed(2);
+              },
+            }
+          },
           responsive: true,
           scales: {
             x: {
+              title: {
+                text: "Months",
+                display: true,
+                font: { weight: 'bold', size: 20 },
+                color: 'black'
+              },
               type: 'category'
             },
             y: {
+              title:
+            {
+              text: "Monthly Expenditure Price (R)",
+              display: true,
+              font: { weight: 'bold', size: 20 },
+              color: 'black'
+            },
+            beginAtZero: true,
               type: 'linear'
             }
           }
-        }
+          
+        },
+        plugins: [ChartDataLabels]
       });
-      setTimeout(() => {
+      this.budgetVarianceLineChartImageBase64 = this.lineChart.toBase64Image();
+      //setTimeout(() => {
 
-        this.budgetVarianceLineChartImageBase64 = this.lineChart.toBase64Image();
-        this.lineChart.destroy();
+       
+        //this.lineChart.destroy();
         // this.showCanvas = false;  // Hide the canvas
-      }, 500);
+      //}, 500);
 
 
     });
@@ -1278,15 +1262,11 @@ export class ReportsMainViewComponent implements OnInit {
       }
 
       case 3: {
-        this.bDownload = boolValue;
-        this.GenerateVendorSpentReport()
+        this.ViewFilter(3, boolValue)
         break;
       }
 
       case 4: {
-        console.log(this.GeneralConsumableMangementSelected)
-        this.GeneralConsumableMangementSelected = true
-        console.log("hy")
         this.bDownload = boolValue;
         this.ViewFilter(4, boolValue)
         break;
@@ -1328,6 +1308,8 @@ export class ReportsMainViewComponent implements OnInit {
   }
 
   ViewFilter2(ID: Number, sDownload: boolean) {
+
+
     const confirm = this.dialog.open(YearPickerComponent, {
       disableClose: true,
       data: { ID, sDownload }
@@ -1338,13 +1320,6 @@ export class ReportsMainViewComponent implements OnInit {
       }
     })
   }
-
-
-
-
-
-
-
 
 
   openReportsIFrameTab(): void {
