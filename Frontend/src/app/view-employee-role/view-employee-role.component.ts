@@ -28,7 +28,8 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewEmployeeRoleComponent implements OnInit {
-
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  dataSource: any;
   displayedColumns: string[] = ['name', 'description', 'action', 'delete'];
   roleDelete: any
   RoleToUse: string = "";
@@ -71,17 +72,22 @@ export class ViewEmployeeRoleComponent implements OnInit {
       this.SearchedRole = this.Roles.filter(r => r.name.toLocaleLowerCase().includes(searchTerm))
     }
     else if (searchTerm == "") {
-      this.SearchedRole = [...this.Roles]
+      this.GetRoles();
     }
   }
 
   GetRoles() {
     this.dataService.GetRoles().subscribe(result => {
+      let employeeList: any[] = result;
+      this.Roles = [...employeeList];
+      this.SearchedRole = [...employeeList];
+      this.dataSource = new MatTableDataSource(this.Roles.filter((value, index, self) => self.map(x => x.role_ID).indexOf(value.role_ID) == index));
+      this.dataSource.paginator = this.paginator
+
       if (result) {
         hideloader();
       }
-      this.Roles = result;
-      this.SearchedRole = this.Roles;
+
     });
     function hideloader() {
       document.getElementById('loading')

@@ -331,7 +331,8 @@ export class CreateDelegationComponent implements OnInit {
                       this.dataService.CheckDelegation().subscribe({
                         next: (r) => {
                           if (r) {
-
+                            document.getElementById('AnimationBtn').classList.toggle("is_active");
+                            document.getElementById('cBtn').style.display = "none";
                             this.log.action = "Created Delegation: " + response[0].delegation_ID;
                             this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
                             let test: any

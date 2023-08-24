@@ -122,8 +122,8 @@ export class CreateBudgetAllocationComponent {
             (AllocationAdded) => {
 
               if (AllocationAdded) {
+                document.getElementById('AnimationBtn').classList.toggle("is_active");
                 document.getElementById('cBtn').style.display = "none";
-                document.querySelector('button').classList.toggle("is_active");
               }
 
               this.log.action = "Created Budget Allocation for: " + this.budgetAllocation.department.name;

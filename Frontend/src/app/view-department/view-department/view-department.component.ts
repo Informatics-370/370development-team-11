@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Department } from 'src/app/Shared/Department';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -16,6 +16,7 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/
 import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
 import { DepartmentIFrameComponent } from 'src/app/HelpIFrames/DepartmentIFrame/department-iframe/department-iframe.component';
+import { MatPaginator } from '@angular/material/paginator';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -43,7 +44,8 @@ export class ViewDepartmentComponent implements OnInit{
   }
 
   displayedColumns: string[] = ['name', 'description', 'action', 'delete'];
-  dataSource = new MatTableDataSource<Department>();
+  dataSource: any;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
  
 
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router, private sanitizer: DomSanitizer, private dialog: MatDialog) { }
@@ -57,20 +59,24 @@ export class ViewDepartmentComponent implements OnInit{
     const searchTerm = this.searchWord.toLocaleLowerCase();
 
     if (searchTerm) {
-      this.SearchedDepartment = this.Departments.filter(department => department.name.toLocaleLowerCase().includes(searchTerm))
+      this.dataSource = this.Departments.filter(department => department.name.toLocaleLowerCase().includes(searchTerm))
     }
     else if (searchTerm == "") {
-      this.SearchedDepartment = [...this.Departments]
+      this.GetDepartments();
     }
   }
 
   GetDepartments() {
     this.dataService.GetDepartments().subscribe(result => {
+      let employeeList: any[] = result;
+      this.Departments = [...employeeList];
+      this.SearchedDepartment = [...employeeList];
+      this.dataSource = new MatTableDataSource(this.Departments.filter((value, index, self) => self.map(x => x.department_ID).indexOf(value.department_ID) == index));
+      this.dataSource.paginator = this.paginator
+
       if (result) {
         hideloader();
       }
-      this.Departments = result;
-      this.SearchedDepartment = this.Departments;
     }); 
     function hideloader() {
       document.getElementById('loading')

@@ -173,8 +173,9 @@ export class UpdatePasswordComponent implements OnInit {
           this.dataService.UpdatePassword(UserID, NewPassword).subscribe({
             next: (Response) => {
               if (Response != null) {
-
-                this.log.action = "Updatet User Password";
+                document.getElementById('AnimationBtn').classList.toggle("is_active");
+                document.getElementById('cBtn').style.display = "none";
+                this.log.action = "Updated User Password";
                 this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
                 let test: any
                 test = new DatePipe('en-ZA');

@@ -46,6 +46,8 @@ export class ReceiveAssetComponent implements OnInit {
     let StatusID = this.myForm.get("Status")?.value;
     let SelectedStatus = this.Statuses.findIndex(x => x.procurement_Status_ID == StatusID)
     console.log(StatusID)
+    document.getElementById('AnimationBtn').classList.toggle("is_active");
+    document.getElementById('cBtn').style.display = "none";
     this.dataService.UpdateProcurementStatus(StatusID, this.id).subscribe({
       next: (Result) => {
         this.log.action = "Changed Asset Status To: " + this.Statuses[Number(SelectedStatus)].name;

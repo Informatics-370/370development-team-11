@@ -215,6 +215,7 @@ export class FinalizeProcurementRequestCreateComponent {
 
 
   budgetLine: BudgetLine = {
+    budgetLineId: 0,
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
@@ -398,6 +399,8 @@ export class FinalizeProcurementRequestCreateComponent {
           this.dataService.FinalizeProcurementRequest(this.ProcurementDetails.procurement_Details_ID).subscribe(result => {
             this.dataService.UpdateProcurementStatus(2, this.id).subscribe({
               next: (Result) => {
+                document.getElementById('AnimationBtn').classList.toggle("is_active");
+                document.getElementById('cBtn').style.display = "none";
                 this.log.action = "Finalised procurement request for: " + this.Procurement_Request.name;
                 this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
                 let test: any

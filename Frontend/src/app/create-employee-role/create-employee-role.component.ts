@@ -47,6 +47,7 @@ export class CreateEmployeeRoleComponent implements OnInit {
       Name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(32), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 -]+"),]),
       Description: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 ]+")])
     });
+
   }
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
@@ -59,6 +60,9 @@ export class CreateEmployeeRoleComponent implements OnInit {
 
   onSubmit() {
 
+    
+    
+
     var name = this.myForm.get('Name')?.value;
 
     this.dataService.CreateRoleValidation(name).subscribe({
@@ -66,8 +70,8 @@ export class CreateEmployeeRoleComponent implements OnInit {
         if (Result == null) {
           this.dataService.AddRole(this.myForm.value).subscribe({
             next: (response) => {
+              document.getElementById('AnimationBtn').classList.toggle("is_active");
               document.getElementById('cBtn').style.display = "none";
-              document.querySelector('button').classList.toggle("is_active");
 
               this.log.action = "Created Employee Role: " + name;
               this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));

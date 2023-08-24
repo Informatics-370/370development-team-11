@@ -271,8 +271,8 @@ export class UserProfileEditComponent {
           this.dataService.EditUser(this.usr, this.admin.user_Id).subscribe(result => {
             this.dataService.EditAdmin(this.adm, this.admin.admin_ID).subscribe({
               next: (response) => {
+                document.getElementById('AnimationBtn').classList.toggle("is_active");
                 document.getElementById('cBtn').style.display = "none";
-                document.querySelector('button').classList.toggle("is_active");
 
                 this.log.action = "Edited User Profile for: " + this.adm.adminName + " " + this.adm.adminSurname;
                 this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
@@ -350,8 +350,8 @@ export class UserProfileEditComponent {
           this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
             this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
               next: (response) => {
+                document.getElementById('AnimationBtn').classList.toggle("is_active");
                 document.getElementById('cBtn').style.display = "none";
-                document.querySelector('button').classList.toggle("is_active");
 
                 this.log.action = "Edited User Profile for: " + this.emp.employeeName + " " + this.emp.employeeSurname;
                 this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));

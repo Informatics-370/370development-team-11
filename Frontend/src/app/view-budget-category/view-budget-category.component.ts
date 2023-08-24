@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../DataService/data-service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -10,6 +10,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { BudgetCategoryIFrameComponent } from '../HelpIFrames/BudgetCategoryIFrame/budget-category-iframe/budget-category-iframe.component';
+import { MatPaginator } from '@angular/material/paginator';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -25,7 +26,8 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 })
 export class ViewBudgetCategoryComponent implements OnInit {
   displayedColumns: string[] = [ 'account_Name', 'description', 'action', 'delete'];
-  dataSource = new MatTableDataSource<BudgetCategory>();
+  dataSource: any;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService,
     private sanitizer: DomSanitizer) { }
@@ -49,12 +51,10 @@ export class ViewBudgetCategoryComponent implements OnInit {
     const Searchterm = this.searchWord.toLocaleLowerCase();
 
     if (Searchterm) {
-      this.SearchedBudgetCategories = this.BudgetCategories.filter(Category => Category.account_Name.toLocaleLowerCase().includes(Searchterm))
-      this.dataSource = new MatTableDataSource(this.SearchedBudgetCategories);
+      this.dataSource = this.BudgetCategories.filter(Category => Category.account_Name.toLocaleLowerCase().includes(Searchterm))
     }
     else if (Searchterm == "") {
-      this.SearchedBudgetCategories = [...this.BudgetCategories];
-      this.dataSource = new MatTableDataSource(this.SearchedBudgetCategories);
+      this.GetBudgetCategories();
     }
   }
 
@@ -73,8 +73,11 @@ export class ViewBudgetCategoryComponent implements OnInit {
 
   GetBudgetCategories() {
     this.dataService.GetBudgetCategories().subscribe(result => {
-      this.BudgetCategories = result;
-      this.dataSource = new MatTableDataSource(this.BudgetCategories);
+      let employeeList: any[] = result;
+      this.BudgetCategories = [...employeeList];
+      this.SearchedBudgetCategories = [...employeeList];
+      this.dataSource = new MatTableDataSource(this.BudgetCategories.filter((value, index, self) => self.map(x => x.category_ID).indexOf(value.category_ID) == index));
+      this.dataSource.paginator = this.paginator
     });
   }
   DeleteBudgetCategory(id: Number) {

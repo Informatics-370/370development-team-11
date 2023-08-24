@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Mandate_Limit } from '../Shared/MandateLimit';
@@ -13,6 +13,7 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/
 import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
 import { MandateIFrameComponent } from '../HelpIFrames/MandateIFrame/mandate-iframe/mandate-iframe.component';
+import { MatPaginator } from '@angular/material/paginator';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -27,8 +28,9 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewMandateLimitComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = [ 'amount', 'date', 'action', 'delete'];
-  dataSource = new MatTableDataSource<Mandate_Limit>();
+  dataSource : any;
 
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService,
     private sanitizer: DomSanitizer) { }
@@ -72,8 +74,11 @@ export class ViewMandateLimitComponent implements OnInit {
 
   GetMandateLimits() {
     this.dataService.GetMandateLimits().subscribe(result => {
-      this.Mandate_Limits = result;
-      this.dataSource = new MatTableDataSource(this.Mandate_Limits);
+      let employeeList: any[] = result;
+      this.Mandate_Limits = [...employeeList];
+      this.SearchedMandate_Limits = [...employeeList];
+      this.dataSource = new MatTableDataSource(this.Mandate_Limits.filter((value, index, self) => self.map(x => x.mandate_ID).indexOf(value.mandate_ID) == index));
+      this.dataSource.paginator = this.paginator
     });
   }
   DeleteMandateLimit(id: Number) {

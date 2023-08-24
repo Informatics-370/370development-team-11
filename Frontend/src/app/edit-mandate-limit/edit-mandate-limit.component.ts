@@ -59,8 +59,8 @@ export class EditMandateLimitComponent {
   onSubmit(): void {
     console.log(this.currentMandateLimit)
     this.dataService.EditMandateLimit(this.currentMandateLimit.mandate_ID, this.currentMandateLimit).subscribe(result => {
+      document.getElementById('AnimationBtn').classList.toggle("is_active");
       document.getElementById('cBtn').style.display = "none";
-      document.querySelector('button').classList.toggle("is_active");
 
       this.log.action = "Mandate Limit Updated: " + this.currentMandateLimit.ammount;
       this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));

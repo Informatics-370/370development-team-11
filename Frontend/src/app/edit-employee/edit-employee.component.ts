@@ -367,8 +367,8 @@ export class EditEmployeeComponent implements OnInit {
                 this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
                 this.dataService.AuditLogAdd(this.log).subscribe({
                   next: (Log) => {
+                    document.getElementById('AnimationBtn').classList.toggle("is_active");
                     document.getElementById('cBtn').style.display = "none";
-                    document.querySelector('button').classList.toggle("is_active");
                     var action = "Update";
                     var title = "UPDATE SUCCESSFUL";
                     var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");

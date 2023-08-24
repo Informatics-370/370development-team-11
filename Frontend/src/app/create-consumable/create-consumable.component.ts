@@ -98,8 +98,8 @@ export class CreateConsumableComponent implements OnInit {
             (ConsumableAdded) => {
 
               if (ConsumableAdded) {
+                document.getElementById('AnimationBtn').classList.toggle("is_active");
                 document.getElementById('cBtn').style.display = "none";
-                document.querySelector('button').classList.toggle("is_active");
               }
 
               this.log.action = "Created Consumable: " + this.Consumables.name;

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataService } from '../DataService/data-service';
@@ -8,6 +8,7 @@ import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { DeleteBudgetLineComponent } from '../delete-budget-line/delete-budget-line.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { BudgetLineIFrameComponent } from '../HelpIFrames/BudgetLineIFrame/budget-line-iframe/budget-line-iframe.component';
+import { MatPaginator } from '@angular/material/paginator';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -28,7 +29,10 @@ export class ViewBudgetLinesComponent {
   SearchedBudgetLines: BudgetLine[] = [];
   searchTerm: String = '';
   displayedColumns: string[] = ['budgetCategory', 'month', 'budget', 'actual', 'variance', 'action', 'delete'];
-  dataSource = new MatTableDataSource<BudgetLine>();
+  dataSource: any;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  filters: any[] = ["None", "Category", "Month"]
+  searchWord: string = "None";
 
   constructor(private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private dataService: DataService) { }
 
@@ -36,15 +40,12 @@ export class ViewBudgetLinesComponent {
     const Searchterm = this.searchTerm.toLowerCase();
 
     if (Searchterm) {
-      this.SearchedBudgetLines = this.BudgetLines.filter(budgetLine => budgetLine.budget_Category.account_Name.toLowerCase().includes(Searchterm));
-      this.dataSource = new MatTableDataSource(this.SearchedBudgetLines);
+      this.dataSource = this.BudgetLines.filter(budgetLine => budgetLine.budget_Category.account_Name.toLowerCase().includes(Searchterm));
     }
     else if (Searchterm == "") {
-      this.SearchedBudgetLines = [...this.BudgetLines];
-      this.dataSource = new MatTableDataSource(this.BudgetLines);
+      console.log(Number(this.route.snapshot.paramMap.get('id')))
+      this.GetBudgetLines(Number(this.route.snapshot.paramMap.get('id')));
     }
-
-    this.dataSource = new MatTableDataSource<BudgetLine>(this.SearchedBudgetLines);
   }
 
 
@@ -56,10 +57,53 @@ export class ViewBudgetLinesComponent {
 
   GetBudgetLines(id: number) {
     this.dataService.GetBudgetLineItems(id).subscribe(result => {
-      this.BudgetLines = result;
-      this.dataSource = new MatTableDataSource(this.BudgetLines);
+      let employeeList: any[] = result;
+      this.BudgetLines = [...employeeList];
+      this.dataSource = new MatTableDataSource(this.BudgetLines.filter((value, index, self) => self.map(x => x.budgetLineId).indexOf(value.budgetLineId) == index));
+      this.dataSource.paginator = this.paginator
     });
   }
+
+  RefreshBLs() {
+    this.dataService.GetBudgetLineItems(Number(this.route.snapshot.paramMap.get('id'))).subscribe(result => {
+      let BLList: any[] = result;
+      this.BudgetLines = [...BLList];
+      console.log(this.BudgetLines)
+    });
+  }
+
+  OnInPutChangeS() {
+    const Searchterm = this.searchWord; // Use this.selectedFilter instead of this.searchWord
+
+    if (Searchterm === "Category") {
+      this.RefreshBLs()
+      this.dataSource = this.BudgetLines.sort((a, b) => {
+        if (a.budget_Category.account_Name < b.budget_Category.account_Name) {
+          return -1;
+        } else if (a.budget_Category.account_Name > b.budget_Category.account_Name) {
+          return 1;
+        }
+        return 0;
+      });
+
+      this.dataSource = new MatTableDataSource(this.BudgetLines.filter((value, index, self) => self.map(x => x.budgetLineId).indexOf(value.budgetLineId) == index));
+      this.dataSource.paginator = this.paginator
+    }
+    else if (Searchterm === "Month") {
+      this.RefreshBLs()
+      this.dataSource = this.BudgetLines.sort((a, b) => {
+        const monthOrder: String[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        return monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month);
+      });
+
+      this.dataSource = new MatTableDataSource(this.BudgetLines.filter((value, index, self) => self.map(x => x.budgetLineId).indexOf(value.budgetLineId) == index));
+      this.dataSource.paginator = this.paginator
+    }
+    else if (Searchterm === "None") {
+      this.GetBudgetLines(Number(this.route.snapshot.paramMap.get('id')));
+    }
+  }
+
   AddBudgetLine() {
     this.router.navigate(['/AddBudgetLine', this.id]);
   }

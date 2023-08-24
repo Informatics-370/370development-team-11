@@ -159,8 +159,8 @@ export class CreateHelpComponent implements OnInit{
 
                           if (response) {
                             hideloader();
+                            document.getElementById('AnimationBtn').classList.toggle("is_active");
                             document.getElementById('cBtn').style.display = "none";
-                            document.querySelector('button').classList.toggle("is_active");
                           }
 
                           this.log.action = "Created Help: " + this.Help.name;

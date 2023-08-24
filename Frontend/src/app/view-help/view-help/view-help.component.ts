@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,6 +15,7 @@ import { VideoDialogComponent } from 'src/app/VideoDialog/video-dialog/video-dia
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
+import { MatPaginator } from '@angular/material/paginator';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -35,7 +36,8 @@ export class ViewHelpComponent implements OnInit {
                                   //'help_ID',
   displayedColumnsUser: string[] = [ 'helpCategory', 'name', 'description', 'video', 'user_Manual'];
                                  //'help_ID',
-  dataSource = new MatTableDataSource<Help>();
+  dataSource: any;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   HelpToDelete:any  = {
     help_ID :0,
@@ -79,10 +81,10 @@ export class ViewHelpComponent implements OnInit {
     const searchTerm = this.searchWord.toLocaleLowerCase();
   
     if (searchTerm) {
-      this.SearchedHelp = this.Helps.filter(help => help.name.toLocaleLowerCase().includes(searchTerm))
+      this.dataSource = this.Helps.filter(help => help.name.toLocaleLowerCase().includes(searchTerm))
     }
     else if (searchTerm == "") {
-      this.SearchedHelp = [...this.Helps]
+      this.GetHelps();
     }
   }
 
@@ -90,11 +92,16 @@ export class ViewHelpComponent implements OnInit {
 
   GetHelps() {
     this.dataService.GetHelps().subscribe(result => {
+      let employeeList: any[] = result;
+      this.Helps = [...employeeList];
+      this.SearchedHelp = [...employeeList];
+      this.dataSource = new MatTableDataSource(this.Helps.filter((value, index, self) => self.map(x => x.help_ID).indexOf(value.help_ID) == index));
+      this.dataSource.paginator = this.paginator
+
       if (result) {
         hideloader();
       }
-      this.Helps = result;
-      this.SearchedHelp = this.Helps;
+
       for (let i = 0; i < this.Helps.length; i++) {
         this.FileDetails.push({ FileURL: "", FileName: "" })
         this.vFileDetails.push({ FileURL: "", FileName: "" })

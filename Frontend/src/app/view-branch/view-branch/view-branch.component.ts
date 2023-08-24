@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Branch } from 'src/app/Shared/Branch';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -16,6 +16,7 @@ import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-
 import { BranchIFrameComponent } from 'src/app/HelpIFrames/BranchIFrame/branch-iframe/branch-iframe.component';
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { MatPaginator } from '@angular/material/paginator';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -43,8 +44,9 @@ export class ViewBranchComponent implements OnInit {
     province:'',
   }
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = ['name', 'street','city','postal_Code','province', 'action', 'delete'];
-  dataSource = new MatTableDataSource<Branch>();
+  dataSource : any;
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router, private sanitizer: DomSanitizer, private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -56,20 +58,25 @@ export class ViewBranchComponent implements OnInit {
     const searchTerm = this.searchWord.toLocaleLowerCase();
 
     if (searchTerm) {
-      this.SearchedBranch = this.Branches.filter(branch => branch.name.toLocaleLowerCase().includes(searchTerm))
+      this.dataSource = this.Branches.filter(branch => branch.name.toLocaleLowerCase().includes(searchTerm))
     }
     else if (searchTerm == "") {
-      this.SearchedBranch = [...this.Branches]
+      this.GetBranches();
     }
   }
 
   GetBranches() {
     this.dataService.GetBranches().subscribe(result => {
+      let employeeList: any[] = result;
+      this.Branches = [...employeeList];
+      this.SearchedBranch = [...employeeList];
+      this.dataSource = new MatTableDataSource(this.Branches.filter((value, index, self) => self.map(x => x.branch_ID).indexOf(value.branch_ID) == index));
+      this.dataSource.paginator = this.paginator
+
       if (result) {
         hideloader();
       }
-      this.Branches = result;
-      this.SearchedBranch =this.Branches;
+
     }); 
     function hideloader() {
       document.getElementById('loading')
