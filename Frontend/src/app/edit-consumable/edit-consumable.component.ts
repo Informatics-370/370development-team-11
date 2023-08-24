@@ -110,6 +110,8 @@ export class EditConsumableComponent implements OnInit {
         if (Result == null) {
           this.dataService.UpdateConsumable(this.ConsumableToEdit.consumable_ID, this.ConsumableToEdit).subscribe({
             next: (response) => {
+              document.getElementById('AnimationBtn').classList.toggle("is_active");
+              document.getElementById('cBtn').style.display = "none";
               this.log.action = "Edited Consumable: " + this.ConsumableToEdit.name;
               this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
               let test: any
@@ -147,8 +149,8 @@ export class EditConsumableComponent implements OnInit {
             this.dataService.UpdateConsumable(this.ConsumableToEdit.consumable_ID, this.ConsumableToEdit).subscribe({
               next: (response) => {
 
+                document.getElementById('AnimationBtn').classList.toggle("is_active");
                 document.getElementById('cBtn').style.display = "none";
-                document.querySelector('button').classList.toggle("is_active");
                 var action = "Update";
                 var title = "UPDATE SUCCESSFUL";
                 var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");

@@ -163,8 +163,8 @@ export class EditHelpComponent implements OnInit{
 
                 if (response) {
                   hideloader();
+                  document.getElementById('AnimationBtn').classList.toggle("is_active");
                   document.getElementById('cBtn').style.display = "none";
-                  document.querySelector('button').classList.toggle("is_active");
                 }
 
                 this.log.action = "Edited Help: " + this.HelpToEdit.name;
@@ -239,7 +239,9 @@ export class EditHelpComponent implements OnInit{
 
               
                 this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
-                 next: (response) => {
+                  next: (response) => {
+                    document.getElementById('AnimationBtn').classList.toggle("is_active");
+                    document.getElementById('cBtn').style.display = "none";
                     this.log.action = "Edited Help for: " + this.HelpToEdit.name;
                     this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
                     let test: any
@@ -320,7 +322,9 @@ export class EditHelpComponent implements OnInit{
            
 
               this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
-                   next: (response) => {
+                next: (response) => {
+                  document.getElementById('AnimationBtn').classList.toggle("is_active");
+                  document.getElementById('cBtn').style.display = "none";
                   this.log.action = "Edited Help for: " + this.HelpToEdit.name;
                   this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
                   let test: any
@@ -423,8 +427,8 @@ export class EditHelpComponent implements OnInit{
 
                   if (response) {
                     hideloader();
+                    document.getElementById('AnimationBtn').classList.toggle("is_active");
                     document.getElementById('cBtn').style.display = "none";
-                    document.querySelector('button').classList.toggle("is_active");
                   }
 
 

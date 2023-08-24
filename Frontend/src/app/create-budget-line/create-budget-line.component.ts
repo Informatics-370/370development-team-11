@@ -52,6 +52,7 @@ export class CreateBudgetLineComponent {
 
 
   budgetLine: BudgetLine = {
+    budgetLineId: 0,
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
@@ -124,8 +125,8 @@ export class CreateBudgetLineComponent {
         } else {
           this.dataService.AddBudgetLine(this.budgetLine).subscribe(result => {
             if (result != null) {
+              document.getElementById('AnimationBtn').classList.toggle("is_active");
               document.getElementById('cBtn').style.display = "none";
-              document.querySelector('button').classList.toggle("is_active");
 
               this.log.action = "Created Budget Line for: " + this.budgetLine.account_Code;
               this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));

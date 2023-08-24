@@ -202,6 +202,7 @@ export class SignOffRequestComponent {
 
 
   budgetLine: BudgetLine = {
+    budgetLineId: 0,
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
@@ -370,7 +371,8 @@ export class SignOffRequestComponent {
       //   this.ProofOfPayment.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category;
       //   this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe();
       // })
-
+      document.getElementById('AnimationBtn').classList.toggle("is_active");
+      document.getElementById('cBtn').style.display = "none";
       this.log.action = "Procurement Sign-Off Completed for Request: " + this.ProcurementDetails.procurement_Details_ID;
       this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
       let test: any

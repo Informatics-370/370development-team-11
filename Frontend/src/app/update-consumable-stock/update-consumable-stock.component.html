@@ -13,7 +13,7 @@
                     </mat-form-field>
                     <div mat-dialog-actions>
                         <div class="wrapper">
-                            <button class="" type="submit" [disabled]="!myForm.valid" matTooltip="Update stock levels counted for current stock on hand">
+                            <button class="" id="AnimationBtn" type="submit" [disabled]="!myForm.valid" matTooltip="Update stock levels counted for current stock on hand">
                                 <span>Update Stock</span>
                                 <div class="success">
                                     <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
@@ -25,7 +25,7 @@
                                 </div>
                             </button>
 
-                            <button mat-raised-button type="button" (click)="Close()" class="CloseButton"
+                            <button mat-raised-button id="cBtn" type="button" (click)="Close()" class="CloseButton"
                                 style="margin-left: 5px;">
                                 Close
                             </button>

@@ -235,6 +235,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
 
   budgetLine: BudgetLine = {
+    budgetLineId: 0,
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
@@ -481,15 +482,16 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
               let AccountInfo: AccountCodeDisplay = {
                 AccountCodeValue: t.budgetLineId,
                 AccountCodeName: t.budget_Category.account_Name.toString(),
-                Year: t.month.toString(),
-                Month: t.budget_Allocation.year.toString(),
+                Year: t.budget_Allocation.year.toString(),
+                Month: t.month.toString(),
               };
               this.AccountCodeDetails.push(AccountInfo);
             })
 
             this.AccountCodeDetails.forEach(b => {
-
-              if (this.AccountCodeGroups.filter(x => (x.Month == b.Month) && (x.Year == b.Year) == null || this.AccountCodeDetails == undefined)) {
+              //console.log()
+              if(this.AccountCodeGroups.filter(x=> (x.Month == b.Month) && (x.Year == b.Year)).length == 0) {          
+              if (this.AccountCodeGroups.filter(x => (x.Month == b.Month) && (x.Year == b.Year))) {
                 let AccountGroupInfo: AccountCodeDisplayGroup = {
                   Year: b.Year,
                   Month: b.Month,
@@ -497,8 +499,9 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
                 };
                 this.AccountCodeGroups.push(AccountGroupInfo)
               }
+              }
             })
-
+           
             console.log(this.AccountCodeGroups)
 
           })
@@ -805,7 +808,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
         })
       }
-
+      document.getElementById('AnimationBtn').classList.toggle("is_active");
+      document.getElementById('cBtn').style.display = "none";
       this.log.action = "Placed Procurement Request for: " + this.ProcurementDetails.procurement_Request.name;
       this.log.user = this.ProcureService.decodeUser(sessionStorage.getItem("token"));
       let test: any

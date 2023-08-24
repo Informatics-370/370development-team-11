@@ -98,8 +98,8 @@ export class EditBudgetAllocationComponent {
     console.log(this.budgetAllocation);
 
     this.dataService.EditBudgetAllocation(this.budgetAllocation.budget_ID, this.budgetAllocation).subscribe(result => {
+      document.getElementById('AnimationBtn').classList.toggle("is_active");
       document.getElementById('cBtn').style.display = "none";
-      document.querySelector('button').classList.toggle("is_active");
 
       this.log.action = "Edited Budget Allocation for: " + this.budgetAllocation.department.name;
       this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));

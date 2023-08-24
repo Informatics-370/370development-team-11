@@ -113,6 +113,8 @@ export class ReceiveProcurementItemComponent {
 
                 this.dataService.UpdateStock(this.History).subscribe({
                   next: (response) => {
+                    document.getElementById('AnimationBtn').classList.toggle("is_active");
+                    document.getElementById('cBtn').style.display = "none";
                     this.dataService.UpdateProcurementStatus(5, this.ProcurementID).subscribe({
                       next: (Result) => {
                         this.router.navigate(['/ViewProcurementDetails'])

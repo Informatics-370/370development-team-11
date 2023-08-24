@@ -39,8 +39,10 @@ mat-mdc-tab-body-content {
     inline-size: max-content;
     height:fit-content!important;
 }
+/* 
+changed */
 
-::ng-deep .mat-expansion-panel:not([class*=mat-elevation-z]) {
+:host :ng-deep .mat-expansion-panel:not([class*=mat-elevation-z]) {
     box-shadow:none!important;
 
 }

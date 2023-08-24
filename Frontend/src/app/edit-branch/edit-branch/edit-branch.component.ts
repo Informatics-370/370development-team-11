@@ -76,8 +76,8 @@ export class EditBranchComponent implements OnInit{
         if (Result != null) {
           this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe({
             next: (response) => {
+              document.getElementById('AnimationBtn').classList.toggle("is_active");
               document.getElementById('cBtn').style.display = "none";
-              document.querySelector('button').classList.toggle("is_active");
 
               this.log.action = "Edited Branch: " + this.Branch.name;
               this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));

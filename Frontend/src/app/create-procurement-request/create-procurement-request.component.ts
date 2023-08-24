@@ -514,6 +514,8 @@ export class CreateProcurementRequestComponent implements OnInit {
                   this.ProcurementNotif.user_ID = 1;
                   this.dataService.ProcurementRequestAddNotification(this.ProcurementNotif).subscribe({
                     next: (Notif) => {
+                      document.getElementById('AnimationBtn').classList.toggle("is_active");
+                      document.getElementById('cBtn').style.display = "none";
                       this.DisplayNotif()
                     }
                   })

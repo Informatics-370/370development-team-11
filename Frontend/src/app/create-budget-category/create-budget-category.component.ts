@@ -57,8 +57,8 @@ export class CreateBudgetCategoryComponent {
             (CategoryAdded) => {
 
               if (CategoryAdded) {
+                document.getElementById('AnimationBtn').classList.toggle("is_active");
                 document.getElementById('cBtn').style.display = "none";
-                document.querySelector('button').classList.toggle("is_active");
               }
 
               this.log.action = "Created Budget Category: " + this.budgetCategory.account_Name;

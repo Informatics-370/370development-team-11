@@ -115,7 +115,7 @@
             <label style="width: 450px;">Account Code:</label>
           </div>
           <div class="col-7">
-            <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length > 0">
+            <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length != 0">
               <mat-select formControlName="AccountCode" placeholder="Please Select an Account Code" style="display: contents;" [errorStateMatcher]="matcher">
                 <mat-optgroup *ngFor="let group of AccountCodeGroups" id="CBStyle" [label]="group.Month + ' - ' + group.Year" style="color: white;background-color: #244688;">
                 <mat-option *ngFor="let AccountCode of group.AccountDetails" [value]="AccountCode.AccountCodeValue">
@@ -285,7 +285,7 @@
         <br>
         <div  style="background-color: white;display: flex;align-items: center;margin: 1%;place-content: center;">
           <div class="wrapper">
-            <button class="" (click)="Validation()" [disabled]="ProcurementFormGroup.invalid">
+            <button class="" id="AnimationBtn"  (click)="Validation()" [disabled]="ProcurementFormGroup.invalid">
               <span>Place</span>
               <div class="success">
                 <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">

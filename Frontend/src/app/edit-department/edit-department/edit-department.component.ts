@@ -166,8 +166,8 @@ export class EditDepartmentComponent implements OnInit{
           this.dataService.EditDepartment(this.Department.department_ID, this.myForm.value).subscribe({
             next: (response) => {
 
+              document.getElementById('AnimationBtn').classList.toggle("is_active");
               document.getElementById('cBtn').style.display = "none";
-              document.querySelector('button').classList.toggle("is_active");
 
               this.log.action = "Edited Department: " + name;
               this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));

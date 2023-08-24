@@ -248,7 +248,8 @@ export class UpdateConsumableStockComponent implements OnInit {
                       this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
                       this.dataservice.AuditLogAdd(this.log).subscribe({
                         next: (Log) => {
-                          document.querySelector('button').classList.toggle("is_active");
+                          document.getElementById('AnimationBtn').classList.toggle("is_active");
+                          document.getElementById('cBtn').style.display = "none";
                           this.dialogRef.close();
                           this.router.navigate(['/ViewConsumable'])
                         }

@@ -61,8 +61,8 @@ export class EditBudgetCategoryComponent {
     this.currentBudgetCategory.description = this.budgetCategoryForm.get('description')?.value;
     console.log(this.currentBudgetCategory)
     this.dataService.EditBudgetCategory(this.currentBudgetCategory.category_ID, this.currentBudgetCategory).subscribe(result => {
+      document.getElementById('AnimationBtn').classList.toggle("is_active");
       document.getElementById('cBtn').style.display = "none";
-      document.querySelector('button').classList.toggle("is_active");
 
       this.log.action = "Edited Budget Category for: " + this.currentBudgetCategory.account_Name;
       this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));

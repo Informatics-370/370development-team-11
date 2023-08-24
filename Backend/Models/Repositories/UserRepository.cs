@@ -286,10 +286,17 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<User> EditUserValidationAsync(string name, int id)
         {
-            User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.Username == name && x.User_Id == id);
+            User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.Username == name);
             if (ExistingUser != null)
             {
-                return ExistingUser;
+                if (ExistingUser.User_Id == id)
+                {
+                    return null;
+                }
+                else
+                {
+                    return ExistingUser;
+                }
             }
 
             else

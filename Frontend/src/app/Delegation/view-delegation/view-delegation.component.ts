@@ -37,10 +37,10 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
 })
 export class ViewDelegationComponent implements OnInit{
-
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   
   displayedColumnsAdmin: string[] = ['delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete', 'revoke'];
-  dataSource = new MatTableDataSource<Delegation_Of_Authority>;
+  dataSource : any;
 
   userDelete: any
   rl: Role = {
@@ -103,24 +103,28 @@ export class ViewDelegationComponent implements OnInit{
         this.dataSource = new MatTableDataSource(this.Delegations.filter(r => r.delegatingParty.toLocaleLowerCase().includes(searchTerm)))
       }
       else if (searchTerm == "") {
-        this.dataSource = new MatTableDataSource([...this.Delegations])
+        this.GetDelegations();
       }
     } 
 
     
   }
 
+
   GetDelegations() {
 
     if (this.iRole == "Admin") {
 
       this.dataService.GetDelegations().subscribe(result => {
+        let employeeList: any[] = result;
+        this.Delegations = [...employeeList];
+        this.SearchedDelegation = [...employeeList];
+        this.dataSource = new MatTableDataSource(this.Delegations.filter((value, index, self) => self.map(x => x.delegation_ID).indexOf(value.delegation_ID) == index));
+        this.dataSource.paginator = this.paginator
+
         if (result) {
           hideloader();
         }
-
-        this.Delegations = result;
-        this.dataSource = new MatTableDataSource(result);
 
         for (let i = 0; i < this.Delegations.length; i++) {
           this.FileDetails.push({ FileURL: "", FileName: "" })
@@ -150,8 +154,6 @@ export class ViewDelegationComponent implements OnInit{
     }
   }
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
 
   

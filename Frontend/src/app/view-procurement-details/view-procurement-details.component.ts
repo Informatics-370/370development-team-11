@@ -19,6 +19,8 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { ProcDetailIFrameComponent } from '../HelpIFrames/ProcDetailIFrame/proc-detail-iframe/proc-detail-iframe.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -31,8 +33,10 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewProcurementDetailsComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   ProcurementRequests: Procurement_Details[] = [];
   SearchedPRequests: Procurement_Details[] = [];
+  dataSource: any;
   displayedColumns: string[] = ['Name', 'Description', 'Vendor', 'Status', 'POP', 'Inv', 'View'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
@@ -69,7 +73,13 @@ export class ViewProcurementDetailsComponent implements OnInit {
 
   GetProcurementDetails() {
     this.dataService.GetProcurementRequestDetails().subscribe(result => {
-      this.ProcurementRequests = result;
+      let procurementDetailsList: any[] = result;
+      this.ProcurementRequests = [...procurementDetailsList];
+      this.SearchedPRequests = [...procurementDetailsList];
+      this.dataSource = new MatTableDataSource(this.ProcurementRequests.filter((value, index, self) => self.map(x => x.procurement_Details_ID).indexOf(value.procurement_Details_ID) == index));
+      this.dataSource.paginator = this.paginator
+
+
       if (result) {
         hideloader();
       }
@@ -114,10 +124,10 @@ export class ViewProcurementDetailsComponent implements OnInit {
     const Searchterm = this.searchWord.toLocaleLowerCase();
 
     if (Searchterm) {
-      this.SearchedPRequests = this.ProcurementRequests.filter(PR => PR.procurement_Request.name.toLocaleLowerCase().includes(Searchterm))
+      this.dataSource = this.ProcurementRequests.filter(PR => PR.procurement_Request.name.toLocaleLowerCase().includes(Searchterm))
     }
     else if (Searchterm == "") {
-      this.SearchedPRequests = [...this.ProcurementRequests];
+      this.GetProcurementDetails();
     }
   }
 
@@ -129,7 +139,13 @@ export class ViewProcurementDetailsComponent implements OnInit {
       case 'awaiting delivery':
         return 'orange';
       case 'item received and checked':
-        return 'blue'; // Set the color you want for 'Approved'
+        return 'blue';
+      case 'item received and checked':
+        return 'blue';
+      case 'asset registered':
+        return 'blue';// Set the color you want for 'Approved'
+      case 'asset to be registered':
+        return 'blue';
       default:
         return 'black'; // Default color if the status doesn't match any case
     }

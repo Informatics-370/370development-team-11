@@ -50,6 +50,7 @@ export class EditBudgetLineComponent {
 
 
   budgetLine: BudgetLine = {
+    budgetLineId: 0,
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
@@ -131,8 +132,8 @@ export class EditBudgetLineComponent {
     console.log(this.budgetLine);
 
     this.dataService.EditBudgetLine(this.id2, this.budgetLine).subscribe(result => {
+      document.getElementById('AnimationBtn').classList.toggle("is_active");
       document.getElementById('cBtn').style.display = "none";
-      document.querySelector('button').classList.toggle("is_active");
 
       this.log.action = "Edited Budget Line for: " + this.budgetLine.budget_Category.account_Name;
       this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));

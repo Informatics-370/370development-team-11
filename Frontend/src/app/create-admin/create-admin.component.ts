@@ -177,7 +177,7 @@ export class CreateAdminComponent implements OnInit {
                   if (response) {
                     hideloader();
                     document.getElementById('cBtn').style.display = "none";
-                    document.querySelector('button').classList.toggle("is_active");
+                    document.getElementById('AnimationBtn').classList.toggle("is_active");
                   }
 
                   this.log.action = "Created Admin: " + this.adm.adminName + " " + this.adm.adminSurname;

@@ -68,11 +68,12 @@ export class EditEmployeeRoleComponent implements OnInit {
 
     this.dataService.EditRoleValidation(name, this.role.role_ID).subscribe({
       next: (Result) => {
-        if (Result != null) {
+        console.log(Result)
+        if (Result == null) {
           this.dataService.EditRole(this.role.role_ID, this.myForm.value).subscribe({
             next: (response) => {
+              document.getElementById('AnimationBtn').classList.toggle("is_active");
               document.getElementById('cBtn').style.display = "none";
-              document.querySelector('button').classList.toggle("is_active");
 
               this.log.action = "Edited Employee Role: " + name;
               this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));

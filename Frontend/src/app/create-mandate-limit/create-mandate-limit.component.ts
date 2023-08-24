@@ -50,8 +50,8 @@ export class CreateMandateLimitComponent {
     this.dataService.AddMandateLimit(this.mandateLimit).subscribe(result => {
 
       if (result) {
+        document.getElementById('AnimationBtn').classList.toggle("is_active");
         document.getElementById('cBtn').style.display = "none";
-        document.querySelector('button').classList.toggle("is_active");
       }
 
       this.log.action = "Exported Inventory Details";
