@@ -5,11 +5,13 @@
             <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center"
                 fxLayoutGap="10px" (ngSubmit)="EditProcurementRequestB()">
                 <mat-card-header>
-                    <mat-card-title
-                        style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">Edit
-                        Procurement Request</mat-card-title>
-                        <mat-icon (click)="openEditPRApprovedTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
-                    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+                  <mat-card-title style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">
+                    Edit
+                    Procurement Request
+                    <mat-icon (click)="openEditPRApprovedTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+                              style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+                  </mat-card-title>
+                        
                     <mat-card-subtitle>
                         <table style="width:100%;" cellspacing="0">
                             <tr>
@@ -39,68 +41,89 @@
                                     </mat-card-content>
                                 </td>
                                 <td style="width:100%;">
-                                    <mat-card-content>
-                                        <label style=" color: black;">Request Description:</label>
-                                        <br />
-                                        <mat-form-field>
-                                            <input matInput type="text" placeholder=""
-                                                formControlName="OtherDescription" id="Surname"
-                                                [(ngModel)]="Procurement_Request.description" required>
-                                            <mat-hint align="end">Not more then 50 characters long.</mat-hint>
-                                            <mat-error *ngIf="myError('OtherDescription', 'required')">Description is
-                                                required</mat-error>
-                                            <mat-error *ngIf="myError('OtherDescription', 'minlength')">Description must
-                                                be 3 to
-                                                50 characters long</mat-error>
-                                            <mat-error *ngIf="myError('OtherDescription', 'maxlength')">Limit
-                                                exceed</mat-error>
-                                            <mat-error *ngIf="myError('OtherDescription', 'pattern')">Description can
-                                                not contain
-                                                symbols</mat-error>
+                                  <mat-card-content>
+                                    <label style=" color:black;">Vendor Name:</label>
+                                    <br />
+                                    <mat-form-field>
+                                      <input matInput type="text" placeholder="" formControlName="VendorName"
+                                             id="VendorName" [(ngModel)]="Procurement_Request.vendor.name" readonly>
 
-                                        </mat-form-field>
-                                    </mat-card-content>
+                                      <mat-hint align="end">Not more then 32 characters long.</mat-hint>
+                                      <mat-error *ngIf="myError('VendorName', 'required')">
+                                        Name is
+                                        required
+                                      </mat-error>
+                                      <mat-error *ngIf="myError('VendorName', 'minlength')">
+                                        Name must be 3 to 32
+                                        characters
+                                        long
+                                      </mat-error>
+                                      <mat-error *ngIf="myError('VendorName', 'maxlength')">
+                                        Limit
+                                        exceed
+                                      </mat-error>
+                                      <mat-error *ngIf="myError('VendorName', 'pattern')">
+                                        Name can not contain
+                                        numbers
+                                      </mat-error>
+                                    </mat-form-field>
+                                  </mat-card-content>
                                 </td>
                             </tr>
 
                             <tr>
+                              <td style="width:100%;">
+                                <mat-card-content>
+                                  <label style=" color: black;">Request Description:</label>
+                                  <br />
+                                  <mat-form-field style="width:80%;">
+                                    <textarea matInput type="text" placeholder=""
+                                              formControlName="OtherDescription" id="Surname"
+                                              [(ngModel)]="Procurement_Request.description" required></textarea>
+                                    <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+                                    <mat-error *ngIf="myError('OtherDescription', 'required')">
+                                      Description is
+                                      required
+                                    </mat-error>
+                                    <mat-error *ngIf="myError('OtherDescription', 'minlength')">
+                                      Description must
+                                      be 3 to
+                                      50 characters long
+                                    </mat-error>
+                                    <mat-error *ngIf="myError('OtherDescription', 'maxlength')">
+                                      Limit
+                                      exceed
+                                    </mat-error>
+                                    <mat-error *ngIf="myError('OtherDescription', 'pattern')">
+                                      Description can
+                                      not contain
+                                      symbols
+                                    </mat-error>
+
+                                  </mat-form-field>
+                                </mat-card-content>
+
+                                
+                              </td>
+
                                 <td style="width:100%;">
-                                    <mat-card-content>
-                                        <label style=" color:black;">Vendor Name:</label>
-                                        <br />
-                                        <mat-form-field>
-                                            <input matInput type="text" placeholder="" formControlName="VendorName"
-                                                id="VendorName" [(ngModel)]="Procurement_Request.vendor.name" readonly>
+                                  
+                                  <mat-card-content>
+                                    <label style=" color: black;">Vendor Email:</label>
+                                    <br />
+                                    <mat-form-field>
+                                      <input matInput type="text" placeholder="" formControlName="Email"
+                                             id="Surname" required [(ngModel)]="Procurement_Request.vendor.email"
+                                             readonly>
+                                      <mat-error *ngIf="myError('Email', 'required')">
+                                        Email is
+                                        required
+                                      </mat-error>
+                                      <mat-error *ngIf="myError('Email', 'maxlength')">Limit exceed</mat-error>
+                                      <mat-error *ngIf="myError('Email', 'email')">Enter a valid email</mat-error>
 
-                                            <mat-hint align="end">Not more then 32 characters long.</mat-hint>
-                                            <mat-error *ngIf="myError('VendorName', 'required')">Name is
-                                                required</mat-error>
-                                            <mat-error *ngIf="myError('VendorName', 'minlength')">Name must be 3 to 32
-                                                characters
-                                                long</mat-error>
-                                            <mat-error *ngIf="myError('VendorName', 'maxlength')">Limit
-                                                exceed</mat-error>
-                                            <mat-error *ngIf="myError('VendorName', 'pattern')">Name can not contain
-                                                numbers</mat-error>
-                                        </mat-form-field>
-                                    </mat-card-content>
-                                </td>
-
-                                <td style="width:100%;">
-                                    <mat-card-content>
-                                        <label style=" color: black;">Vendor Email:</label>
-                                        <br />
-                                        <mat-form-field>
-                                            <input matInput type="text" placeholder="" formControlName="Email"
-                                                id="Surname" required [(ngModel)]="Procurement_Request.vendor.email"
-                                                readonly>
-                                            <mat-error *ngIf="myError('Email', 'required')">Email is
-                                                required</mat-error>
-                                            <mat-error *ngIf="myError('Email', 'maxlength')">Limit exceed</mat-error>
-                                            <mat-error *ngIf="myError('Email', 'email')">Enter a valid email</mat-error>
-
-                                        </mat-form-field>
-                                    </mat-card-content>
+                                    </mat-form-field>
+                                  </mat-card-content>
                                 </td>
                             </tr>
                         </table>
@@ -174,11 +197,13 @@
             <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center"
                 fxLayoutGap="10px" (ngSubmit)="EditProcurementRequestA()">
                 <mat-card-header>
-                    <mat-card-title
-                        style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">Edit
-                        Procurement Request</mat-card-title>
-                        <mat-icon (click)="openEditPROtherTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
-                        style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+                  <mat-card-title style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">
+                    Edit
+                    Procurement Request
+                    <mat-icon (click)="openEditPROtherTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+                              style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+                  </mat-card-title>
+                        
                     <mat-card-subtitle>
                         <table style="width:100%;" cellspacing="0">
                             <tr>
@@ -212,55 +237,65 @@
                                 </td>
 
                                 <td style="width:100%;">
-                                    <mat-card-content>
-                                        <label style=" color: black;">Request Description:</label>
-                                        <br />
-                                        <mat-form-field>
-                                            <input matInput type="text" placeholder="" formControlName="Description"
-                                                id="Surname" [(ngModel)]="Procurement_Request.description" required>
-                                            <mat-hint align="end">Not more then 50 characters long.</mat-hint>
-                                            <mat-error *ngIf="myError('Description', 'required')">Description is
-                                                required</mat-error>
-                                            <mat-error *ngIf="myError('Description', 'minlength')">Description must be 3
-                                                to
-                                                50 characters long</mat-error>
-                                            <mat-error *ngIf="myError('Description', 'maxlength')">Limit
-                                                exceed</mat-error>
-                                            <mat-error *ngIf="myError('Description', 'pattern')">Description can not
-                                                contain
-                                                symbols</mat-error>
+                                  <mat-card-content>
+                                    <label style=" color: black;">Vendor:</label>
+                                    <br />
+                                    <mat-form-field>
+                                      <input readonly matInput type="text" placeholder="" formControlName="Vendor"
+                                             id="Surname" [(ngModel)]="Procurement_Request.vendor.name" required>
+                                    </mat-form-field>
 
-                                        </mat-form-field>
-                                    </mat-card-content>
+
+                                  </mat-card-content>
                                 </td>
 
                             </tr>
 
                             <tr>
+                              <td >
+                                <mat-card-content>
+                                  <label style=" color: black;">Request Description:</label>
+                                  <br />
+                                  <mat-form-field style="width:80%;">
+                                    <textarea matInput type="text" placeholder="" formControlName="Description"
+                                           id="Surname" [(ngModel)]="Procurement_Request.description" required></textarea>
+                                    <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+                                    <mat-error *ngIf="myError('Description', 'required')">
+                                      Description is
+                                      required
+                                    </mat-error>
+                                    <mat-error *ngIf="myError('Description', 'minlength')">
+                                      Description must be 3
+                                      to
+                                      50 characters long
+                                    </mat-error>
+                                    <mat-error *ngIf="myError('Description', 'maxlength')">
+                                      Limit
+                                      exceed
+                                    </mat-error>
+                                    <mat-error *ngIf="myError('Description', 'pattern')">
+                                      Description can not
+                                      contain
+                                      symbols
+                                    </mat-error>
+
+                                  </mat-form-field>
+                                </mat-card-content>
+                                
+                              </td>
+
                                 <td style="width:100%;">
-                                    <mat-card-content>
-                                        <label style=" color: black;">Vendor:</label>
-                                        <br />
-                                        <mat-form-field>
-                                            <input readonly matInput type="text" placeholder="" formControlName="Vendor"
-                                                id="Surname" [(ngModel)]="Procurement_Request.vendor.name" required>
-                                        </mat-form-field>
+                                  <mat-card-content>
+                                    <label style=" color:black;">Replace Quote:</label>
+                                    <br />
 
+                                    <input type="file" id="file1" placeholder="" formControlName="Quote1"
+                                           style="border: solid #244688; border-radius: 5px; " accept=".pdf"
+                                           (change)="onFileAppUpload($event)">
+                                    <mat-hint align="end">Provide Quote to replace.</mat-hint>
 
-                                    </mat-card-content>
-                                </td>
-
-                                <td style="width:100%;">
-                                    <mat-card-content>
-                                        <label style=" color:black;">Replace Quote:</label>
-                                        <br />
-
-                                        <input type="file" id="file1" placeholder="" formControlName="Quote1"
-                                            style="border: solid #244688; border-radius: 5px; " accept=".pdf"
-                                            (change)="onFileAppUpload($event)">
-                                        <mat-hint align="end">Provide Quote to replace.</mat-hint>
-
-                                    </mat-card-content>
+                                  </mat-card-content>
+                                  
                                 </td>
                             </tr>
 

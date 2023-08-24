@@ -1,56 +1,60 @@
 <div style="display: flex; justify-content: center; align-items: center;">
-    <mat-card style="width: 550px; margin-top: 1%; display: flex; justify-content: center; align-items: center; ">
+  <mat-card style="width: 550px; margin-top: 1%; display: flex; justify-content: center; align-items: center; ">
 
-      <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px" (ngSubmit)="onSubmit()">
+    <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px" (ngSubmit)="onSubmit()">
 
-        <mat-card-header>
-          <mat-card-title style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align: center;" >Edit Department</mat-card-title>
+      <mat-card-header>
+        <mat-card-title style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align: center;">
+          Edit Department
           <mat-icon (click)="openEditDepartmentTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
-        style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
-          <mat-card-subtitle style="justify-content: center; align-items: center;">
-  
-            <mat-card-content style="margin-left:10%;">
-              <label style="margin-right:11%; color:black;" for="Name">Name:</label>
-              <mat-form-field>
-                <input matInput type="text" placeholder="" formControlName="name" id="name">
-                <mat-hint align="end">Not more then 32 characters long.</mat-hint>
-                <mat-error *ngIf="myError('name', 'required')">Name is required</mat-error>
-                <mat-error *ngIf="myError('name', 'maxlength')">Limit exceed</mat-error>
-                <mat-error *ngIf="myError('name', 'minlength')">Name must be 2 to 32 characters long</mat-error>
-                <mat-error *ngIf="myError('name', 'pattern')">Name can not contain numbers</mat-error>
-              </mat-form-field>
-            </mat-card-content>
-            <br />
-            <mat-card-content style="margin-left:10%;">
-              <label style="margin-right: 2.3%; color: black;" for="Descriptions">Description:</label>
-              <mat-form-field>
-                <input matInput type="text" placeholder="" formControlName="description" id="description">
-                <mat-hint align="end">Not more then 50 characters long.</mat-hint>
-                <mat-error *ngIf="myError('description', 'required')">Description is required</mat-error>
-                <mat-error *ngIf="myError('description', 'maxlength')">Limit exceed</mat-error>
-                <mat-error *ngIf="myError('description', 'pattern')">Description can not contain numbers</mat-error>
-                <mat-error *ngIf="myError('description', 'minlength')">Description must be 2 to 50 characters long</mat-error>
-              </mat-form-field>
-            </mat-card-content>
-  
-          </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
-          <!--<button mat-raised-button style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color:#94CC5B; color: white;" [disabled]="!myForm.valid" type="submit">Save</button>-->
+                    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+        </mat-card-title>
+        
+        <mat-card-subtitle style="justify-content: center; align-items: center;">
+          <label style="display: flex; justify-content: center; align-items: center; margin-right: 172px; color: black;">Name:</label>
+          <mat-card-content style="display: flex; justify-content: center; align-items: center;">
 
-          <div class="wrapper">
-            <button class="" type="submit" [disabled]="!myForm.valid">
-              <span>Save</span>
-              <div class="success">
-                <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
-                <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+            <mat-form-field>
+              <input matInput type="text" placeholder="" formControlName="name" id="name">
+              <mat-hint align="end">Not more then 32 characters long.</mat-hint>
+              <mat-error *ngIf="myError('name', 'required')">Name is required</mat-error>
+              <mat-error *ngIf="myError('name', 'maxlength')">Limit exceed</mat-error>
+              <mat-error *ngIf="myError('name', 'minlength')">Name must be 2 to 32 characters long</mat-error>
+              <mat-error *ngIf="myError('name', 'pattern')">Name can not contain numbers</mat-error>
+            </mat-form-field>
+          </mat-card-content>
+          <br />
+          <label style="display: flex; justify-content: center; align-items: center; margin-right: 188px; color: black;">Description:</label>
+          <mat-card-content style="display: flex; justify-content: center; align-items: center;">
+            
+            <mat-form-field style="width: 77%;">
+              <textarea matInput type="text" placeholder="" formControlName="description" id="description"></textarea>
+              <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+              <mat-error *ngIf="myError('description', 'required')">Description is required</mat-error>
+              <mat-error *ngIf="myError('description', 'maxlength')">Limit exceed</mat-error>
+              <mat-error *ngIf="myError('description', 'pattern')">Description can not contain numbers</mat-error>
+              <mat-error *ngIf="myError('description', 'minlength')">Description must be 2 to 50 characters long</mat-error>
+            </mat-form-field>
+          </mat-card-content>
+
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
+        <!--<button mat-raised-button style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color:#94CC5B; color: white;" [disabled]="!myForm.valid" type="submit">Save</button>-->
+
+        <div class="wrapper">
+          <button class="" type="submit" [disabled]="!myForm.valid">
+            <span>Save</span>
+            <div class="success">
+              <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
+              <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
                 </svg>
-              </div>
-            </button>
-          </div>
+            </div>
+          </button>
+        </div>
 
-          <button mat-raised-button id="cBtn" style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" (click)="Close()">Cancel</button>
-        </mat-card-actions>
-      </form>
-    </mat-card>
-  </div>
+        <button mat-raised-button id="cBtn" style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" (click)="Close()">Cancel</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>

@@ -255,7 +255,7 @@ export class DataService {
   restoreDatabase(backupFile: File): Observable<any> {
     const formData = new FormData();
     formData.append('backupFile', backupFile, backupFile.name);
-    return this.httpClient.post<any>(`${this.apiUrl}Backup/restore`, formData, { reportProgress: true, observe: 'events' });
+    return this.httpClient.post<any>(`${this.apiUrl}Backup/restore`, formData);
   }
   //--------------------------------------------------------------------------------------Requests--------------------------------------------------------------------------------------
 
