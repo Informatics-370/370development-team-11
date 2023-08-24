@@ -171,6 +171,7 @@ import { FlaggerProcDetailIFrameComponent } from './HelpIFrames/FlaggedProcDetai
 import { ProcDetailIFrameComponent } from './HelpIFrames/ProcDetailIFrame/proc-detail-iframe/proc-detail-iframe.component';
 import { YearPickerComponent } from './year-picker/year-picker.component';
 import { ReceiveAssetComponent } from './receive-asset/receive-asset.component';
+import { ExportBaPickerComponent } from './export-ba-picker/export-ba-picker.component';
 
 
 
@@ -308,6 +309,7 @@ import { ReceiveAssetComponent } from './receive-asset/receive-asset.component';
     ProcDetailIFrameComponent,
     YearPickerComponent,
     ReceiveAssetComponent,
+    ExportBaPickerComponent,
   ],
   imports: [
     BrowserModule,
