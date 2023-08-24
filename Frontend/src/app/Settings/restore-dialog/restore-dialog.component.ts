@@ -47,8 +47,6 @@ export class RestoreDialogComponent {
 
     this.dataService.restoreDatabase(this.selectedFile).subscribe({
       next: (Response) => {
-
-
         this.isLoading = false;
         this.MydialogRef.close();
 
@@ -82,8 +80,6 @@ export class RestoreDialogComponent {
             Success.close();
           }, 1750);
         }, 5000);
-
-
       }
     });
   }

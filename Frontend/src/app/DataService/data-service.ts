@@ -862,7 +862,7 @@ export class DataService {
   }
 
   GetDepBudgetAllocation(dep: string | String) {
-    return this.httpClient.get < BudgetAllocation[]>(`${this.apiUrl}BudgetAllocation/GetDepBudgetAllocation` + '/' + dep)
+    return this.httpClient.get<BudgetAllocation[]>(`${this.apiUrl}BudgetAllocation/GetDepBudgetAllocation` + '/' + dep)
       .pipe(
         map(budgetAllocations => budgetAllocations.map(budgetAllocation => {
           const date = budgetAllocation.date_Created as any;
