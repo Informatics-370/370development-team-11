@@ -20,7 +20,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-restore-dialog',
   templateUrl: './restore-dialog.component.html',
   styleUrls: ['./restore-dialog.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class RestoreDialogComponent {
   isLoading: boolean;
@@ -43,47 +43,43 @@ export class RestoreDialogComponent {
       return;
     }
 
-    this.isLoading = true;
-
+    this.isLoading = true;;
 
     this.dataService.restoreDatabase(this.selectedFile).subscribe({
       next: (Response) => {
-        if (Response) {
-          console.log(Response)
-          this.isLoading = false;
-          this.MydialogRef.close();
+        this.isLoading = false;
+        this.MydialogRef.close();
 
-          var action = 'RESTORE IN PROGRESS';
-          var title = 'RESTORE IN PROGRESS';
+        var action = 'RESTORE IN PROGRESS';
+        var title = 'RESTORE IN PROGRESS';
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
+          'Please wait <strong style="color:green">5 SECONDS</strong> for the restore to complete!'
+        );
+
+        const NotifdialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+
+
+        setTimeout(() => {
+          NotifdialogRef.close();
+
+          var action = 'RESTORE SUCCESSFUL';
+          var title = 'Restore Successful';
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
-            'Please wait <strong style="color:green">5 SECONDS</strong> for the restore to complete!'
+            'The database has been <strong style="color:green">RESTORED</strong> successfully!'
           );
 
-          const NotifdialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          const Success: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,
             data: { action, title, message }
           });
-
-
-
           setTimeout(() => {
-            NotifdialogRef.close();
-
-            var action = 'RESTORE SUCCESSFUL';
-            var title = 'Restore Successful';
-            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(
-              'The database has been <strong style="color:green">RESTORED</strong> successfully!'
-            );
-
-            const Success: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-              disableClose: true,
-              data: { action, title, message }
-            });
-            setTimeout(() => {
-              Success.close();
-            }, 1750);
-          }, 5000);
-        }
+            Success.close();
+          }, 1750);
+        }, 5000);
       }
     });
   }
@@ -95,7 +91,7 @@ export class RestoreDialogComponent {
 
 
   openRestoreTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

@@ -603,17 +603,24 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             return await query.ToArrayAsync();
         }
 
+        public async Task<Procurement_Status[]> GetAssetStatusesAsync()
+        {
+            IQueryable<Procurement_Status> Statuses = _dbContext.Procurement_Status.Where(x => x.Procurement_Status_ID >= 5);
+
+            return await Statuses.ToArrayAsync();
+        }
+
         public async Task<Procurement_Details> UpdateProcurementDetailsStatusAsync(int StatusID, int ProcurementID)
         {
             Procurement_Details ExistingPD = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Details_ID == ProcurementID);
-            if (StatusID == 5)
+            if (StatusID == 5 && ExistingPD.Item_Type == "Consumable")
             {
-                ExistingPD.ItemReceived = true;
-                await _dbContext.SaveChangesAsync();
+                
                 ExistingPD.Procurement_Status = new Procurement_Status();
 
-                if (ExistingPD.Payment_Made = true)
+                if (ExistingPD.Payment_Made == true)
                 {
+                    ExistingPD.ItemReceived = true;
                     Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == 2);
 
                     ExistingPD.Procurement_Status = ExistingStatus;
@@ -622,6 +629,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 }
                 else
                 {
+                    ExistingPD.ItemReceived = true;
                     Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == StatusID);
 
                     ExistingPD.Procurement_Status = ExistingStatus;
@@ -630,6 +638,83 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 }
 
             }
+
+            else if(StatusID == 5 && ExistingPD.Item_Type == "Assets")
+            {
+
+                ExistingPD.Procurement_Status = new Procurement_Status();
+
+                if (ExistingPD.Payment_Made == true)
+                {
+                    ExistingPD.ItemReceived = false;
+                    Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == StatusID);
+
+                    ExistingPD.Procurement_Status = ExistingStatus;
+
+                    await _dbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    ExistingPD.ItemReceived = false;
+                    Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == StatusID);
+
+                    ExistingPD.Procurement_Status = ExistingStatus;
+
+                    await _dbContext.SaveChangesAsync();
+                }
+
+            }
+            else if (StatusID == 6 && ExistingPD.Item_Type == "Assets")
+            {
+
+                ExistingPD.Procurement_Status = new Procurement_Status();
+
+                if (ExistingPD.Payment_Made == true)
+                {
+                    ExistingPD.ItemReceived = false;
+                    Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == StatusID);
+
+                    ExistingPD.Procurement_Status = ExistingStatus;
+
+                    await _dbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    ExistingPD.ItemReceived = false;
+                    Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == StatusID);
+
+                    ExistingPD.Procurement_Status = ExistingStatus;
+
+                    await _dbContext.SaveChangesAsync();
+                }
+
+            }
+            else if (StatusID == 7 && ExistingPD.Item_Type == "Assets")
+            {
+
+                ExistingPD.Procurement_Status = new Procurement_Status();
+
+                if (ExistingPD.Payment_Made == true)
+                {
+                    ExistingPD.ItemReceived = true;
+                    Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == StatusID);
+
+                    ExistingPD.Procurement_Status = ExistingStatus;
+
+                    await _dbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    ExistingPD.ItemReceived = true;
+                    Procurement_Status ExistingStatus = await _dbContext.Procurement_Status.FirstOrDefaultAsync(x => x.Procurement_Status_ID == StatusID);
+
+                    ExistingPD.Procurement_Status = ExistingStatus;
+
+                    await _dbContext.SaveChangesAsync();
+                }
+
+            }
+
 
             else
             {

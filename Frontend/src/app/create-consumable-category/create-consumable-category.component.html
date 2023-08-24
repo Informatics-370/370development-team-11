@@ -4,58 +4,61 @@
             (ngSubmit)="AddCategory()">
             <mat-card-header>
                 
-                <mat-card-title
-                    style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">Create
-                    Consumable &nbsp; Category</mat-card-title>
+              <mat-card-title style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">
+                Create
+                Consumable Category
+                <mat-icon (click)="openCreateConCatTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+                          style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+              </mat-card-title>
                 
-                    <span style="flex: 1; text-align: right;">
-                    <mat-icon (click)="openCreateConCatTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
-                    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
-                    </span>
-                <mat-card-subtitle>
-                    <table style="width:100%;" cellspacing="0">
-                        <tr>
-                            <td style="width:100%;">
-                                <mat-card-content>
-                                    <label style=" color:black;">Name:</label>
-                                    <br />
-                                    <mat-form-field>
-                                        <input matInput type="text" placeholder="" formControlName="Name" id="Name"
-                                            required>
-                                        <mat-hint align="end">Not more then 32 characters long.</mat-hint>
-                                        <mat-error *ngIf="myError('Name', 'required')">Name is required</mat-error>
-                                        <mat-error *ngIf="myError('Name', 'minlength')">Name must be 3 to 32 characters
-                                            long</mat-error>
-                                        <mat-error *ngIf="myError('Name', 'maxlength')">Limit exceed</mat-error>
-                                        <mat-error *ngIf="myError('Name', 'pattern')">Name can not contain
-                                            numbers</mat-error>
-                                    </mat-form-field>
-                                </mat-card-content>
-                            </td>
-                            <td style="width:100%;">
-                                <mat-card-content>
-                                    <label style=" color: black;">Description:</label>
-                                    <br />
-                                    <mat-form-field>
-                                        <input matInput type="text" placeholder="" formControlName="Description"
-                                            id="Surname" required>
-                                        <mat-hint align="end">Not more then 50 characters long.</mat-hint>
-                                        <mat-error *ngIf="myError('Description', 'required')">Description is
-                                            required</mat-error>
-                                        <mat-error *ngIf="myError('Description', 'minlength')">Description must be 3 to
-                                            50 characters long</mat-error>
-                                        <mat-error *ngIf="myError('Description', 'maxlength')">Limit exceed</mat-error>
-                                        <mat-error *ngIf="myError('Description', 'pattern')">Description can not contain
-                                            symbols</mat-error>
+                   
+              <mat-card-subtitle style="justify-content: center; align-items: center;">
+                <label style="display: flex; justify-content: center; align-items: center; margin-right: 172px; color: black;">Name:</label>
+                <mat-card-content style="display: flex; justify-content: center; align-items: center;">
+                  <mat-form-field>
+                    <input matInput type="text" placeholder="" formControlName="Name" id="Name"
+                           required>
+                    <mat-hint align="end">Not more then 32 characters long.</mat-hint>
+                    <mat-error *ngIf="myError('Name', 'required')">Name is required</mat-error>
+                    <mat-error *ngIf="myError('Name', 'minlength')">
+                      Name must be 3 to 32 characters
+                      long
+                    </mat-error>
+                    <mat-error *ngIf="myError('Name', 'maxlength')">Limit exceed</mat-error>
+                    <mat-error *ngIf="myError('Name', 'pattern')">
+                      Name can not contain
+                      numbers
+                    </mat-error>
+                  </mat-form-field>
+                </mat-card-content>
 
-                                    </mat-form-field>
-                                </mat-card-content>
-                            </td>
-                        </tr>
-                    </table>
+                <br />
+                <label style="display: flex; justify-content: center; align-items: center; margin-right: 188px; color: black;">Description:</label>
+                <mat-card-content style="display: flex; justify-content: center; align-items: center; ">
+                  <mat-form-field style="width: 50%;">
+                    <textarea matInput type="text" placeholder="" formControlName="Description"
+                              id="Surname" required></textarea>
+                    <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+                    <mat-error *ngIf="myError('Description', 'required')">
+                      Description is
+                      required
+                    </mat-error>
+                    <mat-error *ngIf="myError('Description', 'minlength')">
+                      Description must be 3 to
+                      50 characters long
+                    </mat-error>
+                    <mat-error *ngIf="myError('Description', 'maxlength')">Limit exceed</mat-error>
+                    <mat-error *ngIf="myError('Description', 'pattern')">
+                      Description can not contain
+                      symbols
+                    </mat-error>
+
+                  </mat-form-field>
+                </mat-card-content>
 
 
-                </mat-card-subtitle>
+
+              </mat-card-subtitle>
             </mat-card-header>
             <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
               <!--<button mat-raised-button type="submit"

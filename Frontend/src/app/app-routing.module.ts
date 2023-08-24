@@ -92,6 +92,7 @@ import { ReportsMainViewComponent } from './Reports/reports-main-view/reports-ma
 import { ReportFilterMenuComponent } from './Reports/report-filter-menu/report-filter-menu.component';
 
 import { BudgetVarianceReportComponent } from './budget-variance-report/budget-variance-report.component';
+import { ReceiveAssetComponent } from './receive-asset/receive-asset.component';
 const routes: Routes = [
   {
     path: "",
@@ -385,6 +386,11 @@ const routes: Routes = [
   {
     path: 'VarianceReport',
     component: BudgetVarianceReportComponent
+  }
+  ,
+  {
+    path: 'ReceiveAsset/:id',
+    component: ReceiveAssetComponent
   }
 
 

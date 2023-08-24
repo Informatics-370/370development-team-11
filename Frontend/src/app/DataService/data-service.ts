@@ -58,6 +58,7 @@ import { VendorSpentReport } from '../Shared/VendorSpentReport';
 import * as FileSaver from 'file-saver';
 import { ReportData } from '../Shared/ConsumableReport';
 import { Procurement_Invoice } from '../Shared/Procurement_Invoice';
+import { Procurement_Status } from '../Shared/ProcurementStatus';
 
 @Injectable({
   providedIn: 'root'
@@ -254,7 +255,7 @@ export class DataService {
   restoreDatabase(backupFile: File): Observable<any> {
     const formData = new FormData();
     formData.append('backupFile', backupFile, backupFile.name);
-    return this.httpClient.post<any>(`${this.apiUrl}Backup/restore`, formData, { reportProgress: true, observe: 'events' });
+    return this.httpClient.post<any>(`${this.apiUrl}Backup/restore`, formData);
   }
   //--------------------------------------------------------------------------------------Requests--------------------------------------------------------------------------------------
 
@@ -668,6 +669,10 @@ export class DataService {
     return this.httpClient.get<User>(`${this.apiUrl}User/CreateUserValidation/` + name, this.httpOptions)
   }
 
+  CreateUserRoleValidation(department: String, role: String): Observable<Employee> {
+    return this.httpClient.get<Employee>(`${this.apiUrl}User/CreateUserRoleValidation/` + department + "/" + role, this.httpOptions)
+  }
+
   SendEmail(mail: MailData) {
     return this.httpClient.post(`${this.apiUrl}Mail/sendemailusingtemplate`, mail, this.httpOptions)
   }
@@ -856,6 +861,17 @@ export class DataService {
       );
   }
 
+  GetDepBudgetAllocation(dep: string | String) {
+    return this.httpClient.get<BudgetAllocation[]>(`${this.apiUrl}BudgetAllocation/GetDepBudgetAllocation` + '/' + dep)
+      .pipe(
+        map(budgetAllocations => budgetAllocations.map(budgetAllocation => {
+          const date = budgetAllocation.date_Created as any;
+          budgetAllocation.date_Created = moment.utc(date).local().format();
+          return budgetAllocation;
+        }))
+      );
+  }
+
   GetBudgetAllocation(budgetAllocationID: number | Number) {
     return this.httpClient.get<BudgetAllocation>(`${this.apiUrl}BudgetAllocation/GetBudgetAllocation` + '/' + budgetAllocationID)
       .pipe(
@@ -932,6 +948,20 @@ export class DataService {
       const decodedPayload = JSON.parse(atob(tokenPayload));
 
       return decodedPayload.unique_name;
+
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  }
+
+  decodeUserDep(token: string): any {
+    try {
+      const tokenParts = token.split('.');
+      const tokenPayload = tokenParts[1];
+      const decodedPayload = JSON.parse(atob(tokenPayload));
+
+      return decodedPayload.Department;
 
     } catch (error) {
       console.error('Error decoding token:', error);
@@ -1132,6 +1162,20 @@ export class DataService {
     return this.httpClient.get(`${this.apiUrl}BudgetAllocation/ExportExcel/` + id, { 'responseType': 'blob' }).subscribe((x: Blob) => {
       FileSaver.saveAs(x, 'Budget Allocation - ' + name + '.xlsx')
     })
+  }
+
+  ExportExcelForMonth(id: Number, name: String, month: String) {
+    return this.httpClient.get(`${this.apiUrl}BudgetAllocation/ExportExcelForMonth/` + id + "/" + month, { 'responseType': 'blob' }).subscribe((x: Blob) => {
+      FileSaver.saveAs(x, 'Budget Allocation - ' + name + '.xlsx')
+    })
+  }
+
+  BudgetAllocationMonthExportValidation(id: Number, month: String): Observable<BudgetLine> {
+    return this.httpClient.get<BudgetLine>(`${this.apiUrl}BudgetAllocation/BudgetAllocationMonthExportValidation/` + id + "/" + month, this.httpOptions)
+  }
+
+  BudgetAllocationExportValidation(id: Number): Observable<BudgetLine> {
+    return this.httpClient.get<BudgetLine>(`${this.apiUrl}BudgetAllocation/BudgetAllocationExportValidation/` + id, this.httpOptions)
   }
   //--------------------------------------------------------------------------------------Delegation--------------------------------------------------------------------------------------
   GetDelegations(): Observable<any> {
@@ -1570,6 +1614,10 @@ export class DataService {
     this.yearDialogClosed2Source.next();
   }
 
+
+  GetAssetStatuses(): Observable<any> {
+    return this.httpClient.get<Procurement_Status[]>(`${this.apiUrl}ProcurementDetails/getAssetStatuses`).pipe(map(result => result))
+  }
 
 }
 
