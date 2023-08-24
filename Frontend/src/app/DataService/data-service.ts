@@ -255,7 +255,7 @@ export class DataService {
   restoreDatabase(backupFile: File): Observable<any> {
     const formData = new FormData();
     formData.append('backupFile', backupFile, backupFile.name);
-    return this.httpClient.post<any>(`${this.apiUrl}Backup/restore`, formData, { reportProgress: true, observe: 'events' });
+    return this.httpClient.post<any>(`${this.apiUrl}Backup/restore`, formData);
   }
   //--------------------------------------------------------------------------------------Requests--------------------------------------------------------------------------------------
 
@@ -862,7 +862,7 @@ export class DataService {
   }
 
   GetDepBudgetAllocation(dep: string | String) {
-    return this.httpClient.get < BudgetAllocation[]>(`${this.apiUrl}BudgetAllocation/GetDepBudgetAllocation` + '/' + dep)
+    return this.httpClient.get<BudgetAllocation[]>(`${this.apiUrl}BudgetAllocation/GetDepBudgetAllocation` + '/' + dep)
       .pipe(
         map(budgetAllocations => budgetAllocations.map(budgetAllocation => {
           const date = budgetAllocation.date_Created as any;
