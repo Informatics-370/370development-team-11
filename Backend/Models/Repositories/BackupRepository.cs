@@ -159,12 +159,16 @@ namespace ProcionAPI.Models.Repositories
 
                 server.KillAllProcesses("ProcionAPI.Data");
                 DefaultCOnnect.Disconnect();
+
+                serverConnection.Connect();
                 
 
 
                 // Perform the restore asynchronously
                 restore.SqlRestore(server);
 
+                serverConnection.Disconnect();
+                DefaultCOnnect.Connect();
 
                 // Delete the temporary file after restore
                 File.Delete(tempFilePath);
