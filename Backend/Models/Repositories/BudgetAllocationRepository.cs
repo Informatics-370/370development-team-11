@@ -95,7 +95,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Budget_Line[]> AddBudgetLineAsync(Budget_Line budgetLine)
         {
-            Budget_Line existingLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(d => d.Budget_Category.Account_Name == budgetLine.Budget_Category.Account_Name && d.Month == budgetLine.Month && d.Budget_ID == budgetLine.Budget_ID);
+            Budget_Line existingLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(d => d.Budget_Category.Account_Name == budgetLine.Budget_Category.Account_Name && d.Month == budgetLine.Month && d.Budget_ID == budgetLine.Budget_ID && d.Account_Code == budgetLine.Account_Code);
             
             if (existingLine != null)
             {
@@ -174,6 +174,20 @@ namespace ProcionAPI.Models.Repositories
             if(ExistingAllocation != null)
             {
                 return ExistingAllocation;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Budget_Line> BudgetLineValidationAsync(string accCode, string budgetCatName, string month, int blID)
+        {
+            Budget_Line ExistingLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(d => d.Budget_Category.Account_Name == budgetCatName && d.Month == month && d.Budget_ID == blID && d.Account_Code == accCode);
+            if (ExistingLine != null)
+            {
+                return ExistingLine;
             }
 
             else

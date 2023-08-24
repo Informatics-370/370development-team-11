@@ -160,9 +160,11 @@ export class EditDepartmentComponent implements OnInit{
 
     this.dataService.EditDepartmentValidation(name, this.Department.department_ID).subscribe({
       next: (Result) => {
-        if (Result != null) {
+        if (Result == null) {
 
-
+          console.log(Result)
+          console.log(this.Department.department_ID)
+          console.log(this.myForm.value)
           this.dataService.EditDepartment(this.Department.department_ID, this.myForm.value).subscribe({
             next: (response) => {
 
@@ -195,7 +197,22 @@ export class EditDepartmentComponent implements OnInit{
             }
           })
         }
+        else if (Result.department_ID == this.route.snapshot.params['department_ID'] && Result.name == name) {
+          var action = "NOTIFICATION";
+          var title = "NOTIFICATION: NO CHANGES MADE";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to the department: <strong>" + name + "</strong>");
 
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            this.router.navigate(['/ViewDepartment']);
+            dialogRef.close();
+          }, duration);
+        }
         else {
           var action = "ERROR";
           var title = "ERROR: Department Exists";

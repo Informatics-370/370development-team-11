@@ -44,7 +44,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Branch> BranchValidationAsync(string street)
         {
-            Branch ExistingBranch = await _dbContext.Branch.FirstOrDefaultAsync(x => x.Street == street);
+            Branch ExistingBranch = await _dbContext.Branch.FirstOrDefaultAsync(x => x.Name == street);
             if (ExistingBranch != null)
             {
                 return ExistingBranch;
@@ -57,7 +57,7 @@ namespace ProcionAPI.Models.Repositories
         }
         public async Task<Branch> EditBranchValidationAsync(string street, int id)
         {
-            Branch ExistingBranch = await _dbContext.Branch.FirstOrDefaultAsync(x => x.Street == street && x.Branch_ID == id);
+            Branch ExistingBranch = await _dbContext.Branch.FirstOrDefaultAsync(x => x.Name == street && x.Branch_ID == id);
             if (ExistingBranch != null)
             {
                 return ExistingBranch;

@@ -381,6 +381,22 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
+        [Route("BudgetLineValidation/{accCode}/{budgetCatName}/{month}/{blID}")]
+        public async Task<IActionResult> BudgetLineValidation([FromRoute] string accCode, [FromRoute] string budgetCatName, [FromRoute] string month, [FromRoute] int blID)
+        {
+            try
+            {
+                var result = await _repository.BudgetLineValidationAsync(accCode, budgetCatName, month, blID);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpGet]
         [Route("ExportExcel/{bai}")]
         public async Task<IActionResult> ExportExcel(int bai)
         {

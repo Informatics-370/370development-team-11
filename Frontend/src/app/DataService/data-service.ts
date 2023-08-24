@@ -907,6 +907,10 @@ export class DataService {
     return this.httpClient.get<BudgetLine[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetLines`).pipe(map(result => result))
   }
 
+  BudgetLineValidation(accCode: String, budgetCatName: String, month: String, blID: Number): Observable<BudgetLine> {
+    return this.httpClient.get<BudgetLine>(`${this.apiUrl}BudgetAllocation/BudgetLineValidation/` + accCode + "/" + budgetCatName + "/" + month + "/" + blID , this.httpOptions)
+  }
+
   AddBudgetLine(budgetLine: BudgetLine) {
     return this.httpClient.post<BudgetLine>(`${this.apiUrl}BudgetAllocation/AddBudgetLine`, budgetLine, this.httpOptions)
   }

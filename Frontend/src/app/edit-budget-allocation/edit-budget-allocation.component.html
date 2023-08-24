@@ -12,64 +12,67 @@
                     
                 <mat-card-subtitle>
                     <table style="width:100%;" cellspacing="0">
+                      <tr>
+                        <!-- <td style="width:100%;">
+      <mat-card-content>
+          <label style=" color:black;">Date Created:</label>
+          <br />
+          <mat-form-field>
+              <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                  formControlName="date_Created" id="date_Created"
+                  [(ngModel)]="budgetAllocation.date_Created" required>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+      </mat-card-content>
+  </td> -->
+                        <td style="width:100%;">
+                          <mat-card-content>
+                            <label style=" color:black;">Total (R):</label>
+                            <br />
+                            <mat-form-field>
+                              <input matInput type="text" placeholder="" formControlName="total" id="total"
+                                     [(ngModel)]="budgetAllocation.total" required>
+                              <mat-error *ngIf="myError('total', 'pattern')">
+                                Total must be in
+                                numbers.
+                              </mat-error>
+                              <mat-error *ngIf="myError('total', 'minlength')">
+                                Total must be 3 to 12
+                                characters
+                                long
+                              </mat-error>
+                              <mat-error *ngIf="myError('total', 'maxlength')">
+                                Limit
+                                exceeded
+                              </mat-error>
+                            </mat-form-field>
+                          </mat-card-content>
+                        </td>
+                        <td>
+                          <mat-card-content>
+                            <label style=" color:black;">Year:</label>
+                            <br />
+                            <mat-form-field>
+                              <mat-label>Year</mat-label>
+                              <input matInput
+                                     placeholder="YYYY"
+                                     [matDatepicker]="datePicker"
+                                     formControlName="year"
+                                     (focus)="datePicker?.open()"
+                                     [(ngModel)]="budgetAllocation.year" required
+                                     id="year" [min]="minDate" />
+                              <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+                              <mat-datepicker #datePicker
+                                              color="primary"
+                                              startView="multi-year"
+                                              (yearSelected)="onsYearSelected($event, datePicker)"></mat-datepicker>
+                            </mat-form-field>
+                          </mat-card-content>
+                        </td>
+                      </tr>
                         <tr>
-                            <!-- <td style="width:100%;">
-                                <mat-card-content>
-                                    <label style=" color:black;">Date Created:</label>
-                                    <br />
-                                    <mat-form-field>
-                                        <input matInput [matDatepicker]="picker" placeholder="Choose a date"
-                                            formControlName="date_Created" id="date_Created"
-                                            [(ngModel)]="budgetAllocation.date_Created" required>
-                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                        <mat-datepicker #picker></mat-datepicker>
-                                    </mat-form-field>
-                                </mat-card-content>
-                            </td> -->
-                            <td style="width:100%;">
-                                <mat-card-content>
-                                    <label style=" color:black;">Total (R):</label>
-                                    <br />
-                                    <mat-form-field>
-                                        <input matInput type="text" placeholder="" formControlName="total" id="total"
-                                            [(ngModel)]="budgetAllocation.total" required>
-                                        <mat-error *ngIf="myError('total', 'pattern')">Total must be in
-                                            numbers.</mat-error>
-                                        <mat-error *ngIf="myError('total', 'minlength')">Total must be 3 to 12
-                                            characters
-                                            long</mat-error>
-                                        <mat-error *ngIf="myError('total', 'maxlength')">Limit
-                                            exceeded</mat-error>
-                                    </mat-form-field>
-                                </mat-card-content>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <mat-card-content>
-                                    <label style=" color:black;">Year:</label>
-                                    <br />
-                                    <mat-form-field>
-                                        <mat-label>Year</mat-label>
-                                        <input
-                                          matInput
-                                          placeholder="YYYY"
-                                          [matDatepicker]="datePicker"
-                                          formControlName="year"
-                                          (focus)="datePicker?.open()"
-                                          [(ngModel)]="budgetAllocation.year" required
-                                          id="year" [min]="minDate"
-                                        />
-                                        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-                                        <mat-datepicker
-                                          #datePicker
-                                          color="primary"
-                                          startView="multi-year"
-                                          (yearSelected)="onsYearSelected($event, datePicker)"
-                                        ></mat-datepicker>
-                               </mat-form-field>
-                                </mat-card-content>
-                            </td>
+                            
                             <td>
                                 <mat-card-content>
                                     <label style=" color:black;">Department:</label>

@@ -69,11 +69,12 @@ export class EditBranchComponent implements OnInit{
   }
 
   onSubmit() {
-    var street = this.myForm.get('street')?.value;
+    var name = this.myForm.get('name')?.value;
 
-    this.dataService.EditBranchValidation(street, this.Branch.branch_ID).subscribe({
+    this.dataService.EditBranchValidation(name, this.Branch.branch_ID).subscribe({
       next: (Result) => {
-        if (Result != null) {
+        console.log(Result)
+        if (Result == null) {
           this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe({
             next: (response) => {
               document.getElementById('AnimationBtn').classList.toggle("is_active");
@@ -88,7 +89,7 @@ export class EditBranchComponent implements OnInit{
                 next: (Log) => {
                   var action = "Update";
                   var title = "UPDATE SUCCESSFUL";
-                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + street + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
                   const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
                     disableClose: true,
@@ -107,10 +108,26 @@ export class EditBranchComponent implements OnInit{
             }
           })
         }
+        else if (Result.name == name && Result.branch_ID == this.Branch.branch_ID) {
+          var action = "NOTIFICATION";
+          var title = "NOTIFICATION: NO CHANGES MADE";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to Branch: <strong>" + name + "</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            this.router.navigate(['/ViewBranch']);
+            dialogRef.close();
+          }, duration);
+        }
         else {
           var action = "ERROR";
           var title = "ERROR: Branch Exists";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch street address <strong>" + street + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,

@@ -28,6 +28,9 @@ export class YearOnlyDateAdapter extends NativeDateAdapter {
 
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -70,7 +73,7 @@ export class EditBudgetAllocationComponent {
   departments: any[] = []
   minDate:any;
   budgetAllocationForm: FormGroup = new FormGroup({});
-  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     let currentYear = new Date().getFullYear()
@@ -91,27 +94,116 @@ export class EditBudgetAllocationComponent {
   onSubmit(): void {
 
     this.dep.department_ID = this.budgetAllocationForm.get('department_ID')?.value;
+    console.log(this.dep.department_ID);
+    this.budgetAllocation.department_ID = this.dep.department_ID;
     this.budgetAllocation.date_Created = this.budgetAllocationForm.get('date_Created')?.value;
     let date = this.budgetAllocationForm.get('year')?.value
     this.budgetAllocation.year = date.getFullYear();
     this.budgetAllocation.total = this.budgetAllocationForm.get('total')?.value;
     console.log(this.budgetAllocation);
 
-    this.dataService.EditBudgetAllocation(this.budgetAllocation.budget_ID, this.budgetAllocation).subscribe(result => {
-      document.getElementById('AnimationBtn').classList.toggle("is_active");
-      document.getElementById('cBtn').style.display = "none";
+    this.dataService.GetDepartment(this.budgetAllocationForm.get('department_ID')?.value).subscribe(r => {
+      var dep: any = r;
+      this.dataService.BudgetAllocationValidation(dep.name, this.budgetAllocation.year).subscribe(re => {
+        if (re == null) {
+          this.dataService.EditBudgetAllocation(this.budgetAllocation.budget_ID, this.budgetAllocation).subscribe(result => {
+            document.getElementById('AnimationBtn').classList.toggle("is_active");
+            document.getElementById('cBtn').style.display = "none";
 
-      this.log.action = "Edited Budget Allocation for: " + this.budgetAllocation.department.name;
-      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-      let test: any
-      test = new DatePipe('en-ZA');
-      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-      this.dataService.AuditLogAdd(this.log).subscribe({
-        next: (Log) => {
-          this.router.navigate(['/ViewBudgetAllocation']);
+            this.log.action = "Edited Budget Allocation for: " + this.budgetAllocation.department.name;
+            this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+            let test: any
+            test = new DatePipe('en-ZA');
+            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+            this.dataService.AuditLogAdd(this.log).subscribe({
+              next: (Log) => {
+                var action = "Update";
+                var title = "UPDATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Allocation for department: <strong>" + dep.name + "</strong> for year: " + this.budgetAllocation.year +" has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  this.router.navigate(['/ViewBudgetAllocation']);
+                  dialogRef.close();
+                }, duration);
+                
+              }
+            })
+          });
+        } else if (re.total == this.budgetAllocation.total && re.year == this.budgetAllocation.year && re.department.name == dep.name && re.budget_ID == Number(this.route.snapshot.paramMap.get('id'))) {
+          var action = "NOTIFICATION";
+          var title = "NOTIFICATION: NO CHANGES MADE";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to Budget Allocation for department: <strong>" + dep.name + "</strong> for year: <strong>" + this.budgetAllocation.year +"</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            this.router.navigate(['/ViewBudgetAllocation']);
+            dialogRef.close();
+          }, duration);
+        }
+        else if (re.total != this.budgetAllocation.total && re.year == this.budgetAllocation.year && re.department.name == dep.name && re.budget_ID == Number(this.route.snapshot.paramMap.get('id'))) {
+          this.dataService.EditBudgetAllocation(this.budgetAllocation.budget_ID, this.budgetAllocation).subscribe(result => {
+            document.getElementById('AnimationBtn').classList.toggle("is_active");
+            document.getElementById('cBtn').style.display = "none";
+
+            this.log.action = "Edited Budget Allocation for: " + this.budgetAllocation.department.name;
+            this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+            let test: any
+            test = new DatePipe('en-ZA');
+            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+            this.dataService.AuditLogAdd(this.log).subscribe({
+              next: (Log) => {
+                var action = "Update";
+                var title = "UPDATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Allocation for department: <strong>" + dep.name + "</strong> for year: " + this.budgetAllocation.year + " has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  this.router.navigate(['/ViewBudgetAllocation']);
+                  dialogRef.close();
+                }, duration);
+
+              }
+            })
+          });
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: Budget Allocation Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A Budget Allocation for department: <strong>" + dep.name + " for the year: <strong>" + this.budgetAllocation.year + " <strong style='color:red'> ALREADY EXISTS!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
         }
       })
-    });
+
+    })
+
+    /*this.dataService.BudgetAllocationValidation(this.)*/
+
+    
   }
 
   GetDepartments() {
