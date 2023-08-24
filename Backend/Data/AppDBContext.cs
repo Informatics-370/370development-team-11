@@ -686,7 +686,23 @@ namespace ProcionAPI.Data
                Name = "Item Received and checked",
                Description = "Received and Checked",
 
-           });
+           }
+           ,
+           new
+           {
+               Procurement_Status_ID = 6,
+               Name = "Asset To Be Registered",
+               Description = "Asset Received",
+
+           },
+           new
+           {
+               Procurement_Status_ID = 7,
+               Name = "Asset Registered",
+               Description = "Asset Registered",
+
+           }
+           );
 
             modelBuilder.Entity<Procurement_Payment_Status>()
             .HasData(

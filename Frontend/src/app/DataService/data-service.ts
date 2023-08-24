@@ -58,6 +58,7 @@ import { VendorSpentReport } from '../Shared/VendorSpentReport';
 import * as FileSaver from 'file-saver';
 import { ReportData } from '../Shared/ConsumableReport';
 import { Procurement_Invoice } from '../Shared/Procurement_Invoice';
+import { Procurement_Status } from '../Shared/ProcurementStatus';
 
 @Injectable({
   providedIn: 'root'
@@ -1570,6 +1571,10 @@ export class DataService {
     this.yearDialogClosed2Source.next();
   }
 
+
+  GetAssetStatuses(): Observable<any> {
+    return this.httpClient.get<Procurement_Status[]>(`${this.apiUrl}ProcurementDetails/getAssetStatuses`).pipe(map(result => result))
+  }
 
 }
 
