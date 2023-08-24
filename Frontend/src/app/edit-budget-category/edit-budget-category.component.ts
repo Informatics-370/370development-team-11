@@ -42,8 +42,8 @@ export class EditBudgetCategoryComponent {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.GetBudgetCategory(id);
     this.budgetCategoryForm = this.formBuilder.group({
-      account_Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 &:-]+")]],
-      description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 &:-]+")]]
+      account_Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(150), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 &:-]+")]],
+      description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(200), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 &:-]+")]]
     })
 
   }

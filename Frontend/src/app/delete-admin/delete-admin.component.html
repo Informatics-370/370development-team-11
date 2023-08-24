@@ -1,9 +1,13 @@
-<h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center; display: flex; justify-content: space-between;"
-    *ngIf="showConfirmationDialog == true">
-  DELETE ADMIN
+<div style="color: white; background-color: #244688; text-align: center; display: flex; justify-content: center; align-items: center;">
+  <h1 mat-dialog-title style="color: white;"
+      *ngIf="showConfirmationDialog == true">
+    DELETE ADMIN
+  </h1>
   <mat-icon (click)="openDeleteAdminTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
-  style="font-size:30pt; height: 37px; width: 37px; cursor: pointer;" [ngStyle]="{'color':'white'}" matTooltip="Need help? Click me!"></mat-icon>
-</h1>
+            style="font-size: 24pt; height: 37px; width: 37px; margin-bottom: 5px; cursor: pointer;" [ngStyle]="{'color':'white'}" matTooltip="Need help? Click me!"></mat-icon>
+</div>
+
+
 <div mat-dialog-content *ngIf="showConfirmationDialog == true">
   <p>You are about to delete the admin: <strong>{{Admin.adminName}}</strong></p>
   <p>Are you sure you want to continue?</p>

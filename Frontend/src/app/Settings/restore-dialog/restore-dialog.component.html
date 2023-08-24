@@ -1,8 +1,12 @@
-<h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center; display: flex; justify-content: space-between;">
+<div style="color: white; background-color: #244688; text-align: center; display: flex; justify-content: center; align-items: center;">
+  <h1 mat-dialog-title style="color: white;">
     RESTORE SYSTEM DATA
-    <mat-icon (click)="openRestoreTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
-    style="font-size:30pt; height: 37px; width: 37px; cursor: pointer;" [ngStyle]="{'color':'white'}" matTooltip="Need help? Click me!"></mat-icon>
   </h1>
+  <mat-icon (click)="openRestoreTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+            style="font-size: 24pt; height: 37px; width: 37px; margin-bottom: 5px; cursor: pointer;" [ngStyle]="{'color':'white'}" matTooltip="Need help? Click me!"></mat-icon>
+</div>
+
+
   <div mat-dialog-content style="display: flex; flex-direction: column; align-items: center;">
     <p>Select the backup file you want to use for restoring the system.</p>
     <input type="file" class="file-upload" accept=".bak"  (change)="onFileSelected($event)" required>
