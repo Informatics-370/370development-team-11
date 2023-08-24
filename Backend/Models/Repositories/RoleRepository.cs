@@ -48,7 +48,7 @@ namespace ProcionAPI.Models.Repositories
         public async Task<Role> CreateRoleValidationAsync(string name)
         {
             Role ExistingRole = await _dbContext.Role.FirstOrDefaultAsync(x => x.Name == name);
-            if (ExistingRole == null)
+            if (ExistingRole != null)
             {
                 return ExistingRole;
             }
@@ -61,10 +61,18 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Role> EditRoleValidationAsync(string name, int id)
         {
-            Role ExistingRole = await _dbContext.Role.FirstOrDefaultAsync(x => x.Name == name && x.Role_ID == id);
+            Role ExistingRole = await _dbContext.Role.FirstOrDefaultAsync(x => x.Name == name);
             if (ExistingRole != null)
             {
-                return ExistingRole;
+                if(ExistingRole.Role_ID == id)
+                {
+                    return null;
+                }
+                else
+                {
+                    return ExistingRole;
+                }
+                
             }
 
             else

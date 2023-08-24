@@ -354,7 +354,7 @@ export class EditEmployeeComponent implements OnInit {
 
     this.dataService.EditUserValidation(username, this.employee.user_Id).subscribe({
       next: (Result) => {
-        if (Result != null) {
+        if (Result == null) {
           this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
             this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
               next: (response) => {

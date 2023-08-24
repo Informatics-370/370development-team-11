@@ -44,6 +44,7 @@ export class UserProfileEditComponent {
   employee: any;
   myForm: FormGroup = new FormGroup({});
   cropImgPreview: string = '';
+  usernameChangeLogout = false;
 
   fileToUpload: File | null = null;
   files: any[] = ['', '', ''];
@@ -191,9 +192,11 @@ export class UserProfileEditComponent {
       this.emp.department_ID = this.employee.department.department_ID;
       this.emp.mandate_ID = this.employee.mandate_Limit.mandate_ID;
 
+      this.usr.user_Id = this.employee.user.user_Id;
       this.usr.role_ID = this.employee.user.role.role_ID;
       this.usr.access = this.employee.user.access;
       this.usr.password = this.employee.user.password;
+      this.usr.username = this.employee.user.username;
       this.usr.profile_Picture = this.employee.user.profile_Picture;
       this.cropImgPreview = this.employee.user.profile_Picture;
 
@@ -213,6 +216,9 @@ export class UserProfileEditComponent {
   GetAdmin() {
     this.dataService.GetAdminByUsername(this.iName).subscribe(result => {
       this.admin = result
+
+      this.usr.user_Id = this.admin.user.user_Id;
+      this.usr.username = this.admin.user.username;
       this.usr.role_ID = this.admin.user.role.role_ID
       this.usr.access = this.admin.user.access;
       console.log(this.admin.user.access.access_ID)
@@ -261,7 +267,9 @@ export class UserProfileEditComponent {
     var username = ts.concat(cel.toString().substring(3, 6));
     username = username.replace(/\s/g, "");
 
-    localStorage.setItem("User", JSON.stringify(username))
+    if (username != this.usr.username) {
+      this.usernameChangeLogout = true;
+    }
 
     this.usr.username = username;
 
@@ -281,23 +289,52 @@ export class UserProfileEditComponent {
                 this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
                 this.dataService.AuditLogAdd(this.log).subscribe({
                   next: (Log) => {
-                    var action = "Update";
-                    var title = "UPDATE SUCCESSFUL";
-                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
+                    if (this.usernameChangeLogout == true) {
+                      var action = "Update";
+                      var title = "UPDATE SUCCESSFUL";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                      disableClose: true,
-                      data: { action, title, message }
-                    });
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
 
-                    const duration = 1750;
-                    setTimeout(() => {
-                      this.router.navigate(['/Profile']);
-                      //this.nav.reload();
-                      //const NavbarElement = document.getElementById("nav");
-                      //NavbarElement.innerHTML = NavbarElement.innerHTML;
-                      dialogRef.close();
-                    }, duration);
+                      const duration = 1750;
+                      setTimeout(() => {
+                        this.log.action = "Manually Logged out of the system";
+                        this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                        let test: any
+                        test = new DatePipe('en-ZA');
+                        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                        this.dataService.AuditLogAdd(this.log).subscribe({
+                          next: (Log) => {
+                            sessionStorage.removeItem('token');
+                            sessionStorage.removeItem('tokenExpiration');
+                            this.router.navigate(['']);
+                            dialogRef.close();
+                          }
+                        })
+                        
+                      }, duration);
+                    } else {
+                      var action = "Update";
+                      var title = "UPDATE SUCCESSFUL";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
+
+                      const duration = 1750;
+                      setTimeout(() => {
+                        this.router.navigate(['/Profile']);
+                        //this.nav.reload();
+                        //const NavbarElement = document.getElementById("nav");
+                        //NavbarElement.innerHTML = NavbarElement.innerHTML;
+                        dialogRef.close();
+                      }, duration);
+                    }
                   }
                 })
               }
@@ -339,13 +376,17 @@ export class UserProfileEditComponent {
     var username = ts.concat(cel.toString().substring(3, 6));
     username = username.replace(/\s/g, "");
 
-    localStorage.setItem("User", JSON.stringify(username))
+    if (username != this.usr.username) {
+      this.usernameChangeLogout = true;
+    }
 
     this.usr.username = username;
     this.usr.role_ID = this.myForm.get('Role')?.value;
 
     this.dataService.EditUserValidation(username, this.usr.user_Id).subscribe({
       next: (Result) => {
+        console.log(Result)
+        console.log(this.usr)
         if (Result == null) {
           this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
             this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
@@ -360,23 +401,53 @@ export class UserProfileEditComponent {
                 this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
                 this.dataService.AuditLogAdd(this.log).subscribe({
                   next: (Log) => {
-                    var action = "Update";
-                    var title = "UPDATE SUCCESSFUL";
-                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
+                    if (this.usernameChangeLogout == true) {
+                      var action = "Update";
+                      var title = "UPDATE SUCCESSFUL";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                      disableClose: true,
-                      data: { action, title, message }
-                    });
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
 
-                    const duration = 1750;
-                    setTimeout(() => {
-                      this.router.navigate(['/Profile']);
-                      //this.nav.reload();
-                      //const NavbarElement = document.getElementById("nav");
-                      //NavbarElement.innerHTML = NavbarElement.innerHTML;
-                      dialogRef.close();
-                    }, duration);
+                      const duration = 1750;
+                      setTimeout(() => {
+                        this.log.action = "Manually Logged out of the system";
+                        this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                        let test: any
+                        test = new DatePipe('en-ZA');
+                        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                        this.dataService.AuditLogAdd(this.log).subscribe({
+                          next: (Log) => {
+                            sessionStorage.removeItem('token');
+                            sessionStorage.removeItem('tokenExpiration');
+                            this.router.navigate(['']);
+                            dialogRef.close();
+                          }
+                        })
+                      }, duration);
+                    } else {
+                      var action = "Update";
+                      var title = "UPDATE SUCCESSFUL";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Your profile has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
+
+                      const duration = 1750;
+                      setTimeout(() => {
+                        this.router.navigate(['/Profile']);
+                        //this.nav.reload();
+                        //const NavbarElement = document.getElementById("nav");
+                        //NavbarElement.innerHTML = NavbarElement.innerHTML;
+                        dialogRef.close();
+                      }, duration);
+                    }
+
+                   
                   }
                 })
               }
