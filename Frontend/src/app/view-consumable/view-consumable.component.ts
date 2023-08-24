@@ -78,6 +78,9 @@ export class ViewConsumableComponent implements OnInit {
 
   ExportInventoryDetails() {
     let docDefinition = {
+      pageSize: 'A4',
+
+      pageOrientation: 'landscape',
       footer:
         function (currentPage, pageCount) {
           return {
@@ -135,10 +138,16 @@ export class ViewConsumableComponent implements OnInit {
             body: [
               [{ text: 'Name', fillColor: '#244688', color: "white" },
               { text: 'Category', fillColor: '#244688', color: "white" },
-              { text: 'Minimum Reorder- Quantity', fillColor: '#244688', color: "white" },
-              { text: 'Maximum Reorder- Quantity', fillColor: '#244688', color: "white" },
-              { text: 'On-Hand', fillColor: '#244688', color: "white" }],
-              ...this.Consumables.map(p => ([p.name, p.consumable_Category.name, p.minimum_Reorder_Quantity, p.maximum_Reorder_Quantity, p.on_Hand]))
+              { text: 'Minimum Reorder- Quantity', fillColor: '#244688', color: "white", alignment: 'center', },
+              { text: 'Maximum Reorder- Quantity', fillColor: '#244688', color: "white", alignment: 'center', },
+              { text: 'On-Hand', fillColor: '#244688', color: "white", alignment: 'center', }],
+              ...this.Consumables.map((p, index) => ([
+                { text: p.name, fillColor: index % 2 === 0 ? '#b4c6e7' : '#d9e2f3' }, // Alternating color
+                { text: p.consumable_Category.name, fillColor: index % 2 === 0 ? '#b4c6e7' : 'd9e2f3' }, // Alternating color
+                { text: p.minimum_Reorder_Quantity, alignment: 'center', fillColor: index % 2 === 0 ? '#b4c6e7' : '#d9e2f3' }, // Alternating color
+                { text: p.maximum_Reorder_Quantity, alignment: 'center', fillColor: index % 2 === 0 ? '#b4c6e7' : '#d9e2f3' }, // Alternating color
+                { text: p.on_Hand, alignment: 'center', fillColor: index % 2 === 0 ? '#b4c6e7' : '#d9e2f3' } // Alternating color
+              ]))
             ],
 
             margin: [0, 10]
@@ -147,7 +156,7 @@ export class ViewConsumableComponent implements OnInit {
         {
           canvas: [
             // Centered line with space above
-            { type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }
+            { type: 'line', x1: 0, y1: 5, x2: 762, y2: 5, alignment: 'center' }
           ],
           // Add space above the line
           margin: [0, 10]

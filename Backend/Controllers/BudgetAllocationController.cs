@@ -5,6 +5,8 @@ using ProcionAPI.Models.Repositories;
 using Microsoft.AspNetCore.Cors;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Packaging;
+using System.Text;
 
 namespace ProcionAPI.Controllers
 {
@@ -711,6 +713,72 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
+        //[HttpGet]
+        //[Route("ImportExcel")]
+        //public async Task<IActionResult> ReadExcelFile()
+        //{
+        //    try
+        //    {
+        //        var Somethin = await _repository.GetAllBudgetLinesAsync();
+        //        StringBuilder excelResult = new StringBuilder();
+
+        //        using (SpreadsheetDocument doc = SpreadsheetDocument.Open("C:\\Users\\jason\\source\\repos\\370development-team-11\\Backend\\bin\\Debug\\GL Codes per Tracking Category - 2022.10.17.xlsx", false))
+        //        {
+        //            WorkbookPart workbookPart = doc.WorkbookPart;
+        //            Sheets thesheetcollection = workbookPart.Workbook.GetFirstChild<Sheets>();
+
+        //            int cellIndex = 0;
+
+        //            foreach (Sheet thesheet in thesheetcollection)
+        //            {
+        //                excelResult.AppendLine("Excel Sheet Name : " + thesheet.Name);
+        //                excelResult.AppendLine("----------------------------------------------- ");
+
+        //                Worksheet theWorksheet = ((WorksheetPart)workbookPart.GetPartById(thesheet.Id)).Worksheet;
+        //                SheetData thesheetdata = theWorksheet.GetFirstChild<SheetData>();
+
+        //                foreach (Row thecurrentrow in thesheetdata)
+        //                {
+        //                    foreach (Cell thecurrentcell in thecurrentrow)
+        //                    {
+        //                        string currentcellvalue = string.Empty;
+        //                        if (thecurrentcell.DataType != null && thecurrentcell.DataType == CellValues.SharedString)
+        //                        {
+        //                            int id;
+        //                            if (Int32.TryParse(thecurrentcell.InnerText, out id))
+        //                            {
+        //                                SharedStringItem item = workbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>().ElementAt(id);
+        //                                currentcellvalue = item.Text?.Text ?? item.InnerText ?? item.InnerXml;
+
+                                        
+        //                                    Console.WriteLine(thecurrentrow.RowIndex.ToString());
+                                           
+        //                                    Console.WriteLine(currentcellvalue);
+                                        
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            currentcellvalue = thecurrentcell.InnerText;
+        //                            Console.WriteLine(currentcellvalue);
+        //                        }
+        //                        cellIndex++;
+        //                        excelResult.Append(currentcellvalue + " ");
+        //                    }
+        //                    excelResult.AppendLine();
+        //                }
+        //            }
+        //        }
+
+        //        // Now you can decide how you want to respond with the content in excelResult
+        //        return Ok(excelResult.ToString());
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, ex.Message);
+        //    }
+        //}
 
     }
 }
