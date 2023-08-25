@@ -139,5 +139,37 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
+        [HttpGet]
+        [Route("DepartmentDeleteUserValidation/{id}")]
+        public async Task<IActionResult> DepartmentDeleteUserValidation([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _departmentRepository.DepartmentDeleteUserValidationAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("DepartmentDeleteBudgetAllocationValidation/{id}")]
+        public async Task<IActionResult> DepartmentDeleteBudgetAllocationValidation([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _departmentRepository.DepartmentDeleteBudgetAllocationValidationAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
 }

@@ -78,5 +78,19 @@ namespace ProcionAPI.Models.Repositories
             return await _dbContext.SaveChangesAsync() > 0;
         }
 
+        public async Task<Employee> BranchDeleteUserValidationAsync(int id)
+        {
+            Employee ExistingUser = await _dbContext.Employee.FirstOrDefaultAsync(x => x.Branch_ID == id);
+            if (ExistingUser != null)
+            {
+                return ExistingUser;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
     }
 }

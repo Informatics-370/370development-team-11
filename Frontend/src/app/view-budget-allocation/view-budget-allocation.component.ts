@@ -164,48 +164,40 @@ export class ViewBudgetAllocationComponent {
   }
 
   DeleteBudgetAllocation(id: Number) {
-    this.dataService.GetBudgetLines().subscribe({
-      next: (result) => {
-        let LineList: any[] = result
-        LineList.forEach((element) => {
-          this.BudgetLines.push(element)
+    this.dataService.BudgetAllocationDeleteBudgetLineValidation(id).subscribe(r => {
+      if (r == null) {
+        const confirm = this.dialog.open(DeleteBudgetAllocationComponent, {
+          disableClose: true,
+          data: { id }
         });
-        console.log(this.BudgetLines)
-        var Count: number = 0;
-        this.BudgetLines.forEach(element => {
-          if (element.budget_ID == id) {
-            Count = Count + 1;
-            console.log(Count)
+
+        this.dialog.afterAllClosed.subscribe({
+          next: (response) => {
+            this.ngOnInit();
           }
-        });
+        })
+      }
+      else {
+        this.dataService.GetBudgetAllocation(id).subscribe({
+          next: (allocationReceived) => {
+            this.deleteBudgetAllocation = allocationReceived as BudgetAllocation;
 
-        if (Count == 0) {
-          const confirm = this.dialog.open(DeleteBudgetAllocationComponent, {
-            disableClose: true,
-            data: { id }
-          });
-        }
-        else {
+            var action = "ERROR";
+            var title = "ERROR: Budget Allocation In Use";
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Allocation for year <strong> " + this.deleteBudgetAllocation.year + " <strong style='color:red'>IS ASSOCIATED WITH A BUDGET LINE!</strong><br> Please remove the budget allocation from the budget line to continue with deletion.");
 
-          this.dataService.GetBudgetAllocation(id).subscribe({
-            next: (allocationReceived) => {
-              this.deleteBudgetAllocation = allocationReceived as BudgetAllocation;
-            }
-          })
-          var action = "ERROR";
-          var title = "ERROR: Budget Allocation In Use";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Allocation for year <strong> " + this.deleteBudgetAllocation.year + " <strong style='color:red'>IS ASSOCIATED WITH A BUDGET LINE!</strong><br> Please remove the budget allocation from the budget line to continue with deletion.");
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
 
-          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-            disableClose: true,
-            data: { action, title, message }
-          });
-
-          const duration = 4000;
-          setTimeout(() => {
-            dialogRef.close();
-          }, duration);
-        }
+            const duration = 4000;
+            setTimeout(() => {
+              dialogRef.close();
+            }, duration);
+          }
+        })
+        
       }
     })
   }

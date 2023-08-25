@@ -178,21 +178,21 @@ export class ViewEmployeeComponent implements OnInit {
                               this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
                               this.UserToDelete.user_Id = this.userDelete.user_Id;
                               this.UserToDelete.role = this.userDelete.role;
+
+                              var action = "ERROR";
+                              var title = "ERROR: User In Use";
+                              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A PROCUREMENT REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
+
+                              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                                disableClose: true,
+                                data: { action, title, message }
+                              });
+
+                              const duration = 4000;
+                              setTimeout(() => {
+                                dialogRef.close();
+                              }, duration);
                             });
-
-                            var action = "ERROR";
-                            var title = "ERROR: User In Use";
-                            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A PROCUREMENT REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
-
-                            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                              disableClose: true,
-                              data: { action, title, message }
-                            });
-
-                            const duration = 4000;
-                            setTimeout(() => {
-                              dialogRef.close();
-                            }, duration);
                           }
                         }
                       })
@@ -206,21 +206,21 @@ export class ViewEmployeeComponent implements OnInit {
                         this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
                         this.UserToDelete.user_Id = this.userDelete.user_Id;
                         this.UserToDelete.role = this.userDelete.role;
+
+                        var action = "ERROR";
+                        var title = "ERROR: User In Use";
+                        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A PROCUREMENT REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
+
+                        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                          disableClose: true,
+                          data: { action, title, message }
+                        });
+
+                        const duration = 4000;
+                        setTimeout(() => {
+                          dialogRef.close();
+                        }, duration);
                       });
-
-                      var action = "ERROR";
-                      var title = "ERROR: User In Use";
-                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A PROCUREMENT REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
-
-                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                        disableClose: true,
-                        data: { action, title, message }
-                      });
-
-                      const duration = 4000;
-                      setTimeout(() => {
-                        dialogRef.close();
-                      }, duration);
                     }
                   }
                 })
@@ -234,21 +234,21 @@ export class ViewEmployeeComponent implements OnInit {
                   this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
                   this.UserToDelete.user_Id = this.userDelete.user_Id;
                   this.UserToDelete.role = this.userDelete.role;
+
+                  var action = "ERROR";
+                  var title = "ERROR: User In Use";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A ONBOARD REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
+
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
+
+                  const duration = 4000;
+                  setTimeout(() => {
+                    dialogRef.close();
+                  }, duration);
                 });
-
-                var action = "ERROR";
-                var title = "ERROR: User In Use";
-                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A ONBOARD REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
-
-                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                  disableClose: true,
-                  data: { action, title, message }
-                });
-
-                const duration = 4000;
-                setTimeout(() => {
-                  dialogRef.close();
-                }, duration);
               }
             }
           })
@@ -262,78 +262,24 @@ export class ViewEmployeeComponent implements OnInit {
             this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
             this.UserToDelete.user_Id = this.userDelete.user_Id;
             this.UserToDelete.role = this.userDelete.role;
+
+            var action = "ERROR";
+            var title = "ERROR: User In Use";
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A DELEGATION REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
+
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
+
+            const duration = 4000;
+            setTimeout(() => {
+              dialogRef.close();
+            }, duration);
           });
-
-          var action = "ERROR";
-          var title = "ERROR: User In Use";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A DELEGATION REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
-
-          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-            disableClose: true,
-            data: { action, title, message }
-          });
-
-          const duration = 4000;
-          setTimeout(() => {
-            dialogRef.close();
-          }, duration);
         }
       }
     })
-
-
-    //this.dataService.GetAllOnboardRequest().subscribe({
-    //  next: (result) => {
-    //    let UserList: any[] = result
-    //    UserList.forEach((element) => {
-    //      this.OnboardRequests.push(element)
-    //    });
-    //    var Count: number = 0;
-    //    this.OnboardRequests.forEach(element => {
-    //      if (element.user_Id == id) {
-    //        Count = Count + 1;
-    //      }
-    //    });
-    //    if (Count == 0) {
-    //      const confirm = this.dialog.open(DeleteEmployeeComponent, {
-    //        disableClose: true,
-    //        data: { id }
-    //      });
-
-    //      this.dialog.afterAllClosed.subscribe({
-    //        next: (response) => {
-    //          this.ngOnInit();
-    //        }
-    //      })
-    //    }
-    //    else {
-
-    //      this.dataService.GetUser(id).subscribe(UserRecieved => {
-    //        this.userDelete = UserRecieved
-    //        this.UserToDelete.role_ID = this.userDelete.role_ID;
-    //        this.UserToDelete.username = this.userDelete.username;
-    //        this.UserToDelete.password = this.userDelete.password;
-    //        this.UserToDelete.profile_Picture = this.userDelete.profile_Picture;
-    //        this.UserToDelete.user_Id = this.userDelete.user_Id;
-    //        this.UserToDelete.role = this.userDelete.role;
-    //      });
-
-    //      var action = "ERROR";
-    //      var title = "ERROR: User In Use";
-    //      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + this.UserToDelete.username + " <strong style='color:red'>IS ASSOCIATED WITH A ONBOARD REQUEST!</strong><br> Please remove the user from associated tables to continue with deletion.");
-
-    //      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-    //        disableClose: true,
-    //        data: { action, title, message }
-    //      });
-
-    //      const duration = 4000;
-    //      setTimeout(() => {
-    //        dialogRef.close();
-    //      }, duration);
-    //    }
-    //  }
-    //})
   }
 
 

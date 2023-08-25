@@ -276,5 +276,47 @@ namespace ProcionAPI.Models.Repositories
         {
             return await _dbContext.SaveChangesAsync() > 0;
         }
+
+        public async Task<Budget_Line> BudgetAllocationDeleteBudgetLineValidationAsync(int id)
+        {
+            Budget_Line ExistingBL = await _dbContext.Budget_Line.FirstOrDefaultAsync(x => x.Budget_ID == id);
+            if (ExistingBL != null)
+            {
+                return ExistingBL;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Budget_Line> BudgetCategoryDeleteBudgetLineValidationAsync(int id)
+        {
+            Budget_Line ExistingBL = await _dbContext.Budget_Line.FirstOrDefaultAsync(x => x.Category_ID == id);
+            if (ExistingBL != null)
+            {
+                return ExistingBL;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Procurement_Details> BudgetLineDeleteProcurementDetailsValidationAsync(int id)
+        {
+            Procurement_Details ExistingPD = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.BudgetLineId == id);
+            if (ExistingPD != null)
+            {
+                return ExistingPD;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
     }
 }

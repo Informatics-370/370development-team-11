@@ -9,7 +9,7 @@
 
 
 <div mat-dialog-content *ngIf="showConfirmationDialog == true">
-    <p>You are about to delete the Budget Allocation with total: <strong>{{budgetAllocation.total}}</strong> for year
+    <p>You are about to delete the Budget Allocation with total: R<strong>{{budgetAllocation.total}}</strong> for year
         {{budgetAllocation.year}}</p>
     <p>Are you sure you want to continue?</p>
 </div>
@@ -21,7 +21,7 @@
 <ng-container *ngIf="showSuccessDialog == true">
     <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;">DELETE SUCCESSFUL</h1>
     <div mat-dialog-content>
-        <p>The budget allocation with total <strong>{{ budgetAllocation.total }}</strong> has been <strong
+        <p>The budget allocation with total R<strong>{{ budgetAllocation.total }}</strong> has been <strong
                 style="color:red">DELETED</strong>
             successfully!</p>
     </div>

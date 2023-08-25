@@ -66,7 +66,6 @@ export class DeleteBranchComponent implements OnInit{
             setTimeout(() => {
               this.dialogRef.close();
               this.route.navigate(['/ViewBranch'], { queryParams: { refresh: true } });
-              location.reload();
             }, 1750);
           }
         }) 

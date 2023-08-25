@@ -4,6 +4,7 @@ using ProcionAPI.Models.Entities;
 using ProcionAPI.Models.Repositories;
 using ProcionAPI.Data;
 using Microsoft.AspNetCore.Cors;
+using NuGet.Protocol.Core.Types;
 
 namespace ProcionAPI.Controllers
 {
@@ -124,6 +125,22 @@ namespace ProcionAPI.Controllers
             try
             {
                 var result = await _RoleRepository.EditRoleValidationAsync(name, id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("RoleDeleteUserValidation/{id}")]
+        public async Task<IActionResult> RoleDeleteUserValidation([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _RoleRepository.RoleDeleteUserValidationAsync(id);
                 return Ok(result);
             }
             catch (Exception)

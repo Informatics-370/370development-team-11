@@ -31,7 +31,7 @@ export class ViewEmployeeRoleComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   dataSource: any;
   displayedColumns: string[] = ['name', 'description', 'action', 'delete'];
-  roleDelete: any
+  roleDelete: any;
   RoleToUse: string = "";
 
   RoleToDelete: Role = {
@@ -99,42 +99,29 @@ export class ViewEmployeeRoleComponent implements OnInit {
 
 
   DeleteEmpRole(id: Number) {
-    this.dataService.GetUsers().subscribe({
-      next: (result) => {
-        let UserList: any[] = result
-        UserList.forEach((element) => {
-          this.Users.push(element)
+    this.dataService.RoleDeleteUserValidation(id).subscribe(r => {
+      if (r == null) {
+        const confirm = this.dialog.open(DeleteEmployeeRoleComponent, {
+          disableClose: true,
+          data: { id }
         });
-        var Count: number = 0;
-        this.Users.forEach(element => {
-          if (element.role_ID == id) {
-            Count = Count + 1;
+
+        this.dialog.afterAllClosed.subscribe({
+          next: (response) => {
+            this.ngOnInit();
           }
-        });
-        if (Count == 0) {
-          const confirm = this.dialog.open(DeleteEmployeeRoleComponent, {
-            disableClose: true,
-            data: { id }
-          });
-
-          this.dialog.afterAllClosed.subscribe({
-            next: (response) => {
-              this.ngOnInit();
-            }
-          })
-        }
-        else {
-
-          this.dataService.GetUser(id).subscribe(RoleRecieved => {
-            this.roleDelete = RoleRecieved
-            this.RoleToDelete.role_ID = this.roleDelete.role_ID;
-            this.RoleToDelete.name = this.roleDelete.name;
-            this.RoleToDelete.description = this.roleDelete.description;
-          });
+        })
+      }
+      else {
+        this.dataService.GetRole(id).subscribe(RoleRecieved => {
+          this.roleDelete = RoleRecieved
+          this.RoleToDelete.role_ID = this.roleDelete.role_ID;
+          this.RoleToDelete.name = this.roleDelete.name;
+          this.RoleToDelete.description = this.roleDelete.description;
 
           var action = "ERROR";
           var title = "ERROR: Role In Use";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + this.RoleToDelete.name + " <strong style='color:red'>IS ASSOCIATED WITH A USER!</strong><br> Please remove the role from the user to continue with deletion.");
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + this.roleDelete.name + " <strong style='color:red'>IS ASSOCIATED WITH A USER!</strong><br> Please remove the role from the user to continue with deletion.");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,
@@ -145,7 +132,9 @@ export class ViewEmployeeRoleComponent implements OnInit {
           setTimeout(() => {
             dialogRef.close();
           }, duration);
-        }
+        });
+
+        
       }
     })
 

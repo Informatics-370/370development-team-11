@@ -12,5 +12,7 @@ namespace ProcionAPI.Models.Repositories
         Task<Department> DepartmentValidationAsync(string name);
         Task<Department> EditDepartmentValidationAsync(string name, int id);
         Task<bool> SaveChangesAsync();
+        Task<Employee> DepartmentDeleteUserValidationAsync(int id);
+        Task<Budget_Allocation> DepartmentDeleteBudgetAllocationValidationAsync(int id);
     }
 }

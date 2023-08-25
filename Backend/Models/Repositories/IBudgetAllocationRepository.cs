@@ -31,5 +31,8 @@ namespace ProcionAPI.Models.Repositories
         void Add<T>(T entity) where T : class;
         void Delete<T>(T entity) where T : class;
         Task<bool> SaveChangesAsync();
+        Task<Budget_Line> BudgetAllocationDeleteBudgetLineValidationAsync(int id);
+        Task<Budget_Line> BudgetCategoryDeleteBudgetLineValidationAsync(int id);
+        Task<Procurement_Details> BudgetLineDeleteProcurementDetailsValidationAsync(int id);
     }
 }

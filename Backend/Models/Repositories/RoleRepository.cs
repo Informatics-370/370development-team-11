@@ -96,5 +96,19 @@ namespace ProcionAPI.Models.Repositories
 
             return rl;
         }
+
+        public async Task<User> RoleDeleteUserValidationAsync(int id)
+        {
+            User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.Role_ID == id);
+            if (ExistingUser != null)
+            {
+                return ExistingUser;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
     }
 }
