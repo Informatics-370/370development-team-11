@@ -11,5 +11,6 @@ namespace ProcionAPI.Models.Repositories
         Task<Branch> BranchValidationAsync(string street);
         Task<Branch> EditBranchValidationAsync(string street, int id);
         Task<bool> SaveChangesAsync();
+        Task<Employee> BranchDeleteUserValidationAsync(int id);
     }
 }

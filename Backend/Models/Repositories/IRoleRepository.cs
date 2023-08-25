@@ -12,5 +12,6 @@ namespace ProcionAPI.Models.Repositories
         Task<Role> CreateRoleValidationAsync(string name);
         Task<Role> EditRoleValidationAsync(string name, int id);
         Task<Role> UpdateRoleAsync(int id, Role role);
+        Task<User> RoleDeleteUserValidationAsync(int id);
     }
 }

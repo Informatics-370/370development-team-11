@@ -4,6 +4,7 @@ using ProcionAPI.Models.Entities;
 using ProcionAPI.Models.Repositories;
 using ProcionAPI.Data;
 using Microsoft.AspNetCore.Cors;
+using NuGet.Protocol.Core.Types;
 
 namespace ProcionAPI.Controllers
 {
@@ -137,6 +138,22 @@ namespace ProcionAPI.Controllers
             try
             {
                 var result = await _branchRepository.EditBranchValidationAsync(street, id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("BranchDeleteUserValidation/{id}")]
+        public async Task<IActionResult> BranchDeleteUserValidation([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _branchRepository.BranchDeleteUserValidationAsync(id);
                 return Ok(result);
             }
             catch (Exception)

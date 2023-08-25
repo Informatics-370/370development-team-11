@@ -8,7 +8,7 @@ import { DeleteDepartmentComponent } from 'src/app/delete-department/delete-depa
 import { DataService } from 'src/app/DataService/data-service';
 import { Employee } from 'src/app/Shared/Employee';
 import { BudgetAllocation } from 'src/app/Shared/BudgetAllocation';
-import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component'; 
+import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
 import { count, elementAt } from 'rxjs';
@@ -28,25 +28,25 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-department',
   templateUrl: './view-department.component.html',
   styleUrls: ['./view-department.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
-export class ViewDepartmentComponent implements OnInit{
+export class ViewDepartmentComponent implements OnInit {
   Departments: Department[] = [];
-  Employees: Employee[]=[];
-  Budget_Allocation : BudgetAllocation[]=[];
+  Employees: Employee[] = [];
+  Budget_Allocation: BudgetAllocation[] = [];
   SearchedDepartment: Department[] = [];
   searchWord: string = "";
 
-  DepartmentToDelete:any  = {
-    department_ID :0,
-    name:'',
-    description:'',
+  DepartmentToDelete: any = {
+    department_ID: 0,
+    name: '',
+    description: '',
   }
 
   displayedColumns: string[] = ['name', 'description', 'action', 'delete'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
- 
+
 
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router, private sanitizer: DomSanitizer, private dialog: MatDialog) { }
 
@@ -77,63 +77,59 @@ export class ViewDepartmentComponent implements OnInit{
       if (result) {
         hideloader();
       }
-    }); 
+    });
     function hideloader() {
       document.getElementById('loading')
         .style.display = 'none';
       document.getElementById('table').style.visibility = "visible";
-    } 
+    }
   }
-  GetEmployees(){
+  GetEmployees() {
     this.dataService.GetEmployees().subscribe(result => {
       this.Employees = result;
     })
   }
 
 
-DeleteDepartment(department_ID: number) {
-  this.dataService.GetEmployees().subscribe({
-    next: (result) => {
-      let EmployeeList: any[] = result
-      EmployeeList.forEach((element) => {
-        this.Employees.push(element)
-      });
-     
-    this.dataService.GetBudgetAllocations().subscribe({
-      next: (result)=> {
-          let Budgetallocationlist: any[] = result
-          Budgetallocationlist.forEach((element) => {
-          this.Budget_Allocation.push(element)
-          });
-     
-      
+  DeleteDepartment(department_ID: number) {
+    this.dataService.DepartmentDeleteUserValidation(department_ID).subscribe(u => {
+      if (u == null) {
+        this.dataService.DepartmentDeleteBudgetAllocationValidation(department_ID).subscribe(ba => {
+          if (ba == null) {
+            const confirm = this.Dialog.open(DeleteDepartmentComponent, {
+              disableClose: true,
+              data: { department_ID }
+            });
 
-      var Count: number = 0;
+            this.dialog.afterAllClosed.subscribe({
+              next: (response) => {
+                this.ngOnInit();
+              }
+            })
+          }
+          else {
+            this.dataService.GetDepartment(department_ID).subscribe({
+              next: (DepartmentRecieved) => {
+                this.DepartmentToDelete = DepartmentRecieved
+                var action = "ERROR";
+                var title = "ERROR: Department In Use";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + this.DepartmentToDelete.name + " <strong style='color:red'>IS ASSOCIATED WITH BUDGET ALLOCATION!</strong><br> Please remove the Department from the Budget allocation to continue with deletion.");
 
-      this.Employees.forEach(element => {
-        if (element.department_ID == department_ID) {
-          Count = Count + 1;
-          console.log(Count)
-        }
-      });
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
 
-      this.Budget_Allocation.forEach(element => {
-        if(element.department_ID == department_ID){
-          Count = Count +1;
-          console.log(Count)
-        }
-      });
-
-      
-
-      if (Count == 0) {
-        const confirm = this.Dialog.open(DeleteDepartmentComponent, {
-          disableClose: true,
-          data: { department_ID }
-        });
+                const duration = 4000;
+                setTimeout(() => {
+                  dialogRef.close();
+                }, duration);
+              }
+            })
+          }
+        })
       }
       else {
-
         this.dataService.GetDepartment(department_ID).subscribe({
           next: (DepartmentRecieved) => {
             this.DepartmentToDelete = DepartmentRecieved
@@ -141,7 +137,7 @@ DeleteDepartment(department_ID: number) {
         })
         var action = "ERROR";
         var title = "ERROR: Department In Use";
-        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + this.DepartmentToDelete.name + " <strong style='color:red'>IS ASSOCIATED WITH A EMPLOYEE AND/OR BUDGET ALLOCATION!</strong><br> Please remove the Department from the Employee and/or Budget allocation to continue with deletion.");
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + this.DepartmentToDelete.name + " <strong style='color:red'>IS ASSOCIATED WITH AN EMPLOYEE!</strong><br> Please remove the Department from the Employee to continue with deletion.");
 
         const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
           disableClose: true,
@@ -153,46 +149,39 @@ DeleteDepartment(department_ID: number) {
           dialogRef.close();
         }, duration);
       }
-
-    }
-  })
-    }
-  })
-
-  
-
-}
+    })
+  }
 
 
-openDialog() {
-  const dialogRef = this.dialog.open(RestoreComponent);
+  openDialog() {
+    const dialogRef = this.dialog.open(RestoreComponent);
 
-  dialogRef.afterClosed().subscribe(result => {
-    console.log(`Dialog result: ${result}`);
-  });
-}
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 
-openRestoreDialog() {
-  const dialogRef = this.dialog.open(RestoreDialogComponent);
+  openRestoreDialog() {
+    const dialogRef = this.dialog.open(RestoreDialogComponent);
 
-  dialogRef.afterClosed().subscribe(result => {
-    console.log(`Dialog result: ${result}`);
-  });
-}
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 
 
 
-openDepartmentIFrameTab(): void {
-  const dialogRef = this.dialog.open(DepartmentIFrameComponent, {
-    // width: '800px', // Set the desired width
-    // height: '600px', // Set the desired height
-    panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
-  });
+  openDepartmentIFrameTab(): void {
+    const dialogRef = this.dialog.open(DepartmentIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
 
-  dialogRef.afterClosed().subscribe(result => {
-    // Handle any dialog close actions if needed
-  });
-}
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
+  }
 
 
 }

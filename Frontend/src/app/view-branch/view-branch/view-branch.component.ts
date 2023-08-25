@@ -91,48 +91,39 @@ export class ViewBranchComponent implements OnInit {
   }
 
   DeleteBranch(branch_ID: number) {
-    this.dataService.GetEmployees().subscribe({
-      next: (result) => {
-        let EmployeeList: any[] = result
-        EmployeeList.forEach((element) => {
-          this.Employees.push(element)
+    this.dataService.BranchDeleteUserValidation(branch_ID).subscribe(r => {
+      if (r == null) {
+        const confirm = this.Dialog.open(DeleteBranchComponent, {
+          disableClose: true,
+          data: { branch_ID }
         });
-        console.log(this.Employees)
-        var Count: number = 0;
-        this.Employees.forEach(element => {
-          if (element.branch_ID == branch_ID) {
-            Count = Count + 1;
-            console.log(Count)
+
+        this.dialog.afterAllClosed.subscribe({
+          next: (response) => {
+            this.ngOnInit();
           }
-        });
-  
-        if (Count == 0) {
-          const confirm = this.Dialog.open(DeleteBranchComponent, {
-            disableClose: true,
-            data: { branch_ID }
-          });
-        }
-        else {
-  
-          this.dataService.GetBranch(branch_ID).subscribe({
-            next: (BranchRecieved) => {
-              this.BranchToDelete = BranchRecieved
-            }
-          })
-          var action = "ERROR";
-          var title = "ERROR: Branch In Use";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + this.BranchToDelete.name + " <strong style='color:red'>IS ASSOCIATED WITH A EMPLOYEE!</strong><br> Please remove the Branch from the Employee to continue with deletion.");
-  
-          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-            disableClose: true,
-            data: { action, title, message }
-          });
-  
-          const duration = 4000;
-          setTimeout(() => {
-            dialogRef.close();
-          }, duration);
-        }
+        })
+      }
+      else {
+        this.dataService.GetBranch(branch_ID).subscribe({
+          next: (BranchRecieved) => {
+            this.BranchToDelete = BranchRecieved
+            var action = "ERROR";
+            var title = "ERROR: Branch In Use";
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + this.BranchToDelete.name + " <strong style='color:red'>IS ASSOCIATED WITH A EMPLOYEE!</strong><br> Please remove the Branch from the Employee to continue with deletion.");
+
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
+
+            const duration = 4000;
+            setTimeout(() => {
+              dialogRef.close();
+            }, duration);
+          }
+        })
+        
       }
     })
   

@@ -112,6 +112,38 @@ namespace ProcionAPI.Controllers
             }
             return BadRequest("Your request is invalid.");
         }
+
+        [HttpGet]
+        [Route("EditMandateValidation/{amount}")]
+        public async Task<IActionResult> EditMandateValidation([FromRoute] double amount)
+        {
+            try
+            {
+                var result = await _repository.EditMandateValidationAsync(amount);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("MandateDeleteUserValidation/{id}")]
+        public async Task<IActionResult> MandateDeleteUserValidation([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _repository.MandateDeleteUserValidationAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
     }
         
 }

@@ -82,48 +82,39 @@ export class ViewMandateLimitComponent implements OnInit {
     });
   }
   DeleteMandateLimit(id: Number) {
-    this.dataService.GetEmployees().subscribe({
-      next: (result) => {
-        let EmployeeList: any[] = result
-        EmployeeList.forEach((element) => {
-          this.Employees.push(element)
+    this.dataService.MandateDeleteUserValidation(id).subscribe(r => {
+      if (r == null) {
+        const confirm = this.dialog.open(DeleteMandateLimitComponent, {
+          disableClose: true,
+          data: { id }
         });
-        console.log(this.Employees)
-        var Count: number = 0;
-        this.Employees.forEach(element => {
-          if (element.mandate_ID == id) {
-            Count = Count + 1;
-            console.log(Count)
+
+        this.dialog.afterAllClosed.subscribe({
+          next: (response) => {
+            this.ngOnInit();
           }
-        });
+        })
+      }
+      else {
+        this.dataService.GetMandateLimit(id).subscribe({
+          next: (mandateReceived) => {
+            this.deleteMandateLimit = mandateReceived as Mandate_Limit;
+            var action = "ERROR";
+            var title = "ERROR: Mandate Limit In Use";
+            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Mandate Limit with amount R<strong>" + mandateReceived.ammount + " <strong style='color:red'>IS ASSOCIATED WITH AN EMPLOYEE!</strong><br> Please remove the mandate limit from the employee to continue with deletion.");
 
-        if (Count == 0) {
-          const confirm = this.dialog.open(DeleteMandateLimitComponent, {
-            disableClose: true,
-            data: { id }
-          });
-        }
-        else {
+            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+              disableClose: true,
+              data: { action, title, message }
+            });
 
-          this.dataService.GetMandateLimit(id).subscribe({
-            next: (mandateReceived) => {
-              this.deleteMandateLimit = mandateReceived as Mandate_Limit;
-            }
-          })
-          var action = "ERROR";
-          var title = "ERROR: Mandate Limit In Use";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Mandate Limit with amount <strong>" + this.deleteMandateLimit.ammount + " <strong style='color:red'>IS ASSOCIATED WITH AN EMPLOYEE!</strong><br> Please remove the mandate limit from the employee to continue with deletion.");
-
-          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-            disableClose: true,
-            data: { action, title, message }
-          });
-
-          const duration = 4000;
-          setTimeout(() => {
-            dialogRef.close();
-          }, duration);
-        }
+            const duration = 4000;
+            setTimeout(() => {
+              dialogRef.close();
+            }, duration);
+          }
+        })
+        
       }
     })
   }

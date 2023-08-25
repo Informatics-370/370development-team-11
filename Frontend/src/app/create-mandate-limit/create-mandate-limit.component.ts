@@ -10,6 +10,8 @@ import { DatePipe } from '@angular/common';
 
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -25,7 +27,7 @@ export class CreateMandateLimitComponent {
   mandateLimit: Mandate_Limit = {
     mandate_ID: 0,
     ammount: 0,
-    date: '2023-05-07T12:14:46.249'
+    date: ''
   }
 
   log: AuditLog = {
@@ -36,8 +38,9 @@ export class CreateMandateLimitComponent {
   }
 
   mandateLimitForm: FormGroup = new FormGroup({});
+  minDate: Date = new Date()
 
-  constructor(private router: Router, private dataService: DataService, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private dataService: DataService, private formBuilder: FormBuilder, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.mandateLimitForm = this.formBuilder.group({
@@ -61,7 +64,21 @@ export class CreateMandateLimitComponent {
       this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
       this.dataService.AuditLogAdd(this.log).subscribe({
         next: (Log) => {
-          this.router.navigate(['/ViewMandateLimit']);
+          var action = "Create";
+          var title = "CREATE SUCCESSFUL";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The mandate limit with amount: R<strong>" + this.mandateLimit.ammount + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            this.router.navigate(['/ViewMandateLimit']);
+            dialogRef.close();
+          }, duration);
+          
         }
       })
 

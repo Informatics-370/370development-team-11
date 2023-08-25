@@ -727,6 +727,54 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("BudgetAllocationDeleteBudgetLineValidation/{id}")]
+        public async Task<IActionResult> BudgetAllocationDeleteBudgetLineValidation([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _repository.BudgetAllocationDeleteBudgetLineValidationAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("BudgetCategoryDeleteBudgetLineValidation/{id}")]
+        public async Task<IActionResult> BudgetCategoryDeleteBudgetLineValidation([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _repository.BudgetCategoryDeleteBudgetLineValidationAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("BudgetLineDeleteProcurementDetailsValidation/{id}")]
+        public async Task<IActionResult> BudgetLineDeleteProcurementDetailsValidation([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _repository.BudgetLineDeleteProcurementDetailsValidationAsync(id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
         //[HttpGet]
         //[Route("ImportExcel")]
         //public async Task<IActionResult> ReadExcelFile()
@@ -764,11 +812,11 @@ namespace ProcionAPI.Controllers
         //                                SharedStringItem item = workbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>().ElementAt(id);
         //                                currentcellvalue = item.Text?.Text ?? item.InnerText ?? item.InnerXml;
 
-                                        
+
         //                                    Console.WriteLine(thecurrentrow.RowIndex.ToString());
-                                           
+
         //                                    Console.WriteLine(currentcellvalue);
-                                        
+
         //                            }
         //                        }
         //                        else

@@ -89,7 +89,7 @@
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let BudgetLines" style="width:140px;">
 
-            <button class="noselect" (click)="DeleteBudgetLine(BudgetLines.budgetLineId)">
+            <button class="noselect" (click)="DeleteBudgetLine(BudgetLines.budgetLineId, BudgetLines.budget_Category.account_Name)">
               <span class='text'>Delete</span>
               <span class="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" height="1em"
