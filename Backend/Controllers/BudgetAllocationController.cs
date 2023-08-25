@@ -7,6 +7,8 @@ using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Packaging;
 using System.Text;
+using ProcionAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProcionAPI.Controllers
 {
@@ -14,11 +16,13 @@ namespace ProcionAPI.Controllers
     [ApiController]
     public class BudgetAllocationController : ControllerBase
     {
+        private readonly AppDBContext _dbContext;
         private readonly IBudgetAllocationRepository _repository;
 
-        public BudgetAllocationController(IBudgetAllocationRepository repository)
+        public BudgetAllocationController(IBudgetAllocationRepository repository, AppDBContext DBContext)
         {
             _repository = repository;
+            _dbContext = DBContext;
         }
         [HttpGet]
         [Route("GetAllBudgetCategories")]
@@ -727,6 +731,97 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("ImportExcel")]
+        public async Task<IActionResult> ImportExcel()
+        {
+            try
+            {
+                using var workbook = new XLWorkbook("C:\\Users\\jason\\source\\repos\\370development-team-11\\Backend\\bin\\Debug\\Budget Allocation - BE.xlsx"); // Provide the path to the exported Excel file
+
+                var worksheet = workbook.Worksheet("Budget Allocation");
+                var rows = worksheet.RowsUsed();
+
+                var departmentDescription = worksheet.Cell(1, 1).Value.ToString().Replace("Department: ", "");
+                Console.WriteLine(departmentDescription);
+                var fyAndMonth = worksheet.Cell(2, 1).Value.ToString().Replace("FY: ", "");
+                var year = fyAndMonth;
+                var total = decimal.Parse(worksheet.Cell(5, 2).Value.ToString());
+                Department Dep = await _dbContext.Department.FirstOrDefaultAsync(x => x.Description.ToLower() == departmentDescription.ToLower());
+                Budget_Allocation BA = new Budget_Allocation
+                {
+                    Budget_ID = 0,
+                    Date_Created = DateTime.UtcNow,
+                    Department_ID = 0,
+                    Department = Dep,
+                    Total = total,
+                    Year = Convert.ToInt32(year),
+                };
+                var BAresult = await _repository.AddBudgetAllocationAsync(BA);
+                
+                foreach (var row in rows.Skip(5)) // Skip the header rows
+                {
+                    var accountName = row.Cell(1).Value.ToString();
+                    var accountCode = row.Cell(2).Value.ToString();
+                    var month = row.Cell(3).Value.ToString();
+                    var budgetAmt = decimal.Parse(row.Cell(4).Value.ToString());
+                    var actualAmt = decimal.Parse(row.Cell(5).Value.ToString());
+                    var variance = decimal.Parse(row.Cell(6).Value.ToString());
+
+                    Console.WriteLine(accountName);
+                    Console.WriteLine(accountCode);
+
+                    Console.WriteLine(budgetAmt);
+                    Console.WriteLine(actualAmt);
+                    Console.WriteLine(variance);
+
+                    
+                    
+                    Budget_Category BC = new Budget_Category
+                    {
+                        Account_Code = accountCode,
+                        Account_Name = accountName,
+                        Description = accountName,
+                        Category_ID = 0
+                    };
+                    Budget_Line BL = new Budget_Line
+                    {
+                        Budget_Category = BC,
+                        Month = month,
+                        BudgetAmt = budgetAmt,
+                        ActualAmt = actualAmt,
+                        Variance = variance,
+                        Budget_Allocation = BA,
+                    };
+
+                    
+                    if (BAresult != null)
+                    {
+                        BA = BAresult[0];
+                        BL.Budget_Allocation = BA;
+                        Budget_Category ExisCA = await _dbContext.Budget_Category.FirstOrDefaultAsync(x => x.Account_Code == accountCode);
+                        if (ExisCA != null)
+                        {
+                            BC = ExisCA;
+                            BL.Budget_Category = BC;
+                            await _dbContext.Budget_Line.AddAsync(BL);
+                            await _dbContext.SaveChangesAsync();
+                        }
+                    }
+                    
+                    
+                }
+
+                await _repository.SaveChangesAsync();
+
+                return Ok("Success");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         //[HttpGet]
         //[Route("ImportExcel")]
         //public async Task<IActionResult> ReadExcelFile()
@@ -734,64 +829,96 @@ namespace ProcionAPI.Controllers
         //    try
         //    {
         //        var Somethin = await _repository.GetAllBudgetLinesAsync();
-        //        StringBuilder excelResult = new StringBuilder();
+        //        List<Budget_Category> categories = new List<Budget_Category>();
 
-        //        using (SpreadsheetDocument doc = SpreadsheetDocument.Open("C:\\Users\\jason\\source\\repos\\370development-team-11\\Backend\\bin\\Debug\\GL Codes per Tracking Category - 2022.10.17.xlsx", false))
+        //        using (SpreadsheetDocument doc = SpreadsheetDocument.Open("C:\\Users\\jason\\source\\repos\\370development-team-11\\Backend\\bin\\Debug\\Budget Allocation - BE.xlsx", false))
         //        {
         //            WorkbookPart workbookPart = doc.WorkbookPart;
         //            Sheets thesheetcollection = workbookPart.Workbook.GetFirstChild<Sheets>();
 
-        //            int cellIndex = 0;
-
         //            foreach (Sheet thesheet in thesheetcollection)
         //            {
-        //                excelResult.AppendLine("Excel Sheet Name : " + thesheet.Name);
-        //                excelResult.AppendLine("----------------------------------------------- ");
-
         //                Worksheet theWorksheet = ((WorksheetPart)workbookPart.GetPartById(thesheet.Id)).Worksheet;
         //                SheetData thesheetdata = theWorksheet.GetFirstChild<SheetData>();
 
         //                foreach (Row thecurrentrow in thesheetdata)
         //                {
-        //                    foreach (Cell thecurrentcell in thecurrentrow)
+        //                    if (thecurrentrow.RowIndex > 1)
         //                    {
-        //                        string currentcellvalue = string.Empty;
-        //                        if (thecurrentcell.DataType != null && thecurrentcell.DataType == CellValues.SharedString)
-        //                        {
-        //                            int id;
-        //                            if (Int32.TryParse(thecurrentcell.InnerText, out id))
-        //                            {
-        //                                SharedStringItem item = workbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>().ElementAt(id);
-        //                                currentcellvalue = item.Text?.Text ?? item.InnerText ?? item.InnerXml;
+        //                        string accountCode = string.Empty;
+        //                        string accountName = string.Empty;
+        //                        int columnIndex = 0;
 
-                                        
-        //                                    Console.WriteLine(thecurrentrow.RowIndex.ToString());
-                                           
-        //                                    Console.WriteLine(currentcellvalue);
-                                        
-        //                            }
-        //                        }
-        //                        else
+        //                        foreach (Cell thecurrentcell in thecurrentrow)
         //                        {
-        //                            currentcellvalue = thecurrentcell.InnerText;
-        //                            Console.WriteLine(currentcellvalue);
+        //                            string currentcellvalue = string.Empty;
+
+        //                            if (thecurrentcell.DataType != null && thecurrentcell.DataType == CellValues.SharedString)
+        //                            {
+        //                                int id;
+        //                                if (Int32.TryParse(thecurrentcell.InnerText, out id))
+        //                                {
+        //                                    SharedStringItem item = workbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>().ElementAt(id);
+        //                                    currentcellvalue = item.Text?.Text ?? item.InnerText ?? item.InnerXml;
+        //                                }
+        //                            }
+        //                            else
+        //                            {
+        //                                currentcellvalue = thecurrentcell.InnerText.ToString();
+        //                            }
+
+        //                            if (columnIndex == 0) // First column is account code
+        //                            {
+        //                                accountCode = currentcellvalue;
+        //                            }
+        //                            else // Other columns are account name and description
+        //                            {
+        //                                accountName = currentcellvalue;
+        //                            }
+
+        //                            columnIndex++;
         //                        }
-        //                        cellIndex++;
-        //                        excelResult.Append(currentcellvalue + " ");
+
+        //                        categories.Add(new Budget_Category
+        //                        {
+        //                            Category_ID = 0,
+        //                            Account_Code = accountCode,
+        //                            Account_Name = accountName,
+        //                            Description = accountName
+        //                        });
         //                    }
-        //                    excelResult.AppendLine();
         //                }
         //            }
         //        }
 
-        //        // Now you can decide how you want to respond with the content in excelResult
-        //        return Ok(excelResult.ToString());
+        //        foreach (var Cat in categories)
+        //        {
+        //            // Check for duplicates based on Account_Code
+        //            bool isDuplicate = categories.Any(c => c != Cat && c.Account_Code == Cat.Account_Code);
+
+        //            if (!isDuplicate)
+        //            {
+        //                Budget_Category CatToAdd = new Budget_Category
+        //                {
+        //                    Category_ID = 0,
+        //                    Account_Code = Cat.Account_Code,
+        //                    Account_Name = Cat.Account_Name,
+        //                    Description = Cat.Description
+        //                };
+
+        //                _repository.Add(CatToAdd);
+        //                await _repository.SaveChangesAsync();
+        //            }
+        //        }
+
+        //        return Ok(categories);
         //    }
         //    catch (Exception ex)
         //    {
         //        return StatusCode(500, ex.Message);
         //    }
         //}
+
 
     }
 }

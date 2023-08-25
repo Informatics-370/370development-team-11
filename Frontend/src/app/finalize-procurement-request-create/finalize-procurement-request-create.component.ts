@@ -377,61 +377,97 @@ export class FinalizeProcurementRequestCreateComponent {
   }
 
   onSubmit(): void {
-    let ProcurementRequest = `ProcurementDetails${this.id}`
-    let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString();
-    console.log(ProcurementRequest)
-    this.dataService.POPFileAdd(ProofName, this.file[0]).subscribe(response => {
+    let Selection = this.finalizationForm.get("ProofOfPayment").value;
+    if (Selection == true) {
+      let ProcurementRequest = `ProcurementDetails${this.id}`
+      let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString();
+      console.log(ProcurementRequest)
+      this.dataService.POPFileAdd(ProofName, this.file[0]).subscribe(response => {
 
-      console.log(response)
-      let Path: any = response.pathSaved.toString()
-      this.ProofOfPayment.proof_Of_Payment_Doc = Path;
-      this.ProofOfPayment.procurement_Details_ID = Number(this.id);
-      this.ProofOfPayment.procurement_Details.procurement_Request.user = this.usr;
-      this.ProofOfPayment.procurement_Details.procurement_Request.vendor = this.ProcurementDetails.procurement_Request.vendor;
-      this.ProofOfPayment.procurement_Details.procurement_Request.requisition_Status = this.ProcurementDetails.procurement_Request.requisition_Status;
-      this.ProofOfPayment.procurement_Details.budget_Line.budget_Allocation = this.ProcurementDetails.budget_Line.budget_Allocation
-      this.ProofOfPayment.procurement_Details.budget_Line.budget_Category = this.ProcurementDetails.budget_Line.budget_Category
-      this.ProofOfPayment.procurement_Details.budget_Line.budget_Category.account_Code = this.ProcurementDetails.budget_Line.budget_Category.account_Code
-      this.ProofOfPayment.procurement_Details.procurement_Request.name = this.ProcurementDetails.procurement_Request.name
-      this.ProofOfPayment.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
-      this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe({
-        next: (res) => {
-          this.dataService.FinalizeProcurementRequest(this.ProcurementDetails.procurement_Details_ID).subscribe(result => {
-            this.dataService.UpdateProcurementStatus(2, this.id).subscribe({
-              next: (Result) => {
-                document.getElementById('AnimationBtn').classList.toggle("is_active");
-                document.getElementById('cBtn').style.display = "none";
-                this.log.action = "Finalised procurement request for: " + this.Procurement_Request.name;
-                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-                let test: any
-                test = new DatePipe('en-ZA');
-                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-                this.dataService.AuditLogAdd(this.log).subscribe({
-                  next: (Log) => {
-                    var action = "CREATE";
-                    var title = "CREATE SUCCESSFUL";
-                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> FINALISED! </strong> successfully!");
+        let Path: any = response.pathSaved.toString()
+        this.ProofOfPayment.proof_Of_Payment_Doc = Path;
+        this.ProofOfPayment.procurement_Details_ID = Number(this.id);
+        this.ProofOfPayment.procurement_Details.procurement_Request.user = this.usr;
+        this.ProofOfPayment.procurement_Details.procurement_Request.vendor = this.ProcurementDetails.procurement_Request.vendor;
+        this.ProofOfPayment.procurement_Details.procurement_Request.requisition_Status = this.ProcurementDetails.procurement_Request.requisition_Status;
+        this.ProofOfPayment.procurement_Details.budget_Line.budget_Allocation = this.ProcurementDetails.budget_Line.budget_Allocation
+        this.ProofOfPayment.procurement_Details.budget_Line.budget_Category = this.ProcurementDetails.budget_Line.budget_Category
+        this.ProofOfPayment.procurement_Details.budget_Line.budget_Category.account_Code = this.ProcurementDetails.budget_Line.budget_Category.account_Code
+        this.ProofOfPayment.procurement_Details.procurement_Request.name = this.ProcurementDetails.procurement_Request.name
+        this.ProofOfPayment.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
+        this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe({
+          next: (res) => {
+            this.dataService.FinalizeProcurementRequest(this.ProcurementDetails.procurement_Details_ID).subscribe(result => {
+              this.dataService.UpdateProcurementStatus(2, this.id).subscribe({
+                next: (Result) => {
+                  document.getElementById('AnimationBtn').classList.toggle("is_active");
+                  document.getElementById('cBtn').style.display = "none";
+                  this.log.action = "Finalised procurement request for: " + this.Procurement_Request.name;
+                  this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                  let test: any
+                  test = new DatePipe('en-ZA');
+                  this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                  this.dataService.AuditLogAdd(this.log).subscribe({
+                    next: (Log) => {
+                      var action = "CREATE";
+                      var title = "CREATE SUCCESSFUL";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> FINALISED! </strong> successfully!");
 
-                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                      disableClose: true,
-                      data: { action, title, message }
-                    });
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
 
-                    const duration = 1750;
-                    setTimeout(() => {
-                      dialogRef.close();
-                      this.router.navigate(['/ViewBudgetAllocation']);
-                    }, duration);
-                  }
-                })
-              }
+                      const duration = 1750;
+                      setTimeout(() => {
+                        dialogRef.close();
+                        this.router.navigate(['/ViewBudgetAllocation']);
+                      }, duration);
+                    }
+                  })
+                }
+              })
+
             })
 
-          })
+          }
+        });
+      })
+    }
+    else {
+      this.dataService.FinalizeProcurementRequest(this.ProcurementDetails.procurement_Details_ID).subscribe(result => {
+        this.dataService.UpdateProcurementStatus(2, this.id).subscribe({
+          next: (Result) => {
+            document.getElementById('AnimationBtn').classList.toggle("is_active");
+            document.getElementById('cBtn').style.display = "none";
+            this.log.action = "Finalised procurement request for: " + this.Procurement_Request.name;
+            this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+            let test: any
+            test = new DatePipe('en-ZA');
+            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+            this.dataService.AuditLogAdd(this.log).subscribe({
+              next: (Log) => {
+                var action = "CREATE";
+                var title = "CREATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> FINALISED! </strong> successfully!");
 
-        }
-      });
-    })
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  dialogRef.close();
+                  this.router.navigate(['/ViewBudgetAllocation']);
+                }, duration);
+              }
+            })
+          }
+        })
+
+      })
+    }
 
 
   }
