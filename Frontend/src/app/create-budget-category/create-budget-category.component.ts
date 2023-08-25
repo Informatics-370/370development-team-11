@@ -26,6 +26,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 export class CreateBudgetCategoryComponent {
   budgetCategory: BudgetCategory = {
     category_ID: 0,
+    account_Code: "",
     account_Name: '',
     description: ''
   }
@@ -43,13 +44,16 @@ export class CreateBudgetCategoryComponent {
   ngOnInit(): void {
     this.budgetCategoryForm = this.formBuilder.group({
       account_Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(150), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 &:-]+")]],
+      account_Code: ['', [Validators.required]],
       description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(200), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 &:-]+")]]
     })
   }
 
   onSubmit(): void {
     this.budgetCategory.account_Name = this.budgetCategoryForm.get('account_Name')?.value;
+    this.budgetCategory.account_Code = this.budgetCategoryForm.get('account_Code')?.value;
     this.budgetCategory.description = this.budgetCategoryForm.get('description')?.value;
+    console.log(this.budgetCategory)
     this.dataService.BudgetCategoryValidation(this.budgetCategory.account_Name).subscribe({
       next: (Result) => {
         if (Result == null) {
@@ -85,7 +89,7 @@ export class CreateBudgetCategoryComponent {
                 }
               })
 
-              
+
             }
           );
         }
@@ -121,7 +125,7 @@ export class CreateBudgetCategoryComponent {
 
 
   openCreateBCTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

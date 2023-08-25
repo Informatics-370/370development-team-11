@@ -66,7 +66,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Budget_Line> GetBudgetLineAsync(string accountCode)
         {
-            IQueryable<Budget_Line> query = _dbContext.Budget_Line.Where(c => c.Account_Code == accountCode).Include(c => c.Budget_Category).Include(b => b.Budget_Allocation).ThenInclude(a => a.Department);
+            IQueryable<Budget_Line> query = _dbContext.Budget_Line.Where(c => c.Budget_Category.Account_Code == accountCode).Include(c => c.Budget_Category).Include(b => b.Budget_Allocation).ThenInclude(a => a.Department);
             return await query.FirstOrDefaultAsync();
         }
 
@@ -95,7 +95,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Budget_Line[]> AddBudgetLineAsync(Budget_Line budgetLine)
         {
-            Budget_Line existingLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(d => d.Budget_Category.Account_Name == budgetLine.Budget_Category.Account_Name && d.Month == budgetLine.Month && d.Budget_ID == budgetLine.Budget_ID && d.Account_Code == budgetLine.Account_Code);
+            Budget_Line existingLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(d => d.Budget_Category.Account_Name == budgetLine.Budget_Category.Account_Name && d.Month == budgetLine.Month && d.Budget_ID == budgetLine.Budget_ID && d.Budget_Category.Account_Code == budgetLine.Budget_Category.Account_Code);
             
             if (existingLine != null)
             {
@@ -129,7 +129,6 @@ namespace ProcionAPI.Models.Repositories
         {
             var budgetline = await _dbContext.Budget_Line.FindAsync(budget_Line.BudgetLineId);
 
-            budgetline.Account_Code = budget_Line.Account_Code;
             budgetline.ActualAmt = budget_Line.ActualAmt;
             budgetline.BudgetAmt = budget_Line.BudgetAmt;
             budgetline.Budget_ID = budget_Line.Budget_ID;
@@ -184,7 +183,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Budget_Line> BudgetLineValidationAsync(string accCode, string budgetCatName, string month, int blID)
         {
-            Budget_Line ExistingLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(d => d.Budget_Category.Account_Name == budgetCatName && d.Month == month && d.Budget_ID == blID && d.Account_Code == accCode);
+            Budget_Line ExistingLine = await _dbContext.Budget_Line.Include(c => c.Budget_Category).FirstOrDefaultAsync(d => d.Budget_Category.Account_Name == budgetCatName && d.Month == month && d.Budget_ID == blID && d.Budget_Category.Account_Code == accCode);
             if (ExistingLine != null)
             {
                 return ExistingLine;

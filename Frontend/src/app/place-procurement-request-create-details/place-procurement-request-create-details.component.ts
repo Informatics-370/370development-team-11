@@ -220,6 +220,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
   category: BudgetCategory = {
     category_ID: 0,
+    account_Code: '',
     account_Name: '',
     description: ''
   }
@@ -239,7 +240,6 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: '',
     budget_Category: this.category,
     month: '',
     budgetAmt: 0,
@@ -485,23 +485,24 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
                 Year: t.budget_Allocation.year.toString(),
                 Month: t.month.toString(),
               };
+              console.log(AccountInfo)
               this.AccountCodeDetails.push(AccountInfo);
             })
 
             this.AccountCodeDetails.forEach(b => {
               //console.log()
-              if(this.AccountCodeGroups.filter(x=> (x.Month == b.Month) && (x.Year == b.Year)).length == 0) {          
-              if (this.AccountCodeGroups.filter(x => (x.Month == b.Month) && (x.Year == b.Year))) {
-                let AccountGroupInfo: AccountCodeDisplayGroup = {
-                  Year: b.Year,
-                  Month: b.Month,
-                  AccountDetails: this.AccountCodeDetails.filter(x => (x.Month == b.Month) && (x.Year == b.Year)),
-                };
-                this.AccountCodeGroups.push(AccountGroupInfo)
-              }
+              if (this.AccountCodeGroups.filter(x => (x.Month == b.Month) && (x.Year == b.Year)).length == 0) {
+                if (this.AccountCodeGroups.filter(x => (x.Month == b.Month) && (x.Year == b.Year))) {
+                  let AccountGroupInfo: AccountCodeDisplayGroup = {
+                    Year: b.Year,
+                    Month: b.Month,
+                    AccountDetails: this.AccountCodeDetails.filter(x => (x.Month == b.Month) && (x.Year == b.Year)),
+                  };
+                  this.AccountCodeGroups.push(AccountGroupInfo)
+                }
               }
             })
-           
+
             console.log(this.AccountCodeGroups)
 
           })
@@ -682,7 +683,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
 
     this.ProcurementDetails.BudgetLineId = Number(this.ProcurementFormGroup.get("AccountCode")?.value);
-    this.ProcurementDetails.budget_Line.account_Code = this.ProcurementFormGroup.get("AccountCode")?.value;
+    this.ProcurementDetails.budget_Line.budget_Category.account_Code = this.ProcurementFormGroup.get("AccountCode")?.value;
     this.ProcurementDetails.payment_Method_ID = this.ProcurementFormGroup.get("PaymentType")?.value;
     this.ProcurementDetails.procurement_Request = this.Procurement_Request;
     this.ProcurementDetails.procurement_Request_ID = Number(this.Procurement_Request.procurement_Request_ID);

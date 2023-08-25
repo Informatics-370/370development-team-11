@@ -3,13 +3,15 @@
         <form [formGroup]="budgetLineForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center"
             fxLayoutGap="10px" (ngSubmit)="onSubmit()">
             <mat-card-header>
-              <mat-card-title style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">
-                Edit
-                Budget Line
-                <mat-icon (click)="openEditBLTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
-                          style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
-              </mat-card-title>
-                    
+                <mat-card-title
+                    style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">
+                    Edit
+                    Budget Line
+                    <mat-icon (click)="openEditBLTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+                        style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}"
+                        matTooltip="Need help? Click me!"></mat-icon>
+                </mat-card-title>
+
                 <mat-card-subtitle>
                     <table style="width:100%;" cellspacing="0">
                         <tr>
@@ -29,24 +31,6 @@
                                     </mat-form-field>
                                 </mat-card-content>
                             </td>
-                            <td style="width:100%;">
-                                <mat-card-content>
-                                    <label style=" color:black;">Account Code:</label>
-                                    <br />
-                                    <mat-form-field>
-                                        <input matInput type="text" placeholder="" formControlName="account_Code"
-                                            id="account_Code" [(ngModel)]="budgetLine.account_Code" required>
-                                        <mat-error *ngIf="myError('account_Code', 'pattern')">Accont code must be in
-                                            numbers.</mat-error>
-                                        <mat-error *ngIf="myError('account_Code', 'minlength')">Account code must be 4
-                                            to 9
-                                            characters
-                                            long</mat-error>
-                                        <mat-error *ngIf="myError('account_Code', 'maxlength')">Limit
-                                            exceeded</mat-error>
-                                    </mat-form-field>
-                                </mat-card-content>
-                            </td>
                         </tr>
                         <tr>
                             <td style="width:100%;">
@@ -54,11 +38,12 @@
                                     <label style=" color:black;">Month:</label>
                                     <br />
                                     <mat-form-field>
-                                        <mat-select formControlName="month" placeholder="Select One" id="month" style="display: contents;" [(ngModel)]="budgetLine.month" required>
+                                        <mat-select formControlName="month" placeholder="Select One" id="month"
+                                            style="display: contents;" [(ngModel)]="budgetLine.month" required>
                                             <mat-option *ngFor="let Mon of Months" [value]="Mon">
-                                            {{Mon}}
+                                                {{Mon}}
                                             </mat-option>
-                                          </mat-select>
+                                        </mat-select>
                                         <mat-error *ngIf="myError('month', 'pattern')">Month must be in
                                             numbers.</mat-error>
                                         <mat-error *ngIf="myError('month', 'maxlength')">Month must be 4 characters

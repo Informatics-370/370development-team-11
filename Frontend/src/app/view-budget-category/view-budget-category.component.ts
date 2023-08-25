@@ -22,10 +22,10 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-budget-category',
   templateUrl: './view-budget-category.component.html',
   styleUrls: ['./view-budget-category.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewBudgetCategoryComponent implements OnInit {
-  displayedColumns: string[] = [ 'account_Name', 'description', 'action', 'delete'];
+  displayedColumns: string[] = ['account_Name', 'description', 'action', 'delete'];
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -37,6 +37,7 @@ export class ViewBudgetCategoryComponent implements OnInit {
 
   deleteBudgetCategory: BudgetCategory = {
     category_ID: 0,
+    account_Code: '',
     account_Name: '',
     description: ''
   }

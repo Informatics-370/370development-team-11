@@ -24,6 +24,7 @@ export class DeleteBudgetCategoryComponent {
 
   budgetCategory: BudgetCategory = {
     category_ID: 0,
+    account_Code: '',
     account_Name: '',
     description: ''
   }
@@ -76,7 +77,7 @@ export class DeleteBudgetCategoryComponent {
           }
         })
 
-        
+
       }
     });
   }
@@ -89,7 +90,7 @@ export class DeleteBudgetCategoryComponent {
 
 
   openDeleteBCTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

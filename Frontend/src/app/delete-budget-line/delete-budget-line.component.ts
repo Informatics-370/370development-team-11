@@ -31,6 +31,7 @@ export class DeleteBudgetLineComponent {
 
   category: BudgetCategory = {
     category_ID: 0,
+    account_Code: '',
     account_Name: '',
     description: ''
   }
@@ -50,7 +51,6 @@ export class DeleteBudgetLineComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: '',
     budget_Category: this.category,
     month: '2023-05-07',
     budgetAmt: 0,
@@ -90,7 +90,7 @@ export class DeleteBudgetLineComponent {
   onConfirm(id: Number): void {
     this.dataService.DeleteBudgetLine(id).subscribe({
       next: () => {
-        this.log.action = "Deleted Budget Line: " + this.budgetLine.account_Code + " for month: " + this.budgetLine.month;
+        this.log.action = "Deleted Budget Line: " + this.budgetLine.budget_Category.account_Code + " for month: " + this.budgetLine.month;
         this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
         let test: any
         test = new DatePipe('en-ZA');
@@ -117,7 +117,7 @@ export class DeleteBudgetLineComponent {
 
 
   openDeleteBLTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

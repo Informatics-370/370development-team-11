@@ -27,6 +27,7 @@ export class EditBudgetCategoryComponent {
 
   currentBudgetCategory: BudgetCategory = {
     category_ID: 0,
+    account_Code: '',
     account_Name: '',
     description: ''
   }
@@ -48,6 +49,7 @@ export class EditBudgetCategoryComponent {
     this.GetBudgetCategory(id);
     this.budgetCategoryForm = this.formBuilder.group({
       account_Name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(150), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 &:-]+")]],
+      account_Code: ['', [Validators.required]],
       description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(200), Validators.pattern("[a-zA-Z0-9][a-zA-Z0-9 &:-]+")]]
     })
 
@@ -65,6 +67,7 @@ export class EditBudgetCategoryComponent {
 
   onSubmit(): void {
     this.currentBudgetCategory.account_Name = this.budgetCategoryForm.get('account_Name')?.value;
+    this.currentBudgetCategory.account_Code = this.budgetCategoryForm.get('account_Code')?.value;
     this.currentBudgetCategory.description = this.budgetCategoryForm.get('description')?.value;
     console.log(this.currentBudgetCategory)
 
@@ -96,11 +99,11 @@ export class EditBudgetCategoryComponent {
                 dialogRef.close();
               }, duration);
 
-              
+
             }
           })
         });
-      } else if (r.account_Name == this.currentBudgetCategory.account_Name && r.category_ID == Number(this.route.snapshot.paramMap.get('id')) && r.description == this.currentBudgetCategory.description) {
+      } else if (r.account_Name == this.currentBudgetCategory.account_Name && r.category_ID == Number(this.route.snapshot.paramMap.get('id')) && r.description == this.currentBudgetCategory.description && r.account_Code == this.currentBudgetCategory.account_Code) {
         var action = "NOTIFICATION";
         var title = "NOTIFICATION: NO CHANGES MADE";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to Budget Category: <strong>" + this.currentBudgetCategory.account_Name + "</strong>");
@@ -116,7 +119,7 @@ export class EditBudgetCategoryComponent {
           dialogRef.close();
         }, duration);
       }
-      else if (r.account_Name == this.currentBudgetCategory.account_Name && r.category_ID == Number(this.route.snapshot.paramMap.get('id')) && r.description != this.currentBudgetCategory.description) {
+      else if (r.account_Name == this.currentBudgetCategory.account_Name && r.category_ID == Number(this.route.snapshot.paramMap.get('id')) && r.description != this.currentBudgetCategory.description || r.account_Code != this.currentBudgetCategory.account_Code) {
         this.dataService.EditBudgetCategory(this.currentBudgetCategory.category_ID, this.currentBudgetCategory).subscribe(result => {
           document.getElementById('AnimationBtn').classList.toggle("is_active");
           document.getElementById('cBtn').style.display = "none";
@@ -162,7 +165,7 @@ export class EditBudgetCategoryComponent {
         }, duration);
       }
     })
-    
+
   }
 
   onCancel(): void {
@@ -177,7 +180,7 @@ export class EditBudgetCategoryComponent {
 
 
   openEditBCTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

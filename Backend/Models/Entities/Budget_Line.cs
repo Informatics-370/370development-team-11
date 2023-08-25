@@ -10,9 +10,6 @@ namespace ProcionAPI.Models.Entities
         public int BudgetLineId { get; set; }
 
         [Required]
-        public string Account_Code { get; set; }
-
-        [Required]
         public int Budget_ID { get; set; }
 
         [Required]

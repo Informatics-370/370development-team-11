@@ -37,6 +37,7 @@ export class CreateBudgetLineComponent {
 
   category: BudgetCategory = {
     category_ID: 0,
+    account_Code: '',
     account_Name: '',
     description: ''
   }
@@ -56,7 +57,6 @@ export class CreateBudgetLineComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: '',
     budget_Category: this.category,
     month: '',
     budgetAmt: 0,
@@ -70,7 +70,7 @@ export class CreateBudgetLineComponent {
     action: "",
     actionTime: new Date(),
   }
-  Months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+  Months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   categories: any[] = []
   budgetLineForm: FormGroup = new FormGroup({});
   constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder,
@@ -82,7 +82,6 @@ export class CreateBudgetLineComponent {
     this.GetCategories();
     this.budgetLineForm = this.formBuilder.group({
       category_ID: ['', [Validators.required]],
-      account_Code: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8), Validators.pattern("^[0-9 ,]+$")]],
       month: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(9), Validators.pattern("^[a-zA-Z ]+$")]],
       budgetAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],
       actualAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],
@@ -93,7 +92,6 @@ export class CreateBudgetLineComponent {
     this.category = this.budgetLineForm.get('category_ID')?.value;
     this.budgetLine.budget_Category = this.category;
     this.budgetLine.category_ID = this.category.category_ID;
-    this.budgetLine.account_Code = this.budgetLineForm.get('account_Code')?.value;
     this.budgetLine.month = this.budgetLineForm.get('month')?.value;
     this.budgetLine.budgetAmt = this.budgetLineForm.get('budgetAmt').value;
     this.budgetLine.actualAmt = this.budgetLineForm.get('actualAmt').value;
@@ -128,7 +126,7 @@ export class CreateBudgetLineComponent {
               document.getElementById('AnimationBtn').classList.toggle("is_active");
               document.getElementById('cBtn').style.display = "none";
 
-              this.log.action = "Created Budget Line for: " + this.budgetLine.account_Code;
+              this.log.action = "Created Budget Line for: " + this.budgetLine.budget_Category.account_Code;
               this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
               let test: any
               test = new DatePipe('en-ZA');
@@ -155,7 +153,7 @@ export class CreateBudgetLineComponent {
               }, duration);
             }
 
-            
+
           });
         }
       });
@@ -180,7 +178,7 @@ export class CreateBudgetLineComponent {
 
 
   openCreateBLTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

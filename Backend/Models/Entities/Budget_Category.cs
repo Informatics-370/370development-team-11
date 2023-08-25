@@ -6,6 +6,8 @@ namespace ProcionAPI.Models.Entities
     {
         [Key]
         public int Category_ID { get; set; }
+        [Required]
+        public string Account_Code { get; set; }
 
         [MaxLength(150)]
         public string Account_Name { get; set; }

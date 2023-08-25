@@ -169,7 +169,7 @@ namespace ProcionAPI.Controllers
         [Route("AddBudgetCategory")]
         public async Task<IActionResult> AddBudgetCategory(Budget_Category budget_Category)
         {
-            var _budget_Category = new Budget_Category{  Account_Name = budget_Category.Account_Name, Description= budget_Category.Description};
+            var _budget_Category = new Budget_Category{  Account_Name = budget_Category.Account_Name, Account_Code =budget_Category.Account_Code, Description= budget_Category.Description};
             try
             {
                 _repository.Add(_budget_Category);
@@ -226,6 +226,7 @@ namespace ProcionAPI.Controllers
                 if (existingBudgetCategory == null) return NotFound("The budget category does not exist.");
 
                 existingBudgetCategory.Account_Name = budgetCategory.Account_Name;
+                existingBudgetCategory.Account_Code = budgetCategory.Account_Code;
                 existingBudgetCategory.Description = budgetCategory.Description;
 
                 if (await _repository.SaveChangesAsync())
@@ -420,10 +421,6 @@ namespace ProcionAPI.Controllers
                 atotal = atotal + at.ActualAmt;
             }
 
-            //worksheet.Row(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            //worksheet.Row(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            //worksheet.Row(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-
             
 
             worksheet.Row(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -479,7 +476,7 @@ namespace ProcionAPI.Controllers
                 worksheet.Row(currentRow).Style.Font.FontSize = 12;
 
                 worksheet.Cell(currentRow, 1).Value = bl.Budget_Category.Description;
-                worksheet.Cell(currentRow, 2).Value = bl.Account_Code;
+                worksheet.Cell(currentRow, 2).Value = bl.Budget_Category.Account_Code;
                 worksheet.Cell(currentRow, 3).Value = bl.Month;
                 worksheet.Cell(currentRow, 4).Value = bl.BudgetAmt;
                 worksheet.Cell(currentRow, 5).Value = bl.ActualAmt;
@@ -657,7 +654,7 @@ namespace ProcionAPI.Controllers
                 worksheet.Row(currentRow).Style.Font.FontSize = 12;
 
                 worksheet.Cell(currentRow, 1).Value = bl.Budget_Category.Description;
-                worksheet.Cell(currentRow, 2).Value = bl.Account_Code;
+                worksheet.Cell(currentRow, 2).Value = bl.Budget_Category.Account_Code;
                 worksheet.Cell(currentRow, 3).Value = bl.Month;
                 worksheet.Cell(currentRow, 4).Value = bl.BudgetAmt;
                 worksheet.Cell(currentRow, 5).Value = bl.ActualAmt;

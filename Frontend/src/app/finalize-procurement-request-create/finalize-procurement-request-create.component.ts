@@ -200,6 +200,7 @@ export class FinalizeProcurementRequestCreateComponent {
 
   category: BudgetCategory = {
     category_ID: 0,
+    account_Code: '',
     account_Name: '',
     description: ''
   }
@@ -219,7 +220,6 @@ export class FinalizeProcurementRequestCreateComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: '',
     budget_Category: this.category,
     month: '',
     budgetAmt: 0,
@@ -391,7 +391,7 @@ export class FinalizeProcurementRequestCreateComponent {
       this.ProofOfPayment.procurement_Details.procurement_Request.requisition_Status = this.ProcurementDetails.procurement_Request.requisition_Status;
       this.ProofOfPayment.procurement_Details.budget_Line.budget_Allocation = this.ProcurementDetails.budget_Line.budget_Allocation
       this.ProofOfPayment.procurement_Details.budget_Line.budget_Category = this.ProcurementDetails.budget_Line.budget_Category
-      this.ProofOfPayment.procurement_Details.budget_Line.account_Code = this.ProcurementDetails.budget_Line.account_Code
+      this.ProofOfPayment.procurement_Details.budget_Line.budget_Category.account_Code = this.ProcurementDetails.budget_Line.budget_Category.account_Code
       this.ProofOfPayment.procurement_Details.procurement_Request.name = this.ProcurementDetails.procurement_Request.name
       this.ProofOfPayment.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
       this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe({
@@ -466,7 +466,7 @@ export class FinalizeProcurementRequestCreateComponent {
 
 
   openFinalizeProcReqTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

@@ -748,7 +748,6 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         {
             var budgetline = await _dbContext.Budget_Line.FindAsync(budget_Line.BudgetLineId);
 
-            budgetline.Account_Code = budget_Line.Account_Code;
             budgetline.ActualAmt = budget_Line.ActualAmt + ActualAmount;
             budgetline.BudgetAmt = budget_Line.BudgetAmt;
             budgetline.Budget_ID = budget_Line.Budget_ID;
