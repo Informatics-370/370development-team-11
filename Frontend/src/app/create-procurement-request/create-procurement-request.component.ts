@@ -164,10 +164,13 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   originalBorderColor: string = 'solid #244688';
+  userDepartment: any;
 
   ngOnInit(): void {
     this.GetVendors();
     let usr = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    this.userDepartment = this.dataService.decodeUserDep(sessionStorage.getItem("token"));
+    console.log(this.userDepartment);
     if (this.VendorType == "Approved") {
       this.myForm = this.formBuilder.group({
         Selection: ["Approved", [Validators.required]],
@@ -434,13 +437,15 @@ export class CreateProcurementRequestComponent implements OnInit {
                       transVar = new DatePipe('en-ZA');
                       this.ProcurementNotif.send_Date = transVar.transform(new Date(), 'MM d, y, h:mm:ss a');
                       this.ProcurementNotif.name = "A new procurement request for Vendor: " + this.Procurement_Request.vendor.name + " is awaiting your attention!";
-                      this.ProcurementNotif.user_ID = 1;
-                      this.dataService.ProcurementRequestAddNotification(this.ProcurementNotif).subscribe({
-                        next: (Notif) => {
-                          this.DisplayNotif()
-                        }
+                      this.dataService.GetEmployeeByDepartment(this.userDepartment).subscribe(ud => {
+                        this.ProcurementNotif.user_ID = ud.user_Id;
+                        console.log(ud.user_Id);
+                        this.dataService.ProcurementRequestAddNotification(this.ProcurementNotif).subscribe({
+                          next: (Notif) => {
+                            this.DisplayNotif()
+                          }
+                        })
                       })
-
                     }
                   }
                 })
@@ -511,14 +516,19 @@ export class CreateProcurementRequestComponent implements OnInit {
                   transVar = new DatePipe('en-ZA');
                   this.ProcurementNotif.send_Date = transVar.transform(new Date(), 'MM d, y, h:mm:ss a');
                   this.ProcurementNotif.name = "A new procurement request for Vendor: " + this.Procurement_Request.vendor.name + " is awaiting your attention!";
-                  this.ProcurementNotif.user_ID = 1;
-                  this.dataService.ProcurementRequestAddNotification(this.ProcurementNotif).subscribe({
-                    next: (Notif) => {
-                      document.getElementById('AnimationBtn').classList.toggle("is_active");
-                      document.getElementById('cBtn').style.display = "none";
-                      this.DisplayNotif()
-                    }
+                  this.dataService.GetEmployeeByDepartment(this.userDepartment).subscribe(ud => {
+                    this.ProcurementNotif.user_ID = ud.user_Id;
+                    console.log(ud.user_Id);
+
+                    this.dataService.ProcurementRequestAddNotification(this.ProcurementNotif).subscribe({
+                      next: (Notif) => {
+                        document.getElementById('AnimationBtn').classList.toggle("is_active");
+                        document.getElementById('cBtn').style.display = "none";
+                        this.DisplayNotif()
+                      }
+                    })
                   })
+                  
                 }
               })
             }

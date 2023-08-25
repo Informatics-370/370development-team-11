@@ -11,6 +11,11 @@ import { Procurement_Consumable } from '../Shared/Procurement_Consumable';
 import { DatePipe } from '@angular/common';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { Procurement_Details } from '../Shared/ProcurementDetails';
+import { Role } from '../Shared/EmployeeRole';
+import { Access } from '../Shared/Access';
+import { User } from '../Shared/User';
+import { Notification_Type } from '../Shared/Notification_Type';
+import { Notification } from '../Shared/Notification';
 
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
@@ -88,6 +93,56 @@ export class ReceiveProcurementItemComponent {
     })
   }
 
+  rl: Role = {
+    role_ID: 0,
+    name: '',
+    description: ''
+  }
+
+  Access: Access = {
+    Access_ID: 0,
+    IsAdmin: '',
+    CanAccInv: '',
+    CanAccFin: '',
+    CanAccPro: '',
+    CanAccVen: '',
+    CanAccRep: '',
+    CanViewPenPro: '',
+    CanViewFlagPro: '',
+    CanViewFinPro: '',
+    CanAppVen: '',
+    CanEditVen: '',
+    CanDeleteVen: '',
+  }
+
+  usr: User = {
+    user_Id: 0,
+    role_ID: 0,
+    access_ID: 0,
+    access: this.Access,
+    username: '',
+    password: '',
+    profile_Picture: './assets/Images/Default_Profile.jpg',
+    no_Notifications: 0,
+    role: this.rl
+  }
+
+  Notification_Type: Notification_Type = {
+    notification_Type_ID: 0,
+    name: "",
+    description: "",
+  }
+
+  VendorNotification: Notification = {
+    notification_ID: 0,
+    notification_Type_ID: 0,
+    user_ID: 0,
+    name: "",
+    send_Date: new Date(),
+    user: this.usr,
+    notification_Type: this.Notification_Type,
+  };
+
   updateStock() {
     this.dataService.GetConsumableHistoryByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
       next: (Hist) => {
@@ -117,7 +172,20 @@ export class ReceiveProcurementItemComponent {
                     document.getElementById('cBtn').style.display = "none";
                     this.dataService.UpdateProcurementStatus(5, this.ProcurementID).subscribe({
                       next: (Result) => {
-                        this.router.navigate(['/ViewProcurementDetails'])
+                        this.VendorNotification.notification_Type_ID = 19;
+                        let transVar: any
+                        transVar = new DatePipe('en-ZA');
+                        this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+                        this.VendorNotification.name = "Procurement Request " +this.ProcurementID + " has been received and can be finalised.";
+                        this.dataService.GetUserByRole("Finance").subscribe(r => {
+                          var user: any = r;
+
+                          this.VendorNotification.user_ID = user.user_Id;
+                          this.dataService.ProcurementAddNotification(this.VendorNotification).subscribe();
+                          this.router.navigate(['/ViewProcurementDetails'])
+                        }) 
+
+                        
                       }
                     })
 

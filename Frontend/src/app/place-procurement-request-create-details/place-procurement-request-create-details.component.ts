@@ -667,15 +667,33 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     else {
       this.ProcurementDetails.procurement_Payment_Status_ID = 2;
     }
-    if (this.MandateLimitAmount < Number(this.ProcurementDetails.total_Amount)) {
+    if (Number(this.ProcurementDetails.total_Amount) > 80000 && Number(this.ProcurementDetails.total_Amount) <= 150000) {
       this.ProcurementDetails.procurement_Status_ID = 3;
       this.VendorNotification.notification_Type_ID = 14;
       let transVar: any
       transVar = new DatePipe('en-ZA');
       this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
       this.VendorNotification.name = this.Procurement_Request.name + " has been flagged for exceeded mandate limit";
-      this.VendorNotification.user_ID = 1;
-      this.ProcureService.ProcurementAddNotification(this.VendorNotification).subscribe();
+      this.ProcureService.GetUserByRole("FD").subscribe(r => {
+        var user: any = r;
+
+        this.VendorNotification.user_ID = user.user_Id;
+        this.ProcureService.ProcurementAddNotification(this.VendorNotification).subscribe();
+      }) 
+    }
+    else if (Number(this.ProcurementDetails.total_Amount) > 150000) {
+      this.ProcurementDetails.procurement_Status_ID = 3;
+      this.VendorNotification.notification_Type_ID = 14;
+      let transVar: any
+      transVar = new DatePipe('en-ZA');
+      this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+      this.VendorNotification.name = this.Procurement_Request.name + " has been flagged for exceeded mandate limit";
+      this.ProcureService.GetUserByRole("MD").subscribe(r => {
+        var user: any = r;
+
+        this.VendorNotification.user_ID = user.user_Id;
+        this.ProcureService.ProcurementAddNotification(this.VendorNotification).subscribe();
+      }) 
     }
     else {
       this.ProcurementDetails.procurement_Status_ID = 1;

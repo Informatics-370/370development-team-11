@@ -11,8 +11,7 @@
           matTooltip="Need help? Click me!"></mat-icon>
         <mat-card-subtitle style="justify-content: center; align-items: center;">
 
-          <label
-            style="display: flex; justify-content: center; align-items: center; margin-right: 228px; color: black;">Name:</label>
+          <label style="display: flex; justify-content: center; align-items: center; margin-right: 228px; color: black;">Name:</label>
           <mat-card-content style="display: flex; justify-content: center; align-items: center;">
 
 
@@ -39,14 +38,40 @@
             </mat-form-field>
           </mat-card-content>
           <br />
-          <label
-            style="display: flex; justify-content: center; align-items: center; margin-right: 188px; color: black;">Description:</label>
+          <label style="display: flex; justify-content: center; align-items: center; margin-right: 180px; color: black;">Account Code:</label>
+          <mat-card-content style="display: flex; justify-content: center; align-items: center;">
+
+            <mat-form-field style="width: 60%;">
+
+              <input matInput type="text" placeholder="" formControlName="account_Code" id="account_Code" required>
+              <mat-hint align="end">Not more than 9 characters long (incl. point or comma).</mat-hint>
+              <mat-error *ngIf="myError('account_Code', 'required')">
+                Accont code is
+                required
+              </mat-error>
+              <mat-error *ngIf="myError('account_Code', 'pattern')">
+                Accont code cannont contain special characters other than . or ,
+              </mat-error>
+              <mat-error *ngIf="myError('account_Code', 'minlength')">
+                Account code must be 4
+                to 9
+                characters
+                long
+              </mat-error>
+              <mat-error *ngIf="myError('account_Code', 'maxlength')">
+                Limit
+                exceeded
+              </mat-error>
+            </mat-form-field>
+          </mat-card-content>
+          <br />
+          <label style="display: flex; justify-content: center; align-items: center; margin-right: 188px; color: black;">Description:</label>
           <mat-card-content style="display: flex; justify-content: center; align-items: center;">
 
 
             <mat-form-field style="width: 60%;">
               <textarea matInput type="text" placeholder="" formControlName="description" id="description"
-                required></textarea>
+                        required></textarea>
               <mat-hint align="end">Not more than 200 characters long.</mat-hint>
               <mat-error *ngIf="myError('description', 'required')">
                 Description is
@@ -66,21 +91,7 @@
               </mat-error>
             </mat-form-field>
           </mat-card-content>
-          <mat-card-content style="display: flex; justify-content: center; align-items: center;">
 
-            <mat-form-field>
-              <label style=" color:black;">Account Code:</label>
-              <input matInput type="text" placeholder="" formControlName="account_Code" id="account_Code" required>
-              <mat-error *ngIf="myError('account_Code', 'pattern')">Accont code must be in
-                numbers.</mat-error>
-              <mat-error *ngIf="myError('account_Code', 'minlength')">Account code must be 4
-                to 9
-                characters
-                long</mat-error>
-              <mat-error *ngIf="myError('account_Code', 'maxlength')">Limit
-                exceeded</mat-error>
-            </mat-form-field>
-          </mat-card-content>
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">

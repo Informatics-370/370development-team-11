@@ -665,6 +665,10 @@ export class DataService {
     return this.httpClient.get<User>(`${this.apiUrl}User/GetUserByUsername` + "/" + username).pipe(map(result => result))
   }
 
+  GetUserByRole(role: string) {
+    return this.httpClient.get<User>(`${this.apiUrl}User/GetUserByRole` + "/" + role).pipe(map(result => result))
+  }
+
   AddUser(user: User) {
     return this.httpClient.post(`${this.apiUrl}User/CreateUser`, user, this.httpOptions)
   }
@@ -754,6 +758,10 @@ export class DataService {
   }
   getEmployeebyEmail(Email: String) {
     return this.httpClient.get<Employee>(`${this.apiUrl}User/GetEmployeeByEmail/` + Email).pipe(map(result => result))
+  }
+
+  GetEmployeeByDepartment(dep: String) {
+    return this.httpClient.get<Employee>(`${this.apiUrl}User/GetEmployeeByDepartment/` + dep).pipe(map(result => result))
   }
 
   getAdminbyEmail(Email: String) {
@@ -1463,6 +1471,14 @@ export class DataService {
 
   GetProcurementRequestDetails(): Observable<any> {
     return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetails`).pipe(map(result => result))
+  }
+
+  GetProcurementRequestDetailsFD(): Observable<any> {
+    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetailsFD`).pipe(map(result => result))
+  }
+
+  GetProcurementRequestDetailsMD(): Observable<any> {
+    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetailsMD`).pipe(map(result => result))
   }
 
   GetProcurementDetailsByID(ProcurementDetailsID: Number): Observable<any> {

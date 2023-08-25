@@ -602,6 +602,12 @@ namespace ProcionAPI.Data
                 Notification_Type_ID = 18,
                 Name = "New Procurement Request",
                 Description = "Please review the request and respond accordingly.",
+            },
+            new
+            {
+                Notification_Type_ID = 19,
+                Name = "Procurement Request has been Received",
+                Description = "Please review the request and respond accordingly.",
             }
             );
 

@@ -59,6 +59,8 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
       this.canViewPenPro = "true";
     }
 
+    
+
     this.GetProcurementDetails();
     console.log(this.ProcurementDetails)
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
@@ -68,23 +70,50 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
   ProcurementDetails: Procurement_Details[] = [];
   GetProcurementDetails() {
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
-    this.dataService.GetProcurementRequestDetails().subscribe(result => {
-      result.forEach(e => {
-        if (e.procurement_Status_ID == 3 && User != e.user.username)
-          this.ProcurementDetails.push(e);
+
+    if (this.iRole == "FD") {
+      this.dataService.GetProcurementRequestDetailsFD().subscribe(result => {
+        result.forEach(e => {
+          console.log(e)
+          if (e.procurement_Status_ID == 3 && User != e.employee.user.username)
+            this.ProcurementDetails.push(e);
+        })
+
+        this.SearchedPDetails = new MatTableDataSource(this.ProcurementDetails);
+        this.SearchedPDetails.paginator = this.paginator;
+        if (result) {
+          hideloader();
+        }
       })
 
-      this.SearchedPDetails = new MatTableDataSource(this.ProcurementDetails);
-      this.SearchedPDetails.paginator = this.paginator;
-      if (result) {
-        hideloader();
+      function hideloader() {
+        document.getElementById('loading').style.display = "none";
+        document.getElementById('table').style.visibility = "visible";
       }
-    })
-
-    function hideloader() {
-      document.getElementById('loading').style.display = "none";
-      document.getElementById('table').style.visibility = "visible";
     }
+
+    if (this.iRole == "MD") {
+      this.dataService.GetProcurementRequestDetailsMD().subscribe(result => {
+        result.forEach(e => {
+          console.log(e)
+          if (e.procurement_Status_ID == 3 && User != e.employee.user.username)
+            this.ProcurementDetails.push(e);
+        })
+
+        this.SearchedPDetails = new MatTableDataSource(this.ProcurementDetails);
+        this.SearchedPDetails.paginator = this.paginator;
+        if (result) {
+          hideloader();
+        }
+      })
+
+      function hideloader() {
+        document.getElementById('loading').style.display = "none";
+        document.getElementById('table').style.visibility = "visible";
+      }
+    }
+
+    
   }
 
   OnInPutChange() {

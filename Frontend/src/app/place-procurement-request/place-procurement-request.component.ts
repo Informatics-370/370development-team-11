@@ -58,6 +58,10 @@ export class PlaceProcurementRequestComponent implements OnInit {
   }
 
   GetProcurementRequests() {
+    var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+    var TempAcc = this.dataService.decodeTempUsername(sessionStorage.getItem('token'))
+
+
     this.dataService.GetProcurementRequests().subscribe(result => {
       let procurementRequestList: any[] = result;
       procurementRequestList.forEach(e => {
@@ -67,9 +71,22 @@ export class PlaceProcurementRequestComponent implements OnInit {
           this.dataService.GetProcurementDetailsByRequestID(e.procurement_Request_ID).subscribe(a => {
             //console.log(result)
             if (a == null) {
-              this.ProcurementRequests.push(e)
-              this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
-              this.SearchedPRequests.paginator = this.paginator;
+              if (TempAcc == "None") {
+                if (e.user.username == User) {
+                  this.ProcurementRequests.push(e)
+                  this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
+                  this.SearchedPRequests.paginator = this.paginator;
+                }
+              }
+              else {
+                if (e.user.username == User || e.user.username == TempAcc) {
+                  this.ProcurementRequests.push(e)
+                  this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
+                  this.SearchedPRequests.paginator = this.paginator;
+                }
+              }
+
+              
             }
 
           })

@@ -15,6 +15,7 @@ import { useAnimation } from '@angular/animations';
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { ProcReqPendingIFrameComponent } from '../HelpIFrames/ProcReqPendingIFrame/proc-req-pending-iframe/proc-req-pending-iframe.component';
+import { Employee } from '../Shared/Employee';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -35,6 +36,7 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   iRole: string;
+  iDep: string;
 
   iCanViewFlagPro: string = "false";
   canViewFlagPro: string;
@@ -44,6 +46,7 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
 
   ngOnInit() {
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iDep = this.dataService.decodeUserDep(sessionStorage.getItem("token"));
     this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
     this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
 
@@ -60,9 +63,14 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
       this.canViewPenPro = "true";
     }
 
-    this.GetProcurementRequests();
-    console.log(this.ProcurementRequests)
-    console.log(this.SearchedPRequests)
+    if (this.iRole == "BO") {
+      this.GetProcurementRequests();
+      console.log(this.ProcurementRequests)
+      console.log(this.SearchedPRequests)
+    }
+
+    
+   
 
     //console.log(User)
   }
@@ -76,15 +84,26 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
       procurementRequestList.forEach(e => {
         // console.log(e.user.username)
         // console.log(User.username)
+   
         if (e.requisition_Status_ID == 3 && User != e.user.username) {
-          this.ProcurementRequests.push(e)
-          //this.SearchedPRequests.push(e)
+          this.dataService.GetEmployeeByUsername(e.user.username).subscribe(ud => {
+            
+            let userdep: any = ud;
+            if (userdep.department.name == this.iDep) {
+              this.ProcurementRequests.push(e)
+              this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
+              this.SearchedPRequests.paginator = this.paginator;
+              console.log(this.ProcurementRequests)
+            }
+
+              
+          })
         }
       })
 
       //this.ProcurementRequests = [...procurementRequestList];
-      this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
-      this.SearchedPRequests.paginator = this.paginator;
+      //this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
+      //this.SearchedPRequests.paginator = this.paginator;
       //console.log(this.SearchedPRequests[0].requisition_Status_ID)
       if (result) {
         hideloader();
