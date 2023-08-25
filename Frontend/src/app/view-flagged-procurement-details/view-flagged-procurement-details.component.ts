@@ -138,29 +138,11 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
     }
     this.route.paramMap.subscribe({
       next: (paramater) => {
-        
-       this.ProcurementDetailsID = Number(paramater.get("ProcurementDetailsID"));
-        
-       this.dataService.GetProcurementDetailsByID(this.ProcurementDetailsID).subscribe(response => {
-        this.ProcurementDetails = response;
-        console.log(this.ProcurementDetails)
-        console.log(response)
-        let dateChange: any
-        dateChange = new DatePipe('en-ZA');
-         this.ProcurementFormGroup.get("BuyerName")?.setValue(this.ProcurementDetails.buyer_Name);
-         this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.ProcurementDetails.buyer_Email);
-         //consumbleAssets
-         this.ProcurementFormGroup.get("ItemType")?.setValue(this.ProcurementDetails.item_Type);
-         this.getItemDetails(this.ProcurementDetails.item_Type);
-         
-         this.ProcurementFormGroup.get("AccountCode")?.setValue(this.ProcurementDetails.budget_Line.budget_Category.account_Name.toString());
 
         this.ProcurementDetailsID = Number(paramater.get("ProcurementDetailsID"));
 
         this.dataService.GetProcurementDetailsByID(this.ProcurementDetailsID).subscribe(response => {
           this.ProcurementDetails = response;
-          console.log(this.ProcurementDetails)
-          console.log(response)
           let dateChange: any
           dateChange = new DatePipe('en-ZA');
           this.ProcurementFormGroup.get("BuyerName")?.setValue(this.ProcurementDetails.buyer_Name);
@@ -171,53 +153,62 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
 
           this.ProcurementFormGroup.get("AccountCode")?.setValue(this.ProcurementDetails.budget_Line.budget_Category.account_Name.toString());
 
-          //paymentType
-          this.ProcurementFormGroup.get("PaymentType")?.setValue(this.ProcurementDetails.payment_Method.name);
+          this.ProcurementDetailsID = Number(paramater.get("ProcurementDetailsID"));
 
-          //Deposit
-          this.ProcurementFormGroup.get("HasDeposit")?.setValue(this.ProcurementDetails.deposit_Required);
-          this.ProcurementFormGroup.get("HasDeposit")?.disable();
-          console.log(this.ProcurementDetails.deposit_Required)
-          if (this.ProcurementDetails.deposit_Required == true) {
-            this.dataService.GetDepositByID(this.ProcurementDetailsID).subscribe(result => {
-              this.Deposit = result
-              console.log(this.Deposit)
-              this.ProcurementFormGroup.get("DepositAmount")?.setValue(Number(this.Deposit.deposit_Amount));
-              this.ProcurementFormGroup.get("DepositDueDate")?.setValue(dateChange.transform(this.Deposit.deposit_Due_Date, 'MM/dd/y'));
-            })
-          }
-          this.ProcurementFormGroup.get("FullPaymentMade")?.setValue(this.ProcurementDetails.payment_Made);
-          this.ProcurementFormGroup.get("FullPaymentMade")?.disable();
-          if (this.ProcurementDetails.payment_Made == true) {
-            this.dataService.GetFullPaymentMadeByID(this.ProcurementDetailsID).subscribe(result => {
-              this.PaymentMade = result
-              console.log(this.PaymentMade)
-              this.ProcurementFormGroup.get("PaidOnDate")?.setValue(dateChange.transform(this.PaymentMade.paid_On_Date, 'MM/dd/y'));
-              this.GetFiles(this.PaymentMade.receipt_Upload, 0)
-            })
+          this.dataService.GetProcurementDetailsByID(this.ProcurementDetailsID).subscribe(response => {
+            this.ProcurementDetails = response;
+            let dateChange: any
+            dateChange = new DatePipe('en-ZA');
+            this.ProcurementFormGroup.get("BuyerName")?.setValue(this.ProcurementDetails.buyer_Name);
+            this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.ProcurementDetails.buyer_Email);
+            //consumbleAssets
+            this.ProcurementFormGroup.get("ItemType")?.setValue(this.ProcurementDetails.item_Type);
+            this.getItemDetails(this.ProcurementDetails.item_Type);
+
+            this.ProcurementFormGroup.get("AccountCode")?.setValue(this.ProcurementDetails.budget_Line.budget_Category.account_Name.toString());
+
+            //paymentType
+            this.ProcurementFormGroup.get("PaymentType")?.setValue(this.ProcurementDetails.payment_Method.name);
+
+            //Deposit
+            this.ProcurementFormGroup.get("HasDeposit")?.setValue(this.ProcurementDetails.deposit_Required);
+            this.ProcurementFormGroup.get("HasDeposit")?.disable();
+            if (this.ProcurementDetails.deposit_Required == true) {
+              this.dataService.GetDepositByID(this.ProcurementDetailsID).subscribe(result => {
+                this.Deposit = result
+                this.ProcurementFormGroup.get("DepositAmount")?.setValue(Number(this.Deposit.deposit_Amount));
+                this.ProcurementFormGroup.get("DepositDueDate")?.setValue(dateChange.transform(this.Deposit.deposit_Due_Date, 'MM/dd/y'));
+              })
+            }
+            this.ProcurementFormGroup.get("FullPaymentMade")?.setValue(this.ProcurementDetails.payment_Made);
+            this.ProcurementFormGroup.get("FullPaymentMade")?.disable();
+            if (this.ProcurementDetails.payment_Made == true) {
+              this.dataService.GetFullPaymentMadeByID(this.ProcurementDetailsID).subscribe(result => {
+                this.PaymentMade = result
+                this.ProcurementFormGroup.get("PaidOnDate")?.setValue(dateChange.transform(this.PaymentMade.paid_On_Date, 'MM/dd/y'));
+                this.GetFiles(this.PaymentMade.receipt_Upload, 0)
+              })
 
 
-          }
-          this.ProcurementFormGroup.get("ProofOfPayment")?.setValue(this.ProcurementDetails.proof_Of_Payment_Required);
-          this.ProcurementFormGroup.get("ProofOfPayment")?.disable();
-          if (this.ProcurementDetails.proof_Of_Payment_Required == true) {
-            this.dataService.GetProofOfPaymentByID(this.ProcurementDetailsID).subscribe(result => {
-              this.ProofOfPayment = result;
-              console.log(this.ProofOfPayment)
-              this.GetFiles(this.ProofOfPayment.proof_Of_Payment_Doc, 1)
-            })
-          }
+            }
+            this.ProcurementFormGroup.get("ProofOfPayment")?.setValue(this.ProcurementDetails.proof_Of_Payment_Required);
+            this.ProcurementFormGroup.get("ProofOfPayment")?.disable();
+            if (this.ProcurementDetails.proof_Of_Payment_Required == true) {
+              this.dataService.GetProofOfPaymentByID(this.ProcurementDetailsID).subscribe(result => {
+                this.ProofOfPayment = result;
+                this.GetFiles(this.ProofOfPayment.proof_Of_Payment_Doc, 1)
+              })
+            }
 
-          this.ProcurementFormGroup.get("TotalAmount")?.setValue(Number(this.ProcurementDetails.total_Amount));
-          this.ProcurementFormGroup.get("TotalAmountDueDate")?.setValue(dateChange.transform(this.ProcurementDetails.full_Payment_Due_Date, 'MM/dd/y'));
-          this.ProcurementFormGroup.get("Comments")?.setValue(this.ProcurementDetails.comment);
+            this.ProcurementFormGroup.get("TotalAmount")?.setValue(Number(this.ProcurementDetails.total_Amount));
+            this.ProcurementFormGroup.get("TotalAmountDueDate")?.setValue(dateChange.transform(this.ProcurementDetails.full_Payment_Due_Date, 'MM/dd/y'));
+            this.ProcurementFormGroup.get("Comments")?.setValue(this.ProcurementDetails.comment);
+          })
         })
-      })
-    }
-   })
+      }
+    })
 
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
-    console.log(User)
   }
 
   getItemDetails(sItem: string) {
@@ -238,22 +229,30 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
       this.ProcurementFormGroup.get("AssetDescription")?.disable();
     }
     else {
-
+      console.log("test")
+      console.log(this.ProcurementDetailsID)
       this.AssetChecked = true;
       this.ConsumableChecked = false;
       this.dataService.GetProcurementAsset().subscribe(a => {
+        console.log(a)
         a.forEach(b => {
+          console.log(b.procurement_Details_ID)
+          console.log(this.ProcurementDetailsID)
           if (b.procurement_Details_ID == this.ProcurementDetailsID) {
             this.dataService.GetAssetByID(b.asset_ID).subscribe(c => {
               this.ProcurementFormGroup.get("AssetName")?.setValue(c.name);
               this.ProcurementFormGroup.get("AssetDescription")?.setValue(c.description);
+
+              console.log(c.name)
+              console.log(c.description)
             })
 
           }
+          this.ProcurementFormGroup.get("ConsumableItem")?.disable();
+          this.ProcurementFormGroup.get("ConsumableQuantity")?.disable();
         })
       })
-      this.ProcurementFormGroup.get("ConsumableItem")?.disable();
-      this.ProcurementFormGroup.get("ConsumableQuantity")?.disable();
+
     }
   }
 
@@ -262,7 +261,6 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
 
   GetFiles(sfilepath: string, i: number) {
     let sFile = sfilepath;
-    console.log(sFile)
     let FolderCategory = sFile.substring(0, sFile.indexOf("\\"))
     sFile = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
     let ProcurementID = sFile.substring(0, sFile.indexOf("\\"))
@@ -279,7 +277,7 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
   AcceptRequest() {
     this.dataService.UpdateProcurementDetailsStatus(1, this.ProcurementDetails).subscribe({
       next: (response) => {
-        this.dataService.UpdateBudgetLineAmount(this.ProcurementDetails.total_Amount,this.ProcurementDetails.budget_Line).subscribe();
+        this.dataService.UpdateBudgetLineAmount(this.ProcurementDetails.total_Amount, this.ProcurementDetails.budget_Line).subscribe();
         this.ProcurementNotification.notification_Type_ID = 16;
         let transVar: any
         transVar = new DatePipe('en-ZA');
@@ -287,7 +285,6 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
         this.ProcurementNotification.name = this.ProcurementDetails.procurement_Request.name + " has been Approved";
         this.ProcurementNotification.user_ID = this.ProcurementDetails.procurement_Request.user_ID
         this.dataService.ProcurementAddNotification(this.ProcurementNotification).subscribe();
-        console.log(response);
         var action = "APPROVE";
         var title = "APPROVE SUCCESSFUL";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement Details has been <strong style='color:green'> APPROVED </strong> successfully!");
@@ -317,7 +314,6 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
         this.ProcurementNotification.name = this.ProcurementDetails.procurement_Request.name + " has been rejected";
         this.ProcurementNotification.user_ID = this.ProcurementDetails.procurement_Request.user_ID;
         this.dataService.ProcurementAddNotification(this.ProcurementNotification).subscribe();
-        console.log(response);
         var action = "REJECTED";
         var title = "REJECTION SUCCESSFUL";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement Details has been <strong style='color:red'> Rejected </strong> successfully!");
@@ -348,7 +344,7 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
 
 
   openFPDTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }
