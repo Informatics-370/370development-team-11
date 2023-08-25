@@ -74,10 +74,18 @@ export class ViewProcurementDetailsComponent implements OnInit {
   GetProcurementDetails() {
     this.dataService.GetProcurementRequestDetails().subscribe(result => {
       let procurementDetailsList: any[] = result;
-      this.ProcurementRequests = [...procurementDetailsList];
-      this.SearchedPRequests = [...procurementDetailsList];
-      this.dataSource = new MatTableDataSource(this.ProcurementRequests.filter((value, index, self) => self.map(x => x.procurement_Details_ID).indexOf(value.procurement_Details_ID) == index));
-      this.dataSource.paginator = this.paginator
+      procurementDetailsList.forEach(e => {
+        if (e.procurement_Status.name != "Flagged" && e.procurement_Status.name != "Rejected") {
+          this.ProcurementRequests.push(e)
+          this.SearchedPRequests = [...procurementDetailsList];
+          this.dataSource = new MatTableDataSource(this.ProcurementRequests.filter((value, index, self) => self.map(x => x.procurement_Details_ID).indexOf(value.procurement_Details_ID) == index));
+          this.dataSource.paginator = this.paginator
+        }
+      })
+
+
+      /*this.ProcurementRequests = [...procurementDetailsList];*/
+      
 
 
       if (result) {
