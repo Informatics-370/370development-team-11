@@ -66,7 +66,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Budget_Line> GetBudgetLineAsync(string accountCode)
         {
-            IQueryable<Budget_Line> query = _dbContext.Budget_Line.Where(c => c.Account_Code == accountCode).Include(c => c.Budget_Category).Include(b => b.Budget_Allocation).ThenInclude(a => a.Department);
+            IQueryable<Budget_Line> query = _dbContext.Budget_Line.Where(c => c.Budget_Category.Account_Code == accountCode).Include(c => c.Budget_Category).Include(b => b.Budget_Allocation).ThenInclude(a => a.Department);
             return await query.FirstOrDefaultAsync();
         }
 
@@ -95,7 +95,7 @@ namespace ProcionAPI.Models.Repositories
 
         public async Task<Budget_Line[]> AddBudgetLineAsync(Budget_Line budgetLine)
         {
-            Budget_Line existingLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(d => d.Budget_Category.Account_Name == budgetLine.Budget_Category.Account_Name && d.Month == budgetLine.Month && d.Budget_ID == budgetLine.Budget_ID);
+            Budget_Line existingLine = await _dbContext.Budget_Line.FirstOrDefaultAsync(d => d.Budget_Category.Account_Name == budgetLine.Budget_Category.Account_Name && d.Month == budgetLine.Month && d.Budget_ID == budgetLine.Budget_ID && d.Budget_Category.Account_Code == budgetLine.Budget_Category.Account_Code);
             
             if (existingLine != null)
             {
@@ -129,7 +129,6 @@ namespace ProcionAPI.Models.Repositories
         {
             var budgetline = await _dbContext.Budget_Line.FindAsync(budget_Line.BudgetLineId);
 
-            budgetline.Account_Code = budget_Line.Account_Code;
             budgetline.ActualAmt = budget_Line.ActualAmt;
             budgetline.BudgetAmt = budget_Line.BudgetAmt;
             budgetline.Budget_ID = budget_Line.Budget_ID;
@@ -174,6 +173,20 @@ namespace ProcionAPI.Models.Repositories
             if(ExistingAllocation != null)
             {
                 return ExistingAllocation;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Budget_Line> BudgetLineValidationAsync(string accCode, string budgetCatName, string month, int blID)
+        {
+            Budget_Line ExistingLine = await _dbContext.Budget_Line.Include(c => c.Budget_Category).FirstOrDefaultAsync(d => d.Budget_Category.Account_Name == budgetCatName && d.Month == month && d.Budget_ID == blID && d.Budget_Category.Account_Code == accCode);
+            if (ExistingLine != null)
+            {
+                return ExistingLine;
             }
 
             else
@@ -261,6 +274,48 @@ namespace ProcionAPI.Models.Repositories
         public async Task<bool> SaveChangesAsync()
         {
             return await _dbContext.SaveChangesAsync() > 0;
+        }
+
+        public async Task<Budget_Line> BudgetAllocationDeleteBudgetLineValidationAsync(int id)
+        {
+            Budget_Line ExistingBL = await _dbContext.Budget_Line.FirstOrDefaultAsync(x => x.Budget_ID == id);
+            if (ExistingBL != null)
+            {
+                return ExistingBL;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Budget_Line> BudgetCategoryDeleteBudgetLineValidationAsync(int id)
+        {
+            Budget_Line ExistingBL = await _dbContext.Budget_Line.FirstOrDefaultAsync(x => x.Category_ID == id);
+            if (ExistingBL != null)
+            {
+                return ExistingBL;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Procurement_Details> BudgetLineDeleteProcurementDetailsValidationAsync(int id)
+        {
+            Procurement_Details ExistingPD = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.BudgetLineId == id);
+            if (ExistingPD != null)
+            {
+                return ExistingPD;
+            }
+
+            else
+            {
+                return null;
+            }
         }
     }
 }

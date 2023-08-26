@@ -187,6 +187,7 @@ export class SignOffRequestComponent {
 
   category: BudgetCategory = {
     category_ID: 0,
+    account_Code: '',
     account_Name: '',
     description: ''
   }
@@ -206,7 +207,6 @@ export class SignOffRequestComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: '',
     budget_Category: this.category,
     month: '',
     budgetAmt: 0,

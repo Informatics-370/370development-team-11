@@ -94,7 +94,7 @@ namespace ProcionAPI.Models.Repositories
             var query = ProcurementRequestDetails.Select((R, index) => new VendorSpentReport
             {
                 SupplierName = R.Procurement_Request.Vendor.Name,
-                AccountCode = R.Budget_Line.Account_Code,
+                AccountCode = R.Budget_Line.Budget_Category.Account_Code,
                 AccountName = R.Budget_Line.Budget_Category.Account_Name,
                 BudgetDepartment = R.Employee.Department.Name,
                 BranchName = R.Employee.Branch.Name,

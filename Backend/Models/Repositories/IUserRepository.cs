@@ -10,6 +10,7 @@ namespace ProcionAPI.Models.Repositories {
         Task<Employee> GetEmployeeByUserNameAsync(string username);
         Task<User> GetUserAsync(int userID);
         Task<User> GetUserByUserNameAsync(string username);
+        Task<User> GetUserByRoleAsync(string role);
         Task<Admin[]> GetAllAdminsAsync();
         Task<Admin> GetAdminAsync(int userID);
         Task<Admin> GetAdminByUserNameAsync(string username);
@@ -27,6 +28,7 @@ namespace ProcionAPI.Models.Repositories {
         Task<User> ResetNumNotifications(string username);
         Task<AuditLog[]> AddLogAsync(AuditLog LogAdd);
         Task<AuditLog[]> GetAllLogsAsync();
+        Task<Employee> GetEmployeeByDepartmentAsync(string dep);
 
         //---------------------------------------------------------------------------VALIDATION------------------------------------------------------------------------------------
         Task<User> EditUserValidationAsync(string name, int id);

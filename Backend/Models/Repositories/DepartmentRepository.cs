@@ -81,5 +81,33 @@ namespace ProcionAPI.Models.Repositories
             return await _dbContext.SaveChangesAsync() > 0;
         }
 
+        public async Task<Employee> DepartmentDeleteUserValidationAsync(int id)
+        {
+            Employee ExistingUser = await _dbContext.Employee.FirstOrDefaultAsync(x => x.Department_ID == id);
+            if (ExistingUser != null)
+            {
+                return ExistingUser;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Budget_Allocation> DepartmentDeleteBudgetAllocationValidationAsync(int id)
+        {
+            Budget_Allocation ExistingDep = await _dbContext.Budget_Allocation.FirstOrDefaultAsync(x => x.Department_ID == id);
+            if (ExistingDep != null)
+            {
+                return ExistingDep;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
     }
 }

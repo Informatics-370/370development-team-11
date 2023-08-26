@@ -87,8 +87,7 @@ export class ReportsMainViewComponent implements OnInit {
   myBar: any;
 
   barChart: any;
-  //splitButtons = document.getElementsByClassName('gui-split-button')
-  //popupButtons = document.getElementsByClassName('gui-popup-button')
+
   ngOnInit(): void {
     this.ReportService.filter$.subscribe(filter => {
       this.filter = filter;
@@ -108,13 +107,7 @@ export class ReportsMainViewComponent implements OnInit {
       this.initializeBarChart();
       this.initializeLineChart();
     });
-    //this.ReportService.getBEESpendReport().subscribe(result => {
-    // this.BEESpendReportDetails = result;
     this.convertImageToBase64()
-    // this.columnChartbasestring = this.getColumnChart(this.BEESpendReportDetails);
-    // this.pieChartBaseString = this.getPieChart(this.BEESpendReportDetails);
-    // console.log(this.columnChartbasestring.toBase64Image('image/png'))
-    // })
     this.dialogClosedSubscriptionConsumableManagement = this.ReportService.dialogClosed$.subscribe(() => {
       this.generateConsumableManagementReport();
     });
@@ -320,7 +313,7 @@ export class ReportsMainViewComponent implements OnInit {
               { text: 'Budgeted Amount', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
               { text: 'Variance', alignment: 'center', color: '#ffffff', fillColor: '#244688' }
             ],
-            ...ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[0]).map(p => ([{ text: p.budget_Allocation.department.name, fillColor: '#b4c6e7' }, { text: p.account_Code, fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.actualAmt), 'R'), fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.budgetAmt), 'R'), fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.variance), 'R'), fillColor: '#b4c6e7' }])),
+            ...ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[0]).map(p => ([{ text: p.budget_Allocation.department.name, fillColor: '#b4c6e7' }, { text: p.budget_Category.account_Code, fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.actualAmt), 'R'), fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.budgetAmt), 'R'), fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.variance), 'R'), fillColor: '#b4c6e7' }])),
             [{ text: 'Total Amount for ' + uniqueDepartments[0], colSpan: 2, fillColor: '#d9e2f3' }, {}, { text: CurrencyTransform.transform(Number(ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[0]).reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[0]).reduce((sum, p) => sum + Number(p.budgetAmt), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[0]).reduce((sum, p) => sum + Number(p.variance), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }],
             [{ text: ' ', colSpan: 5, fillColor: "#244688" }, {}, {}, {}]],
 
@@ -355,7 +348,7 @@ export class ReportsMainViewComponent implements OnInit {
                 headerRows: 0,
                 widths: [62, 54, 96, 96, 50],
                 body: [
-                  ...ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[i]).map(p => ([{ text: p.budget_Allocation.department.name, fillColor: '#b4c6e7' }, { text: p.account_Code, fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.actualAmt), 'R'), fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.budgetAmt), 'R'), fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.variance), 'R'), fillColor: '#b4c6e7' }])),
+                  ...ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[i]).map(p => ([{ text: p.budget_Allocation.department.name, fillColor: '#b4c6e7' }, { text: p.budget_Category.account_Code, fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.actualAmt), 'R'), fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.budgetAmt), 'R'), fillColor: '#b4c6e7' }, { text: CurrencyTransform.transform(Number(p.variance), 'R'), fillColor: '#b4c6e7' }])),
                 ],
               },
               layout: {
@@ -440,7 +433,7 @@ export class ReportsMainViewComponent implements OnInit {
             headerRows: 0,
             widths: [125, 96, 96, 50],
             body: [
-              [{ text: 'Total Amount for all Departments', alignment: 'center', color: 'black', fillColor: '#d9e2f3' },{ text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)), 'R'), alignment: 'center', color: 'black', fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.budgetAmt), 0).toFixed(2)), 'R'), alignment: 'center', color: 'black', fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.variance), 0).toFixed(2)), 'R'), alignment: 'center', color: 'black', fillColor: '#d9e2f3' }],
+              [{ text: 'Total Amount for all Departments', alignment: 'center', color: 'black', fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)), 'R'), alignment: 'center', color: 'black', fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.budgetAmt), 0).toFixed(2)), 'R'), alignment: 'center', color: 'black', fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.variance), 0).toFixed(2)), 'R'), alignment: 'center', color: 'black', fillColor: '#d9e2f3' }],
             ],
           },
           layout: {
@@ -570,7 +563,7 @@ export class ReportsMainViewComponent implements OnInit {
             position: 'bottom',
             labels: {
               font: {
-                  size: 16,
+                size: 16,
               },
               color: 'black'
             }
@@ -579,7 +572,7 @@ export class ReportsMainViewComponent implements OnInit {
             anchor: 'end',
             align: 'top',
             color: 'black',
-            font: {size: 16},
+            font: { size: 16 },
             formatter: (value, ctx) => {
               const datapoints = ctx.chart.data.datasets[0].data
               return "R " + Number(value).toFixed(2);
@@ -599,19 +592,19 @@ export class ReportsMainViewComponent implements OnInit {
             stacked: false
           },
           y: {
-            title:  
-              {
-                text: "Business Unit Allocation Pricing (R)",
-                display: true,
-                font: { weight: 'bold', size: 20 },
-                color: 'black'
-              },
-              beginAtZero: true,
+            title:
+            {
+              text: "Business Unit Allocation Pricing (R)",
+              display: true,
+              font: { weight: 'bold', size: 20 },
+              color: 'black'
+            },
+            beginAtZero: true,
             type: 'linear',
             stacked: false
           }
         }
-      }, 
+      },
       plugins: [ChartDataLabels]
     });
     this.businessUnitAllocationChartImageBase64 = this.chart.toBase64Image();
@@ -797,7 +790,7 @@ export class ReportsMainViewComponent implements OnInit {
             headerRows: 0,
             widths: [125, 96, 96, 50, 50, 60],
             body: [
-              [{ text: 'Total Amount for all Categories', alignment: 'center', color: 'black', fillColor: '#d9e2f3' },{ text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.budgetAmt), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.variance), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: '', fillColor: '#d9e2f3' }],
+              [{ text: 'Total Amount for all Categories', alignment: 'center', color: 'black', fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.budgetAmt), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: CurrencyTransform.transform(Number(ReportData.reduce((sum, p) => sum + Number(p.variance), 0).toFixed(2)), 'R'), fillColor: '#d9e2f3' }, { text: '', fillColor: '#d9e2f3' }],
             ],
           },
           layout: {
@@ -923,7 +916,7 @@ export class ReportsMainViewComponent implements OnInit {
               position: 'bottom',
               labels: {
                 font: {
-                    size: 16
+                  size: 16
                 },
                 color: 'black'
               }
@@ -932,7 +925,7 @@ export class ReportsMainViewComponent implements OnInit {
               anchor: 'end',
               align: 'top',
               color: 'black',
-              font: {size: 16},
+              font: { size: 16 },
               formatter: (value, ctx) => {
                 const datapoints = ctx.chart.data.datasets[0].data
                 return "R " + Number(value).toFixed(2);
@@ -952,7 +945,7 @@ export class ReportsMainViewComponent implements OnInit {
               stacked: false
             },
             y: {
-              title:  
+              title:
               {
                 text: "Total Category Expense (R)",
                 display: true,
@@ -1021,7 +1014,7 @@ export class ReportsMainViewComponent implements OnInit {
               position: 'bottom',
               labels: {
                 font: {
-                    size: 16
+                  size: 16
                 },
                 color: 'black'
               }
@@ -1030,7 +1023,7 @@ export class ReportsMainViewComponent implements OnInit {
               anchor: 'end',
               align: 'top',
               color: 'black',
-              font: {size: 16},
+              font: { size: 16 },
               formatter: (value, ctx) => {
                 const datapoints = ctx.chart.data.datasets[0].data
                 return "R " + Number(value).toFixed(2);
@@ -1050,26 +1043,26 @@ export class ReportsMainViewComponent implements OnInit {
             },
             y: {
               title:
-            {
-              text: "Monthly Expenditure Price (R)",
-              display: true,
-              font: { weight: 'bold', size: 20 },
-              color: 'black'
-            },
-            beginAtZero: true,
+              {
+                text: "Monthly Expenditure Price (R)",
+                display: true,
+                font: { weight: 'bold', size: 20 },
+                color: 'black'
+              },
+              beginAtZero: true,
               type: 'linear'
             }
           }
-          
+
         },
         plugins: [ChartDataLabels]
       });
       this.budgetVarianceLineChartImageBase64 = this.lineChart.toBase64Image();
       //setTimeout(() => {
 
-       
-        //this.lineChart.destroy();
-        // this.showCanvas = false;  // Hide the canvas
+
+      //this.lineChart.destroy();
+      // this.showCanvas = false;  // Hide the canvas
       //}, 500);
 
 
@@ -1324,9 +1317,7 @@ export class ReportsMainViewComponent implements OnInit {
 
   openReportsIFrameTab(): void {
     const dialogRef = this.dialog.open(ReportsIFrameComponent, {
-      // width: '800px', // Set the desired width
-      // height: '600px', // Set the desired height
-      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+      panelClass: 'iframe-dialog'
     });
 
     dialogRef.afterClosed().subscribe(result => {

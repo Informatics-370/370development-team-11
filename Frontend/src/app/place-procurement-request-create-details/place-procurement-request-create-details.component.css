@@ -1,97 +1,98 @@
 .mat-expansion-panel:not([class*=mat-elevation-z]) {
-    box-shadow:none!important;
+  box-shadow: none !important;
 
 }
 
 .mat-expansion-panel-header {
-    padding: 0;
- 
-    margin-left: 1%;
-} 
+  padding: 0;
 
- .mat-expansion-panel-body {
-    padding:0!important;
+  margin-left: 1%;
+}
+
+.mat-expansion-panel-body {
+  padding: 0 !important;
 }
 
 .file-upload {
-    background-color: #244688;
-    color: white;
-    
+  background-color: #244688;
+  color: white;
+
 }
 
 
 .mat-expansion-panel-header[aria-disabled=true] {
-color: black;
+  color: black;
 }
 
 .table {
-    margin-bottom: 0px;
-    width: 610px;
+  margin-bottom: 0px;
+  width: 610px;
 }
 
 td {
-    width: 400px;
+  width: 400px;
 }
 
 
 mat-error {
-    display: none !important;
+  display: none !important;
 }
 
 mat-error:first-child {
-    display: block !important;
+  display: block !important;
 }
 
-mat-form-field{
-    width:350px
+mat-form-field {
+  width: 350px
 }
 
 label {
-    margin-right: 20px;
-    font-weight: 500;
-    
+  margin-right: 20px;
+  font-weight: 500;
+
 }
 
 
-.mat-expansion-panel-body[_ngcontent-xds-c113], .ng-tns-c109-28[_ngcontent-xds-c113] {
-    width: 740px;
+.mat-expansion-panel-body[_ngcontent-xds-c113],
+.ng-tns-c109-28[_ngcontent-xds-c113] {
+  width: 740px;
 }
 
 .mat-mdc-select {
-    width: 80%!important;
+  width: 80% !important;
 }
 
 
- .mat-expansion-panel:not([class*=mat-elevation-z]) {
-    box-shadow:none!important;
+.mat-expansion-panel:not([class*=mat-elevation-z]) {
+  box-shadow: none !important;
 
 }
 
 .mat-expansion-panel-body {
-    padding:0!important;
-    
+  padding: 0 !important;
+
 }
 
-.col-7{
-    display: inline-flex;
-    align-items: center;
+.col-7 {
+  display: inline-flex;
+  align-items: center;
 }
 
-.col-5{
-    text-align: left;
-    align-self: center;
+.col-5 {
+  text-align: left;
+  align-self: center;
 }
 
-.row{
-    margin: 10px;
-    height: 70px;
+.row {
+  margin: 10px;
+  height: 70px;
 }
 
 #CBStyle {
   font-weight: 500;
 }
 
-:host ::ng-deep  .mat-mdc-optgroup-label:first-child{
+::ng-deep .mat-mdc-optgroup-label:first-child {
   color: white;
   background-color: #244688;
 }
@@ -99,80 +100,77 @@ label {
 
 
 .wrapper {
-   
-    /*width: 100%;*/
-    height: 100%;
-  }
-  
-  button {
-    transform: translate(-0%, -0%);
-    width: 150px;
-    height: 42px;
-    font-size: 14px;
-    font-weight: bold;
-    border: 3px solid #94CC5B;
-    border-radius: 5px;
-    background: #fff;
-    color: #94CC5B;
-    cursor: pointer;
-    overflow: hidden;
-    transition: all .35s;
-  }
-  
-    button:hover {
-      background: #94CC5B;
-      color: #fff;
-    }
-  
-    button span {
-      opacity: 1;
-      visibility: visible;
-      transition: all .35s;
-    }
-  
-  .success {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    border-radius: 50%;
-    z-index: 1;
-    opacity: 0;
-    visibility: hidden;
-    transition: all .35s;
-  }
-  
-    .success svg {
-      width: 20px;
-      height: 20px;
-      fill: yellowgreen;
-      transform-origin: 0% 0%;
-      transform: translateY(-0%) rotate(0deg) scale(0);
-      transition: all .35s;
-    }
-  
-  button.is_active {
-    width: 40px;
-    height: 40px;
-    border-radius: 40px;
-  }
-  
-    button.is_active .success {
-      opacity: 1;
-      visibility: visible;
-    }
-  
-      button.is_active .success svg {
-        margin-top: 50%;
-        transform: translateY(-50%) rotate(720deg) scale(1);
-      }
-  
-    button.is_active span {
-      opacity: 0;
-      visibility: hidden;
-    }
-  
 
- 
+  /*width: 100%;*/
+  height: 100%;
+}
+
+button {
+  transform: translate(-0%, -0%);
+  width: 150px;
+  height: 42px;
+  font-size: 14px;
+  font-weight: bold;
+  border: 3px solid #94CC5B;
+  border-radius: 5px;
+  background: #fff;
+  color: #94CC5B;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all .35s;
+}
+
+button:hover {
+  background: #94CC5B;
+  color: #fff;
+}
+
+button span {
+  opacity: 1;
+  visibility: visible;
+  transition: all .35s;
+}
+
+.success {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .35s;
+}
+
+.success svg {
+  width: 20px;
+  height: 20px;
+  fill: yellowgreen;
+  transform-origin: 0% 0%;
+  transform: translateY(-0%) rotate(0deg) scale(0);
+  transition: all .35s;
+}
+
+button.is_active {
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+}
+
+button.is_active .success {
+  opacity: 1;
+  visibility: visible;
+}
+
+button.is_active .success svg {
+  margin-top: 50%;
+  transform: translateY(-50%) rotate(720deg) scale(1);
+}
+
+button.is_active span {
+  opacity: 0;
+  visibility: hidden;
+}

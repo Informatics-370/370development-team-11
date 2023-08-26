@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataService } from '../DataService/data-service';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,6 +9,8 @@ import { DeleteBudgetLineComponent } from '../delete-budget-line/delete-budget-l
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { BudgetLineIFrameComponent } from '../HelpIFrames/BudgetLineIFrame/budget-line-iframe/budget-line-iframe.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -34,7 +36,7 @@ export class ViewBudgetLinesComponent {
   filters: any[] = ["None", "Category", "Month"]
   searchWord: string = "None";
 
-  constructor(private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private dataService: DataService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer) { }
 
   OnInPutChange() {
     const Searchterm = this.searchTerm.toLowerCase();
@@ -114,14 +116,36 @@ export class ViewBudgetLinesComponent {
 
 
 
-  DeleteBudgetLine(id2: Number) {
-    const confirm = this.dialog.open(DeleteBudgetLineComponent, {
-      disableClose: true,
-      data: { id2 }
-    });
-    confirm.afterClosed().subscribe(result => {
-      this.ngOnInit()
-    });
+  DeleteBudgetLine(id2: Number, name: String) {
+    this.dataService.BudgetLineDeleteProcurementDetailsValidation(id2).subscribe(r => {
+      if (r == null) {
+        const confirm = this.dialog.open(DeleteBudgetLineComponent, {
+          disableClose: true,
+          data: { id2 }
+        });
+
+        confirm.afterClosed().subscribe(result => {
+          this.ngOnInit()
+        });
+      }
+      else {
+        var action = "ERROR";
+        var title = "ERROR: Budget Line In Use";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Line <strong>" + name + " <strong style='color:red'>IS ASSOCIATED WITH A PROCUREMENT REQUEST!</strong><br> Please remove the budget line from the procurement request to continue with deletion.");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 4000;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
+      }
+    })
+
+    
   }
 
 

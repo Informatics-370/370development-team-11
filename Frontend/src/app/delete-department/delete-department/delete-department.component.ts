@@ -69,7 +69,6 @@ export class DeleteDepartmentComponent implements OnInit{
             setTimeout(() => {
               this.dialogRef.close();
               this.route.navigate(['/ViewDepartment'], { queryParams: { refresh: true } });
-              location.reload();
             }, 1750);
           }
         })

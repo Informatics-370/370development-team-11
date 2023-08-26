@@ -312,6 +312,38 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
         }
 
+        [HttpGet]
+        [Route("GetProcurementRequestDetailsFD")]
+        public async Task<IActionResult> GetProcurementRequestDetailsFD()
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementRequestDetailsFDAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetProcurementRequestDetailsMD")]
+        public async Task<IActionResult> GetProcurementRequestDetailsMD()
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementRequestDetailsMDAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
 
         [HttpGet]
         [Route("GetProcurementDetailsByID/{ProcurementDetailsID}")]

@@ -11,6 +11,9 @@ import { DatePipe } from '@angular/common';
 
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -35,6 +38,7 @@ export class EditBudgetLineComponent {
 
   category: BudgetCategory = {
     category_ID: 0,
+    account_Code: '',
     account_Name: '',
     description: ''
   }
@@ -54,7 +58,6 @@ export class EditBudgetLineComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: '',
     budget_Category: this.category,
     month: '2023-05-07',
     budgetAmt: 0,
@@ -68,12 +71,12 @@ export class EditBudgetLineComponent {
     action: "",
     actionTime: new Date(),
   }
-  Months = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+  Months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   categories: BudgetCategory[] = []
   budgetLineForm: FormGroup = new FormGroup({});
   CatInUse: String;
 
-  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private route: ActivatedRoute, private dataService: DataService, private formBuilder: FormBuilder, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -84,7 +87,6 @@ export class EditBudgetLineComponent {
     this.GetCategories();
     this.budgetLineForm = this.formBuilder.group({
       category_ID: ['', [Validators.required]],
-      account_Code: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8), Validators.pattern("^[0-9 ,]+$")]],
       month: ['', [Validators.required]],
       budgetAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],
       actualAmt: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(12), Validators.pattern("^[0-9]+$")]],
@@ -98,10 +100,11 @@ export class EditBudgetLineComponent {
     this.dataService.GetBudgetLine(this.id2).subscribe((data: any) => {
       this.budgetLine = data;
       console.log(this.budgetLine)
+      this.CatInUse = this.budgetLine.budget_Category.account_Name;
 
       this.budgetLineForm.patchValue({
         category_ID: this.budgetLine.category_ID,
-        account_Code: this.budgetLine.account_Code,
+        account_Code: this.budgetLine.budget_Category.account_Code,
         month: this.budgetLine.month,
         budgetAmt: this.budgetLine.budgetAmt,
         actualAmt: this.budgetLine.actualAmt
@@ -124,28 +127,187 @@ export class EditBudgetLineComponent {
 
   onSubmit() {
     this.budgetLine.category_ID = this.budgetLineForm.get('category_ID')?.value;
-    this.budgetLine.account_Code = this.budgetLineForm.get('account_Code')?.value;
     this.budgetLine.month = this.budgetLineForm.get('month')?.value;
     this.budgetLine.budgetAmt = this.budgetLineForm.get('budgetAmt')?.value;
     this.budgetLine.actualAmt = this.budgetLineForm.get('actualAmt')?.value;
     this.budgetLine.variance = Number(this.budgetLine.budgetAmt) - Number(this.budgetLine.actualAmt);
-    console.log(this.budgetLine);
 
-    this.dataService.EditBudgetLine(this.id2, this.budgetLine).subscribe(result => {
-      document.getElementById('AnimationBtn').classList.toggle("is_active");
-      document.getElementById('cBtn').style.display = "none";
+    this.dataService.GetBudgetCategory(this.budgetLine.category_ID).subscribe(re => {
+      var cat: any = re;
+      console.log(this.budgetLine.budget_Category.account_Code)
+      console.log(cat)
 
-      this.log.action = "Edited Budget Line for: " + this.budgetLine.budget_Category.account_Name;
-      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-      let test: any
-      test = new DatePipe('en-ZA');
-      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-      this.dataService.AuditLogAdd(this.log).subscribe({
-        next: (Log) => {
-          this.router.navigate(['/ViewBudgetLines', this.id]);
+      this.dataService.BudgetLineValidation(cat.account_Code.toString(), cat.account_Name, this.budgetLine.month, Number(this.route.snapshot.paramMap.get('id'))).subscribe(r => {
+        console.log(r)
+        if (r == null) {
+
+          this.dataService.EditBudgetLine(this.id2, this.budgetLine).subscribe(result => {
+            document.getElementById('AnimationBtn').classList.toggle("is_active");
+            document.getElementById('cBtn').style.display = "none";
+
+            this.log.action = "Edited Budget Line for: " + this.budgetLine.budget_Category.account_Name;
+            this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+            let test: any
+            test = new DatePipe('en-ZA');
+            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+            this.dataService.AuditLogAdd(this.log).subscribe({
+              next: (Log) => {
+                var action = "Update";
+                var title = "UPDATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Line: <strong>" + cat.account_Name + "</strong> for month: " + this.budgetLine.month + " has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  this.router.navigate(['/ViewBudgetLines', this.id]);
+                  dialogRef.close();
+                }, duration);
+
+              }
+            })
+          });
+        }
+        else if (r.category_ID == this.budgetLine.category_ID && r.budget_Category.account_Code == this.budgetLine.budget_Category.account_Code && r.month == this.budgetLine.month && r.budgetAmt == this.budgetLine.budgetAmt &&
+          r.actualAmt == this.budgetLine.actualAmt && r.budgetLineId == Number(this.route.snapshot.paramMap.get('id'))) {
+          var action = "NOTIFICATION";
+          var title = "NOTIFICATION: NO CHANGES MADE";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to Budget Line: <strong>" + cat.account_Name + "</strong> for month: <strong>" + this.budgetLine.month + "</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            this.router.navigate(['/ViewBudgetLines', this.id]);
+            dialogRef.close();
+          }, duration);
+        }
+        else if (r.category_ID == this.budgetLine.category_ID && r.budget_Category.account_Code == this.budgetLine.budget_Category.account_Code && r.month == this.budgetLine.month && r.budgetAmt != this.budgetLine.budgetAmt &&
+          r.actualAmt == this.budgetLine.actualAmt && r.budgetLineId == Number(this.route.snapshot.paramMap.get('id'))) {
+          this.dataService.EditBudgetLine(this.id2, this.budgetLine).subscribe(result => {
+            document.getElementById('AnimationBtn').classList.toggle("is_active");
+            document.getElementById('cBtn').style.display = "none";
+
+            this.log.action = "Edited Budget Line for: " + this.budgetLine.budget_Category.account_Name;
+            this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+            let test: any
+            test = new DatePipe('en-ZA');
+            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+            this.dataService.AuditLogAdd(this.log).subscribe({
+              next: (Log) => {
+                next: (Log) => {
+                  var action = "Update";
+                  var title = "UPDATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Line: <strong>" + cat.account_Name + "</strong> for month: " + this.budgetLine.month + " has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
+
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewBudgetLines', this.id]);
+                    dialogRef.close();
+                  }, duration);
+
+                }
+              }
+            })
+          });
+        }
+        else if (r.category_ID == this.budgetLine.category_ID && r.budget_Category.account_Code == this.budgetLine.budget_Category.account_Code && r.month == this.budgetLine.month && r.budgetAmt == this.budgetLine.budgetAmt &&
+          r.actualAmt != this.budgetLine.actualAmt && r.budgetLineId == Number(this.route.snapshot.paramMap.get('id'))) {
+          this.dataService.EditBudgetLine(this.id2, this.budgetLine).subscribe(result => {
+            document.getElementById('AnimationBtn').classList.toggle("is_active");
+            document.getElementById('cBtn').style.display = "none";
+
+            this.log.action = "Edited Budget Line for: " + this.budgetLine.budget_Category.account_Name;
+            this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+            let test: any
+            test = new DatePipe('en-ZA');
+            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+            this.dataService.AuditLogAdd(this.log).subscribe({
+              next: (Log) => {
+                next: (Log) => {
+                  var action = "Update";
+                  var title = "UPDATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Line: <strong>" + cat.account_Name + "</strong> for month: " + this.budgetLine.month + " has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
+
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewBudgetLines', this.id]);
+                    dialogRef.close();
+                  }, duration);
+
+                }
+              }
+            })
+          });
+        }
+
+        else if (r.category_ID == this.budgetLine.category_ID && r.budget_Category.account_Code == this.budgetLine.budget_Category.account_Code && r.month == this.budgetLine.month && r.budgetAmt != this.budgetLine.budgetAmt &&
+          r.actualAmt == this.budgetLine.actualAmt && r.budgetLineId == Number(this.route.snapshot.paramMap.get('id'))) {
+          this.dataService.EditBudgetLine(this.id2, this.budgetLine).subscribe(result => {
+            document.getElementById('AnimationBtn').classList.toggle("is_active");
+            document.getElementById('cBtn').style.display = "none";
+
+            this.log.action = "Edited Budget Line for: " + this.budgetLine.budget_Category.account_Name;
+            this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+            let test: any
+            test = new DatePipe('en-ZA');
+            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+            this.dataService.AuditLogAdd(this.log).subscribe({
+              next: (Log) => {
+                next: (Log) => {
+                  var action = "Update";
+                  var title = "UPDATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Line: <strong>" + cat.account_Name + "</strong> for month: " + this.budgetLine.month + " has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
+
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewBudgetLines', this.id]);
+                    dialogRef.close();
+                  }, duration);
+
+                }
+              }
+            })
+          });
+        }
+        else {
+          var action = "ERROR";
+          var title = "ERROR: Budget Line Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A Budget Line for: <strong>" + cat.account_Name + " for the month: <strong>" + this.budgetLine.month + " <strong style='color:red'> ALREADY EXISTS!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
         }
       })
-    });
+    })
   }
 
   onCancel() {
@@ -159,7 +321,7 @@ export class EditBudgetLineComponent {
 
 
   openEditBLTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

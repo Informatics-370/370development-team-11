@@ -362,7 +362,25 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
         public async Task<Procurement_Details[]> GetProcurementRequestDetailsAsync()
         {
-            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit).Include(x => x.Procurement_Request).ThenInclude(x => x.Vendor).Include(x => x.Sign_Off_Status).Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line);
+            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit).Include(x => x.Employee).ThenInclude(x => x.User).Include(x => x.Procurement_Request).ThenInclude(x => x.Vendor).Include(x => x.Sign_Off_Status).Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line);
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Procurement_Details[]> GetProcurementRequestDetailsFDAsync()
+        {
+            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit).Include(x => x.Employee).ThenInclude(x => x.User).Include(x => x.Procurement_Request)
+                .ThenInclude(x => x.Vendor).Include(x => x.Sign_Off_Status).Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line)
+                .Where(x => x.Total_Amount > 80000 && x.Total_Amount <= 150000);
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Procurement_Details[]> GetProcurementRequestDetailsMDAsync()
+        {
+            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit).Include(x => x.Employee).ThenInclude(x => x.User).Include(x => x.Procurement_Request)
+                .ThenInclude(x => x.Vendor).Include(x => x.Sign_Off_Status).Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line)
+                .Where(x => x.Total_Amount > 150000);
 
             return await query.ToArrayAsync();
         }
@@ -748,7 +766,6 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         {
             var budgetline = await _dbContext.Budget_Line.FindAsync(budget_Line.BudgetLineId);
 
-            budgetline.Account_Code = budget_Line.Account_Code;
             budgetline.ActualAmt = budget_Line.ActualAmt + ActualAmount;
             budgetline.BudgetAmt = budget_Line.BudgetAmt;
             budgetline.Budget_ID = budget_Line.Budget_ID;

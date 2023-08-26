@@ -319,6 +319,22 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
+        [Route("GetEmployeeByDepartment/{dep}")]
+        public async Task<IActionResult> GetEmployeeByDepartment(string dep)
+        {
+            try
+            {
+                var result = await _UserRepository.GetEmployeeByDepartmentAsync(dep);
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
+
+        [HttpGet]
         [Route("GetAdminByEmail/{Email}")]
         public async Task<IActionResult> GetAdminByEmail(string Email)
         {
@@ -405,6 +421,23 @@ namespace ProcionAPI.Controllers
             try
             {
                 var result = await _UserRepository.GetUserByUserNameAsync(username);
+                if (result == null) return NotFound("User does not exist. You need to create it first");
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetUserByRole/{role}")]
+        public async Task<IActionResult> GetUserByRole(string role)
+        {
+            try
+            {
+                var result = await _UserRepository.GetUserByRoleAsync(role);
                 if (result == null) return NotFound("User does not exist. You need to create it first");
 
                 return Ok(result);

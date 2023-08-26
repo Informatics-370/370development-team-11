@@ -192,6 +192,7 @@ export class UploadPayementFileComponent {
 
   category: BudgetCategory = {
     category_ID: 0,
+    account_Code: '',
     account_Name: '',
     description: ''
   }
@@ -211,7 +212,6 @@ export class UploadPayementFileComponent {
     category_ID: 0,
     budget_Allocation: this.budgetAllocation,
     budget_ID: 0,
-    account_Code: '',
     budget_Category: this.category,
     month: '',
     budgetAmt: 0,
@@ -388,7 +388,7 @@ export class UploadPayementFileComponent {
         this.pop.procurement_Details.procurement_Request.requisition_Status = this.ProcurementDetails.procurement_Request.requisition_Status;
         this.pop.procurement_Details.budget_Line.budget_Allocation = this.ProcurementDetails.budget_Line.budget_Allocation
         this.pop.procurement_Details.budget_Line.budget_Category = this.ProcurementDetails.budget_Line.budget_Category
-        this.pop.procurement_Details.budget_Line.account_Code = this.ProcurementDetails.budget_Line.account_Code
+        this.pop.procurement_Details.budget_Line.budget_Category.account_Code = this.ProcurementDetails.budget_Line.budget_Category.account_Code
         this.pop.procurement_Details.procurement_Request.name = this.ProcurementDetails.procurement_Request.name
         this.pop.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
 
@@ -456,7 +456,7 @@ export class UploadPayementFileComponent {
         this.PaymentMade.procurement_Details.procurement_Request.requisition_Status = this.ProcurementDetails.procurement_Request.requisition_Status;
         this.PaymentMade.procurement_Details.budget_Line.budget_Allocation = this.ProcurementDetails.budget_Line.budget_Allocation
         this.PaymentMade.procurement_Details.budget_Line.budget_Category = this.ProcurementDetails.budget_Line.budget_Category
-        this.PaymentMade.procurement_Details.budget_Line.account_Code = this.ProcurementDetails.budget_Line.account_Code
+        this.PaymentMade.procurement_Details.budget_Line.budget_Category.account_Code = this.ProcurementDetails.budget_Line.budget_Category.account_Code
         this.PaymentMade.procurement_Details.procurement_Request.name = this.ProcurementDetails.procurement_Request.name
         this.PaymentMade.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
 

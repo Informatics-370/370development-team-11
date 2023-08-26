@@ -167,7 +167,9 @@ export class DataService {
   EditBranchValidation(name: String, id: Number): Observable<Branch> {
     return this.httpClient.get<Branch>(`${this.apiUrl}Branch/EditBranchValidation/` + name + '/' + id, this.httpOptions)
   }
-
+  BranchDeleteUserValidation(id: Number): Observable<Employee> {
+    return this.httpClient.get<Employee>(`${this.apiUrl}Branch/BranchDeleteUserValidation/` + id, this.httpOptions)
+  }
 
   //--------------------------------------------------------------------------------------Department--------------------------------------------------------------------------------------
   GetDepartments(): Observable<any> {
@@ -195,6 +197,14 @@ export class DataService {
   }
   EditDepartmentValidation(name: String, id: Number): Observable<Department> {
     return this.httpClient.get<Department>(`${this.apiUrl}Department/EditDepartmentValidation/` + name + '/' + id, this.httpOptions)
+  }
+
+  DepartmentDeleteBudgetAllocationValidation(id: Number): Observable<BudgetAllocation> {
+    return this.httpClient.get<BudgetAllocation>(`${this.apiUrl}Department/DepartmentDeleteBudgetAllocationValidation/` + id, this.httpOptions)
+  }
+
+  DepartmentDeleteUserValidation(id: Number): Observable<Employee> {
+    return this.httpClient.get<Employee>(`${this.apiUrl}Department/DepartmentDeleteUserValidation/` + id, this.httpOptions)
   }
 
   //--------------------------------------------------------------------------------------Help And Help Files--------------------------------------------------------------------------------------
@@ -634,6 +644,14 @@ export class DataService {
   DeleteMandateLimit(mlID: Number) {
     return this.httpClient.delete<string>(`${this.apiUrl}Mandate/DeleteMandateLimit` + "/" + mlID, this.httpOptions)
   }
+
+  EditMandateValidation(amount: Number): Observable<Mandate_Limit> {
+    return this.httpClient.get<Mandate_Limit>(`${this.apiUrl}Mandate/EditMandateValidation/` + amount , this.httpOptions)
+  }
+
+  MandateDeleteUserValidation(id: Number): Observable<Employee> {
+    return this.httpClient.get<Employee>(`${this.apiUrl}Mandate/MandateDeleteUserValidation/` + id, this.httpOptions)
+  }
   //--------------------------------------------------------------------------------------User--------------------------------------------------------------------------------------
   GetUsers(): Observable<any> {
     return this.httpClient.get<User[]>(`${this.apiUrl}User/GetUsers`).pipe(map(result => result))
@@ -645,6 +663,10 @@ export class DataService {
 
   GetUserByUsername(username: string) {
     return this.httpClient.get<User>(`${this.apiUrl}User/GetUserByUsername` + "/" + username).pipe(map(result => result))
+  }
+
+  GetUserByRole(role: string) {
+    return this.httpClient.get<User>(`${this.apiUrl}User/GetUserByRole` + "/" + role).pipe(map(result => result))
   }
 
   AddUser(user: User) {
@@ -738,6 +760,10 @@ export class DataService {
     return this.httpClient.get<Employee>(`${this.apiUrl}User/GetEmployeeByEmail/` + Email).pipe(map(result => result))
   }
 
+  GetEmployeeByDepartment(dep: String) {
+    return this.httpClient.get<Employee>(`${this.apiUrl}User/GetEmployeeByDepartment/` + dep).pipe(map(result => result))
+  }
+
   getAdminbyEmail(Email: String) {
     return this.httpClient.get<Admin>(`${this.apiUrl}User/GetAdminByEmail/` + Email).pipe(map(result => result))
   }
@@ -792,7 +818,7 @@ export class DataService {
     return this.httpClient.get<Role[]>(`${this.apiUrl}Role/GetRoles`).pipe(map(result => result))
   }
 
-  GetRole(roleID: number) {
+  GetRole(roleID: Number) {
     return this.httpClient.get(`${this.apiUrl}Role/GetRole` + "/" + roleID).pipe(map(result => result))
   }
 
@@ -814,6 +840,10 @@ export class DataService {
 
   EditRoleValidation(name: String, id: Number): Observable<Role> {
     return this.httpClient.get<Role>(`${this.apiUrl}Role/EditRoleValidation/` + name + '/' + id, this.httpOptions)
+  }
+
+  RoleDeleteUserValidation(id: Number): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiUrl}Role/RoleDeleteUserValidation/` + id, this.httpOptions)
   }
 
   //--------------------------------------------------------------------------------------Login--------------------------------------------------------------------------------------
@@ -905,6 +935,10 @@ export class DataService {
 
   GetBudgetLines(): Observable<any> {
     return this.httpClient.get<BudgetLine[]>(`${this.apiUrl}BudgetAllocation/GetAllBudgetLines`).pipe(map(result => result))
+  }
+
+  BudgetLineValidation(accCode: String, budgetCatName: String, month: String, blID: Number): Observable<BudgetLine> {
+    return this.httpClient.get<BudgetLine>(`${this.apiUrl}BudgetAllocation/BudgetLineValidation/` + accCode + "/" + budgetCatName + "/" + month + "/" + blID, this.httpOptions)
   }
 
   AddBudgetLine(budgetLine: BudgetLine) {
@@ -1177,6 +1211,18 @@ export class DataService {
   BudgetAllocationExportValidation(id: Number): Observable<BudgetLine> {
     return this.httpClient.get<BudgetLine>(`${this.apiUrl}BudgetAllocation/BudgetAllocationExportValidation/` + id, this.httpOptions)
   }
+
+  BudgetAllocationDeleteBudgetLineValidation(id: Number): Observable<BudgetLine> {
+    return this.httpClient.get<BudgetLine>(`${this.apiUrl}BudgetAllocation/BudgetAllocationDeleteBudgetLineValidation/` + id, this.httpOptions)
+  }
+
+  BudgetCategoryDeleteBudgetLineValidation(id: Number): Observable<BudgetLine> {
+    return this.httpClient.get<BudgetLine>(`${this.apiUrl}BudgetAllocation/BudgetCategoryDeleteBudgetLineValidation/` + id, this.httpOptions)
+  }
+
+  BudgetLineDeleteProcurementDetailsValidation(id: Number): Observable<Procurement_Details> {
+    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}BudgetAllocation/BudgetLineDeleteProcurementDetailsValidation/` + id, this.httpOptions)
+  }
   //--------------------------------------------------------------------------------------Delegation--------------------------------------------------------------------------------------
   GetDelegations(): Observable<any> {
     return this.httpClient.get<Delegation_Of_Authority[]>(`${this.apiUrl}Delegation/GetDelegations`).pipe(map(result => result))
@@ -1427,6 +1473,14 @@ export class DataService {
     return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetails`).pipe(map(result => result))
   }
 
+  GetProcurementRequestDetailsFD(): Observable<any> {
+    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetailsFD`).pipe(map(result => result))
+  }
+
+  GetProcurementRequestDetailsMD(): Observable<any> {
+    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetailsMD`).pipe(map(result => result))
+  }
+
   GetProcurementDetailsByID(ProcurementDetailsID: Number): Observable<any> {
     return this.httpClient.get<Procurement_Request>(`${this.apiUrl}ProcurementDetails/GetProcurementDetailsByID/${ProcurementDetailsID}`).pipe(map(result => result))
   }
@@ -1617,6 +1671,12 @@ export class DataService {
 
   GetAssetStatuses(): Observable<any> {
     return this.httpClient.get<Procurement_Status[]>(`${this.apiUrl}ProcurementDetails/getAssetStatuses`).pipe(map(result => result))
+  }
+
+  ImportBudgetAllocation(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.httpClient.post<any>(`${this.apiUrl}BudgetAllocation/ImportExcel`, formData, this.httpOptions).pipe(map(result => result))
   }
 
 }

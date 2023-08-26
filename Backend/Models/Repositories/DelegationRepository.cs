@@ -140,7 +140,7 @@ namespace ProcionAPI.Models.Repositories
         public async Task<Delegation_Of_Authority> GetDelegationAsync(int delegationID)
         {
             IQueryable<Delegation_Of_Authority> query = _dbContext.Delegation_Of_Authority
-                .Include(u => u.User).Include(s => s.Delegation_Status).Include(a => a.Admin)
+                .Include(s => s.Delegation_Status).Include(a => a.Admin).Include(u => u.User).ThenInclude(ur => ur.Role).Include(u => u.User).ThenInclude(ua => ua.Access)
                 .Where(w => w.Delegation_ID == delegationID);
 
             return await query.FirstOrDefaultAsync();
@@ -245,7 +245,7 @@ namespace ProcionAPI.Models.Repositories
         public async Task<Notification[]> AddActiveNotificationaAsync(int userID, Notification newNotification, Delegation_Of_Authority delegation)
         {
             
-            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 19);
+            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 20);
             User existingUser = await _dbContext.User.FirstOrDefaultAsync(a => a.User_Id == userID);
 
             if (existingNotificationType != null)
@@ -271,7 +271,7 @@ namespace ProcionAPI.Models.Repositories
         public async Task<Notification[]> AddRevokeNotificationaAsync(int userID, Notification newNotification, Delegation_Of_Authority delegation)
         {
 
-            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 20);
+            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 21);
             User existingUser = await _dbContext.User.FirstOrDefaultAsync(a => a.User_Id == userID);
 
             if (existingNotificationType != null)
@@ -316,16 +316,12 @@ namespace ProcionAPI.Models.Repositories
         public async Task<Delegation_Of_Authority> EditDelegationValidationAsync(string name)
         {
             Delegation_Of_Authority ExistingActiveDelegation = await _dbContext.Delegation_Of_Authority.FirstOrDefaultAsync(x => x.DelegatingParty == name && x.Delegation_Status.Name == "Active");
-            Delegation_Of_Authority ExistingInactiveDelegation = await _dbContext.Delegation_Of_Authority.FirstOrDefaultAsync(x => x.DelegatingParty == name && x.Delegation_Status.Name == "Inactive");
 
             if (ExistingActiveDelegation != null)
             {
                 return ExistingActiveDelegation;
             }
-            else if (ExistingInactiveDelegation != null)
-            {
-                return ExistingInactiveDelegation;
-            }
+            
             else
             {
                 return null;

@@ -18,6 +18,7 @@ namespace ProcionAPI.Models.Repositories
         Task<Budget_Line> UpdateBudgetLineAsync(Budget_Line budget_Line, string accountCode);
         Task<Budget_Category> BudgetCategoryValidationAsync(string name);
         Task<Budget_Allocation> BudgetAllocationValidationAsync(string departmentName, int year);
+        Task<Budget_Line> BudgetLineValidationAsync(string accCode, string budgetCatName, string month, int blID);
         Task<Budget_Line[]> GetBudgetAllocationExportAsync(int budgetAllocationId);
         Task<Budget_Line[]> GetBudgetAllocationExportForMonthAsync(int budgetAllocationId, string month);
         Task<Budget_Line> BudgetAllocationMonthExportValidationAsync(int budgetAllocationId, string month);
@@ -30,5 +31,8 @@ namespace ProcionAPI.Models.Repositories
         void Add<T>(T entity) where T : class;
         void Delete<T>(T entity) where T : class;
         Task<bool> SaveChangesAsync();
+        Task<Budget_Line> BudgetAllocationDeleteBudgetLineValidationAsync(int id);
+        Task<Budget_Line> BudgetCategoryDeleteBudgetLineValidationAsync(int id);
+        Task<Procurement_Details> BudgetLineDeleteProcurementDetailsValidationAsync(int id);
     }
 }

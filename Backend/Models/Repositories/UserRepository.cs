@@ -177,6 +177,30 @@ namespace ProcionAPI.Models.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
+        public async Task<Employee> GetEmployeeByDepartmentAsync(string dep)
+        {
+            IQueryable<Employee> Query = _dbContext.Employee.Where(c => c.Department.Name == dep && c.User.Role.Description == "Budget Owner");
+            if (Query != null)
+            {
+                return await Query.FirstOrDefaultAsync();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<User> GetUserByRoleAsync(string role)
+        {
+            IQueryable<User> query = _dbContext.User
+                .Include(r => r.Role)
+                .Include(a => a.Access)
+                .Where(w => w.Role.Name == role);
+
+
+            return await query.FirstOrDefaultAsync();
+        }
+
         public async Task<User> Login(string Username, string Password)
         {
             IQueryable<User> query = _dbContext.User.Include(c => c.Role).Include(a => a.Access)

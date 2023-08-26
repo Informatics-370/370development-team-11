@@ -51,7 +51,7 @@ export class CreateBranchComponent {
 
   onSubmit() {
 
-    var street = this.myForm.get('street')?.value;
+    var street = this.myForm.get('name')?.value;
 
     this.dataService.BranchValidation(street).subscribe({
       next: (Result) => {
@@ -93,7 +93,7 @@ export class CreateBranchComponent {
         else {
           var action = "ERROR";
           var title = "ERROR: Branch Exists";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch street address <strong>" + street + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + street + " <strong style='color:red'>ALREADY EXISTS!</strong>");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,

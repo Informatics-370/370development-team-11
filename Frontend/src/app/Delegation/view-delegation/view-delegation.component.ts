@@ -75,7 +75,7 @@ export class ViewDelegationComponent implements OnInit{
         if (r) {
           this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
 
-          if (this.iRole == "Admin") {
+          if (this.iRole == "Admin" || this.iRole == "MD") {
             this.rAdmin = "true";
           }
 
@@ -97,8 +97,8 @@ export class ViewDelegationComponent implements OnInit{
 
   search() {
     const searchTerm = this.searchWord.toLocaleLowerCase();
-    
-    if (this.iRole == "Admin") {
+
+    if (this.iRole == "Admin" || this.iRole == "MD") {
       if (searchTerm) {
         this.dataSource = new MatTableDataSource(this.Delegations.filter(r => r.delegatingParty.toLocaleLowerCase().includes(searchTerm)))
       }
@@ -113,7 +113,7 @@ export class ViewDelegationComponent implements OnInit{
 
   GetDelegations() {
 
-    if (this.iRole == "Admin") {
+    if (this.iRole == "Admin" || this.iRole == "MD") {
 
       this.dataService.GetDelegations().subscribe(result => {
         let employeeList: any[] = result;

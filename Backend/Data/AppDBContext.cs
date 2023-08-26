@@ -602,6 +602,24 @@ namespace ProcionAPI.Data
                 Notification_Type_ID = 18,
                 Name = "New Procurement Request",
                 Description = "Please review the request and respond accordingly.",
+            },
+            new
+            {
+                Notification_Type_ID = 19,
+                Name = "Procurement Request has been Received",
+                Description = "Please review the request and respond accordingly.",
+            },
+            new
+            {
+                Notification_Type_ID = 20,
+                Name = "Delegation of Authority Active",
+                Description = "Please re-login if Temporary Access has not been assigned.",
+            },
+            new
+            {
+                Notification_Type_ID = 21,
+                Name = "Delegation of Authority Active",
+                Description = "Please re-login if Temporary Access has not been removed.",
             }
             );
 
@@ -786,267 +804,310 @@ namespace ProcionAPI.Data
 
             });
 
-            modelBuilder.Entity<Budget_Category>()
-            .HasData(
-            new
-            {
-                Category_ID = 1,
-                Account_Name = "Accounting & Audit Fees",
-                Description = "Accounting & Audit Fees",
-            },
-            new
-            {
-                Category_ID = 2,
-                Account_Name = "Bank Service Charges",
-                Description = "Bank Service Charges",
-            },
-            new
-            {
-                Category_ID = 3,
-                Account_Name = "B-BBEE expenses: B-BBEE Audits",
-                Description = "B-BBEE expenses: B-BBEE Audits",
-            },
-            new
-            {
-                Category_ID = 4,
-                Account_Name = "CIO Mentoring costs",
-                Description = "CIO Mentoring costs",
-            },
-            new
-            {
-                Category_ID = 5,
-                Account_Name = "CIPC Costs",
-                Description = "CIPC Costs",
-            },
-            new
-            {
-                Category_ID = 6,
-                Account_Name = "Collection charges",
-                Description = "Collection charges",
-            },
-            new
-            {
-                Category_ID = 7,
-                Account_Name = "Computer Expenses: Repairs & services",
-                Description = "Computer Expenses: Repairs & services",
-            },
-            new
-            {
-                Category_ID = 8,
-                Account_Name = "Cost of Sales Kumba Kapstevel: KKPS6226",
-                Description = "Cost of Sales Kumba Kapstevel: KKPS6226",
-            },
-            new
-            {
-                Category_ID = 9,
-                Account_Name = "Engineering - Software Tools",
-                Description = "Engineering - Software Tools",
-            },
-            new
-            {
-                Category_ID = 10,
-                Account_Name = "Entertainment",
-                Description = "Entertainment",
-            },
-            new
-            {
-                Category_ID = 11,
-                Account_Name = "Entertainment Client",
-                Description = "Entertainment Client",
-            },
-            new
-            {
-                Category_ID = 12,
-                Account_Name = "Entertainment Team",
-                Description = "Entertainment Team",
-            },
-            new
-            {
-                Category_ID = 13,
-                Account_Name = "Insurance: Business Insurance",
-                Description = "Insurance: Business Insurance",
-            },
-            new
-            {
-                Category_ID = 14,
-                Account_Name = "Insurance: Professional Indemnity",
-                Description = "Insurance: Professional Indemnity",
-            },
-            new
-            {
-                Category_ID = 15,
-                Account_Name = "Katendo Cost",
-                Description = "Katendo Cost",
-            },
-            new
-            {
-                Category_ID = 16,
-                Account_Name = "Legal Cost",
-                Description = "Legal Cost",
-            },
-            new
-            {
-                Category_ID = 17,
-                Account_Name = "License fees: Active campaign",
-                Description = "License fees: Active campaign",
-            },
-            new
-            {
-                Category_ID = 18,
-                Account_Name = "License Fees: Aptien",
-                Description = "License Fees: Aptien",
-            },
-            new
-            {
-                Category_ID = 19,
-                Account_Name = "License Fees: CASM",
-                Description = "License Fees: CASM",
-            },
-            new
-            {
-                Category_ID = 20,
-                Account_Name = "License Fees: CodeTwo",
-                Description = "License Fees: CodeTwo",
-            },
-            new
-            {
-                Category_ID = 21,
-                Account_Name = "License Fees: Zoom",
-                Description = "License Fees: Zoom",
-            },
-            new
-            {
-                Category_ID = 22,
-                Account_Name = "Overheads Allocated",
-                Description = "Overheads Allocated",
-            },
-            new
-            {
-                Category_ID = 23,
-                Account_Name = "Placement Cost: Kroll Checks",
-                Description = "Placement Cost: Kroll Checks",
-            },
-            new
-            {
-                Category_ID = 24,
-                Account_Name = "Placement Cost: Pnet/Linkedin Ads",
-                Description = "Placement Cost: Pnet/Linkedin Ads",
-            },
-            new
-            {
-                Category_ID = 25,
-                Account_Name = "PowaREP Azure: Cost",
-                Description = "PowaREP Azure: Cost",
-            },
-            new
-            {
-                Category_ID = 26,
-                Account_Name = "Powarep Data Services Cost",
-                Description = "Powarep Data Services Cost",
-            },
-            new
-            {
-                Category_ID = 27,
-                Account_Name = "Product Cost: Grinrod Project 6737",
-                Description = "Product Cost: Grinrod Project 6737",
-            },
-            new
-            {
-                Category_ID = 28,
-                Account_Name = "Product Cost: Insightsec support (1st, 2nd, 3rd)",
-                Description = "Product Cost: Insightsec support (1st, 2nd, 3rd)",
-            },
-            new
-            {
-                Category_ID = 29,
-                Account_Name = "Product Cost: MI2",
-                Description = "Product Cost: MI2",
-            },
-            new
-            {
-                Category_ID = 30,
-                Account_Name = "Recruitment costs",
-                Description = "Recruitment costs",
-            },
-            new
-            {
-                Category_ID = 31,
-                Account_Name = "Recruitment: Ads",
-                Description = "Recruitment: Ads",
-            },
-            new
-            {
-                Category_ID = 32,
-                Account_Name = "Service Partner Costs",
-                Description = "Service Partner Costs",
-            },
-            new
-            {
-                Category_ID = 33,
-                Account_Name = "Training Costs: Advanced Excel Trainer Fees",
-                Description = "Training Costs: Advanced Excel Trainer Fees",
-            },
-            new
-            {
-                Category_ID = 34,
-                Account_Name = "Training Costs: Microsoft Power BI Trainer Fees",
-                Description = "Training Costs: Microsoft Power BI Trainer Fees",
-            },
-            new
-            {
-                Category_ID = 35,
-                Account_Name = "Training Costs: SQL Fundamentals Trainer Fee",
-                Description = "Training Costs: SQL Fundamentals Trainer Fee",
-            },
-            new
-            {
-                Category_ID = 36,
-                Account_Name = "Training Costs: Tableau Trainer fees",
-                Description = "Training Costs: Tableau Trainer fees",
-            },
-            new
-            {
-                Category_ID = 37,
-                Account_Name = "Training Offering Costs",
-                Description = "Training Offering Costs",
-            },
-            new
-            {
-                Category_ID = 38,
-                Account_Name = "Training Offering Costs: Content development",
-                Description = "Training Offering Costs: Content development",
-            },
-            new
-            {
-                Category_ID = 39,
-                Account_Name = "Training Offering Costs: Digital Consulting",
-                Description = "Training Offering Costs: Digital Consulting",
-            },
-            new
-            {
-                Category_ID = 40,
-                Account_Name = "Training Offering Costs: Facilitation Cost",
-                Description = "Training Offering Costs: Facilitation Cost",
-            },
-            new
-            {
-                Category_ID = 41,
-                Account_Name = "Training Offering Costs: LMS",
-                Description = "Training Offering Costs: LMS",
-            },
-            new
-            {
-                Category_ID = 42,
-                Account_Name = "Travel - Local",
-                Description = "Travel - Local",
-            },
-            new
-            {
-                Category_ID = 43,
-                Account_Name = "Travel - Local: Group Innovation",
-                Description = "Travel - Local: Group Innovation",
-            }
-            );
+            //modelBuilder.Entity<Budget_Category>()
+            //.HasData(
+            //new
+            //{
+            //    Category_ID = 1,
+            //    Account_Code = "2000",
+            //    Account_Name = "Accounting & Audit Fees",
+            //    Description = "Accounting & Audit Fees",
+            //},
+            //new
+            //{
+            //    Category_ID = 2,
+            //    Account_Code = "2020",
+            //    Account_Name = "Bank Service Charges",
+            //    Description = "Bank Service Charges",
+            //},
+            //new
+            //{
+            //    Category_ID = 3,
+            //    Account_Code = "2111.02",
+            //    Account_Name = "B-BBEE expenses: B-BBEE Audits",
+            //    Description = "B-BBEE expenses: B-BBEE Audits",
+            //},
+            //new
+            //{
+            //    Category_ID = 4,
+            //    Account_Code = "2430.500",
+            //    Account_Name = "CIO Mentoring costs",
+            //    Description = "CIO Mentoring costs",
+            //},
+            //new
+            //{
+            //    Category_ID = 5,
+            //    Account_Code = "2010",
+            //    Account_Name = "CIPC Costs",
+            //    Description = "CIPC Costs",
+            //},
+            //new
+            //{
+            //    Category_ID = 6,
+            //    Account_Code = "2080",
+            //    Account_Name = "Collection charges",
+            //    Description = "Collection charges",
+            //},
+            //new
+            //{
+            //    Category_ID = 7,
+            //    Account_Code = "2090.001",
+            //    Account_Name = "Computer Expenses: Repairs & services",
+            //    Description = "Computer Expenses: Repairs & services",
+            //},
+            //new
+            //{
+            //    Category_ID = 8,
+            //    Account_Code = "2990.623",
+            //    Account_Name = "Cost of Sales Kumba Kapstevel: KKPS6226",
+            //    Description = "Cost of Sales Kumba Kapstevel: KKPS6226",
+            //},
+            //new
+            //{
+            //    Category_ID = 9,
+            //    Account_Code = "2230.037",
+            //    Account_Name = "Engineering - Software Tools",
+            //    Description = "Engineering - Software Tools",
+            //},
+            //new
+            //{
+            //    Category_ID = 10,
+            //    Account_Code = "2150",
+            //    Account_Name = "Entertainment",
+            //    Description = "Entertainment",
+            //},
+            //new
+            //{
+            //    Category_ID = 11,
+            //    Account_Code = "2000",
+            //    Account_Name = "Entertainment Client",
+            //    Description = "Entertainment Client",
+            //},
+            //new
+            //{
+            //    Category_ID = 12,
+            //    Account_Code = "2000",
+            //    Account_Name = "Entertainment Team",
+            //    Description = "Entertainment Team",
+            //},
+            //new
+            //{
+            //    Category_ID = 13,
+            //    Account_Code = "2000",
+            //    Account_Name = "Insurance: Business Insurance",
+            //    Description = "Insurance: Business Insurance",
+            //},
+            //new
+            //{
+            //    Category_ID = 14,
+            //    Account_Code = "2000",
+            //    Account_Name = "Insurance: Professional Indemnity",
+            //    Description = "Insurance: Professional Indemnity",
+            //},
+            //new
+            //{
+            //    Category_ID = 15,
+            //    Account_Code = "2000",
+            //    Account_Name = "Katendo Cost",
+            //    Description = "Katendo Cost",
+            //},
+            //new
+            //{
+            //    Category_ID = 16,
+            //    Account_Code = "2000",
+            //    Account_Name = "Legal Cost",
+            //    Description = "Legal Cost",
+            //},
+            //new
+            //{
+            //    Category_ID = 17,
+            //    Account_Code = "2000",
+            //    Account_Name = "License fees: Active campaign",
+            //    Description = "License fees: Active campaign",
+            //},
+            //new
+            //{
+            //    Category_ID = 18,
+            //    Account_Code = "2000",
+            //    Account_Name = "License Fees: Aptien",
+            //    Description = "License Fees: Aptien",
+            //},
+            //new
+            //{
+            //    Category_ID = 19,
+            //    Account_Code = "2000",
+            //    Account_Name = "License Fees: CASM",
+            //    Description = "License Fees: CASM",
+            //},
+            //new
+            //{
+            //    Category_ID = 20,
+            //    Account_Code = "2000",
+            //    Account_Name = "License Fees: CodeTwo",
+            //    Description = "License Fees: CodeTwo",
+            //},
+            //new
+            //{
+            //    Category_ID = 21,
+            //    Account_Code = "2000",
+            //    Account_Name = "License Fees: Zoom",
+            //    Description = "License Fees: Zoom",
+            //},
+            //new
+            //{
+            //    Category_ID = 22,
+            //    Account_Code = "2000",
+            //    Account_Name = "Overheads Allocated",
+            //    Description = "Overheads Allocated",
+            //},
+            //new
+            //{
+            //    Category_ID = 23,
+            //    Account_Code = "2000",
+            //    Account_Name = "Placement Cost: Kroll Checks",
+            //    Description = "Placement Cost: Kroll Checks",
+            //},
+            //new
+            //{
+            //    Category_ID = 24,
+            //    Account_Code = "2000",
+            //    Account_Name = "Placement Cost: Pnet/Linkedin Ads",
+            //    Description = "Placement Cost: Pnet/Linkedin Ads",
+            //},
+            //new
+            //{
+            //    Category_ID = 25,
+            //    Account_Code = "2000",
+            //    Account_Name = "PowaREP Azure: Cost",
+            //    Description = "PowaREP Azure: Cost",
+            //},
+            //new
+            //{
+            //    Category_ID = 26,
+            //    Account_Code = "2000",
+            //    Account_Name = "Powarep Data Services Cost",
+            //    Description = "Powarep Data Services Cost",
+            //},
+            //new
+            //{
+            //    Category_ID = 27,
+            //    Account_Code = "2000",
+            //    Account_Name = "Product Cost: Grinrod Project 6737",
+            //    Description = "Product Cost: Grinrod Project 6737",
+            //},
+            //new
+            //{
+            //    Category_ID = 28,
+            //    Account_Code = "2000",
+            //    Account_Name = "Product Cost: Insightsec support (1st, 2nd, 3rd)",
+            //    Description = "Product Cost: Insightsec support (1st, 2nd, 3rd)",
+            //},
+            //new
+            //{
+            //    Category_ID = 29,
+            //    Account_Code = "2000",
+            //    Account_Name = "Product Cost: MI2",
+            //    Description = "Product Cost: MI2",
+            //},
+            //new
+            //{
+            //    Category_ID = 30,
+            //    Account_Code = "2000",
+            //    Account_Name = "Recruitment costs",
+            //    Description = "Recruitment costs",
+            //},
+            //new
+            //{
+            //    Category_ID = 31,
+            //    Account_Code = "2000",
+            //    Account_Name = "Recruitment: Ads",
+            //    Description = "Recruitment: Ads",
+            //},
+            //new
+            //{
+            //    Category_ID = 32,
+            //    Account_Code = "2000",
+            //    Account_Name = "Service Partner Costs",
+            //    Description = "Service Partner Costs",
+            //},
+            //new
+            //{
+            //    Category_ID = 33,
+            //    Account_Code = "2000",
+            //    Account_Name = "Training Costs: Advanced Excel Trainer Fees",
+            //    Description = "Training Costs: Advanced Excel Trainer Fees",
+            //},
+            //new
+            //{
+            //    Category_ID = 34,
+            //    Account_Code = "2000",
+            //    Account_Name = "Training Costs: Microsoft Power BI Trainer Fees",
+            //    Description = "Training Costs: Microsoft Power BI Trainer Fees",
+            //},
+            //new
+            //{
+            //    Category_ID = 35,
+            //    Account_Code = "2000",
+            //    Account_Name = "Training Costs: SQL Fundamentals Trainer Fee",
+            //    Description = "Training Costs: SQL Fundamentals Trainer Fee",
+            //},
+            //new
+            //{
+            //    Category_ID = 36,
+            //    Account_Code = "2000",
+            //    Account_Name = "Training Costs: Tableau Trainer fees",
+            //    Description = "Training Costs: Tableau Trainer fees",
+            //},
+            //new
+            //{
+            //    Category_ID = 37,
+            //    Account_Code = "2000",
+            //    Account_Name = "Training Offering Costs",
+            //    Description = "Training Offering Costs",
+            //},
+            //new
+            //{
+            //    Category_ID = 38,
+            //    Account_Code = "2000",
+            //    Account_Name = "Training Offering Costs: Content development",
+            //    Description = "Training Offering Costs: Content development",
+            //},
+            //new
+            //{
+            //    Category_ID = 39,
+            //    Account_Code = "2000",
+            //    Account_Name = "Training Offering Costs: Digital Consulting",
+            //    Description = "Training Offering Costs: Digital Consulting",
+            //},
+            //new
+            //{
+            //    Category_ID = 40,
+            //    Account_Code = "2000",
+            //    Account_Name = "Training Offering Costs: Facilitation Cost",
+            //    Description = "Training Offering Costs: Facilitation Cost",
+            //},
+            //new
+            //{
+            //    Category_ID = 41,
+            //    Account_Code = "2000",
+            //    Account_Name = "Training Offering Costs: LMS",
+            //    Description = "Training Offering Costs: LMS",
+            //},
+            //new
+            //{
+            //    Category_ID = 42,
+            //    Account_Code = "2000",
+            //    Account_Name = "Travel - Local",
+            //    Description = "Travel - Local",
+            //},
+            //new
+            //{
+            //    Category_ID = 43,
+            //    Account_Code = "2000",
+            //    Account_Name = "Travel - Local: Group Innovation",
+            //    Description = "Travel - Local: Group Innovation",
+            //}
+            //);
 
         }
     }
