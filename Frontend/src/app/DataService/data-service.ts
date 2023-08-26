@@ -646,7 +646,7 @@ export class DataService {
   }
 
   EditMandateValidation(amount: Number): Observable<Mandate_Limit> {
-    return this.httpClient.get<Mandate_Limit>(`${this.apiUrl}Mandate/EditMandateValidation/` + amount , this.httpOptions)
+    return this.httpClient.get<Mandate_Limit>(`${this.apiUrl}Mandate/EditMandateValidation/` + amount, this.httpOptions)
   }
 
   MandateDeleteUserValidation(id: Number): Observable<Employee> {
