@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./delegation-iframe.component.css']
 })
 export class DelegationIFrameComponent {
-  presetImageUrl = 'assets/Images/ViewEmployee.jpg';
+  presetImageUrl = 'assets/Images/IFrameDelegation.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 

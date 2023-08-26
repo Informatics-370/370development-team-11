@@ -14,6 +14,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
   iRole: string;
   rAdmin: string;
   rUser: string;
+  rAdminUser: string;
 
   iCanAccInv: string = "false";
   canAccInv: string;
@@ -39,7 +40,12 @@ export class HomePageComponent implements OnInit, AfterViewInit {
     this.iCanAccVen = this.dataService.decodeCanAccVen(sessionStorage.getItem("token"));
     this.iCanAccRep = this.dataService.decodeCanAccRep(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin" || this.iRole == "MD") {
+    if (this.iRole == "Admin") {
+      this.rAdmin = "true";
+      this.rAdminUser = "true";
+    }
+
+    if (this.iRole == "MD") {
       this.rAdmin = "true";
       this.canAccInv = "true";
       this.canAccFin = "true";
@@ -68,7 +74,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.nav.reload();
     }, 1000);
-    
+
   }
 
   ngAfterViewInit(): void {

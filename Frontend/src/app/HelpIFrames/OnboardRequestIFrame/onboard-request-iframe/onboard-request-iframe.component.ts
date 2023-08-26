@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./onboard-request-iframe.component.css']
 })
 export class OnboardRequestIFrameComponent {
-  presetImageUrl = 'assets/Images/ViewEmployee.jpg';
+  presetImageUrl = 'assets/Images/IFrameOnboard.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 

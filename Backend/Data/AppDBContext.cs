@@ -114,17 +114,17 @@ namespace ProcionAPI.Data
             {
                 Access_ID = 1,
                 IsAdmin = "true",
-                CanAccInv = "true",
-                CanAccFin = "true",
-                CanAccPro = "true",
-                CanAccVen = "true",
-                CanAccRep = "true",
-                CanViewPenPro = "true",
-                CanViewFlagPro = "true",
-                CanViewFinPro = "true",
-                CanAppVen = "true",
-                CanEditVen = "true",
-                CanDeleteVen = "true"
+                CanAccInv = "false",
+                CanAccFin = "false",
+                CanAccPro = "false",
+                CanAccVen = "false",
+                CanAccRep = "false",
+                CanViewPenPro = "false",
+                CanViewFlagPro = "false",
+                CanViewFinPro = "false",
+                CanAppVen = "false",
+                CanEditVen = "false",
+                CanDeleteVen = "false"
             }
             );
 

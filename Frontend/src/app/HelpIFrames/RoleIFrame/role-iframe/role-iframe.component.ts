@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./role-iframe.component.css']
 })
 export class RoleIFrameComponent {
-  presetImageUrl = 'assets/Images/ViewEmployee.jpg';
+  presetImageUrl = 'assets/Images/IFrameRole.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 

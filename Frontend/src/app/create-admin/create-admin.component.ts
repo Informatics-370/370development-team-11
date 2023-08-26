@@ -24,7 +24,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 @Component({
   selector: 'app-create-admin',
   templateUrl: './create-admin.component.html',
-  styleUrls: ['./create-admin.component.css'],  
+  styleUrls: ['./create-admin.component.css'],
   providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class CreateAdminComponent implements OnInit {
@@ -132,17 +132,17 @@ export class CreateAdminComponent implements OnInit {
     this.rl.description = "Admin";
 
     this.Access.IsAdmin = 'true';
-    this.Access.CanAccFin = 'true';
-    this.Access.CanAccInv = 'true';
-    this.Access.CanAccPro = 'true';
-    this.Access.CanAccRep = 'true';
-    this.Access.CanAccVen = 'true';
-    this.Access.CanAppVen = 'true';
-    this.Access.CanDeleteVen = 'true';
-    this.Access.CanEditVen = 'true';
-    this.Access.CanViewFinPro = 'true';
-    this.Access.CanViewFlagPro = 'true';
-    this.Access.CanViewPenPro = 'true';
+    this.Access.CanAccFin = 'false';
+    this.Access.CanAccInv = 'false';
+    this.Access.CanAccPro = 'false';
+    this.Access.CanAccRep = 'false';
+    this.Access.CanAccVen = 'false';
+    this.Access.CanAppVen = 'false';
+    this.Access.CanDeleteVen = 'false';
+    this.Access.CanEditVen = 'false';
+    this.Access.CanViewFinPro = 'false';
+    this.Access.CanViewFlagPro = 'false';
+    this.Access.CanViewPenPro = 'false';
 
 
     this.usr.username = username;
@@ -233,7 +233,7 @@ export class CreateAdminComponent implements OnInit {
   }
 
   openCreateAdminTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

@@ -79,6 +79,22 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("getAllOtherVendors/{VendorStatusID}")]
+        public async Task<IActionResult> getAllOtherVendors(int VendorStatusID)
+        {
+            try
+            {
+                var result = await _VendorRepository.getAllOtherVendorsAsync(VendorStatusID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
         [HttpPost]
         [Route("AddVendorDetails")]
         public async Task<IActionResult> CreateOnboardRequest(Vendor_Detail VenDetails)

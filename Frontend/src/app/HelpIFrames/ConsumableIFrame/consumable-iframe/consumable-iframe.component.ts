@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./consumable-iframe.component.css']
 })
 export class ConsumableIFrameComponent {
-  presetImageUrl = 'assets/Images/ViewEmployee.jpg';
+  presetImageUrl = 'assets/Images/IFrameConsumable.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 

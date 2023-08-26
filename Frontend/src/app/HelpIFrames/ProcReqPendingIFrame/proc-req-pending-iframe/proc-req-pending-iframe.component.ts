@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./proc-req-pending-iframe.component.css']
 })
 export class ProcReqPendingIFrameComponent {
-  presetImageUrl = 'assets/Images/ViewEmployee.jpg';
+  presetImageUrl = 'assets/Images/IFramePendingProcurement.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 

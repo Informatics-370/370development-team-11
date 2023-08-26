@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./place-proc-detail-iframe.component.css']
 })
 export class PlaceProcDetailIFrameComponent {
-  presetImageUrl = 'assets/Images/ViewEmployee.jpg';
+  presetImageUrl = 'assets/Images/IFramePlaceProcReq.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 

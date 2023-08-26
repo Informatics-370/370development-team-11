@@ -75,7 +75,7 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
       this.dataService.GetProcurementRequestDetailsFD().subscribe(result => {
         result.forEach(e => {
           console.log(e)
-          if (e.procurement_Status_ID == 3 && User != e.employee.user.username)
+          if (e.procurement_Status_ID == 3)
             this.ProcurementDetails.push(e);
         })
 
@@ -96,7 +96,7 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
       this.dataService.GetProcurementRequestDetailsMD().subscribe(result => {
         result.forEach(e => {
           console.log(e)
-          if (e.procurement_Status_ID == 3 && User != e.employee.user.username)
+          if (e.procurement_Status_ID == 3)
             this.ProcurementDetails.push(e);
         })
 
