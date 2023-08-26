@@ -126,7 +126,7 @@ export class ReportFilterMenuComponent implements OnInit {
   GenerateBEESpentReport() {
     let DateTransf: any
     DateTransf = new DatePipe('en-ZA');
-    console.log(DateTransf.transform(this.range.get("end")?.value, 'MM, d, y')  )
+    console.log(DateTransf.transform(this.range.get("end")?.value, 'MM, d, y'))
     this.ReportService.getBEESpendReport(DateTransf.transform(this.range.get("start")?.value, 'MM, d, y'), DateTransf.transform(this.range.get("end")?.value, 'MM, d, y')).subscribe(result => {
       this.BEESpendReportDetails = result;
 
@@ -183,16 +183,16 @@ export class ReportFilterMenuComponent implements OnInit {
             { text: 'Non-Compliant', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
             { text: 'Total', alignment: 'center', color: '#ffffff', fillColor: '#244688' }],
             [{ text: 'Procurement Spend', bold: true, alignment: 'left', color: '#ffffff', fillColor: '#244688' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 3).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 8).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 0).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' }],
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 3).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 8).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 0).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' }],
             [{ text: 'Procurement %', bold: true, alignment: 'left', color: '#ffffff', fillColor: '#244688' },
             { text: '135%', alignment: 'center', fillColor: '#d9e2f3' },
             { text: '125%', alignment: 'center', fillColor: '#d9e2f3' },
@@ -203,16 +203,16 @@ export class ReportFilterMenuComponent implements OnInit {
             { text: '50%', alignment: 'center', fillColor: '#d9e2f3' },
             { text: '10%', alignment: 'center', fillColor: '#d9e2f3' }, { text: "", fillColor: '#d9e2f3' }, { text: "", fillColor: '#d9e2f3' }],
             [{ text: 'Procurement Entitlement', bold: true, alignment: 'left', color: '#ffffff', fillColor: '#244688' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 3).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 8).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 0).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-            { text:"R" + this.getProcurementEntitlementTotal(this.BEESpendReportDetails).toFixed(2), fillColor: '#b4c6e7' }]],
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 3).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 8).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.BEESpendReportDetails.filter(x => x.beE_Level == 0).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+            { text: "R" + this.getProcurementEntitlementTotal(this.BEESpendReportDetails).toFixed(2), fillColor: '#b4c6e7' }]],
             layout: {
               hLineWidth: function (i, node) {
                 if (i === 0 || i === node.table.body.length || i === 1) {
@@ -280,16 +280,16 @@ export class ReportFilterMenuComponent implements OnInit {
                 { text: 'Non-Compliant', alignment: 'center', color: '#ffffff', fillColor: '#244688' },
                 { text: 'Total', alignment: 'center', color: '#ffffff', fillColor: '#244688' }],
                 [{ text: 'Procurement Spend', bold: true, alignment: 'left', color: '#ffffff', fillColor: '#244688' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 1) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 2) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 3) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 4) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 5) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 6) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 7) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 8) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 0) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => x.branchName == BranchName).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' }],
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 1) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 2) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 3) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 4) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 5) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 6) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 7) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 8) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 0) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => x.branchName == BranchName).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' }],
                 [{ text: 'Procurement %', bold: true, alignment: 'left', color: '#ffffff', fillColor: '#244688' },
                 { text: '135%', alignment: 'center', fillColor: '#d9e2f3' },
                 { text: '125%', alignment: 'center', fillColor: '#d9e2f3' },
@@ -300,16 +300,16 @@ export class ReportFilterMenuComponent implements OnInit {
                 { text: '50%', alignment: 'center', fillColor: '#d9e2f3' },
                 { text: '10%', alignment: 'center', fillColor: '#d9e2f3' }, { text: "", fillColor: '#d9e2f3' }, { text: "", fillColor: '#d9e2f3' }],
                 [{ text: 'Procurement Entitlement', bold: true, alignment: 'left', color: '#ffffff', fillColor: '#244688' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 1) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 2) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 3) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 4) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 5) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 6) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 7) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 8) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 0) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
-                { text:"R" + this.getProcurementEntitlementTotal(this.BEESpendReportDetails.filter(x => x.branchName == BranchName)).toFixed(2), fillColor: '#b4c6e7' }]],
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 1) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 2) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 3) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 4) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 5) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 6) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 7) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 8) && (x.branchName == BranchName)).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.BEESpendReportDetails.filter(x => (x.beE_Level == 0) && (x.branchName == BranchName)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2), fillColor: '#b4c6e7' },
+                { text: "R" + this.getProcurementEntitlementTotal(this.BEESpendReportDetails.filter(x => x.branchName == BranchName)).toFixed(2), fillColor: '#b4c6e7' }]],
                 layout: {
                   hLineWidth: function (i, node) {
                     if (i === 0 || i === node.table.body.length || i === 1) {
@@ -472,63 +472,63 @@ export class ReportFilterMenuComponent implements OnInit {
       data: {
         labels: ["BEE Levels"],
         datasets: [{
-            label: "Level 1",
-            backgroundColor: "#4472c4",
-            data: [ReportsDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 100).toFixed(2)],
-            borderWidth: 2,
-            borderColor: 'black',
-            },
-            {
-              label: "Level 2",
-              backgroundColor: "#ed7d31",
-              data: [ReportsDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 150).toFixed(2)],
-              borderWidth: 2,
-              borderColor: 'black',
-            },
-            {
-              label: "Level 3",
-              backgroundColor: "#a5a5a5",
-              data: [ReportsDetails.filter(x => x.beE_Level == 3).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2)],
-              borderWidth: 2,
-              borderColor: 'black',
-            },
-            {
-              label: "Level 4",
-              backgroundColor: "#ffc000",
-              data: [ReportsDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 1).toFixed(2)],
-              borderWidth: 2,
-              borderColor: 'black',
-            },
-            {
-              label: "Level 5",
-              backgroundColor: "#5b9bd5",
-              data: [ReportsDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 140).toFixed(2)],
-              borderWidth: 2,
-              borderColor: 'black',
-            },
-            {
-              label: "Level 6",
-              backgroundColor: "#8cba6d",
-              data: [ReportsDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 260).toFixed(2)],
-              borderWidth: 2,
-              borderColor: 'black',
-            },
-            {
-              label: "Level 7",
-              backgroundColor: "#2b487c",
-              data: [ReportsDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 300).toFixed(2)],
-              borderWidth: 2,
-              borderColor: 'black',
-            },
-            {
-              label: "Level 8",
-              backgroundColor: "#a2521a",
-              data: [ReportsDetails.filter(x => x.beE_Level == 8).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2)],
-              borderWidth: 2,
-              borderColor: 'black',
-            },
+          label: "Level 1",
+          backgroundColor: "#4472c4",
+          data: [ReportsDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 100).toFixed(2)],
+          borderWidth: 2,
+          borderColor: 'black',
+        },
+        {
+          label: "Level 2",
+          backgroundColor: "#ed7d31",
+          data: [ReportsDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 150).toFixed(2)],
+          borderWidth: 2,
+          borderColor: 'black',
+        },
+        {
+          label: "Level 3",
+          backgroundColor: "#a5a5a5",
+          data: [ReportsDetails.filter(x => x.beE_Level == 3).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.10)), 0).toFixed(2)],
+          borderWidth: 2,
+          borderColor: 'black',
+        },
+        {
+          label: "Level 4",
+          backgroundColor: "#ffc000",
+          data: [ReportsDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 1).toFixed(2)],
+          borderWidth: 2,
+          borderColor: 'black',
+        },
+        {
+          label: "Level 5",
+          backgroundColor: "#5b9bd5",
+          data: [ReportsDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 140).toFixed(2)],
+          borderWidth: 2,
+          borderColor: 'black',
+        },
+        {
+          label: "Level 6",
+          backgroundColor: "#8cba6d",
+          data: [ReportsDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 260).toFixed(2)],
+          borderWidth: 2,
+          borderColor: 'black',
+        },
+        {
+          label: "Level 7",
+          backgroundColor: "#2b487c",
+          data: [ReportsDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 300).toFixed(2)],
+          borderWidth: 2,
+          borderColor: 'black',
+        },
+        {
+          label: "Level 8",
+          backgroundColor: "#a2521a",
+          data: [ReportsDetails.filter(x => x.beE_Level == 8).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.10)), 0).toFixed(2)],
+          borderWidth: 2,
+          borderColor: 'black',
+        },
         ]
-        
+
       },
       options: {
         animation: {
@@ -546,7 +546,7 @@ export class ReportFilterMenuComponent implements OnInit {
             position: 'bottom',
             labels: {
               font: {
-                  size: 16
+                size: 16
               },
               color: 'black'
             }
@@ -555,7 +555,7 @@ export class ReportFilterMenuComponent implements OnInit {
             anchor: 'end',
             align: 'top',
             color: 'black',
-            font: {size: 16},
+            font: { size: 16 },
             formatter: (value, ctx) => {
               const datapoints = ctx.chart.data.datasets[0].data
               return "R " + Number(value).toFixed(2);
@@ -640,7 +640,7 @@ export class ReportFilterMenuComponent implements OnInit {
             position: 'bottom',
             labels: {
               font: {
-                  size: 16
+                size: 16
               },
               color: 'black'
             }
@@ -650,7 +650,7 @@ export class ReportFilterMenuComponent implements OnInit {
             color: 'black',
             anchor: 'center',
             align: 'end',
-            font: {size: 16},
+            font: { size: 16 },
             formatter: (value, ctx) => {
               const datapoints = ctx.chart.data.datasets[0].data
               const total = datapoints.reduce((total, datapoint) => Number(total) + Number(datapoint), 0)
@@ -679,7 +679,7 @@ export class ReportFilterMenuComponent implements OnInit {
       console.log(this.VendorSpentReportDetails)
       let content = [
         {
-          text: 'Vendor Spent Report',
+          text: 'Vendor Spend Report',
           fontSize: 18,
           alignment: 'center',
           color: '#244688',

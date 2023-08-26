@@ -86,7 +86,7 @@ export class DeleteBudgetAllocationComponent {
           }
         })
 
-        
+
       }
     });
   }
@@ -101,7 +101,7 @@ export class DeleteBudgetAllocationComponent {
 
 
   openDeleteBATab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

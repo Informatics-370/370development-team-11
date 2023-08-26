@@ -780,12 +780,40 @@ namespace ProcionAPI.Controllers
             }
         }
         
+        [HttpPost]
+        [DisableRequestSizeLimit]
         [Route("ImportExcel")]
         public async Task<IActionResult> ImportExcel()
         {
             try
             {
-                using var workbook = new XLWorkbook("C:\\Users\\jason\\source\\repos\\370development-team-11\\Backend\\bin\\Debug\\Budget Allocation - BE.xlsx"); // Provide the path to the exported Excel file
+                //Upload file
+                var formCollection = await Request.ReadFormAsync();
+
+                var file = formCollection.Files.First();
+
+
+                if (file == null || file.Length == 0)
+                {
+                    return BadRequest("No file selected");
+                }
+
+                var folderPath = Path.Combine("Files", "TempExcel");
+                var filePath = Path.Combine(folderPath, file.FileName);
+                var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
+
+                if (!Directory.Exists(absoluteFolderPath))
+                {
+                    Directory.CreateDirectory(absoluteFolderPath);
+                }
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+
+                }
+
+                using var workbook = new XLWorkbook(filePath); // Provide the path to the exported Excel file
 
                 var worksheet = workbook.Worksheet("Budget Allocation");
                 var rows = worksheet.RowsUsed();
@@ -796,73 +824,92 @@ namespace ProcionAPI.Controllers
                 var year = fyAndMonth;
                 var total = decimal.Parse(worksheet.Cell(5, 2).Value.ToString());
                 Department Dep = await _dbContext.Department.FirstOrDefaultAsync(x => x.Description.ToLower() == departmentDescription.ToLower());
+                var fileInfo = new FileInfo(filePath);
+                DateTime lastModified = fileInfo.LastWriteTime;
                 Budget_Allocation BA = new Budget_Allocation
                 {
                     Budget_ID = 0,
-                    Date_Created = DateTime.UtcNow,
+                    Date_Created = lastModified,
                     Department_ID = 0,
                     Department = Dep,
                     Total = total,
                     Year = Convert.ToInt32(year),
                 };
-                var BAresult = await _repository.AddBudgetAllocationAsync(BA);
-                
-                foreach (var row in rows.Skip(5)) // Skip the header rows
+                var ExistingBA = await _dbContext.Budget_Allocation.FirstOrDefaultAsync(x =>x.Department.Description == departmentDescription && x.Year == Convert.ToInt32(year));
+                if (ExistingBA == null)
                 {
-                    var accountName = row.Cell(1).Value.ToString();
-                    var accountCode = row.Cell(2).Value.ToString();
-                    var month = row.Cell(3).Value.ToString();
-                    var budgetAmt = decimal.Parse(row.Cell(4).Value.ToString());
-                    var actualAmt = decimal.Parse(row.Cell(5).Value.ToString());
-                    var variance = decimal.Parse(row.Cell(6).Value.ToString());
+                    var BAresult = await _repository.AddBudgetAllocationAsync(BA);
 
-                    Console.WriteLine(accountName);
-                    Console.WriteLine(accountCode);
-
-                    Console.WriteLine(budgetAmt);
-                    Console.WriteLine(actualAmt);
-                    Console.WriteLine(variance);
-
-                    
-                    
-                    Budget_Category BC = new Budget_Category
+                    foreach (var row in rows.Skip(5)) // Skip the header rows
                     {
-                        Account_Code = accountCode,
-                        Account_Name = accountName,
-                        Description = accountName,
-                        Category_ID = 0
-                    };
-                    Budget_Line BL = new Budget_Line
-                    {
-                        Budget_Category = BC,
-                        Month = month,
-                        BudgetAmt = budgetAmt,
-                        ActualAmt = actualAmt,
-                        Variance = variance,
-                        Budget_Allocation = BA,
-                    };
+                        var accountName = row.Cell(1).Value.ToString();
+                        var accountCode = row.Cell(2).Value.ToString();
+                        var month = row.Cell(3).Value.ToString();
+                        var budgetAmt = decimal.Parse(row.Cell(4).Value.ToString());
+                        var actualAmt = decimal.Parse(row.Cell(5).Value.ToString());
+                        var variance = decimal.Parse(row.Cell(6).Value.ToString());
 
-                    
-                    if (BAresult != null)
-                    {
-                        BA = BAresult[0];
-                        BL.Budget_Allocation = BA;
-                        Budget_Category ExisCA = await _dbContext.Budget_Category.FirstOrDefaultAsync(x => x.Account_Code == accountCode);
-                        if (ExisCA != null)
+                        Console.WriteLine(accountName);
+                        Console.WriteLine(accountCode);
+
+                        Console.WriteLine(budgetAmt);
+                        Console.WriteLine(actualAmt);
+                        Console.WriteLine(variance);
+
+
+
+                        Budget_Category BC = new Budget_Category
                         {
-                            BC = ExisCA;
-                            BL.Budget_Category = BC;
-                            await _dbContext.Budget_Line.AddAsync(BL);
-                            await _dbContext.SaveChangesAsync();
+                            Account_Code = accountCode,
+                            Account_Name = accountName,
+                            Description = accountName,
+                            Category_ID = 0
+                        };
+                        Budget_Line BL = new Budget_Line
+                        {
+                            Budget_Category = BC,
+                            Month = month,
+                            BudgetAmt = budgetAmt,
+                            ActualAmt = actualAmt,
+                            Variance = variance,
+                            Budget_Allocation = BA,
+                        };
+
+
+                        if (BAresult != null)
+                        {
+                            BA = BAresult[0];
+                            BL.Budget_Allocation = BA;
+                            Budget_Category ExisCA = await _dbContext.Budget_Category.FirstOrDefaultAsync(x => x.Account_Code == accountCode);
+                            if (ExisCA != null)
+                            {
+                                BC = ExisCA;
+                                BL.Budget_Category = BC;
+                                await _dbContext.Budget_Line.AddAsync(BL);
+                                await _dbContext.SaveChangesAsync();
+                            }
                         }
+
+
                     }
-                    
-                    
+
+                    await _repository.SaveChangesAsync();
+
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                    else
+                    {
+                        return NotFound($"File {filePath} not found");
+                    }
+                    return Ok(BA);
+                }
+                else {
+                    return Ok(null);
                 }
 
-                await _repository.SaveChangesAsync();
-
-                return Ok("Success");
+                
             }
             catch (Exception ex)
             {

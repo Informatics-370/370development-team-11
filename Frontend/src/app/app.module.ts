@@ -172,6 +172,7 @@ import { ProcDetailIFrameComponent } from './HelpIFrames/ProcDetailIFrame/proc-d
 import { YearPickerComponent } from './year-picker/year-picker.component';
 import { ReceiveAssetComponent } from './receive-asset/receive-asset.component';
 import { ExportBaPickerComponent } from './export-ba-picker/export-ba-picker.component';
+import { ImportAllocationComponent } from './import-allocation/import-allocation.component';
 
 
 
@@ -310,6 +311,7 @@ import { ExportBaPickerComponent } from './export-ba-picker/export-ba-picker.com
     YearPickerComponent,
     ReceiveAssetComponent,
     ExportBaPickerComponent,
+    ImportAllocationComponent,
   ],
   imports: [
     BrowserModule,

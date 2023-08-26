@@ -938,7 +938,7 @@ export class DataService {
   }
 
   BudgetLineValidation(accCode: String, budgetCatName: String, month: String, blID: Number): Observable<BudgetLine> {
-    return this.httpClient.get<BudgetLine>(`${this.apiUrl}BudgetAllocation/BudgetLineValidation/` + accCode + "/" + budgetCatName + "/" + month + "/" + blID , this.httpOptions)
+    return this.httpClient.get<BudgetLine>(`${this.apiUrl}BudgetAllocation/BudgetLineValidation/` + accCode + "/" + budgetCatName + "/" + month + "/" + blID, this.httpOptions)
   }
 
   AddBudgetLine(budgetLine: BudgetLine) {
@@ -1671,6 +1671,12 @@ export class DataService {
 
   GetAssetStatuses(): Observable<any> {
     return this.httpClient.get<Procurement_Status[]>(`${this.apiUrl}ProcurementDetails/getAssetStatuses`).pipe(map(result => result))
+  }
+
+  ImportBudgetAllocation(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.httpClient.post<any>(`${this.apiUrl}BudgetAllocation/ImportExcel`, formData, this.httpOptions).pipe(map(result => result))
   }
 
 }
