@@ -139,7 +139,11 @@ export class MainNavComponent implements OnInit {
     this.iCanAccVen = this.dataService.decodeCanAccVen(sessionStorage.getItem("token"));
     this.iCanAccRep = this.dataService.decodeCanAccRep(sessionStorage.getItem("token"));
 
-    if (this.iRole == "Admin" || this.iRole == "MD") {
+
+    if (this.iRole == "Admin") {
+      this.rAdmin = "true";
+    }
+    if (this.iRole == "MD") {
       this.rAdmin = "true";
       this.canAccInv = "true";
       this.canAccFin = "true";
