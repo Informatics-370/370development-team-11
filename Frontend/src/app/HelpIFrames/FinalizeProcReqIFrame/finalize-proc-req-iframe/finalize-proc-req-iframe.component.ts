@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./finalize-proc-req-iframe.component.css']
 })
 export class FinalizeProcReqIFrameComponent {
-  presetImageUrl = 'assets/Images/ViewEmployee.jpg';
+  presetImageUrl = 'assets/Images/IFrameUnfinalizeProcReq.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 

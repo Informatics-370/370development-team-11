@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./branch-iframe.component.css']
 })
 export class BranchIFrameComponent {
-  presetImageUrl = 'assets/Images/ViewEmployee.jpg';
+  presetImageUrl = 'assets/Images/IFrameBranch.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 
