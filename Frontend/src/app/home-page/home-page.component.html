@@ -1,70 +1,135 @@
-<div class="hero-banner hero-banner--aqua-emerald">
-  <div>
-    <br />
-    <h1 class="hero-banner__headline" style="color: white; font-weight:700; font-size:32pt;">
-      Welcome
-    </h1>
-    <br />
-    <h2 class="hero-banner__headline" style="margin-bottom: 2%; color: white; font-weight: 700; font-size: 28pt;">
-      Explore
-    </h2>
-    <div class="auth0-features__grid">
-      <mat-card *ngIf="canAccInv" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center;"
-        routerLink="/ViewConsumable">
-        <img mat-card-image src="./assets/Images/inventory-menu-item.jpg" width="412" height="251">
-        <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px; ">
-          <h3 style="margin-top: 3%; font-size: 18pt;">Inventory</h3>
-        </mat-card-content>
-      </mat-card>
+<div *ngIf="rAdminUser; else elseBlock">
+  <div class="hero-bannerA hero-banner--aqua-emerald">
+    <div>
+      <br />
+      <h1 class="hero-banner__headlineA" style="color: white; font-weight:700; font-size:32pt;">
+        Welcome
+      </h1>
+      <br />
+      <h2 class="hero-banner__headlineA" style="margin-bottom: 2%; color: white; font-weight: 700; font-size: 28pt;">
+        Explore
+      </h2>
+      <div class="auth0-features__gridA">
+        <mat-card *ngIf="canAccInv" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center;" routerLink="/ViewConsumable">
+          <img mat-card-image src="./assets/Images/inventory-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px; ">
+            <h3 style="margin-top: 3%; font-size: 18pt;">Inventory</h3>
+          </mat-card-content>
+        </mat-card>
 
-      <mat-card *ngIf="rAdmin" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center;"
-        routerLink="/ViewEmployee">
-        <img mat-card-image src="./assets/Images/admin-menu-item.jpg" width="412" height="251">
-        <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
-          <h3 style="margin-top:3%; font-size:18pt;">Administration</h3>
-        </mat-card-content>
-      </mat-card>
+        <mat-card *ngIf="rAdmin" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center;" routerLink="/ViewEmployee">
+          <img mat-card-image src="./assets/Images/admin-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
+            <h3 style="margin-top:3%; font-size:18pt;">Administration</h3>
+          </mat-card-content>
+        </mat-card>
 
-      <mat-card *ngIf="canAccPro" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center; "
-        routerLink="/ViewProcurementRequest">
-        <img mat-card-image src="./assets/Images/procurement-menu-item.jpg" width="412" height="251">
-        <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
-          <h3 style="margin-top: 3%; font-size: 18pt;">Procurement</h3>
-        </mat-card-content>
-      </mat-card>
+        <mat-card *ngIf="canAccPro" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center; " routerLink="/ViewProcurementRequest">
+          <img mat-card-image src="./assets/Images/procurement-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
+            <h3 style="margin-top: 3%; font-size: 18pt;">Procurement</h3>
+          </mat-card-content>
+        </mat-card>
 
-      <mat-card *ngIf="canAccFin" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center; "
-        routerLink="/ViewBudgetAllocation">
-        <img mat-card-image src="./assets/Images/finance-menu-item.jpg" width="412" height="251">
-        <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
-          <h3 style="margin-top: 3%; font-size: 18pt;">Finance</h3>
-        </mat-card-content>
-      </mat-card>
+        <mat-card *ngIf="canAccFin" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center; " routerLink="/ViewBudgetAllocation">
+          <img mat-card-image src="./assets/Images/finance-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
+            <h3 style="margin-top: 3%; font-size: 18pt;">Finance</h3>
+          </mat-card-content>
+        </mat-card>
 
-      <mat-card *ngIf="canAccVen" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center;"
-        routerLink="/request-view">
-        <img mat-card-image src="./assets/Images/vendor-menu-item.jpg" width="412" height="251">
-        <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
-          <h3 style="margin-top: 3%; font-size: 18pt;">Vendor</h3>
-        </mat-card-content>
-      </mat-card>
+        <mat-card *ngIf="canAccVen" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center;" routerLink="/request-view">
+          <img mat-card-image src="./assets/Images/vendor-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
+            <h3 style="margin-top: 3%; font-size: 18pt;">Vendor</h3>
+          </mat-card-content>
+        </mat-card>
 
-      <mat-card *ngIf="canAccRep" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center; "
-        routerLink="/ReportsMainView">
-        <img mat-card-image src="./assets/Images/reports-menu-item.jpg" width="412" height="251">
-        <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
-          <h3 style="margin-top: 3%; font-size: 18pt;">Reports</h3>
-        </mat-card-content>
-      </mat-card>
+        <mat-card *ngIf="canAccRep" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center; " routerLink="/ReportsMainView">
+          <img mat-card-image src="./assets/Images/reports-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
+            <h3 style="margin-top: 3%; font-size: 18pt;">Reports</h3>
+          </mat-card-content>
+        </mat-card>
 
-      <mat-card class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center;"
-        (click)="HelpRoute()">
-        <img mat-card-image src="./assets/Images/help-menu-item.jpg" width="412" height="251">
-        <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
-          <h3 style="margin-top: 3%; font-size: 18pt;">Help</h3>
-        </mat-card-content>
-      </mat-card>
+        <mat-card class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center;" (click)="HelpRoute()">
+          <img mat-card-image src="./assets/Images/help-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
+            <h3 style="margin-top: 3%; font-size: 18pt;">Help</h3>
+          </mat-card-content>
+        </mat-card>
 
+      </div>
     </div>
   </div>
 </div>
+
+
+<ng-template #elseBlock>
+  <div class="hero-banner hero-banner--aqua-emerald">
+    <div>
+      <br />
+      <h1 class="hero-banner__headline" style="color: white; font-weight:700; font-size:32pt;">
+        Welcome
+      </h1>
+      <br />
+      <h2 class="hero-banner__headline" style="margin-bottom: 2%; color: white; font-weight: 700; font-size: 28pt;">
+        Explore
+      </h2>
+      <div class="auth0-features__grid">
+        <mat-card *ngIf="canAccInv" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center;" routerLink="/ViewConsumable">
+          <img mat-card-image src="./assets/Images/inventory-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px; ">
+            <h3 style="margin-top: 3%; font-size: 18pt;">Inventory</h3>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card *ngIf="rAdmin" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center;" routerLink="/ViewEmployee">
+          <img mat-card-image src="./assets/Images/admin-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
+            <h3 style="margin-top:3%; font-size:18pt;">Administration</h3>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card *ngIf="canAccPro" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center; " routerLink="/ViewProcurementRequest">
+          <img mat-card-image src="./assets/Images/procurement-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
+            <h3 style="margin-top: 3%; font-size: 18pt;">Procurement</h3>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card *ngIf="canAccFin" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center; " routerLink="/ViewBudgetAllocation">
+          <img mat-card-image src="./assets/Images/finance-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
+            <h3 style="margin-top: 3%; font-size: 18pt;">Finance</h3>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card *ngIf="canAccVen" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center;" routerLink="/request-view">
+          <img mat-card-image src="./assets/Images/vendor-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
+            <h3 style="margin-top: 3%; font-size: 18pt;">Vendor</h3>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card *ngIf="canAccRep" class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center; " routerLink="/ReportsMainView">
+          <img mat-card-image src="./assets/Images/reports-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
+            <h3 style="margin-top: 3%; font-size: 18pt;">Reports</h3>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="example-card" style="border-radius: 25px 25px 25px 25px; text-align: center;" (click)="HelpRoute()">
+          <img mat-card-image src="./assets/Images/help-menu-item.jpg" width="412" height="251">
+          <mat-card-content style="background-color: #244688; color: white; border-radius: 0px 0px 25px 25px;">
+            <h3 style="margin-top: 3%; font-size: 18pt;">Help</h3>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </div>
+  </div>
+  
+</ng-template>
+
+

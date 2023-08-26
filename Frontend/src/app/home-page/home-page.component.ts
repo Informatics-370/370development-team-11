@@ -14,6 +14,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
   iRole: string;
   rAdmin: string;
   rUser: string;
+  rAdminUser: string;
 
   iCanAccInv: string = "false";
   canAccInv: string;
@@ -39,6 +40,11 @@ export class HomePageComponent implements OnInit, AfterViewInit {
     this.iCanAccVen = this.dataService.decodeCanAccVen(sessionStorage.getItem("token"));
     this.iCanAccRep = this.dataService.decodeCanAccRep(sessionStorage.getItem("token"));
 
+    if (this.iRole == "Admin") {
+      this.rAdmin = "true";
+      this.rAdminUser = "true";
+    }
+
     if (this.iRole == "MD") {
       this.rAdmin = "true";
       this.canAccInv = "true";
@@ -46,9 +52,6 @@ export class HomePageComponent implements OnInit, AfterViewInit {
       this.canAccPro = "true";
       this.canAccVen = "true";
       this.canAccRep = "true";
-    }
-    if (this.iRole == "Admin") {
-      this.rAdmin = "true";
     }
     if (this.iCanAccInv == "true") {
       this.canAccInv = "true";
