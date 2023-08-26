@@ -15,6 +15,7 @@ import { DatePipe } from '@angular/common';
 import { BudgetAllocationIFrameComponent } from '../HelpIFrames/BudgetAllocationIFrame/budget-allocation-iframe/budget-allocation-iframe.component';
 import { ExportBaPickerComponent } from '../export-ba-picker/export-ba-picker.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { ImportAllocationComponent } from '../import-allocation/import-allocation.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -36,8 +37,8 @@ export class ViewBudgetAllocationComponent {
   ExportBudgetLine: BudgetLine[] = [];
 
   searchNumber: Number = null;
-  displayedColumns: string[] = ['department', 'date', 'year', 'total', 'lines', 'export', 'action', 'delete' ];
-  dataSource : any;
+  displayedColumns: string[] = ['department', 'date', 'year', 'total', 'lines', 'export', 'action', 'delete'];
+  dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   dep: Department = {
@@ -67,8 +68,7 @@ export class ViewBudgetAllocationComponent {
   iCanViewFinPro: string = "false";
   canViewFinPro: string;
 
-  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService,
-    private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer, private Dialog: MatDialog) { }
 
   OnInPutChange() {
     const Searchterm = this.searchNumber;
@@ -102,7 +102,7 @@ export class ViewBudgetAllocationComponent {
       this.GetDepBudgetAllocation();
     }
 
-    
+
   }
 
   GetBudgetAllocations() {
@@ -157,9 +157,9 @@ export class ViewBudgetAllocationComponent {
       }
     })
 
-    
 
-    
+
+
 
   }
 
@@ -184,7 +184,12 @@ export class ViewBudgetAllocationComponent {
             disableClose: true,
             data: { id }
           });
+
+          confirm.afterClosed().subscribe(() => {
+            this.ngOnInit();
+          });
         }
+
         else {
 
           this.dataService.GetBudgetAllocation(id).subscribe({
@@ -222,4 +227,23 @@ export class ViewBudgetAllocationComponent {
       // Handle any dialog close actions if needed
     });
   }
+
+  ImportAllocation() {
+    this.Dialog.open(ImportAllocationComponent, {
+      disableClose: true
+    });
+
+    const afterClosedSubscription = this.Dialog.afterAllClosed.subscribe({
+      next: (response) => {
+
+        this.ngOnInit();
+
+        // Unsubscribe from the afterAllClosed subscription
+        afterClosedSubscription.unsubscribe();
+      }
+    });
+  }
+
+
+
 }

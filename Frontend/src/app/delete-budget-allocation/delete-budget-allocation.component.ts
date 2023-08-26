@@ -82,12 +82,11 @@ export class DeleteBudgetAllocationComponent {
             this.showSuccessDialog = true;
             setTimeout(() => {
               this.dialogRef.close();
-              location.reload();
             }, 1750);
           }
         })
 
-        
+
       }
     });
   }
@@ -102,7 +101,7 @@ export class DeleteBudgetAllocationComponent {
 
 
   openDeleteBATab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }
