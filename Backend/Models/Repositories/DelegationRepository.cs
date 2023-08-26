@@ -245,7 +245,7 @@ namespace ProcionAPI.Models.Repositories
         public async Task<Notification[]> AddActiveNotificationaAsync(int userID, Notification newNotification, Delegation_Of_Authority delegation)
         {
             
-            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 19);
+            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 20);
             User existingUser = await _dbContext.User.FirstOrDefaultAsync(a => a.User_Id == userID);
 
             if (existingNotificationType != null)
@@ -271,7 +271,7 @@ namespace ProcionAPI.Models.Repositories
         public async Task<Notification[]> AddRevokeNotificationaAsync(int userID, Notification newNotification, Delegation_Of_Authority delegation)
         {
 
-            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 20);
+            Notification_Type existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 21);
             User existingUser = await _dbContext.User.FirstOrDefaultAsync(a => a.User_Id == userID);
 
             if (existingNotificationType != null)

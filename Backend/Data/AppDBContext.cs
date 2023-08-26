@@ -608,6 +608,18 @@ namespace ProcionAPI.Data
                 Notification_Type_ID = 19,
                 Name = "Procurement Request has been Received",
                 Description = "Please review the request and respond accordingly.",
+            },
+            new
+            {
+                Notification_Type_ID = 20,
+                Name = "Delegation of Authority Active",
+                Description = "Please re-login if Temporary Access has not been assigned.",
+            },
+            new
+            {
+                Notification_Type_ID = 21,
+                Name = "Delegation of Authority Active",
+                Description = "Please re-login if Temporary Access has not been removed.",
             }
             );
 
