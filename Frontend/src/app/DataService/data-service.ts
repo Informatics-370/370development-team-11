@@ -348,6 +348,10 @@ export class DataService {
     return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}Vendor/getAllApprovedVendors/${VendorStatusID}`).pipe(map(result => result))
   }
 
+  getAllOtherVendors(VendorStatusID: number): Observable<any> {
+    return this.httpClient.get<VendorOnboardRequest[]>(`${this.apiUrl}Vendor/getAllOtherVendors/${VendorStatusID}`).pipe(map(result => result))
+  }
+
   GetVendorByID(VendorID: number): Observable<any> {
     return this.httpClient.get<VendorOnboardRequest>(`${this.apiUrl}Vendor/GetVendorByID/${VendorID}`).pipe(map(result => result))
   }

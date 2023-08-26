@@ -225,11 +225,11 @@ export class CreateProcurementRequestComponent implements OnInit {
 
   private _filter(value: string): VendorOnboardRequest[] {
     const filterValue = value.toLowerCase();
-    const filteredVendors = this.vendors.filter(option => option.name.toLowerCase().includes(filterValue));
+    const filteredVendors = this.vendors.filter(option => option.name.toLowerCase().includes(filterValue) && option.vendor_Status.name == "other");
 
     this.setVal(value)
     // If no vendors match the filter, return an array with a single element containing the entered value
-    return this.vendors.filter(option => option.name.toLowerCase().includes(filterValue));
+    return this.vendors.filter(option => option.name.toLowerCase().includes(filterValue) && option.vendor_Status.name == "Other");
   }
 
   setVal(Name: String) {
@@ -318,14 +318,30 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   GetVendors() {
-    this.dataService.getAllApprovedVendors(3).subscribe({
-      next: (response) => {
-        let VendorList: any[] = response
-        VendorList.forEach((element) => {
-          this.vendors.push(element)
-        })
-      }
-    })
+    if (this.VendorType == "Approved") {
+      this.dataService.getAllApprovedVendors(3).subscribe({
+        next: (response) => {
+          this.vendors.splice(0, this.vendors.length);
+          let VendorList: any[] = response
+          VendorList.forEach((element) => {
+            this.vendors.push(element)
+          })
+        }
+      })
+    }
+
+    else {
+      this.dataService.getAllOtherVendors(6).subscribe({
+        next: (Response) => {
+          this.vendors.splice(0, this.vendors.length);
+          let VendorList: any[] = Response
+          VendorList.forEach((element) => {
+            this.vendors.push(element)
+          })
+        }
+      })
+    }
+
   }
 
   AddProcurementRequestB() {
@@ -528,7 +544,7 @@ export class CreateProcurementRequestComponent implements OnInit {
                       }
                     })
                   })
-                  
+
                 }
               })
             }
@@ -574,7 +590,7 @@ export class CreateProcurementRequestComponent implements OnInit {
 
 
   openCreatePRTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

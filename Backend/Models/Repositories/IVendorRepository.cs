@@ -92,5 +92,7 @@ namespace ProcionAPI.Models.Repositories
         Task<Vendor[]> GetAllSoleSupplierVendorAsync();
         Task<Notification[]> GenerateSoleSupplierPerformanceReviewAsync(Vendor ven);
         Task<Notification[]> AddNotificationAsync(Notification VendorNotification);
+
+        Task<Vendor[]> getAllOtherVendorsAsync(int VendorStatusID);
     }
 }
