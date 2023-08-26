@@ -8,7 +8,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class BudgetAllocationIFrameComponent {
 
-  presetImageUrl = 'assets/Images/ViewEmployee.jpg';
+  presetImageUrl = 'assets/Images/IFrameBudgetAllocation.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 

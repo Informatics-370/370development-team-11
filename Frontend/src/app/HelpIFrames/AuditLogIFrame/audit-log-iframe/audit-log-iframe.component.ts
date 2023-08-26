@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./audit-log-iframe.component.css']
 })
 export class AuditLogIFrameComponent {
-  presetImageUrl = 'assets/Images/ViewEmployee.jpg';
+  presetImageUrl = 'assets/Images/IFrameAuditLog.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 

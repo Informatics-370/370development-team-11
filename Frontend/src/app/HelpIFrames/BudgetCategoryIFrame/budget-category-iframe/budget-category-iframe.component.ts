@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./budget-category-iframe.component.css']
 })
 export class BudgetCategoryIFrameComponent {
-  presetImageUrl = 'assets/Images/ViewEmployee.jpg';
+  presetImageUrl = 'assets/Images/IFrameBudgetCategory.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 

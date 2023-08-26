@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./manage-vendor-iframe.component.css']
 })
 export class ManageVendorIFrameComponent {
-  presetImageUrl = 'assets/Images/ViewEmployee.jpg';
+  presetImageUrl = 'assets/Images/IFrameManageVendor.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 
