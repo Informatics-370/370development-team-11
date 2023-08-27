@@ -97,7 +97,7 @@ export class ViewBudgetAllocationComponent {
       this.GetBudgetAllocations();
     } else if (this.iCanViewFinPro == "true") {
       this.canViewFinPro = "true";
-      this.GetDepBudgetAllocation();
+      this.GetBudgetAllocations()
     } else {
       this.GetDepBudgetAllocation();
     }

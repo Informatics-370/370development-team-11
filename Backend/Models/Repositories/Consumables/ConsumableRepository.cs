@@ -57,33 +57,6 @@ namespace ProcionAPI.Models.Repositories.Consumables
             await _dbContext.Consumable_History.AddRangeAsync(HistData);
             await _dbContext.SaveChangesAsync();
 
-            // Add the consumable to the database and save changes
-            
-
-            // Generate dummy data for Consumable_History
-            var dummyData = new List<Consumable_History>();
-
-            var random = new Random();
-
-            for (int i = 0; i < 1000; i++)
-            {
-                var histAmt = random.Next(1, 51);
-                var histDate = DateTime.UtcNow.AddMonths(-i).AddMonths(-1);
-
-                var dummyHistory = new Consumable_History
-                {
-                    Consumable = ConsumableAdd,
-                    StockAmt = histAmt,
-                    DateCaptured = histDate
-                };
-
-                dummyData.Add(dummyHistory);
-            }
-
-            // Add the dummy data to the database and save changes
-            await _dbContext.Consumable_History.AddRangeAsync(dummyData);
-            await _dbContext.SaveChangesAsync();
-
             return new Consumable[] { ConsumableAdd };
         }
 

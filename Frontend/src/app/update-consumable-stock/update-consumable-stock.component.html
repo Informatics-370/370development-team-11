@@ -4,16 +4,32 @@
             <h1 mat-dialog-title>Update {{Consumable}} stock level</h1>
             <div mat-dialog-content>Please enter the stock level for the relevant consumable <b>{{Consumable}}:</b>
                 <form [formGroup]="myForm" (ngSubmit)="updateStock()">
-                    <mat-form-field>
-                        <input matInput type="number" placeholder="" formControlName="StockLevel" required>
-                        <mat-error *ngIf="myError('StockLevel', 'required')">The minimum
-                            amount is required</mat-error>
-                        <mat-error *ngIf="myError('StockLevel', 'pattern')">Value cannot
-                            be negative</mat-error>
-                    </mat-form-field>
+                    <table>
+                        <tr>
+                            <td>
+                                <mat-form-field>
+                                    <input matInput type="number" placeholder="" formControlName="StockLevel" required>
+                                    <mat-error *ngIf="myError('StockLevel', 'required')">The minimum
+                                        amount is required</mat-error>
+                                    <mat-error *ngIf="myError('StockLevel', 'pattern')">Value cannot
+                                        be negative</mat-error>
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field style="margin-left: 5px; align-self: center;">
+                                    <mat-label>Choose a date</mat-label>
+                                    <input matInput [matDatepicker]="picker" formControlName="DateCaptured"
+                                        [max]="MaxDate">
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker startView="year"></mat-datepicker>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                    </table>
                     <div mat-dialog-actions>
                         <div class="wrapper">
-                            <button class="" id="AnimationBtn" type="submit" [disabled]="!myForm.valid" matTooltip="Update stock levels counted for current stock on hand">
+                            <button class="" id="AnimationBtn" type="submit" [disabled]="!myForm.valid"
+                                matTooltip="Update stock levels counted for current stock on hand">
                                 <span>Update Stock</span>
                                 <div class="success">
                                     <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
@@ -42,8 +58,14 @@
             <div style="margin: 10px;">
                 <div>
                     <h2>{{data.name}} Stock Level Predictions For The Next 12 Months</h2>
-                    <canvas id="linechart" style="width: 600px; height: 400px;"></canvas>
+                    <canvas id="linechart" style="width: 600px; height: 400px;" *ngIf="Data != null ; else
+                    NoData"></canvas>
                 </div>
+                <ng-template #NoData>
+                    &nbsp;
+                    <p><b>Too little history exists on {{data.name}} to make yearly predictions.</b></p>
+                    <p><b>You require at least 24 monthly stock takes for predictions to take place</b></p>
+                </ng-template>
                 <button mat-raised-button type="button" (click)="Close()" class="CloseButton"
                     style="margin-left: 5px; margin-top: 10px;">
                     Close
