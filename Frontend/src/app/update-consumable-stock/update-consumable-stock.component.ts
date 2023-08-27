@@ -124,11 +124,21 @@ export class UpdateConsumableStockComponent implements OnInit {
     action: "",
     actionTime: new Date(),
   }
+  mychart;
+  MaxDate: Date;
 
   ngOnInit(): void {
     this.myForm = this.formBuilder.group({
       StockLevel: [0, [Validators.required, Validators.pattern("^[0-9]+$")]],
+      DateCaptured: [0, [Validators.required]],
+
     })
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    const currentDay = currentDate.getDate();
+    this.MaxDate = new Date(currentYear, currentMonth, currentDay);
+
 
     this.dataservice.GetConsumablePredictions(this.data.ID).subscribe({
       next: (item) => {
@@ -137,6 +147,9 @@ export class UpdateConsumableStockComponent implements OnInit {
         this.Data = item
         console.log(this.Data)
         return this.Data;
+      },
+      error: (error) => {
+        this.mychart = null;
       }
     })
 
@@ -145,9 +158,15 @@ export class UpdateConsumableStockComponent implements OnInit {
 
   onTabChange(event: MatTabChangeEvent): void {
     if (event.index === 1) {
-      setTimeout(() => {
-        this.populateChartData(this.Data);
-      });
+      if (this.data != null) {
+        setTimeout(() => {
+          this.populateChartData(this.Data);
+
+        });
+      }
+      if (this.mychart) {
+        this.mychart.destroy()
+      }
     }
 
     this.ngOnInit()
@@ -169,7 +188,7 @@ export class UpdateConsumableStockComponent implements OnInit {
     });
     console.log(labelsPopulation)
 
-    new Chart("linechart", {
+    this.mychart = new Chart("linechart", {
       type: 'line',
       data: {
         labels: labelsData,
@@ -188,6 +207,9 @@ export class UpdateConsumableStockComponent implements OnInit {
 
       },
       options: {
+        animation: {
+          duration: 0
+        },
         scales: {
           y: {
             beginAtZero: true
@@ -220,6 +242,7 @@ export class UpdateConsumableStockComponent implements OnInit {
             console.log(this.Consumables)
 
             this.History.stockAmt = this.myForm.get('StockLevel')?.value;
+            this.History.dateCaptured = this.myForm.get("DateCaptured")?.value;
 
             let test: any
             test = new DatePipe('en-ZA');

@@ -19,7 +19,7 @@
                   <label style=" color:black;">Name:</label>
                   <br />
                   <mat-form-field>
-                    <input matInput type="text" placeholder="" formControlName="Name" id="Name"
+                    <input matInput type="text" E.g. formControlName="Name" id="Name"
                       [(ngModel)]="ConsumableToEdit.name" required>
                     <mat-hint align="end">Not more then 32 characters long.</mat-hint>
                     <mat-error *ngIf="myError('Name', 'required')">Name is required</mat-error>
@@ -150,16 +150,6 @@
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
-        <!--<button mat-raised-button type="submit"
-                style="width: 150px; font-size: 14px; height: 42px; margin: 10px;" [disabled]="!myForm.valid"
-                [ngStyle]="{'background-color': !myForm.valid ? 'rgba(148, 204, 91, 0.6)' : '#94CC5B','color': !myForm.valid ? 'rgba(255, 255, 255, 0.6)' : 'white'}">
-          Save
-        </button>-->
-        <!--<button mat-raised-button type="submit"
-        style="width: 150px; font-size: 14px; height: 42px; margin: 10px;" [disabled]="!myForm.valid"
-        [ngStyle]="{'background-color': !myForm.valid ? 'rgba(148, 204, 91, 0.6)' : '#94CC5B','color': !myForm.valid ? 'rgba(255, 255, 255, 0.6)' : 'white'}">Update
-        Stock</button>-->
-
         <div class="wrapper">
           <button class="" id="AnimationBtn" type="submit" [disabled]="!myForm.valid">
             <span>Save</span>
