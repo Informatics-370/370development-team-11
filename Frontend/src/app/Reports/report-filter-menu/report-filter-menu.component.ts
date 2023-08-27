@@ -421,7 +421,7 @@ export class ReportFilterMenuComponent implements OnInit {
       //docDefinition.push()
       if (this.bDownload == true) {
         this.bDownload = false;
-        pdfMake.createPdf(docDefinition).download("Vendor Spent Report")
+        pdfMake.createPdf(docDefinition).download("BEE Spent Report")
       }
       else {
         this.bDownload = false;

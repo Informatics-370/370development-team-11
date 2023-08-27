@@ -43,3 +43,17 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+*.dll
+*.json
+*.exe
+*.pdb
+*.so
+*.dylib
+Backend/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs
+Backend/obj/Debug/net7.0/ProcionAPI.AssemblyInfo.cs
+*.cache
+Backend/obj/Debug/net7.0/ProcionAPI.GeneratedMSBuildEditorConfig.editorconfig
+Backend/obj/Debug/net7.0/ProcionAPI.GlobalUsings.g.cs
+Backend/obj/Debug/net7.0/ProcionAPI.RazorAssemblyInfo.cs
+Backend/obj/ProcionAPI.csproj.nuget.g.props
+Backend/obj/ProcionAPI.csproj.nuget.g.targets
