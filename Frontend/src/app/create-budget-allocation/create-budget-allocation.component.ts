@@ -211,7 +211,7 @@ export class CreateBudgetAllocationComponent {
 
 
   openCreateBATab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateAllocationUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

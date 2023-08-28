@@ -334,7 +334,7 @@ export class EditAdminComponent implements OnInit {
 
 
   openEditAdminTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/EditAdminUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

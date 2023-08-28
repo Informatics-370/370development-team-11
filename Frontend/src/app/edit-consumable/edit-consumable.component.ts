@@ -243,7 +243,7 @@ export class EditConsumableComponent implements OnInit {
 
 
   openEditConTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/EditConsumableUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

@@ -85,7 +85,7 @@ export class DeleteDepartmentComponent implements OnInit{
 
 
   openDeleteDepartmentTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteDepartmentUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

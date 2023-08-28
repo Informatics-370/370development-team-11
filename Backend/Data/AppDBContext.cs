@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.EntityFrameworkCore;
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Models.Repositories;
 
@@ -137,9 +138,8 @@ namespace ProcionAPI.Data
                 Access_ID = 1,
                 Username = "Admin",
                 Password = userrep.HashPassword("Admin123"),
-                Profile_Picture = "test",
-                No_Notifications = 0
-
+                Profile_Picture = "./assets/Images/Default_Profile.jpg",
+                No_Notifications = 0,
             }
             );
             modelBuilder.Entity<Admin>()
@@ -194,6 +194,18 @@ namespace ProcionAPI.Data
                 Role_ID = 6,
                 Name = "Employee",
                 Description = "Employee",
+            },
+            new
+            {
+                Role_ID = 7,
+                Name = "Manager",
+                Description = "Manager",
+            },
+            new
+            {
+                Role_ID = 8,
+                Name = "FD",
+                Description = "Financial Director",
             }
             );
 
@@ -218,8 +230,17 @@ namespace ProcionAPI.Data
                 Postal_Code = "0042",
                 Province = "Gauteng",
 
-            }
-            );
+            },
+            new
+            {
+                Branch_ID = 2,
+                Name = "Cape Town",
+                Street = "Rhodes Drive",
+                City = "Cape Town",
+                Postal_Code = "0070",
+                Province = "Western Cape",
+
+            });
 
             modelBuilder.Entity<Department>()
             .HasData(

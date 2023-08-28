@@ -348,10 +348,6 @@ export class EditEmployeeComponent implements OnInit {
     this.usr.access.CanViewFlagPro = this.accForm.get('canViewFlagPro')?.value;
     this.usr.access.CanViewPenPro = this.accForm.get('canViewPenPro')?.value;
 
-
-
-    console.log(this.usr)
-
     this.dataService.EditUserValidation(username, this.employee.user_Id).subscribe({
       next: (Result) => {
         if (Result == null) {
@@ -416,7 +412,7 @@ export class EditEmployeeComponent implements OnInit {
 
 
   openEditEmployeeTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
+    const userManualUrl = 'assets/PDF/EditEmployeeUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

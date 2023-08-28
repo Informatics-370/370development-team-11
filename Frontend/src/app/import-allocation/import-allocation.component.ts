@@ -8,10 +8,18 @@ import { DatePipe } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-import-allocation',
   templateUrl: './import-allocation.component.html',
-  styleUrls: ['./import-allocation.component.css']
+  styleUrls: ['./import-allocation.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ImportAllocationComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private dataservice: DataService, private router: Router, private dialogRef: MatDialogRef<ImportAllocationComponent>, private sanitizer: DomSanitizer, private dialog: MatDialog) { }
@@ -108,5 +116,15 @@ export class ImportAllocationComponent implements OnInit {
 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
+  }
+
+
+
+
+
+
+  openImportExcelTab(): void {
+    const userManualUrl = 'assets/PDF/ImportUM.pdf';
+    window.open(userManualUrl, '_blank');
   }
 }

@@ -154,7 +154,7 @@ export class ViewHelpuserComponent implements OnInit {
   }
 
   openUserManualInNewTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/UserManual.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 

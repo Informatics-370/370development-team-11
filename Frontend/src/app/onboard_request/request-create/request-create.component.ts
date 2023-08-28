@@ -576,7 +576,7 @@ export class RequestCreateComponent implements OnInit {
 
 
   openCreateOnboardRequestTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateOnboardUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }//addrequest 

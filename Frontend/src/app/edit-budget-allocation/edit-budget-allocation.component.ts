@@ -246,7 +246,7 @@ export class EditBudgetAllocationComponent {
 
 
   openEditBATab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/EditAllocation.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

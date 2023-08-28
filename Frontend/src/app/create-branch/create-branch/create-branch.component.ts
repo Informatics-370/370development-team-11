@@ -124,7 +124,7 @@ export class CreateBranchComponent {
 
 
   openCreateBranchTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateBranchUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

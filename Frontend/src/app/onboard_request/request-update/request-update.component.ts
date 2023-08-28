@@ -674,7 +674,7 @@ onPreferredChecked(i: number) {
 
 
 openEditOnboardRequestTab(): void {
-  const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+  const userManualUrl = 'assets/PDF/EditOnboardUM.pdf'; 
   window.open(userManualUrl, '_blank');
 }
 }

@@ -18,6 +18,7 @@ import { Access } from '../Shared/Access';
 
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { subscribeOn } from 'rxjs';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -240,6 +241,15 @@ export class CreateEmployeeComponent implements OnInit {
       this.Access.CanViewFlagPro = 'true';
       this.Access.CanViewPenPro = 'true';
     }
+    else if (this.rl.name == "Employee") {
+      this.Access.CanAccFin = 'false';
+      this.Access.CanAccPro = 'true';
+      this.Access.CanAccRep = 'false';
+      this.Access.CanAccVen = 'true';
+      this.Access.CanViewFinPro = 'false';
+      this.Access.CanViewFlagPro = 'false';
+      this.Access.CanViewPenPro = 'false';
+    }
     else if (this.rl.name == "FD") {
       this.Access.CanAccFin = 'true';
       this.Access.CanAccPro = 'true';
@@ -294,80 +304,96 @@ export class CreateEmployeeComponent implements OnInit {
     this.mail.Username = username;
     this.mail.Password = newPassword;
     this.mail.Email = this.myForm.get('Email')?.value;
-    
 
-    //console.log(cel.substring(7,3));
-    //console.log(username);
-    //console.log(this.roles);
+    this.dataService.getEmployeebyEmail(this.emp.email).subscribe({
+      next: (exist) => {
+        if (exist == null) {
+          this.dataService.CreateUserValidation(username).subscribe({
+            next: (Result) => {
+              if (Result == null) {
+                this.dataService.CreateUserRoleValidation(this.emp.department.name, this.usr.role.name).subscribe(re => {
+                  if (re == null) {
+                    document.getElementById('loading').style.display = 'block';
+                    document.querySelector('button').disabled;
+                    this.dataService.AddUser(this.usr).subscribe(result => {
+                      this.dataService.AddEmployee(this.emp).subscribe(r => {
+                        this.dataService.SendEmail(this.mail).subscribe({
+                          next: (response) => {
 
-    this.dataService.CreateUserValidation(username).subscribe({
-      next: (Result) => {
-        if (Result == null) {
-          this.dataService.CreateUserRoleValidation(this.emp.department.name, this.usr.role.name).subscribe(re => {
-            if (re == null) {
-              document.getElementById('loading').style.display = 'block';
-              document.querySelector('button').disabled;
-              this.dataService.AddUser(this.usr).subscribe(result => {
-                this.dataService.AddEmployee(this.emp).subscribe(r => {
-                  this.dataService.SendEmail(this.mail).subscribe({
-                    next: (response) => {
+                            if (response) {
+                              hideloader();
+                              document.getElementById('AnimationBtn').classList.toggle("is_active");
+                              document.getElementById('cBtn').style.display = "none";
+                            }
 
-                      if (response) {
-                        hideloader();
-                        document.getElementById('AnimationBtn').classList.toggle("is_active");
-                        document.getElementById('cBtn').style.display = "none";
-                      }
+                            this.log.action = "Created Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                            this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                            let test: any
+                            test = new DatePipe('en-ZA');
+                            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                            this.dataService.AuditLogAdd(this.log).subscribe({
+                              next: (Log) => {
+                                var action = "Create";
+                                var title = "CREATE SUCCESSFUL";
+                                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
 
-                      this.log.action = "Created Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
-                      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-                      let test: any
-                      test = new DatePipe('en-ZA');
-                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-                      this.dataService.AuditLogAdd(this.log).subscribe({
-                        next: (Log) => {
-                          var action = "Create";
-                          var title = "CREATE SUCCESSFUL";
-                          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+                                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                                  disableClose: true,
+                                  data: { action, title, message }
+                                });
 
-                          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                            disableClose: true,
-                            data: { action, title, message }
-                          });
+                                const duration = 1750;
+                                setTimeout(() => {
+                                  this.router.navigate(['/ViewEmployee']);
+                                  dialogRef.close();
+                                }, duration);
+                              }
+                            })
 
-                          const duration = 1750;
-                          setTimeout(() => {
-                            this.router.navigate(['/ViewEmployee']);
-                            dialogRef.close();
-                          }, duration);
-                        }
+
+                          }
+                        })
                       })
+                    })
+                  }
+                  else {
+                    var action = "ERROR";
+                    var title = "ERROR: Budget Owner Exists";
+                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There alread exists a Budget Owner for department <strong>" + this.emp.department.name + "<strong>!</strong>");
 
+                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                      disableClose: true,
+                      data: { action, title, message }
+                    });
 
-                    }
-                  })
+                    const duration = 1750;
+                    setTimeout(() => {
+                      dialogRef.close();
+                    }, duration);
+                  }
                 })
-              })
-            }
-            else {
-              var action = "ERROR";
-              var title = "ERROR: Budget Owner Exists";
-              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There alread exists a Budget Owner for department <strong>" + this.emp.department.name + "<strong>!</strong>");
+              } else {
+                var action = "ERROR";
+                var title = "ERROR: User Exists";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");
 
-              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                disableClose: true,
-                data: { action, title, message }
-              });
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
 
-              const duration = 1750;
-              setTimeout(() => {
-                dialogRef.close();
-              }, duration);
+                const duration = 1750;
+                setTimeout(() => {
+                  dialogRef.close();
+                }, duration);
+              }
             }
           })
-        } else {
-          var action = "ERROR";
-          var title = "ERROR: User Exists";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+        }
+        else {
+          var action = "Create";
+          var title = "CREATE FAILED";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A user with the email <strong>" + this.emp.email + "</strong> <strong style='color:red'> ALREADY EXISTS </strong> successfully!");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,
@@ -389,7 +415,7 @@ export class CreateEmployeeComponent implements OnInit {
   }
 
   openCreateEmployeeTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateEmployeeUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

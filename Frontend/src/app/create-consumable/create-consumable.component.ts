@@ -164,7 +164,7 @@ export class CreateConsumableComponent implements OnInit {
 
 
   openCreateConTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateConsumableUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

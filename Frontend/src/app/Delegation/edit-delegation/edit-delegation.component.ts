@@ -456,7 +456,7 @@ export class EditDelegationComponent implements OnInit {
 
 
   openEditDelegationTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/EditDelegationUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

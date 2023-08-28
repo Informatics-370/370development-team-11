@@ -99,7 +99,7 @@ export class CreateMandateLimitComponent {
 
 
   openCreateMandateTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateMandate.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

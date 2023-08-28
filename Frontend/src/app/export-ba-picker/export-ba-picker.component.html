@@ -1,8 +1,10 @@
 <form style="width: 400px;" [formGroup]="exportFilterForm">
 
-    <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center; display: flex; justify-content: center; align-items: center;"
+    <h1 mat-dialog-title style="color: white;  background-color: #244688; text-align: center; display: flex; justify-content: center; align-items: center;"
         *ngIf="showConfirmationDialog == true">
       SELECT FILTER CRITERIA
+      <mat-icon (click)="openExportTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help" *ngIf="showConfirmationDialog == true"
+            style="font-size: 24pt; height: 37px; width: 37px; margin-bottom: 1px; cursor: pointer;" [ngStyle]="{'color':'white'}" matTooltip="Need help? Click me!"></mat-icon>
     </h1>
 
   <div align="center">

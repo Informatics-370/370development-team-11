@@ -131,7 +131,7 @@ export class EditEmployeeRoleComponent implements OnInit {
 
 
   openEditRoleTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/EditRoleUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

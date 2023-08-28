@@ -1,5 +1,10 @@
 <h1 mat-dialog-title style="color: #244688; font-weight:700; font-size:25pt; margin-bottom:5%; text-align:center;">
-    Import Budget Allocation</h1>
+    Import Budget Allocation
+    <mat-icon (click)="openImportExcelTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}"
+    matTooltip="Need help? Click me!"></mat-icon>
+</h1>
+
 <div style="display: flex; flex-direction: column; align-items: center;">
     <div mat-dialog-content>Please Provide the Excell file to import:
         <form [formGroup]="myForm" (ngSubmit)="onSubmit()">

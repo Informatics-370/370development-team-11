@@ -404,7 +404,7 @@ OnboardRequestDetails: any[] = [];
 
 
   openDeleteVendorTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteVendorUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

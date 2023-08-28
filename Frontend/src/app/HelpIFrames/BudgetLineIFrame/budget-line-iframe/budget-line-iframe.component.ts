@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./budget-line-iframe.component.css']
 })
 export class BudgetLineIFrameComponent {
-  presetImageUrl = 'assets/Images/IFrameBudgetLines.png';
+  presetImageUrl = 'assets/Images/IFrameNewBudgetLine.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 
