@@ -237,7 +237,7 @@ export class EditDepartmentComponent implements OnInit{
  
 
   openEditDepartmentTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/EditDepartmentUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

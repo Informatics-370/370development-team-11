@@ -866,7 +866,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
 
   openPPRDTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
+    const userManualUrl = 'assets/PDF/CreatePlaceProcUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 

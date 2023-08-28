@@ -90,7 +90,7 @@ export class DeleteEmployeeComponent implements OnInit {
   }
 
   openDeleteEmployeeTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteEmployeeUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

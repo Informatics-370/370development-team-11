@@ -244,11 +244,11 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
 
 
   openPPROtherTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/ViewPendingProcUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
   openPPRNOTOtherTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/ViewPendingProcUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 

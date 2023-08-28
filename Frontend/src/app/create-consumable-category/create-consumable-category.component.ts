@@ -129,7 +129,7 @@ export class CreateConsumableCategoryComponent implements OnInit {
 
 
   openCreateConCatTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateConumableCategoryUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

@@ -89,7 +89,7 @@ export class DeleteBudgetCategoryComponent {
 
 
   openDeleteBCTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
+    const userManualUrl = 'assets/PDF/DeleteCategoryUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

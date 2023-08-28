@@ -88,7 +88,7 @@ export class DeleteAdminComponent implements OnInit {
 
 
   openDeleteAdminTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteAdminUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

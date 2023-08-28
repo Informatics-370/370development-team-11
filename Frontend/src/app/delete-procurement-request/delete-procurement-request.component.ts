@@ -180,7 +180,7 @@ export class DeleteProcurementRequestComponent implements OnInit {
 
 
   openDeletePRTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteProcReq.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

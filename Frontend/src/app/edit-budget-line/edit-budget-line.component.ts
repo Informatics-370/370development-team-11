@@ -8,12 +8,11 @@ import { BudgetAllocation } from '../Shared/BudgetAllocation';
 import { Department } from '../Shared/Department';
 import { AuditLog } from '../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
-
-
-import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -321,7 +320,7 @@ export class EditBudgetLineComponent {
 
 
   openEditBLTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
+    const userManualUrl = 'assets/PDF/EditLineUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

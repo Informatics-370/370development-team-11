@@ -233,7 +233,7 @@ export class CreateAdminComponent implements OnInit {
   }
 
   openCreateAdminTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateAdminUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

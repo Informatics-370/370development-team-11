@@ -180,7 +180,7 @@ export class EditBudgetCategoryComponent {
 
 
   openEditBCTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
+    const userManualUrl = 'assets/PDF/EditCategoryUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

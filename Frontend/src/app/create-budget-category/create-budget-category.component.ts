@@ -125,7 +125,7 @@ export class CreateBudgetCategoryComponent {
 
 
   openCreateBCTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
+    const userManualUrl = 'assets/PDF/CreateCategoryUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

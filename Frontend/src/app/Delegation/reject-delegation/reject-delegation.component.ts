@@ -93,7 +93,7 @@ export class RejectDelegationComponent implements OnInit {
 
 
   openRevokeDelegationTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/RevokeDelegationUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

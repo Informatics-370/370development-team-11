@@ -502,7 +502,7 @@ export class FinalizeProcurementRequestCreateComponent {
 
 
   openFinalizeProcReqTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
+    const userManualUrl = 'assets/PDF/FinaliseProcurementRequestUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

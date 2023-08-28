@@ -255,7 +255,7 @@ export class RequestDeleteComponent {
 
 
   openDeleteOnboardRequestTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteOnboardUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

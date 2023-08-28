@@ -1416,16 +1416,16 @@ export class VendorApproveComponent implements OnInit {
 
 
   openOnboard3QuotesTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/ARGeneralVendorUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
   openApproveRejectSoleTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/ARSoleVendorUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 
   openOnboardRequestCleanTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/ViewApproveVendorUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
  

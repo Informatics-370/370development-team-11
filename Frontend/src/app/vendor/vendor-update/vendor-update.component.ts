@@ -1090,7 +1090,7 @@ this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.setValue(this.VendorTax.in
 
 
 openEditVendorTab(): void {
-  const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+  const userManualUrl = 'assets/PDF/UpdateVendorUM.pdf'; 
   window.open(userManualUrl, '_blank');
 }
 }
