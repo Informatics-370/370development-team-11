@@ -45,6 +45,8 @@ export class CreateDepartmentComponent implements OnInit {
 
   onSubmit() {
 
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+
     var name = this.myForm.get('name')?.value;
 
     this.dataService.DepartmentValidation(name).subscribe({

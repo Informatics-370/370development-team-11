@@ -50,6 +50,7 @@ export class CreateMandateLimitComponent {
   }
 
   onSubmit(): void {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.dataService.AddMandateLimit(this.mandateLimit).subscribe(result => {
 
       if (result) {

@@ -60,7 +60,7 @@ export class CreateEmployeeRoleComponent implements OnInit {
 
   onSubmit() {
 
-    
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     
 
     var name = this.myForm.get('Name')?.value;

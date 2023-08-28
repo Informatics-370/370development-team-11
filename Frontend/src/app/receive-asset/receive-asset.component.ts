@@ -108,6 +108,7 @@ export class ReceiveAssetComponent implements OnInit {
 
 
   onSubmit() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     let StatusID = this.myForm.get("Status")?.value;
     let SelectedStatus = this.Statuses.findIndex(x => x.procurement_Status_ID == StatusID)
     console.log(StatusID)
