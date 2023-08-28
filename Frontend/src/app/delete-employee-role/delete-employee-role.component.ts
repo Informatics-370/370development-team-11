@@ -89,7 +89,7 @@ export class DeleteEmployeeRoleComponent implements OnInit {
 
 
   openDeleteRoleTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteRoleUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

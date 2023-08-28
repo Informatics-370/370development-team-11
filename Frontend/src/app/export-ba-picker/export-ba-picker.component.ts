@@ -8,10 +8,19 @@ import { DatePipe } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-export-ba-picker',
   templateUrl: './export-ba-picker.component.html',
-  styleUrls: ['./export-ba-picker.component.css']
+  styleUrls: ['./export-ba-picker.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ExportBaPickerComponent implements OnInit {
 
@@ -114,6 +123,14 @@ export class ExportBaPickerComponent implements OnInit {
         }
       })
     }
+  }
+
+
+
+
+  openExportTab(): void {
+    const userManualUrl = 'assets/PDF/ExportUM.pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 
 }

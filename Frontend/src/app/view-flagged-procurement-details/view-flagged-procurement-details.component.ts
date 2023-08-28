@@ -344,7 +344,7 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
 
 
   openFPDTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
+    const userManualUrl = 'assets/PDF/ARFlaggedProcUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

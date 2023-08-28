@@ -95,7 +95,7 @@ export class DeleteConsumableComponent implements OnInit {
 
 
   openDeleteConTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteConsumableUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

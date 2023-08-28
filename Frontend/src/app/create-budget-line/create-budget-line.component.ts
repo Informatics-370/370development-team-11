@@ -178,7 +178,7 @@ export class CreateBudgetLineComponent {
 
 
   openCreateBLTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
+    const userManualUrl = 'assets/PDF/CreateLineUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

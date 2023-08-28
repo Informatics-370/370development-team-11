@@ -101,7 +101,7 @@ export class DeleteBudgetAllocationComponent {
 
 
   openDeleteBATab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
+    const userManualUrl = 'assets/PDF/DeleteAllocation.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

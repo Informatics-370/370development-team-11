@@ -83,7 +83,7 @@ export class DeleteConsumableCategoryComponent implements OnInit {
 
 
   openDeleteConCatTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteConumableCategoryUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

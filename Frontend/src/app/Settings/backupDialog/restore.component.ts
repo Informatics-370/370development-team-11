@@ -91,7 +91,7 @@ export class RestoreComponent {
 
 
   openBackupTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/BackupUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

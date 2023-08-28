@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./flagger-proc-detail-iframe.component.css']
 })
 export class FlaggerProcDetailIFrameComponent {
-  presetImageUrl = 'assets/Images/ViewEmployee.jpg';
+  presetImageUrl = 'assets/Images/IFrameFlaggedProcReq.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 

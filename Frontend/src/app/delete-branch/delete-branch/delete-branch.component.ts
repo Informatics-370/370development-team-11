@@ -81,7 +81,7 @@ export class DeleteBranchComponent implements OnInit{
 
 
   openDeleteBranchTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteBranchUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 

@@ -458,12 +458,12 @@ export class EditProcurementRequestComponent implements OnInit {
 
 
   openEditPRApprovedTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/EditProcReq.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 
   openEditPROtherTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/EditProcReq.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

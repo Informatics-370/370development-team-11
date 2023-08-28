@@ -109,7 +109,7 @@ export class DeleteDelegationComponent implements OnInit{
 
 
   openDeleteDelegationTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteDelegationUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

@@ -247,7 +247,7 @@ export class EditBranchComponent implements OnInit{
 
 
   openEditBranchTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/EditBranchUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 

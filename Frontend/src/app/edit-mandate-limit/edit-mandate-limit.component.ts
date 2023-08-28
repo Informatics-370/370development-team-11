@@ -181,7 +181,7 @@ export class EditMandateLimitComponent {
 
 
   openEditMandateTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/EditMandate.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

@@ -962,7 +962,7 @@ validationLinear() {
 
 
 openEditDueDillTab(): void {
-  const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+  const userManualUrl = 'assets/PDF/DueDiligenceChecklistUM.pdf'; 
   window.open(userManualUrl, '_blank');
 }
 }

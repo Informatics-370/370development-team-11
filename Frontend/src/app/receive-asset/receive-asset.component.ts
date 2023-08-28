@@ -12,10 +12,19 @@ import { User } from '../Shared/User';
 import { Access } from '../Shared/Access';
 import { Role } from '../Shared/EmployeeRole';
 
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
 @Component({
   selector: 'app-receive-asset',
   templateUrl: './receive-asset.component.html',
-  styleUrls: ['./receive-asset.component.css']
+  styleUrls: ['./receive-asset.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ReceiveAssetComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private dataService: DataService, private router: Router, private sanitizer: DomSanitizer) { }
@@ -135,5 +144,15 @@ export class ReceiveAssetComponent implements OnInit {
   Close() {
     this.myForm.reset();
     this.router.navigate(['/ViewProcurementDetails']);
+  }
+
+
+
+
+
+
+  openRecieveAssetTab(): void {
+    const userManualUrl = 'assets/PDF/ProcAssetReceiveUM .pdf'; 
+    window.open(userManualUrl, '_blank');
   }
 }

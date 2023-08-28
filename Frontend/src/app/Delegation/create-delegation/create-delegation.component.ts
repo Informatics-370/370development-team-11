@@ -465,7 +465,7 @@ export class CreateDelegationComponent implements OnInit {
 
 
   openCreateDelegationTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/AssignDelegationUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

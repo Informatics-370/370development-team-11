@@ -723,7 +723,7 @@ export class VendorCreateComponent implements OnInit{
 
 
   openCreateVendorTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateVendorUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

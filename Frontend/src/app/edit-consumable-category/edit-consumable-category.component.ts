@@ -183,7 +183,7 @@ export class EditConsumableCategoryComponent implements OnInit {
 
 
   openEditConCatTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/EditConumableCategoryUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

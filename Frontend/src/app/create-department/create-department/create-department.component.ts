@@ -119,7 +119,7 @@ export class CreateDepartmentComponent implements OnInit {
 
 
   openCreateDepartmentTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateDepartmentUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

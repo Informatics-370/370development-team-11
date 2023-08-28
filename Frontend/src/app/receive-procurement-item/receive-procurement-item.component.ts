@@ -9,7 +9,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Procurement_Consumable } from '../Shared/Procurement_Consumable';
 import { DatePipe } from '@angular/common';
-import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { Procurement_Details } from '../Shared/ProcurementDetails';
 import { Role } from '../Shared/EmployeeRole';
 import { Access } from '../Shared/Access';
@@ -17,7 +16,7 @@ import { User } from '../Shared/User';
 import { Notification_Type } from '../Shared/Notification_Type';
 import { Notification } from '../Shared/Notification';
 
-
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -216,7 +215,7 @@ export class ReceiveProcurementItemComponent {
 
 
   openRecieveConsumableTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/ProcConsumableReceiveUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

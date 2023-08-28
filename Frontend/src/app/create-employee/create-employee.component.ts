@@ -389,7 +389,7 @@ export class CreateEmployeeComponent implements OnInit {
   }
 
   openCreateEmployeeTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateEmployeeUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

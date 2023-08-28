@@ -68,7 +68,7 @@ export class VendorCreateChoiceComponent {
 
 
   openAvailableVendorTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateAvailableVendorUM.pdf'; 
     window.open(userManualUrl, '_blank');
   }
 }

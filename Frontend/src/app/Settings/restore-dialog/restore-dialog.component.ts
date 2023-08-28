@@ -91,7 +91,7 @@ export class RestoreDialogComponent {
 
 
   openRestoreTab(): void {
-    const userManualUrl = 'assets/PDF/Procurement Manual.pdf';
+    const userManualUrl = 'assets/PDF/RestoreUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }
