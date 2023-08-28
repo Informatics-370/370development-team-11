@@ -85,7 +85,7 @@ export class ViewProcurementDetailsComponent implements OnInit {
 
 
       /*this.ProcurementRequests = [...procurementDetailsList];*/
-      
+
 
 
       if (result) {
@@ -108,8 +108,9 @@ export class ViewProcurementDetailsComponent implements OnInit {
 
     this.Dialog.afterAllClosed.subscribe({
       next: (response) => {
-        this.ngOnInit()
-        console.log(response)
+        this.dataSource = null;
+        this.ProcurementRequests.splice(0, this.ProcurementRequests.length)
+        this.GetProcurementDetails()
       }
     })
   }

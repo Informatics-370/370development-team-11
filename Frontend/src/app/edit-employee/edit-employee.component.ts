@@ -348,10 +348,6 @@ export class EditEmployeeComponent implements OnInit {
     this.usr.access.CanViewFlagPro = this.accForm.get('canViewFlagPro')?.value;
     this.usr.access.CanViewPenPro = this.accForm.get('canViewPenPro')?.value;
 
-
-
-    console.log(this.usr)
-
     this.dataService.EditUserValidation(username, this.employee.user_Id).subscribe({
       next: (Result) => {
         if (Result == null) {

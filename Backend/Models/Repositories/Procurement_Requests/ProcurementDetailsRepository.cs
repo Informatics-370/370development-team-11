@@ -484,7 +484,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         {
             IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Where(x => x.Procurement_Payment_Status_ID == 2).Include(x => x.Employee)
                 .ThenInclude(x => x.Mandate_Limit).Include(x => x.Procurement_Request).ThenInclude(x => x.Vendor).Include(x => x.Sign_Off_Status)
-                .Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line);
+                .Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line).Include(p => p.Procurement_Request).ThenInclude(u => u.User);
             return await query.ToArrayAsync();
         }
 
