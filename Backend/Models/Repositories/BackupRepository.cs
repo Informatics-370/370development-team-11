@@ -166,7 +166,7 @@ namespace ProcionAPI.Models.Repositories
 
                 // Perform the restore asynchronously
                 restore.SqlRestore(server);
-
+                server.KillAllProcesses("master");
                 serverConnection.Disconnect();
                 DefaultCOnnect.Connect();
 
