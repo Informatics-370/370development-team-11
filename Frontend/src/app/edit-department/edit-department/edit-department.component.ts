@@ -155,7 +155,8 @@ export class EditDepartmentComponent implements OnInit{
 
   // }
 
-  onSubmit(){
+  onSubmit() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     var name = this.myForm.get('name')?.value;
 
     this.dataService.EditDepartmentValidation(name, this.Department.department_ID).subscribe({

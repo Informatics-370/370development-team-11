@@ -95,7 +95,7 @@ export class EditConsumableComponent implements OnInit {
   }
 
   updateConsumable() {
-
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.ConsumableCategory.name = this.myForm.get('ConsumableCategory')?.value;
     this.ConsumableToEdit.name = this.myForm.get('Name')?.value;
     this.ConsumableToEdit.description = this.myForm.get('Description')?.value;
