@@ -56,8 +56,8 @@ export class DeleteEmployeeComponent implements OnInit {
   onConfirm(id: number): void {
     this.dataService.DeleteEmployee(id).subscribe(r => {
       this.dataService.DeleteNotifications(id).subscribe(nr => {
-        this.dataService.DeleteUser(id).subscribe({
-          next: (response) => {
+        this.dataService.DeleteUserAccess(id).subscribe(uar => {
+          this.dataService.DeleteUser(id).subscribe(ur => {
             this.log.action = "Deleted Employee: " + this.Employee.employeeName;
             this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
             let test: any
@@ -72,9 +72,7 @@ export class DeleteEmployeeComponent implements OnInit {
                 }, 1750);
               }
             })
-
-
-          }
+          })
         })
       })
       

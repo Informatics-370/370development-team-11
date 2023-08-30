@@ -687,6 +687,10 @@ export class DataService {
     return this.httpClient.delete<string>(`${this.apiUrl}User/DeleteUser` + "/" + userID, this.httpOptions)
   }
 
+  DeleteUserAccess(userID: number) {
+    return this.httpClient.delete<string>(`${this.apiUrl}User/DeleteUserAccess` + "/" + userID, this.httpOptions)
+  }
+
   EditUserValidation(name: string, id: Number): Observable<User> {
     return this.httpClient.get<User>(`${this.apiUrl}User/EditUserValidation/` + name + '/' + id, this.httpOptions)
   }
