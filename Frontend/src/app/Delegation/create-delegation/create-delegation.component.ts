@@ -219,9 +219,15 @@ export class CreateDelegationComponent implements OnInit {
     this.myForm.reset();
     this.router.navigateByUrl('ViewEmployee');
   }
+  delegateUser: any;
+
+  
 
   getPosts(username) {
+    this.delegateUser = username;
+
     this.dataService.GetUserByUsername(username).subscribe(r => {
+      console.log(r);
       this.delegateID = r;
       this.usr = this.delegateID;
       this.doa.user = this.usr;
@@ -277,6 +283,33 @@ export class CreateDelegationComponent implements OnInit {
 
       //console.log(this.doa.user_Id)
     })
+  }
+
+  checkUser() {
+    var existingUser = "No";
+    setTimeout(() => {
+      this.delegateUser = this.myControl.value;
+
+      if (!this.delegateUser) {
+        this.myControl.setValue(null);
+        this.delegateUser = '';
+      }
+      else {
+        this.options.forEach((element, i) => {
+          if (element.username == this.myControl.value) {
+            existingUser = "Yes"
+          }
+        })
+
+        if (existingUser == "Yes") {
+          this.getPosts(this.myControl.value)
+        } else {
+          this.myControl.setValue(null);
+          this.delegateUser = '';
+        }
+
+      }
+    }, 1000)
   }
 
   onFileUpload(event: any) {

@@ -29,7 +29,7 @@
                   <br />
                   <mat-form-field>
                     <input matInput type="text" placeholder="" [formControl]="myControl" id="DelegateName"
-                           [matAutocomplete]="auto" required>
+                           [matAutocomplete]="auto" (blur)="checkUser()" required>
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)='getPosts($event.option.value)'>
                       <mat-option *ngFor="let u of SearchedOptions | async" [value]="u.username">
                         {{u.username}}
