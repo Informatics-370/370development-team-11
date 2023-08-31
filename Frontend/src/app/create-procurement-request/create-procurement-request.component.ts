@@ -345,7 +345,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   AddProcurementRequestB() {
-
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.Procurement_Request.name = this.myForm.get("RequestName").value;
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
     this.Procurement_Request.vendor.name = this.myForm.get("VendorName").value;
@@ -501,6 +501,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   AddProcurementRequestA() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.Procurement_Request.name = this.myForm.get("Name").value;
     this.Procurement_Request.description = this.myForm.get("Description").value;
     this.Procurement_Request.vendor.name = this.myForm.get("Vendor").value;

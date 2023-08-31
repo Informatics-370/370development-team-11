@@ -29,6 +29,8 @@ namespace ProcionAPI.Models.Repositories {
         Task<AuditLog[]> AddLogAsync(AuditLog LogAdd);
         Task<AuditLog[]> GetAllLogsAsync();
         Task<Employee> GetEmployeeByDepartmentAsync(string dep);
+        Task<Access> GetAccessAsync(int accID);
+        Task<User> GetDeleteUserAsync(int userID);
 
         //---------------------------------------------------------------------------VALIDATION------------------------------------------------------------------------------------
         Task<User> EditUserValidationAsync(string name, int id);

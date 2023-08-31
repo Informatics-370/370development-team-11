@@ -143,6 +143,7 @@ export class ReceiveProcurementItemComponent {
   };
 
   updateStock() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.dataService.GetConsumableHistoryByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
       next: (Hist) => {
         console.log(Hist)

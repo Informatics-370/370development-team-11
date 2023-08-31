@@ -69,6 +69,7 @@ export class EditBranchComponent implements OnInit{
   }
 
   onSubmit() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     var name = this.myForm.get('name')?.value;
 
     this.dataService.EditBranchValidation(name, this.Branch.branch_ID).subscribe({

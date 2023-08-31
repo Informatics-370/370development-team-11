@@ -233,6 +233,7 @@ export class UpdateConsumableStockComponent implements OnInit {
   }
 
   updateStock() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.dataservice.GetConsumableByID(this.data.ID).subscribe({
       next: (response) => {
         this.dataservice.GetCategoryByID(response.consumable_Category_ID).subscribe({

@@ -54,9 +54,9 @@ export class DeleteAdminComponent implements OnInit {
   onConfirm(id: number): void {
     this.dataService.DeleteAdmin(id).subscribe(r => {
       this.dataService.DeleteNotifications(id).subscribe(nr => {
-        this.dataService.DeleteUser(id).subscribe({
-          next: (response) => {
-            this.log.action = "Exported Inventory Details";
+        this.dataService.DeleteUserAccess(id).subscribe(uar => {
+          this.dataService.DeleteUser(id).subscribe(ur => {
+            this.log.action = "Deleted Admin" + this.Admin.adminName;
             this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
             let test: any
             test = new DatePipe('en-ZA');
@@ -70,9 +70,7 @@ export class DeleteAdminComponent implements OnInit {
                 }, 1750);
               }
             })
-
-
-          }
+          }) 
         })
       })
     });

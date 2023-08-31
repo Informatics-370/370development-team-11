@@ -50,6 +50,7 @@ export class CreateBudgetCategoryComponent {
   }
 
   onSubmit(): void {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.budgetCategory.account_Name = this.budgetCategoryForm.get('account_Name')?.value;
     this.budgetCategory.account_Code = this.budgetCategoryForm.get('account_Code')?.value;
     this.budgetCategory.description = this.budgetCategoryForm.get('description')?.value;

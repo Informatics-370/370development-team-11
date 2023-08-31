@@ -166,6 +166,23 @@ namespace ProcionAPI.Models.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
+        public async Task<User> GetDeleteUserAsync(int userID)
+        {
+            IQueryable<User> query = _dbContext.User.Include(c => c.Role)
+                .Where(w => w.User_Id == userID);
+
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Access> GetAccessAsync(int accID)
+        {
+            IQueryable<Access> query = _dbContext.Access.Where(w => w.Access_ID == accID);
+
+
+            return await query.FirstOrDefaultAsync();
+        }
+
         public async Task<User> GetUserByUserNameAsync(string username)
         {
             IQueryable<User> query = _dbContext.User

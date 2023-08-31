@@ -377,6 +377,7 @@ export class FinalizeProcurementRequestCreateComponent {
   }
 
   onSubmit(): void {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     let Selection = this.finalizationForm.get("ProofOfPayment").value;
     if (Selection == true) {
       let ProcurementRequest = `ProcurementDetails${this.id}`
