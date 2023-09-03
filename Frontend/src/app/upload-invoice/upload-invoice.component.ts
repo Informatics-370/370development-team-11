@@ -391,7 +391,6 @@ export class UploadInvoiceComponent {
   }
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.fileToUpload = this.files[0];
     var name = "" + this.data.name
     if (this.fileToUpload != null) {

@@ -29,7 +29,7 @@ namespace ProcionAPI.Models.Repositories
             .ThenInclude(B => B.Branch)
             .Include(BL => BL.Budget_Line)
             .ThenInclude(BC => BC.Budget_Category)
-            .Where(P => (P.Procurement_Status_ID == 5) && (P.Full_Payment_Due_Date >= StartDate) && (P.Full_Payment_Due_Date <= EndDate) )
+            .Where(P => (P.Procurement_Status_ID == 2) && (P.Full_Payment_Due_Date >= StartDate) && (P.Full_Payment_Due_Date <= EndDate) )
             .ToListAsync();
             
             var VendorIDs = ProcurementRequestDetails.Select(V => V.Procurement_Request.Vendor_ID).ToList();
@@ -81,7 +81,7 @@ namespace ProcionAPI.Models.Repositories
             .ThenInclude(BC => BC.Budget_Category)
             .Include(BL => BL.Budget_Line)
             .ThenInclude(BA => BA.Budget_Allocation)
-            .Where(P => (P.Procurement_Status_ID == 5) && (P.Full_Payment_Due_Date >= StartDate) && (P.Full_Payment_Due_Date <= EndDate))
+            .Where(P => (P.Procurement_Status_ID == 2) && (P.Full_Payment_Due_Date >= StartDate) && (P.Full_Payment_Due_Date <= EndDate))
             .ToListAsync();
 
             var VendorIDs = ProcurementRequestDetails.Select(V => V.Procurement_Request.Vendor_ID).ToList();
