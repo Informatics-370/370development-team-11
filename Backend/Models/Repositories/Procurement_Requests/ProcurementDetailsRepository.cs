@@ -177,7 +177,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
 
             Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.User).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Procurement_Details_ID == AddProcurementConsumable.Procurement_Details_ID);
-            Console.WriteLine(existingProcurementDetails);
+           
             if (existingProcurementDetails != null)
             {
                 AddProcurementConsumable.Procurement_Details = existingProcurementDetails;
@@ -601,7 +601,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                                                       "september" ,
                                                       "october" , "november", "december" };
 
-            Console.WriteLine(Array.IndexOf(month2Db,"july"));
+          
 
             var BudgetLineDetails = await _dbContext.Budget_Line.Include(b => b.Budget_Allocation)
                 .ThenInclude(a => a.Department)
