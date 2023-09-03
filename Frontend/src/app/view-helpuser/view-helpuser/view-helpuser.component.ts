@@ -129,7 +129,6 @@ export class ViewHelpuserComponent implements OnInit {
           this.vFileDetails[i].FileName = vFile;
         }
       }
-      console.log(result)
     });
     function hideloader() {
       document.getElementById('loading')
@@ -173,7 +172,6 @@ export class ViewHelpuserComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 }

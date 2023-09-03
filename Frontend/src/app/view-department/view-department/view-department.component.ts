@@ -52,7 +52,6 @@ export class ViewDepartmentComponent implements OnInit {
 
   ngOnInit() {
     this.GetDepartments();
-    console.log(this.Departments)
   }
 
   search() {
@@ -157,7 +156,6 @@ export class ViewDepartmentComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -165,7 +163,6 @@ export class ViewDepartmentComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 

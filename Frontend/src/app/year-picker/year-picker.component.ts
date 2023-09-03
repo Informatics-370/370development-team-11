@@ -206,15 +206,11 @@ export class YearPickerComponent {
 
   public onsYearSelected(date: Date, datepicker: MatDatepicker<Date>) {
     const normalizedYear = date.getFullYear();
-    //console.log(normalizedYear)
     this.yearPick.get("year").setValue(new Date(normalizedYear, 12, 0));
-    console.log(this.yearPick)
-    //console.log(this.budgetAllocationForm.get("year").value())
     datepicker.close();
   }
   generateBudgetVarianceReport(): void {
     this.ReportService.yearFilter$.subscribe(data => {
-      console.log(data);
     });
 
     this.ReportService.GetMonthlyBudgetDataForCategory(2023).subscribe(data => {

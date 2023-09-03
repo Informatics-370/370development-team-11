@@ -431,17 +431,17 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     })
 
     this.ProcureService.getAssets().subscribe(r => {
-      console.log(r)
+
       this.sAssets = r
-      console.log(this.sAssets)
+
       this.sAssets.forEach(x => this.assetnames.push(x.name));
       //this.assetnames.push(r.name);
-      console.log(this.sAssets)
+
       this.filteredAssets = this.ProcurementFormGroup.get("AssetName")?.valueChanges.pipe(
         startWith(''),
         map(value => this._filter(value)),
       );
-      console.log(this.filteredAssets)
+
     })
 
 
@@ -456,18 +456,18 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     this.ProcurementFormGroup.get("ProofOfPaymentDoc")?.disable();
 
     var User = this.ProcureService.decodeUser(sessionStorage.getItem('token'))
-    console.log(User)
+
     this.route.paramMap.subscribe({
       next: (paramater) => {
 
         this.ProcurementRequest_ID = Number(paramater.get("ProcurementRequestID"));
         this.ProcureService.GetConsumables().subscribe(response => {
           this.ConsumableItems = response
-          console.log(this.ConsumableItems)
+
         })
         //User
         this.ProcureService.GetEmployeeByUsername(User).subscribe(result => {
-          console.log(result)
+
           let employeeInfo: any = result;
           this.EmployeeDetails = employeeInfo;
           this.MandateLimitAmount = employeeInfo.mandate_Limit.ammount
@@ -476,7 +476,6 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.EmployeeDetails.email.toString())
           let departmentname = this.EmployeeDetails.department.name
           this.ProcureService.GetProcurementAccountCodeDetails(this.currentYear, this.currentmonth, departmentname.toString()).subscribe(response => {
-            console.log(response)
             this.BudgetAllocationCode = response;
             this.BudgetAllocationCode.forEach(t => {
               let AccountInfo: AccountCodeDisplay = {
@@ -485,12 +484,10 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
                 Year: t.budget_Allocation.year.toString(),
                 Month: t.month.toString(),
               };
-              console.log(AccountInfo)
               this.AccountCodeDetails.push(AccountInfo);
             })
-
             this.AccountCodeDetails.forEach(b => {
-              //console.log()
+
               if (this.AccountCodeGroups.filter(x => (x.Month == b.Month) && (x.Year == b.Year)).length == 0) {
                 if (this.AccountCodeGroups.filter(x => (x.Month == b.Month) && (x.Year == b.Year))) {
                   let AccountGroupInfo: AccountCodeDisplayGroup = {
@@ -503,7 +500,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
               }
             })
 
-            console.log(this.AccountCodeGroups)
+
 
           })
         },
@@ -525,9 +522,9 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           }
         )
         this.ProcureService.GetProcurementRequestByID(this.ProcurementRequest_ID).subscribe(result => {
-          console.log(result)
+
           this.Procurement_Request = result
-          console.log(this.Procurement_Request)
+
         })
       }
     })
@@ -601,7 +598,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   file: File[] = [null, null];
   uploadFile(i: number, event: any) {
     this.file[i] = event.target.files[0];
-    console.log(this.file[i])
+
   }
 
   Validation() {
@@ -631,7 +628,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
 
 
-      console.log(Number(maxValue[0].maximum_Reorder_Quantity))
+
       this.ProcurementFormGroup.get("ConsumableItem").setValidators(Validators.max(Number(maxValue[0].maximum_Reorder_Quantity)))
     }
     else if (this.AssetChecked == true) {
@@ -708,9 +705,9 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     this.ProcurementDetails.payment_Method_ID = this.ProcurementFormGroup.get("PaymentType")?.value;
     this.ProcurementDetails.procurement_Request = this.Procurement_Request;
     this.ProcurementDetails.procurement_Request_ID = Number(this.Procurement_Request.procurement_Request_ID);
-    console.log(this.ProcurementDetails)
+
     this.ProcureService.AddProcurementDetails(this.ProcurementDetails).subscribe(result => {
-      console.log(result[0])
+
       if (result[0].procurement_Status_ID != 3) {
         this.ProcureService.UpdateBudgetLineAmount(this.ProcurementDetails.total_Amount, result[0].budget_Line).subscribe();
       }
@@ -725,13 +722,13 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.Deposit.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category
         this.Deposit.deposit_Due_Date = dateChange.transform(this.ProcurementFormGroup.get("DepositDueDate")?.value, 'MM, dd, y');
         this.Deposit.procurement_Details_ID = result[0].procurement_Details_ID;
-        //console.log(this.Deposit)
-        this.ProcureService.AddDeposit(this.Deposit).subscribe(check => { console.log(check) })
+
+        this.ProcureService.AddDeposit(this.Deposit).subscribe()
       }
       if (this.ProcurementDetails.proof_Of_Payment_Required == true) {
         let FolderCategory = "ProofOfPayment"
         let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`
-        console.log(ProcurementRequest)
+        
         this.ProcureService.uploadProcureFile(FolderCategory, ProcurementRequest, this.file[1]).subscribe(response => {
           this.ProofOfPayment.procurement_Details = result[0];
           this.ProofOfPayment.procurement_Details_ID = result[0].procurement_Details_ID;
@@ -780,21 +777,21 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
             this.Procurement_Consumable.consumable = e
           }
         })
-        console.log(this.Procurement_Consumable)
-        this.ProcureService.AddProcurementConsumable(this.Procurement_Consumable).subscribe(r => { console.log(r) })
+       
+        this.ProcureService.AddProcurementConsumable(this.Procurement_Consumable).subscribe()
         this.ProcureService.GetVendorConsumable().subscribe(b => {
           this.Vendor_Consumable.consumable_ID = Number(this.ProcurementFormGroup.get("ConsumableItem")?.value)
-          console.log(b.length + 1)
+
           this.ConsumableItems.forEach(e => {
             if (e.consumable_Category_ID == Number(this.ProcurementFormGroup.get("ConsumableItem")?.value)) {
-              console.log(e)
+
               this.Vendor_Consumable.consumable = e
               this.Vendor_Consumable.vendor = this.Procurement_Request.vendor;
               this.Vendor_Consumable.vendor_ID = Number(this.Procurement_Request.vendor_ID);
               this.Vendor_Consumable.vendor_Consumbale_ID = 0
-              console.log(this.Vendor_Consumable)
+
               //(b.length + 1);
-              this.ProcureService.AddVendorConsumable(this.Vendor_Consumable).subscribe(r => { console.log(r) });
+              this.ProcureService.AddVendorConsumable(this.Vendor_Consumable).subscribe();
             }
           })
         })
@@ -804,8 +801,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.assets.description = this.ProcurementFormGroup.get("AssetDescription")?.value;
         this.assets.name = this.ProcurementFormGroup.get("AssetName")?.value;
         this.ProcureService.AddAsset(this.assets).subscribe(data => {
-          console.log(data)
-          console.log("test")
+
           this.assets.asset_ID = data[0].asset_ID;
 
           this.procurment_assets.asset = data[0]
@@ -818,16 +814,16 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.procurment_assets.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
           this.procurment_assets.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category
           this.procurment_assets.procurement_Details.employee.user.access = this.ProcurementDetails.employee.user.access
-          console.log(this.procurment_assets)
-          this.ProcureService.AddProcurementAsset(this.procurment_assets).subscribe(r => console.log(r));
-          console.log("test")
+
+          this.ProcureService.AddProcurementAsset(this.procurment_assets).subscribe();
+
           this.ProcureService.GetVendorAsset().subscribe(a => {
             this.vendor_asset.asset = data[0]
             this.vendor_asset.asset_ID = data[0].asset_ID;
             this.vendor_asset.vendor = this.Procurement_Request.vendor;
             this.vendor_asset.vendor_ID = Number(this.Procurement_Request.vendor_ID);
             this.vendor_asset.asset_ID = (a.length + 1);
-            this.ProcureService.AddVendorAsset(this.vendor_asset).subscribe(r => console.log(r))
+            this.ProcureService.AddVendorAsset(this.vendor_asset).subscribe()
           })
 
         })

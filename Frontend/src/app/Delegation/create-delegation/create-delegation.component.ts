@@ -227,7 +227,7 @@ export class CreateDelegationComponent implements OnInit {
     this.delegateUser = username;
 
     this.dataService.GetUserByUsername(username).subscribe(r => {
-      console.log(r);
+
       this.delegateID = r;
       this.usr = this.delegateID;
       this.doa.user = this.usr;
@@ -281,7 +281,6 @@ export class CreateDelegationComponent implements OnInit {
         this.ta.CanViewPenPro = "true";
       }
 
-      //console.log(this.doa.user_Id)
     })
   }
 

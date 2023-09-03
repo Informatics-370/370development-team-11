@@ -65,7 +65,6 @@ export class CreateHelpComponent implements OnInit{
   GetHelpCategorys() {
     this.dataService.GetHelpCategorys().subscribe(result => {
       this.help_Categorys = result;
-      console.log(this.help_Categorys)
     });
   }
 
@@ -132,7 +131,6 @@ export class CreateHelpComponent implements OnInit{
          let Path: any = response
          this.sPath=Path.pathSaved.toString()
          this.Help.user_Manual = this.sPath;
-         console.log(this.Help.user_Manual)
 
 
          this.fileToUpload = this.Videofiles[0];
@@ -143,7 +141,6 @@ export class CreateHelpComponent implements OnInit{
               let Path: any = response
               this.sPath=Path.pathSaved.toString()
               this.Help.video = this.sPath;
-              console.log(this.Help.video)
 
 
 

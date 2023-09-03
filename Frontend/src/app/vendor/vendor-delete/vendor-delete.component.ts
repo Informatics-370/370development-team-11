@@ -188,13 +188,11 @@ OnboardRequestDetails: any[] = [];
       this.ActRoute.paramMap.subscribe({
         next: (params) => {
           const ID = this.data.ID;
-          console.log(ID);
   
           if (ID) {
             this.VendorService.GetVendorDetailByID(ID).subscribe(result => {
                this.VendorDetail = result
                this.Vendor = this.VendorDetail.vendor
-                console.log(this.VendorDetail.vendor)
 
               if(this.VendorDetail.faxProvided == true ) {
                 this.getFax(this.VendorDetail.vendor_Detail_ID)
@@ -223,7 +221,6 @@ OnboardRequestDetails: any[] = [];
               }
 
               this.getFileDetails(this.VendorDetail.bankStampedConfirtmation,6)
-              console.log(this.FileDetails)
               
 
             });//result
@@ -244,7 +241,7 @@ OnboardRequestDetails: any[] = [];
 
     
     if(this.VendorDetail.faxProvided == true ) {
-      this.VendorService.DeleteFaxByID(this.Vendorfax.fax_ID).subscribe(response => {console.log(response)})
+      this.VendorService.DeleteFaxByID(this.Vendorfax.fax_ID).subscribe()
     }
     if(this.VendorDetail.vatRegistered == true) {
       
@@ -252,17 +249,17 @@ OnboardRequestDetails: any[] = [];
       VendorNo = "Vendor" + this.Vendor.vendor_ID
       fileName =  this.FileDetails[1].FileName
       this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
-      this.VendorService.DeleteVatByID(this.VendorVat.vendor_Detail_ID).subscribe(response => {console.log(response)})
+      this.VendorService.DeleteVatByID(this.VendorVat.vendor_Detail_ID).subscribe()
     }
     if(this.VendorDetail.websiteProvided == true) {
-      this.VendorService.DeleteWebsiteByID(this.VendorWebsite.website_ID).subscribe(response => {console.log(response)})
+      this.VendorService.DeleteWebsiteByID(this.VendorWebsite.website_ID).subscribe()
     }
     if(this.VendorDetail.license_Num_Provided == true) {
       FolderCategory = "LicenseOrAccreditationNumber";
       fileName =  this.FileDetails[5].FileName
       VendorNo = "Vendor" + this.Vendor.vendor_ID
       this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
-      this.VendorService.DeleteLicenseByID(this.VendorLicense.vendor_Detail_ID).subscribe(response => {console.log(response)})
+      this.VendorService.DeleteLicenseByID(this.VendorLicense.vendor_Detail_ID).subscribe()
     }
     if(this.VendorDetail.signed_Agreement_Provided == true) {
 
@@ -270,17 +267,17 @@ OnboardRequestDetails: any[] = [];
       VendorNo = "Vendor" + this.Vendor.vendor_ID
       fileName =  this.FileDetails[3].FileName
       this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
-      this.VendorService.DeleteAgreementByID(this.VendorAgreement.agreement_ID).subscribe(response => {console.log(response)})
+      this.VendorService.DeleteAgreementByID(this.VendorAgreement.agreement_ID).subscribe()
     }
     if(this.VendorDetail.payment_Terms_Provided == true) {
-      this.VendorService.DeletePaymentTerms(this.VendorPaymentTerms.payment_Terms_ID).subscribe(response => {console.log(response)})
+      this.VendorService.DeletePaymentTerms(this.VendorPaymentTerms.payment_Terms_ID).subscribe()
     }    
     if(this.VendorDetail.income_Tax_Num_Provided == true) {
       FolderCategory = "IncomeTax";
       VendorNo = "Vendor" + this.Vendor.vendor_ID
       fileName =  this.FileDetails[2].FileName
       this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
-      this.VendorService.DeleteIncomeTaxByID(this.VendorTax.vendor_Detail_ID).subscribe(response => {console.log(response)})
+      this.VendorService.DeleteIncomeTaxByID(this.VendorTax.vendor_Detail_ID).subscribe()
     }
     if(this.VendorDetail.registration_Provided == true) {
       FolderCategory = "RegistrationProof";
@@ -332,7 +329,6 @@ OnboardRequestDetails: any[] = [];
 
 
     getFax(FaxID:number) {
-      console.log(FaxID)
       this.VendorService.GetFaxByID(FaxID).subscribe(result => {
       this.Vendorfax = result
     })

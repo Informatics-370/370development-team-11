@@ -44,7 +44,6 @@ export class DeleteMandateLimitComponent {
     this.route.paramMap.subscribe({
       next: (params) => {
         const ID = this.data.id;
-        console.log(ID);
 
         if (ID) {
           this.dataService.GetMandateLimit(ID).subscribe(result => {

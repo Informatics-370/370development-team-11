@@ -353,7 +353,7 @@ export class UploadInvoiceComponent {
   myTempRef!: ElementRef;
 
   ngOnInit(): void {
-    console.log(this.data.ID)
+
     this.myForm = this.formBuilder.group({
       FileAdded: ["", [Validators.required]],
     });
@@ -384,9 +384,6 @@ export class UploadInvoiceComponent {
   }
 
   onFileUpload(event: any) {
-    console.log('Event:', event);
-    console.log('Event Target:', event.target);
-    console.log('Files:', event.target.files);
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[0] = this.fileToUpload;
@@ -394,7 +391,6 @@ export class UploadInvoiceComponent {
   }
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.fileToUpload = this.files[0];
     var name = "" + this.data.name
     if (this.fileToUpload != null) {

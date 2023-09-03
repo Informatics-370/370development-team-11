@@ -126,7 +126,6 @@ export class ReportFilterMenuComponent implements OnInit {
   GenerateBEESpentReport() {
     let DateTransf: any
     DateTransf = new DatePipe('en-ZA');
-    console.log(DateTransf.transform(this.range.get("end")?.value, 'MM, d, y'))
     this.ReportService.getBEESpendReport(DateTransf.transform(this.range.get("start")?.value, 'MM, d, y'), DateTransf.transform(this.range.get("end")?.value, 'MM, d, y')).subscribe(result => {
       this.BEESpendReportDetails = result;
 
@@ -145,12 +144,14 @@ export class ReportFilterMenuComponent implements OnInit {
           fontSize: 12,
           alignment: 'center',
           bold: true,
+          decoration: 'underline',
         },
         {
           text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
           fontSize: 12,
           alignment: 'center',
           bold: true,
+          decoration: 'underline',
         },
         {
           text: 'Period: ' + DateTransf.transform(this.range.get("start")?.value, 'MM/dd/y') + ' - ' + DateTransf.transform(this.range.get("end")?.value, 'MM/dd/y'),
@@ -257,9 +258,7 @@ export class ReportFilterMenuComponent implements OnInit {
         ...(Number(this.BEESpendReportDetails.reduce((sum, p) => (sum + 0), 0).toFixed(2)) != 0) ? [{ text: 'Column Chart for Total Procurement Entitlement Per BEE Level', fontSize: 12, alignment: 'center', color: '#244688', margin: [0, 0, 0, 10], pageBreak: 'before' },
         { image: this.columnChartbasestring.toBase64Image('image/png'), fit: [550, 700] },] : []
       ]
-      console.log(uniqueBranches.length)
       for (let a = 0; a < uniqueBranches.length; a++) {
-        console.log(a)
         if (this.BEESpendReportDetails.filter(x => x.branchName == uniqueBranches[a]).length != 0) {
           let BranchName = this.BEESpendReportDetails.filter(x => x.branchName == uniqueBranches[a])[0].branchName
           content.push(
@@ -474,14 +473,14 @@ export class ReportFilterMenuComponent implements OnInit {
         datasets: [{
           label: "Level 1",
           backgroundColor: "#4472c4",
-          data: [ReportsDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 100).toFixed(2)],
+          data: [ReportsDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2)],
           borderWidth: 2,
           borderColor: 'black',
         },
         {
           label: "Level 2",
           backgroundColor: "#ed7d31",
-          data: [ReportsDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 150).toFixed(2)],
+          data: [ReportsDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2)],
           borderWidth: 2,
           borderColor: 'black',
         },
@@ -495,28 +494,28 @@ export class ReportFilterMenuComponent implements OnInit {
         {
           label: "Level 4",
           backgroundColor: "#ffc000",
-          data: [ReportsDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 1).toFixed(2)],
+          data: [ReportsDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2)],
           borderWidth: 2,
           borderColor: 'black',
         },
         {
           label: "Level 5",
           backgroundColor: "#5b9bd5",
-          data: [ReportsDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 140).toFixed(2)],
+          data: [ReportsDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)),0).toFixed(2)],
           borderWidth: 2,
           borderColor: 'black',
         },
         {
           label: "Level 6",
           backgroundColor: "#8cba6d",
-          data: [ReportsDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 260).toFixed(2)],
+          data: [ReportsDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)),0).toFixed(2)],
           borderWidth: 2,
           borderColor: 'black',
         },
         {
           label: "Level 7",
           backgroundColor: "#2b487c",
-          data: [ReportsDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 300).toFixed(2)],
+          data: [ReportsDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2)],
           borderWidth: 2,
           borderColor: 'black',
         },
@@ -603,8 +602,6 @@ export class ReportFilterMenuComponent implements OnInit {
       data.push((Number(ReportsDetails.filter(x => (x.branchName == uniqueBranches[a]) && (x.beE_Level == 0)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2)) / total))
       labels.push(uniqueBranches[a])
     }
-    console.log(data)
-    console.log(labels)
     let percentPipe = new PercentPipe('en-ZA');
     this.myPie = new Chart('pie', {
       type: 'pie',
@@ -676,7 +673,6 @@ export class ReportFilterMenuComponent implements OnInit {
       var User = this.ReportService.decodeUser(sessionStorage.getItem('token'))
       var CurrencyTransform = new CurrencyPipe('en-ZA')
       let uniqueBranches = this.VendorSpentReportDetails.map(p => (p.branchName)).filter((name, index, currentval) => currentval.indexOf(name) === index)
-      console.log(this.VendorSpentReportDetails)
       let content = [
         {
           text: 'Vendor Spend Report',
@@ -690,12 +686,14 @@ export class ReportFilterMenuComponent implements OnInit {
           fontSize: 12,
           alignment: 'center',
           bold: true,
+          decoration: 'underline',
         },
         {
           text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
           fontSize: 12,
           alignment: 'center',
           bold: true,
+          decoration: 'underline',
         },
         {
           canvas: [
@@ -743,12 +741,10 @@ export class ReportFilterMenuComponent implements OnInit {
       ]
 
       // content.push({text:'test',fontSize:12,alignment:'left',color:'blue',bold:false},)
-      console.log(uniqueBranches.length);
+
       for (let i = 1; i < uniqueBranches.length; i++) {
 
-        console.log(i)
-        console.log(uniqueBranches[i])
-        console.log(uniqueBranches.length);
+
         if (this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[i]).length != 0) {
           content.push(
             {
@@ -866,7 +862,7 @@ export class ReportFilterMenuComponent implements OnInit {
         // Add space above the line
         margin: [0, 10, 0, 10]
       },
-        { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true })
+        { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true,decoration:null })
 
       const docDefinition = {
         footer: function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },

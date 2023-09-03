@@ -43,13 +43,13 @@ export class OTPComponent implements OnInit {
       this.mail.Username = this.data.MailUserName,
       this.mail.Password = this.data.NewPass;
     this.mail.Email = this.data.MailEmail;
-    console.log(this.mail)
+
     this.startCountdown();
-    console.log(this.data.userID)
+
   }
 
   OnOTPConfirm() {
-    console.log(this.data.userID)
+
     let OTPVAL = this.myForm.get("OTP")?.value
     if (OTPVAL == this.data.OTP) {
       this.dataservice.UpdatePassword(this.data.userID, this.data.NewPass).subscribe({

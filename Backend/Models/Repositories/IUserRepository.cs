@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using ProcionAPI.Models.Entities;
 
 namespace ProcionAPI.Models.Repositories { 
@@ -34,7 +35,7 @@ namespace ProcionAPI.Models.Repositories {
 
         //---------------------------------------------------------------------------VALIDATION------------------------------------------------------------------------------------
         Task<User> EditUserValidationAsync(string name, int id);
-        Task<User> CreateUserValidationAsync(string name);
+        Task<User> CreateUserValidationAsync(string name, string cellphoneNum, string Type);
         Task<Employee> CreateUserRoleValidationAsync(string department, string role);
         Task<bool> VerifyCredentials(string UserName, string Password);
         Task<Delegation_Of_Authority> AdminDeleteDelegationValidationAsync(int id);

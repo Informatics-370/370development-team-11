@@ -127,7 +127,6 @@ export class MainNavComponent implements OnInit {
   ngOnInit() {
     this.AuthServ.userRole$.subscribe(role => {
       this.RoleToUse = role
-      console.log(role)
       this.isLoggedIn = true;
     })
 

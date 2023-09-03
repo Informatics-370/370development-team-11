@@ -62,38 +62,32 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
     if (this.iCanViewPenPro == "true") {
       this.canViewPenPro = "true";
     }
-
+    console.log(this.iRole)
     if (this.iRole == "BO") {
       this.GetProcurementRequests();
-      console.log(this.ProcurementRequests)
-      console.log(this.SearchedPRequests)
     }
 
     
    
 
-    //console.log(User)
   }
 
   GetProcurementRequests() {
 
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
-    //console.log(User)
     this.dataService.GetProcurementRequests().subscribe(result => {
       let procurementRequestList: any[] = result;
       procurementRequestList.forEach(e => {
-        // console.log(e.user.username)
-        // console.log(User.username)
    
         if (e.requisition_Status_ID == 3 && User != e.user.username) {
           this.dataService.GetEmployeeByUsername(e.user.username).subscribe(ud => {
             
             let userdep: any = ud;
+            
             if (userdep.department.name == this.iDep) {
               this.ProcurementRequests.push(e)
               this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
               this.SearchedPRequests.paginator = this.paginator;
-              console.log(this.ProcurementRequests)
             }
 
               
@@ -104,7 +98,6 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
       //this.ProcurementRequests = [...procurementRequestList];
       //this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
       //this.SearchedPRequests.paginator = this.paginator;
-      //console.log(this.SearchedPRequests[0].requisition_Status_ID)
       if (result) {
         hideloader();
       }

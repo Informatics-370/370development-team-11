@@ -128,7 +128,6 @@ export class ViewEmployeeComponent implements OnInit {
       }
       //this.Employees = result;
       //this.SearchedEmployee = this.Employees;
-      //console.log(result)
     });
     function hideloader() {
       document.getElementById('loading')
@@ -287,7 +286,6 @@ export class ViewEmployeeComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -295,7 +293,6 @@ export class ViewEmployeeComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 

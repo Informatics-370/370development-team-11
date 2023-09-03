@@ -308,7 +308,7 @@ export class CreateEmployeeComponent implements OnInit {
     this.dataService.getEmployeebyEmail(this.emp.email).subscribe({
       next: (exist) => {
         if (exist == null) {
-          this.dataService.CreateUserValidation(username).subscribe({
+          this.dataService.CreateUserValidation(username, this.emp.cellPhone_Num.toString(), "Employee").subscribe({
             next: (Result) => {
               if (Result == null) {
                 this.dataService.CreateUserRoleValidation(this.emp.department.name, this.usr.role.name).subscribe(re => {

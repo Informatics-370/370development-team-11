@@ -187,8 +187,7 @@ export class RequestUpdateComponent {
     });
     this.rows.push(row);
     this.fileToUpload = this.files[0]
-   // console.log(this.onboardRequest[5])
-    console.log(this.CompanyContactInfoFormGroup.controls.RequestData.value.length)
+
 
     this.ActRoute.paramMap.subscribe({
       next: (paramater) => {
@@ -205,11 +204,11 @@ export class RequestUpdateComponent {
         this.dataService.GetRequestByID(Number(RequestID)).subscribe(result => {
           let RequestList: any[] = result
           RequestList.forEach((element) => {
-            console.log(element)
+
             this.onboardRequest.push(element)
             if(element.vendor.preferedVendor == true) {
               this.CheckPrev = this.onboardRequest.length-1;
-             // console.log(this.CheckPrev)
+
             }
             const row = this._formBuilder.group({
               tab: [this.onboardRequest.length],
@@ -244,7 +243,7 @@ export class RequestUpdateComponent {
           this.dataService.GetSoleSupplierByID(RequestList[0].vendor_ID).subscribe(result => {
             this.SoleSupply = result
             this.SoleSupplierFormGroup.get('Reason')?.setValue(this.SoleSupply.reason);
-            console.log(this.SoleSupply)
+
           })
           let sFile = this.onboardRequest[0].quotes;
           this.SoleSupplierFormGroup.get('CompanyName')?.setValue(this.onboardRequest[0].vendor.name);
@@ -279,7 +278,7 @@ export class RequestUpdateComponent {
 
   setActiveTab() {
     this.selectedIndex = 0;
-    console.log(this.selectedIndex)
+
   }
   //should also be delete
   radioButtonChange(Supplier: MatRadioChange) {
@@ -290,9 +289,7 @@ export class RequestUpdateComponent {
   onFileUpload(i: number, event: any) {
     this.fileToUpload = event.target.files[0];
     //this.fileToUpload?.name
-    // console.log(this.fileToUpload)
-    console.log(this.fileToUpload)
-    console.log(this.files[0])
+
     if (this.fileToUpload != null) {
       for (let a = 0; a < (i + 1); a++) {
         if (a == i) {
@@ -367,7 +364,7 @@ export class RequestUpdateComponent {
         this.dataService.DeleteFile(RequestNo,filename).subscribe!
     
         this.fileToUpload = this.files[i]
-        console.log("if statement 1")
+
         RequestNo = "Request" + this.onboardRequest[0].onboard_Request_Id.toString();
         this.dataService.OnboardFileAdd(RequestNo,this.fileToUpload).subscribe(response => {
           let Path: any = response
@@ -382,10 +379,10 @@ export class RequestUpdateComponent {
           this.Onboard_Request.vendor = this.Vendor 
           this.Onboard_Request.users = this.onboardRequest[i].users
           this.Onboard_Request.user_Id = Number(this.onboardRequest[0].users.user_Id);
-          //console.log(i)
+
           this.dataService.UpdateOnboardRequest(this.onboardRequest[i].onboard_Request_Id,this.Onboard_Request).subscribe({
             next: (response) => {
-              console.log(response);
+
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -408,7 +405,7 @@ export class RequestUpdateComponent {
       }//if
       else {
         if (this.onboardRequest[i] != undefined) {
-          console.log("if statement 2")
+
           
           this.Onboard_Request.quotes = this.onboardRequest[i].quotes
           this.Vendor = this.onboardRequest[i].vendor
@@ -420,13 +417,12 @@ export class RequestUpdateComponent {
           this.Onboard_Request.vendor = this.Vendor;
           this.Onboard_Request.users = this.onboardRequest[i].users
           this.Onboard_Request.user_Id = Number(this.onboardRequest[0].users.user_Id);
-          //console.log(this.Vendor)
-          //console.log(this.CompanyContactInfoFormGroup.controls.RequestData.value[i].PreferedVendor)
+
           this.Onboard_Request.vendor.preferedVendor = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].PreferedVendor;
-          //console.log(this.onboardRequest)
+
           this.dataService.UpdateOnboardRequest(this.onboardRequest[i].onboard_Request_Id,this.Onboard_Request).subscribe({
             next: (response) => {
-              console.log(response);
+
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -445,8 +441,7 @@ export class RequestUpdateComponent {
             }});//dataservice
         }
         else {
-          console.log("if statement 3")
-          console.log('it was here')
+
           let RequestNo = "Request" + this.onboardRequest[0].onboard_Request_Id.toString()
           this.dataService.OnboardFileAdd(RequestNo,this.fileToUpload).subscribe(response => {
           let Path: any = response
@@ -487,7 +482,7 @@ export class RequestUpdateComponent {
     }//for loop
 
     if(this.onboardRequest.length >  this.CompanyContactInfoFormGroup.controls.RequestData.value.length) {
-      console.log("why")
+
       for (let i = this.CompanyContactInfoFormGroup.controls.RequestData.value.length; i < this.onboardRequest.length; i++) {
         let sFile = this.onboardRequest[i].quotes;
         let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
@@ -532,8 +527,7 @@ export class RequestUpdateComponent {
     //this.onboardRequest[0].users.role = this.rl;
     this.onboardRequest[0].vendor.vendor_Status = this.VStatus
     //this.onboardRequest[0].user_Id = 1
-   // console.log(this.onboardRequest)
-    //console.log(this.files[0])
+
     this.fileToUpload = this.files[0]
     this.Vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value 
     this.Vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value 
@@ -560,7 +554,7 @@ export class RequestUpdateComponent {
       let RequestNo = "Request" + this.Onboard_Request.onboard_Request_Id 
       this.dataService.OnboardFileAdd(RequestNo,this.fileToUpload).subscribe(response => {
         let Path: any = response
-        console.log(Path)
+
         this.sPath = Path.pathSaved.toString()
         this.Onboard_Request.quotes = this.sPath
         this.Onboard_Request.vendor.sole_Supplier_Provided = true;
@@ -593,14 +587,14 @@ export class RequestUpdateComponent {
     else {
      this.Onboard_Request.vendor.name = this.SoleSupplierFormGroup.get("CompanyName")?.value ;
      this.Onboard_Request.vendor.email = this.SoleSupplierFormGroup.get("CompanyEmail")?.value;
-      console.log(this.Onboard_Request)
+
      // this.SoleSupply.vendor = this.Onboard_Request.vendor  
      this.Onboard_Request.users = this.onboardRequest[0].users
      this.Onboard_Request.user_Id = Number(this.onboardRequest[0].users.user_Id);
       this.Onboard_Request.quotes = this.onboardRequest[0].quotes 
         this.dataService.UpdateOnboardRequest(this.onboardRequest[0].onboard_Request_Id, this.Onboard_Request).subscribe(
           (RequestAdded) => {
-            console.log(RequestAdded)
+
             this.SoleSupply.vendor_ID = this.Onboard_Request.vendor_ID
             this.SoleSupply.vendor = RequestAdded.vendor
             this.dataService.UpdateSoleSupplier(RequestAdded.vendor_ID,this.SoleSupply).subscribe({
@@ -646,9 +640,7 @@ export class RequestUpdateComponent {
 PreferredChecked = false;
 CheckPrev:any;
 onPreferredChecked(i: number) {
-   //console.log(this.CheckPrev)
-  // console.log(this.rows.controls[this.CheckPrev].get('PreferedVendor').value)
-   console.log(i)
+
   if ((this.CheckPrev != undefined) && (this.CheckPrev != i) && (this.rows.controls[this.CheckPrev].get('PreferedVendor').value != undefined)) {
 
     this.rows.controls[this.CheckPrev].get('PreferedVendor')?.setValue(false);
