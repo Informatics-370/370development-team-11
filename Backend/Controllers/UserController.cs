@@ -684,12 +684,12 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
-        [Route("CreateUserValidation/{name}")]
-        public async Task<IActionResult> CreateUserValidation([FromRoute] string name)
+        [Route("CreateUserValidation/{name}/{cellphoneNum}/{Type}")]
+        public async Task<IActionResult> CreateUserValidation([FromRoute] string name, [FromRoute] string cellphoneNum, [FromRoute] string Type)
         {
             try
             {
-                var result = await _UserRepository.CreateUserValidationAsync(name);
+                var result = await _UserRepository.CreateUserValidationAsync(name, cellphoneNum, Type);
                 return Ok(result);
             }
             catch (Exception)

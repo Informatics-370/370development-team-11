@@ -166,7 +166,7 @@ export class CreateAdminComponent implements OnInit {
     this.mail.Email = this.myForm.get('Email')?.value;
     document.getElementById('loading').style.display = 'block';
 
-    this.dataService.CreateUserValidation(username).subscribe({
+    this.dataService.CreateUserValidation(username, this.adm.cellPhone_Num.toString(), "Admin").subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.AddUser(this.usr).subscribe(result => {
@@ -233,7 +233,7 @@ export class CreateAdminComponent implements OnInit {
   }
 
   openCreateAdminTab(): void {
-    const userManualUrl = 'assets/PDF/CreateAdminUM.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateAdminUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

@@ -295,13 +295,38 @@ namespace ProcionAPI.Models.Repositories
             return await _dbContext.SaveChangesAsync() > 0;
         }
 
-        public async Task<User> CreateUserValidationAsync(string name)
+        public async Task<User> CreateUserValidationAsync(string name, string cellphoneNum, string Type)
         {
-            User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.Username == name);
-
-            if (ExistingUser != null)
+            if (Type == "Employee")
             {
-                return ExistingUser;
+                User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.Username == name);
+                Employee UserWithPHNUM = await _dbContext.Employee.FirstOrDefaultAsync(pn => pn.CellPhone_Num == cellphoneNum);
+
+
+                if (ExistingUser != null || UserWithPHNUM != null)
+                {
+                    return ExistingUser;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            else if (Type == "Admin")
+            {
+                User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.Username == name);
+                Admin UserWithPHNUM = await _dbContext.Admin.FirstOrDefaultAsync(pn => pn.CellPhone_Num == cellphoneNum);
+
+
+                if (ExistingUser != null || UserWithPHNUM != null)
+                {
+                    return ExistingUser;
+                }
+                else
+                {
+                    return null;
+                }
             }
 
             else
