@@ -105,7 +105,7 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
             catch(Exception  ex)
             {
-                Console.WriteLine(ex.Message);
+       
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
@@ -121,7 +121,7 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+            
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }

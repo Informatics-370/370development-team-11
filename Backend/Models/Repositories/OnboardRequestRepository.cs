@@ -183,7 +183,7 @@ namespace ProcionAPI.Models.Repositories
             var ReqUpdt = await _dbContext.Onboard_Request.Include(x=> x.Onboard_Status).FirstOrDefaultAsync(x => (x.Onboard_Request_Id == RequestID) && (x.Vendor_ID == UpdatedRequest.Vendor.Vendor_ID));
 
             // var existingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Name.ToLower().Trim() == UpdatedRequest.Vendor.Name.ToLower().Trim());
-          //  Console.WriteLine(ReqUpdt);
+          
 
             //  ReqUpdt.Users.Role = new Role();
 
@@ -231,7 +231,7 @@ namespace ProcionAPI.Models.Repositories
             ReqUpdt.Quotes = UpdatedRequest.Quotes;
 
             await _dbContext.SaveChangesAsync();
-            //Console.WriteLine(ReqUpdt);
+            
             return  ReqUpdt;
         }
 
