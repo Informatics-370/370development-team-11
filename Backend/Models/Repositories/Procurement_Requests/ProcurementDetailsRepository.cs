@@ -609,7 +609,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 .Where(x => (x.Budget_Allocation.Department.Name == department) && (x.Budget_Allocation.Year >= year) ).ToListAsync(); ;
  
 
-            var data = BudgetLineDetails.Where(x => Month >= (Array.IndexOf(month2Db, x.Month.ToLower())+1));
+            var data = BudgetLineDetails.Where(x => Month <= (Array.IndexOf(month2Db, x.Month.ToLower())+1));
 
             return data.ToArray();
         }

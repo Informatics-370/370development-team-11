@@ -997,9 +997,9 @@ namespace ProcionAPI.Models.Repositories
         {
 
             Notification newNotification = new Notification();
-
+            var GRCUserID = await _dbContext.User.Include(x=> x.Role).FirstOrDefaultAsync(x => x.Role.Name.ToUpper() == "GRC");
             newNotification.Send_Date = beeDate;
-            newNotification.User_Id = 1;
+            newNotification.User_Id = GRCUserID.User_Id;
             newNotification.Name = Description;
             newNotification.Notification_Type_ID = 2;
             var existingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.User_Id == newNotification.User_Id);
@@ -1034,9 +1034,9 @@ namespace ProcionAPI.Models.Repositories
             {
             
                     Notification newNotification = new Notification();
-
+                    var GRCUserID = await _dbContext.User.Include(x=> x.Role).FirstOrDefaultAsync(x => x.Role.Name.ToUpper() == "GRC");
                     newNotification.Send_Date = DateTime.Now.Date;
-                    newNotification.User_Id = 1;
+                    newNotification.User_Id = GRCUserID.User_Id;
                     newNotification.Name = "Performance review for " + ven.Name + " is needed.";
                     newNotification.Notification_Type_ID = 3;
                     var existingUser = await _dbContext.User.Include(x=> x.Access).FirstOrDefaultAsync(x => x.User_Id == newNotification.User_Id);

@@ -62,7 +62,7 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
     if (this.iCanViewPenPro == "true") {
       this.canViewPenPro = "true";
     }
-
+    console.log(this.iRole)
     if (this.iRole == "BO") {
       this.GetProcurementRequests();
       console.log(this.ProcurementRequests)
@@ -84,11 +84,13 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
       procurementRequestList.forEach(e => {
         // console.log(e.user.username)
         // console.log(User.username)
-   
+        //console.log(userdep.department.name)
+        console.log(this.iDep)
         if (e.requisition_Status_ID == 3 && User != e.user.username) {
           this.dataService.GetEmployeeByUsername(e.user.username).subscribe(ud => {
             
             let userdep: any = ud;
+            
             if (userdep.department.name == this.iDep) {
               this.ProcurementRequests.push(e)
               this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
