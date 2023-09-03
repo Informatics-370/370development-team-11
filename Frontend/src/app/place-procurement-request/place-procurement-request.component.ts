@@ -51,10 +51,9 @@ export class PlaceProcurementRequestComponent implements OnInit {
     }
 
     this.GetProcurementRequests();
-    console.log(this.ProcurementRequests)
-    console.log(this.SearchedPRequests)
+
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
-    console.log(User)
+
   }
 
   GetProcurementRequests() {
@@ -65,11 +64,11 @@ export class PlaceProcurementRequestComponent implements OnInit {
     this.dataService.GetProcurementRequests().subscribe(result => {
       let procurementRequestList: any[] = result;
       procurementRequestList.forEach(e => {
-        //console.log(e)
+
         if (e.requisition_Status_ID == 1) {
-          console.log(e)
+
           this.dataService.GetProcurementDetailsByRequestID(e.procurement_Request_ID).subscribe(a => {
-            //console.log(result)
+
             if (a == null) {
               if (TempAcc == "None") {
                 if (e.user.username == User) {
@@ -96,7 +95,7 @@ export class PlaceProcurementRequestComponent implements OnInit {
       })
       //this.ProcurementRequests = [...procurementRequestList];
       //this.SearchedPRequests = [...this.ProcurementRequests];
-      //console.log(this.SearchedPRequests[0].requisition_Status_ID)
+
       if (result) {
         hideloader();
       }

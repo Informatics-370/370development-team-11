@@ -38,7 +38,7 @@ export class DeleteBranchComponent implements OnInit{
     this.ActRoute.paramMap.subscribe({
       next: (params) => {
         const ID = this.data.branch_ID;
-        console.log(ID);
+
 
         if (ID) {
           this.dataService.GetBranch(ID).subscribe(result => {

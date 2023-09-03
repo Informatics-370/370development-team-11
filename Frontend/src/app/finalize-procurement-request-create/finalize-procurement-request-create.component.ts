@@ -364,7 +364,6 @@ export class FinalizeProcurementRequestCreateComponent {
 
     this.dataService.GetBudgetLines().subscribe(response => {
       this.BudgetAllocationCode = response;
-      console.log(this.BudgetAllocationCode)
     })
 
     this.User = this.dataService.decodeUser(sessionStorage.getItem("token"))
@@ -382,7 +381,6 @@ export class FinalizeProcurementRequestCreateComponent {
     if (Selection == true) {
       let ProcurementRequest = `ProcurementDetails${this.id}`
       let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString();
-      console.log(ProcurementRequest)
       this.dataService.POPFileAdd(ProofName, this.file[0]).subscribe(response => {
 
         let Path: any = response.pathSaved.toString()
@@ -541,7 +539,6 @@ export class FinalizeProcurementRequestCreateComponent {
   file: File[] = [null];
   uploadFile(i: number, event: any) {
     this.file[i] = event.target.files[0];
-    console.log(this.file[i])
   }
   onCancel(): void {
     this.finalizationForm.reset();
@@ -551,12 +548,10 @@ export class FinalizeProcurementRequestCreateComponent {
   GetProcurementDetails(id: number) {
     this.dataService.GetProcurementDetailsByID(id).subscribe(result => {
       this.ProcurementDetails = result;
-      console.log(this.ProcurementDetails.procurement_Details_ID)
       this.ActualAmountDisplay = this.ProcurementDetails.budget_Line.actualAmt;
       this.TotalAmountDisplay = this.ProcurementDetails.total_Amount;
       this.ActualAmountDisplay = this.currencyPipe.transform(this.ActualAmountDisplay, 'R');
       this.TotalAmountDisplay = this.currencyPipe.transform(this.TotalAmountDisplay, 'R');
-      console.log(result)
     })
   }
 

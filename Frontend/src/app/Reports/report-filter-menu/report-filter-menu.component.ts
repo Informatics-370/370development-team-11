@@ -126,7 +126,6 @@ export class ReportFilterMenuComponent implements OnInit {
   GenerateBEESpentReport() {
     let DateTransf: any
     DateTransf = new DatePipe('en-ZA');
-    console.log(DateTransf.transform(this.range.get("end")?.value, 'MM, d, y'))
     this.ReportService.getBEESpendReport(DateTransf.transform(this.range.get("start")?.value, 'MM, d, y'), DateTransf.transform(this.range.get("end")?.value, 'MM, d, y')).subscribe(result => {
       this.BEESpendReportDetails = result;
 
@@ -257,9 +256,7 @@ export class ReportFilterMenuComponent implements OnInit {
         ...(Number(this.BEESpendReportDetails.reduce((sum, p) => (sum + 0), 0).toFixed(2)) != 0) ? [{ text: 'Column Chart for Total Procurement Entitlement Per BEE Level', fontSize: 12, alignment: 'center', color: '#244688', margin: [0, 0, 0, 10], pageBreak: 'before' },
         { image: this.columnChartbasestring.toBase64Image('image/png'), fit: [550, 700] },] : []
       ]
-      console.log(uniqueBranches.length)
       for (let a = 0; a < uniqueBranches.length; a++) {
-        console.log(a)
         if (this.BEESpendReportDetails.filter(x => x.branchName == uniqueBranches[a]).length != 0) {
           let BranchName = this.BEESpendReportDetails.filter(x => x.branchName == uniqueBranches[a])[0].branchName
           content.push(
@@ -603,8 +600,6 @@ export class ReportFilterMenuComponent implements OnInit {
       data.push((Number(ReportsDetails.filter(x => (x.branchName == uniqueBranches[a]) && (x.beE_Level == 0)).reduce((sum, p) => (sum + Number(p.totalSpend)), 0).toFixed(2)) / total))
       labels.push(uniqueBranches[a])
     }
-    console.log(data)
-    console.log(labels)
     let percentPipe = new PercentPipe('en-ZA');
     this.myPie = new Chart('pie', {
       type: 'pie',
@@ -676,7 +671,6 @@ export class ReportFilterMenuComponent implements OnInit {
       var User = this.ReportService.decodeUser(sessionStorage.getItem('token'))
       var CurrencyTransform = new CurrencyPipe('en-ZA')
       let uniqueBranches = this.VendorSpentReportDetails.map(p => (p.branchName)).filter((name, index, currentval) => currentval.indexOf(name) === index)
-      console.log(this.VendorSpentReportDetails)
       let content = [
         {
           text: 'Vendor Spend Report',
@@ -743,12 +737,10 @@ export class ReportFilterMenuComponent implements OnInit {
       ]
 
       // content.push({text:'test',fontSize:12,alignment:'left',color:'blue',bold:false},)
-      console.log(uniqueBranches.length);
+
       for (let i = 1; i < uniqueBranches.length; i++) {
 
-        console.log(i)
-        console.log(uniqueBranches[i])
-        console.log(uniqueBranches.length);
+
         if (this.VendorSpentReportDetails.filter(x => x.branchName == uniqueBranches[i]).length != 0) {
           content.push(
             {

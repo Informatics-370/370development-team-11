@@ -80,8 +80,6 @@ export class ViewDelegationComponent implements OnInit{
           }
 
           this.RoleToUse = this.dataService.decodeUserRole(sessionStorage.getItem("token"))
-          //console.log(this.RoleToUse)
-          //console.log(this.RoleToUse === "Admin")
 
           this.GetDelegations();
         }
@@ -201,14 +199,12 @@ export class ViewDelegationComponent implements OnInit{
     const dialogRef = this.dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
   openRestoreDialog() {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 

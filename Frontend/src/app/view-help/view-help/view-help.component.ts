@@ -132,7 +132,6 @@ export class ViewHelpComponent implements OnInit {
           this.vFileDetails[i].FileName = vFile;
         }
       }
-      console.log(result)
     });
     function hideloader() {
       document.getElementById('loading')
@@ -203,7 +202,6 @@ export class ViewHelpComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -211,7 +209,6 @@ export class ViewHelpComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 

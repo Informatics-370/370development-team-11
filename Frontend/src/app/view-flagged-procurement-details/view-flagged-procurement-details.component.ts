@@ -212,7 +212,6 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
   }
 
   getItemDetails(sItem: string) {
-    console.log(sItem)
     if (sItem == "Consumable") {
       this.ConsumableChecked = true;
       this.AssetChecked = false;
@@ -229,22 +228,15 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
       this.ProcurementFormGroup.get("AssetDescription")?.disable();
     }
     else {
-      console.log("test")
-      console.log(this.ProcurementDetailsID)
       this.AssetChecked = true;
       this.ConsumableChecked = false;
       this.dataService.GetProcurementAsset().subscribe(a => {
-        console.log(a)
         a.forEach(b => {
-          console.log(b.procurement_Details_ID)
-          console.log(this.ProcurementDetailsID)
           if (b.procurement_Details_ID == this.ProcurementDetailsID) {
             this.dataService.GetAssetByID(b.asset_ID).subscribe(c => {
               this.ProcurementFormGroup.get("AssetName")?.setValue(c.name);
               this.ProcurementFormGroup.get("AssetDescription")?.setValue(c.description);
 
-              console.log(c.name)
-              console.log(c.description)
             })
 
           }

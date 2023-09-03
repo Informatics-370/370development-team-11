@@ -57,7 +57,6 @@ export class DeleteBudgetAllocationComponent {
     this.route.paramMap.subscribe({
       next: (params) => {
         const ID = this.data.id;
-        console.log(ID);
 
         if (ID) {
           this.dataService.GetBudgetAllocation(ID).subscribe(result => {

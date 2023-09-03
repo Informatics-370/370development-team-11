@@ -221,7 +221,6 @@ export class UserProfileEditComponent {
       this.usr.username = this.admin.user.username;
       this.usr.role_ID = this.admin.user.role.role_ID
       this.usr.access = this.admin.user.access;
-      console.log(this.admin.user.access.access_ID)
       this.usr.password = this.admin.user.password;
       this.usr.profile_Picture = this.admin.user.profile_Picture;
       this.cropImgPreview = this.admin.user.profile_Picture;
@@ -238,7 +237,6 @@ export class UserProfileEditComponent {
   onFileChange(event: any): void {
     this.imgChangeEvt = event;
     var img = this.imgChangeEvt;
-    console.log(event.target.files[0].name);
 
     const dialogRef: MatDialogRef<CropperModalComponent> = this.dialog.open(CropperModalComponent, {
       disableClose: true,
@@ -386,8 +384,6 @@ export class UserProfileEditComponent {
 
     this.dataService.EditUserValidation(username, this.usr.user_Id).subscribe({
       next: (Result) => {
-        console.log(Result)
-        console.log(this.usr)
         if (Result == null) {
           this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
             this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({

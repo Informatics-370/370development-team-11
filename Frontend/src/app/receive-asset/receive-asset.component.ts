@@ -111,7 +111,6 @@ export class ReceiveAssetComponent implements OnInit {
     document.getElementById('AnimationBtn').setAttribute('disabled', '');
     let StatusID = this.myForm.get("Status")?.value;
     let SelectedStatus = this.Statuses.findIndex(x => x.procurement_Status_ID == StatusID)
-    console.log(StatusID)
     document.getElementById('AnimationBtn').classList.toggle("is_active");
     document.getElementById('cBtn').style.display = "none";
     this.dataService.UpdateProcurementStatus(StatusID, this.id).subscribe({

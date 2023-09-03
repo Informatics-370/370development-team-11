@@ -222,7 +222,6 @@ export class VendordetailsViewComponent implements OnInit {
    for(let i = 0;i < 11;i++) {
       this.FileDetails.push({FileURL:"",FileName:""})
    }
-   console.log(this.FileDetails)
     this.route.paramMap.subscribe({
       next: (paramater) => {
         
@@ -239,8 +238,7 @@ export class VendordetailsViewComponent implements OnInit {
           this.VendorDetail.dateAccepted = test.transform(this.VendorDetail.dateAccepted, 'MMM d, y, h:mm:ss a');
           
           let sFilePath = this.VendorDetail.bankStampedConfirtmation
-          this.getFileDetails(sFilePath,9)
-          console.log(this.VendorDetail.vendor_Detail_ID)  
+          this.getFileDetails(sFilePath,9) 
           if(this.VendorDetail.faxProvided == true ) {
             this.getFax(this.VendorDetail.vendor_Detail_ID)
           }
@@ -280,11 +278,8 @@ export class VendordetailsViewComponent implements OnInit {
                 this.VendorService.GetBEEDetails(this.VendorDetail.vendor_ID).subscribe(value => {
                   this.BeeDetails = value;
                   this.BeeDetails.date = test.transform(this.BeeDetails.date, 'MMM d, y');
-                  console.log(this.BeeDetails)
                   let sFilePath = value.beE_Certificate
-                  //console.log(sFilePath)
                   this.getFileDetails(sFilePath,10)
-                  //console.log(this.BeeDetails)
                 })
               }
           })
@@ -315,7 +310,6 @@ export class VendordetailsViewComponent implements OnInit {
       
       this.VendorVat = result
       let sFilePath = this.VendorVat.vaT_Registration_Document
-      console.log(this.VendorVat.vaT_Registration_Document)
       this.getFileDetails(sFilePath,1)
     })
   }
@@ -323,7 +317,6 @@ export class VendordetailsViewComponent implements OnInit {
   getWebsite(WebsiteID:number) {
     this.VendorService.GetWebsiteByID(WebsiteID).subscribe(result => {
       this.VendorWebsite = result
-      console.log( this.VendorWebsite)
     })
   }
 
@@ -337,7 +330,6 @@ export class VendordetailsViewComponent implements OnInit {
 
   getAgreement(AgreementID:number) {
     this.VendorService.GetAgreementByID(AgreementID).subscribe(result => {
-      console.log(result)
       this.VendorAgreement = result
       let sFilePath = this.VendorAgreement.signed_Agreement_Doc
       this.getFileDetails(sFilePath,3)

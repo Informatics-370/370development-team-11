@@ -49,7 +49,6 @@ export class EditBranchComponent implements OnInit{
 
     this.dataService.GetBranch(+this.route.snapshot.params['branch_ID']).subscribe(result => {
       this.Branch = result
-      console.log(result)
       this.myForm.patchValue({
         name: this.Branch.name,
         street: this.Branch.street,
@@ -74,7 +73,6 @@ export class EditBranchComponent implements OnInit{
 
     this.dataService.EditBranchValidation(name, this.Branch.branch_ID).subscribe({
       next: (Result) => {
-        console.log(Result)
         if (Result == null) {
           this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe({
             next: (response) => {

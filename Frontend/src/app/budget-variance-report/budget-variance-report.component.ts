@@ -56,11 +56,9 @@ export class BudgetVarianceReportComponent implements OnInit {
       }, []);
 
       this.groupedBudgetLines = groupedData;
-      console.log(groupedData)
     });
 
     this.dataService.GetVarianceByDepartment().subscribe(data => {
-      console.log(data)
       this.detailedVariancesByDepartment = Object.keys(data).map(key => {
         return {
           department: key,

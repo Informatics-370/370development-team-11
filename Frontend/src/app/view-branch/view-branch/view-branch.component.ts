@@ -51,7 +51,6 @@ export class ViewBranchComponent implements OnInit {
 
   ngOnInit() {
     this.GetBranches();
-    console.log(this.Branches)
   }
 
   search() {
@@ -135,7 +134,6 @@ export class ViewBranchComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -143,7 +141,6 @@ export class ViewBranchComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 

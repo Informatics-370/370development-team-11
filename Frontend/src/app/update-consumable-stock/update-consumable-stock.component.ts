@@ -143,9 +143,7 @@ export class UpdateConsumableStockComponent implements OnInit {
     this.dataservice.GetConsumablePredictions(this.data.ID).subscribe({
       next: (item) => {
 
-        console.log(item)
         this.Data = item
-        console.log(this.Data)
         return this.Data;
       },
       error: (error) => {
@@ -177,7 +175,6 @@ export class UpdateConsumableStockComponent implements OnInit {
     let labelsData: string[] = [];
     let labelsPopulation: Number[] = [];
     let ActualsData: Number[] = [];
-    console.log(Data)
 
     Data.forEach((element: any) => {
 
@@ -186,7 +183,6 @@ export class UpdateConsumableStockComponent implements OnInit {
       labelsPopulation.push(element.PredictedAmount)
       ActualsData.push(element.ActualAmount)
     });
-    console.log(labelsPopulation)
 
     this.mychart = new Chart("linechart", {
       type: 'line',
@@ -240,7 +236,6 @@ export class UpdateConsumableStockComponent implements OnInit {
           next: (result) => {
             this.Consumables.name = response.name
             this.Consumables.consumable_Category.name = result.name
-            console.log(this.Consumables)
 
             this.History.stockAmt = this.myForm.get('StockLevel')?.value;
             this.History.dateCaptured = this.myForm.get("DateCaptured")?.value;
@@ -251,7 +246,6 @@ export class UpdateConsumableStockComponent implements OnInit {
 
             this.History.consumable = this.Consumables
 
-            console.log(this.History)
 
             this.dataservice.UpdateStock(this.History).subscribe({
               next: (response) => {

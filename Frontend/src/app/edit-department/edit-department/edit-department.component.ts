@@ -45,7 +45,6 @@ export class EditDepartmentComponent implements OnInit{
 
     this.dataService.GetDepartment(+this.route.snapshot.params['department_ID']).subscribe(result => {
       this.Department = result
-      console.log(result)
       this.myForm.patchValue({
         name: this.Department.name,
         description: this.Department.description
@@ -163,9 +162,7 @@ export class EditDepartmentComponent implements OnInit{
       next: (Result) => {
         if (Result == null) {
 
-          console.log(Result)
-          console.log(this.Department.department_ID)
-          console.log(this.myForm.value)
+
           this.dataService.EditDepartment(this.Department.department_ID, this.myForm.value).subscribe({
             next: (response) => {
 

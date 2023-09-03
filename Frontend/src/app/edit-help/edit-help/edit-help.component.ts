@@ -70,7 +70,6 @@ export class EditHelpComponent implements OnInit{
   getHelp() {
     this.dataService.GetHelp(+this.route.snapshot.params['help_ID']).subscribe(r => {
       this.help = r;
-      console.log(+this.route.snapshot.params['help_ID']);
       this.myForm.patchValue({
         name: this.help.name,
         //video: this.help.video,
@@ -79,7 +78,6 @@ export class EditHelpComponent implements OnInit{
         help_Category_ID: this.help.help_Category_ID
       });
 
-      console.log(this.myForm.get('video')?.value);
       this.helpID = this.help.help_ID;
       this.HelpToEdit.help_Category_ID = this.help.help_Category_ID;
       this.HelpToEdit.name = this.help.name;
@@ -398,7 +396,6 @@ export class EditHelpComponent implements OnInit{
             let Path: any = response
             this.sPath=Path.pathSaved.toString()
             this.HelpToEdit.user_Manual = this.sPath;
-            console.log(this.HelpToEdit.user_Manual)
 
 
             this.fileToUpload = this.Videofiles[0];    
@@ -414,7 +411,6 @@ export class EditHelpComponent implements OnInit{
             let Path: any = response
             this.sPath=Path.pathSaved.toString()
             this.HelpToEdit.video = this.sPath;
-            console.log(this.HelpToEdit.video)
 
 
 

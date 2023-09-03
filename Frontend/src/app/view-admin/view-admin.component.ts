@@ -281,7 +281,6 @@ export class ViewAdminComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -289,7 +288,6 @@ export class ViewAdminComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 

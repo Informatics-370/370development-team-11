@@ -98,7 +98,7 @@ export class RequestDeleteComponent {
     this.ActRoute.paramMap.subscribe({
       next: (params) => {
         const ID = this.data.ID;
-        console.log(ID);
+
 
         if (ID) {
           this.dataService.GetRequestByID(ID).subscribe(result => {
@@ -106,18 +106,18 @@ export class RequestDeleteComponent {
             requestlist.forEach((element) => {
               this.OnboardRequestDetails.push(element)
             });//result
-            console.log(this.OnboardRequestDetails.length)
+
           })//dataservice
         }//if
       }//next
     });//actroute
-    console.log(this.OnboardRequestDetails)
+
 
   }//ngonIt
 
   //add loop
   onConfirm(RequestId: number): void {
-    // console.log(this.OnboardRequestDetails.length)
+
     if (this.OnboardRequestDetails.length > 2) {
       for (let i = 0; i < this.OnboardRequestDetails.length; i++) {
         let VendorID = this.OnboardRequestDetails[i].vendor.vendor_ID
@@ -162,9 +162,9 @@ export class RequestDeleteComponent {
     if(this.OnboardRequestDetails[0].quotes != "None") {
       let sFile = this.OnboardRequestDetails[0].quotes;
       let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-      console.log(RequestNo)
+
       let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-      console.log(filename)
+
       this.dataService.DeleteFile(RequestNo,filename).subscribe()
       this.dataService.DeleteSoleSupplier(VendorID).subscribe(response => {
         this.dataService.DeleteRequest(RequestId,VendorID).subscribe({
@@ -198,9 +198,9 @@ export class RequestDeleteComponent {
       if (this.OnboardRequestDetails[0].quotes != "None") {
         let sFile = this.OnboardRequestDetails[0].quotes;
         let RequestNo = sFile.substring(0, sFile.indexOf("\\"))
-        console.log(RequestNo)
+
         let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-        console.log(filename)
+
         this.dataService.DeleteFile(RequestNo, filename).subscribe()
         this.dataService.DeleteSoleSupplier(VendorID).subscribe(response => {
           this.dataService.DeleteRequest(RequestId, VendorID).subscribe({

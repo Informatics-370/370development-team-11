@@ -84,7 +84,6 @@ export class ViewAuditLogComponent implements OnInit {
   }
   OnInPutChange() {
     const Searchterm = this.searchWord; // Use this.selectedFilter instead of this.searchWord
-    console.log(Searchterm);
 
     if (Searchterm === "User") {
       this.RefreshLogs()
@@ -124,7 +123,6 @@ export class ViewAuditLogComponent implements OnInit {
     const dialogRef = this.Dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -132,7 +130,6 @@ export class ViewAuditLogComponent implements OnInit {
     const dialogRef = this.Dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 
