@@ -145,12 +145,14 @@ export class ReportFilterMenuComponent implements OnInit {
           fontSize: 12,
           alignment: 'center',
           bold: true,
+          decoration: 'underline',
         },
         {
           text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
           fontSize: 12,
           alignment: 'center',
           bold: true,
+          decoration: 'underline',
         },
         {
           text: 'Period: ' + DateTransf.transform(this.range.get("start")?.value, 'MM/dd/y') + ' - ' + DateTransf.transform(this.range.get("end")?.value, 'MM/dd/y'),
@@ -474,14 +476,14 @@ export class ReportFilterMenuComponent implements OnInit {
         datasets: [{
           label: "Level 1",
           backgroundColor: "#4472c4",
-          data: [ReportsDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 100).toFixed(2)],
+          data: [ReportsDetails.filter(x => x.beE_Level == 1).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.35)), 0).toFixed(2)],
           borderWidth: 2,
           borderColor: 'black',
         },
         {
           label: "Level 2",
           backgroundColor: "#ed7d31",
-          data: [ReportsDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 150).toFixed(2)],
+          data: [ReportsDetails.filter(x => x.beE_Level == 2).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1.25)), 0).toFixed(2)],
           borderWidth: 2,
           borderColor: 'black',
         },
@@ -495,28 +497,28 @@ export class ReportFilterMenuComponent implements OnInit {
         {
           label: "Level 4",
           backgroundColor: "#ffc000",
-          data: [ReportsDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 1).toFixed(2)],
+          data: [ReportsDetails.filter(x => x.beE_Level == 4).reduce((sum, p) => (sum + (Number(p.totalSpend) * 1)), 0).toFixed(2)],
           borderWidth: 2,
           borderColor: 'black',
         },
         {
           label: "Level 5",
           backgroundColor: "#5b9bd5",
-          data: [ReportsDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)), 140).toFixed(2)],
+          data: [ReportsDetails.filter(x => x.beE_Level == 5).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.80)),0).toFixed(2)],
           borderWidth: 2,
           borderColor: 'black',
         },
         {
           label: "Level 6",
           backgroundColor: "#8cba6d",
-          data: [ReportsDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)), 260).toFixed(2)],
+          data: [ReportsDetails.filter(x => x.beE_Level == 6).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.60)),0).toFixed(2)],
           borderWidth: 2,
           borderColor: 'black',
         },
         {
           label: "Level 7",
           backgroundColor: "#2b487c",
-          data: [ReportsDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 300).toFixed(2)],
+          data: [ReportsDetails.filter(x => x.beE_Level == 7).reduce((sum, p) => (sum + (Number(p.totalSpend) * 0.50)), 0).toFixed(2)],
           borderWidth: 2,
           borderColor: 'black',
         },
@@ -690,12 +692,14 @@ export class ReportFilterMenuComponent implements OnInit {
           fontSize: 12,
           alignment: 'center',
           bold: true,
+          decoration: 'underline',
         },
         {
           text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
           fontSize: 12,
           alignment: 'center',
           bold: true,
+          decoration: 'underline',
         },
         {
           canvas: [
@@ -866,7 +870,7 @@ export class ReportFilterMenuComponent implements OnInit {
         // Add space above the line
         margin: [0, 10, 0, 10]
       },
-        { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true })
+        { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true,decoration:null })
 
       const docDefinition = {
         footer: function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
