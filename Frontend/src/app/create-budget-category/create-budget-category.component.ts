@@ -54,7 +54,6 @@ export class CreateBudgetCategoryComponent {
     this.budgetCategory.account_Name = this.budgetCategoryForm.get('account_Name')?.value;
     this.budgetCategory.account_Code = this.budgetCategoryForm.get('account_Code')?.value;
     this.budgetCategory.description = this.budgetCategoryForm.get('description')?.value;
-    console.log(this.budgetCategory)
     this.dataService.BudgetCategoryValidation(this.budgetCategory.account_Name).subscribe({
       next: (Result) => {
         if (Result == null) {

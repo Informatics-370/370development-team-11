@@ -70,7 +70,6 @@ export class EditBudgetCategoryComponent {
     this.currentBudgetCategory.account_Name = this.budgetCategoryForm.get('account_Name')?.value;
     this.currentBudgetCategory.account_Code = this.budgetCategoryForm.get('account_Code')?.value;
     this.currentBudgetCategory.description = this.budgetCategoryForm.get('description')?.value;
-    console.log(this.currentBudgetCategory)
 
     this.dataService.BudgetCategoryValidation(this.currentBudgetCategory.account_Name).subscribe(r => {
       if (r == null) {

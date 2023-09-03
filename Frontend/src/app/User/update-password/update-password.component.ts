@@ -168,7 +168,6 @@ export class UpdatePasswordComponent implements OnInit {
     //Validate Current Password
     this.dataService.VerifyCredentials(Username, Password).subscribe({
       next: (response) => {
-        console.log(response)
         if (response == true) {
           this.dataService.UpdatePassword(UserID, NewPassword).subscribe({
             next: (Response) => {

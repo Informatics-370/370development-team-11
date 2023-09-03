@@ -93,7 +93,7 @@ export class ReportsMainViewComponent implements OnInit {
       this.filter = filter;
     });
     this.ReportService.GetVarianceByDepartment().subscribe(data => {
-      console.log(data)
+
       this.detailedVariancesByDepartment = Object.keys(data).map(key => {
         return {
           department: key,
@@ -148,7 +148,7 @@ export class ReportsMainViewComponent implements OnInit {
     this.ReportService.getAllApprovedVendors(3).subscribe(result => {
       this.ApprovedVendorDetails = result;
       var User = this.ReportService.decodeUser(sessionStorage.getItem('token'))
-      console.log(this.ApprovedVendorDetails)
+
       let content = [
         {
           text: 'Approved Vendor List Report',

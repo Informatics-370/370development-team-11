@@ -170,7 +170,6 @@ export class CreateProcurementRequestComponent implements OnInit {
     this.GetVendors();
     let usr = this.dataService.decodeUser(sessionStorage.getItem("token"));
     this.userDepartment = this.dataService.decodeUserDep(sessionStorage.getItem("token"));
-    console.log(this.userDepartment);
     if (this.VendorType == "Approved") {
       this.myForm = this.formBuilder.group({
         Selection: ["Approved", [Validators.required]],
@@ -455,7 +454,6 @@ export class CreateProcurementRequestComponent implements OnInit {
                       this.ProcurementNotif.name = "A new procurement request for Vendor: " + this.Procurement_Request.vendor.name + " is awaiting your attention!";
                       this.dataService.GetEmployeeByDepartment(this.userDepartment).subscribe(ud => {
                         this.ProcurementNotif.user_ID = ud.user_Id;
-                        console.log(ud.user_Id);
                         this.dataService.ProcurementRequestAddNotification(this.ProcurementNotif).subscribe({
                           next: (Notif) => {
                             this.DisplayNotif()
@@ -535,7 +533,6 @@ export class CreateProcurementRequestComponent implements OnInit {
                   this.ProcurementNotif.name = "A new procurement request for Vendor: " + this.Procurement_Request.vendor.name + " is awaiting your attention!";
                   this.dataService.GetEmployeeByDepartment(this.userDepartment).subscribe(ud => {
                     this.ProcurementNotif.user_ID = ud.user_Id;
-                    console.log(ud.user_Id);
 
                     this.dataService.ProcurementRequestAddNotification(this.ProcurementNotif).subscribe({
                       next: (Notif) => {

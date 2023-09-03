@@ -178,7 +178,6 @@ export class EditDelegationComponent implements OnInit {
   getDelegation() {
     this.dataService.GetDelegation(+this.route.snapshot.params['did']).subscribe(r => {
       this.delegation = r;
-      console.log(r);
 
       this.myForm.patchValue({
         DelegatingName: this.delegation.delegatingParty,
@@ -205,7 +204,6 @@ export class EditDelegationComponent implements OnInit {
   getTempAccess() {
     this.dataService.GetTempAcc(+this.route.snapshot.params['did']).subscribe(r => {
       this.tempaccess = r;
-      console.log(r);
       this.ta.name = this.tempaccess.name;
       this.ta.IsAdmin = this.tempaccess.isAdmin;
       this.ta.CanAccInv = this.tempaccess.canAccInv;
@@ -296,8 +294,7 @@ export class EditDelegationComponent implements OnInit {
         this.ta.CanViewPenPro = "true";
       }
 
-      console.log(this.doa.user_Id);
-      console.log(this.ta);
+
     })
   }
 

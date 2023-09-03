@@ -102,7 +102,6 @@ export class ViewProcurementRequestComponent implements OnInit {
 
   GetProcurementRequests() {
     this.dataService.GetProcurementRequestsForUser(this.User).subscribe(result => {
-      console.log(result)
       let procurementRequestList: any[] = result;
       this.ProcurementRequests = [...procurementRequestList];
       this.SearchedPRequests = [...procurementRequestList];

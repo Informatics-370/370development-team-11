@@ -100,13 +100,11 @@ export class CreateBudgetLineComponent {
     this.budgetLine.budget_Allocation.budget_ID = this.id;
     this.budgetLine.budget_ID = this.id;
     this.budgetLine.budget_Allocation.department_ID = 0;
-    console.log(this.budgetLine);
 
     this.dataService.GetBudgetAllocation(this.id).subscribe((budgetAllocation: BudgetAllocation) => {
       this.dataService.GetBudgetLineItems(this.id).subscribe(budgetLineItems => {
         let totalBudgetLinesAmount = budgetLineItems.reduce((prev, cur) => prev + Number(cur.budgetAmt), 0);
         totalBudgetLinesAmount = totalBudgetLinesAmount + Number(this.budgetLine.budgetAmt)
-        console.log(totalBudgetLinesAmount)
         if (totalBudgetLinesAmount + Number(this.budgetLine.budgetAmt) > budgetAllocation.total) {
           var action = "Error";
           var title = "Budget Over Allocation";

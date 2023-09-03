@@ -59,9 +59,7 @@ export class RejectDelegationComponent implements OnInit {
   onConfirm(id: number): void {
     this.dataService.GetRevokeStatus().subscribe(r => {
       this.status = r;
-      console.log(r)
       let statusID = this.status.status_ID;
-      console.log(statusID)
 
       this.dataService.EditDelegationStatus(statusID, this.delID).subscribe(r => {
         this.dataService.DeleteTempAcc(this.delID).subscribe(x => {

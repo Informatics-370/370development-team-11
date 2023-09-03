@@ -252,7 +252,6 @@ export class VendorApproveEditComponent implements OnInit{
    const currentmonth = new Date().getMonth();
    const currentDay = new Date().getDate();
    this.minDate = new Date(currentYear - 1, currentmonth, currentDay+1);
-    console.log(this.minDate)
     this.FoundationaldocumentsFormGroup.get("BEELevel").setValue(1);
     this.FoundationaldocumentsFormGroup.get("BEELevel")?.disable();
     this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.disable();
@@ -264,12 +263,9 @@ export class VendorApproveEditComponent implements OnInit{
       next: (paramater) => {
         
         let VendorID = paramater.get("VendorID");
-        console.log(VendorID)
         this.VendorService.GetDueDiligence(Number(VendorID)).subscribe(element => {
           
-          console.log(element.b_BBEE_Certificate_Provided)
           this.DueDilligenceData = element
-          console.log(this.DueDilligenceData)
           this.DueDiligenceChecklistDetailsFormGroup.get("HasDDC")?.setValue(element.due_Diligence_Doc)
 
           this.FoundationaldocumentsFormGroup.get("MutualNDA")?.setValue(element.mutual_Nda_Signed)
@@ -302,7 +298,6 @@ export class VendorApproveEditComponent implements OnInit{
       this.VendorService.GetInsuranceByID(Number(VendorID)).subscribe(result => {
        let requestlist:any = result;
        requestlist.forEach(e => {
-          console.log(e)
           if(e.vendor_Insurance_Type_ID == 1) {
             let sFile = e.confirmation_Doc;
             let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
@@ -311,7 +306,6 @@ export class VendorApproveEditComponent implements OnInit{
             let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
             this.FileDetails[1].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
             this.FileDetails[1].FileName = filename
-            console.log(this.FileDetails)
           }
           else if(e.vendor_Insurance_Type_ID == 2) {
             let sFile = e.confirmation_Doc;
@@ -341,7 +335,6 @@ export class VendorApproveEditComponent implements OnInit{
             this.FileDetails[4].FileName = filename
           }
         })
-        console.log(this.FileDetails[1])
 
       })
 
@@ -373,7 +366,6 @@ export class VendorApproveEditComponent implements OnInit{
           if(element.popI_Present == true) {
             this.VendorService.GetPOPI(element.due_Diligence_ID).subscribe(response => {
               this.POPIDetails = response
-              console.log(response)
               if(this.POPIChecked == true) {
                 this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID")?.setValue(response.contracted_Partner_Type_ID)
                 this.InformationSecurityFormGroup.get("Personal_Data_Purpose")?.setValue(response.personal_Data_Purpose)
@@ -405,7 +397,6 @@ export class VendorApproveEditComponent implements OnInit{
             this.InformationSecurityFormGroup.get("Processing_Activities_Certification_Held").disable();
           }
           if(element.b_BBEE_Certificate_Provided == true) {
-            console.log("works")
             this.VendorService.GetBEEDetails(Number(VendorID)).subscribe(response => {
               this.VenBEEDetails = response //Number(VendorID)
               if(this.BEEChecked == true) {
@@ -413,10 +404,8 @@ export class VendorApproveEditComponent implements OnInit{
                 this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.enable();
                 this.FoundationaldocumentsFormGroup.get("BEECertificateDoc")?.enable();
                 
-                console.log(response)
                 this.FoundationaldocumentsFormGroup.get("BEELevel")?.setValue(response.beE_Level);
                 this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.setValue(response.date);
-                console.log(response)
                 let sFile = response.beE_Certificate;
                 let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
                 sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
@@ -424,7 +413,6 @@ export class VendorApproveEditComponent implements OnInit{
                 let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
                 this.FileDetails[0].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
                 this.FileDetails[0].FileName = filename
-                console.log(this.FileDetails[0])
               }
             })
           }
@@ -442,7 +430,6 @@ export class VendorApproveEditComponent implements OnInit{
     if(stepper != null) {
       
       setTimeout(() => {
-        //console.log(stepper.selectedIndex.toString())
         document.getElementById(stepper.selectedIndex.toString()).scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'})
         //this.setFocus(stepper)
         }, 150);
@@ -587,7 +574,6 @@ Create() {
         let FolderCategory = "BEE";
         let VendorNo = "Vendor" + Number(VendorID);
         if(this.file[0] != null) {
-          console.log(this.FileDetails[0].FileName)
           this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(r => {
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[0]).subscribe(response => {
               let Path: any = response
@@ -629,7 +615,7 @@ Create() {
         this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[0]).subscribe(response => {
          let Path: any = response
          this.VenBEEDetails.beE_Certificate  = Path.returnedPath.toString();
-         this.VendorService.AddBEEDetails(this.VenBEEDetails).subscribe(response => {console.log(response)})
+         this.VendorService.AddBEEDetails(this.VenBEEDetails).subscribe()
         })
       }
 
@@ -687,7 +673,7 @@ Create() {
          this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
          this.VendorInsurance.vendor_ID = Number(VendorID);
          this.VendorInsurance.vendor_Insurance_Type_ID = 1;
-         this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
+         this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
           })
         }
 
@@ -723,7 +709,7 @@ Create() {
          this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
          this.VendorInsurance.vendor_ID = Number(VendorID);
          this.VendorInsurance.vendor_Insurance_Type_ID = 2;
-         this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
+         this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
           })
         }
       }
@@ -758,16 +744,14 @@ Create() {
          this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
          this.VendorInsurance.vendor_ID = Number(VendorID);
          this.VendorInsurance.vendor_Insurance_Type_ID = 3;
-         this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
+         this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
           })
         }
       }
       else if(this.DueDilligenceData.proffesional_Indemnity_Insurance_Present == true && this.InsuranceFormGroup.get("ProfessionalIndemnityInsurance")?.value == false) {
         let FolderCategory = "Insurance";
         let VendorNo = "Vendor" + Number(VendorID);
-        console.log("here")
         this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[3].FileName).subscribe(response => {
-          console.log(response)
           this.VendorService.DeleteInsuranceByID(Number(VendorID),3).subscribe()
         })
       }
@@ -794,7 +778,7 @@ Create() {
          this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
          this.VendorInsurance.vendor_ID = Number(VendorID);
          this.VendorInsurance.vendor_Insurance_Type_ID = 4;
-         this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => {console.log(response)})
+         this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
           })
         }
       }
@@ -853,9 +837,7 @@ Create() {
       this.DueDilligenceDetails.business_References_Present = this.BusinessReferencesFormGroup.get("BusinessReferencesPresent")?.value
 
       //this.DueDilligenceDetails.vendor = this.Vendor
-      console.log(this.DueDilligenceDetails)
       this.VendorService.UpdateDueDiligence(this.DueDilligenceDetails.vendor_ID,this.DueDilligenceDetails).subscribe(response => {
-        console.log(response)
         if(this.POPIChecked == true) {
           if(this.DueDilligenceData.popI_Present == true) {
             this.POPIDetails.contracted_Partner_Type_ID = this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID")?.value
@@ -872,7 +854,7 @@ Create() {
           this.POPIDetails.contract_End_Data_Management_Provided = this.InformationSecurityFormGroup.get("Contract_End_Data_Management_Provided")?.value 
           this.POPIDetails.personal_Data_Processing_Details_Present = this.InformationSecurityFormGroup.get("Personal_Data_Processing_Details_Present")?.value 
           this.POPIDetails.processing_Activities_Certification_Held = this.InformationSecurityFormGroup.get("Processing_Activities_Certification_Held")?.value 
-            this.VendorService.UpdatePOPI(response.due_Diligence_ID,this.POPIDetails).subscribe(response => {console.log(response)})
+            this.VendorService.UpdatePOPI(response.due_Diligence_ID,this.POPIDetails).subscribe()
           }
           else {
             this.POPIDetails.contracted_Partner_Type_ID = this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID")?.value
@@ -889,13 +871,12 @@ Create() {
           this.POPIDetails.contract_End_Data_Management_Provided = this.InformationSecurityFormGroup.get("Contract_End_Data_Management_Provided")?.value 
           this.POPIDetails.personal_Data_Processing_Details_Present = this.InformationSecurityFormGroup.get("Personal_Data_Processing_Details_Present")?.value 
           this.POPIDetails.processing_Activities_Certification_Held = this.InformationSecurityFormGroup.get("Processing_Activities_Certification_Held")?.value 
-            this.VendorService.AddPOPI(this.POPIDetails).subscribe(response => {console.log(response)})
+            this.VendorService.AddPOPI(this.POPIDetails).subscribe()
           }
           
         }
         else if(this.DueDilligenceData.popI_Present == true){
           this.VendorService.GetPOPI(response.due_Diligence_ID).subscribe(response => {
-            console.log(response)
             this.VendorService.DeletePOPI(response.popI_ID).subscribe(next => {
               
             })
@@ -952,7 +933,6 @@ validationLinear() {
   else {
     this.bvalid = true;
   }
-  console.log(this.bvalid)
 }
 
 

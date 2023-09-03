@@ -115,7 +115,6 @@ export class CreateBudgetAllocationComponent {
     let date = this.budgetAllocationForm.get('year')?.value
     this.budgetAllocation.year = date.getFullYear();
     this.budgetAllocation.total = this.budgetAllocationForm.get('total')?.value;
-    console.log(this.budgetAllocation.department.name)
     this.dataService.BudgetAllocationValidation(this.budgetAllocation.department.name, this.budgetAllocation.year).subscribe({
       next: (Result) => {
         if (Result == null) {
@@ -203,9 +202,7 @@ export class CreateBudgetAllocationComponent {
 
   public onsYearSelected(date: Date, datepicker: MatDatepicker<Date>) {
     const normalizedYear = date.getFullYear();
-    //console.log(normalizedYear)
     this.budgetAllocationForm.get("year").setValue(new Date(normalizedYear, 12, 0));
-    //console.log(this.budgetAllocationForm.get("year").value())
     datepicker.close();
   }
 

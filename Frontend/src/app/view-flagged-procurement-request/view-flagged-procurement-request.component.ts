@@ -62,9 +62,7 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
     
 
     this.GetProcurementDetails();
-    console.log(this.ProcurementDetails)
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
-    console.log(User)
   }
 
   ProcurementDetails: Procurement_Details[] = [];
@@ -74,7 +72,6 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
     if (this.iRole == "FD") {
       this.dataService.GetProcurementRequestDetailsFD().subscribe(result => {
         result.forEach(e => {
-          console.log(e)
           if (e.procurement_Status_ID == 3)
             this.ProcurementDetails.push(e);
         })
@@ -95,7 +92,6 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
     if (this.iRole == "MD") {
       this.dataService.GetProcurementRequestDetailsMD().subscribe(result => {
         result.forEach(e => {
-          console.log(e)
           if (e.procurement_Status_ID == 3)
             this.ProcurementDetails.push(e);
         })

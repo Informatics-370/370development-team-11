@@ -88,7 +88,6 @@ export class ReceiveProcurementItemComponent {
     this.dataService.GetConsumablesForRequestConsRecieve(id).subscribe(result => {
       this.ConsumableRequest = result;
       this.Details = result.procurement_Details
-      console.log(this.Details)
     })
   }
 
@@ -146,9 +145,9 @@ export class ReceiveProcurementItemComponent {
     document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.dataService.GetConsumableHistoryByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
       next: (Hist) => {
-        console.log(Hist)
+
         this.HistAmt = Hist.stockAmt
-        console.log(Hist.stockAmt)
+
         this.dataService.GetConsumableByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
           next: (response) => {
             this.dataService.GetCategoryByID(response.consumable_Category_ID).subscribe({
@@ -164,7 +163,7 @@ export class ReceiveProcurementItemComponent {
 
                 this.History.consumable = this.Consumables
 
-                console.log(this.History)
+
 
                 this.dataService.UpdateStock(this.History).subscribe({
                   next: (response) => {

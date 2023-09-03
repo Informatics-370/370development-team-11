@@ -49,7 +49,6 @@ export class ViewNotificationHubComponent implements OnInit {
   ngOnInit() {
     this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
     this.iTempUsername = this.dataService.decodeTempUsername(sessionStorage.getItem("token"));
-    console.log(this.iTempUsername);
 
     if (this.iTempUsername == "None") {
 
@@ -114,7 +113,6 @@ export class ViewNotificationHubComponent implements OnInit {
   }
 
   VendorRoute(name: string) {
-    console.log(name)
     if (name.includes("New Vendor Onboard Request")) {
       this.router.navigate(['/vendor-unofficial-vendorlist']);
     }

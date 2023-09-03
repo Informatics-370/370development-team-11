@@ -100,7 +100,6 @@ export class ViewProcurementDetailsComponent implements OnInit {
   }
 
   openDialog(name: string, ID: Number) {
-    console.log(name)
     this.Dialog.open(UploadPayementFileComponent, {
       data: { name, ID },
       disableClose: true
@@ -116,7 +115,6 @@ export class ViewProcurementDetailsComponent implements OnInit {
   }
 
   openInvDialog(name: string, ID: Number) {
-    console.log(name)
     this.Dialog.open(UploadInvoiceComponent, {
       data: { name, ID },
       disableClose: true
@@ -125,7 +123,6 @@ export class ViewProcurementDetailsComponent implements OnInit {
     this.Dialog.afterAllClosed.subscribe({
       next: (response) => {
         this.ngOnInit()
-        console.log(response)
       }
     })
   }
@@ -194,8 +191,6 @@ export class ViewProcurementDetailsComponent implements OnInit {
   }
 
   Receive(Procurement: string, ID: Number) {
-    console.log(Procurement)
-    console.log(ID)
     if (Procurement == "Consumable") {
       this.router.navigate(["/ReceiveProcurementItem/" + ID])
     }

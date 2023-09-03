@@ -73,7 +73,6 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
 
     this.iRole = this.VendorService.decodeUserRole(sessionStorage.getItem("token"));
 
-   // console.log(this.iRole)
 
     if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
@@ -101,9 +100,6 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
       //RequestList.forEach((element) => this.vendor.push(element.vendors));
       this.PendingOnboardRequests = [];
       this.PendingOnboardRequests =  new MatTableDataSource(this.PendingOnboardDetails.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
-     // console.log(this.onboardRequestData)
-     // console.log(this.PendingOnboardRequests.data)
-      //console.log(this.PendingOnboardDetails)
       let countsByPart = undefined
       countsByPart = this.PendingOnboardDetails.reduce((accumulator, currentValue) => {
         const partId = currentValue.onboard_Request_Id;
@@ -117,7 +113,6 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
         return accumulator;
       }, {});
       
-      //console.log(this.onboardRequestData);
       this.PendingOnboardDetailSummary  = [];
       this.PendingOnboardRequests.data.forEach(element => {
         let sType = "General Suppliers"
@@ -134,7 +129,6 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
           VendorStatusId:this.getVendorStatusID(element.onboard_Request_Id),
           onboardRequestStatusID:this.getOnboardStatusID(element.onboard_Request_Id) ,
         }
-       // console.log(result)
         if(result.SelectedRequestVendorName != "Request Rejected") {
           if(this.sFilter == "1") {
             if(this.rAdmin == "true" && result.onboardRequestStatusID == 4) {
@@ -147,14 +141,12 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
             }
           }
           else if(this.sFilter == "2"){
-           // console.log(result.VendorStatusId)
             if((result.VendorStatusId == 3 && result.onboardRequestStatusID == 3) || (result.VendorStatusId == 4 && result.onboardRequestStatusID == 3)) {
               this.PendingOnboardDetailSummary.push(result)
               this.SearchResults.push(result)
             }
           }
           else if(this.sFilter == "3") {
-           // console.log(result.VendorStatusId)
             if((result.VendorStatusId == 2 && result.onboardRequestStatusID == 2) || (result.VendorStatusId == 1 && result.onboardRequestStatusID == 1) || (result.VendorStatusId == 5 && result.onboardRequestStatusID == 1) || (result.VendorStatusId == 1 && result.onboardRequestStatusID == 2)) {
               this.PendingOnboardDetailSummary.push(result)
               this.SearchResults.push(result)
@@ -198,7 +190,6 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
         document.getElementById('loading').style.display = "none";
         document.getElementById('table').style.visibility = "visible";
       }
-      //console.log(this.PendingOnboardRequests)
    })
 
   }//ngoninIt
@@ -215,7 +206,6 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
 
   ChangeFilter() {
     this.ngOnInit()
-    //console.log(this.sFilter)
   }
 
   searchWord: string = '';
@@ -228,9 +218,7 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
   Edit(i:number) {
     
     this.VendorService.GetRequestByID(i).subscribe(result => {
-     console.log(result)
     for (let a = 0; a < result.length;a++) {
-      console.log(i)
       if(result[a].vendor.vendor_Status_ID == 4 || result[a].vendor.vendor_Status_ID == 3) {
         this.router.navigate(['/vendor-approve-edit/' + result[a].vendor_ID])
       }
@@ -262,7 +250,6 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
     
     for (let a = 0;a < this.onboardRequestData.length;a++) {
         if(this.onboardRequestData[a].onboard_Request_Id == i) {
-         // console.log(this.onboardRequestData[a].vendors.vendor_Status_ID)
           if(this.onboardRequestData[a].vendors.vendor_Status_ID == 4 || this.onboardRequestData[a].vendors.vendor_Status_ID == 3) {
             
             result = this.onboardRequestData[a].vendors.vendor_Status_ID
@@ -280,10 +267,8 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
   
   getOnboardStatusID(i:number) {
     let result = 2
-    //console.log(this.onboardRequestData)
     for (let a = 0;a < this.onboardRequestData.length;a++) {
         if(this.onboardRequestData[a].onboard_Request_Id == i) {
-         // console.log(this.onboardRequestData[a])
           if(this.onboardRequestData[a].onboard_Request_status_ID == 3) {
             
             result = this.onboardRequestData[a].onboard_Request_status_ID

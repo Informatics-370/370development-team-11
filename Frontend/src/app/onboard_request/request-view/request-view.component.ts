@@ -64,7 +64,7 @@ export class RequestViewComponent implements OnInit {
       this.canAppVen = "true";
     }
 
-    //console.log()
+
 
     this.OnboardRequest = []
     this.vendor = []
@@ -78,12 +78,12 @@ export class RequestViewComponent implements OnInit {
      for(let i = 0; i < this.OnboardRequest.length; i++) {
        this.FileDetails.push({FileURL:"",FileName:""})
       }
-      console.log(this.FileDetails)
+
       RequestList.forEach((element) => this.vendor.push(element.vendors));
       this.RequestVendors =  new MatTableDataSource(this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
       this.RequestVendors.paginator = this.paginator;
       this.ReqVenLen = this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)
-      console.log(this.OnboardRequest)
+
       let test = [...this.OnboardRequest].sort((a, b) => {
         // First, compare based on onboard_Request_Id in ascending order
         if (a.onboard_Request_Id !== b.onboard_Request_Id) {
@@ -95,16 +95,13 @@ export class RequestViewComponent implements OnInit {
       });
       
       //let test = this.OnboardRequest.sort((a, b) => a.onboard_Request_Id - b.onboard_Request_Id); let i = 0; i < this.OnboardRequest.length; i++
-      console.log(test)
-      test.forEach(e => {
-        console.log(e)
-      })
+
       
 
       for(let i = 0; i < this.OnboardRequest.length; i++) {
        // if(this.OnboardRequest)
         let sFile = this.OnboardRequest[i].quotes;
-       // console.log(test[i].quotes)
+
         if(sFile != "None") {
           
           
@@ -121,7 +118,6 @@ export class RequestViewComponent implements OnInit {
             this.FileDetails[i].FileName = sFile; 
         }
             
-       console.log(this.FileDetails)
       }
       
      
@@ -133,8 +129,6 @@ export class RequestViewComponent implements OnInit {
 
   getVendorByVendorId(vendorId: number) {
     // Filter the vendor array based on the vendor ID
-    //console.log(this.vendor)
-    //console.log(this.vendor.sort((a,b) => b.vendor_ID - a.vendor_ID).filter(ven => ven.vendor_ID === vendorId))
     return this.vendor.filter(ven => ven.vendor_ID === vendorId);
   }
 

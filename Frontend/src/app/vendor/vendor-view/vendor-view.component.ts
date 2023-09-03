@@ -55,7 +55,6 @@ export class VendorViewComponent implements OnInit  {
     })
     this.VendorSearch =  new MatTableDataSource(result)
     this.VendorSearch.paginator = this.paginator;
-    console.log(VendorDetails)
    })
     
 

@@ -16,6 +16,5 @@ export class VideoDialogComponent implements OnInit{
     constructor(public dialogRef: MatDialogRef<VideoDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: { videoUrl: string }) {}
 
   ngOnInit(): void {
- console.log(this.data.videoUrl)
   }
 }
