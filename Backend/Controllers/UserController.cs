@@ -504,9 +504,19 @@ namespace ProcionAPI.Controllers
             try
             {
                 var existingUser = await _UserRepository.GetEmployeeAsync(userID);
-                if (existingUser == null) return NotFound($"The employee does not exist");
-                _UserRepository.Delete(existingUser);
-                if (await _UserRepository.SaveChangesAsync()) return Ok(existingUser);
+                if (existingUser == null)
+                {
+                    return NotFound($"The employee does not exist");
+                }
+                else
+                {
+                    _UserRepository.Delete(existingUser);
+                    if (await _UserRepository.SaveChangesAsync())
+                    {
+                        return Ok(existingUser);
+                    }
+                }
+                
             }
             catch {
                 return StatusCode(500, "Internal Server Error. Please contact support");
@@ -521,9 +531,19 @@ namespace ProcionAPI.Controllers
             try
             {
                 var existingUser = await _UserRepository.GetDeleteUserAsync(userID);
-                if (existingUser == null) return NotFound($"The user does not exist");
-                _UserRepository.Delete(existingUser);
-                if (await _UserRepository.SaveChangesAsync()) return Ok(existingUser);
+                if (existingUser == null)
+                {
+                    return NotFound($"The user does not exist");
+                }
+                else
+                {
+                    _UserRepository.Delete(existingUser);
+                    if (await _UserRepository.SaveChangesAsync())
+                    {
+                        return Ok(existingUser);
+                    }
+                }
+                
             }
             catch
             {
@@ -538,12 +558,15 @@ namespace ProcionAPI.Controllers
         {
             try
             {
-                var existingUser = await _UserRepository.GetUserAsync(userID);
-                if (existingUser == null) return NotFound($"The user does not exist");
-
-                var existingAccess = await _UserRepository.GetAccessAsync(existingUser.Access_ID);
+                var existingAccess = await _UserRepository.GetAccessAsync(userID);
+                Console.WriteLine(existingAccess.Access_ID);
                 _UserRepository.Delete(existingAccess);
-                if (await _UserRepository.SaveChangesAsync()) return Ok(existingAccess);
+                if (await _UserRepository.SaveChangesAsync())
+                {
+                    return Ok(existingAccess);
+                }
+
+               
             }
             catch
             {
@@ -639,9 +662,19 @@ namespace ProcionAPI.Controllers
             try
             {
                 var existingUser = await _UserRepository.GetAdminAsync(userID);
-                if (existingUser == null) return NotFound($"The admin does not exist");
-                _UserRepository.Delete(existingUser);
-                if (await _UserRepository.SaveChangesAsync()) return Ok(existingUser);
+                if (existingUser == null)
+                {
+                    return NotFound($"The admin does not exist");
+                }
+                else
+                {
+                    _UserRepository.Delete(existingUser);
+                    if (await _UserRepository.SaveChangesAsync())
+                    {
+                        return Ok(existingUser);
+                    }
+                }
+                
             }
             catch
             {

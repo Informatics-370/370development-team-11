@@ -33,6 +33,8 @@ export class DeleteEmployeeComponent implements OnInit {
     actionTime: new Date(),
   }
 
+  userAccID: any;
+
   constructor(public dialogRef: MatDialogRef<DeleteEmployeeComponent>, private ActRoute: ActivatedRoute, private route: Router, private dataService: DataService,
     @Inject(MAT_DIALOG_DATA) public data: { userID: number }) { }
 
@@ -45,6 +47,9 @@ export class DeleteEmployeeComponent implements OnInit {
         if (ID) {
           this.dataService.GetEmployee(ID).subscribe(result => {
             this.Employee = result
+            this.dataService.GetUser(ID).subscribe(ru => {
+              this.userAccID = ru
+            })
           });
         }
       }
@@ -56,8 +61,8 @@ export class DeleteEmployeeComponent implements OnInit {
   onConfirm(id: number): void {
     this.dataService.DeleteEmployee(id).subscribe(r => {
       this.dataService.DeleteNotifications(id).subscribe(nr => {
-        this.dataService.DeleteUserAccess(id).subscribe(uar => {
-          this.dataService.DeleteUser(id).subscribe(ur => {
+        this.dataService.DeleteUser(id).subscribe(uar => {
+          this.dataService.DeleteUserAccess(this.userAccID.access_ID).subscribe(ur => {
             this.log.action = "Deleted Employee: " + this.Employee.employeeName;
             this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
             let test: any
