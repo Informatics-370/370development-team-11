@@ -30,6 +30,7 @@ export class DeleteAdminComponent implements OnInit {
     action: "",
     actionTime: new Date(),
   }
+  userAccID: any;
 
   constructor(public dialogRef: MatDialogRef<DeleteAdminComponent>, private ActRoute: ActivatedRoute, private route: Router, private dataService: DataService,
     @Inject(MAT_DIALOG_DATA) public data: { userID: number }) { }
@@ -43,6 +44,9 @@ export class DeleteAdminComponent implements OnInit {
         if (ID) {
           this.dataService.GetAdmin(ID).subscribe(result => {
             this.Admin = result
+            this.dataService.GetUser(ID).subscribe(ru => {
+              this.userAccID = ru
+            })
           });
         }
       }
@@ -54,8 +58,8 @@ export class DeleteAdminComponent implements OnInit {
   onConfirm(id: number): void {
     this.dataService.DeleteAdmin(id).subscribe(r => {
       this.dataService.DeleteNotifications(id).subscribe(nr => {
-        this.dataService.DeleteUserAccess(id).subscribe(uar => {
-          this.dataService.DeleteUser(id).subscribe(ur => {
+        this.dataService.DeleteUser(id).subscribe(uar => {
+          this.dataService.DeleteUserAccess(this.userAccID.access_ID).subscribe(ur => {
             this.log.action = "Deleted Admin" + this.Admin.adminName;
             this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
             let test: any
