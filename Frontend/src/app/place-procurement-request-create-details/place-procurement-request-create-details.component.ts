@@ -476,7 +476,6 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.EmployeeDetails.email.toString())
           let departmentname = this.EmployeeDetails.department.name
           this.ProcureService.GetProcurementAccountCodeDetails(this.currentYear, this.currentmonth, departmentname.toString()).subscribe(response => {
-            console.log(response)
             this.BudgetAllocationCode = response;
             this.BudgetAllocationCode.forEach(t => {
               let AccountInfo: AccountCodeDisplay = {
@@ -485,10 +484,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
                 Year: t.budget_Allocation.year.toString(),
                 Month: t.month.toString(),
               };
-              console.log(AccountInfo)
               this.AccountCodeDetails.push(AccountInfo);
             })
-
             this.AccountCodeDetails.forEach(b => {
               //console.log()
               if (this.AccountCodeGroups.filter(x => (x.Month == b.Month) && (x.Year == b.Year)).length == 0) {
