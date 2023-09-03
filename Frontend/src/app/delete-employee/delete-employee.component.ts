@@ -40,7 +40,7 @@ export class DeleteEmployeeComponent implements OnInit {
     this.ActRoute.paramMap.subscribe({
       next: (params) => {
         const ID = this.data.userID;
-        
+
 
         if (ID) {
           this.dataService.GetEmployee(ID).subscribe(result => {
@@ -75,7 +75,7 @@ export class DeleteEmployeeComponent implements OnInit {
           })
         })
       })
-      
+
     });
   }
 
@@ -88,7 +88,7 @@ export class DeleteEmployeeComponent implements OnInit {
   }
 
   openDeleteEmployeeTab(): void {
-    const userManualUrl = 'assets/PDF/DeleteEmployeeUM.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteEmployeeUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

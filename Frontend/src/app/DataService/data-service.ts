@@ -695,8 +695,8 @@ export class DataService {
     return this.httpClient.get<User>(`${this.apiUrl}User/EditUserValidation/` + name + '/' + id, this.httpOptions)
   }
 
-  CreateUserValidation(name: String): Observable<User> {
-    return this.httpClient.get<User>(`${this.apiUrl}User/CreateUserValidation/` + name, this.httpOptions)
+  CreateUserValidation(name: String, cellphoneNum: string, type: string): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiUrl}User/CreateUserValidation/` + name + "/" + cellphoneNum + "/" + type, this.httpOptions)
   }
 
   CreateUserRoleValidation(department: String, role: String): Observable<Employee> {
