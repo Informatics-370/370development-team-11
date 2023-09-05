@@ -181,6 +181,7 @@ namespace ProcionAPI.Models.Repositories.Consumables
             {
                 ConsumableNotif.User = existingUser;
                 ConsumableNotif.User.No_Notifications = existingUser.No_Notifications + 1;
+                ConsumableNotif.User.No_InvNotifications = existingUser.No_InvNotifications + 1;
             }
 
 

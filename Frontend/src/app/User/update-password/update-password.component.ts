@@ -73,6 +73,10 @@ export class UpdatePasswordComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -203,6 +207,7 @@ export class UpdatePasswordComponent implements OnInit {
         }
 
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "Update";
           var title = "UPDATE UNSUCCESSFUL";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Password for <strong>" + this.usr.username + "</strong><strong style='color:red'> DOES NOT MATCH </strong>");
@@ -220,6 +225,7 @@ export class UpdatePasswordComponent implements OnInit {
 
       },
       error: (error) => {
+        document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
         var action = "Update";
         var title = "UPDATE UNSUCCESSFUL";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Password for <strong>" + this.usr.username + "</strong><strong style='color:red'> DOES NOT MATCH! </strong>");

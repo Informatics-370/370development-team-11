@@ -202,6 +202,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 ProcurementNotif.User = existingUser;
                 ProcurementNotif.User.Access = ExistingAccess;
                 ProcurementNotif.User.No_Notifications = existingUser.No_Notifications + 1;
+                ProcurementNotif.User.No_ProNotifications = existingUser.No_ProNotifications + 1;
             }
 
 

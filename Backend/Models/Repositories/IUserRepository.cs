@@ -36,6 +36,7 @@ namespace ProcionAPI.Models.Repositories {
         Task<User> EditUserValidationAsync(string name, int id);
         Task<User> CreateUserValidationAsync(string name);
         Task<Employee> CreateUserRoleValidationAsync(string department, string role);
+        Task<Employee> CreateUserMDRoleValidationAsync(string role);
         Task<bool> VerifyCredentials(string UserName, string Password);
         Task<Delegation_Of_Authority> AdminDeleteDelegationValidationAsync(int id);
         Task<Procurement_Details> EmployeeDeleteProcurementDetailsValidationAsync(int id);

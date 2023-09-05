@@ -248,7 +248,7 @@ namespace ProcionAPI.Controllers
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, user.Role.Name),
                     new Claim("Department", dep),
-                    new Claim("TemAccessRole", TempAcc.Name),
+                    new Claim("TemAccess", TempAcc.Name),
                     new Claim("CanAccInv", TempAcc.CanAccInv),
                     new Claim("CanAccFin", TempAcc.CanAccFin),
                     new Claim("CanAccPro", TempAcc.CanAccPro),
@@ -706,6 +706,22 @@ namespace ProcionAPI.Controllers
             try
             {
                 var result = await _UserRepository.CreateUserRoleValidationAsync(department, role);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("CreateUserMDRoleValidation/{role}")]
+        public async Task<IActionResult> CreateUserMDRoleValidation([FromRoute] string role)
+        {
+            try
+            {
+                var result = await _UserRepository.CreateUserMDRoleValidationAsync(role);
                 return Ok(result);
             }
             catch (Exception)

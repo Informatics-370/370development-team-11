@@ -325,6 +325,21 @@ namespace ProcionAPI.Models.Repositories
             }
         }
 
+        public async Task<Employee> CreateUserMDRoleValidationAsync(string role)
+        {
+            Employee ExistingUser = await _dbContext.Employee.FirstOrDefaultAsync(x => x.User.Role.Name == role);
+
+            if (ExistingUser != null)
+            {
+                return ExistingUser;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
         public async Task<User> EditUserValidationAsync(string name, int id)
         {
             User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.Username == name);
@@ -474,6 +489,10 @@ namespace ProcionAPI.Models.Repositories
             var user = await GetUserByUsername(username);
 
             user.No_Notifications = 0;
+            user.No_DelNotifications = 0;
+            user.No_VenNotifications = 0;
+            user.No_InvNotifications = 0;
+            user.No_ProNotifications = 0;
 
             await _dbContext.SaveChangesAsync();
 

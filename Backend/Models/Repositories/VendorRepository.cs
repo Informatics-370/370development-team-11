@@ -1007,6 +1007,8 @@ namespace ProcionAPI.Models.Repositories
             if (existingUser != null)
             {
                 newNotification.User = existingUser;
+                newNotification.User.No_Notifications = existingUser.No_Notifications + 1;
+                newNotification.User.No_VenNotifications = existingUser.No_VenNotifications + 1;
             }
 
             var existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 2);
@@ -1045,6 +1047,8 @@ namespace ProcionAPI.Models.Repositories
                     {
                         newNotification.User = existingUser;
                         newNotification.User.Access = existingUser.Access;
+                        newNotification.User.No_Notifications = existingUser.No_Notifications + 1;
+                        newNotification.User.No_VenNotifications = existingUser.No_VenNotifications + 1;
                     }
 
                     var existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 3);
@@ -1078,6 +1082,7 @@ namespace ProcionAPI.Models.Repositories
             {
                 VendorNotification.User = existingUser;
                 VendorNotification.User.No_Notifications = existingUser.No_Notifications + 1;
+                VendorNotification.User.No_VenNotifications = existingUser.No_VenNotifications + 1;
             }
 
 

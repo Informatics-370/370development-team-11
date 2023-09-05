@@ -144,6 +144,21 @@ export class EditMandateLimitComponent {
 
         });
       }
+      else if (r.ammount == this.currentMandateLimit.ammount && r.date != this.currentMandateLimit.date && r.mandate_ID != this.currentMandateLimit.mandate_ID) {
+        var action = "ERROR";
+        var title = "ERROR: Mandate Limit Exists";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A Mandate Limit with amount: R<strong>" + this.currentMandateLimit.ammount + "<strong style='color:red'> ALREADY EXISTS!</strong>");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 1750;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
+      }
       else {
         var action = "ERROR";
         var title = "ERROR: Mandate Limit Exists";

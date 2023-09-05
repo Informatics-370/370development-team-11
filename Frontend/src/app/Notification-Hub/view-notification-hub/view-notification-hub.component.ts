@@ -28,7 +28,17 @@ export class ViewNotificationHubComponent implements OnInit {
   iTempUsername: string;
   hasTempAcc: string;
 
+  usernotifications: any;
 
+  numVenNoti: number;
+  numDelNoti: number;
+  numInvNoti: number;
+  numProNoti: number;
+
+  InvHidden = false;
+  ProHidden = false;
+  DelHidden = false;
+  VenHidden = false;
 
   todayDate: Date = new Date();
 
@@ -49,6 +59,42 @@ export class ViewNotificationHubComponent implements OnInit {
   ngOnInit() {
     this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
     this.iTempUsername = this.dataService.decodeTempUsername(sessionStorage.getItem("token"));
+
+    this.dataService.GetUserByUsername(this.iName).subscribe(r => {
+      this.usernotifications = r;
+      this.numVenNoti = this.usernotifications.no_VenNotifications;
+      this.numDelNoti = this.usernotifications.no_DelNotifications;
+      this.numInvNoti = this.usernotifications.no_InvNotifications;
+      this.numProNoti = this.usernotifications.no_ProNotifications;
+
+      if (this.numInvNoti == 0) {
+        this.InvHidden = true;
+      }
+      else {
+        this.InvHidden = false;
+      }
+
+      if (this.numDelNoti == 0) {
+        this.DelHidden = true;
+      }
+      else {
+        this.DelHidden = false;
+      }
+
+      if (this.numProNoti == 0) {
+        this.ProHidden = true;
+      }
+      else {
+        this.ProHidden = false;
+      }
+
+      if (this.numVenNoti == 0) {
+        this.VenHidden = true;
+      }
+      else {
+        this.VenHidden = false;
+      }
+    })
 
     if (this.iTempUsername == "None") {
 
@@ -88,6 +134,8 @@ export class ViewNotificationHubComponent implements OnInit {
     this.dataService.GetVendorNotifications(this.iName).subscribe(r => {
       this.VendorNotifications = r;
       this.dataSourceVendor = new MatTableDataSource(r);
+      
+      
     })
   }
 
