@@ -215,6 +215,10 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
   }
 
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
+
   getItemDetails(sItem: string) {
     if (sItem == "Consumable") {
       this.ConsumableChecked = true;

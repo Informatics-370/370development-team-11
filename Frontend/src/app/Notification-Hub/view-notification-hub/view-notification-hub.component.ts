@@ -35,10 +35,21 @@ export class ViewNotificationHubComponent implements OnInit {
   numInvNoti: number;
   numProNoti: number;
 
+  tempNumVenNoti: Number;
+  tempNumDelNoti: Number;
+  tempNumInvNoti: Number;
+  tempNumProNoti: Number;
+
   InvHidden = false;
   ProHidden = false;
   DelHidden = false;
   VenHidden = false;
+
+  tempHidden = false;
+  tempInvHidden = false;
+  tempProHidden = false;
+  tempDelHidden = false;
+  tempVenHidden = false;
 
   todayDate: Date = new Date();
 
@@ -116,6 +127,47 @@ export class ViewNotificationHubComponent implements OnInit {
             this.dataService.GetTempDelegationNotifications(this.iTempUsername).subscribe(d => {
               this.TempDelegationNotifications = d;
               this.dataSourceTempDelegation = new MatTableDataSource(d);
+
+              this.dataService.GetUserByUsername(this.iTempUsername).subscribe(tu => {
+                this.tempNumVenNoti = tu.no_VenNotifications;
+                this.tempNumDelNoti = tu.no_DelNotifications;
+                this.tempNumInvNoti = tu.no_InvNotifications;
+                this.tempNumProNoti = tu.no_ProNotifications;
+
+                if (this.tempNumInvNoti == 0) {
+                  this.tempInvHidden = true;
+                }
+                else {
+                  this.tempInvHidden = false;
+                }
+
+                if (this.tempNumDelNoti == 0) {
+                  this.tempDelHidden = true;
+                }
+                else {
+                  this.tempDelHidden = false;
+                }
+
+                if (this.tempNumProNoti == 0) {
+                  this.tempProHidden = true;
+                }
+                else {
+                  this.tempProHidden = false;
+                }
+
+                if (this.tempNumVenNoti == 0) {
+                  this.tempVenHidden = true;
+                }
+                else {
+                  this.tempVenHidden = false;
+                }
+
+                if (this.tempNumInvNoti == 0 && this.tempNumDelNoti == 0 && this.tempNumProNoti == 0 && this.tempNumVenNoti == 0) {
+                  this.tempHidden = true;
+                } else {
+                  this.tempHidden = false;
+                }
+              })
             })
           })
         })

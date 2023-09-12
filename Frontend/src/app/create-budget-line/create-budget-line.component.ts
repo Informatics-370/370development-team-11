@@ -106,6 +106,7 @@ export class CreateBudgetLineComponent {
         let totalBudgetLinesAmount = budgetLineItems.reduce((prev, cur) => prev + Number(cur.budgetAmt), 0);
         totalBudgetLinesAmount = totalBudgetLinesAmount + Number(this.budgetLine.budgetAmt)
         if (totalBudgetLinesAmount + Number(this.budgetLine.budgetAmt) > budgetAllocation.total) {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "Error";
           var title = "Budget Over Allocation";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The total budget amount for budget lines exceeds the total budget allocation.");
@@ -137,6 +138,7 @@ export class CreateBudgetLineComponent {
               })
 
             } else {
+              document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "Error";
               var title = "Validation Error";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The budget line already exists.");

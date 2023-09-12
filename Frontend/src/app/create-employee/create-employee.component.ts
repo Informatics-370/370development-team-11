@@ -254,6 +254,15 @@ export class CreateEmployeeComponent implements OnInit {
       this.Access.CanViewFlagPro = 'false';
       this.Access.CanViewPenPro = 'false';
     }
+    else if (this.rl.name == "Manager") {
+      this.Access.CanAccFin = 'false';
+      this.Access.CanAccPro = 'true';
+      this.Access.CanAccRep = 'false';
+      this.Access.CanAccVen = 'true';
+      this.Access.CanViewFinPro = 'false';
+      this.Access.CanViewFlagPro = 'false';
+      this.Access.CanViewPenPro = 'false';
+    }
     else if (this.rl.name == "FD") {
       this.Access.CanAccFin = 'true';
       this.Access.CanAccPro = 'true';
@@ -273,6 +282,14 @@ export class CreateEmployeeComponent implements OnInit {
         this.Access.CanViewFlagPro = 'true';
         this.Access.CanViewPenPro = 'true';
       } else if (this.dep.name = "FIN") {
+        this.Access.CanAccFin = 'true';
+        this.Access.CanAccPro = 'true';
+        this.Access.CanAccRep = 'true';
+        this.Access.CanAccVen = 'true';
+        this.Access.CanViewFinPro = 'true';
+        this.Access.CanViewFlagPro = 'true';
+        this.Access.CanViewPenPro = 'true';
+      } else {
         this.Access.CanAccFin = 'true';
         this.Access.CanAccPro = 'true';
         this.Access.CanAccRep = 'true';
@@ -428,8 +445,8 @@ export class CreateEmployeeComponent implements OnInit {
                     else {
                       document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
                       var action = "ERROR";
-                      var title = "ERROR: Budget Owner Exists";
-                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There alread exists a Budget Owner for department <strong>" + this.emp.department.name + "<strong>!</strong>");
+                      var title = "ERROR: Managing Director Exists";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A user with the role Managing Director already exists <strong>!</strong>");
 
                       const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
                         disableClose: true,

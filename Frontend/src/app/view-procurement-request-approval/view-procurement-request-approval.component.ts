@@ -154,6 +154,10 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
   }
 
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
+
   GetFiles(sfilepath: string, i: number) {
     let sFile = sfilepath;
     let VendorName = sFile.substring(0, sFile.indexOf("\\"))

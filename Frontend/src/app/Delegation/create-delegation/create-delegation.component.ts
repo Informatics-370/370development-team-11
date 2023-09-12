@@ -207,6 +207,10 @@ export class CreateDelegationComponent implements OnInit {
     })
   }
 
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
+
   get f() {
     return this.myForm.controls;
   }

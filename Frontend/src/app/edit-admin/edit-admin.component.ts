@@ -272,16 +272,19 @@ export class EditAdminComponent implements OnInit {
     this.usr.access.CanViewPenPro = this.accForm.get('canViewPenPro')?.value;
 
     this.usr.username = username;
-    var id = this.usr.user_Id;
+    var id = this.admin.user_Id;
 
     //this.dataService.EditUser(this.usr, this.route.snapshot.params['uid']).subscribe(r => {
     //  this.dataService.EditAdmin(this.adm, this.route.snapshot.params['uid']).subscribe(result => {
     //    this.router.navigateByUrl('ViewAdmin');
     //  })
     //})
+    console.log(this.usr.role_ID);
+    console.log(username);
 
     this.dataService.EditUserValidation(username, id).subscribe({
       next: (Result) => {
+        console.log(Result);
         if (Result == null) {
           this.dataService.EditUser(this.usr, this.admin.user_Id).subscribe(result => {
             this.dataService.EditAdmin(this.adm, this.admin.admin_ID).subscribe({

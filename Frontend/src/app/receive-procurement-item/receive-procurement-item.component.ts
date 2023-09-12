@@ -215,7 +215,9 @@ export class ReceiveProcurementItemComponent {
   }
 
 
-
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
 
 
   openRecieveConsumableTab(): void {

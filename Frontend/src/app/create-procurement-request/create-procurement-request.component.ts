@@ -557,6 +557,7 @@ export class CreateProcurementRequestComponent implements OnInit {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "CREATE";
           var title = "LIMIT EXCEEDED";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Vendor: <strong>" + this.Procurement_Request.vendor.name + "</strong> will need to be <strong style='color:red'> ONBOARDED </strong> in order to make this request!");

@@ -288,6 +288,7 @@ export class EditBudgetLineComponent {
           });
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Budget Line Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A Budget Line for: <strong>" + cat.account_Name + " for the month: <strong>" + this.budgetLine.month + " <strong style='color:red'> ALREADY EXISTS!</strong>");

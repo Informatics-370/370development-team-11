@@ -546,7 +546,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 ProcurementNotification.User = existingUser;
                 ProcurementNotification.User.Access = existingUser.Access;
                 ProcurementNotification.User.No_Notifications = existingUser.No_Notifications + 1;
-                ProcurementNotif.User.No_ProNotifications = existingUser.No_ProNotifications + 1;
+                ProcurementNotification.User.No_ProNotifications = existingUser.No_ProNotifications + 1;
             }
 
 
@@ -610,7 +610,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 .Where(x => (x.Budget_Allocation.Department.Name == department) && (x.Budget_Allocation.Year >= year) ).ToListAsync(); ;
  
 
-            var data = BudgetLineDetails.Where(x => Month >= (Array.IndexOf(month2Db, x.Month.ToLower())+1));
+            var data = BudgetLineDetails.Where(x => Month >= (Array.IndexOf(month2Db, x.Month.ToLower())));
 
             return data.ToArray();
         }

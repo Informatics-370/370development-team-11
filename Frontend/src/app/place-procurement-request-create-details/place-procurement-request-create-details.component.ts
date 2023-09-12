@@ -452,8 +452,6 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
     })
 
-
-
     this.currentDate = new Date(this.currentYear, this.currentmonth, this.currentDay);
     this.ProcurementFormGroup.get("AssetName")?.disable();
     this.ProcurementFormGroup.get("AssetDescription")?.disable();
@@ -484,7 +482,6 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.EmployeeDetails.email.toString())
           let departmentname = this.EmployeeDetails.department.name
           this.ProcureService.GetProcurementAccountCodeDetails(this.currentYear, this.currentmonth, departmentname.toString()).subscribe(response => {
-
             this.BudgetAllocationCode = response;
             this.BudgetAllocationCode.forEach(t => {
               let AccountInfo: AccountCodeDisplay = {
@@ -541,6 +538,10 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     })
   }
 
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
+
   ChangeDescription(sName: string) {
     let Description = this.sAssets.find(x => x.name == sName).description
     this.ProcurementFormGroup.get("AssetDescription")?.setValue(Description)
@@ -580,10 +581,12 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     if (this.ProcurementFormGroup.get("HasDeposit")?.value == true) {
       this.ProcurementFormGroup.get("DepositAmount")?.enable();
       this.ProcurementFormGroup.get("DepositDueDate")?.enable();
+      this.ProcurementFormGroup.get("FullPaymentMade")?.disable();
     }
     else {
       this.ProcurementFormGroup.get("DepositAmount")?.disable();
       this.ProcurementFormGroup.get("DepositDueDate")?.disable();
+      this.ProcurementFormGroup.get("FullPaymentMade")?.enable();
     }
   }
 
@@ -600,10 +603,12 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     if (this.ProcurementFormGroup.get("FullPaymentMade")?.value == true) {
       this.ProcurementFormGroup.get("PaidOnDate")?.enable();
       this.ProcurementFormGroup.get("UploadReceiptDoc")?.enable();
+      this.ProcurementFormGroup.get("HasDeposit")?.disable();
     }
     else {
       this.ProcurementFormGroup.get("PaidOnDate")?.disable();
       this.ProcurementFormGroup.get("UploadReceiptDoc")?.disable();
+      this.ProcurementFormGroup.get("HasDeposit")?.enable();
     }
   }
   file: File[] = [null, null];
@@ -613,7 +618,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   }
 
   Validation() {
-    
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     if (this.ConsumableChecked == true) {
       let maxValue = this.ConsumableItems.filter(y => y.consumable_ID == Number(this.ProcurementFormGroup.get("ConsumableItem").value))
       let value = Number(maxValue[0].maximum_Reorder_Quantity) - Number(maxValue[0].minimum_Reorder_Quantity)
@@ -621,7 +626,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.Create();
       }
       else {
-
+        document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
         var action = "ERROR";
         var title = "CONSUMABLE QUANTITY EXCEEDED";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Consumable Quantity has exceeded max limit of <strong style='color:red'>" + value + "</strong>!");
@@ -652,7 +657,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
 
   Create() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     let dateChange: any
     dateChange = new DatePipe('en-ZA');
     //Data values

@@ -155,6 +155,7 @@ export class CreateBudgetAllocationComponent {
           );
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Budget Allocation Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Allocation for department <strong>" + this.budgetAllocation.department.name + " </strong> For year <strong>" + this.budgetAllocation.year + " <strong style='color:red'>ALREADY EXISTS!</strong>");

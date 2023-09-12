@@ -93,6 +93,7 @@ export class CreateBranchComponent {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Branch Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + street + " <strong style='color:red'>ALREADY EXISTS!</strong>");

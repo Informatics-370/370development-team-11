@@ -89,6 +89,7 @@ export class CreateDepartmentComponent implements OnInit {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Department Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

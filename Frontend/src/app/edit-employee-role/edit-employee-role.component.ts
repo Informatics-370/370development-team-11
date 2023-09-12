@@ -103,6 +103,7 @@ export class EditEmployeeRoleComponent implements OnInit {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: User Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

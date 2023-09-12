@@ -192,7 +192,8 @@ export class EditHelpComponent implements OnInit{
               }
             })
           } else{
-              hideloader();
+            hideloader();
+            document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "ERROR";
               var title = "ERROR: Help Exists";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -268,7 +269,8 @@ export class EditHelpComponent implements OnInit{
                    })
 
             }else{
-              hideloader();
+                hideloader();
+                document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "ERROR";
               var title = "ERROR: Help Exists";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -352,6 +354,7 @@ export class EditHelpComponent implements OnInit{
 
             }else{
               hideloader();
+              document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "ERROR";
               var title = "ERROR: Help Exists";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -456,7 +459,8 @@ export class EditHelpComponent implements OnInit{
               })
 
               } else{
-                hideloader();
+                    hideloader();
+                    document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "ERROR";
               var title = "ERROR: Help Exists";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

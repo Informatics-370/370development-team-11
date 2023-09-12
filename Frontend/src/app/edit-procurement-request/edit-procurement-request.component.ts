@@ -161,6 +161,10 @@ export class EditProcurementRequestComponent implements OnInit {
     })
   }
 
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
+
   buildFormOther() {
     this.myForm = this.formBuilder.group({
       RequestName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],

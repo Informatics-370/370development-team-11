@@ -383,6 +383,10 @@ export class FinalizeProcurementRequestCreateComponent {
     })
   }
 
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
+
   onSubmit(): void {
     document.getElementById('AnimationBtn').setAttribute('disabled', '');
     let Selection = this.finalizationForm.get("ProofOfPayment").value;

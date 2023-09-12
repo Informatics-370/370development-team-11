@@ -198,6 +198,7 @@ export class EditConsumableComponent implements OnInit {
             Result.maximum_Reorder_Quantity === this.ConsumableToEdit.maximum_Reorder_Quantity &&
             Result.minimum_Reorder_Quantity === this.ConsumableToEdit.minimum_Reorder_Quantity &&
             Result.on_Hand === this.ConsumableToEdit.on_Hand)) {
+            document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
             var action = "ERROR";
             var title = "ERROR: Consumable Exists";
             var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.ConsumableToEdit.name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
