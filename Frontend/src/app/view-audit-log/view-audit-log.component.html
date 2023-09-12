@@ -32,12 +32,19 @@
         <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
             View Audit Log
             <mat-icon (click)="openViewAuditLogIFrameTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
-            style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+                style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}"
+                matTooltip="Need help? Click me!"></mat-icon>
         </h1>
+        <mat-form-field appearance="fill"
+            style=" float:right; font-size: 12px; width: 300px; margin-top:0.5%; margin-right:1%;">
+            <mat-label>Search...</mat-label>
+            <input matInput id="Search" (keyup)="SearchLog()" [(ngModel)]="Searchterm" placeholder="e.g. Water" />
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
         <mat-form-field appearance="fill" id="FVal"
             style=" float:right; font-size: 12px; width: 200px; margin-top:0.5%; margin-right:1%;">
             <mat-label>Sort By:</mat-label>
-            <mat-select (selectionChange)="OnInPutChange()" [(ngModel)]="searchWord">
+            <mat-select (selectionChange)="OnInPutChange()" [(ngModel)]="FilterWord">
                 <mat-option *ngFor="let filter of filters" [value]="filter">{{filter}}</mat-option>
             </mat-select>
         </mat-form-field>

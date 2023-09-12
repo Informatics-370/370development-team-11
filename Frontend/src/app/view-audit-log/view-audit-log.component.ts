@@ -53,7 +53,8 @@ export class ViewAuditLogComponent implements OnInit {
   Logs: AuditLog[] = [];
   displayedColumns: string[] = ['Time', 'User', 'Action'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
-  searchWord: string = "None";
+  FilterWord: string = "None";
+  Searchterm: string = "";
 
   GetLogs() {
     this.dataService.GetLogs().subscribe(result => {
@@ -82,10 +83,30 @@ export class ViewAuditLogComponent implements OnInit {
 
     });
   }
+  SearchLog() {
+    const Searchterm = this.Searchterm.toLocaleLowerCase();
+
+    if (Searchterm) {
+      this.RefreshLogs()
+      this.dataSource = new MatTableDataSource(this.Logs.filter(log => log.action.toLocaleLowerCase().includes(Searchterm) || log.user.toLocaleLowerCase().includes(Searchterm) || log.actionTime.toString().toLocaleLowerCase().includes(Searchterm)));
+      this.Logs.splice(0, this.Logs.length)
+      this.Logs = this.dataSource
+    }
+
+    else if (Searchterm == "") {
+      this.GetLogs();
+    }
+
+
+    this.dataSource.paginator = this.paginator;
+  }
+
   OnInPutChange() {
-    const Searchterm = this.searchWord; // Use this.selectedFilter instead of this.searchWord
+    const Searchterm = this.FilterWord; // Use this.selectedFilter instead of this.searchWord
+    const Searched = this.Searchterm;
 
     if (Searchterm === "User") {
+      this.Searchterm = "";
       this.RefreshLogs()
       this.dataSource = this.Logs.sort((a, b) => {
         if (a.user < b.user) {
@@ -100,6 +121,7 @@ export class ViewAuditLogComponent implements OnInit {
       this.dataSource.paginator = this.paginator
     }
     else if (Searchterm === "Action") {
+      this.Searchterm = "";
       this.RefreshLogs()
       this.dataSource = this.Logs.sort((a, b) => {
         if (a.action < b.action) {
@@ -114,6 +136,7 @@ export class ViewAuditLogComponent implements OnInit {
       this.dataSource.paginator = this.paginator
     }
     else if (Searchterm === "None") {
+      this.Searchterm = "";
       this.GetLogs()
     }
   }
