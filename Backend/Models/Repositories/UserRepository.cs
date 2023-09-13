@@ -112,7 +112,7 @@ namespace ProcionAPI.Models.Repositories
         }
         public async Task<Employee> GetEmployeeByEmailAsync(string Email)
         {
-            IQueryable <Employee> Query = _dbContext.Employee.Include(U => U.User).Where(c => c.Email == Email);
+            IQueryable <Employee> Query = _dbContext.Employee.Include(U => U.User).Include(d => d.Department).Where(c => c.Email == Email);
             if (Query != null)
             {
                 return await Query.FirstOrDefaultAsync();
