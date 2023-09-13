@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { DeleteBranchComponent } from 'src/app/delete-branch/delete-branch/delete-branch.component';
 import { DataService } from 'src/app/DataService/data-service';
 import { Employee } from 'src/app/Shared/Employee';
-import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component'; 
+import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialogRef } from '@angular/material/dialog';
 import { count } from 'rxjs';
@@ -17,6 +17,7 @@ import { BranchIFrameComponent } from 'src/app/HelpIFrames/BranchIFrame/branch-i
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { MatPaginator } from '@angular/material/paginator';
+import { TimerComponent } from 'src/app/Settings/timer/timer.component';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -26,27 +27,27 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 @Component({
   selector: 'app-view-branch',
   templateUrl: './view-branch.component.html',
-  styleUrls: ['./view-branch.component.css'], 
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  styleUrls: ['./view-branch.component.css'],
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewBranchComponent implements OnInit {
   Branches: Branch[] = [];
-  Employees: Employee[]=[];
+  Employees: Employee[] = [];
   SearchedBranch: Branch[] = [];
   searchWord: string = "";
 
-  BranchToDelete: any  = {
-    branch_ID :0,
-    name:'',
-    street:'',
-    city:'',
-    postal_Code:'',
-    province:'',
+  BranchToDelete: any = {
+    branch_ID: 0,
+    name: '',
+    street: '',
+    city: '',
+    postal_Code: '',
+    province: '',
   }
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  displayedColumns: string[] = ['name', 'street','city','postal_Code','province', 'action', 'delete'];
-  dataSource : any;
+  displayedColumns: string[] = ['name', 'street', 'city', 'postal_Code', 'province', 'action', 'delete'];
+  dataSource: any;
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router, private sanitizer: DomSanitizer, private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -76,14 +77,14 @@ export class ViewBranchComponent implements OnInit {
         hideloader();
       }
 
-    }); 
+    });
     function hideloader() {
       document.getElementById('loading')
         .style.display = 'none';
       document.getElementById('table').style.visibility = "visible";
-    }  
+    }
   }
-  GetEmployees(){
+  GetEmployees() {
     this.dataService.GetEmployees().subscribe(result => {
       this.Employees = result;
     })
@@ -122,10 +123,10 @@ export class ViewBranchComponent implements OnInit {
             }, duration);
           }
         })
-        
+
       }
     })
-  
+
   }
 
 
@@ -139,6 +140,12 @@ export class ViewBranchComponent implements OnInit {
 
   openRestoreDialog() {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+  openTimerDialog() {
+    const dialogRef = this.dialog.open(TimerComponent);
 
     dialogRef.afterClosed().subscribe(result => {
     });

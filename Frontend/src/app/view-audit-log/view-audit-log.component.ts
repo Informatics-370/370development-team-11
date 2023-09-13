@@ -10,6 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { AuditLogIFrameComponent } from '../HelpIFrames/AuditLogIFrame/audit-log-iframe/audit-log-iframe.component';
+import { TimerComponent } from '../Settings/timer/timer.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -151,6 +152,13 @@ export class ViewAuditLogComponent implements OnInit {
 
   openRestoreDialog() {
     const dialogRef = this.Dialog.open(RestoreDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openTimerDialog() {
+    const dialogRef = this.Dialog.open(TimerComponent);
 
     dialogRef.afterClosed().subscribe(result => {
     });

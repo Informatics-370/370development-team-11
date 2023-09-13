@@ -16,6 +16,7 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/
 import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { TimerComponent } from 'src/app/Settings/timer/timer.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -29,32 +30,32 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-help',
   templateUrl: './view-help.component.html',
   styleUrls: ['./view-help.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewHelpComponent implements OnInit {
-  displayedColumnsAdmin: string[] = ['helpCategory', 'name', 'description', 'video', 'user_Manual',  'action', 'delete'];
-                                  //'help_ID',
-  displayedColumnsUser: string[] = [ 'helpCategory', 'name', 'description', 'video', 'user_Manual'];
-                                 //'help_ID',
+  displayedColumnsAdmin: string[] = ['helpCategory', 'name', 'description', 'video', 'user_Manual', 'action', 'delete'];
+  //'help_ID',
+  displayedColumnsUser: string[] = ['helpCategory', 'name', 'description', 'video', 'user_Manual'];
+  //'help_ID',
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  HelpToDelete:any  = {
-    help_ID :0,
-    name:'',
-    description:'',
-    video:'',
-    user_Manual:'',
+  HelpToDelete: any = {
+    help_ID: 0,
+    name: '',
+    description: '',
+    video: '',
+    user_Manual: '',
   }
 
 
-  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService,private http: HttpClient, private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private http: HttpClient, private sanitizer: DomSanitizer) { }
 
   DeleteHelp: Help[] = [];
   Helps: Help[] = [];
   HelpCategorys: Help_Category[] = [];
-  FileDetails:any[] = [];
-  vFileDetails:any[]=[];
+  FileDetails: any[] = [];
+  vFileDetails: any[] = [];
   SearchedHelp: Help[] = [];
   searchWord: string = "";
 
@@ -68,7 +69,7 @@ export class ViewHelpComponent implements OnInit {
 
     if (this.iRole == "Admin") {
       this.rAdmin = "true";
-    }else{
+    } else {
       this.rUser = "true";
     }
     this.GetHelps();
@@ -79,7 +80,7 @@ export class ViewHelpComponent implements OnInit {
 
   search() {
     const searchTerm = this.searchWord.toLocaleLowerCase();
-  
+
     if (searchTerm) {
       this.dataSource = this.Helps.filter(help => help.name.toLocaleLowerCase().includes(searchTerm))
     }
@@ -140,7 +141,7 @@ export class ViewHelpComponent implements OnInit {
     }
   }
 
- 
+
 
   DeleteRequest(help_ID: Number) {
     const confirm = this.dialog.open(DeleteHelpComponent, {
@@ -162,11 +163,11 @@ export class ViewHelpComponent implements OnInit {
       window.open(fileURL, '_blank');
       URL.revokeObjectURL(fileURL);
     });
-    
+
   }
 
   openUserManualInNewTab(): void {
-    const userManualUrl = 'assets/PDF/UserManual.pdf'; 
+    const userManualUrl = 'assets/PDF/UserManual.pdf';
     window.open(userManualUrl, '_blank');
   }
 
@@ -180,16 +181,16 @@ export class ViewHelpComponent implements OnInit {
   //
   // }
 
- // openVideoInNewTab(i: number): void {
- //   const videoUrl = this.vFileDetails[i].FileURL;
- //   const dialogRef = this.dialog.open(VideoDialogComponent, {
- //     width: '560px',
- //     height: '315px',
- //     data: { videoUrl },
- //   });
- // }
+  // openVideoInNewTab(i: number): void {
+  //   const videoUrl = this.vFileDetails[i].FileURL;
+  //   const dialogRef = this.dialog.open(VideoDialogComponent, {
+  //     width: '560px',
+  //     height: '315px',
+  //     data: { videoUrl },
+  //   });
+  // }
 
- openVideoInNewTab(videoUrl: string): void {
+  openVideoInNewTab(videoUrl: string): void {
     const dialogRef = this.dialog.open(VideoDialogComponent, {
       //width: '1000px',
       //height: '800px',
@@ -207,6 +208,13 @@ export class ViewHelpComponent implements OnInit {
 
   openRestoreDialog() {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openTimerDialog() {
+    const dialogRef = this.dialog.open(TimerComponent);
 
     dialogRef.afterClosed().subscribe(result => {
     });

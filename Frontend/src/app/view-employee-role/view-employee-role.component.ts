@@ -14,6 +14,7 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/
 import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
 import { RoleIFrameComponent } from '../HelpIFrames/RoleIFrame/role-iframe/role-iframe.component';
+import { TimerComponent } from '../Settings/timer/timer.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -25,7 +26,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-employee-role',
   templateUrl: './view-employee-role.component.html',
   styleUrls: ['./view-employee-role.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewEmployeeRoleComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -132,7 +133,7 @@ export class ViewEmployeeRoleComponent implements OnInit {
           }, duration);
         });
 
-        
+
       }
     })
 
@@ -151,12 +152,18 @@ export class ViewEmployeeRoleComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
     });
   }
+  openTimerDialog() {
+    const dialogRef = this.dialog.open(TimerComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
 
 
   openRoleIFrameTab(): void {
     const dialogRef = this.dialog.open(RoleIFrameComponent, {
-    //   width: '800px', // Set the desired width
-    //  height: '600%', // Set the desired height
+      //   width: '800px', // Set the desired width
+      //  height: '600%', // Set the desired height
       panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
     });
 
@@ -164,5 +171,5 @@ export class ViewEmployeeRoleComponent implements OnInit {
       // Handle any dialog close actions if needed
     });
   }
-  
+
 }

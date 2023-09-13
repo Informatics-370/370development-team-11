@@ -17,6 +17,7 @@ import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.componen
 import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
 import { DepartmentIFrameComponent } from 'src/app/HelpIFrames/DepartmentIFrame/department-iframe/department-iframe.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { TimerComponent } from 'src/app/Settings/timer/timer.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -161,6 +162,12 @@ export class ViewDepartmentComponent implements OnInit {
 
   openRestoreDialog() {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+  openTimerDialog() {
+    const dialogRef = this.dialog.open(TimerComponent);
 
     dialogRef.afterClosed().subscribe(result => {
     });

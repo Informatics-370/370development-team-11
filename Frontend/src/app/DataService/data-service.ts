@@ -59,6 +59,7 @@ import * as FileSaver from 'file-saver';
 import { ReportData } from '../Shared/ConsumableReport';
 import { Procurement_Invoice } from '../Shared/Procurement_Invoice';
 import { Procurement_Status } from '../Shared/ProcurementStatus';
+import { UserSettings } from '../Shared/UserSettings';
 
 @Injectable({
   providedIn: 'root'
@@ -1685,6 +1686,14 @@ export class DataService {
     const formData = new FormData();
     formData.append('file', file);
     return this.httpClient.post<any>(`${this.apiUrl}BudgetAllocation/ImportExcel`, formData, this.httpOptions).pipe(map(result => result))
+  }
+
+  GetTimerDuration(): Observable<any> {
+    return this.httpClient.get<UserSettings>(`${this.apiUrl}User/GetTimerDuration`).pipe(map(result => result))
+  }
+
+  UpdateTime(ID: Number, NewTime: Number): Observable<any> {
+    return this.httpClient.put<UserSettings>(`${this.apiUrl}User/UpdateTimer/` + ID + "/" + NewTime, this.httpOptions).pipe(map(result => result))
   }
 
 }

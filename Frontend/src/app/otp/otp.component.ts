@@ -9,6 +9,7 @@ import { NotificationdisplayComponent } from '../notificationdisplay/notificatio
 import { Dialog } from '@angular/cdk/dialog';
 import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { UserSettings } from '../Shared/UserSettings';
 
 @Component({
   selector: 'app-otp',
@@ -17,7 +18,7 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 })
 export class OTPComponent implements OnInit {
 
-  countdownDuration: number = 120; // Countdown duration in seconds
+  countdownDuration: number = 0; // Countdown duration in seconds
   countdown: number = this.countdownDuration;
   SpinnerProgress: number = this.countdown;
   countdownInterval: any; // Variable to hold the interval reference
@@ -29,6 +30,11 @@ export class OTPComponent implements OnInit {
     Username: '',
     Password: '',
     Email: ''
+  }
+
+  Timer: UserSettings = {
+    setting_ID: 0,
+    timerDuration: 0,
   }
 
 
@@ -44,7 +50,18 @@ export class OTPComponent implements OnInit {
       this.mail.Password = this.data.NewPass;
     this.mail.Email = this.data.MailEmail;
 
-    this.startCountdown();
+    this.dataservice.GetTimerDuration().subscribe({
+      next: (resp) => {
+        this.Timer = resp;
+        this.countdownDuration = resp.timerDuration;
+        this.countdown = resp.timerDuration;
+
+        this.startCountdown();
+
+
+      }
+    })
+
 
   }
 
@@ -122,8 +139,8 @@ export class OTPComponent implements OnInit {
           NotifdialogRef.close();
         }, duration);
         this.color = 'primary'
-        this.countdownDuration = 120; // Countdown duration in seconds
-        this.SpinnerProgress = 120;
+        this.countdownDuration = this.Timer.timerDuration; // Countdown duration in seconds
+        this.SpinnerProgress = this.countdownDuration;
         this.countdown = this.countdownDuration;
         document.getElementById("Spinner").style.display = "flex"
         this.startCountdown();
@@ -135,16 +152,17 @@ export class OTPComponent implements OnInit {
 
   startCountdown() {
     this.countdownInterval = setInterval(() => {
-      if (this.countdown > 0 && this.countdown >= 20) {
+      console.log(this.countdown)
+      if (this.countdown / this.countdownDuration > 0.3) {
         this.countdown--;
-        this.SpinnerProgress = (this.countdown / 120) * 100
+        this.SpinnerProgress = (this.countdown / this.countdownDuration) * 100
       }
-      else if (this.countdown <= 20 && this.countdown > 0) {
+      else if (this.countdown / this.countdownDuration <= 0.3 && this.countdown > 0) {
         this.color = 'warn'
         this.countdown--;
-        this.SpinnerProgress = (this.countdown / 120) * 100
+        this.SpinnerProgress = (this.countdown / this.countdownDuration) * 100
       }
-      else {
+      else if (this.countdown == 0) {
         clearInterval(this.countdownInterval);
         document.getElementById("Spinner").style.display = "none"
         document.getElementById("ResendLink").style.display = "block"
@@ -157,6 +175,7 @@ export class OTPComponent implements OnInit {
 
   Close() {
     this.dialogRef.close()
+    location.reload();
   }
 
   public myError = (controlName: string, errorName: string) => {

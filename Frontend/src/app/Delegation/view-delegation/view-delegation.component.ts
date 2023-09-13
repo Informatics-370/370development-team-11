@@ -23,6 +23,7 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/
 import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
 import { DelegationIFrameComponent } from 'src/app/HelpIFrames/DelegationIFrame/delegation-iframe/delegation-iframe.component';
+import { TimerComponent } from 'src/app/Settings/timer/timer.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -34,13 +35,13 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-delegation',
   templateUrl: './view-delegation.component.html',
   styleUrls: ['./view-delegation.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
-export class ViewDelegationComponent implements OnInit{
+export class ViewDelegationComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  
+
   displayedColumnsAdmin: string[] = ['delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete', 'revoke'];
-  dataSource : any;
+  dataSource: any;
 
   userDelete: any
   rl: Role = {
@@ -56,7 +57,7 @@ export class ViewDelegationComponent implements OnInit{
   rMD: string;
 
   FileDetails: any[] = [];
-  
+
 
 
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer, private http: HttpClient, private datePipe: DatePipe) { }
@@ -86,12 +87,12 @@ export class ViewDelegationComponent implements OnInit{
       }
     })
 
-    
 
-    
+
+
   }
 
-  
+
 
   search() {
     const searchTerm = this.searchWord.toLocaleLowerCase();
@@ -103,9 +104,9 @@ export class ViewDelegationComponent implements OnInit{
       else if (searchTerm == "") {
         this.GetDelegations();
       }
-    } 
+    }
 
-    
+
   }
 
 
@@ -142,9 +143,9 @@ export class ViewDelegationComponent implements OnInit{
         }
         /*this.SearchedEmployee = this.Employees;*/
       })
-    } 
+    }
 
-    
+
     function hideloader() {
       document.getElementById('loading')
         .style.display = 'none';
@@ -154,7 +155,7 @@ export class ViewDelegationComponent implements OnInit{
 
 
 
-  
+
 
   openPDFInNewTab(i: number): void {
     const url = this.FileDetails[i].FileURL;
@@ -203,6 +204,13 @@ export class ViewDelegationComponent implements OnInit{
   }
   openRestoreDialog() {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openTimerDialog() {
+    const dialogRef = this.dialog.open(TimerComponent);
 
     dialogRef.afterClosed().subscribe(result => {
     });

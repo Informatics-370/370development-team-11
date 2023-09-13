@@ -916,5 +916,36 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
+        [HttpGet]
+        [Route("GetTimerDuration")]
+        public async Task<IActionResult> GetTimerDuration()
+        {
+            try
+            {
+                var result = await _UserRepository.GetTimerDurationAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateTimer/{ID}/{NewTime}")]
+        public async Task<ActionResult> UpdateTimer([FromRoute]int ID, [FromRoute] int NewTime)
+        {
+            try
+            {
+                var result = await _UserRepository.UpdateTimerAsync(ID, NewTime);
+                return Ok(result);
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
     }
 }

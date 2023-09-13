@@ -608,6 +608,27 @@ namespace ProcionAPI.Models.Repositories
             }
         }
 
+        public async Task<UserSettings> GetTimerDurationAsync()
+        {
+            UserSettings query = await _dbContext.UserSettings.FirstOrDefaultAsync(I => I.Setting_ID == 1);
+
+
+            return query;
+        }
+
+        public async Task<UserSettings> UpdateTimerAsync(int ID,int NewTime)
+        {
+            var Timer = await _dbContext.UserSettings.FirstOrDefaultAsync(x => x.Setting_ID == ID);
+
+            Timer.TimerDuration = NewTime;
+
+            await _dbContext.SaveChangesAsync();
+
+            return Timer;
+        }
+
     }
+
+    
 
 }
