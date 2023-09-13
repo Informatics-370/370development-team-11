@@ -46,5 +46,8 @@ namespace ProcionAPI.Models.Repositories {
         Task<Delegation_Of_Authority> UserDeleteDelegationValidationAsync(int id, string username);
         Task<Notification> UserDeleteNotificationValidationAsync(int id);
 
+        Task<UserSettings> GetTimerDurationAsync();
+        Task<UserSettings> UpdateTimerAsync(int ID, int NewTime);
+
     }
 }

@@ -93,6 +93,7 @@ import { ReportFilterMenuComponent } from './Reports/report-filter-menu/report-f
 
 import { BudgetVarianceReportComponent } from './budget-variance-report/budget-variance-report.component';
 import { ReceiveAssetComponent } from './receive-asset/receive-asset.component';
+import { TimerComponent } from './Settings/timer/timer.component';
 const routes: Routes = [
   {
     path: "",

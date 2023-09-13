@@ -10,6 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { AuditLogIFrameComponent } from '../HelpIFrames/AuditLogIFrame/audit-log-iframe/audit-log-iframe.component';
+import { TimerComponent } from '../Settings/timer/timer.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -53,7 +54,8 @@ export class ViewAuditLogComponent implements OnInit {
   Logs: AuditLog[] = [];
   displayedColumns: string[] = ['Time', 'User', 'Action'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
-  searchWord: string = "None";
+  FilterWord: string = "None";
+  Searchterm: string = "";
 
   GetLogs() {
     this.dataService.GetLogs().subscribe(result => {
@@ -82,10 +84,30 @@ export class ViewAuditLogComponent implements OnInit {
 
     });
   }
+  SearchLog() {
+    const Searchterm = this.Searchterm.toLocaleLowerCase();
+
+    if (Searchterm) {
+      this.RefreshLogs()
+      this.dataSource = new MatTableDataSource(this.Logs.filter(log => log.action.toLocaleLowerCase().includes(Searchterm) || log.user.toLocaleLowerCase().includes(Searchterm) || log.actionTime.toString().toLocaleLowerCase().includes(Searchterm)));
+      this.Logs.splice(0, this.Logs.length)
+      this.Logs = this.dataSource
+    }
+
+    else if (Searchterm == "") {
+      this.GetLogs();
+    }
+
+
+    this.dataSource.paginator = this.paginator;
+  }
+
   OnInPutChange() {
-    const Searchterm = this.searchWord; // Use this.selectedFilter instead of this.searchWord
+    const Searchterm = this.FilterWord; // Use this.selectedFilter instead of this.searchWord
+    const Searched = this.Searchterm;
 
     if (Searchterm === "User") {
+      this.Searchterm = "";
       this.RefreshLogs()
       this.dataSource = this.Logs.sort((a, b) => {
         if (a.user < b.user) {
@@ -100,6 +122,7 @@ export class ViewAuditLogComponent implements OnInit {
       this.dataSource.paginator = this.paginator
     }
     else if (Searchterm === "Action") {
+      this.Searchterm = "";
       this.RefreshLogs()
       this.dataSource = this.Logs.sort((a, b) => {
         if (a.action < b.action) {
@@ -114,6 +137,7 @@ export class ViewAuditLogComponent implements OnInit {
       this.dataSource.paginator = this.paginator
     }
     else if (Searchterm === "None") {
+      this.Searchterm = "";
       this.GetLogs()
     }
   }
@@ -128,6 +152,13 @@ export class ViewAuditLogComponent implements OnInit {
 
   openRestoreDialog() {
     const dialogRef = this.Dialog.open(RestoreDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openTimerDialog() {
+    const dialogRef = this.Dialog.open(TimerComponent);
 
     dialogRef.afterClosed().subscribe(result => {
     });

@@ -22,6 +22,7 @@ import { AdminIFrameComponent } from '../HelpIFrames/AdminIFrame/admin-iframe/ad
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { MainNavComponent } from '../main-nav/main-nav.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { TimerComponent } from '../Settings/timer/timer.component';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -37,7 +38,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 export class ViewAdminComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = ['name', 'surname', 'email', 'phone', 'role', 'action', 'delete'];
-  dataSource : any;
+  dataSource: any;
 
   userDelete: any
 
@@ -99,7 +100,7 @@ export class ViewAdminComponent implements OnInit {
 
     this.RoleToUse = localStorage.getItem("Role")
     this.GetAdmins();
-    
+
   }
 
   search() {
@@ -133,7 +134,7 @@ export class ViewAdminComponent implements OnInit {
   }
 
   DeleteAdmin(userID: Number, adminID: Number, username: string) {
-    
+
 
     this.dataService.UserDeleteDelegationValidation(userID, username).subscribe({
       next: (dResult) => {
@@ -273,11 +274,11 @@ export class ViewAdminComponent implements OnInit {
         }
       }
     })
-        
 
 
 
-    
+
+
   }
 
 
@@ -290,6 +291,12 @@ export class ViewAdminComponent implements OnInit {
 
   openRestoreDialog() {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+  openTimerDialog() {
+    const dialogRef = this.dialog.open(TimerComponent);
 
     dialogRef.afterClosed().subscribe(result => {
     });
