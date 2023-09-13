@@ -154,7 +154,8 @@ export class EditHelpComponent implements OnInit{
      
       this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
         next: (result) => {
-          if (result != null){
+          console.log(result)
+          if (result == null){
 
          
             this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
@@ -235,7 +236,7 @@ export class EditHelpComponent implements OnInit{
 
           this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
             next: (result) => {
-              if (result != null){
+              if (result == null){
 
               
                 this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
@@ -318,7 +319,7 @@ export class EditHelpComponent implements OnInit{
 
         this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
           next: (result) =>{
-            if (result != null){
+            if (result == null){
 
            
 
@@ -419,7 +420,7 @@ export class EditHelpComponent implements OnInit{
 
               this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
                 next: (result) =>{
-                  if (result != null){
+                  if (result == null){
 
                  
               this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({

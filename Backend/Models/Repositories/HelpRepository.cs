@@ -68,10 +68,17 @@ namespace ProcionAPI.Models.Repositories
         }
         public async Task<HELP> EditHelpValidationAsync(string name, int id)
         {
-            HELP ExistingHelp = await _dbContext.HELP.FirstOrDefaultAsync(x => x.Name == name && x.Help_ID == id);
+            HELP ExistingHelp = await _dbContext.HELP.FirstOrDefaultAsync(x => x.Name == name);
             if (ExistingHelp != null)
             {
-                return ExistingHelp;
+                if (ExistingHelp.Help_ID == id)
+                {
+                    return null;
+                }
+                else
+                {
+                    return ExistingHelp;
+                }
             }
 
             else
