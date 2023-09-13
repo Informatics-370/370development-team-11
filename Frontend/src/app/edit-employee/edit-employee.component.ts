@@ -96,6 +96,10 @@ export class EditEmployeeComponent implements OnInit {
     password: '',
     profile_Picture: '',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -352,43 +356,155 @@ export class EditEmployeeComponent implements OnInit {
     this.dataService.EditUserValidation(username, this.employee.user_Id).subscribe({
       next: (Result) => {
         if (Result == null) {
-          this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
-            this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
-              next: (response) => {
+          if (this.usr.role.name == "BO") {
+            this.dataService.CreateUserRoleValidation(this.emp.department.name, this.usr.role.name).subscribe(bor => {
+              if (bor == null) {
+                this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
+                  this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
+                    next: (response) => {
 
 
-                this.log.action = "Edited Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
-                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-                let test: any
-                test = new DatePipe('en-ZA');
-                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-                this.dataService.AuditLogAdd(this.log).subscribe({
-                  next: (Log) => {
-                    document.getElementById('AnimationBtn').classList.toggle("is_active");
-                    document.getElementById('cBtn').style.display = "none";
-                    var action = "Update";
-                    var title = "UPDATE SUCCESSFUL";
-                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+                      this.log.action = "Edited Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataService.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          document.getElementById('AnimationBtn').classList.toggle("is_active");
+                          document.getElementById('cBtn').style.display = "none";
+                          var action = "Update";
+                          var title = "UPDATE SUCCESSFUL";
+                          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                      disableClose: true,
-                      data: { action, title, message }
-                    });
+                          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                            disableClose: true,
+                            data: { action, title, message }
+                          });
 
-                    const duration = 1750;
-                    setTimeout(() => {
-                      this.router.navigate(['/ViewEmployee']);
-                      dialogRef.close();
-                    }, duration);
-                  }
+                          const duration = 1750;
+                          setTimeout(() => {
+                            this.router.navigate(['/ViewEmployee']);
+                            dialogRef.close();
+                          }, duration);
+                        }
+                      })
+                    }
+                  })
                 })
+              } else {
+                document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
+                var action = "ERROR";
+                var title = "ERROR: Budget Owner Exists";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There alread exists a Budget Owner for department <strong>" + this.emp.department.name + "<strong>!</strong>");
 
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
 
+                const duration = 1750;
+                setTimeout(() => {
+                  dialogRef.close();
+                }, duration);
               }
             })
-          })
+          } else if (this.usr.role.name == "MD") {
+            this.dataService.CreateUserMDRoleValidation(this.usr.role.name).subscribe(mdr => {
+              if (mdr == null) {
+                this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
+                  this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
+                    next: (response) => {
+
+
+                      this.log.action = "Edited Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataService.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          document.getElementById('AnimationBtn').classList.toggle("is_active");
+                          document.getElementById('cBtn').style.display = "none";
+                          var action = "Update";
+                          var title = "UPDATE SUCCESSFUL";
+                          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                            disableClose: true,
+                            data: { action, title, message }
+                          });
+
+                          const duration = 1750;
+                          setTimeout(() => {
+                            this.router.navigate(['/ViewEmployee']);
+                            dialogRef.close();
+                          }, duration);
+                        }
+                      })
+                    }
+                  })
+                })
+              } else {
+                document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
+                var action = "ERROR";
+                var title = "ERROR: Managing Director Exists";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A user with the role Managing Director already exists <strong>!</strong>");
+
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  dialogRef.close();
+                }, duration);
+              }
+            })
+          } else {
+            this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
+              this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
+                next: (response) => {
+
+
+                  this.log.action = "Edited Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                  this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                  let test: any
+                  test = new DatePipe('en-ZA');
+                  this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                  this.dataService.AuditLogAdd(this.log).subscribe({
+                    next: (Log) => {
+                      document.getElementById('AnimationBtn').classList.toggle("is_active");
+                      document.getElementById('cBtn').style.display = "none";
+                      var action = "Update";
+                      var title = "UPDATE SUCCESSFUL";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
+
+                      const duration = 1750;
+                      setTimeout(() => {
+                        this.router.navigate(['/ViewEmployee']);
+                        dialogRef.close();
+                      }, duration);
+                    }
+                  })
+
+
+                }
+              })
+            })
+          }
+
+
+          
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: User Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");

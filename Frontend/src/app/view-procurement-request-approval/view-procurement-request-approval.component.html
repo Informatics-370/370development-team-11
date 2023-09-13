@@ -22,7 +22,7 @@
                 <td><label  for="name" style="margin-right: 1%;">Company Name:</label></td>
                 <td> 
                     <mat-form-field appearance="fill" style="width: 310px;">
-                        <input matInput placeholder="Company Name" id="CompanyName" formControlName="CompanyName" readonly="true">
+                        <input matInput placeholder="Company Name" id="CompanyName" formControlName="CompanyName" readonly="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                       </mat-form-field>
                 </td>
             </tr>
@@ -30,7 +30,7 @@
               <td><label  for="name" style="margin-right: 1%;">Company Email:</label></td>
               <td> 
                   <mat-form-field appearance="fill" style="width: 310px;">
-                      <input matInput placeholder="Company Email" id="CompanyName" formControlName="CompanyEmail" readonly="true" >
+                      <input matInput placeholder="Company Email" id="CompanyName" formControlName="CompanyEmail" readonly="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                     </mat-form-field>
               </td>
           </tr>
@@ -38,7 +38,7 @@
             <td><label  for="name" style="margin-right: 1%;">Description:</label></td>
             <td> 
                 <mat-form-field appearance="fill" style="width: 310px;">
-                    <textarea matInput formControlName="Description" readonly="true" ></textarea>
+                    <textarea matInput formControlName="Description" readonly="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default"></textarea>
                   </mat-form-field>
             </td>
           </tr>
@@ -125,7 +125,7 @@
           <td><label  for="name" style="margin-right: 1%;">Company Name:</label></td>
           <td> 
               <mat-form-field appearance="fill" style="width: 310px;">
-                  <input matInput formControlName="CompanyName" readonly="true">
+                  <input matInput formControlName="CompanyName" readonly="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                 </mat-form-field>
           </td>
       </tr>
@@ -133,7 +133,7 @@
         <td><label  for="name" style="margin-right: 1%;">Company Email:</label></td>
         <td> 
             <mat-form-field appearance="fill" style="width: 310px;">
-                <input matInput formControlName="CompanyEmail" readonly="true" >
+                <input matInput formControlName="CompanyEmail" readonly="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
               </mat-form-field>
         </td>
       </tr>
@@ -141,7 +141,7 @@
         <td><label  for="name" style="margin-right: 1%;">Description:</label></td>
         <td> 
             <mat-form-field appearance="fill" style="width: 310px;">
-                <textarea matInput formControlName="Description" readonly="true" ></textarea>
+                <textarea matInput formControlName="Description" readonly="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default"></textarea>
               </mat-form-field>
         </td>
       </tr>

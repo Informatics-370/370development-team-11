@@ -188,7 +188,7 @@ namespace ProcionAPI.Controllers
                     return Ok(existingNotification);
                 }
 
-                for(int s = 0; s <= existingNotification.Length; s++ )
+                for(int s = 0; s < existingNotification.Length; s++ )
                 {
                     _NotificationRepository.Delete(existingNotification[s]);
                 }

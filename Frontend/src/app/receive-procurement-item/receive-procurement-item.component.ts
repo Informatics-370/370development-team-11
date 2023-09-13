@@ -122,6 +122,10 @@ export class ReceiveProcurementItemComponent {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -211,7 +215,9 @@ export class ReceiveProcurementItemComponent {
   }
 
 
-
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
 
 
   openRecieveConsumableTab(): void {

@@ -703,6 +703,10 @@ export class DataService {
     return this.httpClient.get<Employee>(`${this.apiUrl}User/CreateUserRoleValidation/` + department + "/" + role, this.httpOptions)
   }
 
+  CreateUserMDRoleValidation(role: String): Observable<Employee> {
+    return this.httpClient.get<Employee>(`${this.apiUrl}User/CreateUserMDRoleValidation/` + role, this.httpOptions)
+  }
+
   SendEmail(mail: MailData) {
     return this.httpClient.post(`${this.apiUrl}Mail/sendemailusingtemplate`, mail, this.httpOptions)
   }

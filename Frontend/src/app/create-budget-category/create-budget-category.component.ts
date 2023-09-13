@@ -94,6 +94,7 @@ export class CreateBudgetCategoryComponent {
           );
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Budget Category Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The category <strong>" + this.budgetCategory.account_Name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

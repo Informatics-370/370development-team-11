@@ -34,6 +34,7 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   iRole: string;
+  iTempRole: string;
 
   iCanViewFlagPro: string = "false";
   canViewFlagPro: string;
@@ -43,6 +44,7 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
 
   ngOnInit() {
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iTempRole = this.dataService.decodeTempAcc(sessionStorage.getItem("token"));
     this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
     this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
 
@@ -69,7 +71,7 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
   GetProcurementDetails() {
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
 
-    if (this.iRole == "FD") {
+    if (this.iRole == "FD" || this.iTempRole == "FD") {
       this.dataService.GetProcurementRequestDetailsFD().subscribe(result => {
         result.forEach(e => {
           if (e.procurement_Status_ID == 3)
@@ -89,7 +91,7 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
       }
     }
 
-    if (this.iRole == "MD") {
+    if (this.iRole == "MD" || this.iTempRole == "MD") {
       this.dataService.GetProcurementRequestDetailsMD().subscribe(result => {
         result.forEach(e => {
           if (e.procurement_Status_ID == 3)

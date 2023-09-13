@@ -1,7 +1,11 @@
 <div *ngIf="hasTempAcc != 'true'">
   <mat-tab-group>
-    <mat-tab label="Vendor">
+    <mat-tab>
+      <ng-template mat-tab-label>
 
+        Vendor
+        <mat-icon matBadge="{{numVenNoti}}" matBadgeColor="warn" [matBadgeHidden]="VenHidden"></mat-icon>
+      </ng-template>
       <table mat-table [dataSource]="dataSourceVendor" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
         <ng-container matColumnDef="id" style="width: 800px;">
           <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
@@ -40,8 +44,12 @@
 
     </mat-tab>
 
-    <mat-tab label="Inventory">
+    <mat-tab>
+      <ng-template mat-tab-label>
 
+        Inventory
+        <mat-icon matBadge="{{numInvNoti}}" matBadgeColor="warn" [matBadgeHidden]="InvHidden"></mat-icon>
+      </ng-template>
       <table mat-table [dataSource]="dataSourceInventory" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
         <ng-container matColumnDef="id" style="width: 800px;">
           <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
@@ -80,8 +88,12 @@
 
     </mat-tab>
 
-    <mat-tab label="Procurement">
+    <mat-tab>
+      <ng-template mat-tab-label>
 
+        Procurement
+        <mat-icon matBadge="{{numProNoti}}" matBadgeColor="warn" [matBadgeHidden]="ProHidden"></mat-icon>
+      </ng-template>
       <table mat-table [dataSource]="dataSourceProcurement" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
         <ng-container matColumnDef="id" style="width: 800px;">
           <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
@@ -120,8 +132,12 @@
 
     </mat-tab>
 
-    <mat-tab label="Delegation of Authority">
+    <mat-tab>
+      <ng-template mat-tab-label>
 
+        Delegation of Authority
+        <mat-icon matBadge="{{numDelNoti}}" matBadgeColor="warn" [matBadgeHidden]="DelHidden"></mat-icon>
+      </ng-template>
       <table mat-table [dataSource]="dataSourceDelegation" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
         <ng-container matColumnDef="id" style="width: 800px;">
           <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
@@ -147,11 +163,11 @@
 
               </mat-card-content>
               <!--<mat-card-actions style="display: flex; justify-content: end; align-items: end; margin-top: 5%;">
-                <button mat-raised-button
-                        style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" routerLink="/ViewConsumable">
-                  <mat-icon matPrefix style="margin-right:10%;">visibility</mat-icon>View
-                </button>
-              </mat-card-actions>-->
+            <button mat-raised-button
+                    style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" routerLink="/ViewConsumable">
+              <mat-icon matPrefix style="margin-right:10%;">visibility</mat-icon>View
+            </button>
+          </mat-card-actions>-->
             </mat-card>
           </td>
         </ng-container>
@@ -165,12 +181,16 @@
 </div>
 
 
-<div *ngIf="hasTempAcc == 'true'" >
+<div *ngIf="hasTempAcc == 'true'">
   <mat-tab-group backgroundColor="primary">
     <mat-tab label="My Notifications">
       <mat-tab-group>
-        <mat-tab label="Vendor">
+        <mat-tab>
+          <ng-template mat-tab-label>
 
+            Vendor
+            <mat-icon matBadge="{{numVenNoti}}" matBadgeColor="warn" [matBadgeHidden]="VenHidden"></mat-icon>
+          </ng-template>
           <table mat-table [dataSource]="dataSourceVendor" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
             <ng-container matColumnDef="id" style="width: 800px;">
               <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
@@ -209,8 +229,12 @@
 
         </mat-tab>
 
-        <mat-tab label="Inventory">
+        <mat-tab>
+          <ng-template mat-tab-label>
 
+            Inventory
+            <mat-icon matBadge="{{numInvNoti}}" matBadgeColor="warn" [matBadgeHidden]="InvHidden"></mat-icon>
+          </ng-template>
           <table mat-table [dataSource]="dataSourceInventory" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
             <ng-container matColumnDef="id" style="width: 800px;">
               <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
@@ -249,8 +273,12 @@
 
         </mat-tab>
 
-        <mat-tab label="Procurement">
+        <mat-tab>
+          <ng-template mat-tab-label>
 
+            Procurement
+            <mat-icon matBadge="{{numProNoti}}" matBadgeColor="warn" [matBadgeHidden]="ProHidden"></mat-icon>
+          </ng-template>
           <table mat-table [dataSource]="dataSourceProcurement" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
             <ng-container matColumnDef="id" style="width: 800px;">
               <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
@@ -289,8 +317,12 @@
 
         </mat-tab>
 
-        <mat-tab label="Delegation of Authority">
+        <mat-tab>
+          <ng-template mat-tab-label>
 
+            Delegation of Authority
+            <mat-icon matBadge="{{numDelNoti}}" matBadgeColor="warn" [matBadgeHidden]="DelHidden"></mat-icon>
+          </ng-template>
           <table mat-table [dataSource]="dataSourceDelegation" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
             <ng-container matColumnDef="id" style="width: 800px;">
               <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
@@ -316,11 +348,11 @@
 
                   </mat-card-content>
                   <!--<mat-card-actions style="display: flex; justify-content: end; align-items: end; margin-top: 5%;">
-              <button mat-raised-button
-                      style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" routerLink="/ViewConsumable">
-                <mat-icon matPrefix style="margin-right:10%;">visibility</mat-icon>View
-              </button>
-            </mat-card-actions>-->
+            <button mat-raised-button
+                    style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" routerLink="/ViewConsumable">
+              <mat-icon matPrefix style="margin-right:10%;">visibility</mat-icon>View
+            </button>
+          </mat-card-actions>-->
                 </mat-card>
               </td>
             </ng-container>
@@ -331,9 +363,20 @@
 
       </mat-tab-group>
     </mat-tab>
-    <mat-tab label="Delegating User Notifications">
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+
+        Delegating User Notifications
+        <mat-icon matBadge="!" matBadgeColor="warn" [matBadgeHidden]="tempHidden"></mat-icon>
+      </ng-template>
       <mat-tab-group>
-        <mat-tab label="Vendor">
+        <mat-tab>
+          <ng-template mat-tab-label>
+
+            Vendor
+            <mat-icon matBadge="{{tempNumVenNoti}}" matBadgeColor="warn" [matBadgeHidden]="tempVenHidden"></mat-icon>
+          </ng-template>
 
           <table mat-table [dataSource]="dataSourceTempVendor" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
             <ng-container matColumnDef="id" style="width: 800px;">
@@ -373,8 +416,12 @@
 
         </mat-tab>
 
-        <mat-tab label="Inventory">
+        <mat-tab>
+          <ng-template mat-tab-label>
 
+            Inventory
+            <mat-icon matBadge="{{tempNumInvNoti}}" matBadgeColor="warn" [matBadgeHidden]="tempInvHidden"></mat-icon>
+          </ng-template>
           <table mat-table [dataSource]="dataSourceTempInventory" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
             <ng-container matColumnDef="id" style="width: 800px;">
               <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
@@ -413,8 +460,12 @@
 
         </mat-tab>
 
-        <mat-tab label="Procurement">
+        <mat-tab>
+          <ng-template mat-tab-label>
 
+            Procurement
+            <mat-icon matBadge="{{tempNumProNoti}}" matBadgeColor="warn" [matBadgeHidden]="tempProHidden"></mat-icon>
+          </ng-template>
           <table mat-table [dataSource]="dataSourceTempProcurement" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
             <ng-container matColumnDef="id" style="width: 800px;">
               <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
@@ -453,8 +504,12 @@
 
         </mat-tab>
 
-        <mat-tab label="Delegation of Authority">
+        <mat-tab>
+          <ng-template mat-tab-label>
 
+            Delegation of Authority
+            <mat-icon matBadge="{{tempNumDelNoti}}" matBadgeColor="warn" [matBadgeHidden]="tempDelHidden"></mat-icon>
+          </ng-template>
           <table mat-table [dataSource]="dataSourceTempDelegation" class="mat-elevation-z8" id="table" style="display: flex; justify-content: center; align-items: center;  background-color: #ffffff00; width: 800px;">
             <ng-container matColumnDef="id" style="width: 800px;">
               <!--<th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;"> No. </th>-->
@@ -480,11 +535,11 @@
 
                   </mat-card-content>
                   <!--<mat-card-actions style="display: flex; justify-content: end; align-items: end; margin-top: 5%;">
-              <button mat-raised-button
-                      style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" routerLink="/ViewConsumable">
-                <mat-icon matPrefix style="margin-right:10%;">visibility</mat-icon>View
-              </button>
-            </mat-card-actions>-->
+                <button mat-raised-button
+                        style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;" routerLink="/ViewConsumable">
+                  <mat-icon matPrefix style="margin-right:10%;">visibility</mat-icon>View
+                </button>
+              </mat-card-actions>-->
                 </mat-card>
               </td>
             </ng-container>
@@ -498,3 +553,4 @@
   </mat-tab-group>
 </div>
 
+<!--matBadge="{{numNotifications}}" matBadgeColor="warn" [matBadgeHidden]="hidden"-->

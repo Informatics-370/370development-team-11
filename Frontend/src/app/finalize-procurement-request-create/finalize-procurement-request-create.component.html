@@ -19,7 +19,7 @@
                   <br />
                   <mat-form-field>
                     <input matInput type="text" placeholder="" formControlName="total" id="total"
-                      [(ngModel)]="TotalAmountDisplay" [readonly]="true">
+                      [(ngModel)]="TotalAmountDisplay" [readonly]="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                   </mat-form-field>
                 </mat-card-content>
               </td>
@@ -31,7 +31,7 @@
                   <br />
                   <mat-form-field>
                     <input matInput type="text" placeholder="" formControlName="budgetLine" id="budgetLine"
-                      [(ngModel)]="ActualAmountDisplay" [readonly]="true">
+                      [(ngModel)]="ActualAmountDisplay" [readonly]="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                   </mat-form-field>
                 </mat-card-content>
               </td>
