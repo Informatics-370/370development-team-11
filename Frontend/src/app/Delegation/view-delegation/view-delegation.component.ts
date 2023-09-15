@@ -56,6 +56,8 @@ export class ViewDelegationComponent implements OnInit{
   rMD: string;
 
   FileDetails: any[] = [];
+
+  SearchFileDetails: any[] = [];
   
 
 
@@ -91,7 +93,7 @@ export class ViewDelegationComponent implements OnInit{
     
   }
 
-  
+  searchedDelegations: any;
 
   search() {
     const searchTerm = this.searchWord.toLocaleLowerCase();
@@ -99,8 +101,18 @@ export class ViewDelegationComponent implements OnInit{
     if (this.iRole == "Admin" || this.iRole == "MD") {
       if (searchTerm) {
         this.dataSource = new MatTableDataSource(this.Delegations.filter(r => r.delegatingParty.toLocaleLowerCase().includes(searchTerm)))
+
+        this.SearchedDelegation = this.Delegations.filter(r => r.delegatingParty.toLocaleLowerCase().includes(searchTerm));
+
+        for (let n = 0; n < this.SearchedDelegation.length; n++) {
+          let id = this.SearchedDelegation[n].delegation_ID;
+
+          this.FileDetails[n] = this.SearchFileDetails[Number(id) - 1];
+        }
       }
       else if (searchTerm == "") {
+        this.FileDetails.length = 0;
+        this.SearchFileDetails.length = 0;
         this.GetDelegations();
       }
     } 
@@ -125,20 +137,26 @@ export class ViewDelegationComponent implements OnInit{
         }
 
         for (let i = 0; i < this.Delegations.length; i++) {
-          this.FileDetails.push({ FileURL: "", FileName: "" })
+          this.FileDetails.push({FileID: 0, FileURL: "", FileName: "" })
           let sFile = this.Delegations[i].delegation_Document;
 
           if (sFile != "None") {
             let DelegateName = sFile.substring(0, sFile.indexOf("\\"))
             let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
 
+            this.FileDetails[i].FileID = i + 1;
             this.FileDetails[i].FileURL = `https://localhost:7186/api/Delegation/GetDelegationFiles/${DelegateName}/${filename}`
             this.FileDetails[i].FileName = filename
           }
           else {
+            this.FileDetails[i].FileID = 0;
             this.FileDetails[i].FileURL = ""
             this.FileDetails[i].FileName = sFile;
           }
+        }
+
+        for (let f = 0; f < this.FileDetails.length; f++) {
+          this.SearchFileDetails[f] = this.FileDetails[f];
         }
         /*this.SearchedEmployee = this.Employees;*/
       })

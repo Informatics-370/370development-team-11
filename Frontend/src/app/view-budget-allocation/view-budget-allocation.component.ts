@@ -83,8 +83,6 @@ export class ViewBudgetAllocationComponent {
         this.GetDepBudgetAllocation();
       }
     }
-
-    this.dataSource = new MatTableDataSource<BudgetAllocation>(this.SearchedBudgetAllocations);
   }
 
   ngOnInit() {
