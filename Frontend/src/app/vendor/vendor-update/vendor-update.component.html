@@ -9,7 +9,7 @@
 </div>
   <mat-stepper [linear]="true"  #stepper style="background-color: #eee;">
     <mat-step [stepControl]="CompanyContactInfoFormGroup" >
-      <form [formGroup]="CompanyContactInfoFormGroup" style="text-align: -webkit-center;">
+      <form [formGroup]="CompanyContactInfoFormGroup" style="display: inline-block;">
         <ng-template matStepLabel>COMPANY CONTACT INFORMATION </ng-template>
         <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
             <tr>
@@ -127,7 +127,7 @@
       </form>
     </mat-step>
     <mat-step [stepControl]="CompanyOverviewFormGroup" >
-      <form [formGroup]="CompanyOverviewFormGroup" style="text-align: -webkit-center;">
+      <form [formGroup]="CompanyOverviewFormGroup" style="display: inline-block;">
         <ng-template matStepLabel>COMPANY OVERVIEW  </ng-template>
         <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
             <tr>
@@ -282,7 +282,7 @@
       </form>
     </mat-step>
     <mat-step [stepControl]="BankDetailsFormGroup" >
-        <form [formGroup]="BankDetailsFormGroup" style="text-align: -webkit-center;">
+        <form [formGroup]="BankDetailsFormGroup" style="display: inline-block;">
           <ng-template matStepLabel>BANKING INFORMATION</ng-template>
           <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
             <tr>

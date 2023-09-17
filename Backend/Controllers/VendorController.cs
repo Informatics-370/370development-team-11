@@ -1250,6 +1250,22 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("DeleteVendorValidation/{VendorDetailID}")]
+        public async Task<IActionResult> DeleteVendorValidation(int VendorDetailID)
+        {
+            try
+            {
+                var result = await _VendorRepository.DeleteVendorValidationAsync(VendorDetailID); ;
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
 
 
     }

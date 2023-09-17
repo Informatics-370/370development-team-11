@@ -10,7 +10,7 @@
   </div>
   <mat-stepper [linear]="bvalid"  #stepper style="background-color: #eee;" orientation="vertical" (selectionChange)="setFocus(stepper)" (click)="validationLinear()">
     <mat-step [stepControl]="DueDiligenceChecklistDetailsFormGroup" >
-      <form [formGroup]="DueDiligenceChecklistDetailsFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+      <form [formGroup]="DueDiligenceChecklistDetailsFormGroup" style="display: inline-block;" class="table-responsive">
         <ng-template matStepLabel>DUE DILIGENCE CHECKLIST DETAILS</ng-template>
         <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="0">
           <tr>
@@ -27,7 +27,7 @@
       </form>
     </mat-step>
     <mat-step [stepControl]="FoundationaldocumentsFormGroup" *ngIf="DueDilligenceData != undefined" >
-      <form [formGroup]="FoundationaldocumentsFormGroup" style="text-align: -webkit-center;" class="table-responsive" id="1">
+      <form [formGroup]="FoundationaldocumentsFormGroup" style="display: inline-block;" class="table-responsive" id="1">
         <ng-template  matStepLabel>FOUNDATIONAL DOCUMENTS</ng-template>
         <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" >
             <tr >
@@ -154,7 +154,7 @@
       </form>
     </mat-step>
     <mat-step [stepControl]="FinancialsFormGroup">
-        <form [formGroup]="FinancialsFormGroup" style="text-align: -webkit-center;" class="table-responsive" id="2">
+        <form [formGroup]="FinancialsFormGroup" style="display: inline-block;" class="table-responsive" id="2">
           <ng-template matStepLabel >FINANCIALS</ng-template>
           <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" >
               <tr>
@@ -184,7 +184,7 @@
         </form>
       </mat-step>
       <mat-step [stepControl]="SubContractingFormGroup" >
-          <form [formGroup]="SubContractingFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+          <form [formGroup]="SubContractingFormGroup" style="display: inline-block;" class="table-responsive">
             <ng-template matStepLabel>SUB-CONTRACTING</ng-template>
             <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="3">
               <tr>
@@ -213,7 +213,7 @@
           </form>
         </mat-step>
         <mat-step [stepControl]="InsuranceFormGroup" *ngIf="DueDilligenceData != undefined">
-          <form [formGroup]="InsuranceFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+          <form [formGroup]="InsuranceFormGroup" style="display: inline-block;" class="table-responsive">
             <ng-template matStepLabel >INSURANCE</ng-template>
             <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="4">
               <tr>
@@ -328,7 +328,7 @@
           </form>
         </mat-step>
         <mat-step [stepControl]="LicensesOrProfessionalAccreditationFormGroup" >
-          <form [formGroup]="LicensesOrProfessionalAccreditationFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+          <form [formGroup]="LicensesOrProfessionalAccreditationFormGroup" style="display: inline-block;" class="table-responsive">
             <ng-template matStepLabel >LICENSES OR PROFESSIONAL ACCREDITATION</ng-template>
             <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="5">
               <tr>
@@ -357,7 +357,7 @@
           </form>
         </mat-step>
         <mat-step [stepControl]="InformationSecurityFormGroup" >
-          <form [formGroup]="InformationSecurityFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+          <form [formGroup]="InformationSecurityFormGroup" style="display: inline-block;" class="table-responsive">
             <ng-template matStepLabel >INFORMATION SECURITY</ng-template>
             <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;">
               <tr>
@@ -501,7 +501,7 @@
           </form>
         </mat-step>
         <mat-step [stepControl]="PolicyReviewFormGroup" >
-          <form [formGroup]="PolicyReviewFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+          <form [formGroup]="PolicyReviewFormGroup" style="display: inline-block;" class="table-responsive">
             <ng-template matStepLabel>POLICY REVIEW</ng-template>
             <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;">
               <tr>
@@ -554,7 +554,7 @@
           </form>
         </mat-step>
         <mat-step [stepControl]="BusinessReferencesFormGroup" >
-          <form [formGroup]="BusinessReferencesFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+          <form [formGroup]="BusinessReferencesFormGroup" style="display: inline-block;" class="table-responsive">
             <ng-template matStepLabel>BUSINESS REFERENCES</ng-template>
             <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="8">
               <tr>

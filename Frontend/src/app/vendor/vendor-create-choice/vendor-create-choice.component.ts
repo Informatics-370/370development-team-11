@@ -24,29 +24,63 @@ export class VendorCreateChoiceComponent {
   showConfirmationDialog: boolean = true;
   matcher = new MyErrorStateMatcher()
 
+  User:string;
+  TempUser:string;
+
   constructor(public dialogRef: MatDialogRef<VendorCreateChoiceComponent>,private formBuilder: FormBuilder, private router: Router, private dataService: DataService,
     @Inject(MAT_DIALOG_DATA) public data: { ID: number }) { }
 //create api backend 1 for get and one for delete 
     VendorDetails: any[] = [];
     mySelect: FormGroup = this.formBuilder.group({VendorsApproved: ['', [Validators.required]]});
     ngOnInit(): void {
-      this.mySelect = this.formBuilder.group({VendorsApproved: ['', [Validators.required]]})
+      this.mySelect = this.formBuilder.group({ VendorsApproved: ['', [Validators.required]] })
+      this.User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+      this.TempUser = this.dataService.decodeTempUsername(sessionStorage.getItem('token'))
+
+      this.dataService.GetEmployeeByUsername(this.TempUser).subscribe({next: (tempResult) => {
+        let TempEmployeeDetails:any = tempResult
+        this.getData(TempEmployeeDetails)
+      },
+      error:(y) => {
+        this.getData()
+      }
+      })
 
 
-      this.dataService.getAllApprovedVendors(4).subscribe(result => {
-      let requestlist:any[] = result
-      requestlist.forEach((element) => {
-        if(element.vendor_Status_ID == 4) {
-          this.VendorDetails.push(element)
-        }
-      });//result      
-    })//dataservice
         
       
     
   
  
 }//ngonIt
+
+
+    getData(TempEmpDetails?:any) {
+    this.dataService.GetEmployeeByUsername(this.User).subscribe(r => {
+      let EmployeeDetails: any = r
+      let tempName = "none"
+      if(TempEmpDetails != undefined) {
+         tempName = TempEmpDetails.employeeName + " " + TempEmpDetails.employeeSurname
+      }
+
+      this.dataService.GetAllOnboardRequest().subscribe(e => {
+        let onboardRequestDetails: any[] = e
+        this.dataService.getAllApprovedVendors(4).subscribe(result => {
+          let requestlist: any[] = result
+          requestlist.forEach((element) => {
+            onboardRequestDetails.forEach(x => {
+              let name = EmployeeDetails.employeeName + " " + EmployeeDetails.employeeSurname
+              if ((x.onboard_Request_status_ID == 3) && (x.vendor_ID == element.vendor_ID) && (x.employeeName == name || x.employeeName == tempName)) {
+                this.VendorDetails.push(element)
+              }
+            })
+
+          });//result      
+        })//3dataservice
+      })//2dataservice
+
+    })//1dataservice  
+  }
 
   onConfirm(): void {
    let VendorID = this.mySelect.get('VendorsApproved')?.value;

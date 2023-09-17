@@ -1,9 +1,10 @@
 
 label {
     width: 700px;
-   
+    text-align: justify;
     font-weight: 500;
     margin-left: 1%;
+    text-align-last: left;
 }
 
 mat-form-field{
@@ -90,4 +91,12 @@ mat-error:first-child {
 
 .mat-mdc-select {
     width: 80%!important;
+}
+
+.mat-expansion-panel .label {
+    margin-left: 2%;
+}
+
+.col-7 label{
+    margin-left: 2%;
 }

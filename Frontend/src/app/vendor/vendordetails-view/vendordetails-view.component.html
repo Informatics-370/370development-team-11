@@ -59,7 +59,7 @@
         <tr>
             <td><label for="file" style="margin-right: 1%;">Company Registered Address: </label></td>
             <td>  
-               <span style="word-break: break-word;"> {{VendorDetail.registered_Address}}  </span>
+               <span style="word-break: break-word;padding-left: 0px;"> {{VendorDetail.registered_Address}}  </span>
             </td>
         </tr>
         <br>
@@ -307,7 +307,8 @@
 <tr *ngIf="this.BeeDetails == undefined">
   <td><label style="margin-right: 1%;">Vendor does not have any BEE Details</label></td>
   <td >  
-    <button mat-raised-button style="width: 155px;background-color: #94CC5B;" routerLink="/vendor-approve-edit/{{VendorDetail.vendor_ID}}" > Add BEE Details </button>
+    <button mat-raised-button style="width: 155px;background-color: #94CC5B;" routerLink="/vendor-approve-edit/{{VendorDetail.vendor_ID}}" *ngIf="canAddBEE" > Add BEE Details </button>
+    <span style="padding-left: 0px;" *ngIf="!canAddBEE">Consult GRC if this is must be updated</span>
   </td>
 </tr>
 <br *ngIf="this.BeeDetails == undefined">
