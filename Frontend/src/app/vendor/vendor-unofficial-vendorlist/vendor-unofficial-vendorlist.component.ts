@@ -4,13 +4,15 @@ import { DataService } from 'src/app/DataService/data-service';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { VendorDetails } from 'src/app/Shared/VendorDetails';
 import { VendorCreateChoiceComponent } from '../vendor-create-choice/vendor-create-choice.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import { Subscription, buffer, elementAt, groupBy } from 'rxjs';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
 import { TestScheduler } from 'rxjs/testing';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { ApproveVendorIFrameComponent } from 'src/app/HelpIFrames/ApproveVendorIFrame/approve-vendor-iframe/approve-vendor-iframe.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -43,7 +45,7 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private VendorService: DataService, private dialog: MatDialog, private route: ActivatedRoute,private router: Router,) {
+  constructor(private VendorService: DataService, private dialog: MatDialog, private route: ActivatedRoute,private router: Router,private sanitizer: DomSanitizer) {
    // this.router.routeReuseStrategy.shouldReuseRoute = () => false; 
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
@@ -95,6 +97,7 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
       RequestList = result
       this.onboardRequestData = [];
       this.onboardRequestData = result 
+      console.log(result)
       this.PendingOnboardDetails = [];
       RequestList.forEach((element) => this.PendingOnboardDetails.push(element));
       //RequestList.forEach((element) => this.vendor.push(element.vendors));
@@ -287,16 +290,43 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
       return result
   }
 
+  User:string;
+
   UpdateOnboardRequestStatus(i:number) {
 
-    for (let a = 0;a < this.onboardRequestData.length;a++) {
-        if(this.onboardRequestData[a].onboard_Request_Id == i) {
-          if(this.onboardRequestData[a].onboard_Request_status_ID == 1) {
-            this.VendorService.ChangeOnboardStatus(5,i,this.onboardRequestData[a].vendor_ID).subscribe()
+    this.User = this.VendorService.decodeUser(sessionStorage.getItem('token'))
+    this.VendorService.GetEmployeeByUsername(this.User).subscribe(r => {
+      let EmployeeDetails: any = r
+      let name = EmployeeDetails.employeeName + " " + EmployeeDetails.employeeSurname
+
+      if(this.onboardRequestData.find(x=> x.onboard_Request_Id == i).employeeName != name) {
+        for (let a = 0; a < this.onboardRequestData.length; a++) {
+          if (this.onboardRequestData[a].onboard_Request_Id == i) {
+            if (this.onboardRequestData[a].onboard_Request_status_ID == 1) {
+              this.VendorService.ChangeOnboardStatus(5, i, this.onboardRequestData[a].vendor_ID).subscribe()
+            }
           }
         }
-    }
-    this.router.navigate(['/vendor-approve/' + i])
+        this.router.navigate(['/vendor-approve/' + i])
+      }
+      else {
+        var action = "ERROR";
+        var title = "VALIDATION ERROR";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Forbidden to <strong style='color:red'> APPROVE </strong> own request!");
+
+        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 2200;
+        setTimeout(() => {
+          this.router.navigate(['/vendor-unofficial-vendorlist'])
+          dialogRef.close();
+        }, duration);
+      }
+
+    })
   }
 
   CorrectRouteChoice(i:number) {

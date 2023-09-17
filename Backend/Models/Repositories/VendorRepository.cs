@@ -1087,6 +1087,15 @@ namespace ProcionAPI.Models.Repositories
             return new Notification[] { VendorNotification };
         }
 
+        public async Task<Procurement_Request[]> DeleteVendorValidationAsync(int VendorDetailID)
+        {
+            var VendorDetail = await _dbContext.Vendor_Detail.Include(x => x.Vendor).FirstOrDefaultAsync(x => x.Vendor_Detail_ID == VendorDetailID);
+
+            IQueryable<Procurement_Request> query = _dbContext.Procurement_Request.Include(x => x.Vendor).Where(x => (x.Vendor_ID == VendorDetail.Vendor_ID));
+
+            return await query.ToArrayAsync();
+        }
+
 
     }
 }

@@ -505,6 +505,10 @@ export class DataService {
     return this.httpClient.delete<Vendor_Tax>(`${this.apiUrl}Vendor/DeleteIncomeTaxByID/${IncomeTaxID}`, this.httpOptions).pipe(map(result => result))
   }
 
+  DeleteVendorValidation(VendorDetailID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Request>(`${this.apiUrl}Vendor/DeleteVendorValidation/${VendorDetailID}`, this.httpOptions).pipe(map(result => result))
+  }
+
   //--------------------------------------------------------------------------------------Vendor Files--------------------------------------------------------------------------------------
 
   VendorFileAdd(FolderCategory: string, VendorNo: string, fileName: File): Observable<any> {

@@ -94,7 +94,10 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         {
 
 
-            Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Details_ID == DepositDetails.Procurement_Details_ID);
+            Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details
+                                                                             .Include(x=> x.Employee).ThenInclude(x=> x.User)
+                                                                             .ThenInclude(x=> x.Access)
+                                                                             .FirstOrDefaultAsync(x => x.Procurement_Details_ID == DepositDetails.Procurement_Details_ID);
 
             if (existingProcurementDetails != null)
             {

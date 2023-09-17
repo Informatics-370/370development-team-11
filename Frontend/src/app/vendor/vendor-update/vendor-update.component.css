@@ -31,11 +31,25 @@ td {
 
 label {
     width: 290px;
-   
+    text-align: justify;
     font-weight: 500;
     margin-left: 1%;
+    text-align-last: left;
+}
+.file-upload{
+    float: left;
+    margin-left: 4.5%;
 }
 
+mat-checkbox {
+    float: left;
+    margin-left: 2%;
+}
+a {
+    float: left;
+    margin-left: 4.5%;
+    color: black;
+}
 .file-upload {
     background-color: #244688;
     color: white;

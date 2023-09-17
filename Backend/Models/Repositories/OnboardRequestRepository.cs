@@ -57,12 +57,12 @@ namespace ProcionAPI.Models.Repositories
             var employee = _dbContext.Employee.FirstOrDefault(E => E.User_Id == userId);
             if (employee != null)
             {
-                return employee.EmployeeName;
+                return employee.EmployeeName + " " + employee.EmployeeSurname;
             }
             else
             {
                 var admin = _dbContext.Admin.FirstOrDefault(A => A.User_Id == userId);
-                return admin?.AdminName; // Return null if admin is not found or AdminName if it exists.
+                return admin?.AdminName + " " + admin?.AdminSurname; // Return null if admin is not found or AdminName if it exists.
             }
         }
 

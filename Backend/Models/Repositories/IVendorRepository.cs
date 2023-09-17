@@ -94,5 +94,6 @@ namespace ProcionAPI.Models.Repositories
         Task<Notification[]> AddNotificationAsync(Notification VendorNotification);
 
         Task<Vendor[]> getAllOtherVendorsAsync(int VendorStatusID);
+        Task<Procurement_Request[]> DeleteVendorValidationAsync(int VendorDetailID);
     }
 }

@@ -524,27 +524,32 @@ export class VendorApproveComponent implements OnInit {
             info: {
               title: `Due Dilligence Checklist for ${this.DueDilligenceDetails.vendor.name}`,
             },
-            content: [
-              {table: {
+            header: {
+              table: {
                 headerRows: 0,
-                widths: [ '*', 'auto' ],
+                widths: ['*', 'auto'],
                 body: [
-                  [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 150, height: 50,margin:[5,5,0,5]}, {} ],
+                  [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
                 ]
               },
-              layout: 'noBorders',margin:[0,0,0,10]},
+              layout: 'noBorders',
+  
+            },
+            content: [
               { text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#002060', margin: [0, 0, 0, 15] },
               {
                 text: 'Created By: ' + this.usr.username,
                 fontSize: 12,
                 alignment: 'center',
                 bold:true,
+                decoration: 'underline',
               },
               {
                 text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
                 fontSize: 12,
                 alignment: 'center',
                 bold:true,
+                decoration: 'underline',
               },
               {
                 canvas: [
@@ -884,7 +889,7 @@ export class VendorApproveComponent implements OnInit {
                 },
 
               },
-              margin: [0, 0, 0, 15],
+             pageBreak: 'after',
             },
             {
               table: {
@@ -933,7 +938,8 @@ export class VendorApproveComponent implements OnInit {
               },
               margin: [0, 0, 0, 15],
             },
-            ]
+            ],
+            pageMargins: [40, 80, 40, 60],
 
 
           };
@@ -946,27 +952,32 @@ export class VendorApproveComponent implements OnInit {
           info: {
             title: `Due Dilligence Checklist for ${this.DueDilligenceDetails.vendor.name}`,
           },
-          content: [
-            {table: {
+          header: {
+            table: {
               headerRows: 0,
-              widths: [ '*', 'auto' ],
+              widths: ['*', 'auto'],
               body: [
-                [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 150, height: 50,margin:[5,5,0,5]}, {} ],
+                [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
               ]
             },
-            layout: 'noBorders',margin:[0,0,0,10]},
+            layout: 'noBorders',
+
+          },
+          content: [
             { text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#002060', margin: [0, 0, 0, 15] },
             {
               text: 'Created By: ' + this.usr.username,
               fontSize: 12,
               alignment: 'center',
               bold:true,
+              decoration: 'underline',
             },
             {
               text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
               fontSize: 12,
               alignment: 'center',
               bold:true,
+              decoration: 'underline',
             },
             {
               canvas: [
@@ -1309,7 +1320,8 @@ export class VendorApproveComponent implements OnInit {
             },
             margin: [0, 0, 0, 15],
           },
-          ]
+          ],
+          pageMargins: [40, 80, 40, 60],
 
 
         };

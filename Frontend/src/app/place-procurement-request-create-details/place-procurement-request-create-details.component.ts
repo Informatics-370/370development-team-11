@@ -722,7 +722,10 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.Deposit.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category
         this.Deposit.deposit_Due_Date = dateChange.transform(this.ProcurementFormGroup.get("DepositDueDate")?.value, 'MM, dd, y');
         this.Deposit.procurement_Details_ID = result[0].procurement_Details_ID;
-
+        this.Deposit.procurement_Details.employee = this.EmployeeDetails;
+       // this.Deposit.procurement_Details.employee.user = this.EmployeeDetails.user;
+        //this.Deposit.procurement_Details.employee.user.access = result[0].employee.user.access;
+        console.log(this.Deposit)
         this.ProcureService.AddDeposit(this.Deposit).subscribe()
       }
       if (this.ProcurementDetails.proof_Of_Payment_Required == true) {
