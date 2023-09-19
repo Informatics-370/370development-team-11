@@ -723,6 +723,10 @@ export class DataService {
     return this.httpClient.post(`${this.apiUrl}Mail/OTPEmail`, mail, this.httpOptions)
   }
 
+  SendNewUsernameMail(mail: MailData) {
+    return this.httpClient.post(`${this.apiUrl}Mail/ResetUsernameEmail`, mail, this.httpOptions)
+  }
+
   UpdatePassword(UserID: Number, NewPassword: String) {
     return this.httpClient.put<User>(`${this.apiUrl}User/UpdatePassword/` + UserID + "/" + NewPassword, this.httpOptions)
   }

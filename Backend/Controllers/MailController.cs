@@ -98,5 +98,27 @@ namespace ProcionAPI.Controllers
             }
         }
 
+        [HttpPost("ResetUsernameEmail")]
+        public async Task<IActionResult> ResetUsernameEmail(NewEmpMail ResetUsernameEmail)
+        {
+            // Create MailData object
+            MailData mailData = new MailData(
+                new List<string> { ResetUsernameEmail.Email },
+                "Login Credentials",
+                _mail.GetEmailTemplate("UserNameChange", ResetUsernameEmail));
+
+
+            bool sendResult = await _mail.SendAsync(mailData, new CancellationToken());
+
+            if (sendResult)
+            {
+                return Ok(sendResult);
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occured. The Mail could not be sent.");
+            }
+        }
+
     }
 }
