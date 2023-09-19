@@ -19,6 +19,7 @@ import { Access } from '../Shared/Access';
 
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { DynamicCreateDepartmentComponent } from '../dynamic-create-department/dynamic-create-department.component';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -35,7 +36,7 @@ export class EditEmployeeComponent implements OnInit {
   accForm: FormGroup = new FormGroup({});
 
   employee: any
-  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer, private DynamicDepDialog: MatDialog) { }
 
 
 
@@ -178,9 +179,17 @@ export class EditEmployeeComponent implements OnInit {
   GetRoles() {
     this.dataService.GetRoles().subscribe(result => {
       this.userRoles = result;
-      this.userRoles.forEach((element, index) => {
-        if (element.name == "Admin") this.userRoles.splice(index, 1);
-      });
+
+      if (this.userRoles.length == 0) {
+        document.getElementById('noRoleExists').style.display = "block";
+        document.getElementById('BranchSelected').style.display = "none";
+      } else {
+        this.userRoles.forEach((element, index) => {
+          if (element.name == "Admin") this.userRoles.splice(index, 1);
+        });
+      }
+
+      
     });
 
   }
@@ -188,19 +197,66 @@ export class EditEmployeeComponent implements OnInit {
   GetBranches() {
     this.dataService.GetBranches().subscribe(result => {
       this.branches = result;
+      if (this.branches.length == 0) {
+        document.getElementById('noBranchExists').style.display = "block";
+        document.getElementById('BranchSelected').style.display = "none";
+      }
     });
   }
 
   GetDepartments() {
     this.dataService.GetDepartments().subscribe(result => {
       this.departments = result;
+      if (this.departments.length == 0) {
+        document.getElementById('noDepartmentExists').style.display = "block";
+        document.getElementById('noBranchSelected').style.display = "none";
+      }
     });
   }
 
   GetMandates() {
     this.dataService.GetMandateLimits().subscribe(result => {
       this.mandate_limits = result;
+      if (this.mandate_limits.length == 0) {
+        document.getElementById('noMandateExists').style.display = "block";
+        document.getElementById('MandateExists').style.display = "none";
+      }
 
+    });
+  }
+
+  selectedBranch: any = "none";
+  getBranch(branch) {
+    if (branch == null) {
+      this.selectedBranch = "none";
+      document.getElementById('noBranchSelected').style.display = "block";
+      document.getElementById('BranchSelected').style.display = "none";
+    } else {
+
+      this.branches.forEach(a => {
+        if (a.branch_ID == branch) {
+          this.selectedBranch = a.name;
+          document.getElementById('BranchSelected').style.display = "block";
+          document.getElementById('noBranchSelected').style.display = "none";
+        }
+      })
+
+      //this.br = branch;
+      //this.br.branch_ID = 0;
+      //this.selectedBranch = this.br.name;
+      
+    }
+  }
+
+  DynamicDepartmentCreate() {
+    this.DynamicDepDialog.open(DynamicCreateDepartmentComponent, {
+
+    });
+
+    this.DynamicDepDialog.afterAllClosed.subscribe({
+      next: (response) => {
+        this.GetDepartments();
+      }
     });
   }
 
@@ -293,6 +349,16 @@ export class EditEmployeeComponent implements OnInit {
         this.cDeleteVen = "true";
       }
 
+
+      this.branches.forEach(a => {
+        console.log(a.name)
+        console.log(a.branch_ID)
+        if (a.branch_ID == this.employee.branch.branch_ID) {
+          this.selectedBranch = a.name;
+          /*document.getElementById('BranchSelected').style.display = "block";*/
+          /*document.getElementById('noBranchSelected').style.display = "none";*/
+        }
+      })
     })
   }
 

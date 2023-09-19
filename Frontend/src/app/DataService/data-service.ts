@@ -1542,7 +1542,7 @@ export class DataService {
   }
 
   GetProcurementDetailsByRequestID(RequestID: Number): Observable<any> {
-    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/GetProcurementDetailsByID/${RequestID}`).pipe(map(result => result))
+    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/GetProcurementDetailsByRequestID/${RequestID}`).pipe(map(result => result))
   }
 
   ProcurementAddNotification(ProcurementNotification: Notification): Observable<any> {

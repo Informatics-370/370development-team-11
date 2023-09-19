@@ -66,9 +66,7 @@ export class PlaceProcurementRequestComponent implements OnInit {
       procurementRequestList.forEach(e => {
 
         if (e.requisition_Status_ID == 1) {
-
           this.dataService.GetProcurementDetailsByRequestID(e.procurement_Request_ID).subscribe(a => {
-
             if (a == null) {
               if (TempAcc == "None") {
                 if (e.user.username == User) {

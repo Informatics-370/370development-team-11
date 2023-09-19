@@ -158,7 +158,7 @@
             <tr>
                 <td> <label>Company Registration Document:</label></td>
                 <td>
-                    <input  id="file" formControlName="CompanyRegistrationNumberDoc" type="file" class="file-upload" (change)="FileStorage(0,$event)" > 
+                    <input  id="file" formControlName="CompanyRegistrationNumberDoc" type="file" class="file-upload" (change)="FileStorage(0,$event)" style="max-width: 247px;"> 
                 </td>
             </tr>
             <br>    
@@ -177,7 +177,7 @@
                 <td> <label>Vat Registration Number Document:</label></td>
                 <td>
                     
-                    <input  id="file" formControlName="VatRegistrationNumberDoc" type="file" class="file-upload" (change)="FileStorage(1,$event)"> 
+                    <input  id="file" formControlName="VatRegistrationNumberDoc" type="file" class="file-upload" (change)="FileStorage(1,$event)" style="max-width: 247px;"> 
                 </td>
             </tr>
             <br>
@@ -196,7 +196,7 @@
             <tr>
                 <td><label>Income Tax Number Document:</label></td>
                 <td>
-                    <input  id="file" formControlName="IncomeTaxNumberDoc" type="file" class="file-upload" (change)="FileStorage(2,$event)" >                   
+                    <input  id="file" formControlName="IncomeTaxNumberDoc" type="file" class="file-upload" (change)="FileStorage(2,$event)" style="max-width: 247px;">                   
                 </td>
             </tr>
             <br>
@@ -204,7 +204,7 @@
                 <td><label>Signed Agreement Document:</label></td>
                 <td>
                     <mat-checkbox formControlName="SignedAgreementCheck" (click)="SignedAgreementChange()">Add Signed Agreement Document?</mat-checkbox> <br>
-                    <input  id="file" formControlName="SignedAgreementDoc" type="file" class="file-upload" *ngIf="SignedAgreementChecker === true;" (change)="FileStorage(3,$event)">           
+                    <input  id="file" formControlName="SignedAgreementDoc" type="file" class="file-upload" *ngIf="SignedAgreementChecker === true;" (change)="FileStorage(3,$event)" style="max-width: 247px;">           
                 </td>
             </tr>
             <br>
@@ -242,7 +242,7 @@
             <tr *ngIf="LicenseOrAccreditationChecker === true;">
                 <td> <label>License Or Accreditation Number Document:</label></td>
                 <td>  
-                    <input  id="file" formControlName="LicenseOrAccreditationNumberDoc" type="file" class="file-upload" (change)="FileStorage(5,$event)">  
+                    <input  id="file" formControlName="LicenseOrAccreditationNumberDoc" type="file" class="file-upload" (change)="FileStorage(5,$event)" style="max-width: 247px;">  
                 </td>
             </tr>
             
@@ -344,7 +344,7 @@
             <tr>
                 <td><label>Bank Stamped Confirmation Letter:</label></td>
                 <td>  
-                      <input  id="file" formControlName="BankStampedConfirmationLetter" type="file" class="file-upload" (change)="FileStorage(6,$event)">  
+                      <input  id="file" formControlName="BankStampedConfirmationLetter" type="file" class="file-upload" (change)="FileStorage(6,$event)" style="max-width: 247px;">  
                 </td>
             </tr>
         </table>  

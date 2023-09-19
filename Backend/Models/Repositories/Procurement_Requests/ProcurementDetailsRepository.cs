@@ -480,8 +480,8 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         public async Task<Procurement_Details> GetProcurementDetailsByRequestIDAsync(int RequestID)
         {
             IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Where(x => x.Procurement_Request_ID == RequestID);
-
             return await query.FirstOrDefaultAsync();
+            //return await query.FirstOrDefaultAsync();
         }
         public async Task<Procurement_Details[]> GetUnpaidProcurementDetailsAsync()
         {

@@ -175,6 +175,8 @@ import { ExportBaPickerComponent } from './export-ba-picker/export-ba-picker.com
 import { ImportAllocationComponent } from './import-allocation/import-allocation.component';
 import { TimerComponent } from './Settings/timer/timer.component';
 
+import { MatTreeModule } from '@angular/material/tree';
+import { DynamicCreateDepartmentComponent } from './dynamic-create-department/dynamic-create-department.component';
 
 
 @NgModule({
@@ -314,6 +316,7 @@ import { TimerComponent } from './Settings/timer/timer.component';
     ExportBaPickerComponent,
     ImportAllocationComponent,
     TimerComponent,
+    DynamicCreateDepartmentComponent,
   ],
   imports: [
     BrowserModule,
@@ -353,7 +356,8 @@ import { TimerComponent } from './Settings/timer/timer.component';
     ReactiveFormsModule,
     AsyncPipe,
     NgFor,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatTreeModule
   ],
   providers: [
     //AppService,
