@@ -19,6 +19,7 @@ import { Access } from '../Shared/Access';
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { subscribeOn } from 'rxjs';
+import { DynamicCreateDepartmentComponent } from '../dynamic-create-department/dynamic-create-department.component';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -35,7 +36,7 @@ export class CreateEmployeeComponent implements OnInit {
 
   myForm: FormGroup = new FormGroup({});
 
-  constructor(private router: Router, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer, private DynamicDepDialog: MatDialog) { }
 
 
   roles: any[] = []
@@ -153,27 +154,46 @@ export class CreateEmployeeComponent implements OnInit {
   GetRoles() {
     this.dataService.GetRoles().subscribe(result => {
       this.roles = result;
-      this.roles.forEach((element, index) => {
-        if (element.name == "Admin") this.roles.splice(index, 1);
-      });
+      if (this.roles.length == 0) {
+        document.getElementById('noRoleExists').style.display = "block";
+        document.getElementById('BranchSelected').style.display = "none";
+      } else {
+        this.roles.forEach((element, index) => {
+          if (element.name == "Admin") this.roles.splice(index, 1);
+        });
+      }
+      
     });
   }
 
   GetBranches() {
     this.dataService.GetBranches().subscribe(result => {
       this.branches = result;
+      if (this.branches.length == 0) {
+        document.getElementById('noBranchExists').style.display = "block";
+        document.getElementById('BranchSelected').style.display = "none";
+      }
     });
   }
 
   GetDepartments() {
     this.dataService.GetDepartments().subscribe(result => {
       this.departments = result;
+      if (this.departments.length == 0) {
+        document.getElementById('noDepartmentExists').style.display = "block";
+        document.getElementById('noBranchSelected').style.display = "none";
+      }
+
     });
   }
 
   GetMandates() {
     this.dataService.GetMandateLimits().subscribe(result => {
       this.mandate_limits = result;
+      if (this.mandate_limits.length == 0) {
+        document.getElementById('noMandateExists').style.display = "block";
+        document.getElementById('MandateExists').style.display = "none";
+      }
     });
   }
 
@@ -181,7 +201,33 @@ export class CreateEmployeeComponent implements OnInit {
     return this.myForm.controls;
   }
 
+  selectedBranch: any = "none";
+  getBranch(branch) {
+    console.log(branch)
+    if (branch == null) {
+      this.selectedBranch = "none";
+      document.getElementById('noBranchSelected').style.display = "block";
+      document.getElementById('BranchSelected').style.display = "none";
+    } else {
+      this.br = branch;
+      this.br.branch_ID = 0;
+      this.selectedBranch = this.br.name;
+      document.getElementById('BranchSelected').style.display = "block";
+      document.getElementById('noBranchSelected').style.display = "none";
+    }
+  }
 
+  DynamicDepartmentCreate() {
+    this.DynamicDepDialog.open(DynamicCreateDepartmentComponent, {
+      
+    });
+
+    this.DynamicDepDialog.afterAllClosed.subscribe({
+      next: (response) => {
+        this.GetDepartments();
+      }
+    });
+  }
 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);

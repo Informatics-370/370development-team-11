@@ -511,7 +511,11 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             try
             {
                 var result = await _ProcurementDetailsRepository.GetProcurementDetailsByRequestIDAsync(RequestID);
+                
                 return Ok(result);
+               
+
+                
             }
             catch (Exception)
             {

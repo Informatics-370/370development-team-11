@@ -6,10 +6,6 @@ mat-error {
     display: block !important;
   }
 
-::ng-deep .mat-mdc-optgroup-label:first-child {
-  color: white;
-  background-color: #244688;
-}
 
 .wrapper {
   position: relative;

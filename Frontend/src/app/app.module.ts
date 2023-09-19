@@ -174,6 +174,7 @@ import { ReceiveAssetComponent } from './receive-asset/receive-asset.component';
 import { ExportBaPickerComponent } from './export-ba-picker/export-ba-picker.component';
 import { ImportAllocationComponent } from './import-allocation/import-allocation.component';
 import { MatTreeModule } from '@angular/material/tree';
+import { DynamicCreateDepartmentComponent } from './dynamic-create-department/dynamic-create-department.component';
 
 
 @NgModule({
@@ -312,6 +313,7 @@ import { MatTreeModule } from '@angular/material/tree';
     ReceiveAssetComponent,
     ExportBaPickerComponent,
     ImportAllocationComponent,
+    DynamicCreateDepartmentComponent,
   ],
   imports: [
     BrowserModule,
