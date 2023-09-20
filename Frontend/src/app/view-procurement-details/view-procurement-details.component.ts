@@ -37,7 +37,7 @@ export class ViewProcurementDetailsComponent implements OnInit {
   ProcurementRequests: Procurement_Details[] = [];
   SearchedPRequests: Procurement_Details[] = [];
   dataSource: any;
-  displayedColumns: string[] = ['Name', 'Description', 'Vendor', 'Status', 'POP', 'Inv', 'View'];
+  displayedColumns: string[] = ['Name', 'Description', 'Vendor', 'Status', 'POP', 'Inv', 'View', 'RealView'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
 
