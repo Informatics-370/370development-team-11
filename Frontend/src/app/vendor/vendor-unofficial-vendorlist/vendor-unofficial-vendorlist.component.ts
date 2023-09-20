@@ -295,11 +295,13 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
   UpdateOnboardRequestStatus(i:number) {
 
     this.User = this.VendorService.decodeUser(sessionStorage.getItem('token'))
+    let irole = this.VendorService.decodeUserRole(sessionStorage.getItem('token'))
+    let iTemprole = this.VendorService.decodeTempAcc(sessionStorage.getItem('token'))
     this.VendorService.GetEmployeeByUsername(this.User).subscribe(r => {
       let EmployeeDetails: any = r
       let name = EmployeeDetails.employeeName + " " + EmployeeDetails.employeeSurname
 
-      if(this.onboardRequestData.find(x=> x.onboard_Request_Id == i).employeeName != name) {
+      if(this.onboardRequestData.find(x=> x.onboard_Request_Id == i).employeeName != name || irole == "MD" || iTemprole == "MD") {
         for (let a = 0; a < this.onboardRequestData.length; a++) {
           if (this.onboardRequestData[a].onboard_Request_Id == i) {
             if (this.onboardRequestData[a].onboard_Request_status_ID == 1) {
