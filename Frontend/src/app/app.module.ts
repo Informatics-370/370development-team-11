@@ -177,6 +177,7 @@ import { TimerComponent } from './Settings/timer/timer.component';
 
 import { MatTreeModule } from '@angular/material/tree';
 import { DynamicCreateDepartmentComponent } from './dynamic-create-department/dynamic-create-department.component';
+import { ViewPRDetailsExpandedComponent } from './view-prdetails-expanded/view-prdetails-expanded.component';
 
 
 @NgModule({
@@ -317,6 +318,7 @@ import { DynamicCreateDepartmentComponent } from './dynamic-create-department/dy
     ImportAllocationComponent,
     TimerComponent,
     DynamicCreateDepartmentComponent,
+    ViewPRDetailsExpandedComponent,
   ],
   imports: [
     BrowserModule,

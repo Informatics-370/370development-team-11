@@ -118,9 +118,12 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
             Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Details_ID == PaymentMadeDetails.Procurement_Details_ID);
 
-            if (existingProcurementDetails != null)
+            if (existingProcurementDetails.Payment_Made == false)
             {
+                existingProcurementDetails.Payment_Made = true;
+                
                 PaymentMadeDetails.Procurement_Details = existingProcurementDetails;
+                await _dbContext.SaveChangesAsync();
             }
 
 
@@ -446,6 +449,36 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             IQueryable<Procurement_Consumable> query = _dbContext.Procurement_Consumable.Include(x => x.Consumable).Include(x => x.Procurement_Details);
 
             return await query.ToArrayAsync();
+        }
+
+        public async Task<Procurement_Consumable> GetProcurementConsumablebyIDAsync(int DetailsID)
+        {
+            IQueryable<Procurement_Consumable> query = _dbContext.Procurement_Consumable.Include(x => x.Consumable)
+                                                                                        .Include(x => x.Procurement_Details)
+                                                                                        .ThenInclude(pps => pps.Procurement_Payment_Status)
+                                                                                        .Include(x => x.Procurement_Details)
+                                                                                        .ThenInclude(ps => ps.Procurement_Status)
+                                                                                        .Include(x => x.Procurement_Details)
+                                                                                        .ThenInclude(pr => pr.Procurement_Request)
+                                                                                        .ThenInclude(v => v.Vendor)
+                                                                                        .Where(x => x.Procurement_Details_ID == DetailsID);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Procurement_Asset> GetProcurementAssetbyIDAsync(int DetailsID)
+        {
+            IQueryable<Procurement_Asset> query = _dbContext.Procurement_Asset.Include(x => x.Asset)
+                                                                                        .Include(x => x.Procurement_Details)
+                                                                                        .ThenInclude(pps => pps.Procurement_Payment_Status)
+                                                                                        .Include(x => x.Procurement_Details)
+                                                                                        .ThenInclude(ps => ps.Procurement_Status)
+                                                                                        .Include(x => x.Procurement_Details)
+                                                                                        .ThenInclude(pr => pr.Procurement_Request)
+                                                                                        .ThenInclude(v => v.Vendor)
+                                                                                        .Where(x => x.Procurement_Details_ID == DetailsID);
+
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<Procurement_Asset[]> GetProcurementAssetAsync()
@@ -791,6 +824,18 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
 
             return budgetline;
+        }
+
+        public async Task<Proof_Of_Payment> GetProofofPaymentsAsync(int DetailsID)
+        {
+            IQueryable<Proof_Of_Payment> query = _dbContext.Proof_Of_Payment.Include(p => p.Procurement_Details).Where(i => i.Procurement_Details_ID == DetailsID);
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Procurement_Invoice[]> GetInvoicesAsync(int DetailsID)
+        {
+            IQueryable<Procurement_Invoice> query = _dbContext.Procurement_Invoice.Include(p => p.Procurement_Details).Where(i => i.Procurement_Details_ID == DetailsID);
+            return await query.ToArrayAsync();
         }
 
 

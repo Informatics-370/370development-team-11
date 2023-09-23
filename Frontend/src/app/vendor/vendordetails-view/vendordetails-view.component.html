@@ -1,337 +1,353 @@
 <div class="content">
-    <div style="display: inline-block; text-align: left;position: relative;width: 1000px;">
-       <div style=" margin-top:1%; display: flex;  align-items: center; ">
-       <button  mat-raised-button routerLink="/vendor-view" style="float:right; background-color:#244688; color:white;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
-       
-        <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
-          Vendor Details
-          <mat-icon (click)="openVendorDetailsTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
-          style="font-size:30pt; height: 40px; width: 37px; "  [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
-        </h1> 
-      </div>
-      
-        <br>
-          <mat-tab-group style="background-color: white;" >
-            <mat-tab> 
-            
-              <ng-template  mat-tab-label > 
-                <label style="color:white; margin-right: 0;">Company Contact Info</label>
-              </ng-template> 
-              <table style="margin-left: 1%;" class="table">
-                <br>
-              <tr>
-                <td><label  for="name" style="margin-right: 1%;">Company Name:</label></td>
-                <td> 
-                   {{VendorDetail.vendor.name}}
-                </td>
-            </tr>
-            <br>
-            <tr>
-              <td><label  for="name" style="margin-right: 1%;">Company Email:</label></td>
-              <td> 
-                {{VendorDetail.vendor.email}}
-              </td>
+  <div style="display: inline-block; text-align: left;position: relative;width: 1000px;">
+    <div style=" margin-top:1%; display: flex;  align-items: center; ">
+      <button mat-raised-button routerLink="/vendor-view"
+        style="float:right; background-color:#244688; color:white;"><mat-icon
+          style="margin-right: 0px;">arrow_back</mat-icon></button>
+
+      <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
+        Vendor Details
+        <mat-icon (click)="openVendorDetailsTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+          style="font-size:30pt; height: 40px; width: 37px; " [ngStyle]="{'color':'#244688'}"
+          matTooltip="Need help? Click me!"></mat-icon>
+      </h1>
+    </div>
+
+    <br>
+    <mat-tab-group style="background-color: white;">
+      <mat-tab>
+
+        <ng-template mat-tab-label>
+          <label style="color:white; margin-right: 0;">Company Contact Info</label>
+        </ng-template>
+        <table style="margin-left: 1%;" class="table">
+          <br>
+          <tr>
+            <td><label for="name" style="margin-right: 1%;">Company Name:</label></td>
+            <td>
+              {{VendorDetail.vendor.name}}
+            </td>
           </tr>
           <br>
-            <tr>
-              <td><label for="file" style="margin-right: 1%;">Company Telphone: </label></td>
-              <td >  
-                {{VendorDetail.telephone_Num}} 
-              </td>
+          <tr>
+            <td><label for="name" style="margin-right: 1%;">Company Email:</label></td>
+            <td>
+              {{VendorDetail.vendor.email}}
+            </td>
           </tr>
           <br>
-          <tr >
-            <td><label for="file" style="margin-right: 1%;" >Company Fax: </label></td>
-            <td *ngIf="VendorDetail.faxProvided == true">  
-                {{Vendorfax.fax}}
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">Company Telphone: </label></td>
+            <td>
+              {{VendorDetail.telephone_Num}}
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">Company Fax: </label></td>
+            <td *ngIf="VendorDetail.faxProvided == true">
+              {{Vendorfax.fax}}
             </td>
             <td *ngIf="VendorDetail.faxProvided  == false">No fax provided</td>
-        </tr>
-        <br>
-        <tr >
-            <td><label for="file" style="margin-right: 1%;" >Company Website: </label></td> 
-            <td *ngIf="VendorDetail.websiteProvided == true">  
-                {{VendorWebsite.url}}
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">Company Website: </label></td>
+            <td *ngIf="VendorDetail.websiteProvided == true">
+              {{VendorWebsite.url}}
             </td>
             <td *ngIf="VendorDetail.websiteProvided == false">No website URL provided</td>
-        </tr>
-        <br>
-        <tr>
+          </tr>
+          <br>
+          <tr>
             <td><label for="file" style="margin-right: 1%;">Company Registered Address: </label></td>
-            <td>  
-               <span style="word-break: break-word;padding-left: 0px;"> {{VendorDetail.registered_Address}}  </span>
+            <td>
+              <span style="word-break: break-word;padding-left: 0px;"> {{VendorDetail.registered_Address}} </span>
             </td>
-        </tr>
-        <br>
-        <tr>
+          </tr>
+          <br>
+          <tr>
             <td><label for="file" style="margin-right: 1%;">Contact Person Title: </label></td>
-            <td >  
-                {{VendorDetail.contact_Person_Title}}  
+            <td>
+              {{VendorDetail.contact_Person_Title}}
             </td>
-        </tr>
-        <br>
-        <tr>
+          </tr>
+          <br>
+          <tr>
             <td><label for="file" style="margin-right: 1%;">Contact Person Name: </label></td>
-            <td >  
-                {{VendorDetail.contact_Person_Name}}  
+            <td>
+              {{VendorDetail.contact_Person_Name}}
             </td>
-        </tr>
-        <br>
-        <tr>
+          </tr>
+          <br>
+          <tr>
             <td><label for="file" style="margin-right: 1%;">Contact Person Phone: </label></td>
-            <td >  
-                {{VendorDetail.contact_Person_ContactNum}} 
+            <td>
+              {{VendorDetail.contact_Person_ContactNum}}
             </td>
-        </tr>
-        <br>
-        <tr>
+          </tr>
+          <br>
+          <tr>
             <td><label for="file" style="margin-right: 1%;">Contact Person Email: </label></td>
-            <td >  
-                {{VendorDetail.contact_Person_Email}} 
+            <td>
+              {{VendorDetail.contact_Person_Email}}
             </td>
-        </tr>
+          </tr>
         </table>
       </mat-tab>
       <mat-tab>
-      <ng-template  mat-tab-label > 
-        <label style="color:white; margin-right: 0;">Company Overview</label>
-      </ng-template> 
-      <table style="margin-left: 1%;" class="table">
-        <br>
-      <tr>
-        <td><label  for="name" style="margin-right: 1%;">Details Of Service Or Goods:</label></td>
-        <td> 
-            {{VendorDetail.description_GSP}}
-        </td>
-    </tr>
-    <br>
-    <tr>
-      <td><label  for="name" style="margin-right: 1%;" *ngIf="VendorDetail.registration_Provided == true">Company Registration Number:</label></td>
-      <td > 
-        {{VendorRegistration.company_Registration_Number}}
-      </td>
-  </tr>
-  <br>
-    <tr>
-      <td><label for="file" style="margin-right: 1%;" *ngIf="VendorDetail.registration_Provided == true">Company Registration Document: </label></td>
-      <td >  
-        <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}" matTooltip="This will download the Company Registration Document on your device">{{FileDetails[0].FileName}}</a>  
-      </td>
-  </tr>
-  <br>
-  <tr >
-    <td><label  style="margin-right: 1%;">Vat Registration Number: </label></td>
-    <td *ngIf="VendorDetail.vatRegistered == true">  
-        {{VendorVat.vat_Registration_Number}}
-    </td>
-    <td *ngIf="VendorDetail.vatRegistered == false">None</td>
-  </tr>
-  <br>
-  <tr >
-    <td><label for="file" style="margin-right: 1%;" >Vat Registration document: </label></td> 
-    <td *ngIf="VendorDetail.vatRegistered == true">  
-      <a href="{{FileDetails[1].FileURL}}" download="{{FileDetails[1].FileName}}" matTooltip="This will download the Vat Registration document on your device">{{FileDetails[1].FileName}}</a>   
-    </td>
-    <td *ngIf="VendorDetail.vatRegistered == false">None provided</td>
-  </tr>
-  <br>
-  <tr >
-    <td><label for="file" style="margin-right: 1%;" >Income Tax Number: </label></td>
-    <td *ngIf="VendorDetail.income_Tax_Num_Provided == true">  
-      {{VendorTax.income_Tax_Num}}
-    </td>
-    <td *ngIf="VendorDetail.income_Tax_Num_Provided == false">None</td>
-  </tr>
-  <br>
-  <tr >
-    <td><label for="file" style="margin-right: 1%;" >Income Tax Number Document: </label></td>
-    <td *ngIf="VendorDetail.income_Tax_Num_Provided == true">  
-      <a href="{{FileDetails[2].FileURL}}" download="{{FileDetails[2].FileName}}" matTooltip="This will download the Income Tax Number Document on your device">{{FileDetails[2].FileName}}</a>  
-    </td>
-    <td *ngIf="VendorDetail.income_Tax_Num_Provided == false">None provided</td>
-  </tr>
-  <br>
-  <tr >
-    <td><label for="file" style="margin-right: 1%;" >Signed Agreement Document:</label></td>
-    <td *ngIf="VendorDetail.signed_Agreement_Provided == true">  
-      <a href="{{FileDetails[3].FileURL}}" download="{{FileDetails[3].FileName}}" matTooltip="This will download the Signed Agreement Document on your device">{{FileDetails[3].FileName}}</a> 
-    </td>
-    <td *ngIf="VendorDetail.signed_Agreement_Provided == false">None provided</td>
-  </tr>
-  <br>
-  <tr *ngIf="FileDetails[4].FileName != ''">
-    <td><label>General liability Insurance Document:</label></td>
-    <td><a href="{{FileDetails[4].FileURL}}" download="{{FileDetails[4].FileName}}"
-        matTooltip="This will download the General liability Insurance Document on your device">{{FileDetails[4].FileName}}</a> </td>
-  </tr>
-  <br *ngIf="FileDetails[4].FileName != ''">
-  <tr *ngIf="FileDetails[5].FileName != ''">
-    <td><label>Cyber Insurance Document:</label></td>
-    <td><a href="{{FileDetails[5].FileURL}}" download="{{FileDetails[5].FileName}}"
-        matTooltip="This will download the Cyber Insurance Document on your device">{{FileDetails[5].FileName}}</a> </td>
-  </tr>
-  <br *ngIf="FileDetails[5].FileName != ''">
-  <tr *ngIf="FileDetails[6].FileName != ''">
-    <td><label>Professional Indemnity Insurance Document:</label></td>
-    <td>
-      <a href="{{FileDetails[6].FileURL}}" download="{{FileDetails[6].FileName}}"
-        matTooltip="This will download the Professional Indemnity Insurance Document on your device">{{FileDetails[6].FileName}}</a> 
-      </td>
-  </tr>
-  <br *ngIf="FileDetails[6].FileName != ''">
-  <tr *ngIf="FileDetails[7].FileName != ''">
-    <td><label>Other specific insurance Document:</label></td>
-    <td><a href="{{FileDetails[7].FileURL}}" download="{{FileDetails[7].FileName}}"
-        matTooltip="This will download the Other specific insurance Document on your device">{{FileDetails[7].FileName}}</a> </td>
-  </tr>
-  <br *ngIf="FileDetails[7].FileName != ''">
-  <tr >
-     <td><label for="file" style="margin-right: 1%;" >Payment Terms: </label></td>
-     <td *ngIf="VendorDetail.payment_Terms_Provided == true">  
-         {{VendorPaymentTerms.payment_Terms}}
-     </td>
-     <td *ngIf="VendorDetail.payment_Terms_Provided == false">None</td>
-  </tr>
-  <br>
-  <tr >
-     <td><label for="file" style="margin-right: 1%;" >License Or Accreditation Number: </label></td>
-     <td *ngIf="VendorDetail.license_Num_Provided == true">  
-         {{VendorLicense.license_No}}
-     </td>
-     <td *ngIf="VendorDetail.license_Num_Provided == false">None</td>
-  </tr>
-  <br>
-  <tr>
-     <td><label for="file" style="margin-right: 1%;" >License Or Accreditation document: </label></td>
-     <td *ngIf="VendorDetail.license_Num_Provided == true">  
-      <a href="{{FileDetails[8].FileURL}}" download="{{FileDetails[8].FileName}}" matTooltip="This will download the License Or Accreditation document on your device">{{FileDetails[8].FileName}}</a> 
-     </td>
-     <td *ngIf="VendorDetail.license_Num_Provided == false">None provided</td>
-  </tr>
-  </table> 
-  
-    </mat-tab>
-    <mat-tab> 
-     
-      <ng-template  mat-tab-label > 
-        <label style="color:white; margin-right: 0;">Bank Details</label>
-      </ng-template> 
-      <table style="margin-left: 1%;" class="table">
-        <br>
-      <tr>
-        <td><label  for="name" style="margin-right: 1%;">Bank Name:</label></td>
-        <td> 
-            {{VendorDetail.bank_Name}}
-        </td>
-    </tr>
-    <br>
-    <tr>
-        <td><label  for="name" style="margin-right: 1%;">Account Holder:</label></td>
-        <td> 
-            {{VendorDetail.account_Holder}}
-        </td>
-    </tr>
-    <br>
-    <tr>
-      <td><label  for="name" style="margin-right: 1%;">Branch Code:</label></td>
-      <td> 
-        {{VendorDetail.branch_Code}}
-      </td>
-  </tr>
-  <br>
-  <tr>
-    <td><label for="file" style="margin-right: 1%;">Account Type:</label></td>
-    <td >  
-        {{VendorDetail.account_Type}}
-    </td>
-  </tr>
-  <br>
-  <tr>
-    <td><label for="file" style="margin-right: 1%;">AccountNumber: </label></td> 
-    <td >  
-        {{VendorDetail.bank_Account_Number}}
-    </td>
-  </tr>
-  <br>
-  <tr>
-    <td><label for="file" style="margin-right: 1%;">Bank Contact Name: </label></td>
-    <td >  
-        {{VendorDetail.bank_Contact_Name}}
-    </td>
-  </tr>
-  <br>
-  <tr>
-    <td><label for="file" style="margin-right: 1%;">Bank Contact Phone Number: </label></td>
-    <td >  
-        {{VendorDetail.bank_Contact_PhoneNum}}
-    </td>
-  </tr>
-  <br>
-  <tr>
-    <td><label for="file" style="margin-right: 1%;">Bank Stamped Confirmation Letter: </label></td>
-    <td >  
-      <a href="{{FileDetails[9].FileURL}}" download="{{FileDetails[9].FileName}}" matTooltip="This will download the Bank Stamped Confirmation Letter on your device">{{FileDetails[9].FileName}}</a> 
-    </td>
-  </tr>
-  </table> 
-  
-   </mat-tab>
-   <mat-tab> 
-     
-    <ng-template  mat-tab-label > 
-      <label style="color:white;margin-right: 0;">BEE & Due Dilligence</label>
-    </ng-template> 
-    <table style="margin-left: 1%;" class="table">
-      <br>
-    <tr *ngIf="this.BeeDetails != undefined">
-      <td><label  for="name" style="margin-right: 1%;">BEE Level:</label></td>
-      <td> 
-          {{this.BeeDetails.beE_Level}}
-      </td>
-  </tr>
-  <br *ngIf="this.BeeDetails != undefined">
-  <tr *ngIf="this.BeeDetails != undefined">
-      <td><label  for="name" style="margin-right: 1%;">BEE Certificate:</label></td>
-      <td> 
-        <a href="{{FileDetails[10].FileURL}}" download="{{FileDetails[10].FileName}}">{{FileDetails[10].FileName}}</a> 
-      </td>
-  </tr>
-  <br *ngIf="this.BeeDetails != undefined">
-  <tr *ngIf="this.BeeDetails != undefined">
-    <td><label  for="name" style="margin-right: 1%;">BEE Date:</label></td>
-    <td> 
-      {{this.BeeDetails.date}}
-    </td>
-</tr>
-<br *ngIf="this.BeeDetails != undefined">
-<tr *ngIf="this.BeeDetails == undefined">
-  <td><label style="margin-right: 1%;">Vendor does not have any BEE Details</label></td>
-  <td >  
-    <button mat-raised-button style="width: 155px;background-color: #94CC5B;" routerLink="/vendor-approve-edit/{{VendorDetail.vendor_ID}}" *ngIf="canAddBEE" > Add BEE Details </button>
-    <span style="padding-left: 0px;" *ngIf="!canAddBEE">Consult GRC if this is must be updated</span>
-  </td>
-</tr>
-<br *ngIf="this.BeeDetails == undefined">
-<tr>
-  <td><label for="file" style="margin-right: 1%;">Due Dilligence Checklist</label></td>
-  <td >  
-    <a id="btnLink" (click)="GenerateList()"  style="color: black;">Generate Checklist</a> 
-  </td>
-</tr>
+        <ng-template mat-tab-label>
+          <label style="color:white; margin-right: 0;">Company Overview</label>
+        </ng-template>
+        <table style="margin-left: 1%;" class="table">
+          <br>
+          <tr>
+            <td><label for="name" style="margin-right: 1%;">Details Of Service Or Goods:</label></td>
+            <td>
+              {{VendorDetail.description_GSP}}
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="name" style="margin-right: 1%;" *ngIf="VendorDetail.registration_Provided == true">Company
+                Registration Number:</label></td>
+            <td>
+              {{VendorRegistration.company_Registration_Number}}
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;" *ngIf="VendorDetail.registration_Provided == true">Company
+                Registration Document: </label></td>
+            <td>
+              <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}"
+                matTooltip="This will download the Company Registration Document on your device">{{FileDetails[0].FileName}}</a>
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td><label style="margin-right: 1%;">Vat Registration Number: </label></td>
+            <td *ngIf="VendorDetail.vatRegistered == true">
+              {{VendorVat.vat_Registration_Number}}
+            </td>
+            <td *ngIf="VendorDetail.vatRegistered == false">None</td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">Vat Registration document: </label></td>
+            <td *ngIf="VendorDetail.vatRegistered == true">
+              <a href="{{FileDetails[1].FileURL}}" download="{{FileDetails[1].FileName}}"
+                matTooltip="This will download the Vat Registration document on your device">{{FileDetails[1].FileName}}</a>
+            </td>
+            <td *ngIf="VendorDetail.vatRegistered == false">None provided</td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">Income Tax Number: </label></td>
+            <td *ngIf="VendorDetail.income_Tax_Num_Provided == true">
+              {{VendorTax.income_Tax_Num}}
+            </td>
+            <td *ngIf="VendorDetail.income_Tax_Num_Provided == false">None</td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">Income Tax Number Document: </label></td>
+            <td *ngIf="VendorDetail.income_Tax_Num_Provided == true">
+              <a href="{{FileDetails[2].FileURL}}" download="{{FileDetails[2].FileName}}"
+                matTooltip="This will download the Income Tax Number Document on your device">{{FileDetails[2].FileName}}</a>
+            </td>
+            <td *ngIf="VendorDetail.income_Tax_Num_Provided == false">None provided</td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">Signed Agreement Document:</label></td>
+            <td *ngIf="VendorDetail.signed_Agreement_Provided == true">
+              <a href="{{FileDetails[3].FileURL}}" download="{{FileDetails[3].FileName}}"
+                matTooltip="This will download the Signed Agreement Document on your device">{{FileDetails[3].FileName}}</a>
+            </td>
+            <td *ngIf="VendorDetail.signed_Agreement_Provided == false">None provided</td>
+          </tr>
+          <br>
+          <tr *ngIf="FileDetails[4].FileName != ''">
+            <td><label>General liability Insurance Document:</label></td>
+            <td><a href="{{FileDetails[4].FileURL}}" download="{{FileDetails[4].FileName}}"
+                matTooltip="This will download the General liability Insurance Document on your device">{{FileDetails[4].FileName}}</a>
+            </td>
+          </tr>
+          <br *ngIf="FileDetails[4].FileName != ''">
+          <tr *ngIf="FileDetails[5].FileName != ''">
+            <td><label>Cyber Insurance Document:</label></td>
+            <td><a href="{{FileDetails[5].FileURL}}" download="{{FileDetails[5].FileName}}"
+                matTooltip="This will download the Cyber Insurance Document on your device">{{FileDetails[5].FileName}}</a>
+            </td>
+          </tr>
+          <br *ngIf="FileDetails[5].FileName != ''">
+          <tr *ngIf="FileDetails[6].FileName != ''">
+            <td><label>Professional Indemnity Insurance Document:</label></td>
+            <td>
+              <a href="{{FileDetails[6].FileURL}}" download="{{FileDetails[6].FileName}}"
+                matTooltip="This will download the Professional Indemnity Insurance Document on your device">{{FileDetails[6].FileName}}</a>
+            </td>
+          </tr>
+          <br *ngIf="FileDetails[6].FileName != ''">
+          <tr *ngIf="FileDetails[7].FileName != ''">
+            <td><label>Other specific insurance Document:</label></td>
+            <td><a href="{{FileDetails[7].FileURL}}" download="{{FileDetails[7].FileName}}"
+                matTooltip="This will download the Other specific insurance Document on your device">{{FileDetails[7].FileName}}</a>
+            </td>
+          </tr>
+          <br *ngIf="FileDetails[7].FileName != ''">
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">Payment Terms: </label></td>
+            <td *ngIf="VendorDetail.payment_Terms_Provided == true">
+              {{VendorPaymentTerms.payment_Terms}}
+            </td>
+            <td *ngIf="VendorDetail.payment_Terms_Provided == false">None</td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">License Or Accreditation Number: </label></td>
+            <td *ngIf="VendorDetail.license_Num_Provided == true">
+              {{VendorLicense.license_No}}
+            </td>
+            <td *ngIf="VendorDetail.license_Num_Provided == false">None</td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">License Or Accreditation document: </label></td>
+            <td *ngIf="VendorDetail.license_Num_Provided == true">
+              <a href="{{FileDetails[8].FileURL}}" download="{{FileDetails[8].FileName}}"
+                matTooltip="This will download the License Or Accreditation document on your device">{{FileDetails[8].FileName}}</a>
+            </td>
+            <td *ngIf="VendorDetail.license_Num_Provided == false">None provided</td>
+          </tr>
+        </table>
 
-</table> 
- </mat-tab>
+      </mat-tab>
+      <mat-tab>
+
+        <ng-template mat-tab-label>
+          <label style="color:white; margin-right: 0;">Bank Details</label>
+        </ng-template>
+        <table style="margin-left: 1%;" class="table">
+          <br>
+          <tr>
+            <td><label for="name" style="margin-right: 1%;">Bank Name:</label></td>
+            <td>
+              {{VendorDetail.bank_Name}}
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="name" style="margin-right: 1%;">Account Holder:</label></td>
+            <td>
+              {{VendorDetail.account_Holder}}
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="name" style="margin-right: 1%;">Branch Code:</label></td>
+            <td>
+              {{VendorDetail.branch_Code}}
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">Account Type:</label></td>
+            <td>
+              {{VendorDetail.account_Type}}
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">AccountNumber: </label></td>
+            <td>
+              {{VendorDetail.bank_Account_Number}}
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">Bank Contact Name: </label></td>
+            <td>
+              {{VendorDetail.bank_Contact_Name}}
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">Bank Contact Phone Number: </label></td>
+            <td>
+              {{VendorDetail.bank_Contact_PhoneNum}}
+            </td>
+          </tr>
+          <br>
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">Bank Stamped Confirmation Letter: </label></td>
+            <td>
+              <a href="{{FileDetails[9].FileURL}}" download="{{FileDetails[9].FileName}}"
+                matTooltip="This will download the Bank Stamped Confirmation Letter on your device">{{FileDetails[9].FileName}}</a>
+            </td>
+          </tr>
+        </table>
+
+      </mat-tab>
+      <mat-tab>
+
+        <ng-template mat-tab-label>
+          <label style="color:white;margin-right: 0;">BEE & Due Dilligence</label>
+        </ng-template>
+        <table style="margin-left: 1%;" class="table">
+          <br>
+          <tr *ngIf="this.BeeDetails != undefined">
+            <td><label for="name" style="margin-right: 1%;">BEE Level:</label></td>
+            <td>
+              {{this.BeeDetails.beE_Level}}
+            </td>
+          </tr>
+          <br *ngIf="this.BeeDetails != undefined">
+          <tr *ngIf="this.BeeDetails != undefined">
+            <td><label for="name" style="margin-right: 1%;">BEE Certificate:</label></td>
+            <td>
+              <a href="{{FileDetails[10].FileURL}}"
+                download="{{FileDetails[10].FileName}}">{{FileDetails[10].FileName}}</a>
+            </td>
+          </tr>
+          <br *ngIf="this.BeeDetails != undefined">
+          <tr *ngIf="this.BeeDetails != undefined">
+            <td><label for="name" style="margin-right: 1%;">BEE Date:</label></td>
+            <td>
+              {{this.BeeDetails.date}}
+            </td>
+          </tr>
+          <br *ngIf="this.BeeDetails != undefined">
+          <tr *ngIf="this.BeeDetails == undefined">
+            <td><label style="margin-right: 1%;">Vendor does not have any BEE Details</label></td>
+            <td>
+              <button mat-raised-button style="width: 155px;background-color: #94CC5B;"
+                routerLink="/vendor-approve-edit/{{VendorDetail.vendor_ID}}" *ngIf="canAddBEE"> Add BEE Details
+              </button>
+              <span style="padding-left: 0px;" *ngIf="!canAddBEE">Consult GRC if this is must be updated</span>
+            </td>
+          </tr>
+          <br *ngIf="this.BeeDetails == undefined">
+          <tr>
+            <td><label for="file" style="margin-right: 1%;">Due Dilligence Checklist</label></td>
+            <td>
+              <a id="btnLink" (click)="GenerateList()" style="color: black;">Generate Checklist</a>
+            </td>
+          </tr>
+
+        </table>
+      </mat-tab>
     </mat-tab-group>
-   
-   <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;">
-    <button *ngIf="canEditVen" mat-raised-button routerLink="/vendor-update/{{VendorDetail.vendor_Detail_ID}}" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Update </button>
-    <button *ngIf="canDeleteVen" id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" (click)="DeleteRequest(VendorDetail.vendor_Detail_ID)" > Delete </button>
-   </div>
-          
+
+    <div style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;">
+      <button *ngIf="canEditVen" mat-raised-button routerLink="/vendor-update/{{VendorDetail.vendor_Detail_ID}}"
+        style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;">
+        Update </button>
+      <button *ngIf="canDeleteVen" id="btnHover" mat-raised-button
+        style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;"
+        (click)="DeleteRequest(VendorDetail.vendor_Detail_ID)"> Delete </button>
     </div>
+
+  </div>
 </div>
-
-
-
-
-

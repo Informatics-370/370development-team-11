@@ -94,6 +94,7 @@ import { ReportFilterMenuComponent } from './Reports/report-filter-menu/report-f
 import { BudgetVarianceReportComponent } from './budget-variance-report/budget-variance-report.component';
 import { ReceiveAssetComponent } from './receive-asset/receive-asset.component';
 import { TimerComponent } from './Settings/timer/timer.component';
+import { ViewPRDetailsExpandedComponent } from './view-prdetails-expanded/view-prdetails-expanded.component';
 const routes: Routes = [
   {
     path: "",
@@ -392,6 +393,10 @@ const routes: Routes = [
   {
     path: 'ReceiveAsset/:id',
     component: ReceiveAssetComponent
+  },
+  {
+    path: 'ViewPRDetails/:id/:type',
+    component: ViewPRDetailsExpandedComponent
   }
 
 

@@ -145,14 +145,11 @@
         </ng-container>
 
         <ng-container matColumnDef="RealView">
-          <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600; width:133px">
-            Upload
-            Invoice
-          </th>
+          <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600; width:133px"></th>
           <td mat-cell *matCellDef="let procurement" style="width:100px;">
             <button mat-raised-button
               matTooltip="This will direct you to the Upload Invoice Page, there you will be able to upload the Invoice file."
-              (click)="openInvDialog(procurement.buyer_Name, procurement.procurement_Details_ID)" type="button"
+              routerLink="/ViewPRDetails/{{procurement.procurement_Details_ID}}/{{procurement.item_Type}}" type="button"
               style="margin-right: 5%; display: flex; align-items: center; font-weight: bold; width: 133px; margin-top: 0.5%; background-color: #94CC5B;">
               View
             </button>

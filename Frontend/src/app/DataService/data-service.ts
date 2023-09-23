@@ -1469,6 +1469,9 @@ export class DataService {
   GetProcurementQuotes(): Observable<any> {
     return this.httpClient.get<Procurement_Request_Quote[]>(`${this.apiUrl}ProcurementRequest/GetProcurementQuotes`).pipe(map(result => result))
   }
+  GetProofofPaymentsByID(DetailsID: Number): Observable<any> {
+    return this.httpClient.get<Proof_Of_Payment>(`${this.apiUrl}ProcurementRequest/GetProofofPaymentsbyID/` + DetailsID).pipe(map(result => result))
+  }
 
   GetPRRequestByID(RequestID: Number): Observable<Procurement_Request> {
     return this.httpClient.get<Procurement_Request>(`${this.apiUrl}ProcurementRequest/GetRequestByID/` + RequestID, this.httpOptions)
@@ -1515,6 +1518,9 @@ export class DataService {
   GetProofOfPaymentByID(ProcurementDetailsID: Number): Observable<any> {
     return this.httpClient.get<Proof_Of_Payment>(`${this.apiUrl}ProcurementDetails/GetProofOfPaymentByID/${ProcurementDetailsID}`).pipe(map(result => result))
   }
+  GetInvoicesByID(ProcurementDetailsID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Invoice>(`${this.apiUrl}ProcurementDetails/GetInvoicesbyID/${ProcurementDetailsID}`).pipe(map(result => result))
+  }
   GetVendorConsumable(): Observable<any> {
     return this.httpClient.get<Vendor_Consumable[]>(`${this.apiUrl}ProcurementDetails/GetVendorConsumable`).pipe(map(result => result))
   }
@@ -1523,6 +1529,12 @@ export class DataService {
   }
   GetProcurementConsumable(): Observable<any> {
     return this.httpClient.get<Procurement_Consumable[]>(`${this.apiUrl}ProcurementDetails/GetProcurementConsumable`).pipe(map(result => result))
+  }
+  GetProcurementConsumableByID(DetailsID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Consumable>(`${this.apiUrl}ProcurementDetails/GetProcurementConsumablebyID/` + DetailsID).pipe(map(result => result))
+  }
+  GetProcurementAssetByID(DetailsID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Asset>(`${this.apiUrl}ProcurementDetails/GetProcurementAssetbyID/` + DetailsID).pipe(map(result => result))
   }
   GetProcurementAsset(): Observable<any> {
     return this.httpClient.get<Procurement_Asset[]>(`${this.apiUrl}ProcurementDetails/GetProcurementAsset`).pipe(map(result => result))
