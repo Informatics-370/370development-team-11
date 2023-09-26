@@ -35,6 +35,8 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
   searchWord: string = '';
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  iTempRole: string;
+  iTempUsername: string;
   iRole: string;
   iDep: string;
 
@@ -46,6 +48,7 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
 
   ngOnInit() {
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iTempRole = this.dataService.decodeTempAcc(sessionStorage.getItem("token"));
     this.iDep = this.dataService.decodeUserDep(sessionStorage.getItem("token"));
     this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
     this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
@@ -63,7 +66,7 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
       this.canViewPenPro = "true";
     }
     console.log(this.iRole)
-    if (this.iRole == "BO") {
+    if (this.iRole == "BO" || this.iTempRole == "BO") {
       this.GetProcurementRequests();
     }
 
@@ -75,23 +78,50 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
   GetProcurementRequests() {
 
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+    
     this.dataService.GetProcurementRequests().subscribe(result => {
       let procurementRequestList: any[] = result;
       procurementRequestList.forEach(e => {
    
         if (e.requisition_Status_ID == 3 && User != e.user.username) {
-          this.dataService.GetEmployeeByUsername(e.user.username).subscribe(ud => {
-            
-            let userdep: any = ud;
-            
-            if (userdep.department.name == this.iDep) {
-              this.ProcurementRequests.push(e)
-              this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
-              this.SearchedPRequests.paginator = this.paginator;
-            }
 
-              
-          })
+          if (this.iTempRole == "BO") {
+            this.iTempUsername = this.dataService.decodeTempUsername(sessionStorage.getItem("token"));
+
+            this.dataService.GetEmployeeByUsername(this.iTempUsername).subscribe(tempUD => {
+              let tempUserDep: any = tempUD;
+
+              this.dataService.GetEmployeeByUsername(e.user.username).subscribe(ud => {
+
+                let userdep: any = ud;
+
+                if (userdep.department.name == tempUserDep.department.name) {
+                  this.ProcurementRequests.push(e)
+                  this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
+                  this.SearchedPRequests.paginator = this.paginator;
+                }
+
+
+              })
+            })
+
+            
+          } else {
+            this.dataService.GetEmployeeByUsername(e.user.username).subscribe(ud => {
+
+              let userdep: any = ud;
+
+              if (userdep.department.name == this.iDep) {
+                this.ProcurementRequests.push(e)
+                this.SearchedPRequests = new MatTableDataSource(this.ProcurementRequests);
+                this.SearchedPRequests.paginator = this.paginator;
+              }
+
+
+            })
+          }
+
+          
         }
       })
 
