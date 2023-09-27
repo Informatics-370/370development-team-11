@@ -15,6 +15,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
   rAdmin: string;
   rUser: string;
   rAdminUser: string;
+  rEmployeeUser: string;
 
   iCanAccInv: string = "false";
   canAccInv: string;
@@ -40,6 +41,8 @@ export class HomePageComponent implements OnInit, AfterViewInit {
     this.iCanAccVen = this.dataService.decodeCanAccVen(sessionStorage.getItem("token"));
     this.iCanAccRep = this.dataService.decodeCanAccRep(sessionStorage.getItem("token"));
 
+    let numCards = 0;
+
     if (this.iRole == "Admin") {
       this.rAdmin = "true";
       this.rAdminUser = "true";
@@ -55,18 +58,27 @@ export class HomePageComponent implements OnInit, AfterViewInit {
     }
     if (this.iCanAccInv == "true") {
       this.canAccInv = "true";
+      numCards++;
     }
     if (this.iCanAccFin == "true") {
       this.canAccFin = "true";
+      numCards++;
     }
     if (this.iCanAccPro == "true") {
       this.canAccPro = "true";
+      numCards++;
     }
     if (this.iCanAccVen == "true") {
       this.canAccVen = "true";
+      numCards++;
     }
     if (this.iCanAccRep == "true") {
       this.canAccRep = "true";
+      numCards++;
+    }
+
+    if (numCards <= 3) {
+      this.rEmployeeUser = "true";
     }
 
     document.getElementById('nav').style.visibility = "visible";

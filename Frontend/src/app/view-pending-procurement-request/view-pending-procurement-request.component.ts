@@ -83,7 +83,7 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
       let procurementRequestList: any[] = result;
       procurementRequestList.forEach(e => {
    
-        if (e.requisition_Status_ID == 3 && User != e.user.username) {
+        if (e.requisition_Status_ID == 3 ) {
 
           if (this.iTempRole == "BO") {
             this.iTempUsername = this.dataService.decodeTempUsername(sessionStorage.getItem("token"));
