@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   styleUrls: ['./proc-detail-iframe.component.css']
 })
 export class ProcDetailIFrameComponent {
-  presetImageUrl = 'assets/Images/IFrameNewViewProcDetails.png';
+  presetImageUrl = 'assets/Images/IFrameProcurementDetails.png';
 
   constructor(private sanitizer: DomSanitizer) {}
 
