@@ -17,7 +17,7 @@
                                     <br />
                                     <mat-form-field>
                                         <input matInput type="text" placeholder="" formControlName="Name" id="Name"
-                                            [(ngModel)]="ConsumableRequest.consumable.name" [readonly]="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                                            [(ngModel)]="ConsumableRequest.consumable.name" [readonly]="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default; color: gray;">
                                     </mat-form-field>
                                 </mat-card-content>
                             </td>
@@ -41,7 +41,7 @@
                               <mat-form-field style="width:100%;">
                                 <textarea matInput type="text" placeholder="" formControlName="Description"
                                        id="Surname" [(ngModel)]="ConsumableRequest.consumable.description"
-                                       required [readonly]="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default"></textarea>
+                                       required [readonly]="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default; color: gray;"></textarea>
                                 <mat-hint align="end">Not more then 50 characters long.</mat-hint>
                                 <mat-error *ngIf="myError('Description', 'required')">
                                   Description is

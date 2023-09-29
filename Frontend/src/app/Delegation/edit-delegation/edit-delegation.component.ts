@@ -192,6 +192,8 @@ export class EditDelegationComponent implements OnInit {
         DelegationFile: this.delegation.delegation_Document
       });
 
+      this.myForm.get('DelegatingName').disable();
+
       this.myControl.setValue(this.delegation.user.username);
 
       this.delID = this.delegation.delegation_ID;

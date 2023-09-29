@@ -359,6 +359,9 @@ export class SignOffRequestComponent {
     this.dataService.GetBudgetLines().subscribe(response => {
       this.BudgetAllocationCode = response;
     })
+
+    this.finalizationForm.get('total').disable();
+    this.finalizationForm.get('budgetLine').disable();
   }
 
   onSubmit(): void {

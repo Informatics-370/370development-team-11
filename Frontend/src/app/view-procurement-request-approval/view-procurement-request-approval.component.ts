@@ -94,7 +94,7 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
     Description: '',
   })
 
-
+  
 
   constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute, private _formBuilder: FormBuilder, private http: HttpClient, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
   ProcurementRequestID = 0;
@@ -152,6 +152,10 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
     })
 
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+
+    this.VendorFormGroup.get('CompanyName').disable();
+    this.VendorFormGroup.get('CompanyEmail').disable();
+    this.VendorFormGroup.get('Description').disable();
   }
 
   public onFocus(event: FocusEvent) {

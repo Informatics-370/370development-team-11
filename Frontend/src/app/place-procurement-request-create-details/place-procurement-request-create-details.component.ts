@@ -534,6 +534,9 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         })
       }
     })
+
+    this.ProcurementFormGroup.get("BuyerName")?.disable();
+    this.ProcurementFormGroup.get("BuyerEmail")?.disable();
   }
 
   public onFocus(event: FocusEvent) {

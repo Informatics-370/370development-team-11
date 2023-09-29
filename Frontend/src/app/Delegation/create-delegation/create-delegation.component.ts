@@ -203,6 +203,7 @@ export class CreateDelegationComponent implements OnInit {
       this.myForm.patchValue({
         DelegatingName: this.user.username
       })
+      this.myForm.get('DelegatingName').disable();
       
     })
   }

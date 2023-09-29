@@ -175,6 +175,9 @@ export class EditProcurementRequestComponent implements OnInit {
       OtherQuote2: ['', []],
       OtherQuote3: ['', []]
     })
+
+    this.myForm.get('VendorName').disable();
+    this.myForm.get('Email').disable();
   }
 
   BuildFormApproved() {
@@ -184,6 +187,7 @@ export class EditProcurementRequestComponent implements OnInit {
       Description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
       Quote1: ['', []]
     })
+    this.myForm.get('Vendor').disable();
   }
 
   GetPRQuotes() {
