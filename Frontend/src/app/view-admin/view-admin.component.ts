@@ -23,6 +23,9 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/
 import { MainNavComponent } from '../main-nav/main-nav.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { TimerComponent } from '../Settings/timer/timer.component';
+import { CreateVatComponent } from '../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../Settings/edit-vat/edit-vat.component';
+
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -302,6 +305,19 @@ export class ViewAdminComponent implements OnInit {
     });
   }
 
+  openCreateVATDialog() {
+    const dialogRef = this.dialog.open(CreateVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    const dialogRef = this.dialog.open(EditVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
   openAdminIFrameTab(): void {
     const dialogRef = this.dialog.open(AdminIFrameComponent, {
       // width: '800px', // Set the desired width

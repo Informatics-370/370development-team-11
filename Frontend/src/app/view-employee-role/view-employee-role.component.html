@@ -19,15 +19,26 @@
       <a mat-list-item class="uni-font" routerLink="/ViewAuditLog">Audit Log</a>
       <a mat-list-item class="uni-font" [matMenuTriggerFor]="menu">Settings</a>
       <mat-menu #afterMenu="matMenu" xPosition="after" #menu="matMenu">
-        <button class="MenuButton" mat-menu-item (click)="openDialog()"
-          matTooltip="This will allow you to backup the systems current data">
-          Backup System</button>
-        <button class="MenuButton" mat-menu-item (click)="openRestoreDialog()"
-          matTooltip="This will allow you to restore the systems data with the backed-up file of your chosing">
-          Restore System</button>
-        <button class="MenuButton" mat-menu-item (click)="openTimerDialog()"
-          matTooltip="This will allow you to adjust the timer used for OTP validation">
-          Edit OTP Timer</button>
+        <button mat-menu-item class="MenuButton" (click)="openDialog()"
+                matTooltip="This will allow you to backup the systems current data">
+          Backup System
+        </button>
+        <button mat-menu-item class="MenuButton" (click)="openRestoreDialog()"
+                matTooltip="This will allow you to restore the systems data with the backed-up file of your chosing">
+          Restore System
+        </button>
+        <button mat-menu-item class="MenuButton" (click)="openTimerDialog()"
+                matTooltip="This will allow you to adjust the timer used for OTP validation">
+          Edit OTP Timer
+        </button>
+        <button mat-menu-item class="MenuButton" (click)="openCreateVATDialog()"
+                matTooltip="This will allow you to create the VAT">
+          Create VAT
+        </button>
+        <button mat-menu-item class="MenuButton" (click)="openEditVATDialog()"
+                matTooltip="This will allow you to adjust the VAT">
+          Edit VAT
+        </button>
       </mat-menu>
     </mat-nav-list>
   </mat-sidenav>

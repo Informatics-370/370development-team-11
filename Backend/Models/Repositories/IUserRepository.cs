@@ -48,6 +48,8 @@ namespace ProcionAPI.Models.Repositories {
 
         Task<UserSettings> GetTimerDurationAsync();
         Task<UserSettings> UpdateTimerAsync(int ID, int NewTime);
-
+        Task<VAT> GetVATAsync();
+        Task<VAT[]> AddVATAsync(VAT VATAdd);
+        Task<VAT> EditVATAsync(VAT VATEdit);
     }
 }

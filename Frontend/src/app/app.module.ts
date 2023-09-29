@@ -178,6 +178,8 @@ import { TimerComponent } from './Settings/timer/timer.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { DynamicCreateDepartmentComponent } from './dynamic-create-department/dynamic-create-department.component';
 import { ViewPRDetailsExpandedComponent } from './view-prdetails-expanded/view-prdetails-expanded.component';
+import { CreateVatComponent } from './Settings/create-vat/create-vat.component';
+import { EditVatComponent } from './Settings/edit-vat/edit-vat.component';
 
 
 @NgModule({
@@ -319,6 +321,8 @@ import { ViewPRDetailsExpandedComponent } from './view-prdetails-expanded/view-p
     TimerComponent,
     DynamicCreateDepartmentComponent,
     ViewPRDetailsExpandedComponent,
+    CreateVatComponent,
+    EditVatComponent,
   ],
   imports: [
     BrowserModule,

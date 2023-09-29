@@ -60,6 +60,7 @@ import { ReportData } from '../Shared/ConsumableReport';
 import { Procurement_Invoice } from '../Shared/Procurement_Invoice';
 import { Procurement_Status } from '../Shared/ProcurementStatus';
 import { UserSettings } from '../Shared/UserSettings';
+import { VAT } from '../Shared/VAT';
 
 @Injectable({
   providedIn: 'root'
@@ -1720,6 +1721,17 @@ export class DataService {
     return this.httpClient.put<UserSettings>(`${this.apiUrl}User/UpdateTimer/` + ID + "/" + NewTime, this.httpOptions).pipe(map(result => result))
   }
 
+  GetVAT(): Observable<any> {
+    return this.httpClient.get<VAT>(`${this.apiUrl}User/GetVAT`).pipe(map(result => result))
+  }
+
+  AddVAT(vat: VAT) {
+    return this.httpClient.post(`${this.apiUrl}User/AddVAT`, vat, this.httpOptions)
+  }
+
+  EditVAT(vat: VAT) {
+    return this.httpClient.put<VAT>(`${this.apiUrl}User/EditVAT/`, vat, this.httpOptions)
+  }
 }
 
 

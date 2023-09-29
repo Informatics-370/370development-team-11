@@ -15,6 +15,8 @@ import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
 import { RoleIFrameComponent } from '../HelpIFrames/RoleIFrame/role-iframe/role-iframe.component';
 import { TimerComponent } from '../Settings/timer/timer.component';
+import { CreateVatComponent } from '../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../Settings/edit-vat/edit-vat.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -159,6 +161,19 @@ export class ViewEmployeeRoleComponent implements OnInit {
     });
   }
 
+  openCreateVATDialog() {
+    const dialogRef = this.dialog.open(CreateVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    const dialogRef = this.dialog.open(EditVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
 
   openRoleIFrameTab(): void {
     const dialogRef = this.dialog.open(RoleIFrameComponent, {

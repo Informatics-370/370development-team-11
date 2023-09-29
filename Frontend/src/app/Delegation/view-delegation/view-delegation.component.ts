@@ -24,6 +24,8 @@ import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.componen
 import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
 import { DelegationIFrameComponent } from 'src/app/HelpIFrames/DelegationIFrame/delegation-iframe/delegation-iframe.component';
 import { TimerComponent } from 'src/app/Settings/timer/timer.component';
+import { CreateVatComponent } from '../../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../../Settings/edit-vat/edit-vat.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -229,6 +231,20 @@ export class ViewDelegationComponent implements OnInit {
 
   openTimerDialog() {
     const dialogRef = this.dialog.open(TimerComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openCreateVATDialog() {
+    const dialogRef = this.dialog.open(CreateVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    const dialogRef = this.dialog.open(EditVatComponent);
 
     dialogRef.afterClosed().subscribe(result => {
     });

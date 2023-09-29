@@ -18,6 +18,10 @@ import { BranchIFrameComponent } from 'src/app/HelpIFrames/BranchIFrame/branch-i
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { MatPaginator } from '@angular/material/paginator';
 import { TimerComponent } from 'src/app/Settings/timer/timer.component';
+import { CreateVatComponent } from '../../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../../Settings/edit-vat/edit-vat.component';
+
+
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -151,6 +155,19 @@ export class ViewBranchComponent implements OnInit {
     });
   }
 
+  openCreateVATDialog() {
+    const dialogRef = this.dialog.open(CreateVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    const dialogRef = this.dialog.open(EditVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
   openBranchIFrameTab(): void {
     const dialogRef = this.dialog.open(BranchIFrameComponent, {
       // width: '800px', // Set the desired width

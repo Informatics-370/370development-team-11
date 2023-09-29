@@ -15,6 +15,8 @@ import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialo
 import { MandateIFrameComponent } from '../HelpIFrames/MandateIFrame/mandate-iframe/mandate-iframe.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { TimerComponent } from '../Settings/timer/timer.component';
+import { CreateVatComponent } from '../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../Settings/edit-vat/edit-vat.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -142,7 +144,19 @@ export class ViewMandateLimitComponent implements OnInit {
     });
   }
 
+  openCreateVATDialog() {
+    const dialogRef = this.dialog.open(CreateVatComponent);
 
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    const dialogRef = this.dialog.open(EditVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
 
   openMandateIFrameTab(): void {
     const dialogRef = this.dialog.open(MandateIFrameComponent, {

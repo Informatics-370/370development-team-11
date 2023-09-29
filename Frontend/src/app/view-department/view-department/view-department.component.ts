@@ -18,6 +18,8 @@ import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-
 import { DepartmentIFrameComponent } from 'src/app/HelpIFrames/DepartmentIFrame/department-iframe/department-iframe.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { TimerComponent } from 'src/app/Settings/timer/timer.component';
+import { CreateVatComponent } from '../../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../../Settings/edit-vat/edit-vat.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -173,7 +175,19 @@ export class ViewDepartmentComponent implements OnInit {
     });
   }
 
+  openCreateVATDialog() {
+    const dialogRef = this.dialog.open(CreateVatComponent);
 
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    const dialogRef = this.dialog.open(EditVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
 
   openDepartmentIFrameTab(): void {
     const dialogRef = this.dialog.open(DepartmentIFrameComponent, {

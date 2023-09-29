@@ -646,6 +646,33 @@ namespace ProcionAPI.Models.Repositories
             return Timer;
         }
 
+        public async Task<VAT> GetVATAsync()
+        {
+            VAT query = await _dbContext.VAT.FirstOrDefaultAsync(I => I.VatID == 1);
+
+
+            return query;
+        }
+
+        public async Task<VAT[]> AddVATAsync(VAT VATAdd)
+        {
+            await _dbContext.VAT.AddAsync(VATAdd);
+            await _dbContext.SaveChangesAsync();
+
+            return new VAT[] { VATAdd };
+        }
+
+        public async Task<VAT> EditVATAsync(VAT VATEdit)
+        {
+            var vat = await _dbContext.VAT.FindAsync(1);
+
+            vat.Percentage = VATEdit.Percentage;
+            vat.Date = VATEdit.Date;
+
+            await _dbContext.SaveChangesAsync();
+
+            return vat;
+        }
     }
 
     

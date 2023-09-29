@@ -11,6 +11,8 @@ import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialo
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { AuditLogIFrameComponent } from '../HelpIFrames/AuditLogIFrame/audit-log-iframe/audit-log-iframe.component';
 import { TimerComponent } from '../Settings/timer/timer.component';
+import { CreateVatComponent } from '../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../Settings/edit-vat/edit-vat.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -163,7 +165,19 @@ export class ViewAuditLogComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
     });
   }
+  openCreateVATDialog() {
+    const dialogRef = this.Dialog.open(CreateVatComponent);
 
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    const dialogRef = this.Dialog.open(EditVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
 
   openViewAuditLogIFrameTab(): void {
     const dialogRef = this.Dialog.open(AuditLogIFrameComponent, {
