@@ -163,7 +163,7 @@ export class CreateDelegationComponent implements OnInit {
     this.dataService.GetUsers().subscribe(r => {
       this.options = r
       this.options.forEach((element, i) => {
-        if (element.username == this.user.username) this.options.splice(i, 1);
+        if (element.username == this.myForm.get('DelegatingName')?.value) this.options.splice(i, 1);
       })
     })
 

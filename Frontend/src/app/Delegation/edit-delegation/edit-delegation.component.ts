@@ -157,7 +157,7 @@ export class EditDelegationComponent implements OnInit {
     this.dataService.GetUsers().subscribe(r => {
       this.options = r
       this.options.forEach((element, i) => {
-        if (element.username == this.doa.delegatingParty) this.options.splice(i, 1);
+        if (element.username == this.myForm.get('DelegatingName')?.value) this.options.splice(i, 1);
       })
     })
 
