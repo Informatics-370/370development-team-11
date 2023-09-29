@@ -253,10 +253,28 @@ export class ViewHelpComponent implements OnInit {
   }
 
   openEditVATDialog() {
-    const dialogRef = this.dialog.open(EditVatComponent);
+    this.dataService.GetVAT().subscribe(re => {
+      if (re == null) {
+        var action = "ERROR";
+        var title = "ERROR: VAT does not Exists";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No VAT <strong style='color:red'>EXISTS ON THE SYSTEM!</strong><br> Please add one before and try again.");
 
-    dialogRef.afterClosed().subscribe(result => {
-    });
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 4000;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
+      } else {
+        const dialogRef = this.dialog.open(EditVatComponent);
+
+        dialogRef.afterClosed().subscribe(result => {
+        });
+      }
+    })
   }
 
 }

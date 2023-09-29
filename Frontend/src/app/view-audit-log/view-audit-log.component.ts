@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuditLog } from '../Shared/AuditLog';
 import { DataService } from '../DataService/data-service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 import { BackupComponent } from '../Settings/backup/backup.component';
@@ -13,6 +13,8 @@ import { AuditLogIFrameComponent } from '../HelpIFrames/AuditLogIFrame/audit-log
 import { TimerComponent } from '../Settings/timer/timer.component';
 import { CreateVatComponent } from '../Settings/create-vat/create-vat.component';
 import { EditVatComponent } from '../Settings/edit-vat/edit-vat.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -55,7 +57,7 @@ export class ViewAuditLogComponent implements OnInit {
 
   Logs: AuditLog[] = [];
   displayedColumns: string[] = ['Time', 'User', 'Action'];
-  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
+  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router, private sanitizer: DomSanitizer) { }
   FilterWord: string = "None";
   Searchterm: string = "";
 
@@ -173,10 +175,28 @@ export class ViewAuditLogComponent implements OnInit {
   }
 
   openEditVATDialog() {
-    const dialogRef = this.Dialog.open(EditVatComponent);
+    this.dataService.GetVAT().subscribe(re => {
+      if (re == null) {
+        var action = "ERROR";
+        var title = "ERROR: VAT does not Exists";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No VAT <strong style='color:red'>EXISTS ON THE SYSTEM!</strong><br> Please add one before and try again.");
 
-    dialogRef.afterClosed().subscribe(result => {
-    });
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.Dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 4000;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
+      } else {
+        const dialogRef = this.Dialog.open(EditVatComponent);
+
+        dialogRef.afterClosed().subscribe(result => {
+        });
+      }
+    })
   }
 
   openViewAuditLogIFrameTab(): void {
