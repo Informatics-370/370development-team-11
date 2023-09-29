@@ -231,4 +231,10 @@ export class ViewPRDetailsExpandedComponent implements OnInit {
     this.router.navigate(['/ViewProcurementDetails']);
   }
 
+
+
+  openViewProcurementDetailsTab(): void {
+    const userManualUrl = 'assets/PDF/ViewProcDetailsUM.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
 }
