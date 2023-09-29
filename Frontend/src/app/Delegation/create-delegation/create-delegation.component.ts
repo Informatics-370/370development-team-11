@@ -160,12 +160,7 @@ export class CreateDelegationComponent implements OnInit {
 
     this.getUsername();
 
-    this.dataService.GetUsers().subscribe(r => {
-      this.options = r
-      this.options.forEach((element, i) => {
-        if (element.username == this.myForm.get('DelegatingName')?.value) this.options.splice(i, 1);
-      })
-    })
+    
 
 
 
@@ -204,7 +199,19 @@ export class CreateDelegationComponent implements OnInit {
         DelegatingName: this.user.username
       })
       this.myForm.get('DelegatingName').disable();
-      
+
+      this.dataService.GetUsers().subscribe(r => {
+        this.options = r
+        this.options.forEach((element, i) => {
+          if (element.username == this.user.username) this.options.splice(i, 1);
+        })
+
+        this.options.forEach((el, idx) => {
+          if (el.role.name == "Admin") this.options.splice(idx, 1);
+        })
+      })
+
+
     })
   }
 

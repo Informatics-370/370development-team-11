@@ -43,7 +43,7 @@ export class CreateVatComponent implements OnInit {
   }
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
 
     var percent = this.myForm.get('percentage')?.value;
 
@@ -56,6 +56,7 @@ export class CreateVatComponent implements OnInit {
 
     this.dataservice.GetVAT().subscribe(re => {
       if (re == null) {
+        document.getElementById('AnimationBtn').setAttribute('disabled', '');
         this.dataservice.AddVAT(this.vat).subscribe(r => {
           if (r) {
             document.getElementById('AnimationBtn').classList.toggle("is_active");
@@ -86,7 +87,6 @@ export class CreateVatComponent implements OnInit {
           }
         })
       } else {
-        document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
         var action = "ERROR";
         var title = "ERROR: VAT Exists";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There already exists a <strong style='color:red'> VAT!</strong>");
@@ -99,6 +99,7 @@ export class CreateVatComponent implements OnInit {
         const duration = 1750;
         setTimeout(() => {
           dialogRef.close();
+      
         }, duration);
       }
     })

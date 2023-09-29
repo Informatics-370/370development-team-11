@@ -154,12 +154,7 @@ export class EditDelegationComponent implements OnInit {
     this.getDelegation();
     this.getTempAccess();
 
-    this.dataService.GetUsers().subscribe(r => {
-      this.options = r
-      this.options.forEach((element, i) => {
-        if (element.username == this.myForm.get('DelegatingName')?.value) this.options.splice(i, 1);
-      })
-    })
+    
 
     this.SearchedOptions = this.myControl.valueChanges.pipe(
       startWith(''),
@@ -206,6 +201,18 @@ export class EditDelegationComponent implements OnInit {
       this.doa.to_Date = this.delegation.to_Date;
       this.doa.delegation_Document = this.delegation.delegation_Document;
       this.doa.delegatingParty = this.delegation.delegatingParty;
+
+      this.dataService.GetUsers().subscribe(r => {
+        this.options = r
+        this.options.forEach((element, i) => {
+          if (element.username == this.delegation.delegatingParty) this.options.splice(i, 1);
+          
+        })
+
+        this.options.forEach((el, idx) => {
+          if (el.role.name == "Admin") this.options.splice(idx, 1);
+        })
+      })
     })
   }
 
