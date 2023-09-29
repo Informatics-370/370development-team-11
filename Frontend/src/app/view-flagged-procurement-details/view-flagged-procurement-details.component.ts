@@ -212,6 +212,26 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
       }
     })
 
+    this.ProcurementFormGroup.get("BuyerName")?.disable();
+    this.ProcurementFormGroup.get("BuyerEmail")?.disable();
+    this.ProcurementFormGroup.get("ItemType")?.disable();
+    this.ProcurementFormGroup.get("ConsumableItem")?.disable();
+    this.ProcurementFormGroup.get("ConsumableQuantity")?.disable();
+    this.ProcurementFormGroup.get("AssetName")?.disable();
+    this.ProcurementFormGroup.get("AssetDescription")?.disable();
+    this.ProcurementFormGroup.get("AccountCode")?.disable();
+    this.ProcurementFormGroup.get("PaymentType")?.disable();
+    this.ProcurementFormGroup.get("DepositAmount")?.disable();
+    this.ProcurementFormGroup.get("DepositDueDate")?.disable();
+    this.ProcurementFormGroup.get("PaidOnDate")?.disable();
+    this.ProcurementFormGroup.get("UploadReceiptDoc")?.disable();
+    this.ProcurementFormGroup.get("ProofOfPaymentDoc")?.disable();
+    this.ProcurementFormGroup.get("TotalAmount")?.disable();
+    this.ProcurementFormGroup.get("TotalAmountDueDate")?.disable();
+    this.ProcurementFormGroup.get("DeposCommentsitDueDate")?.disable();
+    this.ProcurementFormGroup.get("Comments")?.disable();
+
+    
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
   }
 

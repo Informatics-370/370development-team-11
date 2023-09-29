@@ -534,6 +534,9 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         })
       }
     })
+
+    this.ProcurementFormGroup.get("BuyerName")?.disable();
+    this.ProcurementFormGroup.get("BuyerEmail")?.disable();
   }
 
   public onFocus(event: FocusEvent) {
@@ -616,7 +619,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   }
 
   Validation() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     if (this.ConsumableChecked == true) {
       let maxValue = this.ConsumableItems.filter(y => y.consumable_ID == Number(this.ProcurementFormGroup.get("ConsumableItem").value))
       let value = Number(maxValue[0].maximum_Reorder_Quantity) - Number(maxValue[0].minimum_Reorder_Quantity)
@@ -624,7 +627,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.Create();
       }
       else {
-        document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
+        /*document.getElementById('AnimationBtn').setAttribute('disabled', 'false');*/
         var action = "ERROR";
         var title = "CONSUMABLE QUANTITY EXCEEDED";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Consumable Quantity has exceeded max limit of <strong style='color:red'>" + value + "</strong>!");
@@ -655,7 +658,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
 
   Create() {
-    
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     let dateChange: any
     dateChange = new DatePipe('en-ZA');
     //Data values

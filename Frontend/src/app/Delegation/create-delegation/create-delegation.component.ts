@@ -203,12 +203,14 @@ export class CreateDelegationComponent implements OnInit {
       this.myForm.patchValue({
         DelegatingName: this.user.username
       })
+      this.myForm.get('DelegatingName').disable();
       
     })
   }
 
   public onFocus(event: FocusEvent) {
     (event.target as any).blur();
+    
   }
 
   get f() {

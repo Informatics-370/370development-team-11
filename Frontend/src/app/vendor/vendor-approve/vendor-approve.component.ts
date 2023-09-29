@@ -278,6 +278,14 @@ export class VendorApproveComponent implements OnInit {
         })
       }
     });
+
+    this.SoleSupplierFormGroup.get('CompanyName').disable();
+    this.SoleSupplierFormGroup.get('CompanyEmail').disable();
+    this.SoleSupplierFormGroup.get('Reason').disable();
+    
+    this.ViewFormGroup.get('CompanyName').disable();
+    this.ViewFormGroup.get('CompanyEmail').disable();
+    this.ViewFormGroup.get('Reason').disable();
   }//ngOnInit
 
   setActiveTab() {
@@ -306,7 +314,10 @@ export class VendorApproveComponent implements OnInit {
     // window.open(url, '_blank');
   }
 
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
 
+  }
 
 
   QuoteChecked = false;

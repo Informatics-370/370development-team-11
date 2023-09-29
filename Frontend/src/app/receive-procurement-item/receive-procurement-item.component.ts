@@ -82,6 +82,9 @@ export class ReceiveProcurementItemComponent {
       Description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
       On_Hand: [0, [Validators.required, Validators.pattern("^[0-9]+$")]]
     })
+
+    this.myForm.get('Name').disable();
+    this.myForm.get('Description').disable();
   }
 
   GetConsumable(id: number) {

@@ -177,7 +177,9 @@ export class EditDelegationComponent implements OnInit {
     return this.options.filter(r => r.username.toLowerCase().includes(filterValue));
   }
 
-
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
 
   getDelegation() {
     this.dataService.GetDelegation(+this.route.snapshot.params['did']).subscribe(r => {
@@ -189,6 +191,8 @@ export class EditDelegationComponent implements OnInit {
         end: this.delegation.to_Date,
         DelegationFile: this.delegation.delegation_Document
       });
+
+      this.myForm.get('DelegatingName').disable();
 
       this.myControl.setValue(this.delegation.user.username);
 

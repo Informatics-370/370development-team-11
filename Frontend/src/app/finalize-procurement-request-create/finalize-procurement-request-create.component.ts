@@ -381,6 +381,9 @@ export class FinalizeProcurementRequestCreateComponent {
         this.usr = Response;
       }
     })
+
+    this.finalizationForm.get('total').disable();
+    this.finalizationForm.get('budgetLine').disable();
   }
 
   public onFocus(event: FocusEvent) {
