@@ -14,12 +14,12 @@
           <label style="display: flex; justify-content: center; align-items: center; margin-right: 172px; color: black;">Name:</label>
           <mat-card-content style="display: flex; justify-content: center; align-items: center;">
             <mat-form-field>
-              <input matInput type="text" placeholder="" formControlName="Name" id="Name">
-              <mat-hint align="end">Not more then 32 characters long.</mat-hint>
+              <input matInput type="text" placeholder="" formControlName="Name" id="Name" [readonly]="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default; color: gray;">
+              <!--<mat-hint align="end">Not more then 32 characters long.</mat-hint>
               <mat-error *ngIf="myError('Name', 'required')">Name is required</mat-error>
               <mat-error *ngIf="myError('Name', 'maxlength')">Limit exceed</mat-error>
               <mat-error *ngIf="myError('Name', 'minlength')">Name must be 3 to 32 characters long</mat-error>
-              <mat-error *ngIf="myError('Name', 'pattern')">Name can not contain numbers</mat-error>
+              <mat-error *ngIf="myError('Name', 'pattern')">Name can not contain numbers</mat-error>-->
             </mat-form-field>
           </mat-card-content>
 
