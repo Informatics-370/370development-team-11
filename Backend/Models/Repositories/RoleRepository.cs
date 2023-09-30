@@ -85,7 +85,7 @@ namespace ProcionAPI.Models.Repositories
         {
             var rl = await _dbContext.Role.FindAsync(id);
 
-            rl.Name = role.Name;
+            //rl.Name = role.Name;
             rl.Description = role.Description;
 
             //Role existingRole = await _dbContext.Role.FirstOrDefaultAsync(c => c.Name == role.Name);
