@@ -145,8 +145,13 @@ export class VendorApproveComponent implements OnInit {
   DueDilligenceDetails: Due_Dillegence;
   POPIDetails: POPI;
   BEEbool = false;
-
+  GRCUserID:Number;
   ngOnInit() {
+    this.dataService.GetUserByRole("GRC").subscribe(x=> {
+      this.GRCUserID = x.user_Id
+    })
+
+
     this.convertLogoToBase64()
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
     this.dataService.GetUserByUsername(User).subscribe(response => {
@@ -1407,7 +1412,7 @@ export class VendorApproveComponent implements OnInit {
     transVar = new DatePipe('en-ZA');
     this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
     this.VendorNotification.name = this.onboardRequest[0].vendor.name + " requires due diligence details"
-    this.VendorNotification.user_ID = 1;
+    this.VendorNotification.user_ID = this.GRCUserID;
     this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
     var action = "APPROVED";
     var title = "APPROVE SUCCESSFUL";

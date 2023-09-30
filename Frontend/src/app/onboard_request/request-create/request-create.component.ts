@@ -185,8 +185,17 @@ export class RequestCreateComponent implements OnInit {
     this.selectedIndex = index - 1;
 
   }
-
+  GRCUserID: Number;
+  MDUserID:Number;
   ngOnInit() {
+    this.dataService.GetUserByRole("GRC").subscribe(x=> {
+      this.GRCUserID = x.user_Id
+    })
+
+    this.dataService.GetUserByRole("MD").subscribe(x=> {
+      this.MDUserID = x.user_Id;
+    })
+    
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
     this.dataService.GetUserByUsername(User).subscribe(response => {
 
@@ -384,7 +393,7 @@ export class RequestCreateComponent implements OnInit {
                   transVar = new DatePipe('en-ZA');
                   this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
                   this.VendorNotification.name = "Request #" + response[0].onboard_Request_Id + " has been created";
-                  this.VendorNotification.user_ID = 1;
+                  this.VendorNotification.user_ID = this.GRCUserID;
                   this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
 
                   this.log.action = "Created Onboard Request #" + this.Onboard_Request.onboard_Request_Id;
@@ -456,7 +465,7 @@ export class RequestCreateComponent implements OnInit {
                 transVar = new DatePipe('en-ZA');
                 this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
                 this.VendorNotification.name = "Sole Supplier Addition Request for " + response[0].vendor.name;
-                this.VendorNotification.user_ID = 1;
+                this.VendorNotification.user_ID = this.MDUserID ;
                 this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
                 
                 this.log.action = "Created Onboard Request #" + this.Onboard_Request.onboard_Request_Id;
@@ -513,7 +522,7 @@ export class RequestCreateComponent implements OnInit {
               transVar = new DatePipe('en-ZA');
               this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
               this.VendorNotification.name = "Sole Supplier Addition Request for " + response[0].vendor.name;
-              this.VendorNotification.user_ID = 1;
+              this.VendorNotification.user_ID = this.MDUserID ;
               this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
 
               this.log.action = "Created Onboard Request #" + this.Onboard_Request.onboard_Request_Id;
