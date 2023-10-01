@@ -59,13 +59,15 @@ import * as FileSaver from 'file-saver';
 import { ReportData } from '../Shared/ConsumableReport';
 import { Procurement_Invoice } from '../Shared/Procurement_Invoice';
 import { Procurement_Status } from '../Shared/ProcurementStatus';
+import { UserSettings } from '../Shared/UserSettings';
+import { VAT } from '../Shared/VAT';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-  apiUrl = 'https://localhost:7186/api/'
+  apiUrl = 'https://procionapi.azurewebsites.net/api/'
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -505,6 +507,10 @@ export class DataService {
     return this.httpClient.delete<Vendor_Tax>(`${this.apiUrl}Vendor/DeleteIncomeTaxByID/${IncomeTaxID}`, this.httpOptions).pipe(map(result => result))
   }
 
+  DeleteVendorValidation(VendorDetailID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Request>(`${this.apiUrl}Vendor/DeleteVendorValidation/${VendorDetailID}`, this.httpOptions).pipe(map(result => result))
+  }
+
   //--------------------------------------------------------------------------------------Vendor Files--------------------------------------------------------------------------------------
 
   VendorFileAdd(FolderCategory: string, VendorNo: string, fileName: File): Observable<any> {
@@ -703,6 +709,10 @@ export class DataService {
     return this.httpClient.get<Employee>(`${this.apiUrl}User/CreateUserRoleValidation/` + department + "/" + role, this.httpOptions)
   }
 
+  CreateUserMDRoleValidation(role: String): Observable<Employee> {
+    return this.httpClient.get<Employee>(`${this.apiUrl}User/CreateUserMDRoleValidation/` + role, this.httpOptions)
+  }
+
   SendEmail(mail: MailData) {
     return this.httpClient.post(`${this.apiUrl}Mail/sendemailusingtemplate`, mail, this.httpOptions)
   }
@@ -712,6 +722,10 @@ export class DataService {
 
   SendOTP(mail: MailData) {
     return this.httpClient.post(`${this.apiUrl}Mail/OTPEmail`, mail, this.httpOptions)
+  }
+
+  SendNewUsernameMail(mail: MailData) {
+    return this.httpClient.post(`${this.apiUrl}Mail/ResetUsernameEmail`, mail, this.httpOptions)
   }
 
   UpdatePassword(UserID: Number, NewPassword: String) {
@@ -1438,11 +1452,11 @@ export class DataService {
     return this.httpClient.post<Vendor_Asset>(`${this.apiUrl}ProcurementDetails/AddVendorAsset`, AddVendorAsset, this.httpOptions).pipe(map(result => result))
   }
 
-  uploadProcureFile(FolderCategory: string, ProcurementID: string, fileName: File): Observable<any> {
+  uploadProcureFile(FolderCategory: string, RequestName: string, fileName: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', fileName);
     formData.append('FolderCategory', FolderCategory)
-    formData.append('ProcurementRequest', ProcurementID)
+    formData.append('ProcurementRequest', RequestName)
     return this.httpClient.post<any>(`${this.apiUrl}ProcurementDetails/uploadProcureFile`, formData, this.httpOptions)
   }
 
@@ -1455,6 +1469,9 @@ export class DataService {
   }
   GetProcurementQuotes(): Observable<any> {
     return this.httpClient.get<Procurement_Request_Quote[]>(`${this.apiUrl}ProcurementRequest/GetProcurementQuotes`).pipe(map(result => result))
+  }
+  GetProofofPaymentsByID(DetailsID: Number): Observable<any> {
+    return this.httpClient.get<Proof_Of_Payment>(`${this.apiUrl}ProcurementRequest/GetProofofPaymentsbyID/` + DetailsID).pipe(map(result => result))
   }
 
   GetPRRequestByID(RequestID: Number): Observable<Procurement_Request> {
@@ -1485,6 +1502,10 @@ export class DataService {
     return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetailsFD`).pipe(map(result => result))
   }
 
+  GetProcurementRequestDetailsBO(): Observable<any> {
+    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetailsBO`).pipe(map(result => result))
+  }
+
   GetProcurementRequestDetailsMD(): Observable<any> {
     return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetailsMD`).pipe(map(result => result))
   }
@@ -1502,6 +1523,9 @@ export class DataService {
   GetProofOfPaymentByID(ProcurementDetailsID: Number): Observable<any> {
     return this.httpClient.get<Proof_Of_Payment>(`${this.apiUrl}ProcurementDetails/GetProofOfPaymentByID/${ProcurementDetailsID}`).pipe(map(result => result))
   }
+  GetInvoicesByID(ProcurementDetailsID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Invoice>(`${this.apiUrl}ProcurementDetails/GetInvoicesbyID/${ProcurementDetailsID}`).pipe(map(result => result))
+  }
   GetVendorConsumable(): Observable<any> {
     return this.httpClient.get<Vendor_Consumable[]>(`${this.apiUrl}ProcurementDetails/GetVendorConsumable`).pipe(map(result => result))
   }
@@ -1510,6 +1534,12 @@ export class DataService {
   }
   GetProcurementConsumable(): Observable<any> {
     return this.httpClient.get<Procurement_Consumable[]>(`${this.apiUrl}ProcurementDetails/GetProcurementConsumable`).pipe(map(result => result))
+  }
+  GetProcurementConsumableByID(DetailsID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Consumable>(`${this.apiUrl}ProcurementDetails/GetProcurementConsumablebyID/` + DetailsID).pipe(map(result => result))
+  }
+  GetProcurementAssetByID(DetailsID: Number): Observable<any> {
+    return this.httpClient.get<Procurement_Asset>(`${this.apiUrl}ProcurementDetails/GetProcurementAssetbyID/` + DetailsID).pipe(map(result => result))
   }
   GetProcurementAsset(): Observable<any> {
     return this.httpClient.get<Procurement_Asset[]>(`${this.apiUrl}ProcurementDetails/GetProcurementAsset`).pipe(map(result => result))
@@ -1533,7 +1563,7 @@ export class DataService {
   }
 
   GetProcurementDetailsByRequestID(RequestID: Number): Observable<any> {
-    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/GetProcurementDetailsByID/${RequestID}`).pipe(map(result => result))
+    return this.httpClient.get<Procurement_Details>(`${this.apiUrl}ProcurementDetails/GetProcurementDetailsByRequestID/${RequestID}`).pipe(map(result => result))
   }
 
   ProcurementAddNotification(ProcurementNotification: Notification): Observable<any> {
@@ -1687,6 +1717,25 @@ export class DataService {
     return this.httpClient.post<any>(`${this.apiUrl}BudgetAllocation/ImportExcel`, formData, this.httpOptions).pipe(map(result => result))
   }
 
+  GetTimerDuration(): Observable<any> {
+    return this.httpClient.get<UserSettings>(`${this.apiUrl}User/GetTimerDuration`).pipe(map(result => result))
+  }
+
+  UpdateTime(ID: Number, NewTime: Number): Observable<any> {
+    return this.httpClient.put<UserSettings>(`${this.apiUrl}User/UpdateTimer/` + ID + "/" + NewTime, this.httpOptions).pipe(map(result => result))
+  }
+
+  GetVAT(): Observable<any> {
+    return this.httpClient.get<VAT>(`${this.apiUrl}User/GetVAT`).pipe(map(result => result))
+  }
+
+  AddVAT(vat: VAT) {
+    return this.httpClient.post(`${this.apiUrl}User/AddVAT`, vat, this.httpOptions)
+  }
+
+  EditVAT(vat: VAT) {
+    return this.httpClient.put<VAT>(`${this.apiUrl}User/EditVAT/`, vat, this.httpOptions)
+  }
 }
 
 

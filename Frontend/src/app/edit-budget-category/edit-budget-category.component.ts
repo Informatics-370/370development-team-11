@@ -150,6 +150,7 @@ export class EditBudgetCategoryComponent {
         });
       }
       else {
+        document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
         var action = "ERROR";
         var title = "ERROR: Budget Category Exists";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Category <strong>" + this.currentBudgetCategory.account_Name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

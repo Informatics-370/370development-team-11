@@ -1007,6 +1007,8 @@ namespace ProcionAPI.Models.Repositories
             if (existingUser != null)
             {
                 newNotification.User = existingUser;
+                newNotification.User.No_Notifications = existingUser.No_Notifications + 1;
+                newNotification.User.No_VenNotifications = existingUser.No_VenNotifications + 1;
             }
 
             var existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 2);
@@ -1045,6 +1047,8 @@ namespace ProcionAPI.Models.Repositories
                     {
                         newNotification.User = existingUser;
                         newNotification.User.Access = existingUser.Access;
+                        newNotification.User.No_Notifications = existingUser.No_Notifications + 1;
+                        newNotification.User.No_VenNotifications = existingUser.No_VenNotifications + 1;
                     }
 
                     var existingNotificationType = await _dbContext.Notification_Type.FirstOrDefaultAsync(x => x.Notification_Type_ID == 3);
@@ -1078,6 +1082,7 @@ namespace ProcionAPI.Models.Repositories
             {
                 VendorNotification.User = existingUser;
                 VendorNotification.User.No_Notifications = existingUser.No_Notifications + 1;
+                VendorNotification.User.No_VenNotifications = existingUser.No_VenNotifications + 1;
             }
 
 
@@ -1085,6 +1090,15 @@ namespace ProcionAPI.Models.Repositories
             await _dbContext.SaveChangesAsync();
 
             return new Notification[] { VendorNotification };
+        }
+
+        public async Task<Procurement_Request[]> DeleteVendorValidationAsync(int VendorDetailID)
+        {
+            var VendorDetail = await _dbContext.Vendor_Detail.Include(x => x.Vendor).FirstOrDefaultAsync(x => x.Vendor_Detail_ID == VendorDetailID);
+
+            IQueryable<Procurement_Request> query = _dbContext.Procurement_Request.Include(x => x.Vendor).Where(x => (x.Vendor_ID == VendorDetail.Vendor_ID));
+
+            return await query.ToArrayAsync();
         }
 
 

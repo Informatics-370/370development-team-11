@@ -19,6 +19,7 @@ import { Access } from '../Shared/Access';
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { subscribeOn } from 'rxjs';
+import { DynamicCreateDepartmentComponent } from '../dynamic-create-department/dynamic-create-department.component';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -35,7 +36,7 @@ export class CreateEmployeeComponent implements OnInit {
 
   myForm: FormGroup = new FormGroup({});
 
-  constructor(private router: Router, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer, private DynamicDepDialog: MatDialog) { }
 
 
   roles: any[] = []
@@ -101,6 +102,10 @@ export class CreateEmployeeComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -149,27 +154,46 @@ export class CreateEmployeeComponent implements OnInit {
   GetRoles() {
     this.dataService.GetRoles().subscribe(result => {
       this.roles = result;
-      this.roles.forEach((element, index) => {
-        if (element.name == "Admin") this.roles.splice(index, 1);
-      });
+      if (this.roles.length == 0) {
+        document.getElementById('noRoleExists').style.display = "block";
+        document.getElementById('BranchSelected').style.display = "none";
+      } else {
+        this.roles.forEach((element, index) => {
+          if (element.name == "Admin") this.roles.splice(index, 1);
+        });
+      }
+      
     });
   }
 
   GetBranches() {
     this.dataService.GetBranches().subscribe(result => {
       this.branches = result;
+      if (this.branches.length == 0) {
+        document.getElementById('noBranchExists').style.display = "block";
+        document.getElementById('BranchSelected').style.display = "none";
+      }
     });
   }
 
   GetDepartments() {
     this.dataService.GetDepartments().subscribe(result => {
       this.departments = result;
+      if (this.departments.length == 0) {
+        document.getElementById('noDepartmentExists').style.display = "block";
+        document.getElementById('noBranchSelected').style.display = "none";
+      }
+
     });
   }
 
   GetMandates() {
     this.dataService.GetMandateLimits().subscribe(result => {
       this.mandate_limits = result;
+      if (this.mandate_limits.length == 0) {
+        document.getElementById('noMandateExists').style.display = "block";
+        document.getElementById('MandateExists').style.display = "none";
+      }
     });
   }
 
@@ -177,7 +201,33 @@ export class CreateEmployeeComponent implements OnInit {
     return this.myForm.controls;
   }
 
+  selectedBranch: any = "none";
+  getBranch(branch) {
+    console.log(branch)
+    if (branch == null) {
+      this.selectedBranch = "none";
+      document.getElementById('noBranchSelected').style.display = "block";
+      document.getElementById('BranchSelected').style.display = "none";
+    } else {
+      this.br = branch;
+      this.br.branch_ID = 0;
+      this.selectedBranch = this.br.name;
+      document.getElementById('BranchSelected').style.display = "block";
+      document.getElementById('noBranchSelected').style.display = "none";
+    }
+  }
 
+  DynamicDepartmentCreate() {
+    this.DynamicDepDialog.open(DynamicCreateDepartmentComponent, {
+      
+    });
+
+    this.DynamicDepDialog.afterAllClosed.subscribe({
+      next: (response) => {
+        this.GetDepartments();
+      }
+    });
+  }
 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
@@ -250,6 +300,15 @@ export class CreateEmployeeComponent implements OnInit {
       this.Access.CanViewFlagPro = 'false';
       this.Access.CanViewPenPro = 'false';
     }
+    else if (this.rl.name == "Manager") {
+      this.Access.CanAccFin = 'false';
+      this.Access.CanAccPro = 'true';
+      this.Access.CanAccRep = 'false';
+      this.Access.CanAccVen = 'true';
+      this.Access.CanViewFinPro = 'false';
+      this.Access.CanViewFlagPro = 'false';
+      this.Access.CanViewPenPro = 'false';
+    }
     else if (this.rl.name == "FD") {
       this.Access.CanAccFin = 'true';
       this.Access.CanAccPro = 'true';
@@ -269,6 +328,14 @@ export class CreateEmployeeComponent implements OnInit {
         this.Access.CanViewFlagPro = 'true';
         this.Access.CanViewPenPro = 'true';
       } else if (this.dep.name = "FIN") {
+        this.Access.CanAccFin = 'true';
+        this.Access.CanAccPro = 'true';
+        this.Access.CanAccRep = 'true';
+        this.Access.CanAccVen = 'true';
+        this.Access.CanViewFinPro = 'true';
+        this.Access.CanViewFlagPro = 'true';
+        this.Access.CanViewPenPro = 'true';
+      } else {
         this.Access.CanAccFin = 'true';
         this.Access.CanAccPro = 'true';
         this.Access.CanAccRep = 'true';
@@ -311,68 +378,180 @@ export class CreateEmployeeComponent implements OnInit {
           this.dataService.CreateUserValidation(username, this.emp.cellPhone_Num.toString(), "Employee").subscribe({
             next: (Result) => {
               if (Result == null) {
-                this.dataService.CreateUserRoleValidation(this.emp.department.name, this.usr.role.name).subscribe(re => {
-                  if (re == null) {
-                    document.getElementById('loading').style.display = 'block';
-                    document.querySelector('button').disabled;
-                    this.dataService.AddUser(this.usr).subscribe(result => {
-                      this.dataService.AddEmployee(this.emp).subscribe(r => {
-                        this.dataService.SendEmail(this.mail).subscribe({
-                          next: (response) => {
+                if (this.usr.role.name == "BO") {
+                  this.dataService.CreateUserRoleValidation(this.emp.department.name, this.usr.role.name).subscribe(re => {
+                    if (re == null) {
+                      document.getElementById('loading').style.display = 'block';
+                      document.querySelector('button').disabled;
+                      this.dataService.AddUser(this.usr).subscribe(result => {
+                        this.dataService.AddEmployee(this.emp).subscribe(r => {
+                          this.dataService.SendEmail(this.mail).subscribe({
+                            next: (response) => {
 
-                            if (response) {
-                              hideloader();
-                              document.getElementById('AnimationBtn').classList.toggle("is_active");
-                              document.getElementById('cBtn').style.display = "none";
-                            }
-
-                            this.log.action = "Created Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
-                            this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-                            let test: any
-                            test = new DatePipe('en-ZA');
-                            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-                            this.dataService.AuditLogAdd(this.log).subscribe({
-                              next: (Log) => {
-                                var action = "Create";
-                                var title = "CREATE SUCCESSFUL";
-                                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
-
-                                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                                  disableClose: true,
-                                  data: { action, title, message }
-                                });
-
-                                const duration = 1750;
-                                setTimeout(() => {
-                                  this.router.navigate(['/ViewEmployee']);
-                                  dialogRef.close();
-                                }, duration);
+                              if (response) {
+                                hideloader();
+                                document.getElementById('AnimationBtn').classList.toggle("is_active");
+                                document.getElementById('cBtn').style.display = "none";
                               }
-                            })
+
+                              this.log.action = "Created Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                              let test: any
+                              test = new DatePipe('en-ZA');
+                              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                              this.dataService.AuditLogAdd(this.log).subscribe({
+                                next: (Log) => {
+                                  var action = "Create";
+                                  var title = "CREATE SUCCESSFUL";
+                                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+                                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                                    disableClose: true,
+                                    data: { action, title, message }
+                                  });
+
+                                  const duration = 1750;
+                                  setTimeout(() => {
+                                    this.router.navigate(['/ViewEmployee']);
+                                    dialogRef.close();
+                                  }, duration);
+                                }
+                              })
 
 
-                          }
+                            }
+                          })
                         })
                       })
-                    })
-                  }
-                  else {
-                    var action = "ERROR";
-                    var title = "ERROR: Budget Owner Exists";
-                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There alread exists a Budget Owner for department <strong>" + this.emp.department.name + "<strong>!</strong>");
+                    }
+                    else {
+                      document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
+                      var action = "ERROR";
+                      var title = "ERROR: Budget Owner Exists";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There alread exists a Budget Owner for department <strong>" + this.emp.department.name + "<strong>!</strong>");
 
-                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                      disableClose: true,
-                      data: { action, title, message }
-                    });
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
 
-                    const duration = 1750;
-                    setTimeout(() => {
-                      dialogRef.close();
-                    }, duration);
-                  }
-                })
+                      const duration = 1750;
+                      setTimeout(() => {
+                        dialogRef.close();
+                      }, duration);
+                    }
+                  })
+
+                } else if (this.usr.role.name == "MD") {
+                  this.dataService.CreateUserMDRoleValidation(this.usr.role.name).subscribe(re => {
+                    if (re == null) {
+                      document.getElementById('loading').style.display = 'block';
+                      document.querySelector('button').disabled;
+                      this.dataService.AddUser(this.usr).subscribe(result => {
+                        this.dataService.AddEmployee(this.emp).subscribe(r => {
+                          this.dataService.SendEmail(this.mail).subscribe({
+                            next: (response) => {
+
+                              if (response) {
+                                hideloader();
+                                document.getElementById('AnimationBtn').classList.toggle("is_active");
+                                document.getElementById('cBtn').style.display = "none";
+                              }
+
+                              this.log.action = "Created Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                              let test: any
+                              test = new DatePipe('en-ZA');
+                              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                              this.dataService.AuditLogAdd(this.log).subscribe({
+                                next: (Log) => {
+                                  var action = "Create";
+                                  var title = "CREATE SUCCESSFUL";
+                                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+                                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                                    disableClose: true,
+                                    data: { action, title, message }
+                                  });
+
+                                  const duration = 1750;
+                                  setTimeout(() => {
+                                    this.router.navigate(['/ViewEmployee']);
+                                    dialogRef.close();
+                                  }, duration);
+                                }
+                              })
+
+
+                            }
+                          })
+                        })
+                      })
+                    }
+                    else {
+                      document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
+                      var action = "ERROR";
+                      var title = "ERROR: Managing Director Exists";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A user with the role Managing Director already exists <strong>!</strong>");
+
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
+
+                      const duration = 1750;
+                      setTimeout(() => {
+                        dialogRef.close();
+                      }, duration);
+                    }
+                  })
+                } else {
+                      document.getElementById('loading').style.display = 'block';
+                      document.querySelector('button').disabled;
+                      this.dataService.AddUser(this.usr).subscribe(result => {
+                        this.dataService.AddEmployee(this.emp).subscribe(r => {
+                          this.dataService.SendEmail(this.mail).subscribe({
+                            next: (response) => {
+
+                              if (response) {
+                                hideloader();
+                                document.getElementById('AnimationBtn').classList.toggle("is_active");
+                                document.getElementById('cBtn').style.display = "none";
+                              }
+
+                              this.log.action = "Created Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                              let test: any
+                              test = new DatePipe('en-ZA');
+                              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                              this.dataService.AuditLogAdd(this.log).subscribe({
+                                next: (Log) => {
+                                  var action = "Create";
+                                  var title = "CREATE SUCCESSFUL";
+                                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+                                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                                    disableClose: true,
+                                    data: { action, title, message }
+                                  });
+
+                                  const duration = 1750;
+                                  setTimeout(() => {
+                                    this.router.navigate(['/ViewEmployee']);
+                                    dialogRef.close();
+                                  }, duration);
+                                }
+                              })
+
+
+                            }
+                          })
+                        })
+                      })
+                    
+                }
               } else {
+                document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
                 var action = "ERROR";
                 var title = "ERROR: User Exists";
                 var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -391,6 +570,7 @@ export class CreateEmployeeComponent implements OnInit {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "Create";
           var title = "CREATE FAILED";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A user with the email <strong>" + this.emp.email + "</strong> <strong style='color:red'> ALREADY EXISTS </strong> successfully!");

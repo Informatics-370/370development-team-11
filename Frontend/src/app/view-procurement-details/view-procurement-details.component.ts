@@ -37,7 +37,7 @@ export class ViewProcurementDetailsComponent implements OnInit {
   ProcurementRequests: Procurement_Details[] = [];
   SearchedPRequests: Procurement_Details[] = [];
   dataSource: any;
-  displayedColumns: string[] = ['Name', 'Description', 'Vendor', 'Status', 'POP', 'Inv', 'View'];
+  displayedColumns: string[] = ['Name', 'Description', 'Vendor', 'Status', 'POP', 'Inv', 'View', 'RealView'];
   constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
   searchWord: string = '';
 
@@ -74,6 +74,7 @@ export class ViewProcurementDetailsComponent implements OnInit {
   GetProcurementDetails() {
     this.dataService.GetProcurementRequestDetails().subscribe(result => {
       let procurementDetailsList: any[] = result;
+      console.log(result)
       procurementDetailsList.forEach(e => {
         if (e.procurement_Status.name != "Flagged" && e.procurement_Status.name != "Rejected") {
           this.ProcurementRequests.push(e)
@@ -149,7 +150,7 @@ export class ViewProcurementDetailsComponent implements OnInit {
       case 'item received and checked':
         return 'blue';
       case 'asset registered':
-        return 'blue';// Set the color you want for 'Approved'
+        return 'green';// Set the color you want for 'Approved'
       case 'asset to be registered':
         return 'blue';
       default:

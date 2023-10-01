@@ -36,7 +36,7 @@
       </div>
       
       <div style="margin-right:1%; margin-left:1%; margin-bottom: 1%;">
-          <table mat-table *ngIf="OnboardRequest.length > 0" [dataSource]="RequestVendors" multiTemplateDataRows matTooltip="Click the table row for more information regarding this Vendor">
+          <table mat-table  [dataSource]="RequestVendors" multiTemplateDataRows matTooltip="Click the table row for more information regarding this Vendor">
 
             <ng-container matColumnDef="ID">
               <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;" > No. </th>
@@ -118,9 +118,7 @@
             </tr>
             <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 
-            <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
-            </tr>
+  
           </table>
           <mat-paginator style="background-color: #eee;"  [pageSizeOptions]="[5, 10, 25, 100]"  [pageSize]="5" aria-label="Select page of GitHub search results"></mat-paginator>
         </div>

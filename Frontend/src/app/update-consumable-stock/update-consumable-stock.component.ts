@@ -99,6 +99,10 @@ export class UpdateConsumableStockComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -255,26 +259,25 @@ export class UpdateConsumableStockComponent implements OnInit {
                 if (this.Consumables.minimum_Reorder_Quantity >= this.Consumables.on_Hand) {
                   this.ComsumableNotif.send_Date = transVar.transform(new Date(), 'MM d, y, h:mm:ss a');
                   this.ComsumableNotif.name = "The stock level for " + this.Consumables.name + " has reached the minimum amount. Please Re-Order!";
-                  this.ComsumableNotif.user_ID = 1;
-
-                  this.dataservice.ConsumableAddNotification(this.ComsumableNotif).subscribe({
-                    next: (LowStock) => {
-                      this.log.action = "Edited Procurement Request: " + this.Consumables.name;
-                      this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
-                      let test: any
-                      test = new DatePipe('en-ZA');
-                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-                      this.dataservice.AuditLogAdd(this.log).subscribe({
-                        next: (Log) => {
-                          document.getElementById('AnimationBtn').classList.toggle("is_active");
-                          document.getElementById('cBtn').style.display = "none";
-                          this.dialogRef.close();
-                          this.router.navigate(['/ViewConsumable'])
-                        }
-                      })
-
-
-                    }
+                  this.dataservice.GetEmployeeByDepartment("BE").subscribe(dp => {
+                    this.ComsumableNotif.user_ID = dp.user_Id;
+                    this.dataservice.ConsumableAddNotification(this.ComsumableNotif).subscribe({
+                      next: (LowStock) => {
+                        this.log.action = "Edited Procurement Request: " + this.Consumables.name;
+                        this.log.user = this.dataservice.decodeUser(sessionStorage.getItem("token"));
+                        let test: any
+                        test = new DatePipe('en-ZA');
+                        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                        this.dataservice.AuditLogAdd(this.log).subscribe({
+                          next: (Log) => {
+                            document.getElementById('AnimationBtn').classList.toggle("is_active");
+                            document.getElementById('cBtn').style.display = "none";
+                            this.dialogRef.close();
+                            this.router.navigate(['/ViewConsumable'])
+                          }
+                        })
+                      }
+                    })
                   })
                 }
                 else {

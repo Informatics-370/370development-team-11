@@ -25,5 +25,9 @@ namespace ProcionAPI.Models.Entities
 
         public string? Profile_Picture { get; set; }
         public int? No_Notifications { get; set; }
+        public int? No_VenNotifications { get; set; }
+        public int? No_InvNotifications { get; set; }
+        public int? No_DelNotifications { get; set; }
+        public int? No_ProNotifications { get; set; }
     }
 }

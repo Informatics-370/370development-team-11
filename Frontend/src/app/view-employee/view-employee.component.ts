@@ -15,12 +15,15 @@ import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
 import { CdkAccordion } from '@angular/cdk/accordion';
 import { Access } from '../Shared/Access';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatButtonModule} from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 import { EmployeeIFrameComponent } from '../HelpIFrames/EmployeeIFrame/employee-iframe/employee-iframe.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { MainNavComponent } from '../main-nav/main-nav.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { TimerComponent } from '../Settings/timer/timer.component';
+import { CreateVatComponent } from '../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../Settings/edit-vat/edit-vat.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -72,6 +75,10 @@ export class ViewEmployeeComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -139,7 +146,7 @@ export class ViewEmployeeComponent implements OnInit {
 
 
   DeleteEmployee(userID: Number, empID: Number, username: string) {
-    
+
 
     this.dataService.UserDeleteDelegationValidation(userID, username).subscribe({
       next: (dResult) => {
@@ -295,12 +302,49 @@ export class ViewEmployeeComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
     });
   }
+  openTimerDialog() {
+    const dialogRef = this.dialog.open(TimerComponent);
 
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openCreateVATDialog() {
+    const dialogRef = this.dialog.open(CreateVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    this.dataService.GetVAT().subscribe(re => {
+      if (re == null) {
+        var action = "ERROR";
+        var title = "ERROR: VAT does not Exists";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No VAT <strong style='color:red'>EXISTS ON THE SYSTEM!</strong><br> Please add one before and try again.");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 4000;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
+      } else {
+        const dialogRef = this.dialog.open(EditVatComponent);
+
+        dialogRef.afterClosed().subscribe(result => {
+        });
+      }
+    })
+  }
 
   openEmployeeIFrameTab(): void {
     const dialogRef = this.dialog.open(EmployeeIFrameComponent, {
-    //   width: '800px', // Set the desired width
-    //  height: '600%', // Set the desired height
+      //   width: '800px', // Set the desired width
+      //  height: '600%', // Set the desired height
       panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
     });
 
@@ -308,5 +352,5 @@ export class ViewEmployeeComponent implements OnInit {
       // Handle any dialog close actions if needed
     });
   }
-  
+
 }

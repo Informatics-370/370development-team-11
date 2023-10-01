@@ -8,6 +8,7 @@ using ProcionAPI.Models.MailKit_Model;
 using RazorEngineCore;
 using System.Text;
 using MimeKit.Utils;
+using Azure.Storage.Blobs;
 
 namespace ProcionAPI.Models.Repositories
 {
@@ -111,14 +112,23 @@ namespace ProcionAPI.Models.Repositories
 
         public string LoadTemplate(string emailTemplate)
         {
-            string templateDir = "./Files/MailTemplates";
-            string templatePath = Path.Combine(templateDir, $"{emailTemplate}.cshtml");
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+            string containerName = "mailtemplates";
+            string templatePath = $"{emailTemplate}.cshtml";
 
-            using FileStream fileStream = new FileStream(templatePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            using StreamReader streamReader = new StreamReader(fileStream, Encoding.Default);
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            BlobClient blobClient = containerClient.GetBlobClient(templatePath);
 
-            string mailTemplate = streamReader.ReadToEnd();
-            streamReader.Close();
+            using MemoryStream memoryStream = new MemoryStream();
+            blobClient.DownloadTo(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+
+            using StreamReader reader = new StreamReader(memoryStream);
+            string mailTemplate = reader.ReadToEnd();
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            memoryStream.SetLength(0);
+
 
             return mailTemplate;
         }

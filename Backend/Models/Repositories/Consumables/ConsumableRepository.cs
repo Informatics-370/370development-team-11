@@ -9,23 +9,57 @@ using Microsoft.ML.Data;
 using Microsoft.ML.Transforms.TimeSeries;
 using Microsoft.ML.TimeSeries;
 using ProcionAPI.ViewModel;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace ProcionAPI.Models.Repositories.Consumables
 {
     public class ConsumableRepository : IConsumableRepository
     {
         private readonly AppDBContext _dbContext;
+        private readonly IConfiguration _configuration;
 
-        public ConsumableRepository(AppDBContext dbContext)
+        public ConsumableRepository(AppDBContext dbContext, IConfiguration configuration)
         {
             _dbContext = dbContext;
+            _configuration = configuration;
         }
 
 
-        public async Task<Consumable[]> GetAllConsumableAsync()
+
+        public async Task<List<Consumable>> GetAllConsumableAsync()
         {
-            IQueryable<Consumable> query = _dbContext.Consumable.Include(c => c.Consumable_Category);
-            return await query.ToArrayAsync();
+            List<Consumable> consumables = new List<Consumable>();
+            using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+                using (SqlCommand command = new SqlCommand("GetAllConsumables", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            Consumable consumable = new Consumable();
+                            consumable.Consumable_ID = (int)reader["Consumable_ID"];
+                            consumable.Name = reader["Name"].ToString();
+                            consumable.Description = reader["Description"].ToString();
+                            consumable.On_Hand = (int)reader["On_Hand"];
+                            consumable.Minimum_Reorder_Quantity = (int)reader["Minimum_Reorder_Quantity"];
+                            consumable.Maximum_Reorder_Quantity = (int)reader["Maximum_Reorder_Quantity"];
+                            consumable.Consumable_Category_ID = (int)reader["Consumable_Category_ID"];
+                            consumable.Consumable_Category = new Consumable_Category();
+                            consumable.Consumable_Category.Name = reader["Category_Name"].ToString();
+                            consumable.Consumable_Category.Description = reader["Category_Description"].ToString();
+                            consumable.Consumable_Category.Consumable_Category_ID = (int)reader["Consumable_Category_ID"];
+
+                            consumables.Add(consumable);
+                        }
+                    }
+                }
+            }
+
+            return consumables;
         }
 
         public async Task<Consumable[]> AddConsumableAsync(Consumable ConsumableAdd)
@@ -181,6 +215,7 @@ namespace ProcionAPI.Models.Repositories.Consumables
             {
                 ConsumableNotif.User = existingUser;
                 ConsumableNotif.User.No_Notifications = existingUser.No_Notifications + 1;
+                ConsumableNotif.User.No_InvNotifications = existingUser.No_InvNotifications + 1;
             }
 
 

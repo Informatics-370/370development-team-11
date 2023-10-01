@@ -3,7 +3,7 @@ import { DataService } from 'src/app/DataService/data-service';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
 import {VendorOnboardRequest} from 'src/app/Shared/VendorOnboardRequest';
 import { MatTableDataSource } from '@angular/material/table';
-import { animate, state, style, transition, trigger} from '@angular/animations';
+import { animate, state, style, transition, trigger, useAnimation} from '@angular/animations';
 import { Subscription, buffer, elementAt, groupBy } from 'rxjs';
 import { VendorOnboardRequestVM } from 'src/app/Shared/VendorOnboardRequestVM';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +15,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { OnboardRequestIFrameComponent } from 'src/app/HelpIFrames/OnboardRequestIFrame/onboard-request-iframe/onboard-request-iframe.component';
-
+import { Employee } from 'src/app/Shared/Employee';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -51,30 +51,65 @@ export class RequestViewComponent implements OnInit {
   iCanAppVen: string = "false";
   canAppVen: string;
   iRole: string;
-
+  User:string;
+  TempUser:string;
+  canViewAll:boolean = false;
   private refreshSubscription: Subscription;
   constructor(private RequestService: DataService,private http: HttpClient, private route: ActivatedRoute,private router: Router, private dialog: MatDialog) { }
 
   ngOnInit() {
-
+    this.User = this.RequestService.decodeUser(sessionStorage.getItem('token'))
     this.iRole = this.RequestService.decodeUserRole(sessionStorage.getItem("token"));
     this.iCanAppVen = this.RequestService.decodeCanAppVen(sessionStorage.getItem("token"));
+    this.TempUser = this.RequestService.decodeTempUsername(sessionStorage.getItem('token'))
 
     if (this.iRole == "Admin" || this.iRole == "MD" || this.iCanAppVen == "true") {
       this.canAppVen = "true";
     }
 
-
+    if(this.iRole == "GRC" || this.iRole == "MD" || this.iCanAppVen == "true") {
+      this.canViewAll = true;
+    }
+    
+  
 
     this.OnboardRequest = []
     this.vendor = []
     this.FileDetails = []
+    this.RequestService.GetEmployeeByUsername(this.TempUser).subscribe({next: (tempResult) => {
+      let TempEmployeeDetails:any = tempResult
+      this.getData(TempEmployeeDetails)
+    },
+    error:(y) => {
+      this.getData()
+    }
+    })
 
+    
+   
+  }
+
+  getData(TempEmpDetails?:any) {
+    this.RequestService.GetEmployeeByUsername(this.User).subscribe(r => {
+      let EmployeeDetails:any = r
+      let name = EmployeeDetails.employeeName + " " + EmployeeDetails.employeeSurname
+      let tempName = "none"
+      if(TempEmpDetails != undefined) {
+        tempName = TempEmpDetails.employeeName + " " + TempEmpDetails.employeeSurname
+      }
+      
     this.RequestService.GetAllOnboardRequest().subscribe(result => {let RequestList:any[] = result
       RequestList.forEach((element) => {
-        this.OnboardRequest.push(element)
+        if(this.canViewAll == true) {
+          this.OnboardRequest.push(element)
+        }
+        else if(name == element.employeeName || tempName == element.employeeName) {
+          this.OnboardRequest.push(element)
+        }
+        
       });
-      this.OnboardRequest = result
+     
+      //this.OnboardRequest = result
      for(let i = 0; i < this.OnboardRequest.length; i++) {
        this.FileDetails.push({FileURL:"",FileName:""})
       }
@@ -105,10 +140,11 @@ export class RequestViewComponent implements OnInit {
         if(sFile != "None") {
           
           
-          let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-          let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+          let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+          let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+          let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
             
-            this.FileDetails[i].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
+            this.FileDetails[i].FileURL = sFile
             this.FileDetails[i].FileName = filename; 
          
         
@@ -124,8 +160,9 @@ export class RequestViewComponent implements OnInit {
       this.vendorIds = [...new Set(this.OnboardRequest.map(req => req.vendor_ID))]
       //this.vendorIds = [...new Set(this.OnboardRequest.sort((a,b) => a.vendor_ID - b.vendor_ID).map(req => req.vendor_ID))]
       })
-   
+    })
   }
+
 
   getVendorByVendorId(vendorId: number) {
     // Filter the vendor array based on the vendor ID
@@ -180,22 +217,22 @@ export class RequestViewComponent implements OnInit {
   }
 
   
-  DownloadFile(sFile :string ) {
-    if(sFile.length > 20) {
-      const formData = new FormData();
-    formData.append('sfile',sFile);
+  // DownloadFile(sFile :string ) {
+  //   if(sFile.length > 20) {
+  //     const formData = new FormData();
+  //   formData.append('sfile',sFile);
     
-    this.http.post(`https://localhost:7186/api/OnboardRequest/getFile/`,formData).subscribe(response => 
-      {let url:any = response     
-        return url.absoluteFolderPath.toString()
-      });
-      return null
-    }
-    else {
-      let test = ""
-      return test
-    } 
-  }
+  //   this.http.post(`https://localhost:7186/api/OnboardRequest/getFile/`,formData).subscribe(response => 
+  //     {let url:any = response     
+  //       return url.absoluteFolderPath.toString()
+  //     });
+  //     return null
+  //   }
+  //   else {
+  //     let test = ""
+  //     return test
+  //   } 
+  // }
 
   
 

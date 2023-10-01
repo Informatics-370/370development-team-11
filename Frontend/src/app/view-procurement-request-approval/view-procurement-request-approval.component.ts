@@ -63,6 +63,10 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -90,7 +94,7 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
     Description: '',
   })
 
-
+  
 
   constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute, private _formBuilder: FormBuilder, private http: HttpClient, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
   ProcurementRequestID = 0;
@@ -148,15 +152,23 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
     })
 
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+
+    this.VendorFormGroup.get('CompanyName').disable();
+    this.VendorFormGroup.get('CompanyEmail').disable();
+    this.VendorFormGroup.get('Description').disable();
+  }
+
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
   }
 
   GetFiles(sfilepath: string, i: number) {
     let sFile = sfilepath;
-    let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-    sFile = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-    let RequestID = sFile.substring(0, sFile.indexOf("\\"))
-    let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-    this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${RequestID}/${filename}`
+    let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+    let VendorName = Stringtouse.substring(0, (Stringtouse.indexOf("/")))
+    let RequestID = Stringtouse.substring(Stringtouse.indexOf("/") + 1, (Stringtouse.lastIndexOf("/")))
+    let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+    this.FileDetails[i].FileURL = sFile
     this.FileDetails[i].FileName = filename
   }
 
@@ -219,11 +231,9 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
   }
 
   openPDFInNewTab(i: number): void {
-    const url = this.FileDetails[i].FileURL;
-    this.http.get(url, { responseType: 'blob' }).subscribe(response => {
-      const fileURL = URL.createObjectURL(response);
-      window.open(fileURL, '_blank');
-    });
+    const fileURL = this.FileDetails[i].FileURL
+    window.open(fileURL, '_blank');
+    URL.revokeObjectURL(fileURL);
   }
 
 
@@ -232,11 +242,11 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
 
 
   openPPROtherTab(): void {
-    const userManualUrl = 'assets/PDF/ViewPendingProcUM.pdf'; 
+    const userManualUrl = 'assets/PDF/ViewPendingProcUM.pdf';
     window.open(userManualUrl, '_blank');
   }
   openPPRNOTOtherTab(): void {
-    const userManualUrl = 'assets/PDF/ViewPendingProcUM.pdf'; 
+    const userManualUrl = 'assets/PDF/ViewPendingProcUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 

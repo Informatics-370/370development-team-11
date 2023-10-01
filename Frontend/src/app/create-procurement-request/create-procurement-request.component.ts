@@ -95,6 +95,10 @@ export class CreateProcurementRequestComponent implements OnInit {
       password: "",
       profile_Picture: "",
       no_Notifications: 0,
+      no_VenNotifications: 0,
+      no_InvNotifications: 0,
+      no_DelNotifications: 0,
+      no_ProNotifications: 0,
       role: {
         role_ID: 0,
         name: "",
@@ -129,6 +133,10 @@ export class CreateProcurementRequestComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -360,7 +368,10 @@ export class CreateProcurementRequestComponent implements OnInit {
               let file: File = this.files[i]
               this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, ("RequestID" + this.Procurement_Request.procurement_Request_ID).toString(), file).subscribe({
                 next: (Response) => {
-                  this.uploadedPathArray.push(Response.pathSaved.toString())
+                  URL: URL = Response.url
+                  console.log(URL)
+                  this.uploadedPathArray.push(URL.toString())
+                  console.log(this.uploadedPathArray)
                   this.GetQuoteDetails()
                 }
               })
@@ -405,12 +416,10 @@ export class CreateProcurementRequestComponent implements OnInit {
         let Filename = this.files[a].name.toString()
         let VendorName = this.Procurement_Request.vendor.name.toString()
         let RequestID = ("RequestID" + this.Procurement_Request.procurement_Request_ID).toString()
-        let PathName = (VendorName + "\\" + RequestID + "\\" + Filename).toString()
-        //evaluate against path array
-        let UploadedPath = this.uploadedPathArray.find(x => x === PathName)
+        let PathName = ("https://procionfiles.blob.core.windows.net/procionfiles/" + VendorName + "/" + RequestID + "/" + Filename).toString()
         //store
         this.Procurement_Request_Quote.procurement_Request.name = this.myForm.get("RequestName").value;
-        this.Procurement_Request_Quote.path = UploadedPath
+        this.Procurement_Request_Quote.path = PathName
         let test: any
         test = new DatePipe('en-ZA');
         this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
@@ -516,7 +525,8 @@ export class CreateProcurementRequestComponent implements OnInit {
               let qPath = Response
               this.Procurement_Request = response[0]
               this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-              this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+              URL: URL = Response.url
+              this.Procurement_Request_Quote.path = URL.toString();
               this.Procurement_Request_Quote.prefferedQuote = true;
 
               let test: any
@@ -549,6 +559,7 @@ export class CreateProcurementRequestComponent implements OnInit {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "CREATE";
           var title = "LIMIT EXCEEDED";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Vendor: <strong>" + this.Procurement_Request.vendor.name + "</strong> will need to be <strong style='color:red'> ONBOARDED </strong> in order to make this request!");
@@ -588,7 +599,7 @@ export class CreateProcurementRequestComponent implements OnInit {
 
 
   openCreatePRTab(): void {
-    const userManualUrl = 'assets/PDF/CreateProcReq.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateProcReq.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

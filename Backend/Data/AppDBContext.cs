@@ -76,6 +76,7 @@ namespace ProcionAPI.Data
         public DbSet<Consumable_History> Consumable_History { get; set; }
         public DbSet<AuditLog> AuditLog { get; set; }
         public DbSet<Procurement_Invoice> Procurement_Invoice { get; set; }
+        public DbSet<UserSettings> UserSettings { get; set; }
 
         UserRepository userrep = new UserRepository();
 
@@ -140,6 +141,10 @@ namespace ProcionAPI.Data
                 Password = userrep.HashPassword("Admin123"),
                 Profile_Picture = "./assets/Images/Default_Profile.jpg",
                 No_Notifications = 0,
+                No_DelNotifications = 0,
+                No_InvNotifications = 0,
+                No_ProNotifications = 0,
+                No_VenNotifications = 0,
             }
             );
             modelBuilder.Entity<Admin>()
@@ -822,6 +827,15 @@ namespace ProcionAPI.Data
                 Sign_Off_Status_ID = 1,
                 Name = "No",
                 Description = "Has not been signed off",
+
+            });
+
+            modelBuilder.Entity<UserSettings>()
+            .HasData(
+            new
+            {
+                Setting_ID = 1,
+                TimerDuration = 120
 
             });
 

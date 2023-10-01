@@ -49,8 +49,9 @@ export class DeleteDelegationComponent implements OnInit{
 
   onConfirm(id: number): void {
     let sFile = this.Delegation.delegation_Document;
-    let DelegateName = sFile.substring(0, sFile.indexOf("\\"))
-    let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+    let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+    let DelegateName = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+    let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
 
     if (this.Delegation.delegation_Status.name == "Revoked") {
       this.dataService.DeleteDelegation(id).subscribe({

@@ -17,8 +17,8 @@
                 <mat-card-content>
                   <label style=" color:black;" for="DelegatingName">Delegating Party:</label>
                   <br />
-                  <mat-form-field>
-                    <input matInput type="text" placeholder="" formControlName="DelegatingName" id="DelegatingName" [readonly]="true">
+                  <mat-form-field appearance="fill">
+                    <input matInput type="text" placeholder="" formControlName="DelegatingName" id="DelegatingName" [readonly]="true" (focus)="onFocus($event)" style="cursor: default; color:gray;">
                   </mat-form-field>
                 </mat-card-content>
               </td>
@@ -29,7 +29,7 @@
                   <br />
                   <mat-form-field>
                     <input matInput type="text" placeholder="" [formControl]="myControl" id="DelegateName"
-                           [matAutocomplete]="auto" (blur)="checkUser()" required>
+                           [matAutocomplete]="auto" (blur)="checkUser()" style="cursor: pointer" required>
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)='getPosts($event.option.value)'>
                       <mat-option *ngFor="let u of SearchedOptions | async" [value]="u.username">
                         {{u.username}}
@@ -75,7 +75,7 @@
                   <label style=" color:black;">Delegation Document:</label>
                   <br />
 
-                  <input type="file" id="file" placeholder="" formControlName="DelegationFile" style="border: solid #244688; border-radius: 5px; "
+                  <input type="file" id="file" placeholder="" formControlName="DelegationFile" style="border: solid #244688; border-radius: 5px; max-width: 247px;"
                          accept=".pdf" (change)="onFileUpload($event)" required>
 
                 </mat-card-content>

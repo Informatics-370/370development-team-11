@@ -3,22 +3,54 @@ using Microsoft.AspNetCore.Mvc;
 using ProcionAPI.Data;
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Controllers;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace ProcionAPI.Models.Repositories
 {
     public class HelpRepository : IHelpRepository
     {
         private readonly AppDBContext _dbContext;
+        private readonly IConfiguration _configuration;
 
-        public HelpRepository(AppDBContext dbContext) 
+        public HelpRepository(AppDBContext dbContext, IConfiguration configuration)
         {
             _dbContext = dbContext;
+            _configuration = configuration;
         }
 
-        public async Task<HELP[]> GetAllHelpsAsync()
+        public async Task<List<HELP>> GetAllHelpsAsync()
         {
-            IQueryable<HELP> query = _dbContext.HELP.Include(c => c.Help_Category);
-            return await query.ToArrayAsync();
+            List<HELP> helps = new List<HELP>();
+            using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+                {
+                    using (SqlCommand command = new SqlCommand("GetAllHelps", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                HELP help = new HELP();
+                                help.Help_ID = Convert.ToInt32(reader["Help_ID"]);
+                                help.Name = reader["Name"].ToString();
+                                help.Description = reader["Description"].ToString();
+                                help.Video = reader["Video"].ToString();
+                                help.User_Manual = reader["User_Manual"].ToString();
+                                help.Help_Category_ID = Convert.ToInt32(reader["Help_Category_ID"]);
+                                help.Help_Category = new Help_Category();
+                                help.Help_Category.Name = reader["Category_Name"].ToString();
+                                help.Help_Category.Description = reader["Category_Description"].ToString();
+                                help.Help_Category.Help_Category_ID = Convert.ToInt32(reader["Help_Category_ID"]);
+                                helps.Add(help);
+                            }
+                        }
+                    }
+                }
+            }
+            return helps;
         }
         public async Task<Help_Category[]> GetAllHelpCategorysAsync()
         {
@@ -68,10 +100,17 @@ namespace ProcionAPI.Models.Repositories
         }
         public async Task<HELP> EditHelpValidationAsync(string name, int id)
         {
-            HELP ExistingHelp = await _dbContext.HELP.FirstOrDefaultAsync(x => x.Name == name && x.Help_ID == id);
+            HELP ExistingHelp = await _dbContext.HELP.FirstOrDefaultAsync(x => x.Name == name);
             if (ExistingHelp != null)
             {
-                return ExistingHelp;
+                if (ExistingHelp.Help_ID == id)
+                {
+                    return null;
+                }
+                else
+                {
+                    return ExistingHelp;
+                }
             }
 
             else

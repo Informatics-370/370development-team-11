@@ -8,6 +8,8 @@ using Azure.Core;
 using Microsoft.Net.Http.Headers;
 using System.Data.SqlTypes;
 using System.Net.Mime;
+using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs;
 
 namespace ProcionAPI.Controllers
 {
@@ -162,74 +164,142 @@ namespace ProcionAPI.Controllers
 
             var formCollection = await Request.ReadFormAsync();
             var file = formCollection.Files.First();
-
-
             var HelpName = Request.Form["HelpName"];
-            // 
+
             if (file == null || file.Length == 0)
             {
                 return BadRequest("No file selected");
             }
 
-            // Replace "path/to/folder" with the actual folder path
-            var folderPath = Path.Combine("Files", "Help", HelpName);
-            var filePath = Path.Combine(folderPath, file.FileName);
-            var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
-            if (!Directory.Exists(absoluteFolderPath))
+
+
+            // Connect to your Azure Blob Storage account
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+            // Create a container (if it doesn't exist already)
+            string containerName = "procionfiles";
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
+
+            // Create a unique blob name (you can adjust this based on your requirement)
+            string blobName = $"Help/{HelpName}/{file.FileName}";
+
+            // Get a reference to the blob and upload the file
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            using (Stream stream = file.OpenReadStream())
             {
-                Directory.CreateDirectory(absoluteFolderPath);
+                await blobClient.UploadAsync(stream, true);
             }
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-            var PathSaved = Path.Combine(HelpName, file.FileName);
-            return Ok(new { PathSaved });
+            // Return the URL of the uploaded blob as the response
+            return Ok(new { url = blobClient.Uri.ToString() });
         }
 
         [HttpGet]
         [Route("GetHelpPDFFiles/{HelpName}/{filename}")]
         public IActionResult GetHelpPDFFile(string HelpName, string filename)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "Help", HelpName, filename);
-            var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            var contentType = "application/pdf";
-            return File(fileBytes, contentType, filename);
+            // Connect to your Azure Blob Storage account
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+            // Specify your container name where the files are stored
+            string containerName = "procionfiles";
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+            // Create a reference to the blob within the container
+            string blobPath = $"Help/{HelpName}/{filename}";
+            BlobClient blobClient = containerClient.GetBlobClient(blobPath);
+
+            // Check if the blob exists
+            if (!blobClient.Exists())
+            {
+                // Return an error response if the blob does not exist
+                return NotFound();
+            }
+
+            // Download the blob content into a MemoryStream
+            MemoryStream memoryStream = new MemoryStream();
+            blobClient.DownloadTo(memoryStream);
+            memoryStream.Position = 0;
+
+            // Determine the content type based on the file extension (e.g., application/pdf for PDF files)
+            string contentType = "application/pdf"; // You may need to adjust this based on your file types
+
+            // Return the file as a FileResult
+            return File(memoryStream, contentType, filename);
         }
 
         [HttpGet]
         [Route("GetHelpVideoFiles/{HelpName}/{filename}")]
         public IActionResult GetHelpVideoFile(string HelpName, string filename)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "Help", HelpName, filename);
-            var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            var contentType = "video/mp4";
-            return File(fileBytes, contentType, filename);
+            // Connect to your Azure Blob Storage account
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+            // Specify your container name where the files are stored
+            string containerName = "procionfiles";
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+            // Create a reference to the blob within the container
+            string blobPath = $"Help/{HelpName}/{filename}";
+            BlobClient blobClient = containerClient.GetBlobClient(blobPath);
+
+            // Check if the blob exists
+            if (!blobClient.Exists())
+            {
+                // Return an error response if the blob does not exist
+                return NotFound();
+            }
+
+            // Download the blob content into a MemoryStream
+            MemoryStream memoryStream = new MemoryStream();
+            blobClient.DownloadTo(memoryStream);
+            memoryStream.Position = 0;
+
+            // Determine the content type based on the file extension (e.g., application/pdf for PDF files)
+            string contentType = "video/mp4"; // You may need to adjust this based on your file types
+
+            // Return the file as a FileResult
+            return File(memoryStream, contentType, filename);
         }
 
         [HttpDelete]
         [Route("DeleteHelpFile/{HelpName}/{fileName}")]
-        public IActionResult DeleteHelpFile(string HelpName, string fileName)
+        public async Task<IActionResult> DeleteHelpFile(string HelpName, string fileName)
         {
-
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "Help", HelpName, fileName);
 
             try
             {
-                if (System.IO.File.Exists(filePath))
+                // Connect to your Azure Blob Storage account
+                string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+                BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+                // Create a container (if it doesn't exist already)
+                string containerName = "procionfiles";
+                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+                // Create a unique blob name based on the given parameters
+                string blobName = $"Help/{HelpName}/{fileName}";
+
+                // Get a reference to the blob and delete it
+                BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+                if (await blobClient.ExistsAsync())
                 {
-                    System.IO.File.Delete(filePath);
-                    return Ok(new {fileName});
+                    await blobClient.DeleteAsync();
+                    return Ok(new { fileName });
                 }
                 else
                 {
                     return NotFound($"File {fileName} not found");
                 }
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
-                return StatusCode(500, $"Error deleting file: {ex.Message}");
+                return NotFound($"File {fileName} not found");
             }
         }
     }

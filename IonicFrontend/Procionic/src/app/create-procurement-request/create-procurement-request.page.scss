@@ -1,0 +1,39 @@
+ion-content {
+    padding: 16px;
+}
+
+ion-segment {
+    margin-bottom: 16px;
+}
+
+ion-item {
+    margin-bottom: 12px;
+}
+
+.invalid-input {
+    border-bottom: 2px solid red;
+}
+
+ion-item ion-label {
+    white-space: normal;
+    /* Allow text to wrap onto the next line */
+    max-width: 80%;
+    /* Set maximum width */
+    overflow: visible;
+    /* Show overflowed content */
+    margin-right: 16px;
+}
+
+ion-button {
+    margin-top: 12px;
+}
+
+/* Style for file selectors */
+/* Custom styling for file input */
+ion-input[type="file"] {
+    cursor: pointer;
+}
+
+ion-input[type="file"]:focus {
+    border-bottom: 1px solid #3880ff;
+}

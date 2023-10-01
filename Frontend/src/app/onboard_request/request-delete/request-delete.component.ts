@@ -68,7 +68,11 @@ export class RequestDeleteComponent {
     status_ID: 0,
     vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0, sole_Supplier_Provided: false, preferedVendor: false },
     onboard_Status: this.OnboardStatus,
-    users: { user_Id: 0, role_ID: 0, access_ID: 0, access: this.Access, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', no_Notifications: 0, role: this.rl },
+    users: {
+      user_Id: 0, role_ID: 0, access_ID: 0, access: this.Access, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', no_Notifications: 0, no_VenNotifications: 0,
+      no_InvNotifications: 0,
+      no_DelNotifications: 0,
+      no_ProNotifications: 0, role: this.rl },
     quotes: '',
   }
 
@@ -122,12 +126,9 @@ export class RequestDeleteComponent {
       for (let i = 0; i < this.OnboardRequestDetails.length; i++) {
         let VendorID = this.OnboardRequestDetails[i].vendor.vendor_ID
         let sFile = this.OnboardRequestDetails[i].quotes;
-        // let sFi = sFile.substring(0,sFile.indexOf("\\"))
-        //  sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-        // let sOR = sFile.substring(0,sFile.indexOf("\\"))
-        // sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-        let RequestNo = sFile.substring(0, sFile.indexOf("\\"))
-        let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+        let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+        let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+        let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
         this.dataService.DeleteFile(RequestNo, filename).subscribe()
         this.dataService.DeleteRequest(RequestId, VendorID).subscribe({
           next: (response) => {

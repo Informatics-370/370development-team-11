@@ -60,7 +60,7 @@ namespace ProcionAPI.Models.Repositories
         }
         public async Task<Department> EditDepartmentValidationAsync(string name, int id)
         {
-            Department ExistingDepartment = await _dbContext.Department.FirstOrDefaultAsync(x => x.Name == name && x.Department_ID == id);
+            Department ExistingDepartment = await _dbContext.Department.FirstOrDefaultAsync(x => x.Name == name);
             if (ExistingDepartment != null)
             {
                 return ExistingDepartment;

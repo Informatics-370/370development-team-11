@@ -48,9 +48,13 @@ export class EditEmployeeRoleComponent implements OnInit {
         Name: this.role.name,
         Description: this.role.description
       });
+      this.myForm.get('Name').disable();
     })
   };
 
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
@@ -103,6 +107,7 @@ export class EditEmployeeRoleComponent implements OnInit {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: User Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

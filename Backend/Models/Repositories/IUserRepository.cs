@@ -3,8 +3,7 @@ using ProcionAPI.Models.Entities;
 
 namespace ProcionAPI.Models.Repositories { 
     public interface IUserRepository {
-        Task<Employee[]> GetAllEmployeesAsync();
-        Task<User[]> GetAllUsersAsync();
+        Task<List<Employee>> GetAllEmployeesAsync(); Task<User[]> GetAllUsersAsync();
         Task<Employee[]> AddEmployeeAsync(Employee EmployeeAdd);
         Task<User[]> AddUserAsync(User UserAdd);
         Task<Employee> GetEmployeeAsync(int userID);
@@ -12,7 +11,7 @@ namespace ProcionAPI.Models.Repositories {
         Task<User> GetUserAsync(int userID);
         Task<User> GetUserByUserNameAsync(string username);
         Task<User> GetUserByRoleAsync(string role);
-        Task<Admin[]> GetAllAdminsAsync();
+        Task<List<Admin>> GetAllAdminsAsync();
         Task<Admin> GetAdminAsync(int userID);
         Task<Admin> GetAdminByUserNameAsync(string username);
         Task<Admin[]> AddAdminAsync(Admin AdminAdd);
@@ -28,7 +27,7 @@ namespace ProcionAPI.Models.Repositories {
         Task<Admin> GetAdminByEmailAsync(string Email);
         Task<User> ResetNumNotifications(string username);
         Task<AuditLog[]> AddLogAsync(AuditLog LogAdd);
-        Task<AuditLog[]> GetAllLogsAsync();
+        Task<List<AuditLog>> GetAllLogsAsync();
         Task<Employee> GetEmployeeByDepartmentAsync(string dep);
         Task<Access> GetAccessAsync(int accID);
         Task<User> GetDeleteUserAsync(int userID);
@@ -37,6 +36,7 @@ namespace ProcionAPI.Models.Repositories {
         Task<User> EditUserValidationAsync(string name, int id);
         Task<User> CreateUserValidationAsync(string name, string cellphoneNum, string Type);
         Task<Employee> CreateUserRoleValidationAsync(string department, string role);
+        Task<Employee> CreateUserMDRoleValidationAsync(string role);
         Task<bool> VerifyCredentials(string UserName, string Password);
         Task<Delegation_Of_Authority> AdminDeleteDelegationValidationAsync(int id);
         Task<Procurement_Details> EmployeeDeleteProcurementDetailsValidationAsync(int id);
@@ -45,5 +45,10 @@ namespace ProcionAPI.Models.Repositories {
         Task<Delegation_Of_Authority> UserDeleteDelegationValidationAsync(int id, string username);
         Task<Notification> UserDeleteNotificationValidationAsync(int id);
 
+        Task<UserSettings> GetTimerDurationAsync();
+        Task<UserSettings> UpdateTimerAsync(int ID, int NewTime);
+        Task<VAT> GetVATAsync();
+        Task<VAT[]> AddVATAsync(VAT VATAdd);
+        Task<VAT> EditVATAsync(VAT VATEdit);
     }
 }

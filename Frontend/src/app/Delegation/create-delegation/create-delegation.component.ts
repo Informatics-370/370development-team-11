@@ -74,6 +74,10 @@ export class CreateDelegationComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -156,12 +160,7 @@ export class CreateDelegationComponent implements OnInit {
 
     this.getUsername();
 
-    this.dataService.GetUsers().subscribe(r => {
-      this.options = r
-      this.options.forEach((element, i) => {
-        if (element.username == this.user.username) this.options.splice(i, 1);
-      })
-    })
+    
 
 
 
@@ -199,8 +198,26 @@ export class CreateDelegationComponent implements OnInit {
       this.myForm.patchValue({
         DelegatingName: this.user.username
       })
-      
+      this.myForm.get('DelegatingName').disable();
+
+      this.dataService.GetUsers().subscribe(r => {
+        this.options = r
+        this.options.forEach((element, i) => {
+          if (element.username == this.user.username) this.options.splice(i, 1);
+        })
+
+        this.options.forEach((el, idx) => {
+          if (el.role.name == "Admin") this.options.splice(idx, 1);
+        })
+      })
+
+
     })
+  }
+
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+    
   }
 
   get f() {
@@ -337,7 +354,7 @@ export class CreateDelegationComponent implements OnInit {
 
             this.dataService.DelegateFileAdd(DelegateName, file).subscribe(response => {
               let Path: any = response
-              this.sPath = Path.pathSaved.toString()
+              this.sPath = Path.url.toString()
               this.doa.delegation_Document = this.sPath;
               this.doa.delegationStatus_ID = 1;
 
@@ -404,6 +421,7 @@ export class CreateDelegationComponent implements OnInit {
           }
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Delegation Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There already exists a Active or Inactive <strong style='color:red'> DELEGATION REQUEST </strong> for user <strong>" + this.doa.delegatingParty + " <strong style='color:red'>!</strong>");

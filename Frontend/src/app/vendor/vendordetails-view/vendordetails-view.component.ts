@@ -15,7 +15,7 @@ import { Vendor_Payment_Terms } from 'src/app/Shared/VendorDetailsPaymentTerms';
 import { Vendor_Tax } from 'src/app/Shared/VendorDetailsIncomeTaxNum';
 import { Vendor_Registration } from 'src/app/Shared/VendorDetailsRegistration';
 import { VendorDeleteComponent } from '../vendor-delete/vendor-delete.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { Due_Dillegence } from 'src/app/Shared/DueDillegence';
 import { POPI } from 'src/app/Shared/POPI';
@@ -26,6 +26,8 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -44,7 +46,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 export class VendordetailsViewComponent implements OnInit {
 
 
-  constructor(private VendorService: DataService, private route: ActivatedRoute,private router: Router, private dialog: MatDialog) { }
+  constructor(private VendorService: DataService, private route: ActivatedRoute,private router: Router, private dialog: MatDialog,private sanitizer: DomSanitizer) { }
 
   
 
@@ -195,6 +197,8 @@ export class VendordetailsViewComponent implements OnInit {
   iCanEditVen: string = "false";
   canEditVen: string;
 
+  canAddBEE:string;
+
   DisplayBool= false;
 
   ngOnInit(): void {
@@ -208,6 +212,7 @@ export class VendordetailsViewComponent implements OnInit {
     if (role == "GRC") {
       this.canEditVen = "true";
       this.canDeleteVen = "true";
+      this.canAddBEE = "true";
     }
 
     if (this.iCanEditVen == "true") {
@@ -290,12 +295,12 @@ export class VendordetailsViewComponent implements OnInit {
   }
 
   getFileDetails(sPath:string,ID:number) {
-          let FolderCategory = sPath.substring(0,sPath.indexOf("\\"))
-          sPath = sPath.substring(sPath.indexOf("\\")+1,sPath.length)
-          let VendorNo = sPath.substring(0,sPath.indexOf("\\"))
-          let filename = sPath.substring(sPath.indexOf("\\")+1,sPath.length)
-          this.FileDetails[ID].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}` 
-          this.FileDetails[ID].FileName = filename
+    let Stringtouse = sPath.substring(sPath.indexOf("procionfiles/") + 13, sPath.length)
+    let FolderCategory = Stringtouse.substring(0, Stringtouse.indexOf("/"))
+    let VendorNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+    let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+    this.FileDetails[ID].FileURL = sPath
+    this.FileDetails[ID].FileName = filename
   }
 
   getFax(FaxID:number) {
@@ -401,15 +406,38 @@ export class VendordetailsViewComponent implements OnInit {
   }
 
   DeleteRequest(ID: Number) {
-    const confirm = this.dialog.open(VendorDeleteComponent, {
-      disableClose: true,
-      data: { ID }
-    });
-    this.dialog.afterAllClosed.subscribe({
-      next: (response) => {
-        this.ngOnInit();
+
+    this.VendorService.DeleteVendorValidation(ID).subscribe(result => {
+      console.log(result)
+      if(result.length == 0) {
+        const confirm = this.dialog.open(VendorDeleteComponent, {
+          disableClose: true,
+          data: { ID }
+        });
+        this.dialog.afterAllClosed.subscribe({
+          next: (response) => {
+            this.ngOnInit();
+          }
+        })
+      }
+      else {
+        var action = "ERROR";
+        var title = "VALIDATION ERROR";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("<strong>" + this.VendorDetail.vendor.name + "</strong> is <strong style='color:red'> ASSOCIATED </strong> with one or more procurement request!");
+
+        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 2200;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
       }
     })
+
+   
   }
 
   boxCheckedTrue:any
@@ -440,27 +468,32 @@ GenerateList() {
         info: {
         title:`Due Dilligence Checklist for ${this.DueDilligenceDetails.vendor.name}`,
         },
-        content: [
-          {table: {
+        header: {
+          table: {
             headerRows: 0,
-            widths: [ '*', 'auto' ],
+            widths: ['*', 'auto'],
             body: [
-              [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 150, height: 50,margin:[5,5,0,5]}, {} ],
+              [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
             ]
           },
-          layout: 'noBorders',margin:[0,0,0,10]},
+          layout: 'noBorders',
+
+        },
+        content: [
           { text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#002060', margin: [0, 0, 0, 15] },
           {
             text: 'Created By: ' + user,
             fontSize: 12,
             alignment: 'center',
             bold:true,
+            decoration: 'underline',
           },
           {
             text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
             fontSize: 12,
             alignment: 'center',
             bold:true,
+            decoration: 'underline',
           },
           {
             canvas: [
@@ -784,7 +817,7 @@ GenerateList() {
           },
           
         },
-        margin:[0,0,0,15],
+        pageBreak: 'after',
         },
         { table: {headerRows: 0,
           widths: ['*','auto'],
@@ -831,7 +864,8 @@ GenerateList() {
         },
         margin:[0,0,0,15],
         },
-      ]
+        ],
+        pageMargins: [40, 80, 40, 60],
         
         
       };
@@ -845,27 +879,32 @@ GenerateList() {
       info: {
         title:`Due Dilligence Checklist for ${this.DueDilligenceDetails.vendor.name}`,
         },
-      content: [
-        {table: {
-          headerRows: 0,
-          widths: [ '*', 'auto' ],
-          body: [
-            [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 150, height: 50,margin:[5,5,0,5]}, {} ],
-          ]
+        header: {
+          table: {
+            headerRows: 0,
+            widths: ['*', 'auto'],
+            body: [
+              [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
+            ]
+          },
+          layout: 'noBorders',
+
         },
-        layout: 'noBorders',margin:[0,0,0,10]},
+      content: [
         { text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#002060', margin: [0, 0, 0, 15] },
         {
           text: 'Created By: ' + user,
           fontSize: 12,
           alignment: 'center',
           bold:true,
+          decoration: 'underline',
         },
         {
           text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
           fontSize: 12,
           alignment: 'center',
           bold:true,
+          decoration: 'underline',
         },
         {
           canvas: [
@@ -1191,7 +1230,8 @@ GenerateList() {
       },
       margin:[0,0,0,15],
       },
-    ]
+      ],
+      pageMargins: [40, 80, 40, 60],
       
       
     };

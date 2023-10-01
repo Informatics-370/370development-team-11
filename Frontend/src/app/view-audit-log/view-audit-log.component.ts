@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuditLog } from '../Shared/AuditLog';
 import { DataService } from '../DataService/data-service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 import { BackupComponent } from '../Settings/backup/backup.component';
@@ -10,6 +10,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { AuditLogIFrameComponent } from '../HelpIFrames/AuditLogIFrame/audit-log-iframe/audit-log-iframe.component';
+import { TimerComponent } from '../Settings/timer/timer.component';
+import { CreateVatComponent } from '../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../Settings/edit-vat/edit-vat.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -52,8 +57,9 @@ export class ViewAuditLogComponent implements OnInit {
 
   Logs: AuditLog[] = [];
   displayedColumns: string[] = ['Time', 'User', 'Action'];
-  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router) { }
-  searchWord: string = "None";
+  constructor(private dataService: DataService, private Dialog: MatDialog, private router: Router, private sanitizer: DomSanitizer) { }
+  FilterWord: string = "None";
+  Searchterm: string = "";
 
   GetLogs() {
     this.dataService.GetLogs().subscribe(result => {
@@ -82,10 +88,30 @@ export class ViewAuditLogComponent implements OnInit {
 
     });
   }
+  SearchLog() {
+    const Searchterm = this.Searchterm.toLocaleLowerCase();
+
+    if (Searchterm) {
+      this.RefreshLogs()
+      this.dataSource = new MatTableDataSource(this.Logs.filter(log => log.action.toLocaleLowerCase().includes(Searchterm) || log.user.toLocaleLowerCase().includes(Searchterm) || log.actionTime.toString().toLocaleLowerCase().includes(Searchterm)));
+      this.Logs.splice(0, this.Logs.length)
+      this.Logs = this.dataSource
+    }
+
+    else if (Searchterm == "") {
+      this.GetLogs();
+    }
+
+
+    this.dataSource.paginator = this.paginator;
+  }
+
   OnInPutChange() {
-    const Searchterm = this.searchWord; // Use this.selectedFilter instead of this.searchWord
+    const Searchterm = this.FilterWord; // Use this.selectedFilter instead of this.searchWord
+    const Searched = this.Searchterm;
 
     if (Searchterm === "User") {
+      this.Searchterm = "";
       this.RefreshLogs()
       this.dataSource = this.Logs.sort((a, b) => {
         if (a.user < b.user) {
@@ -100,6 +126,7 @@ export class ViewAuditLogComponent implements OnInit {
       this.dataSource.paginator = this.paginator
     }
     else if (Searchterm === "Action") {
+      this.Searchterm = "";
       this.RefreshLogs()
       this.dataSource = this.Logs.sort((a, b) => {
         if (a.action < b.action) {
@@ -114,6 +141,7 @@ export class ViewAuditLogComponent implements OnInit {
       this.dataSource.paginator = this.paginator
     }
     else if (Searchterm === "None") {
+      this.Searchterm = "";
       this.GetLogs()
     }
   }
@@ -133,6 +161,43 @@ export class ViewAuditLogComponent implements OnInit {
     });
   }
 
+  openTimerDialog() {
+    const dialogRef = this.Dialog.open(TimerComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+  openCreateVATDialog() {
+    const dialogRef = this.Dialog.open(CreateVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    this.dataService.GetVAT().subscribe(re => {
+      if (re == null) {
+        var action = "ERROR";
+        var title = "ERROR: VAT does not Exists";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No VAT <strong style='color:red'>EXISTS ON THE SYSTEM!</strong><br> Please add one before and try again.");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.Dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 4000;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
+      } else {
+        const dialogRef = this.Dialog.open(EditVatComponent);
+
+        dialogRef.afterClosed().subscribe(result => {
+        });
+      }
+    })
+  }
 
   openViewAuditLogIFrameTab(): void {
     const dialogRef = this.Dialog.open(AuditLogIFrameComponent, {

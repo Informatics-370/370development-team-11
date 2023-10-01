@@ -70,6 +70,10 @@ export class EditBranchComponent implements OnInit{
   onSubmit() {
     document.getElementById('AnimationBtn').setAttribute('disabled', '');
     var name = this.myForm.get('name')?.value;
+    var street = this.myForm.get('street')?.value;
+    var city = this.myForm.get('city')?.value;
+    var postal = this.myForm.get('postal_Code')?.value;
+    var province = this.myForm.get('province')?.value;
 
     this.dataService.EditBranchValidation(name, this.Branch.branch_ID).subscribe({
       next: (Result) => {
@@ -107,7 +111,7 @@ export class EditBranchComponent implements OnInit{
             }
           })
         }
-        else if (Result.name == name && Result.branch_ID == this.Branch.branch_ID) {
+        else if (Result.name == name && Result.branch_ID == this.Branch.branch_ID && Result.street == street && Result.city == city && Result.postal_Code == postal && Result.province == province) {
           var action = "NOTIFICATION";
           var title = "NOTIFICATION: NO CHANGES MADE";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to Branch: <strong>" + name + "</strong>");
@@ -123,7 +127,160 @@ export class EditBranchComponent implements OnInit{
             dialogRef.close();
           }, duration);
         }
+        else if (Result.name == name && Result.branch_ID == this.Branch.branch_ID && Result.street != street && Result.city == city && Result.postal_Code == postal && Result.province == province) {
+          this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe({
+            next: (response) => {
+              document.getElementById('AnimationBtn').classList.toggle("is_active");
+              document.getElementById('cBtn').style.display = "none";
+
+              this.log.action = "Edited Branch: " + this.Branch.name;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  var action = "Update";
+                  var title = "UPDATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
+
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewBranch']);
+                    dialogRef.close();
+                  }, duration);
+                }
+              })
+
+
+            }
+          })
+        }
+        else if (Result.name == name && Result.branch_ID == this.Branch.branch_ID && Result.street == street && Result.city != city && Result.postal_Code == postal && Result.province == province) {
+          this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe({
+            next: (response) => {
+              document.getElementById('AnimationBtn').classList.toggle("is_active");
+              document.getElementById('cBtn').style.display = "none";
+
+              this.log.action = "Edited Branch: " + this.Branch.name;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  var action = "Update";
+                  var title = "UPDATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
+
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewBranch']);
+                    dialogRef.close();
+                  }, duration);
+                }
+              })
+
+
+            }
+          })
+        }
+        else if (Result.name == name && Result.branch_ID == this.Branch.branch_ID && Result.street == street && Result.city == city && Result.postal_Code != postal && Result.province == province) {
+          this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe({
+            next: (response) => {
+              document.getElementById('AnimationBtn').classList.toggle("is_active");
+              document.getElementById('cBtn').style.display = "none";
+
+              this.log.action = "Edited Branch: " + this.Branch.name;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  var action = "Update";
+                  var title = "UPDATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
+
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewBranch']);
+                    dialogRef.close();
+                  }, duration);
+                }
+              })
+
+
+            }
+          })
+        }
+        else if (Result.name == name && Result.branch_ID == this.Branch.branch_ID && Result.street == street && Result.city == city && Result.postal_Code == postal && Result.province != province) {
+          this.dataService.EditBranch(this.Branch.branch_ID, this.myForm.value).subscribe({
+            next: (response) => {
+              document.getElementById('AnimationBtn').classList.toggle("is_active");
+              document.getElementById('cBtn').style.display = "none";
+
+              this.log.action = "Edited Branch: " + this.Branch.name;
+              this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+              let test: any
+              test = new DatePipe('en-ZA');
+              this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+              this.dataService.AuditLogAdd(this.log).subscribe({
+                next: (Log) => {
+                  var action = "Update";
+                  var title = "UPDATE SUCCESSFUL";
+                  var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                  const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                    disableClose: true,
+                    data: { action, title, message }
+                  });
+
+                  const duration = 1750;
+                  setTimeout(() => {
+                    this.router.navigate(['/ViewBranch']);
+                    dialogRef.close();
+                  }, duration);
+                }
+              })
+
+
+            }
+          })
+        }
+        else if (Result.name == name && Result.branch_ID != this.Branch.branch_ID && Result.street == street && Result.city == city && Result.postal_Code == postal && Result.province == province) {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
+          var action = "ERROR";
+          var title = "ERROR: Branch Exists";
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+            disableClose: true,
+            data: { action, title, message }
+          });
+
+          const duration = 1750;
+          setTimeout(() => {
+            dialogRef.close();
+          }, duration);
+        }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Branch Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

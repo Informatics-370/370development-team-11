@@ -16,8 +16,9 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         Task<Procurement_Asset[]> AddProcurementAssetAsync(Procurement_Asset AddProcurementAsset);
         Task<Vendor_Asset[]> AddVendorAssetAsync(Vendor_Asset AddVendorAsset);
         Task<Procurement_Request> UpdateProcurementRequestStatusAsync(int requisition_Status_ID, Procurement_Request ProcurementRequestDetails);
-        Task<Procurement_Details[]> GetProcurementRequestDetailsAsync();
+        Task<List<Procurement_Details>> GetProcurementRequestDetailsAsync();
         Task<Procurement_Details[]> GetProcurementRequestDetailsFDAsync();
+        Task<Procurement_Details[]> GetProcurementRequestDetailsBOAsync();
         Task<Procurement_Details[]> GetProcurementRequestDetailsMDAsync();
         Task<Procurement_Details> GetProcurementDetailsByIDAsync(int ProcurementDetailsID);
         Task<Deposit> GetDepositByIDAsync(int ProcurementRequestID);
@@ -45,6 +46,10 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         Task<Procurement_Invoice[]> AddInvoiceAsync(Procurement_Invoice AddINV);
         Task<Budget_Line> UpdateBudgetLineAmountAsync(Budget_Line budget_Line, decimal ActualAmount);
         Task<Procurement_Status[]> GetAssetStatusesAsync();
+        Task<Procurement_Consumable> GetProcurementConsumablebyIDAsync(int DetailsID);
+        Task<Proof_Of_Payment> GetProofofPaymentsAsync(int DetailsID);
+        Task<Procurement_Invoice[]> GetInvoicesAsync(int DetailsID);
+        Task<Procurement_Asset> GetProcurementAssetbyIDAsync(int DetailsID);
 
 
 

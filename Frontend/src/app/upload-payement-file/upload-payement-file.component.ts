@@ -104,6 +104,10 @@ export class UploadPayementFileComponent {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -156,6 +160,10 @@ export class UploadPayementFileComponent {
       password: "",
       profile_Picture: "",
       no_Notifications: 0,
+      no_VenNotifications: 0,
+      no_InvNotifications: 0,
+      no_DelNotifications: 0,
+      no_ProNotifications: 0,
       role: {
         role_ID: 0,
         name: "",
@@ -374,13 +382,14 @@ export class UploadPayementFileComponent {
     this.fileToUpload = this.files[0];
     var name = "" + this.data.name
     if (this.fileToUpload != null) {
-      let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString();
 
       let file: File = this.fileToUpload
+      let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString() + "/" + file.name;
+
 
       this.dataservice.POPFileAdd(ProofName, file).subscribe(response => {
-        let Path: any = response
-        this.sPath = Path.pathSaved.toString()
+        URL: URL = response.url
+        this.sPath = URL.toString()
         this.pop.proof_Of_Payment_Doc = this.sPath;
         this.pop.procurement_Details_ID = this.data.ID
         this.pop.procurement_Details.procurement_Request.user = this.usr;
@@ -391,6 +400,7 @@ export class UploadPayementFileComponent {
         this.pop.procurement_Details.budget_Line.budget_Category.account_Code = this.ProcurementDetails.budget_Line.budget_Category.account_Code
         this.pop.procurement_Details.procurement_Request.name = this.ProcurementDetails.procurement_Request.name
         this.pop.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
+        this.pop.procurement_Details.payment_Made = true;
 
 
 
@@ -442,13 +452,12 @@ export class UploadPayementFileComponent {
   onSubmitB() {
     this.fileToUpload = this.files[0];
     if (this.fileToUpload != null) {
-      let ProofName: string = "Receipt/" + this.ProcurementDetails.procurement_Request.name.toString();
 
       let file: File = this.fileToUpload
-
+      let ProofName: string = "Receipts/" + this.ProcurementDetails.procurement_Request.name.toString() + "/" + file.name;
       this.dataservice.POPFileAdd(ProofName, file).subscribe(response => {
-        let Path: any = response
-        this.sPath = Path.pathSaved.toString()
+        URL: URL = response.url
+        this.sPath = URL.toString()
         this.PaymentMade.receipt_Upload = this.sPath;
         this.PaymentMade.procurement_Details_ID = this.data.ID
         this.PaymentMade.procurement_Details.procurement_Request.user = this.ProcurementDetails.employee.user;
@@ -459,6 +468,7 @@ export class UploadPayementFileComponent {
         this.PaymentMade.procurement_Details.budget_Line.budget_Category.account_Code = this.ProcurementDetails.budget_Line.budget_Category.account_Code
         this.PaymentMade.procurement_Details.procurement_Request.name = this.ProcurementDetails.procurement_Request.name
         this.PaymentMade.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
+        this.pop.procurement_Details.payment_Made = true;
 
 
 

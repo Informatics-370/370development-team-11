@@ -76,6 +76,10 @@ export class VendorApproveComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -141,8 +145,13 @@ export class VendorApproveComponent implements OnInit {
   DueDilligenceDetails: Due_Dillegence;
   POPIDetails: POPI;
   BEEbool = false;
-
+  GRCUserID:Number;
   ngOnInit() {
+    this.dataService.GetUserByRole("GRC").subscribe(x=> {
+      this.GRCUserID = x.user_Id
+    })
+
+
     this.convertLogoToBase64()
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
     this.dataService.GetUserByUsername(User).subscribe(response => {
@@ -224,9 +233,10 @@ export class VendorApproveComponent implements OnInit {
               this.rows.controls[i].get('PrefferedVendor')?.setValue(this.onboardRequest[i].vendor.preferedVendor);
               this.rows.controls[i].get('PrefferedVendor')?.disable()
               let sFile = this.onboardRequest[i].quotes;
-              let RequestNo = sFile.substring(0, sFile.indexOf("\\"))
-              let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-              this.FileDetails[i].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
+              let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+              let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+              let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+              this.FileDetails[i].FileURL = sFile
               this.FileDetails[i].FileName = filename;
               this.files.push(this.fileToUpload);
               this.dataService.GetOnboardFiles(RequestNo, filename).subscribe(result => {
@@ -253,9 +263,10 @@ export class VendorApproveComponent implements OnInit {
             })
             if (this.onboardRequest[0].quotes != "None") {
               let sFile = this.onboardRequest[0].quotes;
-              let RequestNo = sFile.substring(0, sFile.indexOf("\\"))
-              let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-              this.FileDetails[0].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
+              let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+              let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+              let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+              this.FileDetails[0].FileURL = sFile
               this.FileDetails[0].FileName = filename;
               this.files.push(this.fileToUpload);
               this.dataService.GetOnboardFiles(RequestNo, filename).subscribe(result => {
@@ -274,6 +285,14 @@ export class VendorApproveComponent implements OnInit {
         })
       }
     });
+
+    this.SoleSupplierFormGroup.get('CompanyName').disable();
+    this.SoleSupplierFormGroup.get('CompanyEmail').disable();
+    this.SoleSupplierFormGroup.get('Reason').disable();
+    
+    this.ViewFormGroup.get('CompanyName').disable();
+    this.ViewFormGroup.get('CompanyEmail').disable();
+    this.ViewFormGroup.get('Reason').disable();
   }//ngOnInit
 
   setActiveTab() {
@@ -295,14 +314,16 @@ export class VendorApproveComponent implements OnInit {
 
   openPDFInNewTab(i: number): void {
     const url = this.FileDetails[i].FileURL;
-    this.http.get(url, { responseType: 'blob' }).subscribe(response => {
-      const fileURL = URL.createObjectURL(response);
-      window.open(fileURL, '_blank');
-    });
-    // window.open(url, '_blank');
+
+
+    window.open(url, '_blank');
+    URL.revokeObjectURL(url);
   }
 
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
 
+  }
 
 
   QuoteChecked = false;
@@ -423,10 +444,10 @@ export class VendorApproveComponent implements OnInit {
 
           this.dataService.DeleteBEEDetails(response.beE_ID).subscribe()
           let sFile = response.beE_Certificate;
-          let FolderCategory = sFile.substring(0, sFile.indexOf("\\"))
-          sFile = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-          let VendorNo = sFile.substring(0, sFile.indexOf("\\"))
-          let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+          let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+          let FolderCategory = Stringtouse.substring(0, Stringtouse.indexOf("/"))
+          let VendorNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+          let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
           this.dataService.DeleteVendorFile(FolderCategory, VendorNo, filename).subscribe()
 
         })
@@ -481,9 +502,10 @@ export class VendorApproveComponent implements OnInit {
         }
         if (this.onboardRequestSelectedData.quotes != "None") {
           let sFile = this.onboardRequestSelectedData.quotes;
-          let RequestNo = sFile.substring(0, sFile.indexOf("\\"))
-          let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-          this.FileDetails[0].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
+          let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+          let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+          let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+          this.FileDetails[0].FileURL = sFile
           this.FileDetails[0].FileName = filename;
           this.files.push(this.fileToUpload);
           this.dataService.GetOnboardFiles(RequestNo, filename).subscribe(result => {
@@ -524,27 +546,32 @@ export class VendorApproveComponent implements OnInit {
             info: {
               title: `Due Dilligence Checklist for ${this.DueDilligenceDetails.vendor.name}`,
             },
-            content: [
-              {table: {
+            header: {
+              table: {
                 headerRows: 0,
-                widths: [ '*', 'auto' ],
+                widths: ['*', 'auto'],
                 body: [
-                  [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 150, height: 50,margin:[5,5,0,5]}, {} ],
+                  [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
                 ]
               },
-              layout: 'noBorders',margin:[0,0,0,10]},
+              layout: 'noBorders',
+  
+            },
+            content: [
               { text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#002060', margin: [0, 0, 0, 15] },
               {
                 text: 'Created By: ' + this.usr.username,
                 fontSize: 12,
                 alignment: 'center',
                 bold:true,
+                decoration: 'underline',
               },
               {
                 text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
                 fontSize: 12,
                 alignment: 'center',
                 bold:true,
+                decoration: 'underline',
               },
               {
                 canvas: [
@@ -884,7 +911,7 @@ export class VendorApproveComponent implements OnInit {
                 },
 
               },
-              margin: [0, 0, 0, 15],
+             pageBreak: 'after',
             },
             {
               table: {
@@ -933,7 +960,8 @@ export class VendorApproveComponent implements OnInit {
               },
               margin: [0, 0, 0, 15],
             },
-            ]
+            ],
+            pageMargins: [40, 80, 40, 60],
 
 
           };
@@ -946,27 +974,32 @@ export class VendorApproveComponent implements OnInit {
           info: {
             title: `Due Dilligence Checklist for ${this.DueDilligenceDetails.vendor.name}`,
           },
-          content: [
-            {table: {
+          header: {
+            table: {
               headerRows: 0,
-              widths: [ '*', 'auto' ],
+              widths: ['*', 'auto'],
               body: [
-                [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 150, height: 50,margin:[5,5,0,5]}, {} ],
+                [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
               ]
             },
-            layout: 'noBorders',margin:[0,0,0,10]},
+            layout: 'noBorders',
+
+          },
+          content: [
             { text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#002060', margin: [0, 0, 0, 15] },
             {
               text: 'Created By: ' + this.usr.username,
               fontSize: 12,
               alignment: 'center',
               bold:true,
+              decoration: 'underline',
             },
             {
               text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
               fontSize: 12,
               alignment: 'center',
               bold:true,
+              decoration: 'underline',
             },
             {
               canvas: [
@@ -1309,7 +1342,8 @@ export class VendorApproveComponent implements OnInit {
             },
             margin: [0, 0, 0, 15],
           },
-          ]
+          ],
+          pageMargins: [40, 80, 40, 60],
 
 
         };
@@ -1380,7 +1414,7 @@ export class VendorApproveComponent implements OnInit {
     transVar = new DatePipe('en-ZA');
     this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
     this.VendorNotification.name = this.onboardRequest[0].vendor.name + " requires due diligence details"
-    this.VendorNotification.user_ID = 1;
+    this.VendorNotification.user_ID = this.GRCUserID;
     this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
     var action = "APPROVED";
     var title = "APPROVE SUCCESSFUL";

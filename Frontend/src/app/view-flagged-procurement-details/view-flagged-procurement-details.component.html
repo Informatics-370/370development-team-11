@@ -17,7 +17,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <input matInput readonly formControlName="BuyerName" >
+                    <input matInput readonly formControlName="BuyerName" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                   </mat-form-field>
             </div>
         </div>
@@ -27,7 +27,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <input matInput readonly formControlName="BuyerEmail">
+                    <input matInput readonly formControlName="BuyerEmail" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                    </mat-form-field>
             </div>
         </div>
@@ -37,7 +37,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                        <input matInput readonly formControlName="ItemType">
+                        <input matInput readonly formControlName="ItemType" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                 </mat-form-field>
             </div>
         </div>
@@ -49,7 +49,7 @@
               </div>
               <div class="col-7">
                   <mat-form-field appearance="fill">
-                    <input matInput readonly formControlName="ConsumableItem">
+                    <input matInput readonly formControlName="ConsumableItem" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                   </mat-form-field>
               </div>
           </div>
@@ -59,7 +59,7 @@
               </div>
               <div class="col-7">
                 <mat-form-field appearance="outline">
-                  <input matInput type="number" readonly formControlName="ConsumableQuantity">
+                  <input matInput type="number" readonly formControlName="ConsumableQuantity" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                 </mat-form-field> 
               </div>
             </div>
@@ -73,7 +73,7 @@
               </div>
               <div class="col-7">
                   <mat-form-field appearance="fill">
-                    <input matInput readonly formControlName="AssetName">
+                    <input matInput readonly formControlName="AssetName" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                   </mat-form-field>
               </div>
           </div>
@@ -83,7 +83,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill" >
-                    <textarea matInput readonly formControlName="AssetDescription"></textarea>
+                    <textarea matInput readonly formControlName="AssetDescription" [disabled]="" (focus)="onFocus($event)" style="cursor: default"></textarea>
                   </mat-form-field>
             </div>
           </div>    
@@ -95,7 +95,7 @@
           </div>
           <div class="col-7">
             <mat-form-field appearance="fill">
-                <input matInput readonly formControlName="AccountCode">
+                <input matInput readonly formControlName="AccountCode" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
             </mat-form-field>
           </div>
       </div>
@@ -105,7 +105,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                        <input matInput readonly formControlName="PaymentType">
+                        <input matInput readonly formControlName="PaymentType" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                 </mat-form-field>
             </div>
         </div>
@@ -125,7 +125,7 @@
                 </div>
                 <div class="col-7">
                   <mat-form-field appearance="outline">
-                    <input matInput readonly formControlName="DepositAmount" value="{{this.ProcurementFormGroup.get('DepositAmount')?.value | currency:'R'}}">
+                    <input matInput readonly formControlName="DepositAmount" value="{{this.ProcurementFormGroup.get('DepositAmount')?.value | currency:'R'}}" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                   </mat-form-field> 
                 </div>
               </div>
@@ -135,7 +135,8 @@
                 </div>
                 <div class="col-7">
                   <mat-form-field appearance="outline">
-                    <input matInput readonly formControlName="DepositDueDate" >
+                    <!-- <input matInput readonly formControlName="DepositDueDate" [disabled]="" (focus)="onFocus($event)" style="cursor: default"> -->
+                    <input matInput readonly formControlName="DepositDueDate">
                   </mat-form-field> 
                 </div>
               </div>
@@ -156,7 +157,7 @@
             </div>
             <div class="col-7">
               <mat-form-field appearance="outline">
-                <input matInput readonly formControlName="PaidOnDate">
+                <input matInput readonly formControlName="PaidOnDate" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
               </mat-form-field> 
             </div>
           </div>
@@ -213,7 +214,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <input matInput readonly formControlName="TotalAmount" value="{{this.ProcurementFormGroup.get('TotalAmount')?.value | currency:'R'}}">
+                    <input matInput readonly formControlName="TotalAmount" value="{{this.ProcurementFormGroup.get('TotalAmount')?.value | currency:'R'}}" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                   </mat-form-field>
             </div>
         </div>
@@ -223,7 +224,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="outline">
-                    <input matInput readonly formControlName="TotalAmountDueDate">
+                    <input matInput readonly formControlName="TotalAmountDueDate" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
                 </mat-form-field> 
             </div>
         </div>
@@ -233,7 +234,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill" >
-                    <textarea matInput readonly formControlName="Comments"></textarea>
+                    <textarea matInput readonly formControlName="Comments" [disabled]="" (focus)="onFocus($event)" style="cursor: default"></textarea>
                   </mat-form-field>
             </div>
         </div>

@@ -1,0 +1,83 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>EditProcurementRequest</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- For Approved Vendor Type -->
+  <div *ngIf="VendorType == 'Approved'; else OtherType">
+    <form (ngSubmit)="EditProcurementRequestA()">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Edit Procurement Request (Approved Vendor)</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+
+          <ion-item>
+            <ion-label position="stacked">Request Name</ion-label>
+            <ion-input type="text" [(ngModel)]="Procurement_Request.name"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Vendor</ion-label>
+            <ion-input type="text" [(ngModel)]="Procurement_Request.vendor.name" readonly [disabled]=""></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Request Description</ion-label>
+            <ion-textarea [(ngModel)]="Procurement_Request.description"></ion-textarea>
+          </ion-item>
+
+        </ion-card-content>
+
+        <ion-button type="submit">Save</ion-button>
+        <ion-button (click)="OnCancel()">Cancel</ion-button>
+
+      </ion-card>
+    </form>
+  </div>
+
+  <!-- For Other Vendor Type -->
+  <ng-template #OtherType>
+    <form (ngSubmit)="EditProcurementRequestB()">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Edit Procurement Request</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+
+          <ion-item>
+            <ion-label position="stacked">Request Name</ion-label>
+            <ion-input type="text" [(ngModel)]="Procurement_Request.name" name="RequestName"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Vendor Name</ion-label>
+            <ion-input type="text" [(ngModel)]="Procurement_Request.vendor.name" name="vendorName" readonly
+              [disabled]=""></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Vendor Email</ion-label>
+            <ion-input type="email" [(ngModel)]="Procurement_Request.vendor.email" name="vendorEmail" readonly
+              [disabled]=""></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Request Description</ion-label>
+            <ion-textarea [(ngModel)]="Procurement_Request.description" name="requestDescription"></ion-textarea>
+          </ion-item>
+
+        </ion-card-content>
+
+        <ion-button expand="block" type="submit">Save</ion-button>
+        <ion-button expand="block" (click)="OnCancel()">Cancel</ion-button>
+
+      </ion-card>
+    </form>
+  </ng-template>
+
+</ion-content>

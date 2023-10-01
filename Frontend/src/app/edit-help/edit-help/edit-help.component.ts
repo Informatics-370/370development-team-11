@@ -121,7 +121,7 @@ export class EditHelpComponent implements OnInit{
     this.fileToUpload = event.target.files[0];
 
     if (this.fileToUpload != null) {
-          this.ManualFiles[0] = this.fileToUpload;
+      this.ManualFiles[0] = this.fileToUpload;
     }
   }
 
@@ -129,7 +129,7 @@ export class EditHelpComponent implements OnInit{
     this.fileToUpload = event.target.files[0];
 
     if (this.fileToUpload != null) {
-          this.Videofiles[0] = this.fileToUpload;
+      this.Videofiles[0] = this.fileToUpload;
     }
   }
 
@@ -154,7 +154,8 @@ export class EditHelpComponent implements OnInit{
      
       this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
         next: (result) => {
-          if (result != null){
+          console.log(result)
+          if (result == null){
 
          
             this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
@@ -192,7 +193,8 @@ export class EditHelpComponent implements OnInit{
               }
             })
           } else{
-              hideloader();
+            hideloader();
+            document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "ERROR";
               var title = "ERROR: Help Exists";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -220,8 +222,9 @@ export class EditHelpComponent implements OnInit{
 
       if(this.fileToUpload != null){
         let sFile = this.HelpToEdit.video;
-        let HelpName = sFile.substring(0, sFile.indexOf("\\"))
-        let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length) 
+        let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+        let HelpName = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+        let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length) 
         this.dataService.DeleteHelpFile(HelpName,filename).subscribe( r =>{
           let HelpName: string = name
           let file: File = this.fileToUpload
@@ -229,12 +232,12 @@ export class EditHelpComponent implements OnInit{
       
         this.dataService.HelpFileAdd(HelpName,file).subscribe(response =>{
           let Path: any = response
-          this.sPath=Path.pathSaved.toString()
+          this.sPath=Path.url.toString()
           this.HelpToEdit.video = this.sPath;
 
           this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
             next: (result) => {
-              if (result != null){
+              if (result == null){
 
               
                 this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
@@ -268,7 +271,8 @@ export class EditHelpComponent implements OnInit{
                    })
 
             }else{
-              hideloader();
+                hideloader();
+                document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "ERROR";
               var title = "ERROR: Help Exists";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -300,8 +304,9 @@ export class EditHelpComponent implements OnInit{
 
       if(this.fileToUpload != null){
         let vFile = this.HelpToEdit.user_Manual;
-        let HelpName = vFile.substring(0, vFile.indexOf("\\"))
-        let filename = vFile.substring(vFile.indexOf("\\") + 1, vFile.length)
+        let Stringtouse = vFile.substring(vFile.indexOf("procionfiles/") + 13, vFile.length)
+        let HelpName = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+        let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
        this.dataService.DeleteHelpFile(HelpName, filename).subscribe( r =>{
          let HelpName: string = name
          let file: File = this.fileToUpload
@@ -311,12 +316,12 @@ export class EditHelpComponent implements OnInit{
 
         this.dataService.HelpFileAdd(HelpName,file).subscribe(response =>{
             let Path: any = response
-            this.sPath=Path.pathSaved.toString()
+            this.sPath=Path.url.toString()
             this.HelpToEdit.user_Manual = this.sPath;
 
         this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
           next: (result) =>{
-            if (result != null){
+            if (result == null){
 
            
 
@@ -352,6 +357,7 @@ export class EditHelpComponent implements OnInit{
 
             }else{
               hideloader();
+              document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "ERROR";
               var title = "ERROR: Help Exists";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -386,37 +392,39 @@ export class EditHelpComponent implements OnInit{
         
        if(this.fileToUpload != null){
          let sFile = this.HelpToEdit.user_Manual;
-         let HelpName = sFile.substring(0, sFile.indexOf("\\"))
-         let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+         let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+         let HelpName = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+         let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
         this.dataService.DeleteHelpFile(HelpName,filename).subscribe( r =>{
           let HelpName: string = name
           let file: File = this.fileToUpload
 
         this.dataService.HelpFileAdd(HelpName,file).subscribe(response =>{
             let Path: any = response
-            this.sPath=Path.pathSaved.toString()
+            this.sPath=Path.url.toString()
             this.HelpToEdit.user_Manual = this.sPath;
 
 
             this.fileToUpload = this.Videofiles[0];    
        if(this.fileToUpload != null){
          let vFile = this.HelpToEdit.video;
-         let vHelpName = vFile.substring(0, vFile.indexOf("\\"))
-         let vfilename = vFile.substring(vFile.indexOf("\\") + 1, vFile.length)
+         let vStringtouse = vFile.substring(vFile.indexOf("procionfiles/") + 13, vFile.length)
+         let vHelpName = vStringtouse.substring(vStringtouse.indexOf("/") + 1, vStringtouse.lastIndexOf("/"))
+         let vfilename = vStringtouse.substring(vStringtouse.lastIndexOf("/") + 1, vStringtouse.length)
         this.dataService.DeleteHelpFile(vHelpName, vfilename).subscribe( r =>{
           let vHelpName: string = name
           let file: File = this.fileToUpload
 
         this.dataService.HelpFileAdd(vHelpName,file).subscribe(response =>{
             let Path: any = response
-            this.sPath=Path.pathSaved.toString()
+            this.sPath=Path.url.toString()
             this.HelpToEdit.video = this.sPath;
 
 
 
               this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
                 next: (result) =>{
-                  if (result != null){
+                  if (result == null){
 
                  
               this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
@@ -456,7 +464,8 @@ export class EditHelpComponent implements OnInit{
               })
 
               } else{
-                hideloader();
+                    hideloader();
+                    document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "ERROR";
               var title = "ERROR: Help Exists";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

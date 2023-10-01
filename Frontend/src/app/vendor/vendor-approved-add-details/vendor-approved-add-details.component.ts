@@ -281,6 +281,10 @@ export class VendorApprovedAddDetailsComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -483,7 +487,7 @@ onInsuranceChecked() {
 
           this.VendorService.VendorFileAdd(FolderCategory, VendorNo, this.file[0]).subscribe(response => {
             let Path: any = response
-            this.VenBEEDetails.beE_Certificate = Path.returnedPath.toString();
+            this.VenBEEDetails.beE_Certificate = Path.url.toString();
             this.VendorService.AddBEEDetails(this.VenBEEDetails).subscribe(response => {
               this.VendorService.GenerateVendorBEEExpiryNotification(this.VenBEEDetails.vendor_ID, this.VenBEEDetails.date).subscribe();
             })
@@ -526,7 +530,7 @@ onInsuranceChecked() {
 
           this.VendorService.VendorFileAdd(FolderCategory, VendorNo, this.file[1]).subscribe(response => {
             let Path: any = response
-            this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+            this.VendorInsurance.confirmation_Doc = Path.url.toString();
             this.VendorInsurance.vendor_ID = Number(VendorID);
             this.VendorInsurance.vendor_Insurance_Type_ID = 1;
             this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
@@ -538,7 +542,7 @@ onInsuranceChecked() {
 
           this.VendorService.VendorFileAdd(FolderCategory, VendorNo, this.file[2]).subscribe(response => {
             let Path: any = response
-            this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+            this.VendorInsurance.confirmation_Doc = Path.url.toString();
             this.VendorInsurance.vendor_ID = Number(VendorID);
             this.VendorInsurance.vendor_Insurance_Type_ID = 2;
             this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
@@ -550,7 +554,7 @@ onInsuranceChecked() {
 
           this.VendorService.VendorFileAdd(FolderCategory, VendorNo, this.file[3]).subscribe(response => {
             let Path: any = response
-            this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+            this.VendorInsurance.confirmation_Doc = Path.url.toString();
             this.VendorInsurance.vendor_ID = Number(VendorID);
             this.VendorInsurance.vendor_Insurance_Type_ID = 3;
             this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
@@ -562,7 +566,7 @@ onInsuranceChecked() {
 
           this.VendorService.VendorFileAdd(FolderCategory, VendorNo, this.file[4]).subscribe(response => {
             let Path: any = response
-            this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+            this.VendorInsurance.confirmation_Doc = Path.url.toString();
             this.VendorInsurance.vendor_ID = Number(VendorID);
             this.VendorInsurance.vendor_Insurance_Type_ID = 4;
             this.VendorService.AddInsurance(this.VendorInsurance).subscribe()

@@ -22,6 +22,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { AuditLog } from '../../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 import { Access } from 'src/app/Shared/Access';
+import { MailData } from 'src/app/Shared/Mail';
 
 //const CHECK_ICON = `<svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
 
@@ -79,6 +80,10 @@ export class UserProfileEditComponent {
     password: '',
     profile_Picture: '',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -134,6 +139,13 @@ export class UserProfileEditComponent {
     user: "",
     action: "",
     actionTime: new Date(),
+  }
+
+  mail: MailData = {
+    Name: '',
+    Username: '',
+    Password: '',
+    Email: ''
   }
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer, private nav: MainNavComponent, iconRegistry: MatIconRegistry) {
@@ -267,6 +279,13 @@ export class UserProfileEditComponent {
 
     if (username != this.usr.username) {
       this.usernameChangeLogout = true;
+
+      this.mail.Email = this.adm.email;
+      this.mail.Name = this.adm.adminName;
+      this.mail.Username = username;
+      this.mail.Password = "";
+
+      this.dataService.SendNewUsernameMail(this.mail).subscribe();
     }
 
     this.usr.username = username;
@@ -312,7 +331,7 @@ export class UserProfileEditComponent {
                             dialogRef.close();
                           }
                         })
-                        
+
                       }, duration);
                     } else {
                       var action = "Update";
@@ -340,6 +359,7 @@ export class UserProfileEditComponent {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: User Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A user with the username: <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -377,6 +397,12 @@ export class UserProfileEditComponent {
 
     if (username != this.usr.username) {
       this.usernameChangeLogout = true;
+      this.mail.Email = this.emp.email;
+      this.mail.Name = this.emp.employeeName;
+      this.mail.Username = username;
+      this.mail.Password = "";
+
+      this.dataService.SendNewUsernameMail(this.mail).subscribe();
     }
 
     this.usr.username = username;
@@ -444,7 +470,7 @@ export class UserProfileEditComponent {
                       }, duration);
                     }
 
-                   
+
                   }
                 })
               }
@@ -452,6 +478,7 @@ export class UserProfileEditComponent {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: User Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A user with the username: <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");

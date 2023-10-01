@@ -87,6 +87,10 @@ export class RequestCreateComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -103,7 +107,11 @@ export class RequestCreateComponent implements OnInit {
     status_ID: 1,
     vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0, sole_Supplier_Provided: false, preferedVendor: false },
     onboard_Status: this.OnboardStatus,
-    users: { user_Id: 0, role_ID: 0, access_ID: 0, access: this.Access, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', no_Notifications: 0, role: this.rl },
+    users: {
+      user_Id: 0, role_ID: 0, access_ID: 0, access: this.Access, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', no_Notifications: 0, no_VenNotifications: 0,
+      no_InvNotifications: 0,
+      no_DelNotifications: 0,
+      no_ProNotifications: 0, role: this.rl },
     quotes: '',
   }
 
@@ -177,8 +185,17 @@ export class RequestCreateComponent implements OnInit {
     this.selectedIndex = index - 1;
 
   }
-
+  GRCUserID: Number;
+  MDUserID:Number;
   ngOnInit() {
+    this.dataService.GetUserByRole("GRC").subscribe(x=> {
+      this.GRCUserID = x.user_Id
+    })
+
+    this.dataService.GetUserByRole("MD").subscribe(x=> {
+      this.MDUserID = x.user_Id;
+    })
+    
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
     this.dataService.GetUserByUsername(User).subscribe(response => {
 
@@ -357,7 +374,7 @@ export class RequestCreateComponent implements OnInit {
 
           this.dataService.OnboardFileAdd(RequestNo, file).subscribe(response => {
             let Path: any = response
-            this.sPath = Path.pathSaved.toString()
+            this.sPath = Path.url.toString()
             this.Onboard_Request.quotes = this.sPath
             this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
             this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
@@ -376,7 +393,7 @@ export class RequestCreateComponent implements OnInit {
                   transVar = new DatePipe('en-ZA');
                   this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
                   this.VendorNotification.name = "Request #" + response[0].onboard_Request_Id + " has been created";
-                  this.VendorNotification.user_ID = 1;
+                  this.VendorNotification.user_ID = this.GRCUserID;
                   this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
 
                   this.log.action = "Created Onboard Request #" + this.Onboard_Request.onboard_Request_Id;
@@ -435,7 +452,7 @@ export class RequestCreateComponent implements OnInit {
         this.dataService.OnboardFileAdd(RequestNo, this.fileToUpload).subscribe(response => {
           let Path: any = response
 
-          this.sPath = Path.pathSaved.toString()
+          this.sPath = Path.url.toString()
           this.Onboard_Request.quotes = this.sPath
           this.Onboard_Request.user_Id = Number(this.usr.user_Id);
           this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe(response => {
@@ -448,7 +465,7 @@ export class RequestCreateComponent implements OnInit {
                 transVar = new DatePipe('en-ZA');
                 this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
                 this.VendorNotification.name = "Sole Supplier Addition Request for " + response[0].vendor.name;
-                this.VendorNotification.user_ID = 1;
+                this.VendorNotification.user_ID = this.MDUserID ;
                 this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
                 
                 this.log.action = "Created Onboard Request #" + this.Onboard_Request.onboard_Request_Id;
@@ -505,7 +522,7 @@ export class RequestCreateComponent implements OnInit {
               transVar = new DatePipe('en-ZA');
               this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
               this.VendorNotification.name = "Sole Supplier Addition Request for " + response[0].vendor.name;
-              this.VendorNotification.user_ID = 1;
+              this.VendorNotification.user_ID = this.MDUserID ;
               this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
 
               this.log.action = "Created Onboard Request #" + this.Onboard_Request.onboard_Request_Id;

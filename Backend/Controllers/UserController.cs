@@ -248,7 +248,7 @@ namespace ProcionAPI.Controllers
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, user.Role.Name),
                     new Claim("Department", dep),
-                    new Claim("TemAccessRole", TempAcc.Name),
+                    new Claim("TemAccess", TempAcc.Name),
                     new Claim("CanAccInv", TempAcc.CanAccInv),
                     new Claim("CanAccFin", TempAcc.CanAccFin),
                     new Claim("CanAccPro", TempAcc.CanAccPro),
@@ -716,6 +716,22 @@ namespace ProcionAPI.Controllers
         }
 
         [HttpGet]
+        [Route("CreateUserMDRoleValidation/{role}")]
+        public async Task<IActionResult> CreateUserMDRoleValidation([FromRoute] string role)
+        {
+            try
+            {
+                var result = await _UserRepository.CreateUserMDRoleValidationAsync(role);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
         [Route("EditUserValidation/{name}/{id}")]
         public async Task<IActionResult> EditUserValidation([FromRoute] string name, int id)
         {
@@ -916,5 +932,83 @@ namespace ProcionAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+
+        [HttpGet]
+        [Route("GetTimerDuration")]
+        public async Task<IActionResult> GetTimerDuration()
+        {
+            try
+            {
+                var result = await _UserRepository.GetTimerDurationAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateTimer/{ID}/{NewTime}")]
+        public async Task<ActionResult> UpdateTimer([FromRoute]int ID, [FromRoute] int NewTime)
+        {
+            try
+            {
+                var result = await _UserRepository.UpdateTimerAsync(ID, NewTime);
+                return Ok(result);
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetVAT")]
+        public async Task<IActionResult> GetVAT()
+        {
+            try
+            {
+                var result = await _UserRepository.GetVATAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPost]
+        [Route("AddVAT")]
+        public async Task<IActionResult> AddVAT([FromBody] VAT VATAdd)
+        {
+            try
+            {
+                var result = await _UserRepository.AddVATAsync(VATAdd);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpPut]
+        [Route("EditVAT")]
+        public async Task<ActionResult<VAT>> EditVAT(VAT VATEdit)
+        {
+            try
+            {
+                var result = await _UserRepository.EditVATAsync(VATEdit);
+                return Ok(result);
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal Server Error. Please contact support");
+            }
+        }
     }
 }
+

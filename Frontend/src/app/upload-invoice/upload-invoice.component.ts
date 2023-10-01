@@ -107,6 +107,10 @@ export class UploadInvoiceComponent {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -159,6 +163,10 @@ export class UploadInvoiceComponent {
       password: "",
       profile_Picture: "",
       no_Notifications: 0,
+      no_VenNotifications: 0,
+      no_InvNotifications: 0,
+      no_DelNotifications: 0,
+      no_ProNotifications: 0,
       role: {
         role_ID: 0,
         name: "",
@@ -394,13 +402,13 @@ export class UploadInvoiceComponent {
     this.fileToUpload = this.files[0];
     var name = "" + this.data.name
     if (this.fileToUpload != null) {
-      let InvoiceName: string = name
 
       let file: File = this.fileToUpload
+      let InvoiceName: string = "Request" + this.data.ID + "/" + file.name
 
       this.dataservice.InvoiceFileAdd(InvoiceName, file).subscribe(response => {
-        let Path: any = response
-        this.sPath = Path.pathSaved.toString()
+        URL: URL = response.url
+        this.sPath = URL.toString()
         this.Invoice.path = this.sPath;
         this.Invoice.procurement_Details_ID = this.data.ID;
         this.Invoice.procurement_Details.procurement_Request.user = this.usr;
