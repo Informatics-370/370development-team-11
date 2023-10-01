@@ -400,6 +400,7 @@ export class UploadPayementFileComponent {
         this.pop.procurement_Details.budget_Line.budget_Category.account_Code = this.ProcurementDetails.budget_Line.budget_Category.account_Code
         this.pop.procurement_Details.procurement_Request.name = this.ProcurementDetails.procurement_Request.name
         this.pop.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
+        this.pop.procurement_Details.payment_Made = true;
 
 
 
@@ -467,6 +468,7 @@ export class UploadPayementFileComponent {
         this.PaymentMade.procurement_Details.budget_Line.budget_Category.account_Code = this.ProcurementDetails.budget_Line.budget_Category.account_Code
         this.PaymentMade.procurement_Details.procurement_Request.name = this.ProcurementDetails.procurement_Request.name
         this.PaymentMade.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
+        this.pop.procurement_Details.payment_Made = true;
 
 
 
