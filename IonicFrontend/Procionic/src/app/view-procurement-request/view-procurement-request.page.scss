@@ -1,0 +1,35 @@
+/* Custom styles for visually pleasing display of procurement requests */
+
+ion-card {
+    margin: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+
+ion-card-header {
+    background-color: var(--ion-color-light-tint);
+}
+
+ion-card-title {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+ion-card-content p:first-child {
+    font-size: 1em;
+    margin-bottom: 12px;
+    padding-top: 16px;
+    /* Added padding above the description */
+}
+
+
+ion-card-content p {
+    font-size: 1em;
+    margin-bottom: 12px;
+}
+
+ion-card-actions {
+    justify-content: flex-end;
+}
