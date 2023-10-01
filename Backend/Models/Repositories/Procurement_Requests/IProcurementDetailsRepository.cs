@@ -18,6 +18,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         Task<Procurement_Request> UpdateProcurementRequestStatusAsync(int requisition_Status_ID, Procurement_Request ProcurementRequestDetails);
         Task<Procurement_Details[]> GetProcurementRequestDetailsAsync();
         Task<Procurement_Details[]> GetProcurementRequestDetailsFDAsync();
+        Task<Procurement_Details[]> GetProcurementRequestDetailsBOAsync();
         Task<Procurement_Details[]> GetProcurementRequestDetailsMDAsync();
         Task<Procurement_Details> GetProcurementDetailsByIDAsync(int ProcurementDetailsID);
         Task<Deposit> GetDepositByIDAsync(int ProcurementRequestID);

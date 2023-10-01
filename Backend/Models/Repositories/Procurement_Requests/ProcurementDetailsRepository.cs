@@ -382,6 +382,15 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             return await query.ToArrayAsync();
         }
 
+        public async Task<Procurement_Details[]> GetProcurementRequestDetailsBOAsync()
+        {
+            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit).Include(x => x.Employee).ThenInclude(x => x.User).Include(x => x.Employee).ThenInclude(x => x.Department).Include(x => x.Procurement_Request)
+                .ThenInclude(x => x.Vendor).Include(x => x.Sign_Off_Status).Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line)
+                .Where(x => x.Total_Amount <= 80000);
+
+            return await query.ToArrayAsync();
+        }
+
         public async Task<Procurement_Details[]> GetProcurementRequestDetailsMDAsync()
         {
             IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit).Include(x => x.Employee).ThenInclude(x => x.User).Include(x => x.Procurement_Request)

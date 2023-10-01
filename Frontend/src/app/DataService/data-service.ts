@@ -1502,6 +1502,10 @@ export class DataService {
     return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetailsFD`).pipe(map(result => result))
   }
 
+  GetProcurementRequestDetailsBO(): Observable<any> {
+    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetailsBO`).pipe(map(result => result))
+  }
+
   GetProcurementRequestDetailsMD(): Observable<any> {
     return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetailsMD`).pipe(map(result => result))
   }

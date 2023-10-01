@@ -129,7 +129,7 @@ export class CreateHelpComponent implements OnInit {
       let file: File = this.fileToUpload
       this.dataService.HelpFileAdd(HelpName, file).subscribe(response => {
         let Path: any = response
-        this.sPath = Path.pathSaved.toString()
+        this.sPath = Path.url.toString()
         this.Help.user_Manual = this.sPath;
 
 
@@ -139,7 +139,7 @@ export class CreateHelpComponent implements OnInit {
           let file: File = this.fileToUpload
           this.dataService.HelpFileAdd(HelpName, file).subscribe(response => {
             let Path: any = response
-            this.sPath = Path.pathSaved.toString()
+            this.sPath = Path.url.toString()
             this.Help.video = this.sPath;
 
 
