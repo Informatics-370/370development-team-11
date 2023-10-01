@@ -3,33 +3,107 @@ using Microsoft.AspNetCore.Mvc;
 using ProcionAPI.Data;
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Controllers;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace ProcionAPI.Models.Repositories
 {
     public class UserRepository : IUserRepository {
         private readonly AppDBContext _dbContext;
+        private readonly IConfiguration _configuration;
 
-        public UserRepository(AppDBContext dbContext)
+        public UserRepository(AppDBContext dbContext, IConfiguration configuration)
         {
             _dbContext = dbContext;
+            _configuration = configuration;
         }
         
         public UserRepository()
         {
         }
 
-        public async Task<Employee[]> GetAllEmployeesAsync()
+        public async Task<List<Employee>> GetAllEmployeesAsync()
         {
-            IQueryable<Employee> query = _dbContext.Employee.Include(c => c.Branch)
-                .Include(d => d.Department)
-                .Include(m => m.Mandate_Limit)
-                .Include(u => u.User)
-                .ThenInclude(a => a.Access)
-                .Include(u => u.User)
-                .ThenInclude(r => r.Role);
+            List<Employee> employees = new List<Employee>();
+            using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+                {
+                    using (SqlCommand command = new SqlCommand("GetAllEmployees", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                Employee employee = new Employee();
+                                employee.EmployeeID = Convert.ToInt32(reader["EmployeeID"]);
+                                employee.Branch_ID = Convert.ToInt32(reader["Branch_ID"]);
+                                employee.Department_ID = Convert.ToInt32(reader["Department_ID"]);
+                                employee.Mandate_ID = Convert.ToInt32(reader["Mandate_ID"]);
+                                employee.User_Id = Convert.ToInt32(reader["User_Id"]);
+                                employee.CellPhone_Num = reader["CellPhone_Num"].ToString();
+                                employee.Email = reader["Email"].ToString();
+                                employee.EmployeeName = reader["EmployeeName"].ToString();
+                                employee.EmployeeSurname = reader["EmployeeSurname"].ToString();
+                                employee.Branch = new Branch();
+                                employee.Branch.Branch_ID = Convert.ToInt32(reader["Branch_ID"]);
+                                employee.Branch.City = reader["City"].ToString();
+                                employee.Branch.Name = reader["Branch_Name"].ToString();
+                                employee.Branch.Postal_Code = reader["Postal_Code"].ToString();
+                                employee.Branch.Province = reader["Province"].ToString();
+                                employee.Branch.Street = reader["Street"].ToString();
+                                employee.Department = new Department();
+                                employee.Department.Department_ID = Convert.ToInt32(reader["Department_ID"]);
+                                employee.Department.Name = reader["Department_Name"].ToString();
+                                employee.Department.Description = reader["Department_Description"].ToString();
+                                employee.Mandate_Limit = new Mandate_Limit();
+                                employee.Mandate_Limit.Mandate_ID = Convert.ToInt32(reader["Mandate_ID"]);
+                                employee.Mandate_Limit.Ammount = Convert.ToDouble(reader["Ammount"]);
+                                employee.Mandate_Limit.Date = Convert.ToDateTime(reader["Date"]);
+                                employee.User = new User();
+                                employee.User.User_Id = Convert.ToInt32(reader["User_Id"]);
+                                employee.User.Access_ID = Convert.ToInt32(reader["Access_ID"]);
+                                employee.User.Role_ID = Convert.ToInt32(reader["Role_ID"]);
+                                employee.User.No_Notifications = Convert.ToInt32(reader["No_Notifications"]);
+                                employee.User.Username = reader["Username"].ToString();
+                                employee.User.Password = reader["Password"].ToString();
+                                employee.User.Profile_Picture = reader["Profile_Picture"].ToString();
+                                employee.User.Role = new Role();
+                                employee.User.Role.Role_ID = Convert.ToInt32(reader["Role_ID"]);
+                                employee.User.Role.Name = reader["Role_Name"].ToString();
+                                employee.User.Role.Description = reader["Role_Description"].ToString();
+                                employee.User.Access = new Access();
+                                employee.User.Access.Access_ID = Convert.ToInt32(reader["Access_ID"]);
+                                employee.User.Access.Access_ID = (int)reader["Access_ID"];
+                                employee.User.Access.IsAdmin = reader["IsAdmin"].ToString();
+                                employee.User.Access.CanAccInv = reader["CanAccInv"].ToString();
+                                employee.User.Access.CanAccPro = reader["CanAccPro"].ToString();
+                                employee.User.Access.CanAccRep = reader["CanAccRep"].ToString();
+                                employee.User.Access.CanAccVen = reader["CanAccVen"].ToString();
+                                employee.User.Access.CanAppVen = reader["CanAppVen"].ToString();
+                                employee.User.Access.CanAccFin = reader["CanAccFin"].ToString();
+                                employee.User.Access.CanDeleteVen = reader["CanDeleteVen"].ToString();
+                                employee.User.Access.CanEditVen = reader["CanEditVen"].ToString();
+                                employee.User.Access.CanViewFinPro = reader["CanViewFinPro"].ToString();
+                                employee.User.Access.CanViewFlagPro = reader["CanViewFlagPro"].ToString();
+                                employee.User.Access.CanViewPenPro = reader["CanViewPenPro"].ToString();
+                                employee.User.No_DelNotifications = Convert.ToInt32(reader["No_DelNotifications"]);
+                                employee.User.No_ProNotifications = Convert.ToInt32(reader["No_ProNotifications"]);
+                                employee.User.No_InvNotifications = Convert.ToInt32(reader["No_InvNotifications"]);
+                                employee.User.No_VenNotifications = Convert.ToInt32(reader["No_VenNotifications"]);
+                                employee.User.No_Notifications = Convert.ToInt32(reader["No_Notifications"]);
+                                employees.Add(employee);
 
 
-            return await query.ToArrayAsync();
+
+
+                            }
+                        }
+                    }
+                }
+            }
+            return employees;
         }
 
         public async Task<User[]> GetAllUsersAsync()
@@ -234,16 +308,66 @@ namespace ProcionAPI.Models.Repositories
             }
         }
 
-        public async Task<Admin[]> GetAllAdminsAsync()
+        public async Task<List<Admin>> GetAllAdminsAsync()
         {
-            IQueryable<Admin> query = _dbContext.Admin
-                .Include(u => u.User)
-                .ThenInclude(r => r.Role)
-                .Include(u => u.User)
-                .ThenInclude(a => a.Access);
+            List<Admin> admins = new List<Admin>();
+            using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+                {
+                    using (SqlCommand command = new SqlCommand("GetAllAdmins", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                Admin admin = new Admin();
+                                admin.Admin_ID = (int)reader["Admin_ID"];
+                                admin.AdminName = reader["AdminName"].ToString();
+                                admin.Email = reader["Email"].ToString();
+                                admin.AdminSurname = reader["AdminSurname"].ToString();
+                                admin.CellPhone_Num = reader["CellPhone_Num"].ToString();
+                                admin.User_Id = (int)reader["User_Id"];
+                                admin.User = new User();
+                                admin.User.User_Id = (int)reader["User_Id"];
+                                admin.User.Access_ID = (int)reader["Access_ID"];
+                                admin.User.No_Notifications = (int)reader["No_Notifications"];
+                                admin.User.Password = reader["Password"].ToString();
+                                admin.User.Profile_Picture = reader["Profile_Picture"].ToString();
+                                admin.User.Role_ID = (int)reader["Role_ID"];
+                                admin.User.Username = reader["Username"].ToString();
+                                admin.User.Role = new Role();
+                                admin.User.Role.Role_ID = (int)reader["Role_ID"];
+                                admin.User.Role.Description = reader["Description"].ToString();
+                                admin.User.Role.Name = reader["Name"].ToString();
+                                admin.User.Access = new Access();
+                                admin.User.Access.Access_ID = (int)reader["Access_ID"];
+                                admin.User.Access.IsAdmin = reader["IsAdmin"].ToString();
+                                admin.User.Access.CanAccInv = reader["CanAccInv"].ToString();
+                                admin.User.Access.CanAccPro = reader["CanAccPro"].ToString();
+                                admin.User.Access.CanAccRep = reader["CanAccRep"].ToString();
+                                admin.User.Access.CanAccVen = reader["CanAccVen"].ToString();
+                                admin.User.Access.CanAppVen = reader["CanAppVen"].ToString();
+                                admin.User.Access.CanAccFin = reader["CanAccFin"].ToString();
+                                admin.User.Access.CanDeleteVen = reader["CanDeleteVen"].ToString();
+                                admin.User.Access.CanEditVen = reader["CanEditVen"].ToString();
+                                admin.User.Access.CanViewFinPro = reader["CanViewFinPro"].ToString();
+                                admin.User.Access.CanViewFlagPro = reader["CanViewFlagPro"].ToString();
+                                admin.User.Access.CanViewPenPro = reader["CanViewPenPro"].ToString();
+                                admin.User.No_DelNotifications = Convert.ToInt32(reader["No_DelNotifications"]);
+                                admin.User.No_ProNotifications = Convert.ToInt32(reader["No_ProNotifications"]);
+                                admin.User.No_InvNotifications = Convert.ToInt32(reader["No_InvNotifications"]);
+                                admin.User.No_VenNotifications = Convert.ToInt32(reader["No_VenNotifications"]);
+                                admin.User.No_Notifications = Convert.ToInt32(reader["No_Notifications"]);
 
-
-            return await query.ToArrayAsync();
+                                admins.Add(admin);
+                            }
+                        }
+                    }
+                }
+            }
+            return admins;
         }
 
         public async Task<Admin> GetAdminAsync(int userID)
@@ -533,11 +657,34 @@ namespace ProcionAPI.Models.Repositories
             return new AuditLog[] { LogAdd };
         }
 
-        public async Task<AuditLog[]> GetAllLogsAsync()
+        public async Task<List<AuditLog>> GetAllLogsAsync()
         {
-            IQueryable<AuditLog> query = _dbContext.AuditLog;
-            query = query.OrderByDescending(log => log.ActionTime);
-            return await query.ToArrayAsync();
+            List<AuditLog> logs = new List<AuditLog>();
+            using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+                {
+                    using (SqlCommand command = new SqlCommand("GetAuditLogs", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                AuditLog log = new AuditLog();
+                                log.Log_ID = Convert.ToInt32(reader["Log_ID"]);
+                                log.Action = reader["Action"].ToString();
+                                log.ActionTime = Convert.ToDateTime(reader["ActionTime"]);
+                                log.User = reader["User"].ToString();
+
+                                logs.Add(log);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return logs;
         }
 
         public async Task<Notification> UserDeleteNotificationValidationAsync(int id)

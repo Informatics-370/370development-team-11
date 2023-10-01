@@ -141,6 +141,10 @@ namespace ProcionAPI.Data
                 Password = userrep.HashPassword("Admin123"),
                 Profile_Picture = "./assets/Images/Default_Profile.jpg",
                 No_Notifications = 0,
+                No_DelNotifications = 0,
+                No_InvNotifications = 0,
+                No_ProNotifications = 0,
+                No_VenNotifications = 0,
             }
             );
             modelBuilder.Entity<Admin>()

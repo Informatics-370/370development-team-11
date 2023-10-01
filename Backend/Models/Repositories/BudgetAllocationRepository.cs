@@ -2,16 +2,22 @@
 using ProcionAPI.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.ML;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace ProcionAPI.Models.Repositories
 {
     public class BudgetAllocationRepository: IBudgetAllocationRepository
     {
         private readonly AppDBContext _dbContext;
+        private readonly IConfiguration _configuration;
 
-        public BudgetAllocationRepository(AppDBContext dbContext)
+
+        public BudgetAllocationRepository(IConfiguration configuration, AppDBContext dbContext)
         {
             _dbContext = dbContext;
+            _configuration = configuration;
+
         }
 
         public async Task<Budget_Category[]> GetAllBudgetCategoriesAsync()
@@ -25,10 +31,39 @@ namespace ProcionAPI.Models.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<Budget_Allocation[]> GetAllBudgetAllocationsAsync()
+        public async Task<List<Budget_Allocation>> GetAllBudgetAllocationsAsync()
         {
-            IQueryable<Budget_Allocation> query = _dbContext.Budget_Allocation.Include(c => c.Department);
-            return await query.ToArrayAsync();
+            List<Budget_Allocation> budgets = new List<Budget_Allocation>();
+            using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+                using (SqlCommand command = new SqlCommand("GetAllBudgetAllocations", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Execute the stored procedure and get the result
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            Budget_Allocation budget = new Budget_Allocation();
+
+                            budget.Budget_ID = reader.GetInt32("Budget_ID");
+                            budget.Department_ID = reader.GetInt32("Department_ID");
+                            budget.Date_Created = reader.GetDateTime("Date_Created");
+                            budget.Total = reader.GetDecimal("Total");
+                            budget.Year = reader.GetInt32("Year");
+                            budget.Department = new Department();
+                            budget.Department.Name = reader.GetString("Name");
+                            budget.Department.Department_ID = reader.GetInt32("Department_ID");
+                            budget.Department.Description = reader.GetString("Description");
+                            budgets.Add(budget);
+                        }
+                    }
+                }
+
+            }
+            return budgets;
         }
         public async Task<Budget_Allocation[]> GetDepBudgetAllocationAsync(string dep)
         {
@@ -40,10 +75,53 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Budget_Allocation> query = _dbContext.Budget_Allocation.Include(c => c.Department).Where(c => c.Budget_ID == budgetAllocationId);
             return await query.FirstOrDefaultAsync();
         }
-        public async Task<Budget_Line[]> GetAllBudgetLinesAsync()
+        public async Task<List<Budget_Line>> GetAllBudgetLinesAsync()
         {
-            IQueryable<Budget_Line> query = _dbContext.Budget_Line.Include(b => b.Budget_Allocation).ThenInclude(a => a.Department).Include( c => c.Budget_Category);
-            return await query.ToArrayAsync();
+            List<Budget_Line> budgetLines = new List<Budget_Line>();
+            using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+                using (SqlCommand command = new SqlCommand("GetAllBudgetLines", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Execute the stored procedure and get the result
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            Budget_Line budgetLine = new Budget_Line();
+
+                            budgetLine.BudgetLineId = reader.GetInt32("BudgetLineId");
+                            budgetLine.Budget_ID = reader.GetInt32("Budget_ID");
+                            budgetLine.Category_ID = reader.GetInt32("Category_ID");
+                            budgetLine.ActualAmt = reader.GetDecimal("ActualAmt");
+                            budgetLine.BudgetAmt = reader.GetDecimal("BudgetAmt");
+                            budgetLine.Variance = reader.GetDecimal("Variance");
+                            budgetLine.Month = reader.GetString("Month");
+                            budgetLine.Budget_Allocation = new Budget_Allocation();
+                            budgetLine.Budget_Allocation.Budget_ID = reader.GetInt32("Budget_ID");
+                            budgetLine.Budget_Allocation.Department_ID = reader.GetInt32("Department_ID");
+                            budgetLine.Budget_Allocation.Date_Created = reader.GetDateTime("Date_Created");
+                            budgetLine.Budget_Allocation.Total = reader.GetDecimal("Total");
+                            budgetLine.Budget_Allocation.Year = reader.GetInt32("Year");
+                            budgetLine.Budget_Allocation.Department = new Department();
+                            budgetLine.Budget_Allocation.Department.Name = reader.GetString("Name");
+                            budgetLine.Budget_Allocation.Department.Department_ID = reader.GetInt32("Department_ID");
+                            budgetLine.Budget_Allocation.Department.Description = reader.GetString("Description");
+                            budgetLine.Budget_Category = new Budget_Category();
+                            budgetLine.Budget_Category.Category_ID = reader.GetInt32("Category_ID");
+                            budgetLine.Budget_Category.Account_Name = reader.GetString("Account_Name");
+                            budgetLine.Budget_Category.Account_Code = reader.GetString("Account_Code");
+                            budgetLine.Budget_Category.Description = reader.GetString("Category_Description");
+
+                            budgetLines.Add(budgetLine);
+                        }
+                    }
+                }
+
+            }
+            return budgetLines;
         }
 
         public async Task<Budget_Line[]> GetBudgetLinesForAllocationAsync(int budgetAllocationId)
