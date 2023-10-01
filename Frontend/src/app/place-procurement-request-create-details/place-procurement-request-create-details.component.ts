@@ -431,6 +431,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
   AccountCodeDetails: AccountCodeDisplay[] = [];
   AccountCodeGroups: AccountCodeDisplayGroup[] = [];
+  userDepartment: any;
+
   ngOnInit() {
     var User = this.ProcureService.decodeUser(sessionStorage.getItem('token'))
     this.ProcureService.GetUserByUsername(User).subscribe(response => {
@@ -537,6 +539,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
     this.ProcurementFormGroup.get("BuyerName")?.disable();
     this.ProcurementFormGroup.get("BuyerEmail")?.disable();
+    this.userDepartment = this.ProcureService.decodeUserDep(sessionStorage.getItem("token"));
   }
 
   public onFocus(event: FocusEvent) {
@@ -706,6 +709,20 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
       this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
       this.VendorNotification.name = this.Procurement_Request.name + " has been flagged for exceeded mandate limit";
       this.ProcureService.GetUserByRole("MD").subscribe(r => {
+        var user: any = r;
+
+        this.VendorNotification.user_ID = user.user_Id;
+        this.ProcureService.ProcurementAddNotification(this.VendorNotification).subscribe();
+      }) 
+    }
+    else if (Number(this.ProcurementDetails.total_Amount) > this.MandateLimitAmount && Number(this.ProcurementDetails.total_Amount) <= 80000) {
+      this.ProcurementDetails.procurement_Status_ID = 3;
+      this.VendorNotification.notification_Type_ID = 14;
+      let transVar: any
+      transVar = new DatePipe('en-ZA');
+      this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+      this.VendorNotification.name = this.Procurement_Request.name + " has been flagged for exceeded mandate limit";
+      this.ProcureService.GetEmployeeByDepartment(this.userDepartment).subscribe(r => {
         var user: any = r;
 
         this.VendorNotification.user_ID = user.user_Id;

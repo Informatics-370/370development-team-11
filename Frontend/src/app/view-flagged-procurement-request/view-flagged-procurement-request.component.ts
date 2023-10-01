@@ -35,6 +35,8 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
 
   iRole: string;
   iTempRole: string;
+  iTempUsername: string;
+  iDep: string;
 
   iCanViewFlagPro: string = "false";
   canViewFlagPro: string;
@@ -45,6 +47,7 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
   ngOnInit() {
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
     this.iTempRole = this.dataService.decodeTempAcc(sessionStorage.getItem("token"));
+    this.iDep = this.dataService.decodeUserDep(sessionStorage.getItem("token"));
     this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
     this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
 
@@ -67,9 +70,11 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
   }
 
+  userDepartment: any;
   ProcurementDetails: Procurement_Details[] = [];
   GetProcurementDetails() {
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
+    this.userDepartment = this.dataService.decodeUserDep(sessionStorage.getItem("token"));
 
     if (this.iRole == "FD" || this.iTempRole == "FD") {
       this.dataService.GetProcurementRequestDetailsFD().subscribe(result => {
@@ -83,6 +88,56 @@ export class ViewFlaggedProcurementRequestComponent implements OnInit {
         if (result) {
           hideloader();
         }
+      })
+
+      function hideloader() {
+        document.getElementById('loading').style.display = "none";
+        document.getElementById('table').style.visibility = "visible";
+      }
+    }
+
+    if (this.iRole == "BO" || this.iTempRole == "BO") {
+      this.dataService.GetProcurementRequestDetailsBO().subscribe(result => {
+
+        if (this.iTempRole == "BO") {
+          this.iTempUsername = this.dataService.decodeTempUsername(sessionStorage.getItem("token"));
+
+          this.dataService.GetEmployeeByUsername(this.iTempUsername).subscribe(tempUD => {
+            let tempUserDep: any = tempUD;
+            result.forEach(e => {
+              
+
+                if (e.employee.department.name == tempUserDep.department.name && e.procurement_Status_ID == 3) {
+                  this.ProcurementDetails.push(e);
+                }
+
+
+             
+            })
+
+            this.SearchedPDetails = new MatTableDataSource(this.ProcurementDetails);
+            this.SearchedPDetails.paginator = this.paginator;
+            if (result) {
+              hideloader();
+            }
+          })
+        } else {
+          result.forEach(e => {
+            
+              if (e.employee.department.name == this.iDep && e.procurement_Status_ID == 3) {
+                this.ProcurementDetails.push(e);
+              }
+            
+          })
+
+          this.SearchedPDetails = new MatTableDataSource(this.ProcurementDetails);
+          this.SearchedPDetails.paginator = this.paginator;
+          if (result) {
+            hideloader();
+          }
+        }
+
+        
       })
 
       function hideloader() {

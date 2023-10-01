@@ -329,6 +329,22 @@ namespace ProcionAPI.Controllers.Procurement_Requests
         }
 
         [HttpGet]
+        [Route("GetProcurementRequestDetailsBO")]
+        public async Task<IActionResult> GetProcurementRequestDetailsBO()
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementRequestDetailsBOAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
         [Route("GetProcurementRequestDetailsMD")]
         public async Task<IActionResult> GetProcurementRequestDetailsMD()
         {
