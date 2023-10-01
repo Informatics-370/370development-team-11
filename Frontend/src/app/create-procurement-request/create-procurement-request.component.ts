@@ -95,6 +95,10 @@ export class CreateProcurementRequestComponent implements OnInit {
       password: "",
       profile_Picture: "",
       no_Notifications: 0,
+      no_VenNotifications: 0,
+      no_InvNotifications: 0,
+      no_DelNotifications: 0,
+      no_ProNotifications: 0,
       role: {
         role_ID: 0,
         name: "",
@@ -129,6 +133,10 @@ export class CreateProcurementRequestComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -170,7 +178,6 @@ export class CreateProcurementRequestComponent implements OnInit {
     this.GetVendors();
     let usr = this.dataService.decodeUser(sessionStorage.getItem("token"));
     this.userDepartment = this.dataService.decodeUserDep(sessionStorage.getItem("token"));
-    console.log(this.userDepartment);
     if (this.VendorType == "Approved") {
       this.myForm = this.formBuilder.group({
         Selection: ["Approved", [Validators.required]],
@@ -345,7 +352,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   AddProcurementRequestB() {
-
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.Procurement_Request.name = this.myForm.get("RequestName").value;
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
     this.Procurement_Request.vendor.name = this.myForm.get("VendorName").value;
@@ -455,7 +462,6 @@ export class CreateProcurementRequestComponent implements OnInit {
                       this.ProcurementNotif.name = "A new procurement request for Vendor: " + this.Procurement_Request.vendor.name + " is awaiting your attention!";
                       this.dataService.GetEmployeeByDepartment(this.userDepartment).subscribe(ud => {
                         this.ProcurementNotif.user_ID = ud.user_Id;
-                        console.log(ud.user_Id);
                         this.dataService.ProcurementRequestAddNotification(this.ProcurementNotif).subscribe({
                           next: (Notif) => {
                             this.DisplayNotif()
@@ -501,6 +507,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   AddProcurementRequestA() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.Procurement_Request.name = this.myForm.get("Name").value;
     this.Procurement_Request.description = this.myForm.get("Description").value;
     this.Procurement_Request.vendor.name = this.myForm.get("Vendor").value;
@@ -534,7 +541,6 @@ export class CreateProcurementRequestComponent implements OnInit {
                   this.ProcurementNotif.name = "A new procurement request for Vendor: " + this.Procurement_Request.vendor.name + " is awaiting your attention!";
                   this.dataService.GetEmployeeByDepartment(this.userDepartment).subscribe(ud => {
                     this.ProcurementNotif.user_ID = ud.user_Id;
-                    console.log(ud.user_Id);
 
                     this.dataService.ProcurementRequestAddNotification(this.ProcurementNotif).subscribe({
                       next: (Notif) => {
@@ -551,6 +557,7 @@ export class CreateProcurementRequestComponent implements OnInit {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "CREATE";
           var title = "LIMIT EXCEEDED";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Vendor: <strong>" + this.Procurement_Request.vendor.name + "</strong> will need to be <strong style='color:red'> ONBOARDED </strong> in order to make this request!");

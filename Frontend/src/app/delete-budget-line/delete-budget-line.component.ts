@@ -76,7 +76,7 @@ export class DeleteBudgetLineComponent {
     this.route.paramMap.subscribe({
       next: (params) => {
         const ID = this.data.id2;
-        console.log(ID);
+
 
         if (ID) {
           this.dataService.GetBudgetLineByID(ID).subscribe(result => {

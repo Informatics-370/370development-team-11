@@ -50,40 +50,61 @@ export class CreateMandateLimitComponent {
   }
 
   onSubmit(): void {
-    this.dataService.AddMandateLimit(this.mandateLimit).subscribe(result => {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    this.dataService.EditMandateValidation(this.mandateLimitForm.get('amount')?.value).subscribe(vr => {
+      if (vr == null) {
+        this.dataService.AddMandateLimit(this.mandateLimit).subscribe(result => {
 
-      if (result) {
-        document.getElementById('AnimationBtn').classList.toggle("is_active");
-        document.getElementById('cBtn').style.display = "none";
+          if (result) {
+            document.getElementById('AnimationBtn').classList.toggle("is_active");
+            document.getElementById('cBtn').style.display = "none";
+          }
+
+          this.log.action = "Created Mandate Limit";
+          this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+          let test: any
+          test = new DatePipe('en-ZA');
+          this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+          this.dataService.AuditLogAdd(this.log).subscribe({
+            next: (Log) => {
+              var action = "Create";
+              var title = "CREATE SUCCESSFUL";
+              var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The mandate limit with amount: R<strong>" + this.mandateLimit.ammount + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
+
+              const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                disableClose: true,
+                data: { action, title, message }
+              });
+
+              const duration = 1750;
+              setTimeout(() => {
+                this.router.navigate(['/ViewMandateLimit']);
+                dialogRef.close();
+              }, duration);
+
+            }
+          })
+
+
+        });
+      } else {
+        document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
+        var action = "ERROR";
+        var title = "ERROR: Mandate Limit Exists";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The mandate limit with amount <strong>" + this.mandateLimitForm.get('amount')?.value + " <strong style='color:red'>ALREADY EXISTS!</strong>");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 1750;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
       }
-
-      this.log.action = "Exported Inventory Details";
-      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-      let test: any
-      test = new DatePipe('en-ZA');
-      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-      this.dataService.AuditLogAdd(this.log).subscribe({
-        next: (Log) => {
-          var action = "Create";
-          var title = "CREATE SUCCESSFUL";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The mandate limit with amount: R<strong>" + this.mandateLimit.ammount + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
-
-          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-            disableClose: true,
-            data: { action, title, message }
-          });
-
-          const duration = 1750;
-          setTimeout(() => {
-            this.router.navigate(['/ViewMandateLimit']);
-            dialogRef.close();
-          }, duration);
-          
-        }
-      })
-
-      
-    });
+    })
+    
   }
 
   onCancel(): void {

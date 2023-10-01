@@ -37,7 +37,6 @@ export class FinalizeProcurementRequestComponent {
   GetUnfinalizedProcurementRequests() {
     this.dataService.GetUnfinalizedProcurements().subscribe(result => {
       let procurementList: any[] = result;
-      console.log(result)
       this.ProcurementRequests = [...procurementList];
       this.SearchedPRequests = [...procurementList];
       this.dataSource = new MatTableDataSource(this.ProcurementRequests.filter((value, index, self) => self.map(x => x.procurement_Request_ID).indexOf(value.procurement_Request_ID) == index));

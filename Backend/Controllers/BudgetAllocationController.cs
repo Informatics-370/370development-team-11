@@ -819,7 +819,7 @@ namespace ProcionAPI.Controllers
                 var rows = worksheet.RowsUsed();
 
                 var departmentDescription = worksheet.Cell(1, 1).Value.ToString().Replace("Department: ", "");
-                Console.WriteLine(departmentDescription);
+             
                 var fyAndMonth = worksheet.Cell(2, 1).Value.ToString().Replace("FY: ", "");
                 var year = fyAndMonth;
                 var total = decimal.Parse(worksheet.Cell(5, 2).Value.ToString());
@@ -849,12 +849,7 @@ namespace ProcionAPI.Controllers
                         var actualAmt = decimal.Parse(row.Cell(5).Value.ToString());
                         var variance = decimal.Parse(row.Cell(6).Value.ToString());
 
-                        Console.WriteLine(accountName);
-                        Console.WriteLine(accountCode);
-
-                        Console.WriteLine(budgetAmt);
-                        Console.WriteLine(actualAmt);
-                        Console.WriteLine(variance);
+                       
 
 
 

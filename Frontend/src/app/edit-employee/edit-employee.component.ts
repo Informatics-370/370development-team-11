@@ -19,6 +19,7 @@ import { Access } from '../Shared/Access';
 
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { DynamicCreateDepartmentComponent } from '../dynamic-create-department/dynamic-create-department.component';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -35,7 +36,7 @@ export class EditEmployeeComponent implements OnInit {
   accForm: FormGroup = new FormGroup({});
 
   employee: any
-  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer, private DynamicDepDialog: MatDialog) { }
 
 
 
@@ -96,6 +97,10 @@ export class EditEmployeeComponent implements OnInit {
     password: '',
     profile_Picture: '',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -174,9 +179,17 @@ export class EditEmployeeComponent implements OnInit {
   GetRoles() {
     this.dataService.GetRoles().subscribe(result => {
       this.userRoles = result;
-      this.userRoles.forEach((element, index) => {
-        if (element.name == "Admin") this.userRoles.splice(index, 1);
-      });
+
+      if (this.userRoles.length == 0) {
+        document.getElementById('noRoleExists').style.display = "block";
+        document.getElementById('BranchSelected').style.display = "none";
+      } else {
+        this.userRoles.forEach((element, index) => {
+          if (element.name == "Admin") this.userRoles.splice(index, 1);
+        });
+      }
+
+      
     });
 
   }
@@ -184,19 +197,66 @@ export class EditEmployeeComponent implements OnInit {
   GetBranches() {
     this.dataService.GetBranches().subscribe(result => {
       this.branches = result;
+      if (this.branches.length == 0) {
+        document.getElementById('noBranchExists').style.display = "block";
+        document.getElementById('BranchSelected').style.display = "none";
+      }
     });
   }
 
   GetDepartments() {
     this.dataService.GetDepartments().subscribe(result => {
       this.departments = result;
+      if (this.departments.length == 0) {
+        document.getElementById('noDepartmentExists').style.display = "block";
+        document.getElementById('noBranchSelected').style.display = "none";
+      }
     });
   }
 
   GetMandates() {
     this.dataService.GetMandateLimits().subscribe(result => {
       this.mandate_limits = result;
+      if (this.mandate_limits.length == 0) {
+        document.getElementById('noMandateExists').style.display = "block";
+        document.getElementById('MandateExists').style.display = "none";
+      }
 
+    });
+  }
+
+  selectedBranch: any = "none";
+  getBranch(branch) {
+    if (branch == null) {
+      this.selectedBranch = "none";
+      document.getElementById('noBranchSelected').style.display = "block";
+      document.getElementById('BranchSelected').style.display = "none";
+    } else {
+
+      this.branches.forEach(a => {
+        if (a.branch_ID == branch) {
+          this.selectedBranch = a.name;
+          document.getElementById('BranchSelected').style.display = "block";
+          document.getElementById('noBranchSelected').style.display = "none";
+        }
+      })
+
+      //this.br = branch;
+      //this.br.branch_ID = 0;
+      //this.selectedBranch = this.br.name;
+      
+    }
+  }
+
+  DynamicDepartmentCreate() {
+    this.DynamicDepDialog.open(DynamicCreateDepartmentComponent, {
+
+    });
+
+    this.DynamicDepDialog.afterAllClosed.subscribe({
+      next: (response) => {
+        this.GetDepartments();
+      }
     });
   }
 
@@ -289,6 +349,16 @@ export class EditEmployeeComponent implements OnInit {
         this.cDeleteVen = "true";
       }
 
+
+      this.branches.forEach(a => {
+        console.log(a.name)
+        console.log(a.branch_ID)
+        if (a.branch_ID == this.employee.branch.branch_ID) {
+          this.selectedBranch = a.name;
+          /*document.getElementById('BranchSelected').style.display = "block";*/
+          /*document.getElementById('noBranchSelected').style.display = "none";*/
+        }
+      })
     })
   }
 
@@ -317,6 +387,7 @@ export class EditEmployeeComponent implements OnInit {
   }
 
   onSubmit() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.emp.employeeName = this.myForm.get('Name')?.value;
     this.emp.employeeSurname = this.myForm.get('Surname')?.value;
     this.emp.cellPhone_Num = this.myForm.get('CellPhone_Num')?.value;
@@ -351,43 +422,155 @@ export class EditEmployeeComponent implements OnInit {
     this.dataService.EditUserValidation(username, this.employee.user_Id).subscribe({
       next: (Result) => {
         if (Result == null) {
-          this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
-            this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
-              next: (response) => {
+          if (this.usr.role.name == "BO") {
+            this.dataService.CreateUserRoleValidation(this.emp.department.name, this.usr.role.name).subscribe(bor => {
+              if (bor == null) {
+                this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
+                  this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
+                    next: (response) => {
 
 
-                this.log.action = "Edited Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
-                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-                let test: any
-                test = new DatePipe('en-ZA');
-                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-                this.dataService.AuditLogAdd(this.log).subscribe({
-                  next: (Log) => {
-                    document.getElementById('AnimationBtn').classList.toggle("is_active");
-                    document.getElementById('cBtn').style.display = "none";
-                    var action = "Update";
-                    var title = "UPDATE SUCCESSFUL";
-                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+                      this.log.action = "Edited Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataService.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          document.getElementById('AnimationBtn').classList.toggle("is_active");
+                          document.getElementById('cBtn').style.display = "none";
+                          var action = "Update";
+                          var title = "UPDATE SUCCESSFUL";
+                          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
 
-                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                      disableClose: true,
-                      data: { action, title, message }
-                    });
+                          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                            disableClose: true,
+                            data: { action, title, message }
+                          });
 
-                    const duration = 1750;
-                    setTimeout(() => {
-                      this.router.navigate(['/ViewEmployee']);
-                      dialogRef.close();
-                    }, duration);
-                  }
+                          const duration = 1750;
+                          setTimeout(() => {
+                            this.router.navigate(['/ViewEmployee']);
+                            dialogRef.close();
+                          }, duration);
+                        }
+                      })
+                    }
+                  })
                 })
+              } else {
+                document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
+                var action = "ERROR";
+                var title = "ERROR: Budget Owner Exists";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There alread exists a Budget Owner for department <strong>" + this.emp.department.name + "<strong>!</strong>");
 
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
 
+                const duration = 1750;
+                setTimeout(() => {
+                  dialogRef.close();
+                }, duration);
               }
             })
-          })
+          } else if (this.usr.role.name == "MD") {
+            this.dataService.CreateUserMDRoleValidation(this.usr.role.name).subscribe(mdr => {
+              if (mdr == null) {
+                this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
+                  this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
+                    next: (response) => {
+
+
+                      this.log.action = "Edited Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                      this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                      let test: any
+                      test = new DatePipe('en-ZA');
+                      this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                      this.dataService.AuditLogAdd(this.log).subscribe({
+                        next: (Log) => {
+                          document.getElementById('AnimationBtn').classList.toggle("is_active");
+                          document.getElementById('cBtn').style.display = "none";
+                          var action = "Update";
+                          var title = "UPDATE SUCCESSFUL";
+                          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                          const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                            disableClose: true,
+                            data: { action, title, message }
+                          });
+
+                          const duration = 1750;
+                          setTimeout(() => {
+                            this.router.navigate(['/ViewEmployee']);
+                            dialogRef.close();
+                          }, duration);
+                        }
+                      })
+                    }
+                  })
+                })
+              } else {
+                document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
+                var action = "ERROR";
+                var title = "ERROR: Managing Director Exists";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A user with the role Managing Director already exists <strong>!</strong>");
+
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+
+                const duration = 1750;
+                setTimeout(() => {
+                  dialogRef.close();
+                }, duration);
+              }
+            })
+          } else {
+            this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
+              this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
+                next: (response) => {
+
+
+                  this.log.action = "Edited Employee: " + this.emp.employeeName + " " + this.emp.employeeSurname;
+                  this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                  let test: any
+                  test = new DatePipe('en-ZA');
+                  this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                  this.dataService.AuditLogAdd(this.log).subscribe({
+                    next: (Log) => {
+                      document.getElementById('AnimationBtn').classList.toggle("is_active");
+                      document.getElementById('cBtn').style.display = "none";
+                      var action = "Update";
+                      var title = "UPDATE SUCCESSFUL";
+                      var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + name + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
+
+                      const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                        disableClose: true,
+                        data: { action, title, message }
+                      });
+
+                      const duration = 1750;
+                      setTimeout(() => {
+                        this.router.navigate(['/ViewEmployee']);
+                        dialogRef.close();
+                      }, duration);
+                    }
+                  })
+
+
+                }
+              })
+            })
+          }
+
+
+          
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: User Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The user <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");

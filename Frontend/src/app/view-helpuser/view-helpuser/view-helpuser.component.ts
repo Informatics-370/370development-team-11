@@ -73,15 +73,29 @@ export class ViewHelpuserComponent implements OnInit {
 
   }
 
-
+  searchedHelp: any;
+  SearchFileDetails: any[] = [];
+  SearchvFileDetails: any[] = [];
 
   search() {
     const searchTerm = this.searchWord.toLocaleLowerCase();
   
     if (searchTerm) {
       this.dataSource = this.Helps.filter(help => help.name.toLocaleLowerCase().includes(searchTerm))
+      this.searchedHelp = this.Helps.filter(help => help.name.toLocaleLowerCase().includes(searchTerm))
+
+      for (let n = 0; n < this.searchedHelp.length; n++) {
+        let id = this.searchedHelp[n].help_ID;
+
+        this.FileDetails[n] = this.SearchFileDetails[Number(id) - 1];
+        this.vFileDetails[n] = this.SearchvFileDetails[Number(id) - 1];
+      }
     }
     else if (searchTerm == "") {
+      this.FileDetails.length = 0;
+      this.SearchFileDetails.length = 0;
+      this.vFileDetails.length = 0;
+      this.SearchvFileDetails.length = 0;
       this.GetHelps();
     }
   }
@@ -129,7 +143,14 @@ export class ViewHelpuserComponent implements OnInit {
           this.vFileDetails[i].FileName = vFile;
         }
       }
-      console.log(result)
+
+      for (let um = 0; um < this.FileDetails.length; um++) {
+        this.SearchFileDetails[um] = this.FileDetails[um];
+      }
+
+      for (let f = 0; f < this.vFileDetails.length; f++) {
+        this.SearchvFileDetails[f] = this.vFileDetails[f];
+      }
     });
     function hideloader() {
       document.getElementById('loading')
@@ -173,7 +194,6 @@ export class ViewHelpuserComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 }

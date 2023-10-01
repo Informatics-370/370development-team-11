@@ -80,7 +80,6 @@ export class EditBudgetLineComponent {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     const id2 = String(this.route.snapshot.paramMap.get('id2'));
-    console.log(id2);
     this.id = id;
     this.id2 = id2;
     this.GetCategories();
@@ -98,7 +97,6 @@ export class EditBudgetLineComponent {
   GetBudgetLineByID() {
     this.dataService.GetBudgetLine(this.id2).subscribe((data: any) => {
       this.budgetLine = data;
-      console.log(this.budgetLine)
       this.CatInUse = this.budgetLine.budget_Category.account_Name;
 
       this.budgetLineForm.patchValue({
@@ -119,12 +117,12 @@ export class EditBudgetLineComponent {
   GetCategories() {
     this.dataService.GetBudgetCategories().subscribe((data: any) => {
       this.categories = data;
-      console.log(this.categories)
 
     });
   }
 
   onSubmit() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.budgetLine.category_ID = this.budgetLineForm.get('category_ID')?.value;
     this.budgetLine.month = this.budgetLineForm.get('month')?.value;
     this.budgetLine.budgetAmt = this.budgetLineForm.get('budgetAmt')?.value;
@@ -133,11 +131,10 @@ export class EditBudgetLineComponent {
 
     this.dataService.GetBudgetCategory(this.budgetLine.category_ID).subscribe(re => {
       var cat: any = re;
-      console.log(this.budgetLine.budget_Category.account_Code)
-      console.log(cat)
+
 
       this.dataService.BudgetLineValidation(cat.account_Code.toString(), cat.account_Name, this.budgetLine.month, Number(this.route.snapshot.paramMap.get('id'))).subscribe(r => {
-        console.log(r)
+
         if (r == null) {
 
           this.dataService.EditBudgetLine(this.id2, this.budgetLine).subscribe(result => {
@@ -291,6 +288,7 @@ export class EditBudgetLineComponent {
           });
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Budget Line Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A Budget Line for: <strong>" + cat.account_Name + " for the month: <strong>" + this.budgetLine.month + " <strong style='color:red'> ALREADY EXISTS!</strong>");

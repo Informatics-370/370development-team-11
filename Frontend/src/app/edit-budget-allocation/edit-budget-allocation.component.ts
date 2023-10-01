@@ -92,15 +92,13 @@ export class EditBudgetAllocationComponent {
   }
 
   onSubmit(): void {
-
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.dep.department_ID = this.budgetAllocationForm.get('department_ID')?.value;
-    console.log(this.dep.department_ID);
     this.budgetAllocation.department_ID = this.dep.department_ID;
     this.budgetAllocation.date_Created = this.budgetAllocationForm.get('date_Created')?.value;
     let date = this.budgetAllocationForm.get('year')?.value
     this.budgetAllocation.year = date.getFullYear();
     this.budgetAllocation.total = this.budgetAllocationForm.get('total')?.value;
-    console.log(this.budgetAllocation);
 
     this.dataService.GetDepartment(this.budgetAllocationForm.get('department_ID')?.value).subscribe(r => {
       var dep: any = r;
@@ -183,6 +181,7 @@ export class EditBudgetAllocationComponent {
           });
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Budget Allocation Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A Budget Allocation for department: <strong>" + dep.name + " for the year: <strong>" + this.budgetAllocation.year + " <strong style='color:red'> ALREADY EXISTS!</strong>");
@@ -216,7 +215,6 @@ export class EditBudgetAllocationComponent {
     this.dataService.GetBudgetAllocation(id).subscribe((data: any) => {
       this.budgetAllocation = data;
 
-      console.log(this.budgetAllocation)
       this.budgetAllocationForm.patchValue({
         department_ID: this.budgetAllocation.department_ID,
         date_Created: this.budgetAllocation.date_Created,
@@ -237,7 +235,6 @@ export class EditBudgetAllocationComponent {
 
   public onsYearSelected(date: Date, datepicker: MatDatepicker<Date>) {
     const normalizedYear = date.getFullYear();
-    //console.log(normalizedYear)
     this.budgetAllocationForm.get("year").setValue(new Date(normalizedYear, 12, 0));
     datepicker.close();
   }

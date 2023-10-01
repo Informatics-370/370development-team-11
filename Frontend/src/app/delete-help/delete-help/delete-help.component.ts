@@ -36,7 +36,6 @@ export class DeleteHelpComponent  implements OnInit{
 
         if (ID) {
           this.dataService.GetHelp(ID).subscribe(result => {
-            console.log(result);
             this.Help = result
           });
         }

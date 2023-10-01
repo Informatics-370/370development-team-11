@@ -80,7 +80,7 @@
               </td>
             </tr>
             <tr>
-              <td style="width:100%;">
+              <td id="RoleExists" style="width:100%;">
                 <mat-card-content>
                   <label style=" color:black;">Role:</label>
                   <br />
@@ -94,7 +94,19 @@
                   </mat-form-field>
                 </mat-card-content>
               </td>
-              <td style="width:100%;">
+
+              <td id="noRoleExists" style="width:100%; display: none">
+                <mat-card-content>
+                  <label style=" color:black;">Role:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-select formControlName="Role_ID" placeholder="No role exists on the system" required>
+                    </mat-select>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+
+              <td id="MandateExists" style="width:100%;">
                 <mat-card-content>
                   <label style=" color:black;">Mandate Limit:</label>
                   <br />
@@ -109,29 +121,27 @@
                   </mat-form-field>
                 </mat-card-content>
               </td>
-            </tr>
-            <tr>
-              <td style="width:100%;">
+
+              <td id="noMandateExists" style="width:100%; display: none">
                 <mat-card-content>
-                  <label style=" color:black;">Department:</label>
+                  <label style=" color:black;">Mandate Limit:</label>
                   <br />
                   <mat-form-field>
-                    <mat-label>Choose one</mat-label>
-                    <mat-select formControlName="Department_ID" required>
-                      <mat-option>---</mat-option>
-                      <mat-option *ngFor="let dep of departments" [value]="dep">{{dep.name}}</mat-option>
+                    <mat-select formControlName="Mandate_ID" placeholder="No mandate limit exists on the system" required>
                     </mat-select>
-                    <mat-error *ngIf="myError('Department_ID', 'required')">Please choose a department</mat-error>
                   </mat-form-field>
                 </mat-card-content>
               </td>
-              <td style="width:100%;">
+            </tr>
+
+            <tr>
+              <td id="BranchExists" style="width:100%;">
                 <mat-card-content>
                   <label style=" color:black;">Branch:</label>
                   <br />
                   <mat-form-field>
                     <mat-label>Choose one</mat-label>
-                    <mat-select formControlName="Branch_ID" required>
+                    <mat-select formControlName="Branch_ID" required (selectionChange)='getBranch($event.value)'>
                       <mat-option>---</mat-option>
                       <mat-option *ngFor="let branch of branches" [value]="branch">{{branch.name}}</mat-option>
                     </mat-select>
@@ -139,6 +149,62 @@
                   </mat-form-field>
                 </mat-card-content>
               </td>
+
+              <td id="noBranchExists" style="width:100%; display: none">
+                <mat-card-content>
+                  <label style=" color:black;">Branch:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-select formControlName="Branch_ID" placeholder="No branch exists on the system" required>
+                    </mat-select>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+
+              <td id="noBranchSelected" style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Department:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-select formControlName="Department_ID" placeholder="No branch selected" required>
+                    </mat-select>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+
+              <td id="noDepartmentExists" style="width:100%; display: none">
+                <mat-card-content>
+                  <label style=" color:black;">Department:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-select formControlName="Department_ID" placeholder="No department exists on the system" required>
+                    </mat-select>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+
+              <td id="BranchSelected" style="width:100%; display: none">
+                <mat-card-content>
+                  <div style="display: flex; text-align: left; justify-content: left; align-items: flex-start; ">
+                    <label style=" color: black;">
+                      Department:
+                    </label>
+                    <mat-icon aria-hidden="false" aria-label="add" fontIcon="add" style="color: black; cursor: pointer; font-size: 15pt; width: 20px; height: 20px; " (click)="DynamicDepartmentCreate()"></mat-icon>
+                  </div>
+
+                  <mat-form-field>
+                    <mat-label>Choose one</mat-label>
+                    <mat-select formControlName="Department_ID" required>
+                      <mat-option>---</mat-option>
+                      <mat-optgroup [label]="selectedBranch" [disabled]="selectedBranch.disabled" style="color: white; background-color: #244688;">
+                        <mat-option *ngFor="let dep of departments" [value]="dep">{{dep.name}}</mat-option>
+                      </mat-optgroup>
+                    </mat-select>
+                    <mat-error *ngIf="myError('Branch_ID', 'required')">Please choose a branch</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+
             </tr>
           </table>
 
@@ -154,7 +220,7 @@
             <span>Save</span>
             <div class="success">
               <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
-                <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+              <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
               </svg>
             </div>
           </button>
@@ -165,6 +231,12 @@
                 (click)="Close()">
           Cancel
         </button>
+
+        <!--<button mat-raised-button id="cBtn"
+                style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688; "
+                (click)="DynamicDepartmentCreate()">
+          Create Department
+        </button>-->
 
       </mat-card-actions>
     </form>

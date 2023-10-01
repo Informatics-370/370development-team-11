@@ -76,6 +76,10 @@ export class VendorApproveComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -141,8 +145,13 @@ export class VendorApproveComponent implements OnInit {
   DueDilligenceDetails: Due_Dillegence;
   POPIDetails: POPI;
   BEEbool = false;
-
+  GRCUserID:Number;
   ngOnInit() {
+    this.dataService.GetUserByRole("GRC").subscribe(x=> {
+      this.GRCUserID = x.user_Id
+    })
+
+
     this.convertLogoToBase64()
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
     this.dataService.GetUserByUsername(User).subscribe(response => {
@@ -190,20 +199,16 @@ export class VendorApproveComponent implements OnInit {
     });
     this.rows.push(row);
     // this.fileToUpload = this.files[0]
-    // console.log(this.onboardRequest[5])
-    console.log(this.CompanyContactInfoFormGroup.controls.RequestData.value.length)
     //   {{onboardRequest[0]}}
     this.ActRoute.paramMap.subscribe({
       next: (paramater) => {
 
         let RequestID = paramater.get("RequestNo");
-        console.log(RequestID)
         this.dataService.GetRequestByID(Number(RequestID)).subscribe(result => {
           let RequestList: any[] = []
           RequestList = result
           RequestList.forEach((element) => {
             this.onboardRequest.push(element)
-            console.log(this.onboardRequest)
             this.ViewOnboardRequest()
             const row = this._formBuilder.group({
               tab: [this.onboardRequest.length],
@@ -214,7 +219,6 @@ export class VendorApproveComponent implements OnInit {
               PrefferedVendor: [false],
             });
             this.rows.push(row);
-            console.log(this.rows)
             this.CompanyContactInfoFormGroup = this._formBuilder.group({ 'RequestData': this.rows });
 
           })
@@ -256,7 +260,6 @@ export class VendorApproveComponent implements OnInit {
             this.dataService.GetSoleSupplierByID(RequestList[0].vendor_ID).subscribe(result => {
               this.SoleSupplierFormGroup.get('Reason')?.setValue(result.reason);
             })
-            //  console.log(this.onboardRequest[0].quotes)
             if (this.onboardRequest[0].quotes != "None") {
               let sFile = this.onboardRequest[0].quotes;
               let RequestNo = sFile.substring(0, sFile.indexOf("\\"))
@@ -280,11 +283,18 @@ export class VendorApproveComponent implements OnInit {
         })
       }
     });
+
+    this.SoleSupplierFormGroup.get('CompanyName').disable();
+    this.SoleSupplierFormGroup.get('CompanyEmail').disable();
+    this.SoleSupplierFormGroup.get('Reason').disable();
+    
+    this.ViewFormGroup.get('CompanyName').disable();
+    this.ViewFormGroup.get('CompanyEmail').disable();
+    this.ViewFormGroup.get('Reason').disable();
   }//ngOnInit
 
   setActiveTab() {
     this.selectedIndex = 0;
-    console.log(this.selectedIndex)
   }
   fileUrl: SafeResourceUrl[] = [];
   fileType: string;
@@ -309,7 +319,10 @@ export class VendorApproveComponent implements OnInit {
     // window.open(url, '_blank');
   }
 
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
 
+  }
 
 
   QuoteChecked = false;
@@ -328,9 +341,7 @@ export class VendorApproveComponent implements OnInit {
   ChangesVendorRequestStatus(i: number) {
 
     for (let a = 0; a < this.onboardRequest.length; a++) {
-      //console.log(this.onboardRequest[a].vendor_ID)
       if (this.onboardRequest[a].vendor_ID == i) {
-        // console.log(this.onboardRequest[a].vendor_ID)
         this.dataService.ChangeVendorStatus(1, this.onboardRequest[a].vendor_ID).subscribe()
       }
       else {
@@ -345,19 +356,18 @@ export class VendorApproveComponent implements OnInit {
 
     let Changeable = true;
     for (let a = 0; a < this.onboardRequest.length; a++) {
-      console.log(this.onboardRequest[a].vendor.vendor_Status_ID)
-      console.log(this.onboardRequest[a].vendor_ID)
+
       if (this.onboardRequest[a].vendor.vendor_Status_ID != 5 && this.onboardRequest[a].vendor_ID != i) {
 
         Changeable = false;
-        console.log(Changeable)
+
       }
     }
     if (Changeable == true) {
       this.ChangesVendorRequestStatus(i)
       for (let a = 0; a < this.onboardRequest.length; a++) {
         if (this.onboardRequest[a].status_ID != 1) {
-          console.log(this.onboardRequest[a].vendor_ID)
+
           this.dataService.ChangeOnboardStatus(5, this.onboardRequest[a].onboard_Request_Id, this.onboardRequest[a].vendor_ID).subscribe(next => {
             this.router.navigate(['/vendor-approve/' + this.onboardRequest[0].onboard_Request_Id])
             this.ngOnInit();
@@ -369,7 +379,7 @@ export class VendorApproveComponent implements OnInit {
       //window.location.reload()
       //this.router.navigate(['/vendor-approve/' + this.onboardRequest[0].onboard_Request_Id])
     }
-    console.log(Changeable)
+
 
   }
 
@@ -430,7 +440,7 @@ export class VendorApproveComponent implements OnInit {
 
       if (element.b_BBEE_Certificate_Provided == true) {
         this.dataService.GetBEEDetails(i).subscribe(response => {
-          console.log(response)
+
           this.dataService.DeleteBEEDetails(response.beE_ID).subscribe()
           let sFile = response.beE_Certificate;
           let FolderCategory = sFile.substring(0, sFile.indexOf("\\"))
@@ -444,7 +454,7 @@ export class VendorApproveComponent implements OnInit {
 
       if (element.popI_Present = true) {
         this.dataService.GetPOPI(element.due_Diligence_ID).subscribe(response => {
-          console.log(response)
+
           this.dataService.DeletePOPI(response.popI_ID).subscribe(next => {
             this.dataService.DeleteDueDiligence(element.due_Diligence_ID).subscribe()
           })
@@ -481,7 +491,7 @@ export class VendorApproveComponent implements OnInit {
         this.ViewFormGroup.get('VendorID')?.setValue(this.onboardRequestSelectedData.vendor_ID)
         this.ViewFormGroup.get('CompanyName')?.setValue(this.onboardRequestSelectedData.vendor.name);
         this.ViewFormGroup.get('CompanyEmail')?.setValue(this.onboardRequestSelectedData.vendor.email);
-        console.log(this.onboardRequest.length)
+
         if (this.onboardRequest.length == 1) {
           this.dataService.GetSoleSupplierByID(this.onboardRequestSelectedData.vendor_ID).subscribe(result => {
             if (result != null) {
@@ -504,7 +514,7 @@ export class VendorApproveComponent implements OnInit {
     }
 
 
-    console.log(this.onboardRequestSelectedData)
+
   }
 
   boxCheckedTrue: any
@@ -529,33 +539,37 @@ export class VendorApproveComponent implements OnInit {
       if (this.DueDilligenceDetails.popI_Present == true) {
         this.dataService.GetPOPI(this.DueDilligenceDetails.due_Diligence_ID).subscribe(response => {
           this.POPIDetails = response;
-          console.log(this.DueDilligenceDetails)
-          console.log(this.POPIDetails)
+
           const docDefinition = {
             info: {
               title: `Due Dilligence Checklist for ${this.DueDilligenceDetails.vendor.name}`,
             },
-            content: [
-              {table: {
+            header: {
+              table: {
                 headerRows: 0,
-                widths: [ '*', 'auto' ],
+                widths: ['*', 'auto'],
                 body: [
-                  [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 150, height: 50,margin:[5,5,0,5]}, {} ],
+                  [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
                 ]
               },
-              layout: 'noBorders',margin:[0,0,0,10]},
+              layout: 'noBorders',
+  
+            },
+            content: [
               { text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#002060', margin: [0, 0, 0, 15] },
               {
                 text: 'Created By: ' + this.usr.username,
                 fontSize: 12,
                 alignment: 'center',
                 bold:true,
+                decoration: 'underline',
               },
               {
                 text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
                 fontSize: 12,
                 alignment: 'center',
                 bold:true,
+                decoration: 'underline',
               },
               {
                 canvas: [
@@ -895,7 +909,7 @@ export class VendorApproveComponent implements OnInit {
                 },
 
               },
-              margin: [0, 0, 0, 15],
+             pageBreak: 'after',
             },
             {
               table: {
@@ -944,7 +958,8 @@ export class VendorApproveComponent implements OnInit {
               },
               margin: [0, 0, 0, 15],
             },
-            ]
+            ],
+            pageMargins: [40, 80, 40, 60],
 
 
           };
@@ -957,27 +972,32 @@ export class VendorApproveComponent implements OnInit {
           info: {
             title: `Due Dilligence Checklist for ${this.DueDilligenceDetails.vendor.name}`,
           },
-          content: [
-            {table: {
+          header: {
+            table: {
               headerRows: 0,
-              widths: [ '*', 'auto' ],
+              widths: ['*', 'auto'],
               body: [
-                [ {image: this.logoImageBase64,alignment:'left',fillColor:"#244688", width: 150, height: 50,margin:[5,5,0,5]}, {} ],
+                [{ image: this.logoImageBase64, alignment: 'left', fillColor: "#244688", width: 200, height: 55, margin: [5, 5, 0, 5] }, { text: "", fillColor: "#244688", alignment: 'right' }],
               ]
             },
-            layout: 'noBorders',margin:[0,0,0,10]},
+            layout: 'noBorders',
+
+          },
+          content: [
             { text: 'Vendor Due Diligence Checklist', fontSize: 20, alignment: 'center', color: '#002060', margin: [0, 0, 0, 15] },
             {
               text: 'Created By: ' + this.usr.username,
               fontSize: 12,
               alignment: 'center',
               bold:true,
+              decoration: 'underline',
             },
             {
               text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
               fontSize: 12,
               alignment: 'center',
               bold:true,
+              decoration: 'underline',
             },
             {
               canvas: [
@@ -1320,7 +1340,8 @@ export class VendorApproveComponent implements OnInit {
             },
             margin: [0, 0, 0, 15],
           },
-          ]
+          ],
+          pageMargins: [40, 80, 40, 60],
 
 
         };
@@ -1391,7 +1412,7 @@ export class VendorApproveComponent implements OnInit {
     transVar = new DatePipe('en-ZA');
     this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
     this.VendorNotification.name = this.onboardRequest[0].vendor.name + " requires due diligence details"
-    this.VendorNotification.user_ID = 1;
+    this.VendorNotification.user_ID = this.GRCUserID;
     this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
     var action = "APPROVED";
     var title = "APPROVE SUCCESSFUL";

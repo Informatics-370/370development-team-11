@@ -107,6 +107,12 @@ export class ViewConsumableCategoryComponent implements OnInit {
             disableClose: true,
             data: { ID }
           });
+
+          this.Dialog.afterAllClosed.subscribe({
+            next: (response) => {
+              this.ngOnInit();
+            }
+          })
         }
         else {
 

@@ -33,6 +33,8 @@ export class DeleteEmployeeComponent implements OnInit {
     actionTime: new Date(),
   }
 
+  userAccID: any;
+
   constructor(public dialogRef: MatDialogRef<DeleteEmployeeComponent>, private ActRoute: ActivatedRoute, private route: Router, private dataService: DataService,
     @Inject(MAT_DIALOG_DATA) public data: { userID: number }) { }
 
@@ -40,11 +42,14 @@ export class DeleteEmployeeComponent implements OnInit {
     this.ActRoute.paramMap.subscribe({
       next: (params) => {
         const ID = this.data.userID;
-        
+
 
         if (ID) {
           this.dataService.GetEmployee(ID).subscribe(result => {
             this.Employee = result
+            this.dataService.GetUser(ID).subscribe(ru => {
+              this.userAccID = ru
+            })
           });
         }
       }
@@ -56,8 +61,8 @@ export class DeleteEmployeeComponent implements OnInit {
   onConfirm(id: number): void {
     this.dataService.DeleteEmployee(id).subscribe(r => {
       this.dataService.DeleteNotifications(id).subscribe(nr => {
-        this.dataService.DeleteUser(id).subscribe({
-          next: (response) => {
+        this.dataService.DeleteUser(id).subscribe(uar => {
+          this.dataService.DeleteUserAccess(this.userAccID.access_ID).subscribe(ur => {
             this.log.action = "Deleted Employee: " + this.Employee.employeeName;
             this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
             let test: any
@@ -72,12 +77,10 @@ export class DeleteEmployeeComponent implements OnInit {
                 }, 1750);
               }
             })
-
-
-          }
+          })
         })
       })
-      
+
     });
   }
 
@@ -90,7 +93,7 @@ export class DeleteEmployeeComponent implements OnInit {
   }
 
   openDeleteEmployeeTab(): void {
-    const userManualUrl = 'assets/PDF/DeleteEmployeeUM.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteEmployeeUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

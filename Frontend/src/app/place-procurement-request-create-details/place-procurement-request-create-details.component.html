@@ -16,7 +16,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <input matInput placeholder="Buyer Name" formControlName="BuyerName" readonly>
+                    <input matInput placeholder="Buyer Name" formControlName="BuyerName" readonly (focus)="onFocus($event)" style="cursor: default; color: gray;">
                   </mat-form-field>
             </div>
         </div>
@@ -26,7 +26,7 @@
             </div>
             <div class="col-7">
                 <mat-form-field appearance="fill">
-                    <input matInput placeholder="Buyer Email" formControlName="BuyerEmail" readonly>
+                    <input matInput placeholder="Buyer Email" formControlName="BuyerEmail" readonly (focus)="onFocus($event)" style="cursor: default; color: gray;">
                    </mat-form-field>
             </div>
         </div>
@@ -203,7 +203,7 @@
             <div class="col-7">
               <mat-form-field appearance="outline">
                 <mat-label>Choose a date</mat-label>
-                <input matInput  [matDatepicker]="dp2" formControlName="PaidOnDate" [min]="currentDate"  readonly (click)="dp2.open()" [errorStateMatcher]="matcher">
+                <input matInput  [matDatepicker]="dp2" formControlName="PaidOnDate" [max]="currentDate"  readonly (click)="dp2.open()" [errorStateMatcher]="matcher">
                 <mat-datepicker-toggle matIconSuffix [for]="dp2" >
                 <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
                 </mat-datepicker-toggle>

@@ -96,6 +96,10 @@ export class LoginComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -162,7 +166,6 @@ export class LoginComponent implements OnInit {
       Email: ['', []]
     })
     this.loginConfirm = null;
-    console.log(this.loginConfirm)
   }
 
   // ForgotPass() {
@@ -175,7 +178,6 @@ export class LoginComponent implements OnInit {
   LoginUser() {
     this.loginConfirm = localStorage.getItem("User");
     this.userName = this.myForm.get('UserName')?.value;
-    //console.log(this.userName)
     this.password = this.myForm.get('Password')?.value;
 
     this.dataService.GetActiveDelegations().subscribe({
@@ -184,8 +186,6 @@ export class LoginComponent implements OnInit {
 
         for (let i = 0; i < this.activeDelegations.length; i++) {
           let un = this.activeDelegations[i].user.username;
-          console.log(un)
-          console.log(this.userName)
           if (un == this.userName) {
             this.hasActiveDelegation = "true";
             this.delID = this.activeDelegations[i].delegation_ID;
@@ -199,20 +199,16 @@ export class LoginComponent implements OnInit {
               this.tempAccess = ta;
               this.tA = this.tempAccess;
               this.tA.delegation_Of_Authority = this.doa;
-              console.log(this.tA)
               this.dataService.loginWithTemp(this.userName, this.password, this.tempAccess, this.tempUsername).subscribe({
                 next: (response) => {
                   if (response != null) {
-                    console.log(response)
                     const stringToken = JSON.stringify(response)
-                    console.log(stringToken)
                     const expirationDate = new Date();
                     expirationDate.setTime(expirationDate.getTime() + 3 * 60 * 60 * 1000); // Expires in 3 hours
 
                     sessionStorage.setItem("token", stringToken);
                     sessionStorage.setItem("tokenExpiration", expirationDate.getTime().toString());
 
-                    console.log("Login Succeessss");
 
 
                     this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
@@ -225,7 +221,6 @@ export class LoginComponent implements OnInit {
 
                 },
                 error: (error) => {
-                  console.log(error)
                   if (error.status === 401) {
                     // Unauthorized: Invalid credentials
                     var action = "Error";
@@ -253,16 +248,16 @@ export class LoginComponent implements OnInit {
           this.dataService.login(this.userName, this.password).subscribe({
             next: (response) => {
               if (response != null) {
-                console.log(response)
+
                 const stringToken = JSON.stringify(response)
-                console.log(stringToken)
+
                 const expirationDate = new Date();
                 expirationDate.setTime(expirationDate.getTime() + 3 * 60 * 60 * 1000); // Expires in 3 hours
 
                 sessionStorage.setItem("token", stringToken);
                 sessionStorage.setItem("tokenExpiration", expirationDate.getTime().toString());
 
-                console.log("Login Succeessss");
+
 
 
                 this.AuthServ.setUserRole(this.dataService.decodeUserRole(sessionStorage.getItem("token")))
@@ -285,7 +280,7 @@ export class LoginComponent implements OnInit {
 
             },
             error: (error) => {
-              console.log(error)
+
               if (error.status === 401) {
                 // Unauthorized: Invalid credentials
                 var action = "Error";
@@ -314,11 +309,11 @@ export class LoginComponent implements OnInit {
 
   ResetPassword() {
     this.dataService.getEmployeebyEmail(this.Email).subscribe(result => {
-      console.log(result)
+
       if (result != null) {
         let newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
         let OTP = Array(6).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
-        console.log(result)
+
         document.getElementById('loading').style.display = 'block';
 
         this.mail.Name = result.employeeName,
@@ -330,11 +325,11 @@ export class LoginComponent implements OnInit {
           next: (Result) => {
             let MailName = this.mail.Name;
             let MailUserName = this.mail.Username;
-            console.log(MailUserName)
+
             let NewPass = newPassword;
             let MailEmail = this.mail.Email;
             let userID = Number(result.user.user_Id);
-            console.log(userID)
+
 
             this.dialog.open(OTPComponent, {
               data: { OTP, MailName, MailUserName, NewPass, MailEmail, userID },
@@ -362,11 +357,11 @@ export class LoginComponent implements OnInit {
 
       else {
         this.dataService.getAdminbyEmail(this.Email).subscribe(result => {
-          console.log(result)
+
           if (result != null) {
             let newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
             let OTP = Array(6).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
-            console.log(result)
+
             document.getElementById('loading').style.display = 'block';
 
             this.mail.Name = result.adminName,
@@ -379,11 +374,11 @@ export class LoginComponent implements OnInit {
                 this.hideloader()
                 let MailName = this.mail.Name;
                 let MailUserName = this.mail.Username;
-                console.log(MailUserName)
+
                 let NewPass = newPassword;
                 let MailEmail = this.mail.Email;
                 let userID = Number(result.user.user_Id);
-                console.log(userID)
+
 
                 this.dialog.open(OTPComponent, {
                   data: { OTP, MailName, MailUserName, NewPass, MailEmail, userID },

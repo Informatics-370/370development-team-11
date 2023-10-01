@@ -257,6 +257,7 @@ namespace ProcionAPI.Models.Repositories
             {
                 newNotification.User = existingUser;
                 newNotification.User.No_Notifications = existingUser.No_Notifications + 1;
+                newNotification.User.No_DelNotifications = existingUser.No_DelNotifications + 1;
             }
 
             newNotification.Send_Date = DateTime.Now;
@@ -283,6 +284,7 @@ namespace ProcionAPI.Models.Repositories
             {
                 newNotification.User = existingUser;
                 newNotification.User.No_Notifications = existingUser.No_Notifications + 1;
+                newNotification.User.No_DelNotifications = existingUser.No_DelNotifications + 1;
             }
 
             newNotification.Send_Date = DateTime.Now;

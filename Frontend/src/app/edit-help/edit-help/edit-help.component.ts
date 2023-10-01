@@ -70,7 +70,6 @@ export class EditHelpComponent implements OnInit{
   getHelp() {
     this.dataService.GetHelp(+this.route.snapshot.params['help_ID']).subscribe(r => {
       this.help = r;
-      console.log(+this.route.snapshot.params['help_ID']);
       this.myForm.patchValue({
         name: this.help.name,
         //video: this.help.video,
@@ -79,7 +78,6 @@ export class EditHelpComponent implements OnInit{
         help_Category_ID: this.help.help_Category_ID
       });
 
-      console.log(this.myForm.get('video')?.value);
       this.helpID = this.help.help_ID;
       this.HelpToEdit.help_Category_ID = this.help.help_Category_ID;
       this.HelpToEdit.name = this.help.name;
@@ -137,6 +135,7 @@ export class EditHelpComponent implements OnInit{
 
 
   onSubmit() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.HelpToEdit.name = this.myForm.get('name')?.value;
     var name = "" + this.HelpToEdit.name;
     this.HelpToEdit.help_Category_ID = this.myForm.get('help_Category_ID')?.value;
@@ -155,7 +154,8 @@ export class EditHelpComponent implements OnInit{
      
       this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
         next: (result) => {
-          if (result != null){
+          console.log(result)
+          if (result == null){
 
          
             this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
@@ -193,7 +193,8 @@ export class EditHelpComponent implements OnInit{
               }
             })
           } else{
-              hideloader();
+            hideloader();
+            document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "ERROR";
               var title = "ERROR: Help Exists";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -235,7 +236,7 @@ export class EditHelpComponent implements OnInit{
 
           this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
             next: (result) => {
-              if (result != null){
+              if (result == null){
 
               
                 this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
@@ -269,7 +270,8 @@ export class EditHelpComponent implements OnInit{
                    })
 
             }else{
-              hideloader();
+                hideloader();
+                document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "ERROR";
               var title = "ERROR: Help Exists";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -317,7 +319,7 @@ export class EditHelpComponent implements OnInit{
 
         this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
           next: (result) =>{
-            if (result != null){
+            if (result == null){
 
            
 
@@ -353,6 +355,7 @@ export class EditHelpComponent implements OnInit{
 
             }else{
               hideloader();
+              document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "ERROR";
               var title = "ERROR: Help Exists";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -397,7 +400,6 @@ export class EditHelpComponent implements OnInit{
             let Path: any = response
             this.sPath=Path.pathSaved.toString()
             this.HelpToEdit.user_Manual = this.sPath;
-            console.log(this.HelpToEdit.user_Manual)
 
 
             this.fileToUpload = this.Videofiles[0];    
@@ -413,13 +415,12 @@ export class EditHelpComponent implements OnInit{
             let Path: any = response
             this.sPath=Path.pathSaved.toString()
             this.HelpToEdit.video = this.sPath;
-            console.log(this.HelpToEdit.video)
 
 
 
               this.dataService.EditHelpValidation(name, this.help.help_ID).subscribe({
                 next: (result) =>{
-                  if (result != null){
+                  if (result == null){
 
                  
               this.dataService.EditHelp(this.HelpToEdit, this.helpID).subscribe({
@@ -459,7 +460,8 @@ export class EditHelpComponent implements OnInit{
               })
 
               } else{
-                hideloader();
+                    hideloader();
+                    document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "ERROR";
               var title = "ERROR: Help Exists";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Help name <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

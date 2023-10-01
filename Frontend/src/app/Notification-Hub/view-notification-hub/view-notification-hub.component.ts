@@ -28,7 +28,28 @@ export class ViewNotificationHubComponent implements OnInit {
   iTempUsername: string;
   hasTempAcc: string;
 
+  usernotifications: any;
 
+  numVenNoti: number;
+  numDelNoti: number;
+  numInvNoti: number;
+  numProNoti: number;
+
+  tempNumVenNoti: Number;
+  tempNumDelNoti: Number;
+  tempNumInvNoti: Number;
+  tempNumProNoti: Number;
+
+  InvHidden = false;
+  ProHidden = false;
+  DelHidden = false;
+  VenHidden = false;
+
+  tempHidden = false;
+  tempInvHidden = false;
+  tempProHidden = false;
+  tempDelHidden = false;
+  tempVenHidden = false;
 
   todayDate: Date = new Date();
 
@@ -49,7 +70,42 @@ export class ViewNotificationHubComponent implements OnInit {
   ngOnInit() {
     this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
     this.iTempUsername = this.dataService.decodeTempUsername(sessionStorage.getItem("token"));
-    console.log(this.iTempUsername);
+
+    this.dataService.GetUserByUsername(this.iName).subscribe(r => {
+      this.usernotifications = r;
+      this.numVenNoti = this.usernotifications.no_VenNotifications;
+      this.numDelNoti = this.usernotifications.no_DelNotifications;
+      this.numInvNoti = this.usernotifications.no_InvNotifications;
+      this.numProNoti = this.usernotifications.no_ProNotifications;
+
+      if (this.numInvNoti == 0) {
+        this.InvHidden = true;
+      }
+      else {
+        this.InvHidden = false;
+      }
+
+      if (this.numDelNoti == 0) {
+        this.DelHidden = true;
+      }
+      else {
+        this.DelHidden = false;
+      }
+
+      if (this.numProNoti == 0) {
+        this.ProHidden = true;
+      }
+      else {
+        this.ProHidden = false;
+      }
+
+      if (this.numVenNoti == 0) {
+        this.VenHidden = true;
+      }
+      else {
+        this.VenHidden = false;
+      }
+    })
 
     if (this.iTempUsername == "None") {
 
@@ -71,6 +127,47 @@ export class ViewNotificationHubComponent implements OnInit {
             this.dataService.GetTempDelegationNotifications(this.iTempUsername).subscribe(d => {
               this.TempDelegationNotifications = d;
               this.dataSourceTempDelegation = new MatTableDataSource(d);
+
+              this.dataService.GetUserByUsername(this.iTempUsername).subscribe(tu => {
+                this.tempNumVenNoti = tu.no_VenNotifications;
+                this.tempNumDelNoti = tu.no_DelNotifications;
+                this.tempNumInvNoti = tu.no_InvNotifications;
+                this.tempNumProNoti = tu.no_ProNotifications;
+
+                if (this.tempNumInvNoti == 0) {
+                  this.tempInvHidden = true;
+                }
+                else {
+                  this.tempInvHidden = false;
+                }
+
+                if (this.tempNumDelNoti == 0) {
+                  this.tempDelHidden = true;
+                }
+                else {
+                  this.tempDelHidden = false;
+                }
+
+                if (this.tempNumProNoti == 0) {
+                  this.tempProHidden = true;
+                }
+                else {
+                  this.tempProHidden = false;
+                }
+
+                if (this.tempNumVenNoti == 0) {
+                  this.tempVenHidden = true;
+                }
+                else {
+                  this.tempVenHidden = false;
+                }
+
+                if (this.tempNumInvNoti == 0 && this.tempNumDelNoti == 0 && this.tempNumProNoti == 0 && this.tempNumVenNoti == 0) {
+                  this.tempHidden = true;
+                } else {
+                  this.tempHidden = false;
+                }
+              })
             })
           })
         })
@@ -89,6 +186,8 @@ export class ViewNotificationHubComponent implements OnInit {
     this.dataService.GetVendorNotifications(this.iName).subscribe(r => {
       this.VendorNotifications = r;
       this.dataSourceVendor = new MatTableDataSource(r);
+      
+      
     })
   }
 
@@ -114,7 +213,6 @@ export class ViewNotificationHubComponent implements OnInit {
   }
 
   VendorRoute(name: string) {
-    console.log(name)
     if (name.includes("New Vendor Onboard Request")) {
       this.router.navigate(['/vendor-unofficial-vendorlist']);
     }

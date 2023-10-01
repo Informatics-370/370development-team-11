@@ -74,6 +74,10 @@ export class CreateDelegationComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -156,12 +160,7 @@ export class CreateDelegationComponent implements OnInit {
 
     this.getUsername();
 
-    this.dataService.GetUsers().subscribe(r => {
-      this.options = r
-      this.options.forEach((element, i) => {
-        if (element.username == this.user.username) this.options.splice(i, 1);
-      })
-    })
+    
 
 
 
@@ -199,8 +198,26 @@ export class CreateDelegationComponent implements OnInit {
       this.myForm.patchValue({
         DelegatingName: this.user.username
       })
-      
+      this.myForm.get('DelegatingName').disable();
+
+      this.dataService.GetUsers().subscribe(r => {
+        this.options = r
+        this.options.forEach((element, i) => {
+          if (element.username == this.user.username) this.options.splice(i, 1);
+        })
+
+        this.options.forEach((el, idx) => {
+          if (el.role.name == "Admin") this.options.splice(idx, 1);
+        })
+      })
+
+
     })
+  }
+
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+    
   }
 
   get f() {
@@ -219,9 +236,15 @@ export class CreateDelegationComponent implements OnInit {
     this.myForm.reset();
     this.router.navigateByUrl('ViewEmployee');
   }
+  delegateUser: any;
+
+  
 
   getPosts(username) {
+    this.delegateUser = username;
+
     this.dataService.GetUserByUsername(username).subscribe(r => {
+
       this.delegateID = r;
       this.usr = this.delegateID;
       this.doa.user = this.usr;
@@ -275,8 +298,34 @@ export class CreateDelegationComponent implements OnInit {
         this.ta.CanViewPenPro = "true";
       }
 
-      //console.log(this.doa.user_Id)
     })
+  }
+
+  checkUser() {
+    var existingUser = "No";
+    setTimeout(() => {
+      this.delegateUser = this.myControl.value;
+
+      if (!this.delegateUser) {
+        this.myControl.setValue(null);
+        this.delegateUser = '';
+      }
+      else {
+        this.options.forEach((element, i) => {
+          if (element.username == this.myControl.value) {
+            existingUser = "Yes"
+          }
+        })
+
+        if (existingUser == "Yes") {
+          this.getPosts(this.myControl.value)
+        } else {
+          this.myControl.setValue(null);
+          this.delegateUser = '';
+        }
+
+      }
+    }, 1000)
   }
 
   onFileUpload(event: any) {
@@ -287,6 +336,7 @@ export class CreateDelegationComponent implements OnInit {
   }
 
   onSubmit() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.doa.delegatingParty = this.myForm.get('DelegatingName')?.value;
 
     this.dataService.CreateDelegationValidation(this.myForm.get('DelegatingName')?.value).subscribe({
@@ -371,6 +421,7 @@ export class CreateDelegationComponent implements OnInit {
           }
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Delegation Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There already exists a Active or Inactive <strong style='color:red'> DELEGATION REQUEST </strong> for user <strong>" + this.doa.delegatingParty + " <strong style='color:red'>!</strong>");

@@ -94,7 +94,10 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         {
 
 
-            Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Details_ID == DepositDetails.Procurement_Details_ID);
+            Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details
+                                                                             .Include(x=> x.Employee).ThenInclude(x=> x.User)
+                                                                             .ThenInclude(x=> x.Access)
+                                                                             .FirstOrDefaultAsync(x => x.Procurement_Details_ID == DepositDetails.Procurement_Details_ID);
 
             if (existingProcurementDetails != null)
             {
@@ -115,9 +118,12 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
             Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Details_ID == PaymentMadeDetails.Procurement_Details_ID);
 
-            if (existingProcurementDetails != null)
+            if (existingProcurementDetails.Payment_Made == false)
             {
+                existingProcurementDetails.Payment_Made = true;
+                
                 PaymentMadeDetails.Procurement_Details = existingProcurementDetails;
+                await _dbContext.SaveChangesAsync();
             }
 
 
@@ -177,7 +183,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
 
             Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.User).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Procurement_Details_ID == AddProcurementConsumable.Procurement_Details_ID);
-            Console.WriteLine(existingProcurementDetails);
+           
             if (existingProcurementDetails != null)
             {
                 AddProcurementConsumable.Procurement_Details = existingProcurementDetails;
@@ -445,6 +451,36 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             return await query.ToArrayAsync();
         }
 
+        public async Task<Procurement_Consumable> GetProcurementConsumablebyIDAsync(int DetailsID)
+        {
+            IQueryable<Procurement_Consumable> query = _dbContext.Procurement_Consumable.Include(x => x.Consumable)
+                                                                                        .Include(x => x.Procurement_Details)
+                                                                                        .ThenInclude(pps => pps.Procurement_Payment_Status)
+                                                                                        .Include(x => x.Procurement_Details)
+                                                                                        .ThenInclude(ps => ps.Procurement_Status)
+                                                                                        .Include(x => x.Procurement_Details)
+                                                                                        .ThenInclude(pr => pr.Procurement_Request)
+                                                                                        .ThenInclude(v => v.Vendor)
+                                                                                        .Where(x => x.Procurement_Details_ID == DetailsID);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Procurement_Asset> GetProcurementAssetbyIDAsync(int DetailsID)
+        {
+            IQueryable<Procurement_Asset> query = _dbContext.Procurement_Asset.Include(x => x.Asset)
+                                                                                        .Include(x => x.Procurement_Details)
+                                                                                        .ThenInclude(pps => pps.Procurement_Payment_Status)
+                                                                                        .Include(x => x.Procurement_Details)
+                                                                                        .ThenInclude(ps => ps.Procurement_Status)
+                                                                                        .Include(x => x.Procurement_Details)
+                                                                                        .ThenInclude(pr => pr.Procurement_Request)
+                                                                                        .ThenInclude(v => v.Vendor)
+                                                                                        .Where(x => x.Procurement_Details_ID == DetailsID);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
         public async Task<Procurement_Asset[]> GetProcurementAssetAsync()
         {
             IQueryable<Procurement_Asset> query = _dbContext.Procurement_Asset.Include(x => x.Asset).Include(x => x.Procurement_Details);
@@ -477,8 +513,8 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
         public async Task<Procurement_Details> GetProcurementDetailsByRequestIDAsync(int RequestID)
         {
             IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Where(x => x.Procurement_Request_ID == RequestID);
-
             return await query.FirstOrDefaultAsync();
+            //return await query.FirstOrDefaultAsync();
         }
         public async Task<Procurement_Details[]> GetUnpaidProcurementDetailsAsync()
         {
@@ -546,6 +582,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 ProcurementNotification.User = existingUser;
                 ProcurementNotification.User.Access = existingUser.Access;
                 ProcurementNotification.User.No_Notifications = existingUser.No_Notifications + 1;
+                ProcurementNotification.User.No_ProNotifications = existingUser.No_ProNotifications + 1;
             }
 
 
@@ -601,7 +638,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                                                       "september" ,
                                                       "october" , "november", "december" };
 
-            Console.WriteLine(Array.IndexOf(month2Db,"july"));
+          
 
             var BudgetLineDetails = await _dbContext.Budget_Line.Include(b => b.Budget_Allocation)
                 .ThenInclude(a => a.Department)
@@ -609,7 +646,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                 .Where(x => (x.Budget_Allocation.Department.Name == department) && (x.Budget_Allocation.Year >= year) ).ToListAsync(); ;
  
 
-            var data = BudgetLineDetails.Where(x => Month >= (Array.IndexOf(month2Db, x.Month.ToLower())+1));
+            var data = BudgetLineDetails.Where(x => Month <= (Array.IndexOf(month2Db, x.Month.ToLower())+1));
 
             return data.ToArray();
         }
@@ -787,6 +824,18 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
 
             return budgetline;
+        }
+
+        public async Task<Proof_Of_Payment> GetProofofPaymentsAsync(int DetailsID)
+        {
+            IQueryable<Proof_Of_Payment> query = _dbContext.Proof_Of_Payment.Include(p => p.Procurement_Details).Where(i => i.Procurement_Details_ID == DetailsID);
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Procurement_Invoice[]> GetInvoicesAsync(int DetailsID)
+        {
+            IQueryable<Procurement_Invoice> query = _dbContext.Procurement_Invoice.Include(p => p.Procurement_Details).Where(i => i.Procurement_Details_ID == DetailsID);
+            return await query.ToArrayAsync();
         }
 
 

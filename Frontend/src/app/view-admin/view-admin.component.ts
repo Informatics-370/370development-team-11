@@ -22,6 +22,10 @@ import { AdminIFrameComponent } from '../HelpIFrames/AdminIFrame/admin-iframe/ad
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { MainNavComponent } from '../main-nav/main-nav.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { TimerComponent } from '../Settings/timer/timer.component';
+import { CreateVatComponent } from '../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../Settings/edit-vat/edit-vat.component';
+
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -37,7 +41,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 export class ViewAdminComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = ['name', 'surname', 'email', 'phone', 'role', 'action', 'delete'];
-  dataSource : any;
+  dataSource: any;
 
   userDelete: any
 
@@ -72,6 +76,10 @@ export class ViewAdminComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -95,7 +103,7 @@ export class ViewAdminComponent implements OnInit {
 
     this.RoleToUse = localStorage.getItem("Role")
     this.GetAdmins();
-    
+
   }
 
   search() {
@@ -129,7 +137,7 @@ export class ViewAdminComponent implements OnInit {
   }
 
   DeleteAdmin(userID: Number, adminID: Number, username: string) {
-    
+
 
     this.dataService.UserDeleteDelegationValidation(userID, username).subscribe({
       next: (dResult) => {
@@ -269,11 +277,11 @@ export class ViewAdminComponent implements OnInit {
         }
       }
     })
-        
 
 
 
-    
+
+
   }
 
 
@@ -281,7 +289,6 @@ export class ViewAdminComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -289,10 +296,49 @@ export class ViewAdminComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+    });
+  }
+  openTimerDialog() {
+    const dialogRef = this.dialog.open(TimerComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
     });
   }
 
+  openCreateVATDialog() {
+    const dialogRef = this.dialog.open(CreateVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    this.dataService.GetVAT().subscribe(re => {
+      if (re == null) {
+        var action = "ERROR";
+        var title = "ERROR: VAT does not Exists";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No VAT <strong style='color:red'>EXISTS ON THE SYSTEM!</strong><br> Please add one before and try again.");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 4000;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
+      } else {
+        const dialogRef = this.dialog.open(EditVatComponent);
+
+        dialogRef.afterClosed().subscribe(result => {
+        });
+      }
+    })
+
+
+    
+  }
   openAdminIFrameTab(): void {
     const dialogRef = this.dialog.open(AdminIFrameComponent, {
       // width: '800px', // Set the desired width

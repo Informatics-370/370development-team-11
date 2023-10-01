@@ -22,6 +22,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { AuditLog } from '../../Shared/AuditLog';
 import { DatePipe } from '@angular/common';
 import { Access } from 'src/app/Shared/Access';
+import { MailData } from 'src/app/Shared/Mail';
 
 //const CHECK_ICON = `<svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
 
@@ -79,6 +80,10 @@ export class UserProfileEditComponent {
     password: '',
     profile_Picture: '',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -134,6 +139,13 @@ export class UserProfileEditComponent {
     user: "",
     action: "",
     actionTime: new Date(),
+  }
+
+  mail: MailData = {
+    Name: '',
+    Username: '',
+    Password: '',
+    Email: ''
   }
 
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer, private nav: MainNavComponent, iconRegistry: MatIconRegistry) {
@@ -221,7 +233,6 @@ export class UserProfileEditComponent {
       this.usr.username = this.admin.user.username;
       this.usr.role_ID = this.admin.user.role.role_ID
       this.usr.access = this.admin.user.access;
-      console.log(this.admin.user.access.access_ID)
       this.usr.password = this.admin.user.password;
       this.usr.profile_Picture = this.admin.user.profile_Picture;
       this.cropImgPreview = this.admin.user.profile_Picture;
@@ -238,7 +249,6 @@ export class UserProfileEditComponent {
   onFileChange(event: any): void {
     this.imgChangeEvt = event;
     var img = this.imgChangeEvt;
-    console.log(event.target.files[0].name);
 
     const dialogRef: MatDialogRef<CropperModalComponent> = this.dialog.open(CropperModalComponent, {
       disableClose: true,
@@ -254,7 +264,7 @@ export class UserProfileEditComponent {
 
   onSubmitA() {
 
-
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.adm.adminName = this.myForm.get('AdminName')?.value;
     this.adm.adminSurname = this.myForm.get('AdminSurname')?.value;
     this.adm.cellPhone_Num = this.myForm.get('CellPhone_Num')?.value;
@@ -269,6 +279,13 @@ export class UserProfileEditComponent {
 
     if (username != this.usr.username) {
       this.usernameChangeLogout = true;
+
+      this.mail.Email = this.adm.email;
+      this.mail.Name = this.adm.adminName;
+      this.mail.Username = username;
+      this.mail.Password = "";
+
+      this.dataService.SendNewUsernameMail(this.mail).subscribe();
     }
 
     this.usr.username = username;
@@ -314,7 +331,7 @@ export class UserProfileEditComponent {
                             dialogRef.close();
                           }
                         })
-                        
+
                       }, duration);
                     } else {
                       var action = "Update";
@@ -342,6 +359,7 @@ export class UserProfileEditComponent {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: User Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A user with the username: <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -361,6 +379,7 @@ export class UserProfileEditComponent {
   }
 
   onSubmitE() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.emp.employeeName = this.myForm.get('Name')?.value;
     this.emp.employeeSurname = this.myForm.get('Surname')?.value;
     this.emp.cellPhone_Num = this.myForm.get('CellPhone_Num')?.value;
@@ -378,6 +397,12 @@ export class UserProfileEditComponent {
 
     if (username != this.usr.username) {
       this.usernameChangeLogout = true;
+      this.mail.Email = this.emp.email;
+      this.mail.Name = this.emp.employeeName;
+      this.mail.Username = username;
+      this.mail.Password = "";
+
+      this.dataService.SendNewUsernameMail(this.mail).subscribe();
     }
 
     this.usr.username = username;
@@ -385,8 +410,6 @@ export class UserProfileEditComponent {
 
     this.dataService.EditUserValidation(username, this.usr.user_Id).subscribe({
       next: (Result) => {
-        console.log(Result)
-        console.log(this.usr)
         if (Result == null) {
           this.dataService.EditUser(this.usr, this.employee.user_Id).subscribe(result => {
             this.dataService.EditEmployee(this.emp, this.employee.employeeID).subscribe({
@@ -447,7 +470,7 @@ export class UserProfileEditComponent {
                       }, duration);
                     }
 
-                   
+
                   }
                 })
               }
@@ -455,6 +478,7 @@ export class UserProfileEditComponent {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: User Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A user with the username: <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");

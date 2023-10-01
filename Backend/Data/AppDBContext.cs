@@ -76,6 +76,7 @@ namespace ProcionAPI.Data
         public DbSet<Consumable_History> Consumable_History { get; set; }
         public DbSet<AuditLog> AuditLog { get; set; }
         public DbSet<Procurement_Invoice> Procurement_Invoice { get; set; }
+        public DbSet<UserSettings> UserSettings { get; set; }
 
         UserRepository userrep = new UserRepository();
 
@@ -822,6 +823,15 @@ namespace ProcionAPI.Data
                 Sign_Off_Status_ID = 1,
                 Name = "No",
                 Description = "Has not been signed off",
+
+            });
+
+            modelBuilder.Entity<UserSettings>()
+            .HasData(
+            new
+            {
+                Setting_ID = 1,
+                TimerDuration = 120
 
             });
 

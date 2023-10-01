@@ -17,6 +17,9 @@ import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.componen
 import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
 import { DepartmentIFrameComponent } from 'src/app/HelpIFrames/DepartmentIFrame/department-iframe/department-iframe.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { TimerComponent } from 'src/app/Settings/timer/timer.component';
+import { CreateVatComponent } from '../../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../../Settings/edit-vat/edit-vat.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -52,7 +55,6 @@ export class ViewDepartmentComponent implements OnInit {
 
   ngOnInit() {
     this.GetDepartments();
-    console.log(this.Departments)
   }
 
   search() {
@@ -157,7 +159,6 @@ export class ViewDepartmentComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -165,11 +166,46 @@ export class ViewDepartmentComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+    });
+  }
+  openTimerDialog() {
+    const dialogRef = this.dialog.open(TimerComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
     });
   }
 
+  openCreateVATDialog() {
+    const dialogRef = this.dialog.open(CreateVatComponent);
 
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    this.dataService.GetVAT().subscribe(re => {
+      if (re == null) {
+        var action = "ERROR";
+        var title = "ERROR: VAT does not Exists";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No VAT <strong style='color:red'>EXISTS ON THE SYSTEM!</strong><br> Please add one before and try again.");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 4000;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
+      } else {
+        const dialogRef = this.dialog.open(EditVatComponent);
+
+        dialogRef.afterClosed().subscribe(result => {
+        });
+      }
+    })
+  }
 
   openDepartmentIFrameTab(): void {
     const dialogRef = this.dialog.open(DepartmentIFrameComponent, {

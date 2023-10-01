@@ -83,8 +83,6 @@ export class ViewBudgetAllocationComponent {
         this.GetDepBudgetAllocation();
       }
     }
-
-    this.dataSource = new MatTableDataSource<BudgetAllocation>(this.SearchedBudgetAllocations);
   }
 
   ngOnInit() {
@@ -128,7 +126,6 @@ export class ViewBudgetAllocationComponent {
   exportExcel(id: Number, name: String) {
 
     this.dataService.BudgetAllocationExportValidation(id).subscribe(r => {
-      console.log(r);
       if (r != null) {
         const confirm = this.dialog.open(ExportBaPickerComponent, {
           disableClose: true,

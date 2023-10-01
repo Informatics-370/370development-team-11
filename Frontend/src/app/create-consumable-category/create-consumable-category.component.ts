@@ -52,6 +52,7 @@ export class CreateConsumableCategoryComponent implements OnInit {
   }
 
   AddCategory() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.ConsumableCategory.name = this.myForm.get('Name')?.value;
     this.ConsumableCategory.description = this.myForm.get('Description')?.value;
 
@@ -98,6 +99,7 @@ export class CreateConsumableCategoryComponent implements OnInit {
           );
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Category Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The category <strong>" + this.ConsumableCategory.name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

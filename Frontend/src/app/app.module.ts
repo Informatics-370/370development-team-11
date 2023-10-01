@@ -173,7 +173,13 @@ import { YearPickerComponent } from './year-picker/year-picker.component';
 import { ReceiveAssetComponent } from './receive-asset/receive-asset.component';
 import { ExportBaPickerComponent } from './export-ba-picker/export-ba-picker.component';
 import { ImportAllocationComponent } from './import-allocation/import-allocation.component';
+import { TimerComponent } from './Settings/timer/timer.component';
 
+import { MatTreeModule } from '@angular/material/tree';
+import { DynamicCreateDepartmentComponent } from './dynamic-create-department/dynamic-create-department.component';
+import { ViewPRDetailsExpandedComponent } from './view-prdetails-expanded/view-prdetails-expanded.component';
+import { CreateVatComponent } from './Settings/create-vat/create-vat.component';
+import { EditVatComponent } from './Settings/edit-vat/edit-vat.component';
 
 
 @NgModule({
@@ -312,6 +318,11 @@ import { ImportAllocationComponent } from './import-allocation/import-allocation
     ReceiveAssetComponent,
     ExportBaPickerComponent,
     ImportAllocationComponent,
+    TimerComponent,
+    DynamicCreateDepartmentComponent,
+    ViewPRDetailsExpandedComponent,
+    CreateVatComponent,
+    EditVatComponent,
   ],
   imports: [
     BrowserModule,
@@ -351,7 +362,8 @@ import { ImportAllocationComponent } from './import-allocation/import-allocation
     ReactiveFormsModule,
     AsyncPipe,
     NgFor,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatTreeModule
   ],
   providers: [
     //AppService,

@@ -82,13 +82,15 @@ export class ReceiveProcurementItemComponent {
       Description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
       On_Hand: [0, [Validators.required, Validators.pattern("^[0-9]+$")]]
     })
+
+    this.myForm.get('Name').disable();
+    this.myForm.get('Description').disable();
   }
 
   GetConsumable(id: number) {
     this.dataService.GetConsumablesForRequestConsRecieve(id).subscribe(result => {
       this.ConsumableRequest = result;
       this.Details = result.procurement_Details
-      console.log(this.Details)
     })
   }
 
@@ -123,6 +125,10 @@ export class ReceiveProcurementItemComponent {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -143,11 +149,12 @@ export class ReceiveProcurementItemComponent {
   };
 
   updateStock() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.dataService.GetConsumableHistoryByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
       next: (Hist) => {
-        console.log(Hist)
+
         this.HistAmt = Hist.stockAmt
-        console.log(Hist.stockAmt)
+
         this.dataService.GetConsumableByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
           next: (response) => {
             this.dataService.GetCategoryByID(response.consumable_Category_ID).subscribe({
@@ -163,7 +170,7 @@ export class ReceiveProcurementItemComponent {
 
                 this.History.consumable = this.Consumables
 
-                console.log(this.History)
+
 
                 this.dataService.UpdateStock(this.History).subscribe({
                   next: (response) => {
@@ -211,7 +218,9 @@ export class ReceiveProcurementItemComponent {
   }
 
 
-
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
 
 
   openRecieveConsumableTab(): void {

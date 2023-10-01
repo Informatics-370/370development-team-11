@@ -50,10 +50,10 @@ export class CreateBudgetCategoryComponent {
   }
 
   onSubmit(): void {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.budgetCategory.account_Name = this.budgetCategoryForm.get('account_Name')?.value;
     this.budgetCategory.account_Code = this.budgetCategoryForm.get('account_Code')?.value;
     this.budgetCategory.description = this.budgetCategoryForm.get('description')?.value;
-    console.log(this.budgetCategory)
     this.dataService.BudgetCategoryValidation(this.budgetCategory.account_Name).subscribe({
       next: (Result) => {
         if (Result == null) {
@@ -94,6 +94,7 @@ export class CreateBudgetCategoryComponent {
           );
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Budget Category Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The category <strong>" + this.budgetCategory.account_Name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

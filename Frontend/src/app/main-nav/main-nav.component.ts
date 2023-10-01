@@ -66,6 +66,10 @@ export class MainNavComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -81,7 +85,10 @@ export class MainNavComponent implements OnInit {
   iRole: string;
   rAdmin: string;
   usernotifications: any;
+  tempUsernotifications: any;
   numNotifications: number;
+  iTempUsername: string;
+  hasTempAcc: string;
 
   hidden = false;
 
@@ -93,17 +100,40 @@ export class MainNavComponent implements OnInit {
     })
 
     interval(10000).subscribe(x => {
-      this.dataService.GetUserByUsername(this.iName).subscribe(r => {
-        this.usernotifications = r;
-        this.numNotifications = this.usernotifications.no_Notifications;
+      this.iTempUsername = this.dataService.decodeTempUsername(sessionStorage.getItem("token"));
 
-        if (this.numNotifications == 0) {
-          this.hidden = true;
-        }
-        else {
-          this.hidden = false;
-        }
-      })
+      if (this.iTempUsername == "None") {
+        this.dataService.GetUserByUsername(this.iName).subscribe(r => {
+          this.usernotifications = r;
+          this.numNotifications = this.usernotifications.no_Notifications;
+
+          if (this.numNotifications == 0) {
+            this.hidden = true;
+          }
+          else {
+            this.hidden = false;
+          }
+        })
+      } else {
+        this.dataService.GetUserByUsername(this.iName).subscribe(r => {
+          this.usernotifications = r;
+          this.numNotifications = this.usernotifications.no_Notifications;
+
+          this.dataService.GetUserByUsername(this.iTempUsername).subscribe(re => {
+            this.tempUsernotifications = re;
+            this.numNotifications = this.numNotifications + this.tempUsernotifications.no_Notifications;
+          })
+
+          if (this.numNotifications == 0) {
+            this.hidden = true;
+          }
+          else {
+            this.hidden = false;
+          }
+        })
+      }
+
+      
     })
   }
   RoleToUse: string = "";
@@ -127,7 +157,6 @@ export class MainNavComponent implements OnInit {
   ngOnInit() {
     this.AuthServ.userRole$.subscribe(role => {
       this.RoleToUse = role
-      console.log(role)
       this.isLoggedIn = true;
     })
 

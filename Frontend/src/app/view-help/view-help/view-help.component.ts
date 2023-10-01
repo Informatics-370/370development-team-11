@@ -16,6 +16,9 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/
 import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { TimerComponent } from 'src/app/Settings/timer/timer.component';
+import { CreateVatComponent } from '../../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../../Settings/edit-vat/edit-vat.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -29,32 +32,32 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-help',
   templateUrl: './view-help.component.html',
   styleUrls: ['./view-help.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewHelpComponent implements OnInit {
-  displayedColumnsAdmin: string[] = ['helpCategory', 'name', 'description', 'video', 'user_Manual',  'action', 'delete'];
-                                  //'help_ID',
-  displayedColumnsUser: string[] = [ 'helpCategory', 'name', 'description', 'video', 'user_Manual'];
-                                 //'help_ID',
+  displayedColumnsAdmin: string[] = ['helpCategory', 'name', 'description', 'video', 'user_Manual', 'action', 'delete'];
+  //'help_ID',
+  displayedColumnsUser: string[] = ['helpCategory', 'name', 'description', 'video', 'user_Manual'];
+  //'help_ID',
   dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  HelpToDelete:any  = {
-    help_ID :0,
-    name:'',
-    description:'',
-    video:'',
-    user_Manual:'',
+  HelpToDelete: any = {
+    help_ID: 0,
+    name: '',
+    description: '',
+    video: '',
+    user_Manual: '',
   }
 
 
-  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService,private http: HttpClient, private sanitizer: DomSanitizer) { }
+  constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private http: HttpClient, private sanitizer: DomSanitizer) { }
 
   DeleteHelp: Help[] = [];
   Helps: Help[] = [];
   HelpCategorys: Help_Category[] = [];
-  FileDetails:any[] = [];
-  vFileDetails:any[]=[];
+  FileDetails: any[] = [];
+  vFileDetails: any[] = [];
   SearchedHelp: Help[] = [];
   searchWord: string = "";
 
@@ -68,22 +71,37 @@ export class ViewHelpComponent implements OnInit {
 
     if (this.iRole == "Admin") {
       this.rAdmin = "true";
-    }else{
+    } else {
       this.rUser = "true";
     }
     this.GetHelps();
 
   }
 
-
+  searchedHelp: any;
+  SearchFileDetails: any[] = [];
+  SearchvFileDetails: any[] = [];
 
   search() {
     const searchTerm = this.searchWord.toLocaleLowerCase();
-  
+
     if (searchTerm) {
       this.dataSource = this.Helps.filter(help => help.name.toLocaleLowerCase().includes(searchTerm))
+      this.searchedHelp = this.Helps.filter(help => help.name.toLocaleLowerCase().includes(searchTerm))
+
+      for (let n = 0; n < this.searchedHelp.length; n++) {
+        let id = this.searchedHelp[n].help_ID;
+
+        this.FileDetails[n] = this.SearchFileDetails[Number(id) - 1];
+        this.vFileDetails[n] = this.SearchvFileDetails[Number(id) - 1];
+      }
+
     }
     else if (searchTerm == "") {
+      this.FileDetails.length = 0;
+      this.SearchFileDetails.length = 0;
+      this.vFileDetails.length = 0;
+      this.SearchvFileDetails.length = 0;
       this.GetHelps();
     }
   }
@@ -132,7 +150,14 @@ export class ViewHelpComponent implements OnInit {
           this.vFileDetails[i].FileName = vFile;
         }
       }
-      console.log(result)
+
+      for (let um = 0; um < this.FileDetails.length; um++) {
+        this.SearchFileDetails[um] = this.FileDetails[um];
+      }
+
+      for (let f = 0; f < this.vFileDetails.length; f++) {
+        this.SearchvFileDetails[f] = this.vFileDetails[f];
+      }
     });
     function hideloader() {
       document.getElementById('loading')
@@ -141,7 +166,7 @@ export class ViewHelpComponent implements OnInit {
     }
   }
 
- 
+
 
   DeleteRequest(help_ID: Number) {
     const confirm = this.dialog.open(DeleteHelpComponent, {
@@ -163,11 +188,11 @@ export class ViewHelpComponent implements OnInit {
       window.open(fileURL, '_blank');
       URL.revokeObjectURL(fileURL);
     });
-    
+
   }
 
   openUserManualInNewTab(): void {
-    const userManualUrl = 'assets/PDF/UserManual.pdf'; 
+    const userManualUrl = 'assets/PDF/UserManual.pdf';
     window.open(userManualUrl, '_blank');
   }
 
@@ -181,16 +206,16 @@ export class ViewHelpComponent implements OnInit {
   //
   // }
 
- // openVideoInNewTab(i: number): void {
- //   const videoUrl = this.vFileDetails[i].FileURL;
- //   const dialogRef = this.dialog.open(VideoDialogComponent, {
- //     width: '560px',
- //     height: '315px',
- //     data: { videoUrl },
- //   });
- // }
+  // openVideoInNewTab(i: number): void {
+  //   const videoUrl = this.vFileDetails[i].FileURL;
+  //   const dialogRef = this.dialog.open(VideoDialogComponent, {
+  //     width: '560px',
+  //     height: '315px',
+  //     data: { videoUrl },
+  //   });
+  // }
 
- openVideoInNewTab(videoUrl: string): void {
+  openVideoInNewTab(videoUrl: string): void {
     const dialogRef = this.dialog.open(VideoDialogComponent, {
       //width: '1000px',
       //height: '800px',
@@ -203,7 +228,6 @@ export class ViewHelpComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -211,8 +235,46 @@ export class ViewHelpComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
+  }
+
+  openTimerDialog() {
+    const dialogRef = this.dialog.open(TimerComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openCreateVATDialog() {
+    const dialogRef = this.dialog.open(CreateVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    this.dataService.GetVAT().subscribe(re => {
+      if (re == null) {
+        var action = "ERROR";
+        var title = "ERROR: VAT does not Exists";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No VAT <strong style='color:red'>EXISTS ON THE SYSTEM!</strong><br> Please add one before and try again.");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 4000;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
+      } else {
+        const dialogRef = this.dialog.open(EditVatComponent);
+
+        dialogRef.afterClosed().subscribe(result => {
+        });
+      }
+    })
   }
 
 }

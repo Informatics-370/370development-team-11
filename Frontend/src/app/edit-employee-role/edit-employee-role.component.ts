@@ -44,14 +44,17 @@ export class EditEmployeeRoleComponent implements OnInit {
     });
     this.dataService.GetRole(+this.route.snapshot.params['id']).subscribe(result => {
       this.role = result
-      console.log(result)
       this.myForm.patchValue({
         Name: this.role.name,
         Description: this.role.description
       });
+      this.myForm.get('Name').disable();
     })
   };
 
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
 
   public myError = (controlName: string, errorName: string) => {
     return this.myForm.controls[controlName].hasError(errorName);
@@ -64,11 +67,11 @@ export class EditEmployeeRoleComponent implements OnInit {
   }
 
   onSubmit() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     var name = this.myForm.get('Name')?.value;
 
     this.dataService.EditRoleValidation(name, this.role.role_ID).subscribe({
       next: (Result) => {
-        console.log(Result)
         if (Result == null) {
           this.dataService.EditRole(this.role.role_ID, this.myForm.value).subscribe({
             next: (response) => {
@@ -104,6 +107,7 @@ export class EditEmployeeRoleComponent implements OnInit {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: User Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The role <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

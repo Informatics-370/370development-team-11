@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using ProcionAPI.Models.Entities;
 
 namespace ProcionAPI.Models.Repositories { 
@@ -29,11 +30,14 @@ namespace ProcionAPI.Models.Repositories {
         Task<AuditLog[]> AddLogAsync(AuditLog LogAdd);
         Task<AuditLog[]> GetAllLogsAsync();
         Task<Employee> GetEmployeeByDepartmentAsync(string dep);
+        Task<Access> GetAccessAsync(int accID);
+        Task<User> GetDeleteUserAsync(int userID);
 
         //---------------------------------------------------------------------------VALIDATION------------------------------------------------------------------------------------
         Task<User> EditUserValidationAsync(string name, int id);
-        Task<User> CreateUserValidationAsync(string name);
+        Task<User> CreateUserValidationAsync(string name, string cellphoneNum, string Type);
         Task<Employee> CreateUserRoleValidationAsync(string department, string role);
+        Task<Employee> CreateUserMDRoleValidationAsync(string role);
         Task<bool> VerifyCredentials(string UserName, string Password);
         Task<Delegation_Of_Authority> AdminDeleteDelegationValidationAsync(int id);
         Task<Procurement_Details> EmployeeDeleteProcurementDetailsValidationAsync(int id);
@@ -42,5 +46,10 @@ namespace ProcionAPI.Models.Repositories {
         Task<Delegation_Of_Authority> UserDeleteDelegationValidationAsync(int id, string username);
         Task<Notification> UserDeleteNotificationValidationAsync(int id);
 
+        Task<UserSettings> GetTimerDurationAsync();
+        Task<UserSettings> UpdateTimerAsync(int ID, int NewTime);
+        Task<VAT> GetVATAsync();
+        Task<VAT[]> AddVATAsync(VAT VATAdd);
+        Task<VAT> EditVATAsync(VAT VATEdit);
     }
 }

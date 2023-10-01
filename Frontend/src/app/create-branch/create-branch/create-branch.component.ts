@@ -50,6 +50,8 @@ export class CreateBranchComponent {
   
 
   onSubmit() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+
 
     var street = this.myForm.get('name')?.value;
 
@@ -91,6 +93,7 @@ export class CreateBranchComponent {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Branch Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Branch <strong>" + street + " <strong style='color:red'>ALREADY EXISTS!</strong>");

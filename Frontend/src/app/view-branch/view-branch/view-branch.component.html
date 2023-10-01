@@ -20,11 +20,25 @@
       <a mat-list-item class="uni-font" [matMenuTriggerFor]="menu">Settings</a>
       <mat-menu #afterMenu="matMenu" xPosition="after" #menu="matMenu">
         <button class="MenuButton" mat-menu-item (click)="openDialog()"
-          matTooltip="This will allow you to backup the systems current data">
-          Backup System</button>
+                matTooltip="This will allow you to backup the systems current data">
+          Backup System
+        </button>
         <button class="MenuButton" mat-menu-item (click)="openRestoreDialog()"
-          matTooltip="This will allow you to restore the systems data with the backed-up file of your chosing">
-          Restore System</button>
+                matTooltip="This will allow you to restore the systems data with the backed-up file of your chosing">
+          Restore System
+        </button>
+        <button class="MenuButton" mat-menu-item (click)="openTimerDialog()"
+                matTooltip="This will allow you to adjust the timer used for OTP validation">
+          Edit OTP Timer
+        </button>
+        <button mat-menu-item class="MenuButton" (click)="openCreateVATDialog()"
+                matTooltip="This will allow you to create the VAT">
+          Create VAT
+        </button>
+        <button mat-menu-item class="MenuButton" (click)="openEditVATDialog()"
+                matTooltip="This will allow you to adjust the VAT">
+          Edit VAT
+        </button>
       </mat-menu>
     </mat-nav-list>
   </mat-sidenav>
@@ -32,7 +46,8 @@
     <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
       Manage Branch
       <mat-icon (click)="openBranchIFrameTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
-      style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+        style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}"
+        matTooltip="Need help? Click me!"></mat-icon>
     </h1>
 
     <div mat-list-item style="margin-left: 0.5%; display: flex;  align-items: center; ">
@@ -95,13 +110,13 @@
           <td mat-cell *matCellDef="let Branches" style="width:100px;">
 
             <button class="noselect" [routerLink]="['/EditBranch', Branches.branch_ID]" type="button"
-                    style="background-color: #94CC5B;">
+              style="background-color: #94CC5B;">
               <span class='text'>Edit</span>
               <span class="icon" style="border-left: 1px solid #94CC5B; ">
-                <svg xmlns="http://www.w3.org/2000/svg" height="1em"
-                     viewBox="0 0 512 512">
+                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
                   <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                  <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
+                  <path
+                    d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
                 </svg>
               </span>
             </button>
@@ -123,15 +138,15 @@
             <button class="noselect" (click)="DeleteBranch(this.Branches.branch_ID)">
               <span class='text'>Delete</span>
               <span class="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" height="1em"
-                     viewBox="0 0 448 512">
+                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
                   <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                   <style>
                     svg {
                       fill: #000000
                     }
                   </style>
-                  <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                  <path
+                    d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
                 </svg>
               </span>
             </button>
@@ -147,8 +162,8 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns" style="background-color:#244688;"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
-      <mat-paginator style="background-color: #eee;" [length]="100" [pageSize]="10"
-                     [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page">
+      <mat-paginator style="background-color: #eee;" [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"
+        aria-label="Select page">
       </mat-paginator>
     </div>
   </mat-sidenav-content>

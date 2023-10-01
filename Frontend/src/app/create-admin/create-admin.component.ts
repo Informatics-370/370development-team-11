@@ -77,6 +77,10 @@ export class CreateAdminComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -116,7 +120,7 @@ export class CreateAdminComponent implements OnInit {
 
 
   onSubmit() {
-
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     var newPassword = '';
     newPassword = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map(function (x) { return x[Math.floor(Math.random() * x.length)] }).join('');
 
@@ -166,7 +170,7 @@ export class CreateAdminComponent implements OnInit {
     this.mail.Email = this.myForm.get('Email')?.value;
     document.getElementById('loading').style.display = 'block';
 
-    this.dataService.CreateUserValidation(username).subscribe({
+    this.dataService.CreateUserValidation(username, this.adm.cellPhone_Num.toString(), "Admin").subscribe({
       next: (Result) => {
         if (Result == null) {
           this.dataService.AddUser(this.usr).subscribe(result => {
@@ -209,6 +213,7 @@ export class CreateAdminComponent implements OnInit {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Admin Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The admin <strong>" + username + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -233,7 +238,7 @@ export class CreateAdminComponent implements OnInit {
   }
 
   openCreateAdminTab(): void {
-    const userManualUrl = 'assets/PDF/CreateAdminUM.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateAdminUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

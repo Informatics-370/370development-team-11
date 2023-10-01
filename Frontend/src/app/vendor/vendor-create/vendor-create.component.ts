@@ -244,16 +244,12 @@ export class VendorCreateComponent implements OnInit{
   
      FileStorage(id:number, event: any) {
         this.fileName[id] = event.target.files[0];
-        // console.log(this.fileName)
-        // let stest:File = event.target.files[0];
-        // console.log(stest)
      }
 
   ngOnInit(): void {
 
     
 
-    console.log(this.fileName)
     this.route.paramMap.subscribe({
       next: (paramater) => {
         
@@ -376,7 +372,6 @@ export class VendorCreateComponent implements OnInit{
 
     LicenseOrAccreditationChange() {
       this.LicenseOrAccreditationChecker = this.CompanyOverviewFormGroup.get("LicenseOrAccreditationCheck")?.value
-      console.log(this.LicenseOrAccreditationChecker)
       if(this.LicenseOrAccreditationChecker == true) {
         this.CompanyContactInfoFormGroup.get('LicenseOrAccreditationNumber')?.addValidators(Validators.required)
         this.CompanyContactInfoFormGroup.get('LicenseOrAccreditationNumber')?.enable()
@@ -557,25 +552,21 @@ export class VendorCreateComponent implements OnInit{
       let VendorNo = "Vendor" + this.Vendor.vendor_ID
       this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
         let Path: any = response
-        console.log(response)
         this.VendorDetail.bankStampedConfirtmation = Path.returnedPath.toString();
         
         this.VendorService.AddVendorDetails(this.VendorDetail).subscribe(result =>{
           let VendorList:VendorDetails = result
           
-          this.VendorService.UpdateVendorStatus(VendorList[0].vendor_ID,3).subscribe(result => {console.log(result)})
+          this.VendorService.UpdateVendorStatus(VendorList[0].vendor_ID,3).subscribe()
 
 
           this.VD_ID = VendorList[0].vendor_Detail_ID
-          console.log(this.VD_ID )
-          console.log(VendorList)
           if(this.CompanyFaxChecker == true) {
             this.Vendorfax.vendor_Detail_ID = this.VD_ID 
             this.Vendorfax.fax = this.CompanyContactInfoFormGroup.get("CompanyFax")?.value
-            this.VendorService.AddFax(this.Vendorfax).subscribe(response => {console.log(response)})
+            this.VendorService.AddFax(this.Vendorfax).subscribe()
           }
           if(this.VatRegistrationChecker == true) {
-            console.log("vat")
             FolderCategory = "VATRegistration";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let file:File = this.fileName[1]
@@ -585,15 +576,13 @@ export class VendorCreateComponent implements OnInit{
               this.VendorVat.vaT_Registration_Document = Path.returnedPath.toString();
               this.VendorVat.vendor_Detail_ID = this.VD_ID 
               
-              console.log(this.VendorVat)
-              this.VendorService.AddVat(this.VendorVat).subscribe(response => {console.log(response)})
+              this.VendorService.AddVat(this.VendorVat).subscribe()
             })
-            console.log(Path)
           }
           if(this.CompanyWebsiteChecker == true) {
             this.VendorWebsite.url = this.CompanyContactInfoFormGroup.get("CompanyWebsite")?.value
             this.VendorWebsite.vendor_Detail_ID = this.VD_ID 
-            this.VendorService.AddWebsite(this.VendorWebsite).subscribe(response => {console.log(response)})
+            this.VendorService.AddWebsite(this.VendorWebsite).subscribe()
           }
           if(this.LicenseOrAccreditationChecker == true) {
             FolderCategory = "LicenseOrAccreditationNumber";
@@ -605,7 +594,7 @@ export class VendorCreateComponent implements OnInit{
                 this.VendorLicense.license_Doc_Upload = Path.returnedPath.toString();
                 this.VendorLicense.vendor_Detail_ID = this.VD_ID 
                 this.VendorLicense.license_No = this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value
-                this.VendorService.AddLicense(this.VendorLicense).subscribe(response => {console.log(response)})
+                this.VendorService.AddLicense(this.VendorLicense).subscribe()
               })
              
           }
@@ -617,7 +606,7 @@ export class VendorCreateComponent implements OnInit{
               let Path: any = response
               this.VendorAgreement.signed_Agreement_Doc = Path.returnedPath.toString();
               this.VendorAgreement.vendor_Detail_ID = this.VD_ID 
-             this.VendorService.AddAgreement(this.VendorAgreement).subscribe(response => {console.log(response)})
+             this.VendorService.AddAgreement(this.VendorAgreement).subscribe()
             })
             
           }
@@ -626,7 +615,7 @@ export class VendorCreateComponent implements OnInit{
           if(this.PaymentTermsChecker == true) {
             this.VendorPaymentTerms.payment_Terms = this.CompanyOverviewFormGroup.get("PaymentTerms")?.value
             this.VendorPaymentTerms.vendor_Detail_ID = this.VD_ID 
-            this.VendorService.AddPayTerms(this.VendorPaymentTerms).subscribe(response => {console.log(response)})
+            this.VendorService.AddPayTerms(this.VendorPaymentTerms).subscribe()
           }
           
         
@@ -638,7 +627,6 @@ export class VendorCreateComponent implements OnInit{
               let Path: any = response
               this.VendorRegistration.proof_Of_Registration_Doc = Path.returnedPath.toString();
               this.VendorRegistration.vendor_Detail_ID = this.VD_ID 
-              console.log(this.VendorRegistration.vendor_Detail_ID)
               this,this.VendorRegistration.company_Registration_Number = this.CompanyOverviewFormGroup.get("CompanyRegistrationNumber")?.value
               this.VendorService.AddRegistered(this.VendorRegistration).subscribe()
             })
@@ -652,7 +640,6 @@ export class VendorCreateComponent implements OnInit{
               let Path: any = response
               this.VendorTax.tax_Clearance_Cert = Path.returnedPath.toString();
               this.VendorTax.vendor_Detail_ID = this.VD_ID 
-              console.log(this.VendorTax.vendor_Detail_ID )
               this.VendorTax.income_Tax_Num = this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.value
               this.VendorService.AddIncomeTax(this.VendorTax).subscribe()!
             })

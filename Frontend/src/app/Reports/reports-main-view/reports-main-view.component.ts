@@ -93,7 +93,7 @@ export class ReportsMainViewComponent implements OnInit {
       this.filter = filter;
     });
     this.ReportService.GetVarianceByDepartment().subscribe(data => {
-      console.log(data)
+
       this.detailedVariancesByDepartment = Object.keys(data).map(key => {
         return {
           department: key,
@@ -148,7 +148,7 @@ export class ReportsMainViewComponent implements OnInit {
     this.ReportService.getAllApprovedVendors(3).subscribe(result => {
       this.ApprovedVendorDetails = result;
       var User = this.ReportService.decodeUser(sessionStorage.getItem('token'))
-      console.log(this.ApprovedVendorDetails)
+
       let content = [
         {
           text: 'Approved Vendor List Report',
@@ -162,12 +162,14 @@ export class ReportsMainViewComponent implements OnInit {
           fontSize: 12,
           alignment: 'center',
           bold: true,
+          decoration: 'underline',
         },
         {
           text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
           fontSize: 12,
           alignment: 'center',
           bold: true,
+          decoration: 'underline',
         },
         {
           canvas: [
@@ -286,13 +288,15 @@ export class ReportsMainViewComponent implements OnInit {
           text: 'Created By: ' + User,
           fontSize: 12,
           alignment: 'center',
-          bold: true
+          bold: true,
+          decoration: 'underline',
         },
         {
           text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
           fontSize: 12,
           alignment: 'center',
-          bold: true
+          bold: true,
+          decoration: 'underline',
         },
         {
           canvas: [
@@ -463,14 +467,15 @@ export class ReportsMainViewComponent implements OnInit {
         ...(Number(ReportData.filter(x => x.budget_Allocation.department.name == uniqueDepartments[0]).reduce((sum, p) => sum + Number(p.actualAmt), 0).toFixed(2)) != 0) ? [{ text: 'Bar Chart Showing Business Unit Allocations', fontSize: 18, alignment: 'center', color: '#244688', margin: [0, 0, 0, 10], pageBreak: 'before' },
         { image: this.businessUnitAllocationChartImageBase64, fit: [550, 700] },] : [],
 
+      )
 
+      content.push(
         {
           canvas: [{ type: 'line', x1: 0, y1: 5, x2: 515, y2: 5, alignment: 'center' }],
           // Add space above the line
           margin: [0, 5, 0, 10]
         },
-        { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true, }
-
+        { text: '**End of Report**', fontSize: 12, alignment: 'center', bold: true,decoration:null }
       )
 
 
@@ -633,13 +638,15 @@ export class ReportsMainViewComponent implements OnInit {
           text: 'Created By: ' + User,
           fontSize: 12,
           alignment: 'center',
-          bold: true
+          bold: true,
+          decoration: 'underline',
         },
         {
           text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
           fontSize: 12,
           alignment: 'center',
-          bold: true
+          bold: true,
+          decoration: 'underline',
         },
         {
           text: 'For Year: ' + currYear,
@@ -1123,13 +1130,15 @@ export class ReportsMainViewComponent implements OnInit {
           text: 'Created By: ' + User,
           fontSize: 12,
           alignment: 'center',
-          bold: true
+          bold: true,
+          decoration: 'underline',
         },
         {
           text: 'Generated On: ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' }),
           fontSize: 12,
           alignment: 'center',
-          bold: true
+          bold: true,
+          decoration: 'underline',
         },
         {
           text: 'Monthly On Hand Averages For Period: ' + startDate + ' to ' + endDate,

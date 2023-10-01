@@ -89,6 +89,7 @@ export class CreateBudgetLineComponent {
   }
 
   onSubmit(): void {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.category = this.budgetLineForm.get('category_ID')?.value;
     this.budgetLine.budget_Category = this.category;
     this.budgetLine.category_ID = this.category.category_ID;
@@ -99,14 +100,13 @@ export class CreateBudgetLineComponent {
     this.budgetLine.budget_Allocation.budget_ID = this.id;
     this.budgetLine.budget_ID = this.id;
     this.budgetLine.budget_Allocation.department_ID = 0;
-    console.log(this.budgetLine);
 
     this.dataService.GetBudgetAllocation(this.id).subscribe((budgetAllocation: BudgetAllocation) => {
       this.dataService.GetBudgetLineItems(this.id).subscribe(budgetLineItems => {
         let totalBudgetLinesAmount = budgetLineItems.reduce((prev, cur) => prev + Number(cur.budgetAmt), 0);
         totalBudgetLinesAmount = totalBudgetLinesAmount + Number(this.budgetLine.budgetAmt)
-        console.log(totalBudgetLinesAmount)
         if (totalBudgetLinesAmount + Number(this.budgetLine.budgetAmt) > budgetAllocation.total) {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "Error";
           var title = "Budget Over Allocation";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The total budget amount for budget lines exceeds the total budget allocation.");
@@ -138,6 +138,7 @@ export class CreateBudgetLineComponent {
               })
 
             } else {
+              document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
               var action = "Error";
               var title = "Validation Error";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The budget line already exists.");

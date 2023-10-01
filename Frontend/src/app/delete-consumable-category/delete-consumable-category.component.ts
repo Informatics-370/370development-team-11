@@ -68,7 +68,6 @@ export class DeleteConsumableCategoryComponent implements OnInit {
             this.showSuccessDialog = true;
             setTimeout(() => {
               this.dialogRef.close();
-              location.reload();
             }, 1750);
           }
         })
@@ -83,7 +82,7 @@ export class DeleteConsumableCategoryComponent implements OnInit {
 
 
   openDeleteConCatTab(): void {
-    const userManualUrl = 'assets/PDF/DeleteConumableCategoryUM.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteConumableCategoryUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

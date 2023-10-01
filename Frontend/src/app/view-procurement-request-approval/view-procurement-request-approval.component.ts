@@ -63,6 +63,10 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -90,7 +94,7 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
     Description: '',
   })
 
-
+  
 
   constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute, private _formBuilder: FormBuilder, private http: HttpClient, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
   ProcurementRequestID = 0;
@@ -103,7 +107,6 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
   ngOnInit() {
 
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
-    console.log(User)
     this.dataService.GetUserByUsername(User).subscribe(response => {
       this.ProcurementRequestDetails.user.access = response.access
       this.ProcurementNotification.user.access = response.access
@@ -125,12 +128,9 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
             this.VendorFormGroup.get("Description")?.setValue(this.ProcurementRequestDetails.description.toString())
             this.dataService.GetProcurementRequestQuoteByID(this.ProcurementRequestID).subscribe(result => {
               let b = 0;
-              console.log(result)
               result.forEach(a => {
                 this.GetFiles(a.path, b)
                 b += 1
-                console.log(a.path)
-                console.log(b)
               })
             })
           }
@@ -140,7 +140,6 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
             this.VendorFormGroup.get("Description")?.setValue(this.ProcurementRequestDetails.description.toString())
             this.dataService.GetProcurementRequestQuoteByID(this.ProcurementRequestID).subscribe(result => {
               let b = 0;
-              console.log(result);
               result.forEach(a => {
                 this.GetFiles(a.path, b)
                 b += 1
@@ -153,12 +152,18 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
     })
 
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
-    console.log(User)
+
+    this.VendorFormGroup.get('CompanyName').disable();
+    this.VendorFormGroup.get('CompanyEmail').disable();
+    this.VendorFormGroup.get('Description').disable();
+  }
+
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
   }
 
   GetFiles(sfilepath: string, i: number) {
     let sFile = sfilepath;
-    //console.log(sfilepath)
     let VendorName = sFile.substring(0, sFile.indexOf("\\"))
     sFile = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
     let RequestID = sFile.substring(0, sFile.indexOf("\\"))
@@ -168,20 +173,16 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
   }
 
   AcceptRequest() {
-    console.log(this.ProcurementRequestDetails)
     this.dataService.UpdateProcurementRequestStatus(1, this.ProcurementRequestDetails).subscribe({
       next: (response) => {
-        console.log(response)
         this.ProcurementNotification.notification_Type_ID = 8;
         let transVar: any
         transVar = new DatePipe('en-ZA');
         this.ProcurementNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
         this.ProcurementNotification.name = response.name + " has been approved";
         this.ProcurementNotification.user_ID = response.user_ID;
-        console.log(this.ProcurementNotification)
         this.dataService.ProcurementAddNotification(this.ProcurementNotification).subscribe();
 
-        console.log(response);
         var action = "APPROVE";
         var title = "APPROVE SUCCESSFUL";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement Request <strong>" + response.name + "</strong> has been <strong style='color:green'> APPROVED </strong> successfully!");
@@ -211,7 +212,6 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
         this.ProcurementNotification.user_ID = response.user_Id;
         this.dataService.ProcurementAddNotification(this.ProcurementNotification).subscribe();
 
-        console.log(response);
         var action = "REJECTED";
         var title = "REJECTION SUCCESSFUL";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Procurement Request <strong>" + response.name + "</strong> has been <strong style='color:red'> Rejected </strong> successfully!");

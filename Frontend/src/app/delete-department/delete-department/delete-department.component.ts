@@ -40,12 +40,12 @@ export class DeleteDepartmentComponent implements OnInit{
     this.ActRoute.paramMap.subscribe({
       next: (params) => {
         const ID = this.data.department_ID;
-        console.log(ID);
+
 
         if (ID) {
           this.dataService.GetDepartment(ID).subscribe(result => {
             this.Department = result;
-            console.log(this.Department);
+
           });
         }
       }

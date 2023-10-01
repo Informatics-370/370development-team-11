@@ -99,6 +99,10 @@ export class SignOffRequestComponent {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -151,6 +155,10 @@ export class SignOffRequestComponent {
       password: "",
       profile_Picture: "",
       no_Notifications: 0,
+      no_VenNotifications: 0,
+      no_InvNotifications: 0,
+      no_DelNotifications: 0,
+      no_ProNotifications: 0,
       role: {
         role_ID: 0,
         name: "",
@@ -350,15 +358,17 @@ export class SignOffRequestComponent {
 
     this.dataService.GetBudgetLines().subscribe(response => {
       this.BudgetAllocationCode = response;
-      console.log(this.BudgetAllocationCode)
     })
+
+    this.finalizationForm.get('total').disable();
+    this.finalizationForm.get('budgetLine').disable();
   }
 
   onSubmit(): void {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.dataService.RequisitionApproval(this.ProcurementDetails.procurement_Details_ID).subscribe(result => {
       // let FolderCategory = "ProofOfPayment"
       // let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`
-      // console.log(ProcurementRequest)
       // this.dataService.uploadProcureFile(FolderCategory, ProcurementRequest, this.file[1]).subscribe(response => {
       //   this.ProofOfPayment.procurement_Details = result[0];
       //   this.ProofOfPayment.procurement_Details_ID = result[0].procurement_Details_ID;
@@ -401,7 +411,6 @@ export class SignOffRequestComponent {
       this.TotalAmountDisplay = this.ProcurementDetails.total_Amount;
       this.ActualAmountDisplay = this.currencyPipe.transform(this.ActualAmountDisplay, 'R');
       this.TotalAmountDisplay = this.currencyPipe.transform(this.TotalAmountDisplay, 'R');
-      console.log(result)
     })
   }
 

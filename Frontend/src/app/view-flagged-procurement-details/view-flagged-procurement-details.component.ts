@@ -64,6 +64,10 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -208,11 +212,34 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
       }
     })
 
+    this.ProcurementFormGroup.get("BuyerName")?.disable();
+    this.ProcurementFormGroup.get("BuyerEmail")?.disable();
+    this.ProcurementFormGroup.get("ItemType")?.disable();
+    this.ProcurementFormGroup.get("ConsumableItem")?.disable();
+    this.ProcurementFormGroup.get("ConsumableQuantity")?.disable();
+    this.ProcurementFormGroup.get("AssetName")?.disable();
+    this.ProcurementFormGroup.get("AssetDescription")?.disable();
+    this.ProcurementFormGroup.get("AccountCode")?.disable();
+    this.ProcurementFormGroup.get("PaymentType")?.disable();
+    this.ProcurementFormGroup.get("DepositAmount")?.disable();
+    this.ProcurementFormGroup.get("DepositDueDate")?.disable();
+    this.ProcurementFormGroup.get("PaidOnDate")?.disable();
+    this.ProcurementFormGroup.get("UploadReceiptDoc")?.disable();
+    this.ProcurementFormGroup.get("ProofOfPaymentDoc")?.disable();
+    this.ProcurementFormGroup.get("TotalAmount")?.disable();
+    this.ProcurementFormGroup.get("TotalAmountDueDate")?.disable();
+    this.ProcurementFormGroup.get("DeposCommentsitDueDate")?.disable();
+    this.ProcurementFormGroup.get("Comments")?.disable();
+
+    
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
   }
 
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
+
   getItemDetails(sItem: string) {
-    console.log(sItem)
     if (sItem == "Consumable") {
       this.ConsumableChecked = true;
       this.AssetChecked = false;
@@ -229,22 +256,15 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
       this.ProcurementFormGroup.get("AssetDescription")?.disable();
     }
     else {
-      console.log("test")
-      console.log(this.ProcurementDetailsID)
       this.AssetChecked = true;
       this.ConsumableChecked = false;
       this.dataService.GetProcurementAsset().subscribe(a => {
-        console.log(a)
         a.forEach(b => {
-          console.log(b.procurement_Details_ID)
-          console.log(this.ProcurementDetailsID)
           if (b.procurement_Details_ID == this.ProcurementDetailsID) {
             this.dataService.GetAssetByID(b.asset_ID).subscribe(c => {
               this.ProcurementFormGroup.get("AssetName")?.setValue(c.name);
               this.ProcurementFormGroup.get("AssetDescription")?.setValue(c.description);
 
-              console.log(c.name)
-              console.log(c.description)
             })
 
           }

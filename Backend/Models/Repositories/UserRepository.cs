@@ -112,7 +112,7 @@ namespace ProcionAPI.Models.Repositories
         }
         public async Task<Employee> GetEmployeeByEmailAsync(string Email)
         {
-            IQueryable <Employee> Query = _dbContext.Employee.Include(U => U.User).Where(c => c.Email == Email);
+            IQueryable <Employee> Query = _dbContext.Employee.Include(U => U.User).Include(d => d.Department).Where(c => c.Email == Email);
             if (Query != null)
             {
                 return await Query.FirstOrDefaultAsync();
@@ -161,6 +161,23 @@ namespace ProcionAPI.Models.Repositories
         {
             IQueryable<User> query = _dbContext.User.Include(c => c.Role).Include(a => a.Access)
                 .Where(w => w.User_Id == userID);
+
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<User> GetDeleteUserAsync(int userID)
+        {
+            IQueryable<User> query = _dbContext.User.Include(c => c.Role)
+                .Where(w => w.User_Id == userID);
+
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Access> GetAccessAsync(int accID)
+        {
+            IQueryable<Access> query = _dbContext.Access.Where(w => w.Access_ID == accID);
 
 
             return await query.FirstOrDefaultAsync();
@@ -278,9 +295,49 @@ namespace ProcionAPI.Models.Repositories
             return await _dbContext.SaveChangesAsync() > 0;
         }
 
-        public async Task<User> CreateUserValidationAsync(string name)
+        public async Task<User> CreateUserValidationAsync(string name, string cellphoneNum, string Type)
         {
-            User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.Username == name);
+            if (Type == "Employee")
+            {
+                User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.Username == name);
+                Employee UserWithPHNUM = await _dbContext.Employee.FirstOrDefaultAsync(pn => pn.CellPhone_Num == cellphoneNum);
+
+
+                if (ExistingUser != null || UserWithPHNUM != null)
+                {
+                    return ExistingUser;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            else if (Type == "Admin")
+            {
+                User ExistingUser = await _dbContext.User.FirstOrDefaultAsync(x => x.Username == name);
+                Admin UserWithPHNUM = await _dbContext.Admin.FirstOrDefaultAsync(pn => pn.CellPhone_Num == cellphoneNum);
+
+
+                if (ExistingUser != null || UserWithPHNUM != null)
+                {
+                    return ExistingUser;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<Employee> CreateUserRoleValidationAsync(string department, string role)
+        {
+            Employee ExistingUser = await _dbContext.Employee.FirstOrDefaultAsync(x => x.User.Role.Name == role && x.Department.Name == department);
 
             if (ExistingUser != null)
             {
@@ -293,9 +350,9 @@ namespace ProcionAPI.Models.Repositories
             }
         }
 
-        public async Task<Employee> CreateUserRoleValidationAsync(string department, string role)
+        public async Task<Employee> CreateUserMDRoleValidationAsync(string role)
         {
-            Employee ExistingUser = await _dbContext.Employee.FirstOrDefaultAsync(x => x.User.Role.Name == role && x.Department.Name == department);
+            Employee ExistingUser = await _dbContext.Employee.FirstOrDefaultAsync(x => x.User.Role.Name == role);
 
             if (ExistingUser != null)
             {
@@ -457,6 +514,10 @@ namespace ProcionAPI.Models.Repositories
             var user = await GetUserByUsername(username);
 
             user.No_Notifications = 0;
+            user.No_DelNotifications = 0;
+            user.No_VenNotifications = 0;
+            user.No_InvNotifications = 0;
+            user.No_ProNotifications = 0;
 
             await _dbContext.SaveChangesAsync();
 
@@ -566,6 +627,54 @@ namespace ProcionAPI.Models.Repositories
             }
         }
 
+        public async Task<UserSettings> GetTimerDurationAsync()
+        {
+            UserSettings query = await _dbContext.UserSettings.FirstOrDefaultAsync(I => I.Setting_ID == 1);
+
+
+            return query;
+        }
+
+        public async Task<UserSettings> UpdateTimerAsync(int ID,int NewTime)
+        {
+            var Timer = await _dbContext.UserSettings.FirstOrDefaultAsync(x => x.Setting_ID == ID);
+
+            Timer.TimerDuration = NewTime;
+
+            await _dbContext.SaveChangesAsync();
+
+            return Timer;
+        }
+
+        public async Task<VAT> GetVATAsync()
+        {
+            VAT query = await _dbContext.VAT.FirstOrDefaultAsync(I => I.VatID == 1);
+
+
+            return query;
+        }
+
+        public async Task<VAT[]> AddVATAsync(VAT VATAdd)
+        {
+            await _dbContext.VAT.AddAsync(VATAdd);
+            await _dbContext.SaveChangesAsync();
+
+            return new VAT[] { VATAdd };
+        }
+
+        public async Task<VAT> EditVATAsync(VAT VATEdit)
+        {
+            var vat = await _dbContext.VAT.FindAsync(1);
+
+            vat.Percentage = VATEdit.Percentage;
+            vat.Date = VATEdit.Date;
+
+            await _dbContext.SaveChangesAsync();
+
+            return vat;
+        }
     }
+
+    
 
 }

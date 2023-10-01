@@ -23,7 +23,8 @@
         <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
             View Procurement Request
             <mat-icon (click)="openPRIFrameTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
-            style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+                style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}"
+                matTooltip="Need help? Click me!"></mat-icon>
         </h1>
 
         <div mat-list-item style="margin-left: 0.5%; display: flex;  align-items: center; ">
@@ -51,7 +52,8 @@
                 <span class="loader" id="loading"></span>
             </div>
 
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" id="table" multiTemplateDataRows matTooltip="Click table row for more information regarding procurement request">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" id="table" multiTemplateDataRows
+                matTooltip="Click table row for more information regarding procurement request">
 
                 <ng-container matColumnDef="Name">
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Name </th>
@@ -78,7 +80,8 @@
                     <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;">Status
                     </th>
                     <td mat-cell *matCellDef="let Consumable">
-                        <span matTooltip="Status of this Procurement request" [style.color]="getStatusColor(Consumable.requisition_Status.name)">
+                        <span matTooltip="Status of this Procurement request"
+                            [style.color]="getStatusColor(Consumable.requisition_Status.name)">
                             {{Consumable.requisition_Status.name}}
                         </span>
                     </td>
@@ -165,7 +168,8 @@
                                                 </td>
                                                 <td
                                                     *ngIf="item.procurement_Request_ID == element.procurement_Request_ID">
-                                                    <a target="_blank" style="color: rgb(65, 143, 227);" matTooltip="Click link to open this file in a new tab"
+                                                    <a target="_blank" style="color: rgb(65, 143, 227);"
+                                                        matTooltip="Click link to open this file in a new tab"
                                                         (click)="openPDFInNewTab(i)">{{FileDetails[i].FileName}}</a>
                                                 </td>
                                                 <td

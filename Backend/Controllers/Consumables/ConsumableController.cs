@@ -196,7 +196,7 @@ namespace ProcionAPI.Controllers.Consumables
         [Route("GetConsumableManagementReport/{startDate}/{endDate}")]
         public async Task<IActionResult> GetConsumableManagementReport(string startDate, string endDate)
         {
-            Console.WriteLine(endDate);
+           
             try
             {
                 var result = await _consumableRepository.GetReportData(startDate, endDate);

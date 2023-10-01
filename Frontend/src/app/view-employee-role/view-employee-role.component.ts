@@ -14,6 +14,9 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/
 import { RestoreComponent } from '../Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from '../Settings/restore-dialog/restore-dialog.component';
 import { RoleIFrameComponent } from '../HelpIFrames/RoleIFrame/role-iframe/role-iframe.component';
+import { TimerComponent } from '../Settings/timer/timer.component';
+import { CreateVatComponent } from '../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../Settings/edit-vat/edit-vat.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -25,7 +28,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-employee-role',
   templateUrl: './view-employee-role.component.html',
   styleUrls: ['./view-employee-role.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewEmployeeRoleComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -64,8 +67,6 @@ export class ViewEmployeeRoleComponent implements OnInit {
 
   search() {
     const searchTerm = this.searchWord.toLocaleLowerCase();
-    console.log(searchTerm);
-    console.log(this.Roles)
 
 
     if (searchTerm) {
@@ -134,7 +135,7 @@ export class ViewEmployeeRoleComponent implements OnInit {
           }, duration);
         });
 
-        
+
       }
     })
 
@@ -145,22 +146,57 @@ export class ViewEmployeeRoleComponent implements OnInit {
     const dialogRef = this.dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
   openRestoreDialog() {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+    });
+  }
+  openTimerDialog() {
+    const dialogRef = this.dialog.open(TimerComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
     });
   }
 
+  openCreateVATDialog() {
+    const dialogRef = this.dialog.open(CreateVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    this.dataService.GetVAT().subscribe(re => {
+      if (re == null) {
+        var action = "ERROR";
+        var title = "ERROR: VAT does not Exists";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No VAT <strong style='color:red'>EXISTS ON THE SYSTEM!</strong><br> Please add one before and try again.");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 4000;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
+      } else {
+        const dialogRef = this.dialog.open(EditVatComponent);
+
+        dialogRef.afterClosed().subscribe(result => {
+        });
+      }
+    })
+  }
 
   openRoleIFrameTab(): void {
     const dialogRef = this.dialog.open(RoleIFrameComponent, {
-    //   width: '800px', // Set the desired width
-    //  height: '600%', // Set the desired height
+      //   width: '800px', // Set the desired width
+      //  height: '600%', // Set the desired height
       panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
     });
 
@@ -168,5 +204,5 @@ export class ViewEmployeeRoleComponent implements OnInit {
       // Handle any dialog close actions if needed
     });
   }
-  
+
 }

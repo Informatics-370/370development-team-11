@@ -107,6 +107,7 @@ export class CreateBudgetAllocationComponent {
   }
 
   onSubmit(): void {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.dep = this.budgetAllocationForm.get('department_ID')?.value;
     this.dep.department_ID = 0;
     this.budgetAllocation.department = this.dep;
@@ -114,7 +115,6 @@ export class CreateBudgetAllocationComponent {
     let date = this.budgetAllocationForm.get('year')?.value
     this.budgetAllocation.year = date.getFullYear();
     this.budgetAllocation.total = this.budgetAllocationForm.get('total')?.value;
-    console.log(this.budgetAllocation.department.name)
     this.dataService.BudgetAllocationValidation(this.budgetAllocation.department.name, this.budgetAllocation.year).subscribe({
       next: (Result) => {
         if (Result == null) {
@@ -155,6 +155,7 @@ export class CreateBudgetAllocationComponent {
           );
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Budget Allocation Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Budget Allocation for department <strong>" + this.budgetAllocation.department.name + " </strong> For year <strong>" + this.budgetAllocation.year + " <strong style='color:red'>ALREADY EXISTS!</strong>");
@@ -202,9 +203,7 @@ export class CreateBudgetAllocationComponent {
 
   public onsYearSelected(date: Date, datepicker: MatDatepicker<Date>) {
     const normalizedYear = date.getFullYear();
-    //console.log(normalizedYear)
     this.budgetAllocationForm.get("year").setValue(new Date(normalizedYear, 12, 0));
-    //console.log(this.budgetAllocationForm.get("year").value())
     datepicker.close();
   }
 

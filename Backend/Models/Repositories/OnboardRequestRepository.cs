@@ -57,12 +57,12 @@ namespace ProcionAPI.Models.Repositories
             var employee = _dbContext.Employee.FirstOrDefault(E => E.User_Id == userId);
             if (employee != null)
             {
-                return employee.EmployeeName;
+                return employee.EmployeeName + " " + employee.EmployeeSurname;
             }
             else
             {
                 var admin = _dbContext.Admin.FirstOrDefault(A => A.User_Id == userId);
-                return admin?.AdminName; // Return null if admin is not found or AdminName if it exists.
+                return admin?.AdminName + " " + admin?.AdminSurname; // Return null if admin is not found or AdminName if it exists.
             }
         }
 
@@ -183,7 +183,7 @@ namespace ProcionAPI.Models.Repositories
             var ReqUpdt = await _dbContext.Onboard_Request.Include(x=> x.Onboard_Status).FirstOrDefaultAsync(x => (x.Onboard_Request_Id == RequestID) && (x.Vendor_ID == UpdatedRequest.Vendor.Vendor_ID));
 
             // var existingVendor = await _dbContext.Vendor.FirstOrDefaultAsync(x => x.Name.ToLower().Trim() == UpdatedRequest.Vendor.Name.ToLower().Trim());
-          //  Console.WriteLine(ReqUpdt);
+          
 
             //  ReqUpdt.Users.Role = new Role();
 
@@ -231,7 +231,7 @@ namespace ProcionAPI.Models.Repositories
             ReqUpdt.Quotes = UpdatedRequest.Quotes;
 
             await _dbContext.SaveChangesAsync();
-            //Console.WriteLine(ReqUpdt);
+            
             return  ReqUpdt;
         }
 

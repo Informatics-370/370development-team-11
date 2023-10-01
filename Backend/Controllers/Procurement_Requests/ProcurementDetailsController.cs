@@ -105,7 +105,7 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
             catch(Exception  ex)
             {
-                Console.WriteLine(ex.Message);
+       
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
@@ -121,7 +121,7 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+            
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
@@ -456,6 +456,38 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
         }
+        [HttpGet]
+        [Route("GetProcurementConsumablebyID/{DetailsID}")]
+        public async Task<IActionResult> GetProcurementConsumablebyID([FromRoute] int DetailsID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementConsumablebyIDAsync(DetailsID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+
+        [HttpGet]
+        [Route("GetProcurementAssetbyID/{DetailsID}")]
+        public async Task<IActionResult> GetProcurementAssetbyID([FromRoute] int DetailsID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementAssetbyIDAsync(DetailsID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
 
         [HttpGet]
         [Route("GetProcurementAsset")]
@@ -511,7 +543,11 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             try
             {
                 var result = await _ProcurementDetailsRepository.GetProcurementDetailsByRequestIDAsync(RequestID);
+                
                 return Ok(result);
+               
+
+                
             }
             catch (Exception)
             {
@@ -791,6 +827,58 @@ namespace ProcionAPI.Controllers.Procurement_Requests
 
                 return StatusCode(500, "Internal Server Error. Please contact support.");
             }
+        }
+
+        [HttpGet]
+        [Route("GetProofofPaymentsbyID/{DetailsID}")]
+        public async Task<IActionResult> GetProcurementQuotes([FromRoute] int DetailsID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProofofPaymentsAsync(DetailsID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetPOPFILE/{FolderName}/{ConsumableName}/{filename}")]
+        public IActionResult GetPOPFILE(string FolderName, string ConsumableName, string filename)
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "ProofOfPayment", FolderName, ConsumableName, filename);
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            var contentType = "application/pdf";
+            return File(fileBytes, contentType, filename);
+        }
+
+        [HttpGet]
+        [Route("GetInvoicesbyID/{DetailsID}")]
+        public async Task<IActionResult> GetInvoicesbyID([FromRoute] int DetailsID)
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetInvoicesAsync(DetailsID);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetINVFILE/{User}/{filename}")]
+        public IActionResult GetINVFILE(string User, string filename)
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "Invoices", User, filename);
+            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+            var contentType = "application/pdf";
+            return File(fileBytes, contentType, filename);
         }
     }
 }

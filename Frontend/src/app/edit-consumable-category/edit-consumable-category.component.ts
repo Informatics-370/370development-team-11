@@ -71,7 +71,7 @@ export class EditConsumableCategoryComponent implements OnInit {
   }
 
   UpdateCategory() {
-
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.dataService.CategoryValidation(this.CategoryToEdit.name).subscribe({
       next: (Result) => {
         if (Result == null) {
@@ -109,6 +109,7 @@ export class EditConsumableCategoryComponent implements OnInit {
           });
         }
         if (Result.consumable_Category_ID !== this.CategoryToEdit.consumable_Category_ID && Result.name === this.CategoryToEdit.name) {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Consumable Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.CategoryToEdit.name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

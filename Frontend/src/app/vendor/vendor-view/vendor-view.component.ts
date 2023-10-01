@@ -39,7 +39,7 @@ export class VendorViewComponent implements OnInit  {
   ngOnInit(): void {
     this.iRole = this.VendorService.decodeUserRole(sessionStorage.getItem("token"));
     this.iCanAppVen = this.VendorService.decodeCanAppVen(sessionStorage.getItem("token"));
-
+    
     if (this.iRole == "Admin" || this.iRole == "MD" || this.iCanAppVen == "true") {
       this.canAppVen = "true";
     }
@@ -55,7 +55,6 @@ export class VendorViewComponent implements OnInit  {
     })
     this.VendorSearch =  new MatTableDataSource(result)
     this.VendorSearch.paginator = this.paginator;
-    console.log(VendorDetails)
    })
     
 

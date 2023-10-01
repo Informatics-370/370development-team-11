@@ -1,367 +1,359 @@
 <div style="display: flex; justify-content: center; align-items: center;"
-    *ngIf="VendorType == 'Approved'; else NotApproved">
-    <mat-card style="width: 1000px; margin-top: 1%; align-items: center; ">
-        <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px"
-            (ngSubmit)="AddProcurementRequestA()">
-            <mat-card-header>
-                <mat-card-title
-                    style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">
-                    <span style="flex: 1; text-align: center;">Create Procurment Request</span></mat-card-title>
-                    <mat-icon (click)="openCreatePRTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
-                    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
-                <mat-card-subtitle>
-                    <table style="width:100%;" cellspacing="0">
-                        <tr>
-                            <mat-radio-group aria-label="Select an option" formControlName="Selection"
-                                (change)="SetValueA()">
-                                <mat-radio-button value="Approved">Approved Vendor</mat-radio-button>
-                                <mat-radio-button value="Other">Other</mat-radio-button>
-                            </mat-radio-group>
-                        </tr>
-                        <tr>
-                            <td style="width:100%;">
-                                <mat-card-content>
-                                    <label style=" color: black;">Request Name:</label>
-                                    <br />
-                                    <mat-form-field>
-                                        <input matInput type="text" placeholder="" formControlName="Name" id="Surname"
-                                            required>
-                                        <mat-hint align="end">Not more then 50 characters long.</mat-hint>
-                                        <mat-error *ngIf="myError('Name', 'required')">Request Name is
-                                            required</mat-error>
-                                        <mat-error *ngIf="myError('Name', 'minlength')">Request Name must
-                                            be 3 to
-                                            32 characters long</mat-error>
-                                        <mat-error *ngIf="myError('Name', 'maxlength')">Limit
-                                            exceed</mat-error>
-                                        <mat-error *ngIf="myError('Name', 'pattern')">Request Name can
-                                            not contain
-                                            symbols</mat-error>
+  *ngIf="VendorType == 'Approved'; else NotApproved">
+  <mat-card style="width: 1000px; margin-top: 1%; align-items: center; ">
+    <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px"
+      (ngSubmit)="AddProcurementRequestA()">
+      <mat-card-header>
+        <mat-card-title style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">
+          <span style="flex: 1; text-align: center;">Create Procurement Request</span></mat-card-title>
+        <mat-icon (click)="openCreatePRTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+          style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}"
+          matTooltip="Need help? Click me!"></mat-icon>
+        <mat-card-subtitle>
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <mat-radio-group aria-label="Select an option" formControlName="Selection" (change)="SetValueA()">
+                <mat-radio-button value="Approved">Approved Vendor</mat-radio-button>
+                <mat-radio-button value="Other">Other</mat-radio-button>
+              </mat-radio-group>
+            </tr>
+            <tr>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color: black;">Request Name:</label>
+                  <br />
+                  <mat-form-field>
+                    <input matInput type="text" placeholder="" formControlName="Name" id="Surname" required>
+                    <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+                    <mat-error *ngIf="myError('Name', 'required')">Request Name is
+                      required</mat-error>
+                    <mat-error *ngIf="myError('Name', 'minlength')">Request Name must
+                      be 3 to
+                      32 characters long</mat-error>
+                    <mat-error *ngIf="myError('Name', 'maxlength')">Limit
+                      exceed</mat-error>
+                    <mat-error *ngIf="myError('Name', 'pattern')">Request Name can
+                      not contain
+                      symbols</mat-error>
 
-                                    </mat-form-field>
-                                </mat-card-content>
-                            </td>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
 
-                            <td style="width:100%;">
-                              <mat-card-content>
-                                <label style=" color: black;">Vendor:</label>
-                                <br />
-                                <mat-form-field appearance="fill">
-                                  <mat-label>Select</mat-label>
-                                  <mat-select formControlName="Vendor" required>
-                                    <mat-option *ngFor="let vendor of vendors"
-                                                [value]="vendor.name">{{vendor.name}}</mat-option>
-                                  </mat-select>
-                                  <mat-error *ngIf="myError('Vendor', 'required')">
-                                    The Category is
-                                    required
-                                  </mat-error>
-                                </mat-form-field>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color: black;">Vendor:</label>
+                  <br />
+                  <mat-form-field appearance="fill">
+                    <mat-label>Select</mat-label>
+                    <mat-select formControlName="Vendor" required>
+                      <mat-option *ngFor="let vendor of vendors" [value]="vendor.name">{{vendor.name}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="myError('Vendor', 'required')">
+                      The Category is
+                      required
+                    </mat-error>
+                  </mat-form-field>
 
 
-                              </mat-card-content>
-                            </td>
+                </mat-card-content>
+              </td>
 
-                        </tr>
+            </tr>
 
-                        <tr>
-                          <td >
-                            <mat-card-content>
-                              <label style=" color: black;">Request Description:</label>
-                              <br />
-                              <mat-form-field style="width:100%;">
-                                <textarea matInput type="text" placeholder="" formControlName="Description"
-                                          id="Surname" required></textarea>
-                                <mat-hint align="end">Not more then 50 characters long.</mat-hint>
-                                <mat-error *ngIf="myError('Description', 'required')">
-                                  Description is
-                                  required
-                                </mat-error>
-                                <mat-error *ngIf="myError('Description', 'minlength')">
-                                  Description must be 3 to
-                                  50 characters long
-                                </mat-error>
-                                <mat-error *ngIf="myError('Description', 'maxlength')">Limit exceed</mat-error>
-                                <mat-error *ngIf="myError('Description', 'pattern')">
-                                  Description can not contain
-                                  symbols
-                                </mat-error>
+            <tr>
+              <td>
+                <mat-card-content>
+                  <label style=" color: black;">Request Description:</label>
+                  <br />
+                  <mat-form-field style="width:100%;">
+                    <textarea matInput type="text" placeholder="" formControlName="Description" id="Surname"
+                      required></textarea>
+                    <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+                    <mat-error *ngIf="myError('Description', 'required')">
+                      Description is
+                      required
+                    </mat-error>
+                    <mat-error *ngIf="myError('Description', 'minlength')">
+                      Description must be 3 to
+                      50 characters long
+                    </mat-error>
+                    <mat-error *ngIf="myError('Description', 'maxlength')">Limit exceed</mat-error>
+                    <mat-error *ngIf="myError('Description', 'pattern')">
+                      Description can not contain
+                      symbols
+                    </mat-error>
 
-                              </mat-form-field>
-                            </mat-card-content>
-                          </td>
-                          <td style="width:100%;">
-                            <mat-card-content>
-                              <label style=" color:black;">The Procurement Quote:</label>
-                              <br />
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">The Procurement Quote:</label>
+                  <br />
 
-                              <input type="file" id="file1" placeholder="" formControlName="Quote1"
-                                     style="border: solid #244688; border-radius: 5px; " accept=".pdf"
-                                     (change)="onFile1UploadApproved($event)" required>
+                  <input type="file" id="file1" placeholder="" formControlName="Quote1"
+                    style="border: solid #244688; border-radius: 5px; max-width: 247px;" accept=".pdf"
+                    (change)="onFile1UploadApproved($event)" required>
 
-                            </mat-card-content>
-                          </td>
-
-
-                        </tr>
-
-                    </table>
+                </mat-card-content>
+              </td>
 
 
-                </mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
-                <!--<button mat-raised-button type="submit"
+            </tr>
+
+          </table>
+
+
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
+        <!--<button mat-raised-button type="submit"
                       style="width: 150px; font-size: 14px; height: 42px; margin: 10px;" [disabled]="!myForm.valid"
                       [ngStyle]="{'background-color': !myForm.valid ? 'rgba(148, 204, 91, 0.6)' : '#94CC5B','color': !myForm.valid ? 'rgba(255, 255, 255, 0.6)' : 'white'}">
                 Save
               </button>-->
 
-                <div class="wrapper">
-                    <button class="" id="AnimationBtn" type="submit" [disabled]="!myForm.valid">
-                        <span>Save</span>
-                        <div class="success">
-                            <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756"
-                                style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
-                                <path
-                                    d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
-                            </svg>
-                        </div>
-                    </button>
-                </div>
+        <div class="wrapper">
+          <button class="" id="AnimationBtn" type="submit" [disabled]="!myForm.valid">
+            <span>Save</span>
+            <div class="success">
+              <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756"
+                style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
+                <path
+                  d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+              </svg>
+            </div>
+          </button>
+        </div>
 
-                <button mat-raised-button id="cBtn"
-                    style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;"
-                    (click)="Close()">
-                    Cancel
-                </button>
-            </mat-card-actions>
-        </form>
-    </mat-card>
+        <button mat-raised-button id="cBtn"
+          style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;"
+          (click)="Close()">
+          Cancel
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
 </div>
 
 <ng-template #NotApproved>
-    <div style="display: flex; justify-content: center; align-items: center;">
-        <mat-card style="width: 1000px; margin-top: 1%; align-items: center; ">
-            <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center"
-                fxLayoutGap="10px" (ngSubmit)="AddProcurementRequestB()">
-                <mat-card-header>
-                    <mat-card-title
-                        style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">Create
-                        Procurement Request</mat-card-title>
-                    <mat-card-subtitle>
-                        <table style="width:100%;" cellspacing="0">
-                            <tr>
-                                <mat-radio-group aria-label="Select an option" formControlName="OtherSelection"
-                                    (change)="SetValueB()">
-                                    <mat-radio-button value="Approved">Approved Vendor</mat-radio-button>
-                                    <mat-radio-button value="Other">Other</mat-radio-button>
-                                </mat-radio-group>
-                            </tr>
-                            <tr>
-                                <td style="width:100%;">
-                                    <mat-card-content>
-                                        <label style=" color: black;">Request Name:</label>
-                                        <br />
-                                        <mat-form-field>
-                                            <input matInput type="text" placeholder="" formControlName="RequestName"
-                                                id="RequestName" required>
-                                            <mat-hint align="end">Not more then 50 characters long.</mat-hint>
-                                            <mat-error *ngIf="myError('RequestName', 'required')">Request Name is
-                                                required</mat-error>
-                                            <mat-error *ngIf="myError('RequestName', 'minlength')">Request Name must
-                                                be 3 to
-                                                32 characters long</mat-error>
-                                            <mat-error *ngIf="myError('RequestName', 'maxlength')">Limit
-                                                exceed</mat-error>
-                                            <mat-error *ngIf="myError('RequestName', 'pattern')">Request Name can
-                                                not contain
-                                                symbols</mat-error>
+  <div style="display: flex; justify-content: center; align-items: center;">
+    <mat-card style="width: 1000px; margin-top: 1%; align-items: center; ">
+      <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px"
+        (ngSubmit)="AddProcurementRequestB()">
+        <mat-card-header>
+          <mat-card-title
+            style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">Create
+            Procurement Request</mat-card-title>
+          <mat-card-subtitle>
+            <table style="width:100%;" cellspacing="0">
+              <tr>
+                <mat-radio-group aria-label="Select an option" formControlName="OtherSelection" (change)="SetValueB()">
+                  <mat-radio-button value="Approved">Approved Vendor</mat-radio-button>
+                  <mat-radio-button value="Other">Other</mat-radio-button>
+                </mat-radio-group>
+              </tr>
+              <tr>
+                <td style="width:100%;">
+                  <mat-card-content>
+                    <label style=" color: black;">Request Name:</label>
+                    <br />
+                    <mat-form-field>
+                      <input matInput type="text" placeholder="" formControlName="RequestName" id="RequestName"
+                        required>
+                      <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+                      <mat-error *ngIf="myError('RequestName', 'required')">Request Name is
+                        required</mat-error>
+                      <mat-error *ngIf="myError('RequestName', 'minlength')">Request Name must
+                        be 3 to
+                        32 characters long</mat-error>
+                      <mat-error *ngIf="myError('RequestName', 'maxlength')">Limit
+                        exceed</mat-error>
+                      <mat-error *ngIf="myError('RequestName', 'pattern')">Request Name can
+                        not contain
+                        symbols</mat-error>
 
-                                        </mat-form-field>
-                                    </mat-card-content>
-                                </td>
-                                <td style="width:100%;">
-                                  <mat-card-content>
-                                    <label style=" color:black;">Vendor Name:</label>
-                                    <br />
-                                    <mat-form-field>
-                                      <input matInput type="text" placeholder="" id="VendorName"
-                                             [formControl]="VendorNameControl" [matAutocomplete]="auto" required>
-                                      <mat-autocomplete #auto="matAutocomplete"
-                                                        (optionSelected)="setVal($event.option.value)">
-                                        <mat-option *ngFor="let option of filteredVendors | async"
-                                                    [value]="option.name">
-                                          {{option.name}}
-                                        </mat-option>
-                                      </mat-autocomplete>
-                                      <mat-hint align="end">Not more then 32 characters long.</mat-hint>
-                                      <mat-error *ngIf="AutomyError('VendorNameControl', 'required')">
-                                        Name is
-                                        required
-                                      </mat-error>
-                                      <mat-error *ngIf="AutomyError('VendorNameControl', 'minlength')">
-                                        Name must
-                                        be 3
-                                        to 32
-                                        characters
-                                        long
-                                      </mat-error>
-                                      <mat-error *ngIf="AutomyError('VendorNameControl', 'maxlength')">
-                                        Limit
-                                        exceed
-                                      </mat-error>
-                                      <mat-error *ngIf="AutomyError('VendorNameControl', 'pattern')">
-                                        Name can not
-                                        contain
-                                        numbers/ symbols
-                                      </mat-error>
+                    </mat-form-field>
+                  </mat-card-content>
+                </td>
+                <td style="width:100%;">
+                  <mat-card-content>
+                    <label style=" color:black;">Vendor Name:</label>
+                    <br />
+                    <mat-form-field>
+                      <input matInput type="text" placeholder="" id="VendorName" [formControl]="VendorNameControl"
+                        [matAutocomplete]="auto" required>
+                      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="setVal($event.option.value)">
+                        <mat-option *ngFor="let option of filteredVendors | async" [value]="option.name">
+                          {{option.name}}
+                        </mat-option>
+                      </mat-autocomplete>
+                      <mat-hint align="end">Not more then 32 characters long.</mat-hint>
+                      <mat-error *ngIf="AutomyError('VendorNameControl', 'required')">
+                        Name is
+                        required
+                      </mat-error>
+                      <mat-error *ngIf="AutomyError('VendorNameControl', 'minlength')">
+                        Name must
+                        be 3
+                        to 32
+                        characters
+                        long
+                      </mat-error>
+                      <mat-error *ngIf="AutomyError('VendorNameControl', 'maxlength')">
+                        Limit
+                        exceed
+                      </mat-error>
+                      <mat-error *ngIf="AutomyError('VendorNameControl', 'pattern')">
+                        Name can not
+                        contain
+                        numbers/ symbols
+                      </mat-error>
 
-                                    </mat-form-field>
-                                  </mat-card-content>
-                                </td>
-                            </tr>
+                    </mat-form-field>
+                  </mat-card-content>
+                </td>
+              </tr>
 
-                            <tr>
-                              
-
-                              <td style="width:100%;">
-                                <mat-card-content>
-                                  <label style=" color: black;">Vendor Email:</label>
-                                  <br />
-                                  <mat-form-field>
-                                    <input matInput type="text" placeholder="" formControlName="Email"
-                                           id="Surname" required>
-                                    <mat-error *ngIf="myError('Email', 'required')">
-                                      Email is
-                                      required
-                                    </mat-error>
-                                    <mat-error *ngIf="myError('Email', 'maxlength')">Limit exceed</mat-error>
-                                    <mat-error *ngIf="myError('Email', 'email')">Enter a valid email</mat-error>
-
-                                  </mat-form-field>
-                                </mat-card-content>
-                              </td>
-                              <td style="width:100%;">
-                                <mat-card-content>
-                                  <label style=" color:black;">Preferred Quote:</label>
-                                  <br />
-
-                                  <input type="file" id="file1" placeholder="" formControlName="OtherQuote1"
-                                         style="border: solid #244688; border-radius: 5px; " accept=".pdf"
-                                         (change)="onFile1Upload($event)" required>
-                                  <br>
-                                  <mat-hint id="Error1" style="color: red; display: none;">
-                                    Duplicate files
-                                    not
-                                    allowed!
-                                  </mat-hint>
-
-                                </mat-card-content>
-                              </td>
-                            </tr>
-
-                            <tr>
-                              
-
-                              <td style="width:100%;">
-                                <mat-card-content>
-                                  <label style=" color:black;">Comparative Quote 1:</label>
-                                  <br />
-
-                                  <input type="file" id="file2" placeholder="" formControlName="OtherQuote2"
-                                         style="border: solid #244688; border-radius: 5px; " accept=".pdf"
-                                         (change)="onFile2Upload($event)" required>
-                                  <br>
-                                  <mat-hint id="Error2" style="color: red; display: none;">
-                                    Duplicate files
-                                    not
-                                    allowed!
-                                  </mat-hint>
-
-                                </mat-card-content>
-                              </td>
-                              <td style="width:100%;">
-                                <mat-card-content>
-                                  <label style=" color:black;">Comparative Quote 2:</label>
-                                  <br />
-
-                                  <input type="file" id="file3" placeholder="" formControlName="OtherQuote3"
-                                         style="border: solid #244688; border-radius: 5px; " accept=".pdf"
-                                         (change)="onFile3Upload($event)" required>
-                                  <br>
-                                  <mat-hint id="Error3" style="color: red; display: none;">
-                                    Duplicate files
-                                    not
-                                    allowed!
-                                  </mat-hint>
-
-                                </mat-card-content>
-                              </td>
-
-                            </tr>
-                            <tr>
-                              <td colspan="2">
-                                <mat-card-content>
-                                  <label style=" color: black;">Request Description:</label>
-                                  <br />
-                                  <mat-form-field style="width:100%;">
-                                    <textarea matInput type="text" placeholder=""
-                                           formControlName="OtherDescription" id="Surname" required></textarea>
-                                    <mat-hint align="end">Not more then 50 characters long.</mat-hint>
-                                    <mat-error *ngIf="myError('OtherDescription', 'required')">
-                                      Description is
-                                      required
-                                    </mat-error>
-                                    <mat-error *ngIf="myError('OtherDescription', 'minlength')">
-                                      Description must
-                                      be 3 to
-                                      50 characters long
-                                    </mat-error>
-                                    <mat-error *ngIf="myError('OtherDescription', 'maxlength')">
-                                      Limit
-                                      exceed
-                                    </mat-error>
-                                    <mat-error *ngIf="myError('OtherDescription', 'pattern')">
-                                      Description can
-                                      not contain
-                                      symbols
-                                    </mat-error>
-
-                                  </mat-form-field>
-                                </mat-card-content>
-                              </td>
-                              
-                            </tr>
-
-                        </table>
+              <tr>
 
 
-                    </mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
+                <td style="width:100%;">
+                  <mat-card-content>
+                    <label style=" color: black;">Vendor Email:</label>
+                    <br />
+                    <mat-form-field>
+                      <input matInput type="text" placeholder="" formControlName="Email" id="Surname" required>
+                      <mat-error *ngIf="myError('Email', 'required')">
+                        Email is
+                        required
+                      </mat-error>
+                      <mat-error *ngIf="myError('Email', 'maxlength')">Limit exceed</mat-error>
+                      <mat-error *ngIf="myError('Email', 'email')">Enter a valid email</mat-error>
 
-                    <div class="wrapper">
-                        <button class="" id="AnimationBtn" type="submit" [disabled]="!myForm.valid">
-                            <span>Save</span>
-                            <div class="success">
-                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-                                    viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;"
-                                    xml:space="preserve">
-                                    <path
-                                        d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
-                                </svg>
-                            </div>
-                        </button>
-                    </div>
+                    </mat-form-field>
+                  </mat-card-content>
+                </td>
+                <td style="width:100%;">
+                  <mat-card-content>
+                    <label style=" color:black;">Preferred Quote:</label>
+                    <br />
 
-                    <button mat-raised-button id="cBtn"
-                        style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;"
-                        (click)="Close()">
-                        Cancel
-                    </button>
-                </mat-card-actions>
-            </form>
-        </mat-card>
-    </div>
+                    <input type="file" id="file1" placeholder="" formControlName="OtherQuote1"
+                      style="border: solid #244688; border-radius: 5px; max-width: 247px;" accept=".pdf" (change)="onFile1Upload($event)"
+                      required>
+                    <br>
+                    <mat-hint id="Error1" style="color: red; display: none;">
+                      Duplicate files
+                      not
+                      allowed!
+                    </mat-hint>
+
+                  </mat-card-content>
+                </td>
+              </tr>
+
+              <tr>
+
+
+                <td style="width:100%;">
+                  <mat-card-content>
+                    <label style=" color:black;">Comparative Quote 1:</label>
+                    <br />
+
+                    <input type="file" id="file2" placeholder="" formControlName="OtherQuote2"
+                      style="border: solid #244688; border-radius: 5px; max-width: 247px;" accept=".pdf" (change)="onFile2Upload($event)"
+                      required>
+                    <br>
+                    <mat-hint id="Error2" style="color: red; display: none;">
+                      Duplicate files
+                      not
+                      allowed!
+                    </mat-hint>
+
+                  </mat-card-content>
+                </td>
+                <td style="width:100%;">
+                  <mat-card-content>
+                    <label style=" color:black;">Comparative Quote 2:</label>
+                    <br />
+
+                    <input type="file" id="file3" placeholder="" formControlName="OtherQuote3"
+                      style="border: solid #244688; border-radius: 5px; max-width: 247px;" accept=".pdf" (change)="onFile3Upload($event)"
+                      required>
+                    <br>
+                    <mat-hint id="Error3" style="color: red; display: none;">
+                      Duplicate files
+                      not
+                      allowed!
+                    </mat-hint>
+
+                  </mat-card-content>
+                </td>
+
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <mat-card-content>
+                    <label style=" color: black;">Request Description:</label>
+                    <br />
+                    <mat-form-field style="width:100%;">
+                      <textarea matInput type="text" placeholder="" formControlName="OtherDescription" id="Surname"
+                        required></textarea>
+                      <mat-hint align="end">Not more then 50 characters long.</mat-hint>
+                      <mat-error *ngIf="myError('OtherDescription', 'required')">
+                        Description is
+                        required
+                      </mat-error>
+                      <mat-error *ngIf="myError('OtherDescription', 'minlength')">
+                        Description must
+                        be 3 to
+                        50 characters long
+                      </mat-error>
+                      <mat-error *ngIf="myError('OtherDescription', 'maxlength')">
+                        Limit
+                        exceed
+                      </mat-error>
+                      <mat-error *ngIf="myError('OtherDescription', 'pattern')">
+                        Description can
+                        not contain
+                        symbols
+                      </mat-error>
+
+                    </mat-form-field>
+                  </mat-card-content>
+                </td>
+
+              </tr>
+
+            </table>
+
+
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
+
+          <div class="wrapper">
+            <button class="" id="AnimationBtn" type="submit" [disabled]="!myForm.valid">
+              <span>Save</span>
+              <div class="success">
+                <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756"
+                  style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
+                  <path
+                    d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+                </svg>
+              </div>
+            </button>
+          </div>
+
+          <button mat-raised-button id="cBtn"
+            style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;"
+            (click)="Close()">
+            Cancel
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  </div>
 </ng-template>

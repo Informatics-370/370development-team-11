@@ -281,6 +281,10 @@ export class VendorApprovedAddDetailsComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -336,7 +340,6 @@ export class VendorApprovedAddDetailsComponent implements OnInit {
     const currentmonth = new Date().getMonth();
     const currentDay = new Date().getDate();
     this.minDate = new Date(currentYear - 1, currentmonth, currentDay + 1);
-    console.log(this.minDate)
     this.FoundationaldocumentsFormGroup.get("BEELevel").setValue(1);
 
     this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID")?.setValue(1)
@@ -346,7 +349,6 @@ export class VendorApprovedAddDetailsComponent implements OnInit {
         this.RequestID = Number(paramater.get("RequestNo"));
         this.VendorService.GetRequestByID(this.RequestID).subscribe(result => {
           this.onboardRequest = result
-          console.log(this.onboardRequest)
         })
       }
     }
@@ -531,7 +533,7 @@ onInsuranceChecked() {
             this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
             this.VendorInsurance.vendor_ID = Number(VendorID);
             this.VendorInsurance.vendor_Insurance_Type_ID = 1;
-            this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => { console.log(response) })
+            this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
           })
         }
         if (this.InsuranceFormGroup.get("CyberInsurance")?.value == true) {
@@ -543,7 +545,7 @@ onInsuranceChecked() {
             this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
             this.VendorInsurance.vendor_ID = Number(VendorID);
             this.VendorInsurance.vendor_Insurance_Type_ID = 2;
-            this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => { console.log(response) })
+            this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
           })
         }
         if (this.InsuranceFormGroup.get("ProfessionalIndemnityInsurance")?.value == true) {
@@ -555,7 +557,7 @@ onInsuranceChecked() {
             this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
             this.VendorInsurance.vendor_ID = Number(VendorID);
             this.VendorInsurance.vendor_Insurance_Type_ID = 3;
-            this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => { console.log(response) })
+            this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
           })
         }
         if (this.InsuranceFormGroup.get("OtherInsurance")?.value == true) {
@@ -567,7 +569,7 @@ onInsuranceChecked() {
             this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
             this.VendorInsurance.vendor_ID = Number(VendorID);
             this.VendorInsurance.vendor_Insurance_Type_ID = 4;
-            this.VendorService.AddInsurance(this.VendorInsurance).subscribe(response => { console.log(response) })
+            this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
           })
         }
 
@@ -596,11 +598,9 @@ onInsuranceChecked() {
         this.DueDilligenceDetails.business_References_Present = this.BusinessReferencesFormGroup.get("BusinessReferencesPresent")?.value
 
         //this.DueDilligenceDetails.vendor = this.Vendor
-        console.log(this.DueDilligenceDetails)
         this.VendorService.AddDueDiligence(this.DueDilligenceDetails).subscribe(response => {
 
           let result: Due_Dillegence = response[0]
-          console.log(response)
           next: {
             if (this.POPIChecked == true) {
               this.POPIDetails.contracted_Partner_Type_ID = this.InformationSecurityFormGroup.get("Contracted_Partner_Type_ID")?.value
@@ -618,7 +618,7 @@ onInsuranceChecked() {
               this.POPIDetails.personal_Data_Processing_Details_Present = this.InformationSecurityFormGroup.get("Personal_Data_Processing_Details_Present")?.value
               this.POPIDetails.processing_Activities_Certification_Held = this.InformationSecurityFormGroup.get("Processing_Activities_Certification_Held")?.value
 
-              this.VendorService.AddPOPI(this.POPIDetails).subscribe(response => { console.log(response) })
+              this.VendorService.AddPOPI(this.POPIDetails).subscribe()
             }
           }
           for (let a = 0; a < this.onboardRequest.length; a++) {
@@ -660,7 +660,6 @@ onInsuranceChecked() {
 
         
       })
-      console.log(this.DueDilligenceDetails)
       this.UpdateOnboardRequestStatus(Number(VendorID))
       
     }
@@ -730,9 +729,7 @@ onInsuranceChecked() {
   CancelVendorRequestStatus(i: number) {
 
     for (let a = 0; a < this.onboardRequest.length; a++) {
-      //console.log(this.onboardRequest[a].vendor_ID)
       if (this.onboardRequest[a].vendor_ID == i) {
-        // console.log(this.onboardRequest[a].vendor_ID)
         this.VendorService.ChangeVendorStatus(1, this.onboardRequest[a].vendor_ID).subscribe()
       }
       else {
@@ -751,7 +748,6 @@ onInsuranceChecked() {
 
 
         this.VendorService.ChangeOnboardStatus(1, this.onboardRequest[a].onboard_Request_Id, this.onboardRequest[a].vendor_ID).subscribe(next => { })
-        console.log(this.onboardRequest[a])
       }
 
     }

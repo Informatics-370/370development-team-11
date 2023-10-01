@@ -11,6 +11,11 @@ mat-error:first-child {
     display:none;
 }
 
+::ng-deep .mat-mdc-optgroup-label:first-child {
+  color: white;
+  background-color: #244688;
+}
+
 .loader {
   position: relative;
   border-style: solid;

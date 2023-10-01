@@ -238,9 +238,7 @@ export class VendorUpdateComponent {
   
      FileStorage(id:number, event: any) {
         this.fileName[id] = event.target.files[0];
-        console.log(this.fileName)
         // let stest:File = event.target.files[0];
-        // console.log(stest)
      }
 
   FileDetails:any[] = [];
@@ -251,7 +249,6 @@ export class VendorUpdateComponent {
     for(let i = 0;i < 7;i++) {
       this.FileDetails.push({FileURL:"",FileName:""})
     }
-    console.log(this.fileName)
     this.route.paramMap.subscribe({
       next: (paramater) => {
         
@@ -279,9 +276,7 @@ export class VendorUpdateComponent {
           this.VendorRegistration.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
           this.VendorTax.vendor_Detail_ID = this.VendorDetail.vendor_Detail_ID
           this.getFileDetails(sFilePath,6)
-          this.VD_ID = this.VendorDetail.vendor_Detail_ID;
-          console.log(this.VD_ID)
-          console.log(this.VendorDetail.vendor_Detail_ID)  
+          this.VD_ID = this.VendorDetail.vendor_Detail_ID; 
           if(this.VendorDetail.faxProvided == true ) {
             this.getFax(this.VendorDetail.vendor_Detail_ID)
           }
@@ -425,7 +420,6 @@ export class VendorUpdateComponent {
 
     LicenseOrAccreditationChange() {
       this.LicenseOrAccreditationChecker = this.CompanyOverviewFormGroup.get("LicenseOrAccreditationCheck")?.value
-      console.log(this.LicenseOrAccreditationChecker)
       if(this.LicenseOrAccreditationChecker == true) {
        
         if (this.VendorDetail.license_Num_Provided == false) {
@@ -472,7 +466,6 @@ export class VendorUpdateComponent {
        }, duration);
        }
        else if(this.Passed == true) {
-        console.log(Number(this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value))
         if(this.VendorVat.vat_Registration_Number != this.CompanyOverviewFormGroup.get('VatRegistrationNumber')?.value)
         {
           this.VendorService.VatRegNumberVal(this.CompanyOverviewFormGroup.get('VatRegistrationNumber')?.value).subscribe({next:
@@ -495,8 +488,6 @@ export class VendorUpdateComponent {
             }
          }})
         }
-        console.log(this.VendorRegistration.company_Registration_Number)
-        console.log(Number(this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value))
         if(this.VendorRegistration.company_Registration_Number != this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value){
           this.VendorService.CompanyRegNumberVal(this.CompanyOverviewFormGroup.get('CompanyRegistrationNumber')?.value).subscribe({next:
             (Result) => {if (Result != null) {
@@ -618,16 +609,14 @@ export class VendorUpdateComponent {
         //validate files names-validate tables with number id to check it doesn't exist   
       let FolderCategory = "Bank";
       let VendorNo = "Vendor" + this.Vendor.vendor_ID
-      console.log(this.VendorDetail)
       if(this.BankDetailsFormGroup.get("BankStampedConfirmationLetter")?.value != "") {
       
         let fileName =  this.FileDetails[6].FileName
-        this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe(Response => {console.log(Response)})
+        this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
 
         let file:File = this.fileName[6]
         this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
         let Path: any = response
-        console.log(response)
         this.VendorDetail.bankStampedConfirtmation = Path.returnedPath.toString();
      
         this.VendorService.UpdateVendorDetails(this.VD_ID,this.VendorDetail).subscribe(result =>{
@@ -635,8 +624,6 @@ export class VendorUpdateComponent {
           
           this.VD_ID = VendorList.vendor_Detail_ID
           this.CreateContinue(this.VD_ID)
-          console.log(this.VD_ID )
-          console.log(VendorList)
         })//update vendor details
 
      
@@ -644,14 +631,13 @@ export class VendorUpdateComponent {
       }
       else {
        
-        console.log(this.VD_ID)
+
         this.VendorService.UpdateVendorDetails(this.VD_ID,this.VendorDetail).subscribe(result =>{
           let VendorList:VendorDetails = result
-          console.log(this.VD_ID )
+
           this.VD_ID = VendorList.vendor_Detail_ID
           this.CreateContinue(this.VD_ID)
-          console.log(this.VD_ID )
-          console.log(VendorList)
+
         })//update vendor details
       }
           
@@ -667,28 +653,24 @@ CreateContinue(VenDetailsID:number) {
       let VendorNo = "";
 
   this.Vendorfax.vendor_Detail = this.VendorDetail
-          console.log(this.VD_ID)
-          console.log(this.VendorDetail.vendor_Detail_ID)
+
           if(this.CompanyFaxChecker == true && this.Vendorfax.fax_ID == 0 ) {
-            console.log(this.VendorDetail.vendor_Detail_ID)
+
             this.Vendorfax.vendor_Detail_ID = this.VD_ID 
             this.Vendorfax.fax = this.CompanyContactInfoFormGroup.get("CompanyFax")?.value
-            this.VendorService.AddFax(this.Vendorfax).subscribe(response => {console.log(response)})
+            this.VendorService.AddFax(this.Vendorfax).subscribe()
           }
           else if(this.CompanyFaxChecker == true && this.Vendorfax.fax != this.CompanyContactInfoFormGroup.get("CompanyFax")?.value){
             this.Vendorfax.fax = this.CompanyContactInfoFormGroup.get("CompanyFax")?.value
-            this.VendorService.UpdateFax(this.Vendorfax.fax_ID,this.Vendorfax).subscribe(response => 
-              {
-                console.log("success")
-              })
+            this.VendorService.UpdateFax(this.Vendorfax.fax_ID,this.Vendorfax).subscribe()
           }
           else if(this.Vendorfax.fax_ID != 0 && this.CompanyFaxChecker == false) {
-            this.VendorService.DeleteFaxByID(this.Vendorfax.fax_ID).subscribe(response => {console.log(response)})
+            this.VendorService.DeleteFaxByID(this.Vendorfax.fax_ID).subscribe()
           }//fax
          
           this.VendorVat.vendor_Detail = this.VendorDetail
           if(this.VatRegistrationChecker == true && this.VendorVat.vat_Registration_Number == "" ) {
-            console.log("vat")
+            
             FolderCategory = "VATRegistration";
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let file:File = this.fileName[1]
@@ -697,8 +679,7 @@ CreateContinue(VenDetailsID:number) {
               this.VendorVat.vaT_Registration_Document = Path.returnedPath.toString();
               this.VendorVat.vendor_Detail_ID = this.VD_ID 
               this.VendorVat.vat_Registration_Number = this.CompanyOverviewFormGroup.get("VatRegistrationNumber")?.value
-              console.log(this.VendorVat)
-              this.VendorService.AddVat(this.VendorVat).subscribe(response => {console.log(response)})
+              this.VendorService.AddVat(this.VendorVat).subscribe()
             })
             
           }
@@ -745,7 +726,7 @@ CreateContinue(VenDetailsID:number) {
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let fileName =  this.FileDetails[1].FileName
             this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe({next: (Response) => {
-              this.VendorService.DeleteVatByID(this.VendorDetail.vendor_Detail_ID).subscribe(response => {console.log(response)})
+              this.VendorService.DeleteVatByID(this.VendorDetail.vendor_Detail_ID).subscribe()
             }})
             
           }//vatRegistered
@@ -754,24 +735,19 @@ CreateContinue(VenDetailsID:number) {
           if(this.CompanyWebsiteChecker == true && this.VendorWebsite.website_ID == 0  ) {
             this.VendorWebsite.url = this.CompanyContactInfoFormGroup.get("CompanyWebsite")?.value
             this.VendorWebsite.vendor_Detail_ID = this.VD_ID 
-            this.VendorService.AddWebsite(this.VendorWebsite).subscribe(response => {console.log(response)})
+            this.VendorService.AddWebsite(this.VendorWebsite).subscribe()
           }
           else if (this.CompanyWebsiteChecker == true && this.VendorWebsite.url != this.CompanyContactInfoFormGroup.get("CompanyWebsite")?.value) {
             this.VendorWebsite.url = this.CompanyContactInfoFormGroup.get("CompanyWebsite")?.value
-            this.VendorService.UpdateWebsite(this.VendorWebsite.website_ID,this.VendorWebsite).subscribe(response => 
-              {
-                console.log("success")
-              })
+            this.VendorService.UpdateWebsite(this.VendorWebsite.website_ID,this.VendorWebsite).subscribe()
           }
           else if(this.CompanyWebsiteChecker == false && this.VendorWebsite.website_ID != 0) {
-            this.VendorService.DeleteWebsiteByID(this.VendorWebsite.website_ID).subscribe(response => {console.log(response)})
+            this.VendorService.DeleteWebsiteByID(this.VendorWebsite.website_ID).subscribe()
           }//website
 
           this.VendorLicense.vendor_Detail = this.VendorDetail
           if(this.LicenseOrAccreditationChecker == true && this.VendorLicense.license_No == "" ) {
-            console.log(this.fileName[5])
             this.VendorLicense.license_No = this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value
-            console.log(this.VendorLicense.license_No)
             FolderCategory = "LicenseOrAccreditationNumber";
             let file:File = this.fileName[5]
               VendorNo = "Vendor" + this.Vendor.vendor_ID
@@ -780,7 +756,7 @@ CreateContinue(VenDetailsID:number) {
                 this.VendorLicense.license_Doc_Upload = Path.returnedPath.toString();
                 this.VendorLicense.vendor_Detail_ID = this.VD_ID 
                 this.VendorLicense.license_No = this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value
-                this.VendorService.AddLicense(this.VendorLicense).subscribe(response => {console.log(response)})
+                this.VendorService.AddLicense(this.VendorLicense).subscribe()
               })
              
           } 
@@ -827,7 +803,7 @@ CreateContinue(VenDetailsID:number) {
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let fileName =  this.FileDetails[5].FileName
             this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe({next: (Response) => {
-              this.VendorService.DeleteLicenseByID(this.VendorLicense.vendor_Detail_ID).subscribe(response => {console.log(response)})
+              this.VendorService.DeleteLicenseByID(this.VendorLicense.vendor_Detail_ID).subscribe()
             }})
 
             
@@ -842,8 +818,7 @@ CreateContinue(VenDetailsID:number) {
               let Path: any = response
               this.VendorAgreement.signed_Agreement_Doc = Path.returnedPath.toString();
               this.VendorAgreement.vendor_Detail_ID = this.VD_ID 
-              console.log(this.VendorAgreement)
-             this.VendorService.AddAgreement(this.VendorAgreement).subscribe(response => {console.log(response)})
+             this.VendorService.AddAgreement(this.VendorAgreement).subscribe()
             })
             
           }
@@ -858,10 +833,7 @@ CreateContinue(VenDetailsID:number) {
               let Path: any = response
               this.VendorAgreement.signed_Agreement_Doc = Path.returnedPath.toString(); 
               this.VendorAgreement.vendor_Detail_ID = this.VD_ID
-              this.VendorService.UpdateAgreement(this.VendorAgreement.agreement_ID,this.VendorAgreement).subscribe(response => 
-                {
-                  console.log("success")
-                })
+              this.VendorService.UpdateAgreement(this.VendorAgreement.agreement_ID,this.VendorAgreement).subscribe()
               })
             }
           }
@@ -870,7 +842,7 @@ CreateContinue(VenDetailsID:number) {
             VendorNo = "Vendor" + this.Vendor.vendor_ID
             let fileName =  this.FileDetails[3].FileName  
             this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe({next: (Response) => {
-              this.VendorService.DeleteAgreementByID(this.VendorAgreement.agreement_ID).subscribe(response => {console.log(response)})
+              this.VendorService.DeleteAgreementByID(this.VendorAgreement.agreement_ID).subscribe()
             }})
            
           }//signedagreement
@@ -879,17 +851,14 @@ CreateContinue(VenDetailsID:number) {
           if(this.PaymentTermsChecker == true && this.VendorPaymentTerms.payment_Terms_ID == 0 ) {
             this.VendorPaymentTerms.payment_Terms = this.CompanyOverviewFormGroup.get("PaymentTerms")?.value
             this.VendorPaymentTerms.vendor_Detail_ID = this.VD_ID 
-            this.VendorService.AddPayTerms(this.VendorPaymentTerms).subscribe(response => {console.log(response)})
+            this.VendorService.AddPayTerms(this.VendorPaymentTerms).subscribe()
           }
           else if(this.PaymentTermsChecker == true && this.VendorPaymentTerms.payment_Terms != this.CompanyOverviewFormGroup.get("PaymentTerms")?.value) {
             this.VendorPaymentTerms.payment_Terms = this.CompanyOverviewFormGroup.get("PaymentTerms")?.value
-            this.VendorService.UpdatePayTerms(this.VendorPaymentTerms.payment_Terms_ID,this.VendorPaymentTerms).subscribe(response => 
-              {
-                console.log("success")
-              })
+            this.VendorService.UpdatePayTerms(this.VendorPaymentTerms.payment_Terms_ID,this.VendorPaymentTerms).subscribe()
           }
           else if(this.PaymentTermsChecker == false && this.VendorPaymentTerms.payment_Terms_ID != 0) {
-            this.VendorService.DeletePaymentTerms(this.VendorPaymentTerms.payment_Terms_ID).subscribe(response => {console.log(response)})
+            this.VendorService.DeletePaymentTerms(this.VendorPaymentTerms.payment_Terms_ID).subscribe()
           }//payment terms  
 
        
@@ -934,9 +903,6 @@ CreateContinue(VenDetailsID:number) {
               
             }
           }//vendorregistration 
-          console.log(this.VendorTax.income_Tax_Num)
-          console.log(Number(this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.value))
-          console.log(this.fileName[2])
           if((this.VendorTax.income_Tax_Num != this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.value) || (this.fileName[2] != "" && this.fileName[2] != undefined)) {
             
             FolderCategory = "IncomeTax";
@@ -1019,7 +985,6 @@ CreateContinue(VenDetailsID:number) {
 }
 
 getFax(FaxID:number) {
-  console.log(FaxID)
 this.VendorService.GetFaxByID(FaxID).subscribe(result => {
 this.Vendorfax = result
 this.CompanyContactInfoFormGroup.get("CompanyFax")?.setValue(this.Vendorfax.fax)

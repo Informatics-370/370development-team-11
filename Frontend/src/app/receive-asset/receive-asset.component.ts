@@ -87,6 +87,10 @@ export class ReceiveAssetComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -108,9 +112,9 @@ export class ReceiveAssetComponent implements OnInit {
 
 
   onSubmit() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     let StatusID = this.myForm.get("Status")?.value;
     let SelectedStatus = this.Statuses.findIndex(x => x.procurement_Status_ID == StatusID)
-    console.log(StatusID)
     document.getElementById('AnimationBtn').classList.toggle("is_active");
     document.getElementById('cBtn').style.display = "none";
     this.dataService.UpdateProcurementStatus(StatusID, this.id).subscribe({

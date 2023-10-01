@@ -9,7 +9,7 @@
 </div>
 <mat-stepper [linear]="true"  #stepper style="background-color: #eee;" orientation="vertical" (selectionChange)="setFocus(stepper)">
   <mat-step [stepControl]="DueDiligenceChecklistDetailsFormGroup" >
-    <form [formGroup]="DueDiligenceChecklistDetailsFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+    <form [formGroup]="DueDiligenceChecklistDetailsFormGroup" style="display: inline-block;" class="table-responsive">
       <ng-template matStepLabel>DUE DILIGENCE CHECKLIST DETAILS</ng-template>
       <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="0">
         <tr>
@@ -26,7 +26,7 @@
     </form>
   </mat-step>
   <mat-step [stepControl]="FoundationaldocumentsFormGroup" >
-    <form [formGroup]="FoundationaldocumentsFormGroup" style="text-align: -webkit-center;" class="table-responsive" id="1">
+    <form [formGroup]="FoundationaldocumentsFormGroup" style="display: inline-block;" class="table-responsive" id="1">
       <ng-template  matStepLabel>FOUNDATIONAL DOCUMENTS</ng-template>
       <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;">
           <tr>
@@ -141,7 +141,7 @@
     </form>
   </mat-step>
   <mat-step [stepControl]="FinancialsFormGroup" >
-    <form [formGroup]="FinancialsFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+    <form [formGroup]="FinancialsFormGroup" style="display: inline-block;" class="table-responsive">
       <ng-template matStepLabel >FINANCIALS</ng-template>
       <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="2">
           <tr>
@@ -171,7 +171,7 @@
     </form>
   </mat-step>
   <mat-step [stepControl]="SubContractingFormGroup" >
-      <form [formGroup]="SubContractingFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+      <form [formGroup]="SubContractingFormGroup" style="display: inline-block;" class="table-responsive">
         <ng-template matStepLabel>SUB-CONTRACTING</ng-template>
         <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="3">
           <tr>
@@ -200,7 +200,7 @@
       </form>
     </mat-step>
     <mat-step [stepControl]="InsuranceFormGroup" >
-      <form [formGroup]="InsuranceFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+      <form [formGroup]="InsuranceFormGroup" style="display: inline-block;" class="table-responsive">
         <ng-template matStepLabel >INSURANCE</ng-template>
         <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="4">
           <tr>
@@ -213,7 +213,7 @@
             <mat-expansion-panel hideToggle disabled expanded="{{InsuranceFormGroup.get('GeneralLiabilityInsurance').value}}" style="margin-left: 10px" >
                 <div class="row">
                   <div class="col-7">
-                    <label style="width: 450px;">Please add the General liability Insurance Document:</label>
+                    <label style="width: 450px;">Add the General liability Insurance Document:</label>
                   </div>
                   <div class="col-5">
                       <input  id="file"  type="file" class="file-upload" (change)="FileAdd(1,$event)" formControlName="GeneralLiabilityInsuranceDoc" > 
@@ -231,7 +231,7 @@
             <mat-expansion-panel hideToggle disabled expanded="{{InsuranceFormGroup.get('CyberInsurance').value}}" style="margin-left: 10px" >
                 <div class="row">
                   <div class="col-7">
-                    <label style="width: 450px;">Please add the Cyber Insurance Document:</label>
+                    <label style="width: 450px;">Add the Cyber Insurance Document:</label>
                   </div>
                   <div class="col-5">
                       <input  id="file"  type="file" class="file-upload" (change)="FileAdd(2,$event)" formControlName="CyberInsuranceDoc" > 
@@ -249,7 +249,7 @@
             <mat-expansion-panel hideToggle disabled expanded="{{InsuranceFormGroup.get('ProfessionalIndemnityInsurance').value}}" style="margin-left: 10px" >
                 <div class="row">
                   <div class="col-7">
-                    <label style="width: 370px;">Please add the Professional Indemnity Insurance Document:</label>
+                    <label style="width: 370px;">Add the Professional Indemnity Insurance Document:</label>
                   </div>
                   <div class="col-5">
                       <input  id="file"  type="file" class="file-upload" (change)="FileAdd(3,$event)" formControlName="ProfessionalIndemnityInsuranceDoc" > 
@@ -267,7 +267,7 @@
           <mat-expansion-panel hideToggle disabled expanded="{{InsuranceFormGroup.get('OtherInsurance').value}}" style="margin-left: 10px" >
               <div class="row">
                 <div class="col-7">
-                  <label style="width: 450px;">Please add any Other specific insurance Document:</label>
+                  <label style="width: 450px;">Add any Other specific insurance Document:</label>
                 </div>
                 <div class="col-5">
                     <input  id="file"  type="file" class="file-upload" (change)="FileAdd(4,$event)" formControlName="OtherInsuranceDoc" > 
@@ -283,7 +283,7 @@
       </form>
     </mat-step>
     <mat-step [stepControl]="LicensesOrProfessionalAccreditationFormGroup" >
-      <form [formGroup]="LicensesOrProfessionalAccreditationFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+      <form [formGroup]="LicensesOrProfessionalAccreditationFormGroup" style="display: inline-block;" class="table-responsive">
         <ng-template matStepLabel >LICENSES OR PROFESSIONAL ACCREDITATION</ng-template>
         <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="5">
           <tr>
@@ -312,7 +312,7 @@
       </form>
     </mat-step>
     <mat-step [stepControl]="InformationSecurityFormGroup" >
-      <form [formGroup]="InformationSecurityFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+      <form [formGroup]="InformationSecurityFormGroup" style="display: inline-block;" class="table-responsive">
         <ng-template matStepLabel >INFORMATION SECURITY</ng-template>
         <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;">
           <tr>
@@ -446,7 +446,7 @@
       </form>
     </mat-step>
     <mat-step [stepControl]="PolicyReviewFormGroup" >
-      <form [formGroup]="PolicyReviewFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+      <form [formGroup]="PolicyReviewFormGroup" style="display: inline-block;" class="table-responsive">
         <ng-template matStepLabel>POLICY REVIEW</ng-template>
         <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;">
           <tr>
@@ -499,7 +499,7 @@
       </form>
     </mat-step>
     <mat-step [stepControl]="BusinessReferencesFormGroup" >
-      <form [formGroup]="BusinessReferencesFormGroup" style="text-align: -webkit-center;" class="table-responsive">
+      <form [formGroup]="BusinessReferencesFormGroup" style="display: inline-block;" class="table-responsive">
         <ng-template matStepLabel>BUSINESS REFERENCES</ng-template>
         <table class="table" style="background-color: white;border:1px solid #244688;border-bottom: white;" id="8">
           <tr>

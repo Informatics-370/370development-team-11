@@ -23,6 +23,9 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/
 import { RestoreComponent } from 'src/app/Settings/backupDialog/restore.component';
 import { RestoreDialogComponent } from 'src/app/Settings/restore-dialog/restore-dialog.component';
 import { DelegationIFrameComponent } from 'src/app/HelpIFrames/DelegationIFrame/delegation-iframe/delegation-iframe.component';
+import { TimerComponent } from 'src/app/Settings/timer/timer.component';
+import { CreateVatComponent } from '../../Settings/create-vat/create-vat.component';
+import { EditVatComponent } from '../../Settings/edit-vat/edit-vat.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -34,13 +37,13 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-view-delegation',
   templateUrl: './view-delegation.component.html',
   styleUrls: ['./view-delegation.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
-export class ViewDelegationComponent implements OnInit{
+export class ViewDelegationComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  
+
   displayedColumnsAdmin: string[] = ['delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete', 'revoke'];
-  dataSource : any;
+  dataSource: any;
 
   userDelete: any
   rl: Role = {
@@ -56,6 +59,8 @@ export class ViewDelegationComponent implements OnInit{
   rMD: string;
 
   FileDetails: any[] = [];
+
+  SearchFileDetails: any[] = [];
   
 
 
@@ -80,20 +85,18 @@ export class ViewDelegationComponent implements OnInit{
           }
 
           this.RoleToUse = this.dataService.decodeUserRole(sessionStorage.getItem("token"))
-          //console.log(this.RoleToUse)
-          //console.log(this.RoleToUse === "Admin")
 
           this.GetDelegations();
         }
       }
     })
 
-    
 
-    
+
+
   }
 
-  
+  searchedDelegations: any;
 
   search() {
     const searchTerm = this.searchWord.toLocaleLowerCase();
@@ -101,13 +104,23 @@ export class ViewDelegationComponent implements OnInit{
     if (this.iRole == "Admin" || this.iRole == "MD") {
       if (searchTerm) {
         this.dataSource = new MatTableDataSource(this.Delegations.filter(r => r.delegatingParty.toLocaleLowerCase().includes(searchTerm)))
+
+        this.SearchedDelegation = this.Delegations.filter(r => r.delegatingParty.toLocaleLowerCase().includes(searchTerm));
+
+        for (let n = 0; n < this.SearchedDelegation.length; n++) {
+          let id = this.SearchedDelegation[n].delegation_ID;
+
+          this.FileDetails[n] = this.SearchFileDetails[Number(id) - 1];
+        }
       }
       else if (searchTerm == "") {
+        this.FileDetails.length = 0;
+        this.SearchFileDetails.length = 0;
         this.GetDelegations();
       }
-    } 
+    }
 
-    
+
   }
 
 
@@ -127,26 +140,32 @@ export class ViewDelegationComponent implements OnInit{
         }
 
         for (let i = 0; i < this.Delegations.length; i++) {
-          this.FileDetails.push({ FileURL: "", FileName: "" })
+          this.FileDetails.push({FileID: 0, FileURL: "", FileName: "" })
           let sFile = this.Delegations[i].delegation_Document;
 
           if (sFile != "None") {
             let DelegateName = sFile.substring(0, sFile.indexOf("\\"))
             let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
 
+            this.FileDetails[i].FileID = i + 1;
             this.FileDetails[i].FileURL = `https://localhost:7186/api/Delegation/GetDelegationFiles/${DelegateName}/${filename}`
             this.FileDetails[i].FileName = filename
           }
           else {
+            this.FileDetails[i].FileID = 0;
             this.FileDetails[i].FileURL = ""
             this.FileDetails[i].FileName = sFile;
           }
         }
+
+        for (let f = 0; f < this.FileDetails.length; f++) {
+          this.SearchFileDetails[f] = this.FileDetails[f];
+        }
         /*this.SearchedEmployee = this.Employees;*/
       })
-    } 
+    }
 
-    
+
     function hideloader() {
       document.getElementById('loading')
         .style.display = 'none';
@@ -156,7 +175,7 @@ export class ViewDelegationComponent implements OnInit{
 
 
 
-  
+
 
   openPDFInNewTab(i: number): void {
     const url = this.FileDetails[i].FileURL;
@@ -201,15 +220,52 @@ export class ViewDelegationComponent implements OnInit{
     const dialogRef = this.dialog.open(RestoreComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
   }
   openRestoreDialog() {
     const dialogRef = this.dialog.open(RestoreDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
     });
+  }
+
+  openTimerDialog() {
+    const dialogRef = this.dialog.open(TimerComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openCreateVATDialog() {
+    const dialogRef = this.dialog.open(CreateVatComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+  openEditVATDialog() {
+    this.dataService.GetVAT().subscribe(re => {
+      if (re == null) {
+        var action = "ERROR";
+        var title = "ERROR: VAT does not Exists";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No VAT <strong style='color:red'>EXISTS ON THE SYSTEM!</strong><br> Please add one before and try again.");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 4000;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
+      } else {
+        const dialogRef = this.dialog.open(EditVatComponent);
+
+        dialogRef.afterClosed().subscribe(result => {
+        });
+      }
+    })
   }
 
   openDelegationIFrameTab(): void {

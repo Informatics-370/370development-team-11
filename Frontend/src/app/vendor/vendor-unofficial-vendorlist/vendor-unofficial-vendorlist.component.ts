@@ -4,13 +4,15 @@ import { DataService } from 'src/app/DataService/data-service';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { VendorDetails } from 'src/app/Shared/VendorDetails';
 import { VendorCreateChoiceComponent } from '../vendor-create-choice/vendor-create-choice.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import { Subscription, buffer, elementAt, groupBy } from 'rxjs';
 import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
 import { TestScheduler } from 'rxjs/testing';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { ApproveVendorIFrameComponent } from 'src/app/HelpIFrames/ApproveVendorIFrame/approve-vendor-iframe/approve-vendor-iframe.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
@@ -43,7 +45,7 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private VendorService: DataService, private dialog: MatDialog, private route: ActivatedRoute,private router: Router,) {
+  constructor(private VendorService: DataService, private dialog: MatDialog, private route: ActivatedRoute,private router: Router,private sanitizer: DomSanitizer) {
    // this.router.routeReuseStrategy.shouldReuseRoute = () => false; 
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
@@ -73,7 +75,6 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
 
     this.iRole = this.VendorService.decodeUserRole(sessionStorage.getItem("token"));
 
-   // console.log(this.iRole)
 
     if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
@@ -96,14 +97,12 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
       RequestList = result
       this.onboardRequestData = [];
       this.onboardRequestData = result 
+      console.log(result)
       this.PendingOnboardDetails = [];
       RequestList.forEach((element) => this.PendingOnboardDetails.push(element));
       //RequestList.forEach((element) => this.vendor.push(element.vendors));
       this.PendingOnboardRequests = [];
       this.PendingOnboardRequests =  new MatTableDataSource(this.PendingOnboardDetails.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
-     // console.log(this.onboardRequestData)
-     // console.log(this.PendingOnboardRequests.data)
-      //console.log(this.PendingOnboardDetails)
       let countsByPart = undefined
       countsByPart = this.PendingOnboardDetails.reduce((accumulator, currentValue) => {
         const partId = currentValue.onboard_Request_Id;
@@ -117,7 +116,6 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
         return accumulator;
       }, {});
       
-      //console.log(this.onboardRequestData);
       this.PendingOnboardDetailSummary  = [];
       this.PendingOnboardRequests.data.forEach(element => {
         let sType = "General Suppliers"
@@ -134,7 +132,6 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
           VendorStatusId:this.getVendorStatusID(element.onboard_Request_Id),
           onboardRequestStatusID:this.getOnboardStatusID(element.onboard_Request_Id) ,
         }
-       // console.log(result)
         if(result.SelectedRequestVendorName != "Request Rejected") {
           if(this.sFilter == "1") {
             if(this.rAdmin == "true" && result.onboardRequestStatusID == 4) {
@@ -147,14 +144,12 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
             }
           }
           else if(this.sFilter == "2"){
-           // console.log(result.VendorStatusId)
             if((result.VendorStatusId == 3 && result.onboardRequestStatusID == 3) || (result.VendorStatusId == 4 && result.onboardRequestStatusID == 3)) {
               this.PendingOnboardDetailSummary.push(result)
               this.SearchResults.push(result)
             }
           }
           else if(this.sFilter == "3") {
-           // console.log(result.VendorStatusId)
             if((result.VendorStatusId == 2 && result.onboardRequestStatusID == 2) || (result.VendorStatusId == 1 && result.onboardRequestStatusID == 1) || (result.VendorStatusId == 5 && result.onboardRequestStatusID == 1) || (result.VendorStatusId == 1 && result.onboardRequestStatusID == 2)) {
               this.PendingOnboardDetailSummary.push(result)
               this.SearchResults.push(result)
@@ -198,7 +193,6 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
         document.getElementById('loading').style.display = "none";
         document.getElementById('table').style.visibility = "visible";
       }
-      //console.log(this.PendingOnboardRequests)
    })
 
   }//ngoninIt
@@ -215,7 +209,6 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
 
   ChangeFilter() {
     this.ngOnInit()
-    //console.log(this.sFilter)
   }
 
   searchWord: string = '';
@@ -228,9 +221,7 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
   Edit(i:number) {
     
     this.VendorService.GetRequestByID(i).subscribe(result => {
-     console.log(result)
     for (let a = 0; a < result.length;a++) {
-      console.log(i)
       if(result[a].vendor.vendor_Status_ID == 4 || result[a].vendor.vendor_Status_ID == 3) {
         this.router.navigate(['/vendor-approve-edit/' + result[a].vendor_ID])
       }
@@ -262,7 +253,6 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
     
     for (let a = 0;a < this.onboardRequestData.length;a++) {
         if(this.onboardRequestData[a].onboard_Request_Id == i) {
-         // console.log(this.onboardRequestData[a].vendors.vendor_Status_ID)
           if(this.onboardRequestData[a].vendors.vendor_Status_ID == 4 || this.onboardRequestData[a].vendors.vendor_Status_ID == 3) {
             
             result = this.onboardRequestData[a].vendors.vendor_Status_ID
@@ -280,10 +270,8 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
   
   getOnboardStatusID(i:number) {
     let result = 2
-    //console.log(this.onboardRequestData)
     for (let a = 0;a < this.onboardRequestData.length;a++) {
         if(this.onboardRequestData[a].onboard_Request_Id == i) {
-         // console.log(this.onboardRequestData[a])
           if(this.onboardRequestData[a].onboard_Request_status_ID == 3) {
             
             result = this.onboardRequestData[a].onboard_Request_status_ID
@@ -302,16 +290,45 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
       return result
   }
 
+  User:string;
+
   UpdateOnboardRequestStatus(i:number) {
 
-    for (let a = 0;a < this.onboardRequestData.length;a++) {
-        if(this.onboardRequestData[a].onboard_Request_Id == i) {
-          if(this.onboardRequestData[a].onboard_Request_status_ID == 1) {
-            this.VendorService.ChangeOnboardStatus(5,i,this.onboardRequestData[a].vendor_ID).subscribe()
+    this.User = this.VendorService.decodeUser(sessionStorage.getItem('token'))
+    let irole = this.VendorService.decodeUserRole(sessionStorage.getItem('token'))
+    let iTemprole = this.VendorService.decodeTempAcc(sessionStorage.getItem('token'))
+    this.VendorService.GetEmployeeByUsername(this.User).subscribe(r => {
+      let EmployeeDetails: any = r
+      let name = EmployeeDetails.employeeName + " " + EmployeeDetails.employeeSurname
+
+      if(this.onboardRequestData.find(x=> x.onboard_Request_Id == i).employeeName != name || irole == "MD" || iTemprole == "MD") {
+        for (let a = 0; a < this.onboardRequestData.length; a++) {
+          if (this.onboardRequestData[a].onboard_Request_Id == i) {
+            if (this.onboardRequestData[a].onboard_Request_status_ID == 1) {
+              this.VendorService.ChangeOnboardStatus(5, i, this.onboardRequestData[a].vendor_ID).subscribe()
+            }
           }
         }
-    }
-    this.router.navigate(['/vendor-approve/' + i])
+        this.router.navigate(['/vendor-approve/' + i])
+      }
+      else {
+        var action = "ERROR";
+        var title = "VALIDATION ERROR";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Forbidden to <strong style='color:red'> APPROVE </strong> own request!");
+
+        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 2200;
+        setTimeout(() => {
+          this.router.navigate(['/vendor-unofficial-vendorlist'])
+          dialogRef.close();
+        }, duration);
+      }
+
+    })
   }
 
   CorrectRouteChoice(i:number) {

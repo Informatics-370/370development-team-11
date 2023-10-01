@@ -83,6 +83,7 @@ export class CreateConsumableComponent implements OnInit {
     })
   }
   AddConsumable() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.ConsumableCategory.name = this.myForm.get('ConsumableCategory')?.value;
     this.Consumables.name = this.myForm.get('Name')?.value;
     this.Consumables.description = this.myForm.get('Description')?.value;
@@ -131,6 +132,7 @@ export class CreateConsumableComponent implements OnInit {
           );
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Consumable Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The consumable <strong>" + this.Consumables.name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

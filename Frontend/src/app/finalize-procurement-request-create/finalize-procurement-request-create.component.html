@@ -19,7 +19,7 @@
                   <br />
                   <mat-form-field>
                     <input matInput type="text" placeholder="" formControlName="total" id="total"
-                      [(ngModel)]="TotalAmountDisplay" [readonly]="true">
+                      [(ngModel)]="TotalAmountDisplay" [readonly]="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default; color: gray;">
                   </mat-form-field>
                 </mat-card-content>
               </td>
@@ -31,7 +31,7 @@
                   <br />
                   <mat-form-field>
                     <input matInput type="text" placeholder="" formControlName="budgetLine" id="budgetLine"
-                      [(ngModel)]="ActualAmountDisplay" [readonly]="true">
+                      [(ngModel)]="ActualAmountDisplay" [readonly]="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default; color: gray;">
                   </mat-form-field>
                 </mat-card-content>
               </td>
@@ -50,7 +50,7 @@
                     <br />
                     <input type="file" class="file-upload" formControlName="ProofOfPaymentDoc"
                       (change)="uploadFile(0,$event)"
-                      style="border: solid #244688; border-radius: 5px;height: fit-content; ">
+                      style="border: solid #244688; border-radius: 5px; height: fit-content; max-width: 247px;">
                   </mat-expansion-panel>
                 </mat-card-content>
               </td>

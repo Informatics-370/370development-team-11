@@ -45,7 +45,6 @@ export class ViewBudgetLinesComponent {
       this.dataSource = this.BudgetLines.filter(budgetLine => budgetLine.budget_Category.account_Name.toLowerCase().includes(Searchterm));
     }
     else if (Searchterm == "") {
-      console.log(Number(this.route.snapshot.paramMap.get('id')))
       this.GetBudgetLines(Number(this.route.snapshot.paramMap.get('id')));
     }
   }
@@ -70,7 +69,6 @@ export class ViewBudgetLinesComponent {
     this.dataService.GetBudgetLineItems(Number(this.route.snapshot.paramMap.get('id'))).subscribe(result => {
       let BLList: any[] = result;
       this.BudgetLines = [...BLList];
-      console.log(this.BudgetLines)
     });
   }
 

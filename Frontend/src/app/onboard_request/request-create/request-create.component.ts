@@ -87,6 +87,10 @@ export class RequestCreateComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -103,7 +107,11 @@ export class RequestCreateComponent implements OnInit {
     status_ID: 1,
     vendor: { vendor_ID: 0, vendor_Status_ID: 0, vendor_Status: this.VStatus, name: '', email: '', number_Of_Times_Used: 0, sole_Supplier_Provided: false, preferedVendor: false },
     onboard_Status: this.OnboardStatus,
-    users: { user_Id: 0, role_ID: 0, access_ID: 0, access: this.Access, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', no_Notifications: 0, role: this.rl },
+    users: {
+      user_Id: 0, role_ID: 0, access_ID: 0, access: this.Access, username: '', password: '', profile_Picture: './assets/Images/Default_Profile.jpg', no_Notifications: 0, no_VenNotifications: 0,
+      no_InvNotifications: 0,
+      no_DelNotifications: 0,
+      no_ProNotifications: 0, role: this.rl },
     quotes: '',
   }
 
@@ -177,11 +185,20 @@ export class RequestCreateComponent implements OnInit {
     this.selectedIndex = index - 1;
 
   }
-
+  GRCUserID: Number;
+  MDUserID:Number;
   ngOnInit() {
+    this.dataService.GetUserByRole("GRC").subscribe(x=> {
+      this.GRCUserID = x.user_Id
+    })
+
+    this.dataService.GetUserByRole("MD").subscribe(x=> {
+      this.MDUserID = x.user_Id;
+    })
+    
     var User = this.dataService.decodeUser(sessionStorage.getItem('token'))
     this.dataService.GetUserByUsername(User).subscribe(response => {
-      console.log(response)
+
       this.usr = response;
       this.usr.access = response.access
       this.Onboard_Request.users = response
@@ -211,7 +228,7 @@ export class RequestCreateComponent implements OnInit {
     this.fileToUpload = event.target.files[0];
     //this.fileToUpload?.name
 
-    // console.log(this.fileToUpload)
+
     if (this.fileToUpload != null) {
       for (let a = 0; a < (i + 1); a++) {
         if (a == i) {
@@ -344,7 +361,7 @@ export class RequestCreateComponent implements OnInit {
     if (this.selectedOption == "true") {
       for (let i = 0; i < this.CompanyContactInfoFormGroup.controls.RequestData.value.length + 1; i++) {
 
-        console.log(i)
+
         //we going to need to check that it does not repeat the same file 
 
         this.fileToUpload = this.files[i]
@@ -354,8 +371,7 @@ export class RequestCreateComponent implements OnInit {
           let RequestNo: string = "Request" + this.Onboard_Request.onboard_Request_Id
 
           let file: File = this.fileToUpload
-          console.log(file)
-          console.log(RequestNo)
+
           this.dataService.OnboardFileAdd(RequestNo, file).subscribe(response => {
             let Path: any = response
             this.sPath = Path.pathSaved.toString()
@@ -368,7 +384,7 @@ export class RequestCreateComponent implements OnInit {
             this.Onboard_Request.vendor = this.Vendor;
             this.Onboard_Request.onboard_Status = this.OnboardStatus;
             this.Onboard_Request.user_Id = Number(this.usr.user_Id);
-            console.log(this.Onboard_Request)
+
             this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
               next: (response) => {
                 if (i == this.CompanyContactInfoFormGroup.controls.RequestData.value.length - 1) {
@@ -377,7 +393,7 @@ export class RequestCreateComponent implements OnInit {
                   transVar = new DatePipe('en-ZA');
                   this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
                   this.VendorNotification.name = "Request #" + response[0].onboard_Request_Id + " has been created";
-                  this.VendorNotification.user_ID = 1;
+                  this.VendorNotification.user_ID = this.GRCUserID;
                   this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
 
                   this.log.action = "Created Onboard Request #" + this.Onboard_Request.onboard_Request_Id;
@@ -391,7 +407,7 @@ export class RequestCreateComponent implements OnInit {
                     }
                   })
                 }
-                console.log(response);
+
                 var action = "CREATE";
                 var title = "CREATE SUCCESSFUL";
                 var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id + "</strong> has been <strong style='color:green'> CREATED </strong> successfully!");
@@ -435,7 +451,7 @@ export class RequestCreateComponent implements OnInit {
         let RequestNo = "Request" + this.Onboard_Request.onboard_Request_Id
         this.dataService.OnboardFileAdd(RequestNo, this.fileToUpload).subscribe(response => {
           let Path: any = response
-          console.log(Path)
+
           this.sPath = Path.pathSaved.toString()
           this.Onboard_Request.quotes = this.sPath
           this.Onboard_Request.user_Id = Number(this.usr.user_Id);
@@ -449,7 +465,7 @@ export class RequestCreateComponent implements OnInit {
                 transVar = new DatePipe('en-ZA');
                 this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
                 this.VendorNotification.name = "Sole Supplier Addition Request for " + response[0].vendor.name;
-                this.VendorNotification.user_ID = 1;
+                this.VendorNotification.user_ID = this.MDUserID ;
                 this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
                 
                 this.log.action = "Created Onboard Request #" + this.Onboard_Request.onboard_Request_Id;
@@ -494,11 +510,11 @@ export class RequestCreateComponent implements OnInit {
       else {
         this.Onboard_Request.vendor.sole_Supplier_Provided = true;
         this.Onboard_Request.quotes = "None"
-        console.log(this.Onboard_Request)
+
         this.Onboard_Request.user_Id = Number(this.usr.user_Id);
         this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe(response => {
           this.Onboard_Request = response[0]
-          this.dataService.ChangeOnboardStatus(4, this.Onboard_Request.onboard_Request_Id, this.Onboard_Request.vendor_ID).subscribe(res => console.log(res))
+          this.dataService.ChangeOnboardStatus(4, this.Onboard_Request.onboard_Request_Id, this.Onboard_Request.vendor_ID).subscribe()
           this.dataService.AddSoleSupplierDetails(this.Onboard_Request.vendor_ID, this.SoleSupply).subscribe({
             next: (response) => {
               this.VendorNotification.notification_Type_ID = 15;
@@ -506,7 +522,7 @@ export class RequestCreateComponent implements OnInit {
               transVar = new DatePipe('en-ZA');
               this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
               this.VendorNotification.name = "Sole Supplier Addition Request for " + response[0].vendor.name;
-              this.VendorNotification.user_ID = 1;
+              this.VendorNotification.user_ID = this.MDUserID ;
               this.dataService.VendorAddNotification(this.VendorNotification).subscribe();
 
               this.log.action = "Created Onboard Request #" + this.Onboard_Request.onboard_Request_Id;
@@ -545,7 +561,7 @@ export class RequestCreateComponent implements OnInit {
         }
         );//dataservice
       }
-      console.log("why")
+
     }
   }
 

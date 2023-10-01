@@ -45,6 +45,8 @@ export class CreateDepartmentComponent implements OnInit {
 
   onSubmit() {
 
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+
     var name = this.myForm.get('name')?.value;
 
     this.dataService.DepartmentValidation(name).subscribe({
@@ -87,6 +89,7 @@ export class CreateDepartmentComponent implements OnInit {
           })
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Department Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Department <strong>" + name + " <strong style='color:red'>ALREADY EXISTS!</strong>");

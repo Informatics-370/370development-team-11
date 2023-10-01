@@ -29,7 +29,8 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Notification> query = _dbContext.Notification
                 .Include(nt => nt.Notification_Type).Include(u => u.User)
                 .Where(ui => ui.User.Username == username)
-                .Where(x => x.Notification_Type.Name.Contains("Vendor"));
+                .Where(x => x.Notification_Type.Name.Contains("Vendor"))
+                .OrderBy(um => um.Send_Date);
 
             return await query.ToArrayAsync();
         }
@@ -39,7 +40,8 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Notification> query = _dbContext.Notification
                 .Include(nt => nt.Notification_Type).Include(u => u.User)
                 .Where(ui => ui.User.Username == tempUsername)
-                .Where(x => x.Notification_Type.Name.Contains("Vendor"));
+                .Where(x => x.Notification_Type.Name.Contains("Vendor"))
+                .OrderBy(um => um.Send_Date);
 
             return await query.ToArrayAsync();
         }
@@ -49,7 +51,8 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Notification> query = _dbContext.Notification
                 .Include(nt => nt.Notification_Type).Include(u => u.User)
                 .Where(ui => ui.User.Username == username)
-                .Where(x => x.Notification_Type.Name.Contains("Inventory"));
+                .Where(x => x.Notification_Type.Name.Contains("Inventory"))
+                .OrderBy(um => um.Send_Date);
 
             return await query.ToArrayAsync();
         }
@@ -59,7 +62,8 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Notification> query = _dbContext.Notification
                 .Include(nt => nt.Notification_Type).Include(u => u.User)
                 .Where(ui => ui.User.Username == tempUsername)
-                .Where(x => x.Notification_Type.Name.Contains("Inventory"));
+                .Where(x => x.Notification_Type.Name.Contains("Inventory"))
+                .OrderBy(um => um.Send_Date);
 
             return await query.ToArrayAsync();
         }
@@ -69,7 +73,8 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Notification> query = _dbContext.Notification
                 .Include(nt => nt.Notification_Type).Include(u => u.User)
                 .Where(ui => ui.User.Username == username)
-                .Where(x => x.Notification_Type.Name.Contains("Procurement"));
+                .Where(x => x.Notification_Type.Name.Contains("Procurement"))
+                .OrderBy(um => um.Send_Date);
 
             return await query.ToArrayAsync();
         }
@@ -79,7 +84,8 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Notification> query = _dbContext.Notification
                 .Include(nt => nt.Notification_Type).Include(u => u.User)
                 .Where(ui => ui.User.Username == tempUsername)
-                .Where(x => x.Notification_Type.Name.Contains("Procurement"));
+                .Where(x => x.Notification_Type.Name.Contains("Procurement"))
+                .OrderBy(um => um.Send_Date);
 
             return await query.ToArrayAsync();
         }
@@ -89,7 +95,8 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Notification> query = _dbContext.Notification
                 .Include(nt => nt.Notification_Type).Include(u => u.User)
                 .Where(ui => ui.User.Username == username)
-                .Where(x => x.Notification_Type.Name.Contains("Delegation of Authority"));
+                .Where(x => x.Notification_Type.Name.Contains("Delegation of Authority"))
+                .OrderBy(um => um.Send_Date);
 
             return await query.ToArrayAsync();
         }
@@ -99,7 +106,8 @@ namespace ProcionAPI.Models.Repositories
             IQueryable<Notification> query = _dbContext.Notification
                 .Include(nt => nt.Notification_Type).Include(u => u.User)
                 .Where(ui => ui.User.Username == tempUsername)
-                .Where(x => x.Notification_Type.Name.Contains("Delegation of Authority"));
+                .Where(x => x.Notification_Type.Name.Contains("Delegation of Authority"))
+                .OrderBy(um => um.Send_Date);
 
             return await query.ToArrayAsync();
         }

@@ -86,6 +86,10 @@ export class EditProcurementRequestComponent implements OnInit {
       password: "",
       profile_Picture: "",
       no_Notifications: 0,
+      no_VenNotifications: 0,
+      no_InvNotifications: 0,
+      no_DelNotifications: 0,
+      no_ProNotifications: 0,
       role: {
         role_ID: 0,
         name: "",
@@ -157,6 +161,10 @@ export class EditProcurementRequestComponent implements OnInit {
     })
   }
 
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
+
   buildFormOther() {
     this.myForm = this.formBuilder.group({
       RequestName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32), Validators.pattern("^[a-zA-Z ]+$")]],
@@ -167,6 +175,9 @@ export class EditProcurementRequestComponent implements OnInit {
       OtherQuote2: ['', []],
       OtherQuote3: ['', []]
     })
+
+    this.myForm.get('VendorName').disable();
+    this.myForm.get('Email').disable();
   }
 
   BuildFormApproved() {
@@ -176,6 +187,7 @@ export class EditProcurementRequestComponent implements OnInit {
       Description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern("^[a-zA-Z0-9 ]+$")]],
       Quote1: ['', []]
     })
+    this.myForm.get('Vendor').disable();
   }
 
   GetPRQuotes() {
@@ -284,7 +296,7 @@ export class EditProcurementRequestComponent implements OnInit {
   }
 
   EditProcurementRequestB() {
-
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.Procurement_Request.name = this.myForm.get("RequestName").value;
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
 
@@ -391,6 +403,7 @@ export class EditProcurementRequestComponent implements OnInit {
   }
 
   EditProcurementRequestA() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.Procurement_Request.name = this.myForm.get("Name").value;
     this.Procurement_Request.description = this.myForm.get("Description").value;
 

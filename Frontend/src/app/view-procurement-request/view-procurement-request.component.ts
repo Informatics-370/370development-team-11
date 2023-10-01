@@ -34,7 +34,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class ViewProcurementRequestComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -102,7 +102,6 @@ export class ViewProcurementRequestComponent implements OnInit {
 
   GetProcurementRequests() {
     this.dataService.GetProcurementRequestsForUser(this.User).subscribe(result => {
-      console.log(result)
       let procurementRequestList: any[] = result;
       this.ProcurementRequests = [...procurementRequestList];
       this.SearchedPRequests = [...procurementRequestList];

@@ -76,6 +76,10 @@ export class EditDelegationComponent implements OnInit {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -135,6 +139,8 @@ export class EditDelegationComponent implements OnInit {
     actionTime: new Date(),
   }
 
+  delegateUser: any;
+
   constructor(private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
@@ -148,12 +154,7 @@ export class EditDelegationComponent implements OnInit {
     this.getDelegation();
     this.getTempAccess();
 
-    this.dataService.GetUsers().subscribe(r => {
-      this.options = r
-      this.options.forEach((element, i) => {
-        if (element.username == this.doa.delegatingParty) this.options.splice(i, 1);
-      })
-    })
+    
 
     this.SearchedOptions = this.myControl.valueChanges.pipe(
       startWith(''),
@@ -171,12 +172,13 @@ export class EditDelegationComponent implements OnInit {
     return this.options.filter(r => r.username.toLowerCase().includes(filterValue));
   }
 
-
+  public onFocus(event: FocusEvent) {
+    (event.target as any).blur();
+  }
 
   getDelegation() {
     this.dataService.GetDelegation(+this.route.snapshot.params['did']).subscribe(r => {
       this.delegation = r;
-      console.log(r);
 
       this.myForm.patchValue({
         DelegatingName: this.delegation.delegatingParty,
@@ -185,9 +187,13 @@ export class EditDelegationComponent implements OnInit {
         DelegationFile: this.delegation.delegation_Document
       });
 
+      this.myForm.get('DelegatingName').disable();
+
+      this.myControl.setValue(this.delegation.user.username);
 
       this.delID = this.delegation.delegation_ID;
       this.doa.user_Id = this.delegation.user_Id;
+      this.delegateUser = this.delegation.user.username;
       this.doa.user = this.delegation.user;
       this.doa.admin_ID = this.delegation.admin_ID;
       this.doa.delegationStatus_ID = this.delegation.delegationStatus_ID;
@@ -195,13 +201,24 @@ export class EditDelegationComponent implements OnInit {
       this.doa.to_Date = this.delegation.to_Date;
       this.doa.delegation_Document = this.delegation.delegation_Document;
       this.doa.delegatingParty = this.delegation.delegatingParty;
+
+      this.dataService.GetUsers().subscribe(r => {
+        this.options = r
+        this.options.forEach((element, i) => {
+          if (element.username == this.delegation.delegatingParty) this.options.splice(i, 1);
+          
+        })
+
+        this.options.forEach((el, idx) => {
+          if (el.role.name == "Admin") this.options.splice(idx, 1);
+        })
+      })
     })
   }
 
   getTempAccess() {
     this.dataService.GetTempAcc(+this.route.snapshot.params['did']).subscribe(r => {
       this.tempaccess = r;
-      console.log(r);
       this.ta.name = this.tempaccess.name;
       this.ta.IsAdmin = this.tempaccess.isAdmin;
       this.ta.CanAccInv = this.tempaccess.canAccInv;
@@ -235,7 +252,11 @@ export class EditDelegationComponent implements OnInit {
     this.router.navigateByUrl('Delegation');
   }
 
+ 
+
   getPosts(username) {
+    this.delegateUser = username;
+
     this.dataService.GetUserByUsername(username).subscribe(r => {
       this.delegateID = r;
       this.doa.user_Id = this.delegateID.user_Id;
@@ -287,7 +308,36 @@ export class EditDelegationComponent implements OnInit {
       if (this.ta.CanViewPenPro == "false" && this.delegateID.access.canViewPenPro == "true") {
         this.ta.CanViewPenPro = "true";
       }
+
+
     })
+  }
+
+  checkUser() {
+    var existingUser = "No";
+    setTimeout(() => {
+      this.delegateUser = this.myControl.value;
+
+      if (!this.delegateUser) {
+        this.myControl.setValue(null);
+        this.delegateUser = '';
+      }
+      else {
+        this.options.forEach((element, i) => {
+          if (element.username == this.myControl.value) {
+            existingUser = "Yes"
+          }
+        })
+
+        if (existingUser == "Yes") {
+          this.getPosts(this.myControl.value)
+        } else {
+          this.myControl.setValue(null);
+          this.delegateUser = '';
+        }
+
+      }
+    }, 1000)
   }
 
   onFileUpload(event: any) {
@@ -298,6 +348,7 @@ export class EditDelegationComponent implements OnInit {
   }
 
   onSubmit() {
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.doa.delegatingParty = this.myForm.get('DelegatingName')?.value;
     this.dataService.EditDelegationValidation(this.myForm.get('DelegatingName')?.value).subscribe({
       next: (vResult) => {
@@ -430,6 +481,7 @@ export class EditDelegationComponent implements OnInit {
           }
         }
         else {
+          document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
           var action = "ERROR";
           var title = "ERROR: Delegation Exists";
           var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("There already exists a Active or Inactive <strong style='color:red'> DELEGATION REQUEST </strong> for user <strong>" + this.doa.delegatingParty + " <strong style='color:red'>!</strong>");

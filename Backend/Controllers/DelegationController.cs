@@ -176,7 +176,7 @@ namespace ProcionAPI.Controllers
             {
                 var existingDOA = await _DelegationRepository.GetDelegationAsync(delegationID);
                 if (existingDOA == null) return NotFound($"The delegation request does not exist");
-                Console.WriteLine(existingDOA);
+             
 
                 _DelegationRepository.Delete(existingDOA);
                 if (await _DelegationRepository.SaveChangesAsync()) return Ok(existingDOA);

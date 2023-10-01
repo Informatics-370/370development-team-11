@@ -33,7 +33,7 @@ namespace ProcionAPI.Models.Repositories
             {
 
                 string currentUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-                Console.WriteLine($"Current user: {currentUser}");
+              
                 string connectionString = _dbContext.Database.GetDbConnection().ConnectionString;
 
                 // Generate a unique backup file name with timestamp
@@ -51,15 +51,15 @@ namespace ProcionAPI.Models.Repositories
                 }
                 // Create a new SqlConnectionStringBuilder and set the connection string
                 var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
-                Console.WriteLine(connectionStringBuilder.ToString());
+               
 
                 // Extract the server name from the connection string
                 string serverName = connectionStringBuilder.DataSource;
-                Console.WriteLine(serverName);
+             
 
                 // Extract the database name from the connection string
                 string databaseName = connectionStringBuilder.InitialCatalog;
-                Console.WriteLine(databaseName);
+               
 
                 // Create a new ServerConnection
                 var serverConnection = new ServerConnection(serverName);
@@ -67,10 +67,10 @@ namespace ProcionAPI.Models.Repositories
                 serverConnection.TrustServerCertificate = true;
                 serverConnection.MultipleActiveResultSets = true;
 
-                Console.WriteLine(serverConnection.ConnectionString);
+           
                 // Create a new Server object using the ServerConnection
                 var server = new Server(serverConnection);
-                Console.WriteLine(server);
+              
                 // Create a new Backup object and set properties
                 var backup = new Backup
                 {
@@ -79,7 +79,7 @@ namespace ProcionAPI.Models.Repositories
                     Initialize = true,
                     Checksum = true
                 };
-                Console.WriteLine(backup.Action);
+                
                 // Specify the backup file name and path
                 //backup.Devices.AddDevice("C:\\Program Files\\Microsoft SQL Server\\MSSQL15.MSSQLSERVER\\MSSQL\\Backup\\", DeviceType.File);
                 backup.Devices.AddDevice(pToUse, DeviceType.File);
@@ -91,7 +91,7 @@ namespace ProcionAPI.Models.Repositories
             catch (Exception ex)
             {
                 // Log or handle the exception as per your project's requirements
-                Console.WriteLine(($"Backup failed: {ex.Message}\nStackTrace: {ex.StackTrace}"));
+               
                 return false;
                
             }
@@ -104,7 +104,7 @@ namespace ProcionAPI.Models.Repositories
         {
             try
             {
-                Console.WriteLine(backupFile.FileName);
+               
                 if (backupFile == null || backupFile.Length <= 0)
                 {
                     throw new ArgumentException("Please select a backup file to restore the database.");
@@ -114,14 +114,11 @@ namespace ProcionAPI.Models.Repositories
                 string DefaultString = _configuration.GetConnectionString("DefaultConnection");
                 string sqlServerBasePath = _configuration.GetValue<string>("SqlServerBasePath");
                 string backupDirectory = _configuration.GetValue<string>("BackupDirectory");
-                Console.WriteLine(connectionString);
-                Console.WriteLine(sqlServerBasePath);
-                Console.WriteLine(backupDirectory);
-                Console.WriteLine("Success");
+            
 
                 // Save the uploaded backup file to a temporary location
                 var tempFilePath = Path.Combine(backupDirectory, "TempFile.bak");
-                Console.WriteLine(tempFilePath);
+                
                 using (var stream = new FileStream(tempFilePath, FileMode.Create))
                 {
                     await backupFile.CopyToAsync(stream);
@@ -132,13 +129,11 @@ namespace ProcionAPI.Models.Repositories
                 DefaultCOnnect.ConnectionString = DefaultString;
                 var serverConnection = new ServerConnection();
                 serverConnection.ConnectionString = connectionString;
-                Console.WriteLine(serverConnection.ConnectionString);
-                Console.WriteLine("Success");
+              
 
                 // Create a new Server object using the ServerConnection
                 var server = new Server(serverConnection);
-                Console.WriteLine(server);
-                Console.WriteLine("Success");
+                
 
                 // Create a new Restore object and set properties
                 var restore = new Restore
@@ -148,12 +143,10 @@ namespace ProcionAPI.Models.Repositories
                     ReplaceDatabase = true,
                     NoRecovery = false,
                 };
-                Console.WriteLine(restore.Database);
-                Console.WriteLine("Success");
-
+            
                 // Specify the backup file to restore from
                 restore.Devices.AddDevice(tempFilePath, DeviceType.File);
-                Console.WriteLine("Success");
+             
 
                 // Ensure the 'ProcionAPI.Data' database is closed
 
@@ -166,20 +159,20 @@ namespace ProcionAPI.Models.Repositories
 
                 // Perform the restore asynchronously
                 restore.SqlRestore(server);
-
+                server.KillAllProcesses("master");
                 serverConnection.Disconnect();
                 DefaultCOnnect.Connect();
 
                 // Delete the temporary file after restore
                 File.Delete(tempFilePath);
-                Console.WriteLine("Success");
+              
 
                 return true;
             }
             catch (Exception ex)
             {
                 // Log or handle the exception as per your project's requirements
-                Console.WriteLine(ex.Message);
+              
                 throw;
             }
         }

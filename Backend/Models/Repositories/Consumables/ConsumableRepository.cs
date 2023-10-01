@@ -181,6 +181,7 @@ namespace ProcionAPI.Models.Repositories.Consumables
             {
                 ConsumableNotif.User = existingUser;
                 ConsumableNotif.User.No_Notifications = existingUser.No_Notifications + 1;
+                ConsumableNotif.User.No_InvNotifications = existingUser.No_InvNotifications + 1;
             }
 
 
@@ -216,7 +217,7 @@ namespace ProcionAPI.Models.Repositories.Consumables
                 // Load data
                 var dataView = mlContext.Data.LoadFromEnumerable(consumablesData);
 
-                Console.WriteLine(nameof(StockData.DateCaptured) + " + " + nameof(StockData.StockAmt));
+                
 
 
 
@@ -241,7 +242,6 @@ namespace ProcionAPI.Models.Repositories.Consumables
 
                 var adjustedYear = lastDataPoint.Year;
 
-                Console.WriteLine(adjustedYear.ToString());
 
                 for (int month = 1; month <= 12; month++)
                 {
@@ -258,7 +258,7 @@ namespace ProcionAPI.Models.Repositories.Consumables
                             adjustedYear = adjustedYear + 1;
                         }
                     }
-                    Console.WriteLine(adjustedMonth);
+                   
 
 
                     var Predictions = new List<float>();
@@ -278,16 +278,14 @@ namespace ProcionAPI.Models.Repositories.Consumables
                             };
 
                             var prediction = forecastEngine.Predict(inputData);
-                            Console.WriteLine("Month: " + inputData.DateCaptured + " Previous: " + inputData.StockAmt + " Prediction: " + prediction.PredictedStockAmt[month - 1]);
+                           
                             Predictions.Add(prediction.PredictedStockAmt[month - 1]);
                         }
                     }
 
                     var MonthAverage = Predictions.Average();
                     var ActualsMonthAverage = Actuals.Average();
-                    Console.WriteLine(MonthAverage);
                     var Accuracy = (ActualsMonthAverage - MonthAverage) / ActualsMonthAverage;
-                    Console.WriteLine("Accuracy: " + Accuracy);
                     predictions.Add((Year: (int)adjustedYear, Month: (int)adjustedMonth, ActualAmount: (int)Math.Round(ActualsMonthAverage), PredictedAmount: (int)Math.Round(MonthAverage))); ;
 
 
@@ -299,7 +297,7 @@ namespace ProcionAPI.Models.Repositories.Consumables
             catch (Exception ex)
             {
 
-                Console.WriteLine(ex.Message);
+             
                 throw;
             }
         }

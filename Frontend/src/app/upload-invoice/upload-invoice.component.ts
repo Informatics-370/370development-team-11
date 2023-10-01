@@ -107,6 +107,10 @@ export class UploadInvoiceComponent {
     password: '',
     profile_Picture: './assets/Images/Default_Profile.jpg',
     no_Notifications: 0,
+    no_VenNotifications: 0,
+    no_InvNotifications: 0,
+    no_DelNotifications: 0,
+    no_ProNotifications: 0,
     role: this.rl
   }
 
@@ -159,6 +163,10 @@ export class UploadInvoiceComponent {
       password: "",
       profile_Picture: "",
       no_Notifications: 0,
+      no_VenNotifications: 0,
+      no_InvNotifications: 0,
+      no_DelNotifications: 0,
+      no_ProNotifications: 0,
       role: {
         role_ID: 0,
         name: "",
@@ -353,7 +361,7 @@ export class UploadInvoiceComponent {
   myTempRef!: ElementRef;
 
   ngOnInit(): void {
-    console.log(this.data.ID)
+
     this.myForm = this.formBuilder.group({
       FileAdded: ["", [Validators.required]],
     });
@@ -384,9 +392,6 @@ export class UploadInvoiceComponent {
   }
 
   onFileUpload(event: any) {
-    console.log('Event:', event);
-    console.log('Event Target:', event.target);
-    console.log('Files:', event.target.files);
     this.fileToUpload = event.target.files[0];
     if (this.fileToUpload != null) {
       this.files[0] = this.fileToUpload;

@@ -61,7 +61,7 @@ export class EditMandateLimitComponent {
   }
 
   onSubmit(): void {
-    console.log(this.currentMandateLimit)
+    document.getElementById('AnimationBtn').setAttribute('disabled', '');
     this.dataService.EditMandateValidation(this.currentMandateLimit.ammount).subscribe(r => {
       if (r == null) {
         this.dataService.EditMandateLimit(this.currentMandateLimit.mandate_ID, this.currentMandateLimit).subscribe(result => {
@@ -144,7 +144,24 @@ export class EditMandateLimitComponent {
 
         });
       }
+      else if (r.ammount == this.currentMandateLimit.ammount && r.date != this.currentMandateLimit.date && r.mandate_ID != this.currentMandateLimit.mandate_ID) {
+        document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
+        var action = "ERROR";
+        var title = "ERROR: Mandate Limit Exists";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A Mandate Limit with amount: R<strong>" + this.currentMandateLimit.ammount + "<strong style='color:red'> ALREADY EXISTS!</strong>");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 1750;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
+      }
       else {
+        document.getElementById('AnimationBtn').setAttribute('disabled', 'false');
         var action = "ERROR";
         var title = "ERROR: Mandate Limit Exists";
         var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("A Mandate Limit with amount: R<strong>" + this.currentMandateLimit.ammount + "<strong style='color:red'> ALREADY EXISTS!</strong>");
