@@ -552,7 +552,7 @@ export class VendorCreateComponent implements OnInit{
       let VendorNo = "Vendor" + this.Vendor.vendor_ID
       this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
         let Path: any = response
-        this.VendorDetail.bankStampedConfirtmation = Path.returnedPath.toString();
+        this.VendorDetail.bankStampedConfirtmation = Path.url.toString();
         
         this.VendorService.AddVendorDetails(this.VendorDetail).subscribe(result =>{
           let VendorList:VendorDetails = result
@@ -573,7 +573,7 @@ export class VendorCreateComponent implements OnInit{
             this.VendorVat.vat_Registration_Number = this.CompanyOverviewFormGroup.get("VatRegistrationNumber")?.value
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
               let Path: any = response
-              this.VendorVat.vaT_Registration_Document = Path.returnedPath.toString();
+              this.VendorVat.vaT_Registration_Document = Path.url.toString();
               this.VendorVat.vendor_Detail_ID = this.VD_ID 
               
               this.VendorService.AddVat(this.VendorVat).subscribe()
@@ -591,7 +591,7 @@ export class VendorCreateComponent implements OnInit{
               this.VendorLicense.license_No = this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value
               this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
                 let Path: any = response
-                this.VendorLicense.license_Doc_Upload = Path.returnedPath.toString();
+                this.VendorLicense.license_Doc_Upload = Path.url.toString();
                 this.VendorLicense.vendor_Detail_ID = this.VD_ID 
                 this.VendorLicense.license_No = this.CompanyOverviewFormGroup.get("LicenseOrAccreditationNumber")?.value
                 this.VendorService.AddLicense(this.VendorLicense).subscribe()
@@ -604,7 +604,7 @@ export class VendorCreateComponent implements OnInit{
             let file:File = this.fileName[3]
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
               let Path: any = response
-              this.VendorAgreement.signed_Agreement_Doc = Path.returnedPath.toString();
+              this.VendorAgreement.signed_Agreement_Doc = Path.url.toString();
               this.VendorAgreement.vendor_Detail_ID = this.VD_ID 
              this.VendorService.AddAgreement(this.VendorAgreement).subscribe()
             })
@@ -625,7 +625,7 @@ export class VendorCreateComponent implements OnInit{
             let file:File = this.fileName[0]
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
               let Path: any = response
-              this.VendorRegistration.proof_Of_Registration_Doc = Path.returnedPath.toString();
+              this.VendorRegistration.proof_Of_Registration_Doc = Path.url.toString();
               this.VendorRegistration.vendor_Detail_ID = this.VD_ID 
               this,this.VendorRegistration.company_Registration_Number = this.CompanyOverviewFormGroup.get("CompanyRegistrationNumber")?.value
               this.VendorService.AddRegistered(this.VendorRegistration).subscribe()
@@ -638,7 +638,7 @@ export class VendorCreateComponent implements OnInit{
             file = this.fileName[2]
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,file).subscribe(response => {
               let Path: any = response
-              this.VendorTax.tax_Clearance_Cert = Path.returnedPath.toString();
+              this.VendorTax.tax_Clearance_Cert = Path.url.toString();
               this.VendorTax.vendor_Detail_ID = this.VD_ID 
               this.VendorTax.income_Tax_Num = this.CompanyOverviewFormGroup.get("IncomeTaxNumber")?.value
               this.VendorService.AddIncomeTax(this.VendorTax).subscribe()!

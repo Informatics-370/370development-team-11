@@ -140,10 +140,11 @@ export class RequestViewComponent implements OnInit {
         if(sFile != "None") {
           
           
-          let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-          let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+          let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+          let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+          let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
             
-            this.FileDetails[i].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
+            this.FileDetails[i].FileURL = sFile
             this.FileDetails[i].FileName = filename; 
          
         
@@ -216,22 +217,22 @@ export class RequestViewComponent implements OnInit {
   }
 
   
-  DownloadFile(sFile :string ) {
-    if(sFile.length > 20) {
-      const formData = new FormData();
-    formData.append('sfile',sFile);
+  // DownloadFile(sFile :string ) {
+  //   if(sFile.length > 20) {
+  //     const formData = new FormData();
+  //   formData.append('sfile',sFile);
     
-    this.http.post(`https://localhost:7186/api/OnboardRequest/getFile/`,formData).subscribe(response => 
-      {let url:any = response     
-        return url.absoluteFolderPath.toString()
-      });
-      return null
-    }
-    else {
-      let test = ""
-      return test
-    } 
-  }
+  //   this.http.post(`https://localhost:7186/api/OnboardRequest/getFile/`,formData).subscribe(response => 
+  //     {let url:any = response     
+  //       return url.absoluteFolderPath.toString()
+  //     });
+  //     return null
+  //   }
+  //   else {
+  //     let test = ""
+  //     return test
+  //   } 
+  // }
 
   
 
