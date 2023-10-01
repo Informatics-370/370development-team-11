@@ -118,12 +118,16 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
             Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Details_ID == PaymentMadeDetails.Procurement_Details_ID);
 
-            if (existingProcurementDetails.Payment_Made == false)
+            if (existingProcurementDetails != null)
             {
-                existingProcurementDetails.Payment_Made = true;
-                
-                PaymentMadeDetails.Procurement_Details = existingProcurementDetails;
-                await _dbContext.SaveChangesAsync();
+                if (existingProcurementDetails.Payment_Made == false)
+                {
+                    existingProcurementDetails.Payment_Made = true;
+
+                    
+                    await _dbContext.SaveChangesAsync();
+                    PaymentMadeDetails.Procurement_Details = existingProcurementDetails;
+                }
             }
 
 

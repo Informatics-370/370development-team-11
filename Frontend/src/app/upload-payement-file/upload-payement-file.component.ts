@@ -453,7 +453,7 @@ export class UploadPayementFileComponent {
     if (this.fileToUpload != null) {
 
       let file: File = this.fileToUpload
-      let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString() + "/" + file.name;
+      let ProofName: string = "Receipts/" + this.ProcurementDetails.procurement_Request.name.toString() + "/" + file.name;
       this.dataservice.POPFileAdd(ProofName, file).subscribe(response => {
         URL: URL = response.url
         this.sPath = URL.toString()

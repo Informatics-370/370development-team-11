@@ -622,7 +622,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   }
 
   Validation() {
-    
+
     if (this.ConsumableChecked == true) {
       let maxValue = this.ConsumableItems.filter(y => y.consumable_ID == Number(this.ProcurementFormGroup.get("ConsumableItem").value))
       let value = Number(maxValue[0].maximum_Reorder_Quantity) - Number(maxValue[0].minimum_Reorder_Quantity)
@@ -699,7 +699,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
         this.VendorNotification.user_ID = user.user_Id;
         this.ProcureService.ProcurementAddNotification(this.VendorNotification).subscribe();
-      }) 
+      })
     }
     else if (Number(this.ProcurementDetails.total_Amount) > 150000) {
       this.ProcurementDetails.procurement_Status_ID = 3;
@@ -713,7 +713,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
         this.VendorNotification.user_ID = user.user_Id;
         this.ProcureService.ProcurementAddNotification(this.VendorNotification).subscribe();
-      }) 
+      })
     }
     else if (Number(this.ProcurementDetails.total_Amount) > this.MandateLimitAmount && Number(this.ProcurementDetails.total_Amount) <= 80000) {
       this.ProcurementDetails.procurement_Status_ID = 3;
@@ -757,20 +757,20 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.Deposit.deposit_Due_Date = dateChange.transform(this.ProcurementFormGroup.get("DepositDueDate")?.value, 'MM, dd, y');
         this.Deposit.procurement_Details_ID = result[0].procurement_Details_ID;
         this.Deposit.procurement_Details.employee = this.EmployeeDetails;
-       // this.Deposit.procurement_Details.employee.user = this.EmployeeDetails.user;
+        // this.Deposit.procurement_Details.employee.user = this.EmployeeDetails.user;
         //this.Deposit.procurement_Details.employee.user.access = result[0].employee.user.access;
         console.log(this.Deposit)
         this.ProcureService.AddDeposit(this.Deposit).subscribe()
       }
-      if (this.ProcurementDetails.proof_Of_Payment_Required == true) {
-        let FolderCategory = "ProofOfPayment"
-        let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`
-        
-        this.ProcureService.uploadProcureFile(FolderCategory, ProcurementRequest, this.file[1]).subscribe(response => {
+      if (this.ProcurementDetails.proof_Of_Payment_Required == true && this.ProcurementDetails.payment_Made == false) {
+        let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString() + "/" + this.file[1].name;
+
+
+        this.ProcureService.POPFileAdd(ProofName, this.file[1]).subscribe(response => {
           this.ProofOfPayment.procurement_Details = result[0];
           this.ProofOfPayment.procurement_Details_ID = result[0].procurement_Details_ID;
-          let Path: any = response
-          this.ProofOfPayment.proof_Of_Payment_Doc = Path.returnedPath.toString()
+          URL: URL = response.url
+          this.ProofOfPayment.proof_Of_Payment_Doc = URL.toString()
           this.ProofOfPayment.procurement_Details.procurement_Request.user = this.Procurement_Request.user;
           this.ProofOfPayment.procurement_Details.procurement_Request.vendor = this.Procurement_Request.vendor;
           this.ProofOfPayment.procurement_Details.procurement_Request.requisition_Status = this.Procurement_Request.requisition_Status;
@@ -779,21 +779,19 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.ProcureService.AddProofOfPayment(this.ProofOfPayment).subscribe();
         })
       }
-      if (this.ProcurementDetails.payment_Made == true) {
-        let FolderCategory = "PaymentMade";
-        let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`;
+      if (this.ProcurementDetails.payment_Made == true && this.ProcurementDetails.proof_Of_Payment_Required == false) {
+        let ProofName: string = "Receipts/" + this.ProcurementDetails.procurement_Request.name.toString() + "/" + this.file[0].name;
 
-        this.ProcureService.uploadProcureFile(FolderCategory, ProcurementRequest, this.file[0]).subscribe(response => {
-          let Path: any = response
-          this.PaymentMade.receipt_Upload = Path.returnedPath.toString();
-          this.PaymentMade.paid_On_Date = dateChange.transform(this.ProcurementFormGroup.get("PaidOnDate")?.value, 'MM, dd, y');
-          this.PaymentMade.procurement_Details = result[0]
+        this.ProcureService.POPFileAdd(ProofName, this.file[0]).subscribe(response => {
+          this.PaymentMade.procurement_Details = result[0];
           this.PaymentMade.procurement_Details_ID = result[0].procurement_Details_ID;
+          URL: URL = response.url
+          this.PaymentMade.receipt_Upload = URL.toString()
           this.PaymentMade.procurement_Details.procurement_Request.user = this.Procurement_Request.user;
           this.PaymentMade.procurement_Details.procurement_Request.vendor = this.Procurement_Request.vendor;
           this.PaymentMade.procurement_Details.procurement_Request.requisition_Status = this.Procurement_Request.requisition_Status;
           this.PaymentMade.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
-          this.PaymentMade.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category
+          this.PaymentMade.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category;
           this.ProcureService.AddPaymentMade(this.PaymentMade).subscribe();
         })
 
@@ -814,7 +812,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
             this.Procurement_Consumable.consumable = e
           }
         })
-       
+
         this.ProcureService.AddProcurementConsumable(this.Procurement_Consumable).subscribe()
         this.ProcureService.GetVendorConsumable().subscribe(b => {
           this.Vendor_Consumable.consumable_ID = Number(this.ProcurementFormGroup.get("ConsumableItem")?.value)
