@@ -382,13 +382,14 @@ export class UploadPayementFileComponent {
     this.fileToUpload = this.files[0];
     var name = "" + this.data.name
     if (this.fileToUpload != null) {
-      let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString();
 
       let file: File = this.fileToUpload
+      let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString() + "/" + file.name;
+
 
       this.dataservice.POPFileAdd(ProofName, file).subscribe(response => {
-        let Path: any = response
-        this.sPath = Path.pathSaved.toString()
+        URL: URL = response.url
+        this.sPath = URL.toString()
         this.pop.proof_Of_Payment_Doc = this.sPath;
         this.pop.procurement_Details_ID = this.data.ID
         this.pop.procurement_Details.procurement_Request.user = this.usr;
@@ -450,13 +451,12 @@ export class UploadPayementFileComponent {
   onSubmitB() {
     this.fileToUpload = this.files[0];
     if (this.fileToUpload != null) {
-      let ProofName: string = "Receipt/" + this.ProcurementDetails.procurement_Request.name.toString();
 
       let file: File = this.fileToUpload
-
+      let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString() + "/" + file.name;
       this.dataservice.POPFileAdd(ProofName, file).subscribe(response => {
-        let Path: any = response
-        this.sPath = Path.pathSaved.toString()
+        URL: URL = response.url
+        this.sPath = URL.toString()
         this.PaymentMade.receipt_Upload = this.sPath;
         this.PaymentMade.procurement_Details_ID = this.data.ID
         this.PaymentMade.procurement_Details.procurement_Request.user = this.ProcurementDetails.employee.user;

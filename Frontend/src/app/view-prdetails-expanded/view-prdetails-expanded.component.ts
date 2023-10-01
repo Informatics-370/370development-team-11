@@ -66,9 +66,10 @@ export class ViewPRDetailsExpandedComponent implements OnInit {
               this.Type = type;
               this.MasterTable = Response;
               console.log(this.MasterTable)
+              this.GetInvoices(id);
               if (this.MasterTable.procurement_Details.payment_Made == true) {
                 this.GETPOP(id)
-                this.GetInvoices(id);
+
               }
             }
           })
@@ -94,23 +95,15 @@ export class ViewPRDetailsExpandedComponent implements OnInit {
   }
 
   openPDFInNewTab(i: number): void {
-    const url = this.POPFileDetails[i].FileURL;
-    this.http.get(url, { responseType: 'blob' }).subscribe(response => {
-      const fileURL = URL.createObjectURL(response);
-      window.open(fileURL, '_blank');
-      URL.revokeObjectURL(fileURL);
-    });
-    // window.open(url, '_blank');
+    const fileURL = this.POPFileDetails[i].FileURL
+    window.open(fileURL, '_blank');
+    URL.revokeObjectURL(fileURL);
   }
 
   openINVPDFInNewTab(i: number): void {
-    const url = this.INVFileDetails[i].FileURL;
-    this.http.get(url, { responseType: 'blob' }).subscribe(response => {
-      const fileURL = URL.createObjectURL(response);
-      window.open(fileURL, '_blank');
-      URL.revokeObjectURL(fileURL);
-    });
-    // window.open(url, '_blank');
+    const fileURL = this.INVFileDetails[i].FileURL
+    window.open(fileURL, '_blank');
+    URL.revokeObjectURL(fileURL);
   }
 
   GETPOP(id: Number) {
@@ -123,15 +116,15 @@ export class ViewPRDetailsExpandedComponent implements OnInit {
           this.POPFileDetails.push({ FileURL: "", FileName: "" })
 
           if (sFile != "None") {
-            let FolderName = sFile.substring(0, sFile.indexOf("/"))
+            let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+            let FolderName = Stringtouse.substring(0, (Stringtouse.indexOf("/")))
             console.log(FolderName)
-            let ConsumableName = sFile.substring(sFile.indexOf("/") + 1, (sFile.lastIndexOf("\\")))
-
-            console.log(ConsumableName)
-            let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
+            let Request = Stringtouse.substring(Stringtouse.indexOf("/") + 1, (Stringtouse.lastIndexOf("/")))
+            console.log(Request)
+            let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
             console.log(filename)
 
-            this.POPFileDetails[0].FileURL = `https://localhost:7186/api/ProcurementDetails/GetPOPFILE/${FolderName}/${ConsumableName}/${filename}`
+            this.POPFileDetails[0].FileURL = sFile
             this.POPFileDetails[0].FileName = filename
           }
           else {
@@ -209,12 +202,15 @@ export class ViewPRDetailsExpandedComponent implements OnInit {
             console.log(sFile)
 
             if (sFile != "None") {
-              let User = sFile.substring(0, sFile.indexOf("\\"))
-              console.log(User)
-              let filename = sFile.substring(sFile.indexOf("\\") + 1, (sFile.length))
+              let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+              let FolderName = Stringtouse.substring(0, (Stringtouse.indexOf("/")))
+              console.log(FolderName)
+              let Request = Stringtouse.substring(Stringtouse.indexOf("/") + 1, (Stringtouse.lastIndexOf("/")))
+              console.log(Request)
+              let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
               console.log(filename)
 
-              this.INVFileDetails[i].FileURL = `https://localhost:7186/api/ProcurementDetails/GetINVFILE/${User}/${filename}`
+              this.INVFileDetails[i].FileURL = sFile
               this.INVFileDetails[i].FileName = filename
             }
             else {
