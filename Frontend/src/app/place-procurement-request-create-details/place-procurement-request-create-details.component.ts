@@ -780,18 +780,19 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         })
       }
       if (this.ProcurementDetails.payment_Made == true && this.ProcurementDetails.proof_Of_Payment_Required == false) {
-        let ProofName: string = "Receipts/" + this.ProcurementDetails.procurement_Request.name.toString() + "/" + this.file[0].name;
+        let FolderName: string = "Receipts"
 
-        this.ProcureService.POPFileAdd(ProofName, this.file[0]).subscribe(response => {
-          this.PaymentMade.procurement_Details = result[0];
+        this.ProcureService.uploadProcureFile(FolderName,this.ProcurementDetails.procurement_Request.name.toString(), this.file[0]).subscribe(response => {
+          let Path: any = response
+          this.PaymentMade.receipt_Upload = Path.url.toString();
+          this.PaymentMade.paid_On_Date = dateChange.transform(this.ProcurementFormGroup.get("PaidOnDate")?.value, 'MM, dd, y');
+          this.PaymentMade.procurement_Details = result[0]
           this.PaymentMade.procurement_Details_ID = result[0].procurement_Details_ID;
-          URL: URL = response.url
-          this.PaymentMade.receipt_Upload = URL.toString()
           this.PaymentMade.procurement_Details.procurement_Request.user = this.Procurement_Request.user;
           this.PaymentMade.procurement_Details.procurement_Request.vendor = this.Procurement_Request.vendor;
           this.PaymentMade.procurement_Details.procurement_Request.requisition_Status = this.Procurement_Request.requisition_Status;
           this.PaymentMade.procurement_Details.budget_Line.budget_Allocation = this.BudgetAllocationCode[0].budget_Allocation
-          this.PaymentMade.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category;
+          this.PaymentMade.procurement_Details.budget_Line.budget_Category = this.BudgetAllocationCode[0].budget_Category
           this.ProcureService.AddPaymentMade(this.PaymentMade).subscribe();
         })
 

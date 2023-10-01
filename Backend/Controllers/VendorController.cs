@@ -18,6 +18,8 @@ using System.Reflection;
 using System.CodeDom;
 using System.Collections.Generic;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 namespace ProcionAPI.Controllers
 {

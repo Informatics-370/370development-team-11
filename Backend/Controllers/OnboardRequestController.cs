@@ -1,4 +1,5 @@
 ﻿
+using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
@@ -7,6 +8,7 @@ using ProcionAPI.Models.Repositories;
 using System.Data.SqlTypes;
 using System.Net;
 using System.Net.Mime;
+using Azure.Storage.Blobs.Models;
 
 namespace ProcionAPI.Controllers
 {
@@ -205,7 +207,7 @@ namespace ProcionAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteFile/{RequestNo}/{fileName}")]
-        public IActionResult DeleteFile(string RequestNo, string fileName)
+        public async Task<IActionResult> DeleteFile(string RequestNo, string fileName)
         {
 
             try

@@ -1452,11 +1452,11 @@ export class DataService {
     return this.httpClient.post<Vendor_Asset>(`${this.apiUrl}ProcurementDetails/AddVendorAsset`, AddVendorAsset, this.httpOptions).pipe(map(result => result))
   }
 
-  uploadProcureFile(FolderCategory: string, ProcurementID: string, fileName: File): Observable<any> {
+  uploadProcureFile(FolderCategory: string, RequestName: string, fileName: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', fileName);
     formData.append('FolderCategory', FolderCategory)
-    formData.append('ProcurementRequest', ProcurementID)
+    formData.append('ProcurementRequest', RequestName)
     return this.httpClient.post<any>(`${this.apiUrl}ProcurementDetails/uploadProcureFile`, formData, this.httpOptions)
   }
 

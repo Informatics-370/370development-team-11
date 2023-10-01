@@ -228,33 +228,37 @@ namespace ProcionAPI.Controllers.Procurement_Requests
 
             var formCollection = await Request.ReadFormAsync();
             var file = formCollection.Files.First();
+            var FolderName = Request.Form["FolderCategory"];//Receipt
+            var RequestName = Request.Form["ProcurementRequest"];//requestname
 
-            var FolderCategory = Request.Form["FolderCategory"].ToString();
-            var ProcurementID = Request.Form["ProcurementRequest"].ToString();
-            // 
             if (file == null || file.Length == 0)
             {
                 return BadRequest("No file selected");
             }
 
-            // Replace "path/to/folder" with the actual folder path
-            var folderPath = Path.Combine(FolderCategory, ProcurementID);
-            var filePath = Path.Combine("Files", "Procurement", folderPath);
-            var filecombine = Path.Combine(filePath, file.FileName);
-            var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            if (!Directory.Exists(absoluteFolderPath))
+
+
+            // Connect to your Azure Blob Storage account
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+            // Create a container (if it doesn't exist already)
+            string containerName = "procionfiles";
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
+
+            // Create a unique blob name (you can adjust this based on your requirement)
+            string blobName = $"{FolderName}/{RequestName}/{file.FileName}";
+
+            // Get a reference to the blob and upload the file
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            using (Stream stream = file.OpenReadStream())
             {
-                Directory.CreateDirectory(absoluteFolderPath);
+                await blobClient.UploadAsync(stream, true);
             }
 
-            using (var stream = new FileStream(filecombine, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-            var returnedPath = Path.Combine(FolderCategory, ProcurementID, file.FileName);
-            return Ok(new { returnedPath });
-
-
+            // Return the URL of the uploaded blob as the response
+            return Ok(new { url = blobClient.Uri.ToString() });
 
         }
 

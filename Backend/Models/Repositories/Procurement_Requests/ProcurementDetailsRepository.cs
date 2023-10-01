@@ -120,14 +120,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
             if (existingProcurementDetails != null)
             {
-                if (existingProcurementDetails.Payment_Made == false)
-                {
-                    existingProcurementDetails.Payment_Made = true;
-
-                    
-                    await _dbContext.SaveChangesAsync();
-                    PaymentMadeDetails.Procurement_Details = existingProcurementDetails;
-                }
+                PaymentMadeDetails.Procurement_Details = existingProcurementDetails;
             }
 
 
