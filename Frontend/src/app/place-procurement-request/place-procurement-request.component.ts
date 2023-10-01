@@ -19,7 +19,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   selector: 'app-place-procurement-request',
   templateUrl: './place-procurement-request.component.html',
   styleUrls: ['./place-procurement-request.component.css'],
-  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+  providers: [{ provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }]
 })
 export class PlaceProcurementRequestComponent implements OnInit {
   ProcurementRequests: Procurement_Request[] = [];
@@ -83,7 +83,7 @@ export class PlaceProcurementRequestComponent implements OnInit {
                 }
               }
 
-              
+
             }
 
           })

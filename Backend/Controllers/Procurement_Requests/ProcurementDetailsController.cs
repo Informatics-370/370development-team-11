@@ -90,9 +90,11 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 var results = await _ProcurementDetailsRepository.AddPaymentMadeAsync(AddPaymentMade);
                 return Ok(results);
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return StatusCode(500, "Internal Server Error. Please contact support.");
+                
             }
         }
 

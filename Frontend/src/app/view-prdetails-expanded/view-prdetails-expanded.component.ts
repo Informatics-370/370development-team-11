@@ -141,15 +141,15 @@ export class ViewPRDetailsExpandedComponent implements OnInit {
               this.POPFileDetails.push({ FileURL: "", FileName: "" })
 
               if (sFile != "None") {
-                let FolderName = sFile.substring(0, sFile.indexOf("/"))
+                let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+                let FolderName = Stringtouse.substring(0, (Stringtouse.indexOf("/")))
                 console.log(FolderName)
-                let ConsumableName = sFile.substring(sFile.indexOf("/") + 1, (sFile.lastIndexOf("\\")))
-
-                console.log(ConsumableName)
-                let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
+                let Request = Stringtouse.substring(Stringtouse.indexOf("/") + 1, (Stringtouse.lastIndexOf("/")))
+                console.log(Request)
+                let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
                 console.log(filename)
 
-                this.POPFileDetails[0].FileURL = `https://localhost:7186/api/ProcurementDetails/GetPOPFILE/${FolderName}/${ConsumableName}/${filename}`
+                this.POPFileDetails[0].FileURL = sFile
                 this.POPFileDetails[0].FileName = filename
               }
               else {
@@ -230,7 +230,7 @@ export class ViewPRDetailsExpandedComponent implements OnInit {
 
 
   openViewProcurementDetailsTab(): void {
-    const userManualUrl = 'assets/PDF/ViewProcDetailsUM.pdf'; 
+    const userManualUrl = 'assets/PDF/ViewProcDetailsUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }
