@@ -160,11 +160,11 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
 
   GetFiles(sfilepath: string, i: number) {
     let sFile = sfilepath;
-    let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-    sFile = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-    let RequestID = sFile.substring(0, sFile.indexOf("\\"))
-    let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-    this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${RequestID}/${filename}`
+    let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+    let VendorName = Stringtouse.substring(0, (Stringtouse.indexOf("/")))
+    let RequestID = Stringtouse.substring(Stringtouse.indexOf("/") + 1, (Stringtouse.lastIndexOf("/")))
+    let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+    this.FileDetails[i].FileURL = sFile
     this.FileDetails[i].FileName = filename
   }
 
@@ -227,11 +227,9 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
   }
 
   openPDFInNewTab(i: number): void {
-    const url = this.FileDetails[i].FileURL;
-    this.http.get(url, { responseType: 'blob' }).subscribe(response => {
-      const fileURL = URL.createObjectURL(response);
-      window.open(fileURL, '_blank');
-    });
+    const fileURL = this.FileDetails[i].FileURL
+    window.open(fileURL, '_blank');
+    URL.revokeObjectURL(fileURL);
   }
 
 
@@ -240,11 +238,11 @@ export class ViewProcurementRequestApprovalComponent implements OnInit {
 
 
   openPPROtherTab(): void {
-    const userManualUrl = 'assets/PDF/ViewPendingProcUM.pdf'; 
+    const userManualUrl = 'assets/PDF/ViewPendingProcUM.pdf';
     window.open(userManualUrl, '_blank');
   }
   openPPRNOTOtherTab(): void {
-    const userManualUrl = 'assets/PDF/ViewPendingProcUM.pdf'; 
+    const userManualUrl = 'assets/PDF/ViewPendingProcUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 

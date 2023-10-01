@@ -146,12 +146,12 @@ export class DeleteProcurementRequestComponent implements OnInit {
         this.dataService.AuditLogAdd(this.log).subscribe({
           next: (Log) => {
             this.ProcurementQuotes.forEach(element => {
-
               if (element.procurement_Request_ID == id) {
                 let sFile = element.path;
-                let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-                let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
-                let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
+                let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+                let VendorName = Stringtouse.substring(0, (Stringtouse.indexOf("/")))
+                let RequestID = Stringtouse.substring(Stringtouse.indexOf("/") + 1, (Stringtouse.lastIndexOf("/")))
+                let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
 
                 this.dataService.DeleteProcurementRequestFiles(VendorName, RequestID, filename).subscribe({
                   next: (Result) => {
@@ -167,24 +167,16 @@ export class DeleteProcurementRequestComponent implements OnInit {
             });
           }
         })
-
       }
-
     });
-
   }
-
 
   onCancel(): void {
     this.dialogRef.close();
   }
 
-
-
-
-
   openDeletePRTab(): void {
-    const userManualUrl = 'assets/PDF/DeleteProcReq.pdf'; 
+    const userManualUrl = 'assets/PDF/DeleteProcReq.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

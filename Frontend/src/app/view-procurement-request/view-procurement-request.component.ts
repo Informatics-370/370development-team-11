@@ -69,11 +69,6 @@ export class ViewProcurementRequestComponent implements OnInit {
     this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
     this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
 
-    // if (this.iRole == "Admin" || this.iRole == "MD") {
-    //   this.canViewFlagPro = "true";
-    //   this.canViewPenPro = "true";
-    // }
-
     if (this.iCanViewFlagPro == "true") {
       this.canViewFlagPro = "true";
     }
@@ -90,13 +85,9 @@ export class ViewProcurementRequestComponent implements OnInit {
   }
 
   openPDFInNewTab(i: number): void {
-    const url = this.FileDetails[i].FileURL;
-    this.http.get(url, { responseType: 'blob' }).subscribe(response => {
-      const fileURL = URL.createObjectURL(response);
-      window.open(fileURL, '_blank');
-      URL.revokeObjectURL(fileURL);
-    });
-    // window.open(url, '_blank');
+    const fileURL = this.FileDetails[i].FileURL
+    window.open(fileURL, '_blank');
+    URL.revokeObjectURL(fileURL);
   }
   User: String = this.dataService.decodeUser(sessionStorage.getItem("token"));
 
@@ -140,12 +131,15 @@ export class ViewProcurementRequestComponent implements OnInit {
           let sFile = this.ProcurementQuotes[i].path;
 
           if (sFile != "None") {
-            let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-            let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
-            let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
+            let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+            let VendorName = Stringtouse.substring(0, (Stringtouse.indexOf("/")))
+            let RequestID = Stringtouse.substring(Stringtouse.indexOf("/") + 1, (Stringtouse.lastIndexOf("/")))
+            let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
 
-            this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${RequestID}/${filename}`
             this.FileDetails[i].FileName = filename
+            this.FileDetails[i].FileURL = sFile
+            this.FileDetails[i].VendorName = VendorName
+            this.FileDetails[i].RequestID = RequestID
           }
           else {
             this.FileDetails[i].FileURL = ""

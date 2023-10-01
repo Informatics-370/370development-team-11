@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Mvc;
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Models.Repositories.Procurement_Requests;
 
@@ -679,22 +681,27 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 return BadRequest("No file selected");
             }
 
-            var folderPath = Path.Combine("Files", "ProofOfPayment", ProofName);
-            var filePath = Path.Combine(folderPath, file.FileName);
-            var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
 
-            if (!Directory.Exists(absoluteFolderPath))
+            // Create a container (if it doesn't exist already)
+            string containerName = "procionfiles";
+            string FolderName = "ProofOfPayment";
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
+
+            // Create a unique blob name (you can adjust this based on your requirement)
+            string blobName = $"{FolderName}/{ProofName}";
+
+            // Get a reference to the blob and upload the file
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            using (Stream stream = file.OpenReadStream())
             {
-                Directory.CreateDirectory(absoluteFolderPath);
+                await blobClient.UploadAsync(stream, true);
             }
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            var PathSaved = Path.Combine(ProofName, file.FileName);
-            return Ok(new { PathSaved });
+            // Return the URL of the uploaded blob as the response
+            return Ok(new { url = blobClient.Uri.ToString() });
         }
 
 
@@ -714,22 +721,27 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 return BadRequest("No file selected");
             }
 
-            var folderPath = Path.Combine("Files", "Invoices", InvoiceName);
-            var filePath = Path.Combine(folderPath, file.FileName);
-            var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
 
-            if (!Directory.Exists(absoluteFolderPath))
+            // Create a container (if it doesn't exist already)
+            string containerName = "procionfiles";
+            string FolderName = "Invoices";
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
+
+            // Create a unique blob name (you can adjust this based on your requirement)
+            string blobName = $"{FolderName}/{InvoiceName}";
+
+            // Get a reference to the blob and upload the file
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            using (Stream stream = file.OpenReadStream())
             {
-                Directory.CreateDirectory(absoluteFolderPath);
+                await blobClient.UploadAsync(stream, true);
             }
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            var PathSaved = Path.Combine(InvoiceName, file.FileName);
-            return Ok(new { PathSaved });
+            // Return the URL of the uploaded blob as the response
+            return Ok(new { url = blobClient.Uri.ToString() });
         }
 
         [HttpGet]

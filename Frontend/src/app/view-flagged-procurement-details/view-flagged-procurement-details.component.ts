@@ -261,6 +261,7 @@ export class ViewFlaggedProcurementDetailsComponent implements OnInit {
 
   GetFiles(sfilepath: string, i: number) {
     let sFile = sfilepath;
+    console.log(sFile)
     let FolderCategory = sFile.substring(0, sFile.indexOf("\\"))
     sFile = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
     let ProcurementID = sFile.substring(0, sFile.indexOf("\\"))
