@@ -414,8 +414,9 @@ export class EditDelegationComponent implements OnInit {
             if (this.fileToUpload != null) {
 
               let sFile = this.doa.delegation_Document;
-              let DelegateName = sFile.substring(0, sFile.indexOf("\\"))
-              let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+              let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+              let DelegateName = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+              let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
 
               this.dataService.DeleteDelegationFile(DelegateName, filename).subscribe(r => {
                 let DelegateName: string = name
@@ -424,7 +425,7 @@ export class EditDelegationComponent implements OnInit {
 
                 this.dataService.DelegateFileAdd(DelegateName, file).subscribe(response => {
                   let Path: any = response
-                  this.sPath = Path.pathSaved.toString()
+                  this.sPath = Path.url.toString()
                   this.doa.delegation_Document = this.sPath;
                   this.doa.delegationStatus_ID = 1;
 
