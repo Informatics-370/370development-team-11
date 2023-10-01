@@ -374,7 +374,7 @@ export class RequestCreateComponent implements OnInit {
 
           this.dataService.OnboardFileAdd(RequestNo, file).subscribe(response => {
             let Path: any = response
-            this.sPath = Path.pathSaved.toString()
+            this.sPath = Path.url.toString()
             this.Onboard_Request.quotes = this.sPath
             this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
             this.Vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
@@ -452,7 +452,7 @@ export class RequestCreateComponent implements OnInit {
         this.dataService.OnboardFileAdd(RequestNo, this.fileToUpload).subscribe(response => {
           let Path: any = response
 
-          this.sPath = Path.pathSaved.toString()
+          this.sPath = Path.url.toString()
           this.Onboard_Request.quotes = this.sPath
           this.Onboard_Request.user_Id = Number(this.usr.user_Id);
           this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe(response => {

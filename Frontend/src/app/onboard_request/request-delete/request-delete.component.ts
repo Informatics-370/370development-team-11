@@ -126,12 +126,9 @@ export class RequestDeleteComponent {
       for (let i = 0; i < this.OnboardRequestDetails.length; i++) {
         let VendorID = this.OnboardRequestDetails[i].vendor.vendor_ID
         let sFile = this.OnboardRequestDetails[i].quotes;
-        // let sFi = sFile.substring(0,sFile.indexOf("\\"))
-        //  sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-        // let sOR = sFile.substring(0,sFile.indexOf("\\"))
-        // sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-        let RequestNo = sFile.substring(0, sFile.indexOf("\\"))
-        let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+        let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+        let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+        let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
         this.dataService.DeleteFile(RequestNo, filename).subscribe()
         this.dataService.DeleteRequest(RequestId, VendorID).subscribe({
           next: (response) => {

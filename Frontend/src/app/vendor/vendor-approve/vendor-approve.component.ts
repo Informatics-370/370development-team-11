@@ -233,9 +233,10 @@ export class VendorApproveComponent implements OnInit {
               this.rows.controls[i].get('PrefferedVendor')?.setValue(this.onboardRequest[i].vendor.preferedVendor);
               this.rows.controls[i].get('PrefferedVendor')?.disable()
               let sFile = this.onboardRequest[i].quotes;
-              let RequestNo = sFile.substring(0, sFile.indexOf("\\"))
-              let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-              this.FileDetails[i].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
+              let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+              let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+              let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+              this.FileDetails[i].FileURL = sFile
               this.FileDetails[i].FileName = filename;
               this.files.push(this.fileToUpload);
               this.dataService.GetOnboardFiles(RequestNo, filename).subscribe(result => {
@@ -262,9 +263,10 @@ export class VendorApproveComponent implements OnInit {
             })
             if (this.onboardRequest[0].quotes != "None") {
               let sFile = this.onboardRequest[0].quotes;
-              let RequestNo = sFile.substring(0, sFile.indexOf("\\"))
-              let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-              this.FileDetails[0].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
+              let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+              let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+              let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+              this.FileDetails[0].FileURL = sFile
               this.FileDetails[0].FileName = filename;
               this.files.push(this.fileToUpload);
               this.dataService.GetOnboardFiles(RequestNo, filename).subscribe(result => {
@@ -312,11 +314,10 @@ export class VendorApproveComponent implements OnInit {
 
   openPDFInNewTab(i: number): void {
     const url = this.FileDetails[i].FileURL;
-    this.http.get(url, { responseType: 'blob' }).subscribe(response => {
-      const fileURL = URL.createObjectURL(response);
-      window.open(fileURL, '_blank');
-    });
-    // window.open(url, '_blank');
+
+
+    window.open(url, '_blank');
+    URL.revokeObjectURL(url);
   }
 
   public onFocus(event: FocusEvent) {
@@ -443,10 +444,10 @@ export class VendorApproveComponent implements OnInit {
 
           this.dataService.DeleteBEEDetails(response.beE_ID).subscribe()
           let sFile = response.beE_Certificate;
-          let FolderCategory = sFile.substring(0, sFile.indexOf("\\"))
-          sFile = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-          let VendorNo = sFile.substring(0, sFile.indexOf("\\"))
-          let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+          let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+          let FolderCategory = Stringtouse.substring(0, Stringtouse.indexOf("/"))
+          let VendorNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+          let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
           this.dataService.DeleteVendorFile(FolderCategory, VendorNo, filename).subscribe()
 
         })
@@ -501,9 +502,10 @@ export class VendorApproveComponent implements OnInit {
         }
         if (this.onboardRequestSelectedData.quotes != "None") {
           let sFile = this.onboardRequestSelectedData.quotes;
-          let RequestNo = sFile.substring(0, sFile.indexOf("\\"))
-          let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-          this.FileDetails[0].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
+          let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+          let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+          let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+          this.FileDetails[0].FileURL = sFile
           this.FileDetails[0].FileName = filename;
           this.files.push(this.fileToUpload);
           this.dataService.GetOnboardFiles(RequestNo, filename).subscribe(result => {

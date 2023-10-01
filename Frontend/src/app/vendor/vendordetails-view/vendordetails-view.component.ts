@@ -295,12 +295,12 @@ export class VendordetailsViewComponent implements OnInit {
   }
 
   getFileDetails(sPath:string,ID:number) {
-          let FolderCategory = sPath.substring(0,sPath.indexOf("\\"))
-          sPath = sPath.substring(sPath.indexOf("\\")+1,sPath.length)
-          let VendorNo = sPath.substring(0,sPath.indexOf("\\"))
-          let filename = sPath.substring(sPath.indexOf("\\")+1,sPath.length)
-          this.FileDetails[ID].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}` 
-          this.FileDetails[ID].FileName = filename
+    let Stringtouse = sPath.substring(sPath.indexOf("procionfiles/") + 13, sPath.length)
+    let FolderCategory = Stringtouse.substring(0, Stringtouse.indexOf("/"))
+    let VendorNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+    let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+    this.FileDetails[ID].FileURL = sPath
+    this.FileDetails[ID].FileName = filename
   }
 
   getFax(FaxID:number) {
