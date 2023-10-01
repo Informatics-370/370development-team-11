@@ -202,7 +202,7 @@ export class ViewProcurementRequestPage implements OnInit {
     }
   }
 
-  DeleteRequest(ID: Number) {
+  DeleteRequest(ID: Number, name: String) {
     this.dataService.ValidatePRRequestDelete(ID).subscribe({
       next: async (IsExist) => {
         if (IsExist == null) {
@@ -220,7 +220,7 @@ export class ViewProcurementRequestPage implements OnInit {
                 handler: () => {
                   this.dataService.DeletePRRequest(ID).subscribe({
                     next: async (response) => {
-                      this.log.action = "Deleted Procurement Request For: " + this.Procurement_Request.name;
+                      this.log.action = "Deleted Procurement Request For: " + name;
                       const token = await this.storage.get("token");
                       this.log.user = this.dataService.decodeUser(token);
                       let test: any
@@ -232,9 +232,10 @@ export class ViewProcurementRequestPage implements OnInit {
 
                             if (element.procurement_Request_ID == ID) {
                               let sFile = element.path;
-                              let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-                              let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
-                              let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
+                              let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+                              let VendorName = Stringtouse.substring(0, (Stringtouse.indexOf("/")))
+                              let RequestID = Stringtouse.substring(Stringtouse.indexOf("/") + 1, (Stringtouse.lastIndexOf("/")))
+                              let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
 
                               this.dataService.DeleteProcurementRequestFiles(VendorName, RequestID, filename).subscribe({
                                 next: (Result) => {
