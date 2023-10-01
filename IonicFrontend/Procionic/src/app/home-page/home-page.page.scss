@@ -1,0 +1,19 @@
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+ion-button {
+    display: block;
+    margin: 10px auto;
+}
+
+ion-header {
+    --background: #ffffff; // This sets the background color to white
+    --ion-color-base: #ffffff; // This also sets the background color to white
+}
+
+
+ion-content {
+    --background: url(../../assets/images/Moyo-bg-2.png) no-repeat center center / cover;
+}

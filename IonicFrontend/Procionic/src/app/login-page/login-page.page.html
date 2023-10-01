@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="myForm" (ngSubmit)="LoginUser()">
+    <ion-item
+      [ngClass]="{'invalid-input': myForm.controls['UserName'].invalid && (myForm.controls['UserName'].dirty || myForm.controls['UserName'].touched)}">
+      <ion-label position="stacked">Username or Email</ion-label>
+      <ion-input type="text" formControlName="UserName"></ion-input>
+    </ion-item>
+
+    <ion-item
+      [ngClass]="{'invalid-input': myForm.controls['Password'].invalid && (myForm.controls['Password'].dirty || myForm.controls['Password'].touched)}">
+      <ion-label position="stacked">Password</ion-label>
+      <ion-input type="Password" formControlName="Password"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" [disabled]="myForm.invalid">Login</ion-button>
+  </form>
+</ion-content>
