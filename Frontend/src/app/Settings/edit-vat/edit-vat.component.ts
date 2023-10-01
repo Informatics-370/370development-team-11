@@ -71,7 +71,7 @@ export class EditVatComponent implements OnInit {
         if (re.percentage == this.vat.Percentage) {
           var action = "NOTIFICATION";
           var title = "NOTIFICATION: NO CHANGES MADE";
-          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to VAT: <strong>" + percent + "</strong>");
+          var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("No Changes Made to VAT: <strong>" + percent + "%</strong>");
 
           const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
             disableClose: true,
