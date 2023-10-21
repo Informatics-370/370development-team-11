@@ -620,6 +620,29 @@ onInsuranceChecked() {
 
               this.VendorService.AddPOPI(this.POPIDetails).subscribe()
             }
+            this.log.action = "Created Due Diligence Checklist of " + result.vendor.name;
+            this.log.user = this.VendorService.decodeUser(sessionStorage.getItem("token"));
+            let test: any
+            test = new DatePipe('en-ZA');
+            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+            this.VendorService.AuditLogAdd(this.log).subscribe({
+              next: (Log) => {
+                var action = "CREATE";
+                var title = "CREATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully <strong style='color:green'> ADDED </strong>  Due Dilligence Checklist for <strong>" + result.vendor.name + "</strong>.");
+    
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+    
+                const duration = 2000;
+                setTimeout(() => {
+    
+                  dialogRef.close();
+                }, duration);
+              }
+            })
           }
           for (let a = 0; a < this.onboardRequest.length; a++) {
             if (this.onboardRequest[a].vendor_ID == Number(VendorID)) {
@@ -632,29 +655,7 @@ onInsuranceChecked() {
               this.VendorService.VendorAddNotification(this.VendorNotification).subscribe();
             }
           }
-        this.log.action = "Created Due Diligence Checklist of " + result.vendor.name;
-        this.log.user = this.VendorService.decodeUser(sessionStorage.getItem("token"));
-        let test: any
-        test = new DatePipe('en-ZA');
-        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-        this.VendorService.AuditLogAdd(this.log).subscribe({
-          next: (Log) => {
-            var action = "CREATE";
-            var title = "CREATE SUCCESSFUL";
-            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully <strong style='color:green'> ADDED </strong>  Due Dilligence Checklist for <strong>" + result.vendor.name + "</strong>.");
-
-            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-              disableClose: true,
-              data: { action, title, message }
-            });
-
-            const duration = 2000;
-            setTimeout(() => {
-
-              dialogRef.close();
-            }, duration);
-          }
-        })
+       
 
         
 

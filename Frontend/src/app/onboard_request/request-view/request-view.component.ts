@@ -88,7 +88,7 @@ export class RequestViewComponent implements OnInit {
     
    
   }
-
+  TotalOnboardRequestNumber:Number;
   getData(TempEmpDetails?:any) {
     this.RequestService.GetEmployeeByUsername(this.User).subscribe(r => {
       let EmployeeDetails:any = r
@@ -108,6 +108,7 @@ export class RequestViewComponent implements OnInit {
         }
         
       });
+      this.TotalOnboardRequestNumber = RequestList.length
      
       //this.OnboardRequest = result
      for(let i = 0; i < this.OnboardRequest.length; i++) {
@@ -117,8 +118,8 @@ export class RequestViewComponent implements OnInit {
       RequestList.forEach((element) => this.vendor.push(element.vendors));
       this.RequestVendors =  new MatTableDataSource(this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
       this.RequestVendors.paginator = this.paginator;
-      this.ReqVenLen = this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)
-
+      this.ReqVenLen = RequestList.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)
+      console.log(this.ReqVenLen)
       let test = [...this.OnboardRequest].sort((a, b) => {
         // First, compare based on onboard_Request_Id in ascending order
         if (a.onboard_Request_Id !== b.onboard_Request_Id) {

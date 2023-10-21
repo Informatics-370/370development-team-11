@@ -406,7 +406,6 @@ export class RequestCreateComponent implements OnInit {
                       //Action to take after log (Notification etc)
                     }
                   })
-                }
 
                 var action = "CREATE";
                 var title = "CREATE SUCCESSFUL";
@@ -428,6 +427,9 @@ export class RequestCreateComponent implements OnInit {
                   })
                   dialogRef.close();
                 }, duration);
+              }
+
+                
               }
             }
             );//dataservice

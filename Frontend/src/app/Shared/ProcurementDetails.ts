@@ -5,6 +5,7 @@ import { Procurement_Payment_Status } from "./ProcurementPaymentStatus";
 import { BudgetLine } from "./BudgetLine";
 import { Procurement_Status } from "./ProcurementStatus";
 import { Payment_Method } from "./PaymentMethod";
+import { Branch } from "./Branch";
 
 export interface Procurement_Details {
      procurement_Details_ID: number;
@@ -15,6 +16,8 @@ export interface Procurement_Details {
      BudgetLineId: number;
      procurement_Status_ID: number;
      payment_Method_ID: number;
+     branch_ID: number;
+     branch:Branch;
      employee: Employee;
      procurement_Request: Procurement_Request;
      sign_Off_Status: Sign_Off_Status;

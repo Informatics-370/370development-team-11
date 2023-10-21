@@ -392,7 +392,7 @@ export class RequestUpdateComponent {
 
           this.dataService.UpdateOnboardRequest(this.onboardRequest[i].onboard_Request_Id,this.Onboard_Request).subscribe({
             next: (response) => {
-
+              if (i == this.CompanyContactInfoFormGroup.controls.RequestData.value.length - 1) {
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -408,9 +408,9 @@ export class RequestUpdateComponent {
                 
                 dialogRef.close();
               }, duration);
+             }
             }}
           );//dataservice
-//this.onboardRequest[i].vendor_ID, this.onboardRequest[i].vendor_ID,
         });//post
        })//delete
       }//if
@@ -433,7 +433,7 @@ export class RequestUpdateComponent {
 
           this.dataService.UpdateOnboardRequest(this.onboardRequest[i].onboard_Request_Id,this.Onboard_Request).subscribe({
             next: (response) => {
-
+              if (i == this.CompanyContactInfoFormGroup.controls.RequestData.value.length - 1) {
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -449,6 +449,7 @@ export class RequestUpdateComponent {
                 
                 dialogRef.close();
               }, duration);
+             }
             }});//dataservice
         }
         else {
@@ -468,6 +469,7 @@ export class RequestUpdateComponent {
         this.Onboard_Request.user_Id = Number(this.onboardRequest[0].users.user_Id);
           this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
             next: (response) => {
+              if (i == this.CompanyContactInfoFormGroup.controls.RequestData.value.length - 1) {
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -483,6 +485,7 @@ export class RequestUpdateComponent {
                 
                 dialogRef.close();
               }, duration);
+             }
             }});//dataservice
 
         });//post
@@ -505,7 +508,7 @@ export class RequestUpdateComponent {
         this.dataService.DeleteRequest(this.onboardRequest[i].onboard_Request_Id,this.onboardRequest[i].vendor_ID).subscribe({
           next: (response) => {
             if(this.onboardRequest.length == this.CompanyContactInfoFormGroup.controls.RequestData.value.length -1) {
-              this.log.action = "Exported Inventory Details";
+              this.log.action = "Updated Onboard Request # " + this.onboardRequest[0].onboard_Request_Id;
               this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
               let test: any
               test = new DatePipe('en-ZA');
