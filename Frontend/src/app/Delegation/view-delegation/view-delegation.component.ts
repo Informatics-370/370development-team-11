@@ -43,6 +43,7 @@ export class ViewDelegationComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   displayedColumnsAdmin: string[] = ['delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete', 'revoke'];
+  displayedColumnsMD: string[] = ['delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'delete', 'revoke'];
   dataSource: any;
 
   userDelete: any
@@ -82,6 +83,10 @@ export class ViewDelegationComponent implements OnInit {
 
           if (this.iRole == "Admin" || this.iRole == "MD") {
             this.rAdmin = "true";
+          }
+
+          if (this.iRole == "MD") {
+            this.rMD = "true";
           }
 
           this.RoleToUse = this.dataService.decodeUserRole(sessionStorage.getItem("token"))
