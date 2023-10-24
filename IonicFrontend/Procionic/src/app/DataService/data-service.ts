@@ -66,8 +66,8 @@ import { UserSettings } from '../Shared/UserSettings';
 })
 export class DataService {
 
-  /*apiUrl = 'https://localhost:7186/api/'*/
-  apiUrl = 'https://procionapi.azurewebsites.net/api/'
+  apiUrl = 'https://localhost:7186/api/'
+  // apiUrl = 'https://procionapi.azurewebsites.net/api/'
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -1491,8 +1491,8 @@ export class DataService {
     return this.httpClient.put<Procurement_Request>(`${this.apiUrl}ProcurementDetails/UpdateProcurementRequestStatus/${requisition_Status_ID}`, ProcurementRequestDetails, this.httpOptions).pipe(map(result => result))
   }
 
-  GetProcurementRequestDetails(): Observable<any> {
-    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetails`).pipe(map(result => result))
+  GetProcurementRequestDetails(Username: string): Observable<any> {
+    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetails/` + Username).pipe(map(result => result))
   }
 
   GetProcurementRequestDetailsFD(): Observable<any> {

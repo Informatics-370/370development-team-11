@@ -1494,8 +1494,8 @@ export class DataService {
     return this.httpClient.put<Procurement_Request>(`${this.apiUrl}ProcurementDetails/UpdateProcurementRequestStatus/${requisition_Status_ID}`, ProcurementRequestDetails, this.httpOptions).pipe(map(result => result))
   }
 
-  GetProcurementRequestDetails(): Observable<any> {
-    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetails`).pipe(map(result => result))
+  GetProcurementRequestDetails(Username: string): Observable<any> {
+    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetails/` + Username).pipe(map(result => result))
   }
 
   GetProcurementRequestDetailsFD(): Observable<any> {
