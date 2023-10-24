@@ -120,17 +120,6 @@ export class ViewProcurementRequestPage implements OnInit {
       this.GetProcurementRequests();
       this.GetPRQuotes();
     });
-    // this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
-    // this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
-    // this.iCanViewPenPro = this.dataService.decodeCanViewPenPro(sessionStorage.getItem("token"));
-
-    // if (this.iCanViewFlagPro == "true") {
-    //   this.canViewFlagPro = "true";
-    // }
-
-    // if (this.iCanViewPenPro == "true") {
-    //   this.canViewPenPro = "true";
-    // }
     this.GetProcurementRequests();
     this.GetPRQuotes()
 
@@ -144,7 +133,6 @@ export class ViewProcurementRequestPage implements OnInit {
   }
   async init() {
     await this.storage.create();
-
   }
 
 

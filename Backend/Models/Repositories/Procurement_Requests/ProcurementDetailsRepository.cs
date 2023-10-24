@@ -371,7 +371,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             return ExistingProcurementRequest;
         }
 
-        public async Task<List<Procurement_Details>> GetProcurementRequestDetailsAsync()
+        public async Task<List<Procurement_Details>> GetProcurementRequestDetailsAsync(string Username)
         {
             List<Procurement_Details> procurement_Details = new List<Procurement_Details>();
 
@@ -482,7 +482,10 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                                 procurement_Detail.Procurement_Request.Name = reader["Procurement_Request_Name"].ToString();
                                 procurement_Detail.Procurement_Request.Description = reader["Procurement_Request_Description"].ToString();
 
-                                procurement_Details.Add(procurement_Detail);
+                                if (procurement_Detail.Procurement_Request.User.Username == Username)
+                                {
+                                    procurement_Details.Add(procurement_Detail);
+                                }
 
                             }
                         }

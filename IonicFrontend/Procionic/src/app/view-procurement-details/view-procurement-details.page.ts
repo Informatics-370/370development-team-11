@@ -5,6 +5,7 @@ import { NavController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { PopoverController } from '@ionic/angular';
 import { LogoutPopoverComponent } from '../logout-popover/logout-popover.component';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-view-procurement-details',
@@ -14,7 +15,7 @@ import { LogoutPopoverComponent } from '../logout-popover/logout-popover.compone
 export class ViewProcurementDetailsPage implements OnInit {
   procurementDetails: Procurement_Details[] = [];
 
-  constructor(private dataService: DataService, public alertController: AlertController, private navController: NavController, private popoverController: PopoverController) { }
+  constructor(private dataService: DataService, public alertController: AlertController, private navController: NavController, private popoverController: PopoverController, private storage: Storage) { }
   iRole: string;
 
   iCanViewFlagPro: string = "false";
@@ -22,14 +23,20 @@ export class ViewProcurementDetailsPage implements OnInit {
 
   iCanViewPenPro: string = "false";
   canViewPenPro: string;
-
+  User: string;
+  token: string;
   ngOnInit() {
     this.GetProcurementDetails();
 
   }
+  async init() {
+    await this.storage.create();
+  }
 
-  GetProcurementDetails() {
-    this.dataService.GetProcurementRequestDetails().subscribe(result => {
+  async GetProcurementDetails() {
+    this.token = await this.storage.get("token");
+    this.User = this.dataService.decodeUser(this.token);
+    this.dataService.GetProcurementRequestDetails(this.User).subscribe(result => {
       let procurementDetailsList: any[] = result;
       procurementDetailsList.forEach(e => {
         if (e.procurement_Status.name != "Flagged" && e.procurement_Status.name != "Rejected") {

@@ -305,12 +305,12 @@ namespace ProcionAPI.Controllers.Procurement_Requests
 
 
         [HttpGet]
-        [Route("GetProcurementRequestDetails")]
-        public async Task<IActionResult> GetProcurementRequestDetails()
+        [Route("GetProcurementRequestDetails/{Username}")]
+        public async Task<IActionResult> GetProcurementRequestDetails([FromRoute] string Username)
         {
             try
             {
-                var result = await _ProcurementDetailsRepository.GetProcurementRequestDetailsAsync();
+                var result = await _ProcurementDetailsRepository.GetProcurementRequestDetailsAsync(Username);
                 return Ok(result);
             }
             catch (Exception)
