@@ -91,15 +91,22 @@ export class ViewAdminComponent implements OnInit {
 
   RoleToUse: string = "";
   iRole: string;
+  iName: string;
+  iUserID: Number;
   rAdmin: string;
 
   ngOnInit() {
     this.nav.reload();
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
 
     if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
+
+    this.dataService.GetUserByUsername(this.iName).subscribe(uir => {
+      this.iUserID = uir.user_Id;
+    })
 
     this.RoleToUse = localStorage.getItem("Role")
     this.GetAdmins();
@@ -339,6 +346,23 @@ export class ViewAdminComponent implements OnInit {
 
     
   }
+
+  DeleteAdminErrorNotification() {
+    var action = "ERROR";
+    var title = "ERROR: Action Prohibatid";
+    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("<strong style='color:red'>You cannot delete your own account!</strong>");
+
+    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+      disableClose: true,
+      data: { action, title, message }
+    });
+
+    const duration = 2000;
+    setTimeout(() => {
+      dialogRef.close();
+    }, duration);
+  }
+
   openAdminIFrameTab(): void {
     const dialogRef = this.dialog.open(AdminIFrameComponent, {
       // width: '800px', // Set the desired width
