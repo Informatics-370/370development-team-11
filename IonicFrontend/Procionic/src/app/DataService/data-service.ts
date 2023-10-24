@@ -66,8 +66,8 @@ import { UserSettings } from '../Shared/UserSettings';
 })
 export class DataService {
 
-  apiUrl = 'https://localhost:7186/api/'
-  // apiUrl = 'https://procionapi.azurewebsites.net/api/'
+  // apiUrl = 'https://localhost:7186/api/'
+  apiUrl = 'https://procionapi.azurewebsites.net/api/'
 
   httpOptions = {
     headers: new HttpHeaders({

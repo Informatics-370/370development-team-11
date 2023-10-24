@@ -67,7 +67,7 @@ import { VAT } from '../Shared/VAT';
 })
 export class DataService {
 
-  apiUrl = 'https://localhost:7186/api/'
+  apiUrl = 'https://procionapi.azurewebsites.net/api/'
 
   httpOptions = {
     headers: new HttpHeaders({
