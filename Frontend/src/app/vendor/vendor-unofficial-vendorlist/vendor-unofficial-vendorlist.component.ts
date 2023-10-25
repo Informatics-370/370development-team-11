@@ -67,6 +67,8 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
   rAdmin: string;
   sFilter:string;
   mySubscription: any;
+  
+
 
   ngOnInit() {
     this.iRole = ""
@@ -103,6 +105,8 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
       //RequestList.forEach((element) => this.vendor.push(element.vendors));
       this.PendingOnboardRequests = [];
       this.PendingOnboardRequests =  new MatTableDataSource(this.PendingOnboardDetails.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
+      this.PendingOnboardRequests.paginator = this.paginator;
+      
       let countsByPart = undefined
       countsByPart = this.PendingOnboardDetails.reduce((accumulator, currentValue) => {
         const partId = currentValue.onboard_Request_Id;
@@ -161,7 +165,8 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
               this.SearchResults.push(result)
             }
           }
-          
+          this.PendingOnboardRequests = new MatTableDataSource(this.SearchResults)
+          this.PendingOnboardRequests.paginator = this.paginator;
         }
         
         //result.onboardRequestStatusID == 5 || result.onboardRequestStatusID == 3
@@ -169,24 +174,12 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
       if (result) {
         hideloader();
       }
-
-      this.PendingOnboardRequests = new MatTableDataSource(this.PendingOnboardDetailSummary)
+      console.log(this.SearchResults)
+      this.PendingOnboardRequests = new MatTableDataSource(this.SearchResults)
       this.PendingOnboardRequests.paginator = this.paginator;
-
-    const Searchterm = this.searchWord.toLocaleLowerCase();
-    
-    if (Searchterm) {
-      this.PendingOnboardRequests.filter = Searchterm.trim().toLowerCase();
-      this.PendingOnboardRequests.paginator = this.paginator;
-    }
-    else if (Searchterm == "") {
-      this.PendingOnboardRequests = [...this.SearchResults];
-      this.PendingOnboardRequests.paginator = this.paginator;
-    }
-
-    if (this.PendingOnboardRequests.paginator) {
-      this.PendingOnboardRequests.paginator.firstPage();
-    }
+      
+      
+      
 
 
       function hideloader() {
@@ -213,10 +206,19 @@ export class VendorUnofficialVendorlistComponent implements OnInit{
 
   searchWord: string = '';
 
-  applyFilter() {
-    this.ngOnInit()
-    
+
+  applyFilter(event: Event) {
+
+    const filterValue = (event.target as HTMLInputElement).value;
+
+    this.PendingOnboardRequests.filter = filterValue.trim().toLowerCase();
+  
+    if (this.PendingOnboardRequests.paginator) {
+      this.PendingOnboardRequests.paginator.firstPage();
+    }
   }
+
+
 
   Edit(i:number) {
     
