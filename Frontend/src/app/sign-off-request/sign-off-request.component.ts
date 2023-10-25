@@ -367,7 +367,7 @@ export class SignOffRequestComponent {
   }
 
   onSubmit(): void {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.dataService.RequisitionApproval(this.ProcurementDetails.procurement_Details_ID).subscribe(result => {
       // let FolderCategory = "ProofOfPayment"
       // let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`

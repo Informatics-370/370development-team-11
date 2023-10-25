@@ -116,7 +116,7 @@ export class ReceiveAssetComponent implements OnInit {
   onSubmit() {
     this.dataService.GetUserByRole("Finance").subscribe({
       next: (response) => {
-        document.getElementById('AnimationBtn').setAttribute('disabled', '');
+        
         let StatusID = this.myForm.get("Status")?.value;
         let SelectedStatus = this.Statuses.findIndex(x => x.procurement_Status_ID == StatusID)
         document.getElementById('AnimationBtn').classList.toggle("is_active");

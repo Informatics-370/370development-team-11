@@ -108,7 +108,7 @@ export class CreateHelpComponent implements OnInit {
 
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.HelpCategory = this.myForm.get('help_Category_ID')?.value;
     this.HelpCategory.help_Category_ID = 0;
     this.Help.name = this.myForm.get('name')?.value;

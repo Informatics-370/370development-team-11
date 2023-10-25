@@ -135,7 +135,7 @@ export class EditHelpComponent implements OnInit{
 
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.HelpToEdit.name = this.myForm.get('name')?.value;
     var name = "" + this.HelpToEdit.name;
     this.HelpToEdit.help_Category_ID = this.myForm.get('help_Category_ID')?.value;
