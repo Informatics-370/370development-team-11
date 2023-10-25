@@ -83,7 +83,7 @@ export class CreateConsumableComponent implements OnInit {
     })
   }
   AddConsumable() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.ConsumableCategory.name = this.myForm.get('ConsumableCategory')?.value;
     this.Consumables.name = this.myForm.get('Name')?.value;
     this.Consumables.description = this.myForm.get('Description')?.value;

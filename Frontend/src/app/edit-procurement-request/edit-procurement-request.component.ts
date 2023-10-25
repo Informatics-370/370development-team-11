@@ -294,7 +294,7 @@ export class EditProcurementRequestComponent implements OnInit {
   }
 
   EditProcurementRequestB() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.Procurement_Request.name = this.myForm.get("RequestName").value;
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
 
@@ -402,7 +402,7 @@ export class EditProcurementRequestComponent implements OnInit {
   }
 
   EditProcurementRequestA() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.Procurement_Request.name = this.myForm.get("Name").value;
     this.Procurement_Request.description = this.myForm.get("Description").value;
 

@@ -71,7 +71,7 @@ export class EditConsumableCategoryComponent implements OnInit {
   }
 
   UpdateCategory() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.dataService.CategoryValidation(this.CategoryToEdit.name).subscribe({
       next: (Result) => {
         if (Result == null) {

@@ -89,7 +89,7 @@ export class CreateBudgetLineComponent {
   }
 
   onSubmit(): void {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.category = this.budgetLineForm.get('category_ID')?.value;
     this.budgetLine.budget_Category = this.category;
     this.budgetLine.category_ID = this.category.category_ID;

@@ -387,7 +387,7 @@ export class EditEmployeeComponent implements OnInit {
   }
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.emp.employeeName = this.myForm.get('Name')?.value;
     this.emp.employeeSurname = this.myForm.get('Surname')?.value;
     this.emp.cellPhone_Num = this.myForm.get('CellPhone_Num')?.value;

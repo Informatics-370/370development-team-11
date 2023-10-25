@@ -68,7 +68,7 @@ export class EditBranchComponent implements OnInit{
   }
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     var name = this.myForm.get('name')?.value;
     var street = this.myForm.get('street')?.value;
     var city = this.myForm.get('city')?.value;

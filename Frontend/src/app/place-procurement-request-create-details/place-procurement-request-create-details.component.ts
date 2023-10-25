@@ -664,7 +664,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
 
   Create() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     let dateChange: any
     dateChange = new DatePipe('en-ZA');
     //Data values

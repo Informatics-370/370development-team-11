@@ -153,7 +153,7 @@ export class ReceiveProcurementItemComponent {
   updateStock() {
     this.dataService.GetUserByRole("Finance").subscribe({
       next: (response) => {
-        document.getElementById('AnimationBtn').setAttribute('disabled', '');
+        
         this.dataService.GetConsumableHistoryByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
           next: (Hist) => {
 
