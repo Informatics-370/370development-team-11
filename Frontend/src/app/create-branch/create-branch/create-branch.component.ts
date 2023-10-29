@@ -50,7 +50,7 @@ export class CreateBranchComponent {
   
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
 
 
     var street = this.myForm.get('name')?.value;

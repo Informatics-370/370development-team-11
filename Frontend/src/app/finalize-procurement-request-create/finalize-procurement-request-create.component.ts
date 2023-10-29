@@ -244,6 +244,8 @@ export class FinalizeProcurementRequestCreateComponent {
     BudgetLineId: 0,
     procurement_Status_ID: 0,
     payment_Method_ID: 0,
+    branch_ID: 0,
+    branch:this.EmployeeDetails.branch,
     employee: this.EmployeeDetails,
     procurement_Request: this.Procurement_Request,
     sign_Off_Status: this.SignOffStatus,
@@ -391,7 +393,7 @@ export class FinalizeProcurementRequestCreateComponent {
   }
 
   onSubmit(): void {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     let Selection = this.finalizationForm.get("ProofOfPayment").value;
     if (Selection == true) {
       let file: File = this.file[0]

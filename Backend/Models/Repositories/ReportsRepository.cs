@@ -26,10 +26,10 @@ namespace ProcionAPI.Models.Repositories
             .Include(PC => PC.Procurement_Request)
             .ThenInclude(V => V.Vendor)
             .Include(E => E.Employee)
-            .ThenInclude(B => B.Branch)
+            .Include(B => B.Branch)
             .Include(BL => BL.Budget_Line)
             .ThenInclude(BC => BC.Budget_Category)
-            .Where(P => (P.Procurement_Status_ID == 2) && (P.Full_Payment_Due_Date >= StartDate) && (P.Full_Payment_Due_Date <= EndDate) )
+            .Where(P => (P.Procurement_Status_ID == 2) || (P.Procurement_Status_ID == 5) && (P.Full_Payment_Due_Date >= StartDate) && (P.Full_Payment_Due_Date <= EndDate) )
             .ToListAsync();
             
             var VendorIDs = ProcurementRequestDetails.Select(V => V.Procurement_Request.Vendor_ID).ToList();
@@ -41,7 +41,7 @@ namespace ProcionAPI.Models.Repositories
 
             var query = ProcurementRequestDetails.Select((R, index) => new BEESpentReportVM
             {
-                BranchName = R.Employee.Branch.Name,
+                BranchName = R.Branch.Name,
                 TotalSpend = R.Total_Amount,
                 BEE_Level = VendorBEELevel[index],
             });
@@ -76,12 +76,12 @@ namespace ProcionAPI.Models.Repositories
             .Include(E => E.Employee)
             .ThenInclude(B => B.Department)
             .Include(E => E.Employee)
-            .ThenInclude(B => B.Branch)
+            .Include(B => B.Branch)
             .Include(BL => BL.Budget_Line)
             .ThenInclude(BC => BC.Budget_Category)
             .Include(BL => BL.Budget_Line)
             .ThenInclude(BA => BA.Budget_Allocation)
-            .Where(P => (P.Procurement_Status_ID == 2) && (P.Full_Payment_Due_Date >= StartDate) && (P.Full_Payment_Due_Date <= EndDate))
+            .Where(P => (P.Procurement_Status_ID == 2) || (P.Procurement_Status_ID == 5) && (P.Full_Payment_Due_Date >= StartDate) && (P.Full_Payment_Due_Date <= EndDate))
             .ToListAsync();
 
             var VendorIDs = ProcurementRequestDetails.Select(V => V.Procurement_Request.Vendor_ID).ToList();
@@ -96,8 +96,8 @@ namespace ProcionAPI.Models.Repositories
                 SupplierName = R.Procurement_Request.Vendor.Name,
                 AccountCode = R.Budget_Line.Budget_Category.Account_Code,
                 AccountName = R.Budget_Line.Budget_Category.Account_Name,
-                BudgetDepartment = R.Employee.Department.Name,
-                BranchName = R.Employee.Branch.Name,
+                BudgetDepartment = R.Budget_Line.Budget_Allocation.Department.Name,
+                BranchName = R.Branch.Name,
                 BEE_Level = VendorBEELevel[index],
                 TotalSpend = R.Total_Amount,
             });

@@ -264,6 +264,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     BudgetLineId: 0,
     procurement_Status_ID: 0,
     payment_Method_ID: 0,
+    branch_ID: 0,
+    branch:this.EmployeeDetails.branch,
     employee: this.EmployeeDetails,
     procurement_Request: this.Procurement_Request,
     sign_Off_Status: this.SignOffStatus,
@@ -483,6 +485,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.ProcurementFormGroup.get("BuyerName")?.setValue(this.EmployeeDetails.employeeName.toString())
           this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.EmployeeDetails.email.toString())
           let departmentname = this.EmployeeDetails.department.name
+          console.log(this.EmployeeDetails.branch)
           this.ProcureService.GetProcurementAccountCodeDetails(this.currentYear, this.currentmonth, departmentname.toString()).subscribe(response => {
             this.BudgetAllocationCode = response;
             this.BudgetAllocationCode.forEach(t => {
@@ -661,7 +664,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
 
   Create() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     let dateChange: any
     dateChange = new DatePipe('en-ZA');
     //Data values
@@ -677,6 +680,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     //id values
 
     this.ProcurementDetails.employeeID = this.EmployeeDetails.employeeID;
+    this.ProcurementDetails.branch_ID = Number(this.EmployeeDetails.branch_ID);
+    this.ProcurementDetails.branch = this.EmployeeDetails.branch;
     //this.ProcurementDetails.employeeID = 2;
     // this.ProcurementDetails.procurement_Request_ID = this.ProcurementRequest_ID;
     this.ProcurementDetails.sign_Off_Status_ID = 1;

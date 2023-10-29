@@ -55,7 +55,7 @@ export class EditVatComponent implements OnInit {
   }
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
 
     var percent = this.myForm.get('percentage')?.value;
 

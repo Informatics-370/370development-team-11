@@ -348,7 +348,7 @@ export class EditDelegationComponent implements OnInit {
   }
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.doa.delegatingParty = this.myForm.get('DelegatingName')?.value;
     this.dataService.EditDelegationValidation(this.myForm.get('DelegatingName')?.value).subscribe({
       next: (vResult) => {

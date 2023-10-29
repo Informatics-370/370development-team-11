@@ -155,7 +155,7 @@ export class EditDepartmentComponent implements OnInit{
   // }
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     var name = this.myForm.get('name')?.value;
     var descrip = this.myForm.get('description')?.value;
 

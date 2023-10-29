@@ -107,7 +107,7 @@ export class CreateBudgetAllocationComponent {
   }
 
   onSubmit(): void {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.dep = this.budgetAllocationForm.get('department_ID')?.value;
     this.dep.department_ID = 0;
     this.budgetAllocation.department = this.dep;

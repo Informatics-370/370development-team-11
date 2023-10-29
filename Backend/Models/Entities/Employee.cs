@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ProcionAPI.Models.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProcionAPI.Models.Entities
@@ -38,3 +39,5 @@ namespace ProcionAPI.Models.Entities
         public string Email { get; set; }
     }
 }
+
+

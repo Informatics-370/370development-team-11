@@ -37,11 +37,18 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
         public async Task<Procurement_Details[]> CreateProcurementDetailsAsync(Procurement_Details ProcurementDetails)
         {
-            Employee existingEmployee = await _dbContext.Employee.Include(x => x.User).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.EmployeeID == ProcurementDetails.EmployeeID);
+            Employee existingEmployee = await _dbContext.Employee.Include(x => x.User).ThenInclude(x => x.Role).Include(x => x.Branch).FirstOrDefaultAsync(x => x.EmployeeID == ProcurementDetails.EmployeeID);
 
             if (existingEmployee != null)
             {
                 ProcurementDetails.Employee = existingEmployee;
+            }
+
+            Branch existingBranch = await _dbContext.Branch.FirstOrDefaultAsync(x => x.Branch_ID == ProcurementDetails.Employee.Branch_ID);
+
+            if (existingBranch != null)
+            {
+                ProcurementDetails.Branch = existingBranch;
             }
 
             Procurement_Request existingProcurementRequest = await _dbContext.Procurement_Request.Include(x => x.User).Include(x => x.Requisition_Status).Include(x => x.Vendor).ThenInclude(x => x.Vendor_Status).FirstOrDefaultAsync(x => x.Procurement_Request_ID == ProcurementDetails.Procurement_Request_ID);
@@ -364,7 +371,7 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             return ExistingProcurementRequest;
         }
 
-        public async Task<List<Procurement_Details>> GetProcurementRequestDetailsAsync()
+        public async Task<List<Procurement_Details>> GetProcurementRequestDetailsAsync(string Username)
         {
             List<Procurement_Details> procurement_Details = new List<Procurement_Details>();
 
@@ -388,6 +395,14 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                                 procurement_Detail.Procurement_Status_ID = Convert.ToInt32(reader["Procurement_Status_ID"]);
                                 procurement_Detail.Payment_Method_ID = Convert.ToInt32(reader["Payment_Method_ID"]);
                                 procurement_Detail.BudgetLineId = Convert.ToInt32(reader["BudgetLineId"]);
+                                procurement_Detail.Branch_ID = Convert.ToInt32(reader["Branch_ID"]);
+                                procurement_Detail.Branch = new Branch();
+                                procurement_Detail.Branch.Branch_ID = Convert.ToInt32(reader["Branch_ID"]);
+                                procurement_Detail.Branch.City = reader["City"].ToString();
+                                procurement_Detail.Branch.Name = reader["Branch_Name"].ToString();
+                                procurement_Detail.Branch.Postal_Code = reader["Postal_Code"].ToString();
+                                procurement_Detail.Branch.Province = reader["Province"].ToString();
+                                procurement_Detail.Branch.Street = reader["Street"].ToString();
                                 procurement_Detail.Employee = new Employee();
                                 procurement_Detail.Employee.EmployeeID = Convert.ToInt32(reader["EmployeeID"]);
                                 procurement_Detail.Employee.Branch_ID = Convert.ToInt32(reader["Branch_ID"]);
@@ -467,7 +482,10 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
                                 procurement_Detail.Procurement_Request.Name = reader["Procurement_Request_Name"].ToString();
                                 procurement_Detail.Procurement_Request.Description = reader["Procurement_Request_Description"].ToString();
 
-                                procurement_Details.Add(procurement_Detail);
+                                if (procurement_Detail.Procurement_Request.User.Username == Username)
+                                {
+                                    procurement_Details.Add(procurement_Detail);
+                                }
 
                             }
                         }

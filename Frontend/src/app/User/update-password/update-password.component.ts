@@ -164,7 +164,7 @@ export class UpdatePasswordComponent implements OnInit {
   }
 
   UpdatePassword() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     var Username = this.iName;
     var UserID = this.usr.user_Id;
     var Password = this.myForm.get("CurrentPass")?.value;
