@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Mvc;
 using ProcionAPI.Models.Entities;
 using ProcionAPI.Models.Repositories.Procurement_Requests;
 
@@ -88,9 +90,11 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 var results = await _ProcurementDetailsRepository.AddPaymentMadeAsync(AddPaymentMade);
                 return Ok(results);
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return StatusCode(500, "Internal Server Error. Please contact support.");
+                
             }
         }
 
@@ -224,33 +228,37 @@ namespace ProcionAPI.Controllers.Procurement_Requests
 
             var formCollection = await Request.ReadFormAsync();
             var file = formCollection.Files.First();
+            var FolderName = Request.Form["FolderCategory"];//Receipt
+            var RequestName = Request.Form["ProcurementRequest"];//requestname
 
-            var FolderCategory = Request.Form["FolderCategory"].ToString();
-            var ProcurementID = Request.Form["ProcurementRequest"].ToString();
-            // 
             if (file == null || file.Length == 0)
             {
                 return BadRequest("No file selected");
             }
 
-            // Replace "path/to/folder" with the actual folder path
-            var folderPath = Path.Combine(FolderCategory, ProcurementID);
-            var filePath = Path.Combine("Files", "Procurement", folderPath);
-            var filecombine = Path.Combine(filePath, file.FileName);
-            var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-            if (!Directory.Exists(absoluteFolderPath))
+
+
+            // Connect to your Azure Blob Storage account
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+            // Create a container (if it doesn't exist already)
+            string containerName = "procionfiles";
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
+
+            // Create a unique blob name (you can adjust this based on your requirement)
+            string blobName = $"{FolderName}/{RequestName}/{file.FileName}";
+
+            // Get a reference to the blob and upload the file
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            using (Stream stream = file.OpenReadStream())
             {
-                Directory.CreateDirectory(absoluteFolderPath);
+                await blobClient.UploadAsync(stream, true);
             }
 
-            using (var stream = new FileStream(filecombine, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-            var returnedPath = Path.Combine(FolderCategory, ProcurementID, file.FileName);
-            return Ok(new { returnedPath });
-
-
+            // Return the URL of the uploaded blob as the response
+            return Ok(new { url = blobClient.Uri.ToString() });
 
         }
 
@@ -297,12 +305,12 @@ namespace ProcionAPI.Controllers.Procurement_Requests
 
 
         [HttpGet]
-        [Route("GetProcurementRequestDetails")]
-        public async Task<IActionResult> GetProcurementRequestDetails()
+        [Route("GetProcurementRequestDetails/{Username}")]
+        public async Task<IActionResult> GetProcurementRequestDetails([FromRoute] string Username)
         {
             try
             {
-                var result = await _ProcurementDetailsRepository.GetProcurementRequestDetailsAsync();
+                var result = await _ProcurementDetailsRepository.GetProcurementRequestDetailsAsync(Username);
                 return Ok(result);
             }
             catch (Exception)
@@ -319,6 +327,22 @@ namespace ProcionAPI.Controllers.Procurement_Requests
             try
             {
                 var result = await _ProcurementDetailsRepository.GetProcurementRequestDetailsFDAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+
+                return StatusCode(500, "Internal Server Error. Please contact support.");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetProcurementRequestDetailsBO")]
+        public async Task<IActionResult> GetProcurementRequestDetailsBO()
+        {
+            try
+            {
+                var result = await _ProcurementDetailsRepository.GetProcurementRequestDetailsBOAsync();
                 return Ok(result);
             }
             catch (Exception)
@@ -679,22 +703,27 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 return BadRequest("No file selected");
             }
 
-            var folderPath = Path.Combine("Files", "ProofOfPayment", ProofName);
-            var filePath = Path.Combine(folderPath, file.FileName);
-            var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
 
-            if (!Directory.Exists(absoluteFolderPath))
+            // Create a container (if it doesn't exist already)
+            string containerName = "procionfiles";
+            string FolderName = "ProofOfPayment";
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
+
+            // Create a unique blob name (you can adjust this based on your requirement)
+            string blobName = $"{FolderName}/{ProofName}";
+
+            // Get a reference to the blob and upload the file
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            using (Stream stream = file.OpenReadStream())
             {
-                Directory.CreateDirectory(absoluteFolderPath);
+                await blobClient.UploadAsync(stream, true);
             }
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            var PathSaved = Path.Combine(ProofName, file.FileName);
-            return Ok(new { PathSaved });
+            // Return the URL of the uploaded blob as the response
+            return Ok(new { url = blobClient.Uri.ToString() });
         }
 
 
@@ -714,22 +743,27 @@ namespace ProcionAPI.Controllers.Procurement_Requests
                 return BadRequest("No file selected");
             }
 
-            var folderPath = Path.Combine("Files", "Invoices", InvoiceName);
-            var filePath = Path.Combine(folderPath, file.FileName);
-            var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
 
-            if (!Directory.Exists(absoluteFolderPath))
+            // Create a container (if it doesn't exist already)
+            string containerName = "procionfiles";
+            string FolderName = "Invoices";
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
+
+            // Create a unique blob name (you can adjust this based on your requirement)
+            string blobName = $"{FolderName}/{InvoiceName}";
+
+            // Get a reference to the blob and upload the file
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            using (Stream stream = file.OpenReadStream())
             {
-                Directory.CreateDirectory(absoluteFolderPath);
+                await blobClient.UploadAsync(stream, true);
             }
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            var PathSaved = Path.Combine(InvoiceName, file.FileName);
-            return Ok(new { PathSaved });
+            // Return the URL of the uploaded blob as the response
+            return Ok(new { url = blobClient.Uri.ToString() });
         }
 
         [HttpGet]

@@ -67,7 +67,7 @@ import { VAT } from '../Shared/VAT';
 })
 export class DataService {
 
-  apiUrl = 'https://localhost:7186/api/'
+  apiUrl = 'https://procionapi.azurewebsites.net/api/'
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -1452,11 +1452,11 @@ export class DataService {
     return this.httpClient.post<Vendor_Asset>(`${this.apiUrl}ProcurementDetails/AddVendorAsset`, AddVendorAsset, this.httpOptions).pipe(map(result => result))
   }
 
-  uploadProcureFile(FolderCategory: string, ProcurementID: string, fileName: File): Observable<any> {
+  uploadProcureFile(FolderCategory: string, RequestName: string, fileName: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', fileName);
     formData.append('FolderCategory', FolderCategory)
-    formData.append('ProcurementRequest', ProcurementID)
+    formData.append('ProcurementRequest', RequestName)
     return this.httpClient.post<any>(`${this.apiUrl}ProcurementDetails/uploadProcureFile`, formData, this.httpOptions)
   }
 
@@ -1494,12 +1494,16 @@ export class DataService {
     return this.httpClient.put<Procurement_Request>(`${this.apiUrl}ProcurementDetails/UpdateProcurementRequestStatus/${requisition_Status_ID}`, ProcurementRequestDetails, this.httpOptions).pipe(map(result => result))
   }
 
-  GetProcurementRequestDetails(): Observable<any> {
-    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetails`).pipe(map(result => result))
+  GetProcurementRequestDetails(Username: string): Observable<any> {
+    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetails/` + Username).pipe(map(result => result))
   }
 
   GetProcurementRequestDetailsFD(): Observable<any> {
     return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetailsFD`).pipe(map(result => result))
+  }
+
+  GetProcurementRequestDetailsBO(): Observable<any> {
+    return this.httpClient.get<Procurement_Details[]>(`${this.apiUrl}ProcurementDetails/GetProcurementRequestDetailsBO`).pipe(map(result => result))
   }
 
   GetProcurementRequestDetailsMD(): Observable<any> {

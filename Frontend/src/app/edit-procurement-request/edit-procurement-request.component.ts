@@ -134,8 +134,6 @@ export class EditProcurementRequestComponent implements OnInit {
         const id = paramater.get("procurement_Request_ID");
         this.VendorType = paramater.get("name");
 
-
-
         if (id) {
           this.dataService.GetPRRequestByID(Number(id)).subscribe({
             next: (RequestRecieved) => {
@@ -192,16 +190,19 @@ export class EditProcurementRequestComponent implements OnInit {
 
   GetPRQuotes() {
     for (let i = 0; i < this.ProcurementQuotes.length; i++) {
-      this.FileDetails.push({ FileURL: "", FileName: "" })
-      let sFile = this.ProcurementQuotes[i].path;
+      this.FileDetails.push({ FileURL: "", VendorName: "", RequestID: "", FileName: "" })
+      let sFile = this.ProcurementQuotes[i].path.toString();
 
       if (sFile != "None") {
-        let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-        let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
-        let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
+        let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+        let VendorName = Stringtouse.substring(0, (Stringtouse.indexOf("/")))
+        let RequestID = Stringtouse.substring(Stringtouse.indexOf("/") + 1, (Stringtouse.lastIndexOf("/")))
+        let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
 
-        this.FileDetails[i].FileURL = `https://localhost:7186/api/ProcurementRequest/GetProcurementQuote/${VendorName}/${RequestID}/${filename}`
         this.FileDetails[i].FileName = filename
+        this.FileDetails[i].FileURL = sFile
+        this.FileDetails[i].VendorName = VendorName
+        this.FileDetails[i].RequestID = RequestID
       }
       else {
         this.FileDetails[i].FileURL = ""
@@ -218,12 +219,9 @@ export class EditProcurementRequestComponent implements OnInit {
   }
 
   openPDFInNewTab(i: number): void {
-    const url = this.FileDetails[i].FileURL;
-    this.http.get(url, { responseType: 'blob' }).subscribe(response => {
-      const fileURL = URL.createObjectURL(response);
-      window.open(fileURL, '_blank');
-      URL.revokeObjectURL(fileURL);
-    });
+    const fileURL = this.FileDetails[i].FileURL
+    window.open(fileURL, '_blank');
+    URL.revokeObjectURL(fileURL);
   }
 
   onFile1Upload(event: any) {
@@ -296,7 +294,7 @@ export class EditProcurementRequestComponent implements OnInit {
   }
 
   EditProcurementRequestB() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.Procurement_Request.name = this.myForm.get("RequestName").value;
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
 
@@ -310,9 +308,10 @@ export class EditProcurementRequestComponent implements OnInit {
           if (this.files[0] != null || this.files[1] != null || this.files[2] != null) {
             if (this.files[i] != null) {
               let sFile = this.ProcurementQuotes[i].path;
-              let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-              let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
-              let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
+              let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+              let VendorName = Stringtouse.substring(0, (Stringtouse.indexOf("/")))
+              let RequestID = Stringtouse.substring(Stringtouse.indexOf("/") + 1, (Stringtouse.lastIndexOf("/")))
+              let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
               this.dataService.DeleteProcurementRequestFiles(VendorName, RequestID, filename).subscribe({
                 next: (Result) => {
                   let file: File = this.files[i]
@@ -326,7 +325,7 @@ export class EditProcurementRequestComponent implements OnInit {
                             this.ProcurementQuotes = PRResult
 
                             this.ProcurementQuotes[i].procurement_Request = this.Procurement_Request
-                            this.ProcurementQuotes[i].path = qPath.pathSaved.toString();
+                            this.ProcurementQuotes[i].path = qPath.url;
                             this.ProcurementQuotes[i].prefferedQuote = false;
 
                             let test: any
@@ -344,7 +343,7 @@ export class EditProcurementRequestComponent implements OnInit {
                           else {
                             this.ProcurementQuotes = PRResult
                             this.ProcurementQuotes[i].procurement_Request = this.Procurement_Request
-                            this.ProcurementQuotes[i].path = qPath.pathSaved.toString();
+                            this.ProcurementQuotes[i].path = qPath.url;
                             this.ProcurementQuotes[i].prefferedQuote = true;
 
                             let test: any
@@ -403,7 +402,7 @@ export class EditProcurementRequestComponent implements OnInit {
   }
 
   EditProcurementRequestA() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.Procurement_Request.name = this.myForm.get("Name").value;
     this.Procurement_Request.description = this.myForm.get("Description").value;
 
@@ -412,10 +411,11 @@ export class EditProcurementRequestComponent implements OnInit {
       next: (response) => {
         if (this.files[0] != null) {
           this.ProcurementQuotes.forEach(element => {
-            let sFile = element.path;
-            let VendorName = sFile.substring(0, sFile.indexOf("\\"))
-            let RequestID = sFile.substring(sFile.indexOf("\\") + 1, (sFile.lastIndexOf("\\")))
-            let filename = sFile.substring(sFile.lastIndexOf("\\") + 1, sFile.length)
+            let sFile = element.path;;
+            let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+            let VendorName = Stringtouse.substring(0, (Stringtouse.indexOf("/")))
+            let RequestID = Stringtouse.substring(Stringtouse.indexOf("/") + 1, (Stringtouse.lastIndexOf("/")))
+            let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
             let file: File = this.fileToUpload;
             this.dataService.DeleteProcurementRequestFiles(VendorName, RequestID, filename).subscribe({
               next: (Result) => {
@@ -427,7 +427,8 @@ export class EditProcurementRequestComponent implements OnInit {
                         this.Procurement_Request_Quote = PRResult[0]
                         let qPath = Response
                         this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-                        this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+                        URL: URL = Response.url
+                        this.Procurement_Request_Quote.path = URL.toString();
                         this.Procurement_Request_Quote.prefferedQuote = true;
 
                         let test: any
@@ -471,12 +472,12 @@ export class EditProcurementRequestComponent implements OnInit {
 
 
   openEditPRApprovedTab(): void {
-    const userManualUrl = 'assets/PDF/EditProcReq.pdf'; 
+    const userManualUrl = 'assets/PDF/EditProcReq.pdf';
     window.open(userManualUrl, '_blank');
   }
 
   openEditPROtherTab(): void {
-    const userManualUrl = 'assets/PDF/EditProcReq.pdf'; 
+    const userManualUrl = 'assets/PDF/EditProcReq.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

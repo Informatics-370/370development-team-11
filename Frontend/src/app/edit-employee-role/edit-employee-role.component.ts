@@ -67,7 +67,7 @@ export class EditEmployeeRoleComponent implements OnInit {
   }
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     var name = this.myForm.get('Name')?.value;
 
     this.dataService.EditRoleValidation(name, this.role.role_ID).subscribe({

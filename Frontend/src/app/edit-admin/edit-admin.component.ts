@@ -246,7 +246,7 @@ export class EditAdminComponent implements OnInit {
   }
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.adm.adminName = this.myForm.get('AdminName')?.value;
     this.adm.adminSurname = this.myForm.get('AdminSurname')?.value;
     this.adm.cellPhone_Num = this.myForm.get('CellPhone_Num')?.value;

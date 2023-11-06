@@ -244,6 +244,8 @@ export class FinalizeProcurementRequestCreateComponent {
     BudgetLineId: 0,
     procurement_Status_ID: 0,
     payment_Method_ID: 0,
+    branch_ID: 0,
+    branch:this.EmployeeDetails.branch,
     employee: this.EmployeeDetails,
     procurement_Request: this.Procurement_Request,
     sign_Off_Status: this.SignOffStatus,
@@ -391,14 +393,14 @@ export class FinalizeProcurementRequestCreateComponent {
   }
 
   onSubmit(): void {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     let Selection = this.finalizationForm.get("ProofOfPayment").value;
     if (Selection == true) {
-      let ProcurementRequest = `ProcurementDetails${this.id}`
-      let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString();
+      let file: File = this.file[0]
+      let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString() + "/" + file.name;
       this.dataService.POPFileAdd(ProofName, this.file[0]).subscribe(response => {
-
-        let Path: any = response.pathSaved.toString()
+        URL: URL = response.url
+        let Path: any = URL.toString();
         this.ProofOfPayment.proof_Of_Payment_Doc = Path;
         this.ProofOfPayment.procurement_Details_ID = Number(this.id);
         this.ProofOfPayment.procurement_Details.procurement_Request.user = this.usr;
@@ -411,35 +413,40 @@ export class FinalizeProcurementRequestCreateComponent {
         this.ProofOfPayment.procurement_Details.procurement_Request.description = this.ProcurementDetails.procurement_Request.description
         this.dataService.AddProofOfPayment(this.ProofOfPayment).subscribe({
           next: (res) => {
-            this.dataService.UpdateProcurementStatus(2, this.id).subscribe({
-              next: (Result) => {
-                document.getElementById('AnimationBtn').classList.toggle("is_active");
-                document.getElementById('cBtn').style.display = "none";
-                this.log.action = "Finalised procurement request for: " + this.Procurement_Request.name;
-                this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
-                let test: any
-                test = new DatePipe('en-ZA');
-                this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-                this.dataService.AuditLogAdd(this.log).subscribe({
-                  next: (Log) => {
-                    var action = "CREATE";
-                    var title = "CREATE SUCCESSFUL";
-                    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> FINALISED! </strong> successfully!");
+            this.dataService.UpdatePaymentStatus(1, this.id).subscribe({
+              next: (Response) => {
+                this.dataService.UpdateProcurementStatus(2, this.id).subscribe({
+                  next: (Result) => {
+                    document.getElementById('AnimationBtn').classList.toggle("is_active");
+                    document.getElementById('cBtn').style.display = "none";
+                    this.log.action = "Finalised procurement request for: " + this.Procurement_Request.name;
+                    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+                    let test: any
+                    test = new DatePipe('en-ZA');
+                    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+                    this.dataService.AuditLogAdd(this.log).subscribe({
+                      next: (Log) => {
+                        var action = "CREATE";
+                        var title = "CREATE SUCCESSFUL";
+                        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The procurement request for <strong>" + this.Procurement_Request.name + "</strong> has been <strong style='color:green'> FINALISED! </strong> successfully!");
 
-                    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-                      disableClose: true,
-                      data: { action, title, message }
-                    });
+                        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                          disableClose: true,
+                          data: { action, title, message }
+                        });
 
-                    const duration = 1750;
-                    setTimeout(() => {
-                      dialogRef.close();
-                      this.router.navigate(['/ViewBudgetAllocation']);
-                    }, duration);
+                        const duration = 1750;
+                        setTimeout(() => {
+                          dialogRef.close();
+                          this.router.navigate(['/ViewBudgetAllocation']);
+                        }, duration);
+                      }
+                    })
                   }
                 })
               }
             })
+
 
           }
         });

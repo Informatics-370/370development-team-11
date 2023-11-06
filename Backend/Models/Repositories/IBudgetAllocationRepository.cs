@@ -6,10 +6,10 @@ namespace ProcionAPI.Models.Repositories
     {
         Task<Budget_Category[]> GetAllBudgetCategoriesAsync();
         Task<Budget_Category> GetBudgetCategoryAsync(int budgetCategoryId);
-        Task<Budget_Allocation[]> GetAllBudgetAllocationsAsync();
+        Task<List<Budget_Allocation>> GetAllBudgetAllocationsAsync();
         Task<Budget_Allocation[]> GetDepBudgetAllocationAsync(string dep);
         Task<Budget_Allocation> GetBudgetAllocationAsync(int budgetAllocationId);
-        Task<Budget_Line[]> GetAllBudgetLinesAsync();
+        Task<List<Budget_Line>> GetAllBudgetLinesAsync();
         Task<Budget_Line[]> GetBudgetLinesForAllocationAsync(int budgetAllocationId);
         Task<Budget_Line> GetBudgetLineAsync(string accountCode);
         Task<Budget_Line> GetBudgetLineByIDAsync(int budgetLineID);

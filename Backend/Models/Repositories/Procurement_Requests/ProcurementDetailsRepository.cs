@@ -1,9 +1,11 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Crypto.Agreement;
 using ProcionAPI.Data;
 using ProcionAPI.Models.Entities;
+using System.Data;
 using System.Globalization;
 
 namespace ProcionAPI.Models.Repositories.Procurement_Requests
@@ -11,9 +13,11 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
     public class ProcurementDetailsRepository : IProcurementDetailsRepository
     {
         private readonly AppDBContext _dbContext;
+        private readonly IConfiguration _configuration;
 
-        public ProcurementDetailsRepository(AppDBContext dbContext)
+        public ProcurementDetailsRepository(AppDBContext dbContext, IConfiguration configuration)
         {
+            _configuration = configuration;
             _dbContext = dbContext;
         }
 
@@ -33,11 +37,18 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
         public async Task<Procurement_Details[]> CreateProcurementDetailsAsync(Procurement_Details ProcurementDetails)
         {
-            Employee existingEmployee = await _dbContext.Employee.Include(x => x.User).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.EmployeeID == ProcurementDetails.EmployeeID);
+            Employee existingEmployee = await _dbContext.Employee.Include(x => x.User).ThenInclude(x => x.Role).Include(x => x.Branch).FirstOrDefaultAsync(x => x.EmployeeID == ProcurementDetails.EmployeeID);
 
             if (existingEmployee != null)
             {
                 ProcurementDetails.Employee = existingEmployee;
+            }
+
+            Branch existingBranch = await _dbContext.Branch.FirstOrDefaultAsync(x => x.Branch_ID == ProcurementDetails.Employee.Branch_ID);
+
+            if (existingBranch != null)
+            {
+                ProcurementDetails.Branch = existingBranch;
             }
 
             Procurement_Request existingProcurementRequest = await _dbContext.Procurement_Request.Include(x => x.User).Include(x => x.Requisition_Status).Include(x => x.Vendor).ThenInclude(x => x.Vendor_Status).FirstOrDefaultAsync(x => x.Procurement_Request_ID == ProcurementDetails.Procurement_Request_ID);
@@ -118,12 +129,10 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
             Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Details_ID == PaymentMadeDetails.Procurement_Details_ID);
 
-            if (existingProcurementDetails.Payment_Made == false)
+            if (existingProcurementDetails != null)
             {
                 existingProcurementDetails.Payment_Made = true;
-                
                 PaymentMadeDetails.Procurement_Details = existingProcurementDetails;
-                await _dbContext.SaveChangesAsync();
             }
 
 
@@ -139,17 +148,13 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
 
 
             Procurement_Details existingProcurementDetails = await _dbContext.Procurement_Details.FirstOrDefaultAsync(x => x.Procurement_Details_ID == AddPOP.Procurement_Details_ID);
-
             if (existingProcurementDetails != null)
             {
-                if (existingProcurementDetails.Payment_Made == false)
-                {
-                    existingProcurementDetails.Payment_Made = true;
-                    await _dbContext.SaveChangesAsync();
-                    AddPOP.Procurement_Details = existingProcurementDetails;
-                }
-                
+                existingProcurementDetails.Payment_Made = true;
+                await _dbContext.SaveChangesAsync();
+                AddPOP.Procurement_Details = existingProcurementDetails;
             }
+                
 
 
 
@@ -366,11 +371,129 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             return ExistingProcurementRequest;
         }
 
-        public async Task<Procurement_Details[]> GetProcurementRequestDetailsAsync()
+        public async Task<List<Procurement_Details>> GetProcurementRequestDetailsAsync(string Username)
         {
-            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit).Include(x => x.Employee).ThenInclude(x => x.User).Include(x => x.Procurement_Request).ThenInclude(x => x.Vendor).Include(x => x.Sign_Off_Status).Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line);
+            List<Procurement_Details> procurement_Details = new List<Procurement_Details>();
 
-            return await query.ToArrayAsync();
+            using (SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+            {
+                await connection.OpenAsync();
+                {
+                    using (SqlCommand command = new SqlCommand("GetProcurementDetails", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                Procurement_Details procurement_Detail = new Procurement_Details();
+                                procurement_Detail.Procurement_Details_ID = Convert.ToInt32(reader["Procurement_Details_ID"]);
+                                procurement_Detail.Procurement_Request_ID = Convert.ToInt32(reader["Procurement_Request_ID"]);
+                                procurement_Detail.EmployeeID = Convert.ToInt32(reader["EmployeeID"]);
+                                procurement_Detail.Sign_Off_Status_ID = Convert.ToInt32(reader["Sign_Off_Status_ID"]);
+                                procurement_Detail.Procurement_Payment_Status_ID = Convert.ToInt32(reader["Procurement_Payment_Status_ID"]);
+                                procurement_Detail.Procurement_Status_ID = Convert.ToInt32(reader["Procurement_Status_ID"]);
+                                procurement_Detail.Payment_Method_ID = Convert.ToInt32(reader["Payment_Method_ID"]);
+                                procurement_Detail.BudgetLineId = Convert.ToInt32(reader["BudgetLineId"]);
+                                procurement_Detail.Branch_ID = Convert.ToInt32(reader["Branch_ID"]);
+                                procurement_Detail.Branch = new Branch();
+                                procurement_Detail.Branch.Branch_ID = Convert.ToInt32(reader["Branch_ID"]);
+                                procurement_Detail.Branch.City = reader["City"].ToString();
+                                procurement_Detail.Branch.Name = reader["Branch_Name"].ToString();
+                                procurement_Detail.Branch.Postal_Code = reader["Postal_Code"].ToString();
+                                procurement_Detail.Branch.Province = reader["Province"].ToString();
+                                procurement_Detail.Branch.Street = reader["Street"].ToString();
+                                procurement_Detail.Employee = new Employee();
+                                procurement_Detail.Employee.EmployeeID = Convert.ToInt32(reader["EmployeeID"]);
+                                procurement_Detail.Employee.Branch_ID = Convert.ToInt32(reader["Branch_ID"]);
+                                procurement_Detail.Employee.Department_ID = Convert.ToInt32(reader["Department_ID"]);
+                                procurement_Detail.Employee.Mandate_ID = Convert.ToInt32(reader["Mandate_ID"]);
+                                procurement_Detail.Employee.User_Id = Convert.ToInt32(reader["User_Id"]);
+                                procurement_Detail.Employee.CellPhone_Num = reader["CellPhone_Num"].ToString();
+                                procurement_Detail.Employee.Email = reader["Employee_Email"].ToString();
+                                procurement_Detail.Employee.EmployeeName = reader["EmployeeName"].ToString();
+                                procurement_Detail.Employee.EmployeeSurname = reader["EmployeeSurname"].ToString();
+                                procurement_Detail.Employee.Mandate_Limit = new Mandate_Limit();
+                                procurement_Detail.Employee.Mandate_Limit.Mandate_ID = Convert.ToInt32(reader["Mandate_ID"]);
+                                procurement_Detail.Employee.Mandate_Limit.Ammount = Convert.ToDouble(reader["Ammount"]);
+                                procurement_Detail.Employee.Mandate_Limit.Date = Convert.ToDateTime(reader["Date"]);
+                                procurement_Detail.Employee.User = new User();
+                                procurement_Detail.Employee.User.User_Id = Convert.ToInt32(reader["User_Id"]);
+                                procurement_Detail.Employee.User.Access_ID = Convert.ToInt32(reader["Access_ID"]);
+                                procurement_Detail.Employee.User.Role_ID = Convert.ToInt32(reader["Role_ID"]);
+                                procurement_Detail.Employee.User.No_Notifications = Convert.ToInt32(reader["No_Notifications"]);
+                                procurement_Detail.Employee.User.Username = reader["Username"].ToString();
+                                procurement_Detail.Employee.User.Password = reader["Password"].ToString();
+                                procurement_Detail.Employee.User.Profile_Picture = reader["Profile_Picture"].ToString();
+                                procurement_Detail.Sign_Off_Status = new Sign_Off_Status();
+                                procurement_Detail.Sign_Off_Status.Sign_Off_Status_ID = Convert.ToInt32(reader["Sign_Off_Status_ID"]);
+                                procurement_Detail.Sign_Off_Status.Name = reader["Sign_Off_Name"].ToString();
+                                procurement_Detail.Sign_Off_Status.Description = reader["Sign_Off_Description"].ToString();
+                                procurement_Detail.Procurement_Payment_Status = new Procurement_Payment_Status();
+                                procurement_Detail.Procurement_Payment_Status.Procurement_Payment_Status_ID = Convert.ToInt32(reader["Procurement_Payment_Status_ID"]);
+                                procurement_Detail.Procurement_Payment_Status.Name = reader["Procurement_Payment_Status_Name"].ToString();
+                                procurement_Detail.Procurement_Payment_Status.Description = reader["Procurement_Payment_Status_Description"].ToString();
+                                procurement_Detail.Procurement_Status = new Procurement_Status();
+                                procurement_Detail.Procurement_Status.Procurement_Status_ID = Convert.ToInt32(reader["Procurement_Status_ID"]);
+                                procurement_Detail.Procurement_Status.Name = reader["Procurement_Status_Name"].ToString();
+                                procurement_Detail.Procurement_Status.Description = reader["Procurement_Status_Description"].ToString();
+                                procurement_Detail.Payment_Method = new Payment_Method();
+                                procurement_Detail.Payment_Method.Payment_Method_ID = Convert.ToInt32(reader["Payment_Method_ID"]);
+                                procurement_Detail.Payment_Method.Name = reader["Payment_Method_Name"].ToString();
+                                procurement_Detail.Payment_Method.Description = reader["Payment_Method_Description"].ToString();
+                                procurement_Detail.Budget_Line = new Budget_Line();
+                                procurement_Detail.Budget_Line.BudgetLineId = Convert.ToInt32(reader["BudgetLineId"]);
+                                procurement_Detail.Budget_Line.ActualAmt = Convert.ToDecimal(reader["ActualAmt"]);
+                                procurement_Detail.Budget_Line.BudgetAmt = Convert.ToDecimal(reader["BudgetAmt"]);
+                                procurement_Detail.Budget_Line.Category_ID = Convert.ToInt32(reader["Category_ID"]);
+                                procurement_Detail.Budget_Line.Budget_ID = Convert.ToInt32(reader["Budget_ID"]);
+                                procurement_Detail.Budget_Line.Variance = Convert.ToDecimal(reader["Variance"]);
+                                procurement_Detail.Item_Type = reader["Item_Type"].ToString();
+                                procurement_Detail.Buyer_Name = reader["Buyer_Name"].ToString();
+                                procurement_Detail.Deposit_Required = Convert.ToBoolean(reader["Deposit_Required"]);
+                                procurement_Detail.Full_Payment_Due_Date = Convert.ToDateTime(reader["Full_Payment_Due_Date"]);
+                                procurement_Detail.Total_Amount = Convert.ToDecimal(reader["Total_Amount"]);
+                                procurement_Detail.Payment_Made = Convert.ToBoolean(reader["Payment_Made"]);
+                                procurement_Detail.Comment = reader["Comment"].ToString();
+                                procurement_Detail.Proof_Of_Payment_Required = Convert.ToBoolean(reader["Proof_Of_Payment_Required"]);
+                                procurement_Detail.ItemReceived = Convert.ToBoolean(reader["ItemReceived"]);
+                                procurement_Detail.Procurement_Request = new Procurement_Request();
+                                procurement_Detail.Procurement_Request.Procurement_Request_ID = Convert.ToInt32(reader["Procurement_Request_ID"]);
+                                procurement_Detail.Procurement_Request.Vendor_ID = Convert.ToInt32(reader["Vendor_ID"]);
+                                procurement_Detail.Procurement_Request.Vendor = new Vendor();
+                                procurement_Detail.Procurement_Request.Vendor.Vendor_ID = Convert.ToInt32(reader["Vendor_ID"]);
+                                procurement_Detail.Procurement_Request.Vendor.Vendor_Status_ID = Convert.ToInt32(reader["Vendor_Status_ID"]);
+                                procurement_Detail.Procurement_Request.Vendor.Name = reader["Vendor_Name"].ToString();
+                                procurement_Detail.Procurement_Request.Vendor.Vendor_Status_ID = Convert.ToInt32(reader["Vendor_Status_ID"]);
+                                procurement_Detail.Procurement_Request.Vendor.Email = reader["Vendor_Email"].ToString();
+                                procurement_Detail.Procurement_Request.Vendor.Number_Of_Times_Used = Convert.ToInt32(reader["Number_Of_Times_Used"]);
+                                procurement_Detail.Procurement_Request.Vendor.Sole_Supplier_Provided = Convert.ToBoolean(reader["Sole_Supplier_Provided"]);
+                                procurement_Detail.Procurement_Request.Vendor.PreferedVendor = Convert.ToBoolean(reader["PreferedVendor"]);
+                                procurement_Detail.Procurement_Request.Requisition_Status_ID = Convert.ToInt32(reader["Requisition_Status_ID"]);
+                                procurement_Detail.Procurement_Request.User_ID = Convert.ToInt32(reader["User_ID"]);
+                                procurement_Detail.Procurement_Request.User = new User();
+                                procurement_Detail.Procurement_Request.User.User_Id = Convert.ToInt32(reader["User_Id"]);
+                                procurement_Detail.Procurement_Request.User.Role_ID = Convert.ToInt32(reader["Role_ID"]);
+                                procurement_Detail.Procurement_Request.User.Access_ID = Convert.ToInt32(reader["Access_ID"]);
+                                procurement_Detail.Procurement_Request.User.Username = reader["Username"].ToString();
+                                procurement_Detail.Procurement_Request.User.Password = reader["Password"].ToString();
+                                procurement_Detail.Procurement_Request.User.Profile_Picture = reader["Profile_Picture"].ToString();
+                                procurement_Detail.Procurement_Request.User.No_Notifications = Convert.ToInt32(reader["No_Notifications"]);
+                                procurement_Detail.Procurement_Request.Name = reader["Procurement_Request_Name"].ToString();
+                                procurement_Detail.Procurement_Request.Description = reader["Procurement_Request_Description"].ToString();
+
+                                if (procurement_Detail.Procurement_Request.User.Username == Username)
+                                {
+                                    procurement_Details.Add(procurement_Detail);
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            return procurement_Details;
         }
 
         public async Task<Procurement_Details[]> GetProcurementRequestDetailsFDAsync()
@@ -378,6 +501,15 @@ namespace ProcionAPI.Models.Repositories.Procurement_Requests
             IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit).Include(x => x.Employee).ThenInclude(x => x.User).Include(x => x.Procurement_Request)
                 .ThenInclude(x => x.Vendor).Include(x => x.Sign_Off_Status).Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line)
                 .Where(x => x.Total_Amount > 80000 && x.Total_Amount <= 150000);
+
+            return await query.ToArrayAsync();
+        }
+
+        public async Task<Procurement_Details[]> GetProcurementRequestDetailsBOAsync()
+        {
+            IQueryable<Procurement_Details> query = _dbContext.Procurement_Details.Include(x => x.Employee).ThenInclude(x => x.Mandate_Limit).Include(x => x.Employee).ThenInclude(x => x.User).Include(x => x.Employee).ThenInclude(x => x.Department).Include(x => x.Procurement_Request)
+                .ThenInclude(x => x.Vendor).Include(x => x.Sign_Off_Status).Include(x => x.Procurement_Payment_Status).Include(x => x.Procurement_Status).Include(x => x.Payment_Method).Include(x => x.Budget_Line)
+                .Where(x => x.Total_Amount <= 80000);
 
             return await query.ToArrayAsync();
         }

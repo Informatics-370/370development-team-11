@@ -4,7 +4,7 @@ namespace ProcionAPI.Models.Repositories
 {
     public interface IHelpRepository 
     {
-        Task<HELP[]> GetAllHelpsAsync();
+        Task<List<HELP>> GetAllHelpsAsync();
         Task<Help_Category[]> GetAllHelpCategorysAsync();
         Task<HELP[]> AddHelpAsync(HELP AddHelp);
         Task<HELP> GetHelpAsync(int Help_ID);

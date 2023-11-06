@@ -1,0 +1,89 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Create Procurement <br>Request</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <ion-segment [(ngModel)]="VendorType" (ionChange)="setVendorType()">
+    <ion-segment-button value="Approved">
+      <ion-label>Approved</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="Other">
+      <ion-label>Other</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- Approved Vendor Form -->
+  <form [formGroup]="myForm" (ngSubmit)="AddProcurementRequestA()">
+    <div *ngIf="VendorType == 'Approved'">
+      <ion-item>
+        <ion-input type="text" label="Request Name:" formControlName="Name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-select label="Vendor:" formControlName="Vendor">
+          <ion-select-option *ngFor="let vendor of vendors" [value]="vendor.name">{{ vendor.name }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-textarea label="Description:" formControlName="Description"></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Quote:
+        </ion-label>
+        <input type="file" formControlName="Quote1" label="Quote:" accept=".pdf"
+          (change)="onFile1UploadApproved($event)">
+      </ion-item>
+      <ion-button expand="block" type="submit" [disabled]="myForm.invalid">Save</ion-button>
+      <ion-button expand="block" type="button" color="medium" (click)="OnCancel()">Cancel</ion-button>
+    </div>
+  </form>
+
+  <!-- Other Vendor Form -->
+  <form [formGroup]="myForm" (ngSubmit)="AddProcurementRequestB()">
+    <div *ngIf="VendorType == 'Other'">
+      <ion-item
+        [ngClass]="{'invalid-input': myForm.controls['RequestName'].invalid && (myForm.controls['RequestName'].dirty || myForm.controls['RequestName'].touched)}">
+        <ion-input type="text" formControlName="RequestName" id="RequestName" label="Request Name:"></ion-input>
+      </ion-item>
+      <ion-item
+        [ngClass]="{'invalid-input': myForm.controls['VendorName'].invalid && (myForm.controls['VendorName'].dirty || myForm.controls['VendorName'].touched)}">
+        <ion-input type="text" formControlName="VendorName" id="VendorName" label="Vendor Name:"></ion-input>
+      </ion-item>
+      <ion-item
+        [ngClass]="{'invalid-input': myForm.controls['Email'].invalid && (myForm.controls['Email'].dirty || myForm.controls['Email'].touched)}">
+        <ion-input type="email" formControlName="Email" label="Vendor Email:"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Preferred Quote:
+        </ion-label>
+        <input type="file" id="file1" formControlName="OtherQuote1" accept=".pdf" (change)="onFile1Upload($event)"
+          label="Preferred Quote:">
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Comparative Quote 1:
+        </ion-label>
+        <input type="file" id="file2" formControlName="OtherQuote2" accept=".pdf" (change)="onFile2Upload($event)"
+          label="Comparative Quote 1:">
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Comparative Quote 2:
+        </ion-label>
+        <input type="file" id="file3" formControlName="OtherQuote3" accept=".pdf" (change)="onFile3Upload($event)"
+          label="Comparative Quote 2:">
+      </ion-item>
+      <ion-item
+        [ngClass]="{'invalid-input': myForm.controls['OtherDescription'].invalid && (myForm.controls['OtherDescription'].dirty || myForm.controls['OtherDescription'].touched)}">
+        <ion-textarea label="Description:" formControlName="OtherDescription"></ion-textarea>
+      </ion-item>
+      <ion-button expand="block" type="submit" [disabled]="myForm.invalid">Save</ion-button>
+      <ion-button expand="block" type="button" color="medium" (click)="OnCancel()">Cancel</ion-button>
+    </div>
+  </form>
+
+</ion-content>

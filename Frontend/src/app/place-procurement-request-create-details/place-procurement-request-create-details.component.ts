@@ -264,6 +264,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     BudgetLineId: 0,
     procurement_Status_ID: 0,
     payment_Method_ID: 0,
+    branch_ID: 0,
+    branch:this.EmployeeDetails.branch,
     employee: this.EmployeeDetails,
     procurement_Request: this.Procurement_Request,
     sign_Off_Status: this.SignOffStatus,
@@ -431,6 +433,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
   AccountCodeDetails: AccountCodeDisplay[] = [];
   AccountCodeGroups: AccountCodeDisplayGroup[] = [];
+  userDepartment: any;
+
   ngOnInit() {
     var User = this.ProcureService.decodeUser(sessionStorage.getItem('token'))
     this.ProcureService.GetUserByUsername(User).subscribe(response => {
@@ -481,6 +485,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.ProcurementFormGroup.get("BuyerName")?.setValue(this.EmployeeDetails.employeeName.toString())
           this.ProcurementFormGroup.get("BuyerEmail")?.setValue(this.EmployeeDetails.email.toString())
           let departmentname = this.EmployeeDetails.department.name
+          console.log(this.EmployeeDetails.branch)
           this.ProcureService.GetProcurementAccountCodeDetails(this.currentYear, this.currentmonth, departmentname.toString()).subscribe(response => {
             this.BudgetAllocationCode = response;
             this.BudgetAllocationCode.forEach(t => {
@@ -537,6 +542,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
     this.ProcurementFormGroup.get("BuyerName")?.disable();
     this.ProcurementFormGroup.get("BuyerEmail")?.disable();
+    this.userDepartment = this.ProcureService.decodeUserDep(sessionStorage.getItem("token"));
   }
 
   public onFocus(event: FocusEvent) {
@@ -619,7 +625,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
   }
 
   Validation() {
-    
+
     if (this.ConsumableChecked == true) {
       let maxValue = this.ConsumableItems.filter(y => y.consumable_ID == Number(this.ProcurementFormGroup.get("ConsumableItem").value))
       let value = Number(maxValue[0].maximum_Reorder_Quantity) - Number(maxValue[0].minimum_Reorder_Quantity)
@@ -658,7 +664,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
 
   Create() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     let dateChange: any
     dateChange = new DatePipe('en-ZA');
     //Data values
@@ -674,6 +680,8 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
     //id values
 
     this.ProcurementDetails.employeeID = this.EmployeeDetails.employeeID;
+    this.ProcurementDetails.branch_ID = Number(this.EmployeeDetails.branch_ID);
+    this.ProcurementDetails.branch = this.EmployeeDetails.branch;
     //this.ProcurementDetails.employeeID = 2;
     // this.ProcurementDetails.procurement_Request_ID = this.ProcurementRequest_ID;
     this.ProcurementDetails.sign_Off_Status_ID = 1;
@@ -696,7 +704,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
 
         this.VendorNotification.user_ID = user.user_Id;
         this.ProcureService.ProcurementAddNotification(this.VendorNotification).subscribe();
-      }) 
+      })
     }
     else if (Number(this.ProcurementDetails.total_Amount) > 150000) {
       this.ProcurementDetails.procurement_Status_ID = 3;
@@ -706,6 +714,20 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
       this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
       this.VendorNotification.name = this.Procurement_Request.name + " has been flagged for exceeded mandate limit";
       this.ProcureService.GetUserByRole("MD").subscribe(r => {
+        var user: any = r;
+
+        this.VendorNotification.user_ID = user.user_Id;
+        this.ProcureService.ProcurementAddNotification(this.VendorNotification).subscribe();
+      })
+    }
+    else if (Number(this.ProcurementDetails.total_Amount) > this.MandateLimitAmount && Number(this.ProcurementDetails.total_Amount) <= 80000) {
+      this.ProcurementDetails.procurement_Status_ID = 3;
+      this.VendorNotification.notification_Type_ID = 14;
+      let transVar: any
+      transVar = new DatePipe('en-ZA');
+      this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+      this.VendorNotification.name = this.Procurement_Request.name + " has been flagged for exceeded mandate limit";
+      this.ProcureService.GetEmployeeByDepartment(this.userDepartment).subscribe(r => {
         var user: any = r;
 
         this.VendorNotification.user_ID = user.user_Id;
@@ -740,20 +762,20 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
         this.Deposit.deposit_Due_Date = dateChange.transform(this.ProcurementFormGroup.get("DepositDueDate")?.value, 'MM, dd, y');
         this.Deposit.procurement_Details_ID = result[0].procurement_Details_ID;
         this.Deposit.procurement_Details.employee = this.EmployeeDetails;
-       // this.Deposit.procurement_Details.employee.user = this.EmployeeDetails.user;
+        // this.Deposit.procurement_Details.employee.user = this.EmployeeDetails.user;
         //this.Deposit.procurement_Details.employee.user.access = result[0].employee.user.access;
         console.log(this.Deposit)
         this.ProcureService.AddDeposit(this.Deposit).subscribe()
       }
-      if (this.ProcurementDetails.proof_Of_Payment_Required == true) {
-        let FolderCategory = "ProofOfPayment"
-        let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`
-        
-        this.ProcureService.uploadProcureFile(FolderCategory, ProcurementRequest, this.file[1]).subscribe(response => {
+      if (this.ProcurementDetails.proof_Of_Payment_Required == true && this.ProcurementDetails.payment_Made == false) {
+        let ProofName: string = "ProofOfPayment/" + this.ProcurementDetails.procurement_Request.name.toString() + "/" + this.file[1].name;
+
+
+        this.ProcureService.POPFileAdd(ProofName, this.file[1]).subscribe(response => {
           this.ProofOfPayment.procurement_Details = result[0];
           this.ProofOfPayment.procurement_Details_ID = result[0].procurement_Details_ID;
-          let Path: any = response
-          this.ProofOfPayment.proof_Of_Payment_Doc = Path.returnedPath.toString()
+          URL: URL = response.url
+          this.ProofOfPayment.proof_Of_Payment_Doc = URL.toString()
           this.ProofOfPayment.procurement_Details.procurement_Request.user = this.Procurement_Request.user;
           this.ProofOfPayment.procurement_Details.procurement_Request.vendor = this.Procurement_Request.vendor;
           this.ProofOfPayment.procurement_Details.procurement_Request.requisition_Status = this.Procurement_Request.requisition_Status;
@@ -762,13 +784,12 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
           this.ProcureService.AddProofOfPayment(this.ProofOfPayment).subscribe();
         })
       }
-      if (this.ProcurementDetails.payment_Made == true) {
-        let FolderCategory = "PaymentMade";
-        let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`;
+      if (this.ProcurementDetails.payment_Made == true && this.ProcurementDetails.proof_Of_Payment_Required == false) {
+        let FolderName: string = "Receipts"
 
-        this.ProcureService.uploadProcureFile(FolderCategory, ProcurementRequest, this.file[0]).subscribe(response => {
+        this.ProcureService.uploadProcureFile(FolderName,this.ProcurementDetails.procurement_Request.name.toString(), this.file[0]).subscribe(response => {
           let Path: any = response
-          this.PaymentMade.receipt_Upload = Path.returnedPath.toString();
+          this.PaymentMade.receipt_Upload = Path.url.toString();
           this.PaymentMade.paid_On_Date = dateChange.transform(this.ProcurementFormGroup.get("PaidOnDate")?.value, 'MM, dd, y');
           this.PaymentMade.procurement_Details = result[0]
           this.PaymentMade.procurement_Details_ID = result[0].procurement_Details_ID;
@@ -797,7 +818,7 @@ export class PlaceProcurementRequestCreateDetailsComponent implements OnInit {
             this.Procurement_Consumable.consumable = e
           }
         })
-       
+
         this.ProcureService.AddProcurementConsumable(this.Procurement_Consumable).subscribe()
         this.ProcureService.GetVendorConsumable().subscribe(b => {
           this.Vendor_Consumable.consumable_ID = Number(this.ProcurementFormGroup.get("ConsumableItem")?.value)

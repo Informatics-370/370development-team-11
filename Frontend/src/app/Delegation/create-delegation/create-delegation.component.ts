@@ -336,7 +336,7 @@ export class CreateDelegationComponent implements OnInit {
   }
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.doa.delegatingParty = this.myForm.get('DelegatingName')?.value;
 
     this.dataService.CreateDelegationValidation(this.myForm.get('DelegatingName')?.value).subscribe({
@@ -354,7 +354,7 @@ export class CreateDelegationComponent implements OnInit {
 
             this.dataService.DelegateFileAdd(DelegateName, file).subscribe(response => {
               let Path: any = response
-              this.sPath = Path.pathSaved.toString()
+              this.sPath = Path.url.toString()
               this.doa.delegation_Document = this.sPath;
               this.doa.delegationStatus_ID = 1;
 

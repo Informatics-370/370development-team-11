@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>View Procurement <br>Requests</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentPopover($event)">
+        <ion-icon name="person-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list>
+    <ion-card *ngFor="let request of ProcurementRequests">
+      <ion-card-header>
+        <ion-card-title>{{ request.name }}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><strong>Description:</strong> {{ request.description }}</p>
+        <p><strong>User:</strong> {{ request.user.username }}</p>
+        <p><strong>Vendor:</strong> {{ request.vendor.name }}</p>
+        <p><strong>Status:</strong><span [ngStyle]="{'color': getStatusColor(request.requisition_Status.name)}"> {{
+            request.requisition_Status.name }}</span></p>
+      </ion-card-content>
+
+
+      <ion-button fill="clear" (click)="EditRequest(request.procurement_Request_ID) ">
+        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" (click)="DeleteRequest(request.procurement_Request_ID, request.name)">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+
+    </ion-card>
+  </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="CreateRequest()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

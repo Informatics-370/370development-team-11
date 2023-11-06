@@ -43,6 +43,7 @@ export class ViewDelegationComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   displayedColumnsAdmin: string[] = ['delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'action', 'delete', 'revoke'];
+  displayedColumnsMD: string[] = ['delegatingParty', 'Delegate', 'sDate', 'eDate', 'doaForm', 'status', 'delete', 'revoke'];
   dataSource: any;
 
   userDelete: any
@@ -82,6 +83,10 @@ export class ViewDelegationComponent implements OnInit {
 
           if (this.iRole == "Admin" || this.iRole == "MD") {
             this.rAdmin = "true";
+          }
+
+          if (this.iRole == "MD") {
+            this.rMD = "true";
           }
 
           this.RoleToUse = this.dataService.decodeUserRole(sessionStorage.getItem("token"))
@@ -140,16 +145,18 @@ export class ViewDelegationComponent implements OnInit {
         }
 
         for (let i = 0; i < this.Delegations.length; i++) {
-          this.FileDetails.push({FileID: 0, FileURL: "", FileName: "" })
+          this.FileDetails.push({ FileID: 0, FileURL: "", DelegateName: "", FileName: "" })
           let sFile = this.Delegations[i].delegation_Document;
 
           if (sFile != "None") {
-            let DelegateName = sFile.substring(0, sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
+            let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+            let DelegateName = Stringtouse.substring(0, Stringtouse.indexOf("/"))
+            let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
 
             this.FileDetails[i].FileID = i + 1;
-            this.FileDetails[i].FileURL = `https://localhost:7186/api/Delegation/GetDelegationFiles/${DelegateName}/${filename}`
+            this.FileDetails[i].FileURL = sFile;
             this.FileDetails[i].FileName = filename
+            this.FileDetails[i].DelegateName = DelegateName
           }
           else {
             this.FileDetails[i].FileID = 0;
@@ -178,12 +185,9 @@ export class ViewDelegationComponent implements OnInit {
 
 
   openPDFInNewTab(i: number): void {
-    const url = this.FileDetails[i].FileURL;
-    this.http.get(url, { responseType: 'blob' }).subscribe(response => {
-      const fileURL = URL.createObjectURL(response);
-      window.open(fileURL, '_blank');
-      URL.revokeObjectURL(fileURL);
-    });
+    const fileURL = this.FileDetails[i].FileURL
+    window.open(fileURL, '_blank');
+    URL.revokeObjectURL(fileURL);
     // window.open(url, '_blank');
   }
 

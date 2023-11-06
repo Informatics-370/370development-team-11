@@ -352,7 +352,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   AddProcurementRequestB() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.Procurement_Request.name = this.myForm.get("RequestName").value;
     this.Procurement_Request.description = this.myForm.get("OtherDescription").value;
     this.Procurement_Request.vendor.name = this.myForm.get("VendorName").value;
@@ -368,7 +368,10 @@ export class CreateProcurementRequestComponent implements OnInit {
               let file: File = this.files[i]
               this.dataService.ProcurementRequestFileAdd(this.Procurement_Request.vendor.name, ("RequestID" + this.Procurement_Request.procurement_Request_ID).toString(), file).subscribe({
                 next: (Response) => {
-                  this.uploadedPathArray.push(Response.pathSaved.toString())
+                  URL: URL = Response.url
+                  console.log(URL)
+                  this.uploadedPathArray.push(URL.toString())
+                  console.log(this.uploadedPathArray)
                   this.GetQuoteDetails()
                 }
               })
@@ -413,12 +416,10 @@ export class CreateProcurementRequestComponent implements OnInit {
         let Filename = this.files[a].name.toString()
         let VendorName = this.Procurement_Request.vendor.name.toString()
         let RequestID = ("RequestID" + this.Procurement_Request.procurement_Request_ID).toString()
-        let PathName = (VendorName + "\\" + RequestID + "\\" + Filename).toString()
-        //evaluate against path array
-        let UploadedPath = this.uploadedPathArray.find(x => x === PathName)
+        let PathName = ("https://procionfiles.blob.core.windows.net/procionfiles/" + VendorName + "/" + RequestID + "/" + Filename).toString()
         //store
         this.Procurement_Request_Quote.procurement_Request.name = this.myForm.get("RequestName").value;
-        this.Procurement_Request_Quote.path = UploadedPath
+        this.Procurement_Request_Quote.path = PathName
         let test: any
         test = new DatePipe('en-ZA');
         this.Procurement_Request_Quote.upload_Date = test.transform(this.Procurement_Request_Quote.upload_Date, 'MMM d, y, h:mm:ss a');
@@ -507,7 +508,7 @@ export class CreateProcurementRequestComponent implements OnInit {
   }
 
   AddProcurementRequestA() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.Procurement_Request.name = this.myForm.get("Name").value;
     this.Procurement_Request.description = this.myForm.get("Description").value;
     this.Procurement_Request.vendor.name = this.myForm.get("Vendor").value;
@@ -524,7 +525,8 @@ export class CreateProcurementRequestComponent implements OnInit {
               let qPath = Response
               this.Procurement_Request = response[0]
               this.Procurement_Request_Quote.procurement_Request = this.Procurement_Request
-              this.Procurement_Request_Quote.path = qPath.pathSaved.toString();
+              URL: URL = Response.url
+              this.Procurement_Request_Quote.path = URL.toString();
               this.Procurement_Request_Quote.prefferedQuote = true;
 
               let test: any
@@ -597,7 +599,7 @@ export class CreateProcurementRequestComponent implements OnInit {
 
 
   openCreatePRTab(): void {
-    const userManualUrl = 'assets/PDF/CreateProcReq.pdf'; 
+    const userManualUrl = 'assets/PDF/CreateProcReq.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

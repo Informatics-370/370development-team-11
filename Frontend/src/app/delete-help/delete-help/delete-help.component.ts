@@ -71,11 +71,16 @@ export class DeleteHelpComponent  implements OnInit{
 
   onConfirm(id: number): void {
     let sFile = this.Help.user_Manual;
+    let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+
     let vFile = this.Help.video;
-    let HelpName = sFile.substring(0, sFile.indexOf("\\"))
-    let vHelpName = vFile.substring(0, vFile.indexOf("\\"))
-    let filename = sFile.substring(sFile.indexOf("\\") + 1, sFile.length)
-    let vfilename = vFile.substring(vFile.indexOf("\\") + 1, vFile.length)
+    let vStringtouse = vFile.substring(vFile.indexOf("procionfiles/") + 13, vFile.length)
+
+    let HelpName = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+    let vHelpName = vStringtouse.substring(vStringtouse.indexOf("/") + 1, vStringtouse.lastIndexOf("/"))
+
+    let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+    let vfilename = vStringtouse.substring(vStringtouse.lastIndexOf("/") + 1, vStringtouse.length)
 
 
 

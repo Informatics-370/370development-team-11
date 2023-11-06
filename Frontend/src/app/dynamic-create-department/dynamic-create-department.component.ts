@@ -42,7 +42,7 @@ export class DynamicCreateDepartmentComponent implements OnInit {
 
   onDynamicDepSubmit() {
 
-    document.getElementById('DynamicDepAnimationBtn').setAttribute('disabled', '');
+    
 
     var name = this.myForm.get('name')?.value;
 

@@ -40,6 +40,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 export class ViewEmployeeComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns: string[] = ['name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete', 'delegation'];
+  displayedColumnsMD: string[] = ['name', 'surname', 'username', 'email', 'phone', 'role', 'branch', 'department', 'mandate limit', 'action', 'delete'];
   dataSource: any;
 
   userDelete: any
@@ -84,7 +85,10 @@ export class ViewEmployeeComponent implements OnInit {
 
   RoleToUse: string = "";
   iRole: string;
+  iName: string;
+  iUserID: Number;
   rAdmin: string;
+  rMD: string;
 
   constructor(private router: Router, private dialog: MatDialog, private dataService: DataService, private sanitizer: DomSanitizer, private nav: MainNavComponent) { }
 
@@ -99,10 +103,19 @@ export class ViewEmployeeComponent implements OnInit {
     this.RoleToUse = this.dataService.decodeUserRole(sessionStorage.getItem("token"))
 
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
+    this.iName = this.dataService.decodeUser(sessionStorage.getItem("token"));
 
     if (this.iRole == "Admin" || this.iRole == "MD") {
       this.rAdmin = "true";
     }
+
+    if (this.iRole == "MD") {
+      this.rMD = "true";
+    }
+
+    this.dataService.GetUserByUsername(this.iName).subscribe(uir => {
+      this.iUserID = uir.user_Id;
+    })
 
     this.GetEmployees();
     this.nav.reload();
@@ -339,6 +352,22 @@ export class ViewEmployeeComponent implements OnInit {
         });
       }
     })
+  }
+
+  DeleteEmployeeErrorNotification() {
+    var action = "ERROR";
+    var title = "ERROR: Action Prohibatid";
+    var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("<strong style='color:red'>You cannot delete your own account!</strong>");
+
+    const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+      disableClose: true,
+      data: { action, title, message }
+    });
+
+    const duration = 2000;
+    setTimeout(() => {
+      dialogRef.close();
+    }, duration);
   }
 
   openEmployeeIFrameTab(): void {

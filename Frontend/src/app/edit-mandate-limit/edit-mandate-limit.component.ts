@@ -61,7 +61,7 @@ export class EditMandateLimitComponent {
   }
 
   onSubmit(): void {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.dataService.EditMandateValidation(this.currentMandateLimit.ammount).subscribe(r => {
       if (r == null) {
         this.dataService.EditMandateLimit(this.currentMandateLimit.mandate_ID, this.currentMandateLimit).subscribe(result => {

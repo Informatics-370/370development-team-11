@@ -231,6 +231,8 @@ export class SignOffRequestComponent {
     BudgetLineId: 0,
     procurement_Status_ID: 0,
     payment_Method_ID: 0,
+    branch_ID: 0,
+    branch:this.EmployeeDetails.branch,
     employee: this.EmployeeDetails,
     procurement_Request: this.Procurement_Request,
     sign_Off_Status: this.SignOffStatus,
@@ -365,7 +367,7 @@ export class SignOffRequestComponent {
   }
 
   onSubmit(): void {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.dataService.RequisitionApproval(this.ProcurementDetails.procurement_Details_ID).subscribe(result => {
       // let FolderCategory = "ProofOfPayment"
       // let ProcurementRequest = `ProcurementDetail${result[0].procurement_Details_ID}`

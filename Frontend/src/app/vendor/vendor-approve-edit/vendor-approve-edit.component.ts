@@ -300,38 +300,38 @@ export class VendorApproveEditComponent implements OnInit{
        requestlist.forEach(e => {
           if(e.vendor_Insurance_Type_ID == 1) {
             let sFile = e.confirmation_Doc;
-            let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
-            sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            this.FileDetails[1].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
+            let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+            let FolderCategory = Stringtouse.substring(0, Stringtouse.indexOf("/"))
+            let VendorNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+            let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+            this.FileDetails[1].FileURL = sFile
             this.FileDetails[1].FileName = filename
           }
           else if(e.vendor_Insurance_Type_ID == 2) {
             let sFile = e.confirmation_Doc;
-            let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
-            sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            this.FileDetails[2].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
+            let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+            let FolderCategory = Stringtouse.substring(0, Stringtouse.indexOf("/"))
+            let VendorNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+            let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+            this.FileDetails[2].FileURL = sFile
             this.FileDetails[2].FileName = filename
           }
           else if(e.vendor_Insurance_Type_ID == 3) {
             let sFile = e.confirmation_Doc;
-            let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
-            sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            this.FileDetails[3].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
+            let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+            let FolderCategory = Stringtouse.substring(0, Stringtouse.indexOf("/"))
+            let VendorNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+            let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+            this.FileDetails[3].FileURL = sFile
             this.FileDetails[3].FileName = filename
           }
           else if(e.vendor_Insurance_Type_ID == 4) {
             let sFile = e.confirmation_Doc;
-            let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
-            sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-            this.FileDetails[4].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
+            let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+            let FolderCategory = Stringtouse.substring(0, Stringtouse.indexOf("/"))
+            let VendorNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+            let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+            this.FileDetails[4].FileURL = sFile
             this.FileDetails[4].FileName = filename
           }
         })
@@ -407,11 +407,11 @@ export class VendorApproveEditComponent implements OnInit{
                 this.FoundationaldocumentsFormGroup.get("BEELevel")?.setValue(response.beE_Level);
                 this.FoundationaldocumentsFormGroup.get("BEEValidatityDate")?.setValue(response.date);
                 let sFile = response.beE_Certificate;
-                let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
-                sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-                let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
-                let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-                this.FileDetails[0].FileURL = `https://localhost:7186/api/Vendor/GetVendorFiles/${FolderCategory}/${VendorNo}/${filename}`
+                let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+                let FolderCategory = Stringtouse.substring(0, Stringtouse.indexOf("/"))
+                let VendorNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+                let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+                this.FileDetails[0].FileURL = sFile
                 this.FileDetails[0].FileName = filename
               }
             })
@@ -577,7 +577,7 @@ Create() {
           this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[0].FileName).subscribe(r => {
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[0]).subscribe(response => {
               let Path: any = response
-              this.VenBEEDetails.beE_Certificate  = Path.returnedPath.toString();
+              this.VenBEEDetails.beE_Certificate  = Path.url.toString();
               this.VendorService.UpdateBEEDetails(this.VenBEEDetails.vendor_ID,this.VenBEEDetails).subscribe()
              })
           })
@@ -592,11 +592,11 @@ Create() {
          {
            
            let sFile = response.beE_Certificate;
-           let FolderCategory = sFile.substring(0,sFile.indexOf("\\"))
-           sFile = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-           let VendorNo = sFile.substring(0,sFile.indexOf("\\"))
-           let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-           this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,filename).subscribe()
+           let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+           let FolderCategory = Stringtouse.substring(0, Stringtouse.indexOf("/"))
+           let VendorNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+           let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+           this.VendorService.DeleteVendorFile(FolderCategory, VendorNo, filename).subscribe()
            this.VendorService.DeleteBEEDetails(response.beE_ID).subscribe()
          })
       }
@@ -614,7 +614,7 @@ Create() {
         
         this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[0]).subscribe(response => {
          let Path: any = response
-         this.VenBEEDetails.beE_Certificate  = Path.returnedPath.toString();
+         this.VenBEEDetails.beE_Certificate  = Path.url.toString();
          this.VendorService.AddBEEDetails(this.VenBEEDetails).subscribe()
         })
       }
@@ -658,7 +658,7 @@ Create() {
           this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[1].FileName).subscribe(response => {
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[1]).subscribe(response => {
               let Path: any = response
-              this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+              this.VendorInsurance.confirmation_Doc  = Path.url.toString();
               this.VendorInsurance.vendor_ID = Number(VendorID);
               this.VendorInsurance.vendor_Insurance_Type_ID = 1;
               this.VendorService.UpdateInsurance(this.VendorInsurance.vendor_ID,this.VendorInsurance).subscribe()
@@ -670,7 +670,7 @@ Create() {
           let VendorNo = "Vendor" + Number(VendorID);
           this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[1]).subscribe(response => {
          let Path: any = response
-         this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+         this.VendorInsurance.confirmation_Doc  = Path.url.toString();
          this.VendorInsurance.vendor_ID = Number(VendorID);
          this.VendorInsurance.vendor_Insurance_Type_ID = 1;
          this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
@@ -694,7 +694,7 @@ Create() {
           this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[2].FileName).subscribe(response => {
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[2]).subscribe(response => {
               let Path: any = response
-              this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+              this.VendorInsurance.confirmation_Doc  = Path.url.toString();
               this.VendorInsurance.vendor_ID = Number(VendorID);
               this.VendorInsurance.vendor_Insurance_Type_ID = 2;
               this.VendorService.UpdateInsurance(this.VendorInsurance.vendor_ID,this.VendorInsurance).subscribe()
@@ -706,7 +706,7 @@ Create() {
           let VendorNo = "Vendor" + Number(VendorID);
           this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[2]).subscribe(response => {
          let Path: any = response
-         this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+         this.VendorInsurance.confirmation_Doc  = Path.url.toString();
          this.VendorInsurance.vendor_ID = Number(VendorID);
          this.VendorInsurance.vendor_Insurance_Type_ID = 2;
          this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
@@ -729,7 +729,7 @@ Create() {
           this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[3].FileName).subscribe(response => {
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[3]).subscribe(response => {
               let Path: any = response
-              this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+              this.VendorInsurance.confirmation_Doc  = Path.url.toString();
               this.VendorInsurance.vendor_ID = Number(VendorID);
               this.VendorInsurance.vendor_Insurance_Type_ID = 3;
               this.VendorService.UpdateInsurance(this.VendorInsurance.vendor_ID,this.VendorInsurance).subscribe()
@@ -741,7 +741,7 @@ Create() {
           let VendorNo = "Vendor" + Number(VendorID);
           this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[3]).subscribe(response => {
          let Path: any = response
-         this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+         this.VendorInsurance.confirmation_Doc  = Path.url.toString();
          this.VendorInsurance.vendor_ID = Number(VendorID);
          this.VendorInsurance.vendor_Insurance_Type_ID = 3;
          this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
@@ -763,7 +763,7 @@ Create() {
           this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,this.FileDetails[4].FileName).subscribe(response => {
             this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[4]).subscribe(response => {
               let Path: any = response
-              this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+              this.VendorInsurance.confirmation_Doc  = Path.url.toString();
               this.VendorInsurance.vendor_ID = Number(VendorID);
               this.VendorInsurance.vendor_Insurance_Type_ID = 4;
               this.VendorService.UpdateInsurance(this.VendorInsurance.vendor_ID,this.VendorInsurance).subscribe()
@@ -775,7 +775,7 @@ Create() {
           let VendorNo = "Vendor" + Number(VendorID);
           this.VendorService.VendorFileAdd(FolderCategory,VendorNo,this.file[4]).subscribe(response => {
          let Path: any = response
-         this.VendorInsurance.confirmation_Doc  = Path.returnedPath.toString();
+         this.VendorInsurance.confirmation_Doc  = Path.url.toString();
          this.VendorInsurance.vendor_ID = Number(VendorID);
          this.VendorInsurance.vendor_Insurance_Type_ID = 4;
          this.VendorService.AddInsurance(this.VendorInsurance).subscribe()

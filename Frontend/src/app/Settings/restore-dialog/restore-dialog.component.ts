@@ -6,11 +6,12 @@ import { BackupComponent } from '../backup/backup.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
 import { FormBuilder } from '@angular/forms';
-import { HttpEventType } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 
 
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { AuditLog } from 'src/app/Shared/AuditLog';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -25,7 +26,12 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 export class RestoreDialogComponent {
   isLoading: boolean;
   selectedFile: File | null = null;
-
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
 
   constructor(public MydialogRef: MatDialogRef<BackupComponent>, private router: Router, private route: ActivatedRoute, private formBuilder: FormBuilder, private dataService: DataService, private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
@@ -78,10 +84,28 @@ export class RestoreDialogComponent {
           });
           setTimeout(() => {
             Success.close();
+            this.Logout()
           }, 1750);
         }, 5000);
       }
     });
+  }
+
+  Logout(): void {
+
+    this.log.action = "Manually Logged out of the system";
+    this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
+    let test: any
+    test = new DatePipe('en-ZA');
+    this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+    this.dataService.AuditLogAdd(this.log).subscribe({
+      next: (Log) => {
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('tokenExpiration');
+        this.router.navigate(['']);
+      }
+    })
+
   }
 
   onCancel(): void {

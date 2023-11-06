@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Consumable } from '../Shared/Consumable';
 import { ConsumableCategory } from '../Shared/ConsumableCategory';
 import { Consumable_History } from '../Shared/Consumable_History';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Procurement_Consumable } from '../Shared/Procurement_Consumable';
 import { DatePipe } from '@angular/common';
@@ -15,8 +15,10 @@ import { Access } from '../Shared/Access';
 import { User } from '../Shared/User';
 import { Notification_Type } from '../Shared/Notification_Type';
 import { Notification } from '../Shared/Notification';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { NotificationdisplayComponent } from '../notificationdisplay/notificationdisplay.component';
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 1000,
   hideDelay: 1000,
@@ -35,7 +37,7 @@ export class ReceiveProcurementItemComponent {
   ConsumableRequest: Procurement_Consumable;
   Details: Procurement_Details;
 
-  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private dataService: DataService, private router: Router, private sanitizer: DomSanitizer) { }
+  constructor(private formBuilder: FormBuilder, private dialog: MatDialog, private route: ActivatedRoute, private dataService: DataService, private router: Router, private sanitizer: DomSanitizer) { }
 
   Consumables: Consumable = {
     consumable_ID: 0,
@@ -149,62 +151,80 @@ export class ReceiveProcurementItemComponent {
   };
 
   updateStock() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
-    this.dataService.GetConsumableHistoryByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
-      next: (Hist) => {
+    this.dataService.GetUserByRole("Finance").subscribe({
+      next: (response) => {
+        
+        this.dataService.GetConsumableHistoryByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
+          next: (Hist) => {
 
-        this.HistAmt = Hist.stockAmt
+            this.HistAmt = Hist.stockAmt
 
-        this.dataService.GetConsumableByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
-          next: (response) => {
-            this.dataService.GetCategoryByID(response.consumable_Category_ID).subscribe({
-              next: (result) => {
-                this.Consumables.name = response.name
-                this.Consumables.consumable_Category.name = result.name
+            this.dataService.GetConsumableByID(this.ConsumableRequest.consumable.consumable_ID).subscribe({
+              next: (response) => {
+                this.dataService.GetCategoryByID(response.consumable_Category_ID).subscribe({
+                  next: (result) => {
+                    this.Consumables.name = response.name
+                    this.Consumables.consumable_Category.name = result.name
 
-                this.History.stockAmt = this.myForm.get('On_Hand')?.value + this.HistAmt;
+                    this.History.stockAmt = this.myForm.get('On_Hand')?.value + this.HistAmt;
 
-                let test: any
-                test = new DatePipe('en-ZA');
-                this.History.dateCaptured = test.transform(this.History.dateCaptured, 'MMM d, y, h:mm:ss a');
+                    let test: any
+                    test = new DatePipe('en-ZA');
+                    this.History.dateCaptured = test.transform(this.History.dateCaptured, 'MMM d, y, h:mm:ss a');
 
-                this.History.consumable = this.Consumables
+                    this.History.consumable = this.Consumables
 
 
 
-                this.dataService.UpdateStock(this.History).subscribe({
-                  next: (response) => {
-                    document.getElementById('AnimationBtn').classList.toggle("is_active");
-                    document.getElementById('cBtn').style.display = "none";
-                    this.dataService.UpdateProcurementStatus(5, this.ProcurementID).subscribe({
-                      next: (Result) => {
-                        this.VendorNotification.notification_Type_ID = 19;
-                        let transVar: any
-                        transVar = new DatePipe('en-ZA');
-                        this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
-                        this.VendorNotification.name = "Procurement Request " +this.ProcurementID + " has been received and can be finalised.";
-                        this.dataService.GetUserByRole("Finance").subscribe(r => {
-                          var user: any = r;
+                    this.dataService.UpdateStock(this.History).subscribe({
+                      next: (response) => {
+                        document.getElementById('AnimationBtn').classList.toggle("is_active");
+                        document.getElementById('cBtn').style.display = "none";
+                        this.dataService.UpdateProcurementStatus(5, this.ProcurementID).subscribe({
+                          next: (Result) => {
+                            this.VendorNotification.notification_Type_ID = 19;
+                            let transVar: any
+                            transVar = new DatePipe('en-ZA');
+                            this.VendorNotification.send_Date = transVar.transform(new Date(), 'MM d, y');
+                            this.VendorNotification.name = "Procurement Request " + this.ProcurementID + " has been received and can be finalised.";
+                            this.dataService.GetUserByRole("Finance").subscribe(r => {
+                              var user: any = r;
 
-                          this.VendorNotification.user_ID = user.user_Id;
-                          this.dataService.ProcurementAddNotification(this.VendorNotification).subscribe();
-                          this.router.navigate(['/ViewProcurementDetails'])
-                        }) 
+                              this.VendorNotification.user_ID = user.user_Id;
+                              this.dataService.ProcurementAddNotification(this.VendorNotification).subscribe();
+                              this.router.navigate(['/ViewProcurementDetails'])
+                            })
 
-                        
+
+                          }
+                        })
+
+
                       }
                     })
-
-
                   }
                 })
               }
             })
           }
         })
+      },
+      error: (er) => {
+        var action = "FAIL";
+        var title = "FINANCE CANNOT BE NOTIFIED";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("<strong>No Finance representative can be found. Please contact your system administrator to continue</strong>");
+
+        const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 3000;
+        setTimeout(() => {
+          dialogRef.close();
+        }, duration);
       }
     })
-
   }
 
   Close() {
@@ -224,7 +244,7 @@ export class ReceiveProcurementItemComponent {
 
 
   openRecieveConsumableTab(): void {
-    const userManualUrl = 'assets/PDF/ProcConsumableReceiveUM.pdf'; 
+    const userManualUrl = 'assets/PDF/ProcConsumableReceiveUM.pdf';
     window.open(userManualUrl, '_blank');
   }
 }

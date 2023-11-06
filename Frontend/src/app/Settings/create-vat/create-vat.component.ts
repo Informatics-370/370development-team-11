@@ -56,7 +56,7 @@ export class CreateVatComponent implements OnInit {
 
     this.dataservice.GetVAT().subscribe(re => {
       if (re == null) {
-        document.getElementById('AnimationBtn').setAttribute('disabled', '');
+        
         this.dataservice.AddVAT(this.vat).subscribe(r => {
           if (r) {
             document.getElementById('AnimationBtn').classList.toggle("is_active");

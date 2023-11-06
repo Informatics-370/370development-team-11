@@ -1,0 +1,25 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>View Procurement Details</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentPopover($event)">
+        <ion-icon name="person-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card *ngFor="let detail of procurementDetails">
+    <ion-card-header>
+      <ion-card-title>{{ detail.procurement_Request.name }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p><strong>Vendor:</strong> {{ detail.procurement_Request.vendor.name }}</p>
+      <p><strong>Description:</strong> {{ detail.procurement_Request.description }}</p>
+      <p><strong>Status: </strong> <span [style.color]="getStatusColor(detail.procurement_Status.name)">{{
+          detail.procurement_Status.name }}</span></p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

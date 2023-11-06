@@ -9,6 +9,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Net.Http.Headers;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 namespace ProcionAPI.Controllers
 {
@@ -75,31 +77,36 @@ namespace ProcionAPI.Controllers
         {
             var formCollection = await Request.ReadFormAsync();
             var file = formCollection.Files.First();
-
-            
             var DelegateName = Request.Form["DelegateName"];
 
-            if(file == null || file.Length == 0)
+            if (file == null || file.Length == 0)
             {
                 return BadRequest("No file selected");
             }
 
-            var folderPath = Path.Combine("Files", "AuthorityDelegations", DelegateName);
-            var filePath = Path.Combine(folderPath, file.FileName);
-            var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
 
-            if (!Directory.Exists(absoluteFolderPath))
+
+            // Connect to your Azure Blob Storage account
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+            // Create a container (if it doesn't exist already)
+            string containerName = "procionfiles";
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.BlobContainer);
+
+            // Create a unique blob name (you can adjust this based on your requirement)
+            string blobName = $"AuthorityDelegations/{DelegateName}/{file.FileName}";
+
+            // Get a reference to the blob and upload the file
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            using (Stream stream = file.OpenReadStream())
             {
-                Directory.CreateDirectory(absoluteFolderPath);
+                await blobClient.UploadAsync(stream, true);
             }
 
-            using(var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-            
-            var PathSaved = Path.Combine(DelegateName, file.FileName);
-            return Ok(new {PathSaved });
+            // Return the URL of the uploaded blob as the response
+            return Ok(new { url = blobClient.Uri.ToString() });
         }
 
         [HttpPost]
@@ -121,10 +128,35 @@ namespace ProcionAPI.Controllers
         [Route("GetDelegationFiles/{DelegateName}/{filename}")]
         public IActionResult GetFile(string DelegateName, string filename)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "AuthorityDelegations", DelegateName, filename);
-            var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            var contentType = "application/pdf";
-            return File(fileBytes, contentType, filename);
+            // Connect to your Azure Blob Storage account
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+            // Specify your container name where the files are stored
+            string containerName = "procionfiles";
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+            // Create a reference to the blob within the container
+            string blobPath = $"AuthorityDelegations/{DelegateName}/{filename}";
+            BlobClient blobClient = containerClient.GetBlobClient(blobPath);
+
+            // Check if the blob exists
+            if (!blobClient.Exists())
+            {
+                // Return an error response if the blob does not exist
+                return NotFound();
+            }
+
+            // Download the blob content into a MemoryStream
+            MemoryStream memoryStream = new MemoryStream();
+            blobClient.DownloadTo(memoryStream);
+            memoryStream.Position = 0;
+
+            // Determine the content type based on the file extension (e.g., application/pdf for PDF files)
+            string contentType = "application/pdf"; // You may need to adjust this based on your file types
+
+            // Return the file as a FileResult
+            return File(memoryStream, contentType, filename);
         }
 
         [HttpGet]
@@ -146,15 +178,27 @@ namespace ProcionAPI.Controllers
 
         [HttpDelete]
         [Route("DeleteFile/{DelegateName}/{fileName}")]
-        public IActionResult DeleteFile(string DelegateName, string filename)
+        public async Task<IActionResult> DeleteFile(string DelegateName, string filename)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Files", "AuthorityDelegations", DelegateName, filename);
-
             try
             {
-                if (System.IO.File.Exists(filePath))
+                // Connect to your Azure Blob Storage account
+                string connectionString = "DefaultEndpointsProtocol=https;AccountName=procionfiles;AccountKey=dGF1LT/uPZ+oyq6lJMMAMyrkWazjBRC1G/k3Elirkg8q0pUDGdQ+zAHLEescUbUqFdeYkOu4Kk+r+ASt9YvsFg==;EndpointSuffix=core.windows.net";
+                BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+                // Create a container (if it doesn't exist already)
+                string containerName = "procionfiles";
+                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+                // Create a unique blob name based on the given parameters
+                string blobName = $"AuthorityDelegations/{DelegateName}/{filename}";
+
+                // Get a reference to the blob and delete it
+                BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+                if (await blobClient.ExistsAsync())
                 {
-                    System.IO.File.Delete(filePath);
+                    await blobClient.DeleteAsync();
                     return Ok(new { filename });
                 }
                 else
@@ -162,9 +206,9 @@ namespace ProcionAPI.Controllers
                     return NotFound($"File {filename} not found");
                 }
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
-                return StatusCode(500, $"Error deleting file: {ex.Message}");
+                return NotFound($"File {filename} not found");
             }
         }
 

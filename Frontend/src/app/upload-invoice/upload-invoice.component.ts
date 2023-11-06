@@ -239,6 +239,8 @@ export class UploadInvoiceComponent {
     BudgetLineId: 0,
     procurement_Status_ID: 0,
     payment_Method_ID: 0,
+    branch_ID: 0,
+    branch:this.EmployeeDetails.branch,
     employee: this.EmployeeDetails,
     procurement_Request: this.Procurement_Request,
     sign_Off_Status: this.SignOffStatus,
@@ -402,13 +404,13 @@ export class UploadInvoiceComponent {
     this.fileToUpload = this.files[0];
     var name = "" + this.data.name
     if (this.fileToUpload != null) {
-      let InvoiceName: string = name
 
       let file: File = this.fileToUpload
+      let InvoiceName: string = "Request" + this.data.ID + "/" + file.name
 
       this.dataservice.InvoiceFileAdd(InvoiceName, file).subscribe(response => {
-        let Path: any = response
-        this.sPath = Path.pathSaved.toString()
+        URL: URL = response.url
+        this.sPath = URL.toString()
         this.Invoice.path = this.sPath;
         this.Invoice.procurement_Details_ID = this.data.ID;
         this.Invoice.procurement_Details.procurement_Request.user = this.usr;

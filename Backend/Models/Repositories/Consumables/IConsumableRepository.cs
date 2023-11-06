@@ -5,7 +5,7 @@ namespace ProcionAPI.Models.Repositories.Consumables
 {
     public interface IConsumableRepository
     {
-        Task<Consumable[]> GetAllConsumableAsync();
+        Task<List<Consumable>> GetAllConsumableAsync();
         Task<Consumable[]> AddConsumableAsync(Consumable ConsumableAdd);
         Task<Consumable> GetConsumablesByIDAsync(int id);
         Task<Consumable> DeleteConsumableAsync(int id);

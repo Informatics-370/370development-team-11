@@ -88,7 +88,7 @@ export class RequestViewComponent implements OnInit {
     
    
   }
-
+  TotalOnboardRequestNumber:Number;
   getData(TempEmpDetails?:any) {
     this.RequestService.GetEmployeeByUsername(this.User).subscribe(r => {
       let EmployeeDetails:any = r
@@ -108,6 +108,7 @@ export class RequestViewComponent implements OnInit {
         }
         
       });
+      this.TotalOnboardRequestNumber = RequestList.length
      
       //this.OnboardRequest = result
      for(let i = 0; i < this.OnboardRequest.length; i++) {
@@ -117,8 +118,8 @@ export class RequestViewComponent implements OnInit {
       RequestList.forEach((element) => this.vendor.push(element.vendors));
       this.RequestVendors =  new MatTableDataSource(this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
       this.RequestVendors.paginator = this.paginator;
-      this.ReqVenLen = this.OnboardRequest.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)
-
+      this.ReqVenLen = RequestList.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index)
+      console.log(this.ReqVenLen)
       let test = [...this.OnboardRequest].sort((a, b) => {
         // First, compare based on onboard_Request_Id in ascending order
         if (a.onboard_Request_Id !== b.onboard_Request_Id) {
@@ -140,10 +141,11 @@ export class RequestViewComponent implements OnInit {
         if(sFile != "None") {
           
           
-          let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-          let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+          let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+          let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+          let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
             
-            this.FileDetails[i].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
+            this.FileDetails[i].FileURL = sFile
             this.FileDetails[i].FileName = filename; 
          
         
@@ -216,22 +218,22 @@ export class RequestViewComponent implements OnInit {
   }
 
   
-  DownloadFile(sFile :string ) {
-    if(sFile.length > 20) {
-      const formData = new FormData();
-    formData.append('sfile',sFile);
+  // DownloadFile(sFile :string ) {
+  //   if(sFile.length > 20) {
+  //     const formData = new FormData();
+  //   formData.append('sfile',sFile);
     
-    this.http.post(`https://localhost:7186/api/OnboardRequest/getFile/`,formData).subscribe(response => 
-      {let url:any = response     
-        return url.absoluteFolderPath.toString()
-      });
-      return null
-    }
-    else {
-      let test = ""
-      return test
-    } 
-  }
+  //   this.http.post(`https://localhost:7186/api/OnboardRequest/getFile/`,formData).subscribe(response => 
+  //     {let url:any = response     
+  //       return url.absoluteFolderPath.toString()
+  //     });
+  //     return null
+  //   }
+  //   else {
+  //     let test = ""
+  //     return test
+  //   } 
+  // }
 
   
 

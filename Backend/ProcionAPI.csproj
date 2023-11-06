@@ -18,6 +18,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.18.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="ClosedXML" Version="0.102.0" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.3" />
@@ -41,6 +42,7 @@
     <PackageReference Include="Microsoft.Extensions.ML" Version="2.0.1" />
     <PackageReference Include="Microsoft.ML" Version="2.0.1" />
     <PackageReference Include="Microsoft.ML.TimeSeries" Version="2.0.1" />
+    <PackageReference Include="Microsoft.SqlServer.DacFx" Version="162.0.52" />
     <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="170.18.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.6" />
     <PackageReference Include="RazorEngineCore" Version="2022.8.1" />

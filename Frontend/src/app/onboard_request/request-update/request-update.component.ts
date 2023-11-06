@@ -236,11 +236,12 @@ export class RequestUpdateComponent {
             this.rows.controls[i].get('CompanyEmail')?.setValue(this.onboardRequest[i].vendor.email);
             this.rows.controls[i].get('PreferedVendor')?.setValue(this.onboardRequest[i].vendor.preferedVendor);
             let sFile = this.onboardRequest[i].quotes;
-            let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-            let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-              
-              this.FileDetails[i].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
-              this.FileDetails[i].FileName = filename;           
+            let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+            let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+            let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+
+            this.FileDetails[i].FileURL = sFile
+            this.FileDetails[i].FileName = filename;           
           }
          }
          else 
@@ -258,10 +259,11 @@ export class RequestUpdateComponent {
             this.FileDetails.push({FileURL:"",FileName:""})
            
            
-           let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-           let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+            let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+            let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+            let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
             
-            this.FileDetails[0].FileURL = `https://localhost:7186/api/OnboardRequest/GetOnboardFiles/${RequestNo}/${filename}`
+            this.FileDetails[0].FileURL = sFile;
             this.FileDetails[0].FileName = filename;
           }
   
@@ -364,16 +366,19 @@ export class RequestUpdateComponent {
     for (let i = 0; i < this.CompanyContactInfoFormGroup.controls.RequestData.value.length; i++) {
       if (this.files[i] != "" && this.onboardRequest[i] != undefined) {
         let sFile = this.onboardRequest[i].quotes;
-        let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-        let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-        this.dataService.DeleteFile(RequestNo,filename).subscribe!
+        let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+        let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+        let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+        this.dataService.DeleteFile(RequestNo,filename).subscribe(k=> {
+
+        
     
         this.fileToUpload = this.files[i]
 
         RequestNo = "Request" + this.onboardRequest[0].onboard_Request_Id.toString();
         this.dataService.OnboardFileAdd(RequestNo,this.fileToUpload).subscribe(response => {
           let Path: any = response
-          this.sPath = Path.PathSaved.toString()
+          this.sPath = Path.url.toString()
           this.Onboard_Request.quotes = this.sPath
           this.Vendor = this.onboardRequest[i].vendor
           this.Vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
@@ -387,7 +392,7 @@ export class RequestUpdateComponent {
 
           this.dataService.UpdateOnboardRequest(this.onboardRequest[i].onboard_Request_Id,this.Onboard_Request).subscribe({
             next: (response) => {
-
+              if (i == this.CompanyContactInfoFormGroup.controls.RequestData.value.length - 1) {
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -403,10 +408,11 @@ export class RequestUpdateComponent {
                 
                 dialogRef.close();
               }, duration);
+             }
             }}
           );//dataservice
-//this.onboardRequest[i].vendor_ID, this.onboardRequest[i].vendor_ID,
         });//post
+       })//delete
       }//if
       else {
         if (this.onboardRequest[i] != undefined) {
@@ -427,7 +433,7 @@ export class RequestUpdateComponent {
 
           this.dataService.UpdateOnboardRequest(this.onboardRequest[i].onboard_Request_Id,this.Onboard_Request).subscribe({
             next: (response) => {
-
+              if (i == this.CompanyContactInfoFormGroup.controls.RequestData.value.length - 1) {
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response.onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -443,6 +449,7 @@ export class RequestUpdateComponent {
                 
                 dialogRef.close();
               }, duration);
+             }
             }});//dataservice
         }
         else {
@@ -451,7 +458,7 @@ export class RequestUpdateComponent {
           this.dataService.OnboardFileAdd(RequestNo,this.fileToUpload).subscribe(response => {
           let Path: any = response
           
-          this.sPath = Path.pathSaved.toString()
+          this.sPath = Path.url.toString()
           this.Onboard_Request.quotes = this.sPath
           this.Onboard_Request.vendor.name = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyName;
           this.Onboard_Request.vendor.email = this.CompanyContactInfoFormGroup.controls.RequestData.value[i].CompanyEmail;
@@ -462,6 +469,7 @@ export class RequestUpdateComponent {
         this.Onboard_Request.user_Id = Number(this.onboardRequest[0].users.user_Id);
           this.dataService.AddOnboardRequest(this.Onboard_Request).subscribe({
             next: (response) => {
+              if (i == this.CompanyContactInfoFormGroup.controls.RequestData.value.length - 1) {
               var action = "Update";
               var title = "UPDATE SUCCESSFUL";
               var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("The Request No <strong>" + response[0].onboard_Request_Id + "</strong> has been <strong style='color:green'> UPDATED </strong> successfully!");
@@ -477,6 +485,7 @@ export class RequestUpdateComponent {
                 
                 dialogRef.close();
               }, duration);
+             }
             }});//dataservice
 
         });//post
@@ -490,13 +499,16 @@ export class RequestUpdateComponent {
 
       for (let i = this.CompanyContactInfoFormGroup.controls.RequestData.value.length; i < this.onboardRequest.length; i++) {
         let sFile = this.onboardRequest[i].quotes;
-        let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-        let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
-        this.dataService.DeleteFile(RequestNo,filename).subscribe!
+        let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+        let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+        let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+        this.dataService.DeleteFile(RequestNo,filename).subscribe(k=> {
+
+        
         this.dataService.DeleteRequest(this.onboardRequest[i].onboard_Request_Id,this.onboardRequest[i].vendor_ID).subscribe({
           next: (response) => {
             if(this.onboardRequest.length == this.CompanyContactInfoFormGroup.controls.RequestData.value.length -1) {
-              this.log.action = "Exported Inventory Details";
+              this.log.action = "Updated Onboard Request # " + this.onboardRequest[0].onboard_Request_Id;
               this.log.user = this.dataService.decodeUser(sessionStorage.getItem("token"));
               let test: any
               test = new DatePipe('en-ZA');
@@ -522,7 +534,7 @@ export class RequestUpdateComponent {
             }
             
           }})
-
+        })//delete
       }
   
     }
@@ -549,8 +561,9 @@ export class RequestUpdateComponent {
     if (this.files[0] != '') {
       if(this.Onboard_Request.quotes != "None") {
         let sFile = this.onboardRequest[0].quotes;
-        let RequestNo = sFile.substring(0,sFile.indexOf("\\"))
-        let filename = sFile.substring(sFile.indexOf("\\")+1,sFile.length)
+        let Stringtouse = sFile.substring(sFile.indexOf("procionfiles/") + 13, sFile.length)
+        let RequestNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+        let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
         this.dataService.DeleteFile(RequestNo,filename).subscribe();
 
       }
@@ -560,7 +573,7 @@ export class RequestUpdateComponent {
       this.dataService.OnboardFileAdd(RequestNo,this.fileToUpload).subscribe(response => {
         let Path: any = response
 
-        this.sPath = Path.pathSaved.toString()
+        this.sPath = Path.url.toString()
         this.Onboard_Request.quotes = this.sPath
         this.Onboard_Request.vendor.sole_Supplier_Provided = true;
         this.Onboard_Request.users = this.onboardRequest[0].users

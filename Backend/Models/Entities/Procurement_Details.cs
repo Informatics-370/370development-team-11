@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ProcionAPI.Models.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProcionAPI.Models.Entities
@@ -21,6 +22,8 @@ namespace ProcionAPI.Models.Entities
         public int Procurement_Status_ID { get; set; }
         [Required]
         public int Payment_Method_ID { get; set; }
+        [Required]
+        public int Branch_ID { get; set; }
         [ForeignKey("EmployeeID")]
         public Employee Employee { get; set; }
         [ForeignKey("Procurement_Request_ID")]
@@ -35,7 +38,8 @@ namespace ProcionAPI.Models.Entities
         public Procurement_Status Procurement_Status { get; set; }
         [ForeignKey("Payment_Method_ID")]
         public Payment_Method Payment_Method { get; set; }
-
+        [ForeignKey("Branch_ID")]
+        public Branch? Branch { get; set; }
         [MaxLength(32)]
         public string Item_Type { get; set; }
 
@@ -57,3 +61,6 @@ namespace ProcionAPI.Models.Entities
         public bool ItemReceived { get; set; }
     }
 }
+
+
+

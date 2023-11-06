@@ -48,9 +48,11 @@ export class ViewProcurementDetailsComponent implements OnInit {
 
   iCanViewPenPro: string = "false";
   canViewPenPro: string;
+  User: string;
 
 
   ngOnInit() {
+    this.User = this.dataService.decodeUser(sessionStorage.getItem('token'))
     this.GetProcurementDetails();
     this.iRole = this.dataService.decodeUserRole(sessionStorage.getItem("token"));
     this.iCanViewFlagPro = this.dataService.decodeCanViewFlagPro(sessionStorage.getItem("token"));
@@ -72,7 +74,7 @@ export class ViewProcurementDetailsComponent implements OnInit {
   }
 
   GetProcurementDetails() {
-    this.dataService.GetProcurementRequestDetails().subscribe(result => {
+    this.dataService.GetProcurementRequestDetails(this.User).subscribe(result => {
       let procurementDetailsList: any[] = result;
       console.log(result)
       procurementDetailsList.forEach(e => {

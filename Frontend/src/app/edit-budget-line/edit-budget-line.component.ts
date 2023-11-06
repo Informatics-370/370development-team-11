@@ -122,7 +122,7 @@ export class EditBudgetLineComponent {
   }
 
   onSubmit() {
-    document.getElementById('AnimationBtn').setAttribute('disabled', '');
+    
     this.budgetLine.category_ID = this.budgetLineForm.get('category_ID')?.value;
     this.budgetLine.month = this.budgetLineForm.get('month')?.value;
     this.budgetLine.budgetAmt = this.budgetLineForm.get('budgetAmt')?.value;

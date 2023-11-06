@@ -1,15 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+
 using ProcionAPI.Data;
-using System;
-using System.Configuration;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.SqlServer.Management.Smo;
 using Microsoft.Data.SqlClient;
-using Microsoft.SqlServer.Management.Common;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.SqlServer.Dac;
 
 namespace ProcionAPI.Models.Repositories
 
@@ -25,273 +18,50 @@ namespace ProcionAPI.Models.Repositories
             _configuration = configuration;
             _dbContext = dbContext;
         }
-       
-
-        public async Task<bool> CreateBackup()
-        {
-            try
-            {
-
-                string currentUser = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-              
-                string connectionString = _dbContext.Database.GetDbConnection().ConnectionString;
-
-                // Generate a unique backup file name with timestamp
-                string backupFileName = $"Backup_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
-
-                // Specify the backup directory path
-                // Full backup file path
-                var folderPath = Path.Combine("C:\\Backup", "BackupDirectory");
-                var pToUse = Path.Combine(folderPath, backupFileName);
-               
-                var absoluteFolderPath = Path.Combine(Directory.GetCurrentDirectory(), folderPath);
-                if (!Directory.Exists(absoluteFolderPath))
-                {
-                    Directory.CreateDirectory(absoluteFolderPath);
-                }
-                // Create a new SqlConnectionStringBuilder and set the connection string
-                var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
-               
-
-                // Extract the server name from the connection string
-                string serverName = connectionStringBuilder.DataSource;
-             
-
-                // Extract the database name from the connection string
-                string databaseName = connectionStringBuilder.InitialCatalog;
-               
-
-                // Create a new ServerConnection
-                var serverConnection = new ServerConnection(serverName);
-                serverConnection.LoginSecure = true; // Use Windows authentication or provide login credentials if required
-                serverConnection.TrustServerCertificate = true;
-                serverConnection.MultipleActiveResultSets = true;
-
-           
-                // Create a new Server object using the ServerConnection
-                var server = new Server(serverConnection);
-              
-                // Create a new Backup object and set properties
-                var backup = new Backup
-                {
-                    Action = BackupActionType.Database,
-                    Database = databaseName,
-                    Initialize = true,
-                    Checksum = true
-                };
-                
-                // Specify the backup file name and path
-                //backup.Devices.AddDevice("C:\\Program Files\\Microsoft SQL Server\\MSSQL15.MSSQLSERVER\\MSSQL\\Backup\\", DeviceType.File);
-                backup.Devices.AddDevice(pToUse, DeviceType.File);
-                // Perform the backup asynchronously
-                Task.Run(() => backup.SqlBackup(server));
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the exception as per your project's requirements
-               
-                return false;
-               
-            }
-        }
-
-        
 
 
         public async Task<bool> RestoreDatabase(IFormFile backupFile)
         {
             try
             {
-               
-                if (backupFile == null || backupFile.Length <= 0)
+                string connectionString = _dbContext.Database.GetDbConnection().ConnectionString;
+                string databaseName = new SqlConnectionStringBuilder(connectionString).InitialCatalog;
+
+                DacServices dacServices = new DacServices(connectionString);
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    throw new ArgumentException("Please select a backup file to restore the database.");
+                    await connection.OpenAsync();
+
+                    // Define the SQL command to drop the database
+                    string dropDatabaseQuery = $"DROP DATABASE IF EXISTS [{databaseName}];";
+
+                    try
+                    {
+                        using (SqlCommand command = new SqlCommand(dropDatabaseQuery, connection))
+                        {
+                            await command.ExecuteNonQueryAsync();
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        using (var bacpacStream = backupFile.OpenReadStream())
+                        {
+                            BacPackage dacPackage = BacPackage.Load(bacpacStream);
+
+                            dacServices.ImportBacpac(dacPackage, databaseName);
+                        }
+                    }
                 }
 
-                string connectionString = _configuration.GetConnectionString("RestoreConnection");
-                string DefaultString = _configuration.GetConnectionString("DefaultConnection");
-                string sqlServerBasePath = _configuration.GetValue<string>("SqlServerBasePath");
-                string backupDirectory = _configuration.GetValue<string>("BackupDirectory");
-            
 
-                // Save the uploaded backup file to a temporary location
-                var tempFilePath = Path.Combine(backupDirectory, "TempFile.bak");
-                
-                using (var stream = new FileStream(tempFilePath, FileMode.Create))
-                {
-                    await backupFile.CopyToAsync(stream);
-                }
-
-                // Create a new ServerConnection
-                var DefaultCOnnect = new ServerConnection();
-                DefaultCOnnect.ConnectionString = DefaultString;
-                var serverConnection = new ServerConnection();
-                serverConnection.ConnectionString = connectionString;
-              
-
-                // Create a new Server object using the ServerConnection
-                var server = new Server(serverConnection);
-                
-
-                // Create a new Restore object and set properties
-                var restore = new Restore
-                {
-                    Database = "ProcionAPI.Data", // Set the default database name
-                    Action = RestoreActionType.Database,
-                    ReplaceDatabase = true,
-                    NoRecovery = false,
-                };
-            
-                // Specify the backup file to restore from
-                restore.Devices.AddDevice(tempFilePath, DeviceType.File);
-             
-
-                // Ensure the 'ProcionAPI.Data' database is closed
-
-                server.KillAllProcesses("ProcionAPI.Data");
-                DefaultCOnnect.Disconnect();
-
-                serverConnection.Connect();
-                
-
-
-                // Perform the restore asynchronously
-                restore.SqlRestore(server);
-                server.KillAllProcesses("master");
-                serverConnection.Disconnect();
-                DefaultCOnnect.Connect();
-
-                // Delete the temporary file after restore
-                File.Delete(tempFilePath);
-              
 
                 return true;
             }
             catch (Exception ex)
             {
-                // Log or handle the exception as per your project's requirements
-              
-                throw;
+                Console.WriteLine($"Error: {ex.Message}");
+                return false;
             }
         }
-
-        // TempFilePath
-        //public async Task<bool> RestoreDatabase(IFormFile backupFile)
-        //{
-        //    try
-        //    {
-        //        if (backupFile == null || backupFile.Length <= 0)
-        //        {
-        //            throw new ArgumentException("Please select a backup file to restore the database.");
-        //        }
-        //        Console.WriteLine(backupFile.FileName);
-
-        //        string connectionString = _configuration.GetConnectionString("DefaultConnection");
-        //        string sqlServerBasePath = _configuration.GetValue<string>("SqlServerBasePath");
-        //        string backupDirectory = _configuration.GetValue<string>("BackupDirectory");
-        //        Console.WriteLine(connectionString);
-        //        Console.WriteLine(sqlServerBasePath);
-        //        Console.WriteLine(backupDirectory);
-        //        // Save the uploaded backup file to a temporary location
-        //        var tempFilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".bak");
-        //        using (var stream = new FileStream(tempFilePath, FileMode.Create))
-        //        {
-        //            await backupFile.CopyToAsync(stream);
-        //        }
-        //        Console.WriteLine(tempFilePath);
-
-        //        // Create a new ServerConnection
-        //        var serverConnection = new ServerConnection();
-        //        serverConnection.ConnectionString = connectionString;
-        //        Console.WriteLine(serverConnection.ConnectionString);
-        //        // Create a new Server object using the ServerConnection
-        //        var server = new Server(serverConnection);
-        //        Console.WriteLine(server);
-        //        // Create a new Restore object and set properties
-        //        var restore = new Restore
-        //        {
-        //            //Database = "MOSQ - YEET - OES@ProcionAPI.Data",
-        //           Database = "ProcionAPI.Data", // Set the default database name
-        //            Action = RestoreActionType.Database,
-        //            ReplaceDatabase = true,
-        //            NoRecovery = false,
-        //        };
-        //        Console.WriteLine(restore.Database);
-        //        // Specify the backup file to restore from
-        //        restore.Devices.AddDevice(tempFilePath, DeviceType.File);
-
-        //        // Perform the restore asynchronously
-        //        restore.SqlRestore(server);
-
-        //        // Delete the temporary file after restore
-        //        File.Delete(tempFilePath);
-
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log or handle the exception as per your project's requirements
-        //        throw;
-        //    }
-        //}
-
-
-        //No TempFilePath
-        //public async Task<bool> RestoreDatabase(IFormFile backupFile)
-        //{
-        //    try
-        //    {
-        //        if (backupFile == null || backupFile.Length <= 0)
-        //        {
-        //            throw new ArgumentException("Please select a backup file to restore the database.");
-        //        }
-
-        //        string connectionString = _configuration.GetConnectionString("DefaultConnection");
-        //        string sqlServerBasePath = _configuration.GetValue<string>("SqlServerBasePath");
-        //        string backupDirectory = _configuration.GetValue<string>("BackupDirectory");
-        //        Console.WriteLine(connectionString);
-        //        Console.WriteLine(sqlServerBasePath);
-        //        Console.WriteLine(backupDirectory);
-
-        //        // Create a new ServerConnection
-        //        var serverConnection = new ServerConnection();
-        //        serverConnection.ConnectionString = connectionString;
-        //        Console.WriteLine(serverConnection.ConnectionString);
-
-        //        // Create a new Server object using the ServerConnection
-        //        var server = new Server(serverConnection);
-        //        Console.WriteLine(server);
-
-        //        // Create a new Restore object and set properties
-        //        var restore = new Restore
-        //        {
-        //            Database = "ProcionAPI.Data", // Set the default database name
-        //            Action = RestoreActionType.Database,
-        //            ReplaceDatabase = true,
-        //            NoRecovery = false,
-        //        };
-        //        Console.WriteLine(restore.Database);
-
-        //        // Read the backup file directly from the IFormFile and add it to the Restore.Devices collection
-        //        using (var stream = backupFile.OpenReadStream())
-        //        {
-        //            restore.Devices.AddDevice(stream, DeviceType.File);
-        //            // Perform the restore asynchronously
-        //            restore.SqlRestore(server);
-        //        }
-
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log or handle the exception as per your project's requirements
-        //        throw;
-        //    }
-        //}
-
-
-
     }
 }

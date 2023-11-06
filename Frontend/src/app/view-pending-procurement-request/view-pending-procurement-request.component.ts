@@ -65,7 +65,7 @@ export class ViewPendingProcurementRequestComponent implements OnInit {
     if (this.iCanViewPenPro == "true") {
       this.canViewPenPro = "true";
     }
-    console.log(this.iRole)
+
     if (this.iRole == "BO" || this.iTempRole == "BO") {
       this.GetProcurementRequests();
     }

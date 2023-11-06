@@ -487,7 +487,7 @@ onInsuranceChecked() {
 
           this.VendorService.VendorFileAdd(FolderCategory, VendorNo, this.file[0]).subscribe(response => {
             let Path: any = response
-            this.VenBEEDetails.beE_Certificate = Path.returnedPath.toString();
+            this.VenBEEDetails.beE_Certificate = Path.url.toString();
             this.VendorService.AddBEEDetails(this.VenBEEDetails).subscribe(response => {
               this.VendorService.GenerateVendorBEEExpiryNotification(this.VenBEEDetails.vendor_ID, this.VenBEEDetails.date).subscribe();
             })
@@ -530,7 +530,7 @@ onInsuranceChecked() {
 
           this.VendorService.VendorFileAdd(FolderCategory, VendorNo, this.file[1]).subscribe(response => {
             let Path: any = response
-            this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+            this.VendorInsurance.confirmation_Doc = Path.url.toString();
             this.VendorInsurance.vendor_ID = Number(VendorID);
             this.VendorInsurance.vendor_Insurance_Type_ID = 1;
             this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
@@ -542,7 +542,7 @@ onInsuranceChecked() {
 
           this.VendorService.VendorFileAdd(FolderCategory, VendorNo, this.file[2]).subscribe(response => {
             let Path: any = response
-            this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+            this.VendorInsurance.confirmation_Doc = Path.url.toString();
             this.VendorInsurance.vendor_ID = Number(VendorID);
             this.VendorInsurance.vendor_Insurance_Type_ID = 2;
             this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
@@ -554,7 +554,7 @@ onInsuranceChecked() {
 
           this.VendorService.VendorFileAdd(FolderCategory, VendorNo, this.file[3]).subscribe(response => {
             let Path: any = response
-            this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+            this.VendorInsurance.confirmation_Doc = Path.url.toString();
             this.VendorInsurance.vendor_ID = Number(VendorID);
             this.VendorInsurance.vendor_Insurance_Type_ID = 3;
             this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
@@ -566,7 +566,7 @@ onInsuranceChecked() {
 
           this.VendorService.VendorFileAdd(FolderCategory, VendorNo, this.file[4]).subscribe(response => {
             let Path: any = response
-            this.VendorInsurance.confirmation_Doc = Path.returnedPath.toString();
+            this.VendorInsurance.confirmation_Doc = Path.url.toString();
             this.VendorInsurance.vendor_ID = Number(VendorID);
             this.VendorInsurance.vendor_Insurance_Type_ID = 4;
             this.VendorService.AddInsurance(this.VendorInsurance).subscribe()
@@ -620,6 +620,29 @@ onInsuranceChecked() {
 
               this.VendorService.AddPOPI(this.POPIDetails).subscribe()
             }
+            this.log.action = "Created Due Diligence Checklist of " + result.vendor.name;
+            this.log.user = this.VendorService.decodeUser(sessionStorage.getItem("token"));
+            let test: any
+            test = new DatePipe('en-ZA');
+            this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+            this.VendorService.AuditLogAdd(this.log).subscribe({
+              next: (Log) => {
+                var action = "CREATE";
+                var title = "CREATE SUCCESSFUL";
+                var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully <strong style='color:green'> ADDED </strong>  Due Dilligence Checklist for <strong>" + result.vendor.name + "</strong>.");
+    
+                const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+                  disableClose: true,
+                  data: { action, title, message }
+                });
+    
+                const duration = 2000;
+                setTimeout(() => {
+    
+                  dialogRef.close();
+                }, duration);
+              }
+            })
           }
           for (let a = 0; a < this.onboardRequest.length; a++) {
             if (this.onboardRequest[a].vendor_ID == Number(VendorID)) {
@@ -632,29 +655,7 @@ onInsuranceChecked() {
               this.VendorService.VendorAddNotification(this.VendorNotification).subscribe();
             }
           }
-        this.log.action = "Created Due Diligence Checklist of " + result.vendor.name;
-        this.log.user = this.VendorService.decodeUser(sessionStorage.getItem("token"));
-        let test: any
-        test = new DatePipe('en-ZA');
-        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
-        this.VendorService.AuditLogAdd(this.log).subscribe({
-          next: (Log) => {
-            var action = "CREATE";
-            var title = "CREATE SUCCESSFUL";
-            var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Successfully <strong style='color:green'> ADDED </strong>  Due Dilligence Checklist for <strong>" + result.vendor.name + "</strong>.");
-
-            const dialogRef: MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
-              disableClose: true,
-              data: { action, title, message }
-            });
-
-            const duration = 2000;
-            setTimeout(() => {
-
-              dialogRef.close();
-            }, duration);
-          }
-        })
+       
 
         
 
