@@ -1,0 +1,400 @@
+<div class="content">
+    <div style="text-align: left;position: relative;width: 500px;" >
+<h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
+    Update Vendor
+    <mat-icon (click)="openEditVendorTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+    style="font-size:30pt; height: 40px; width: 37px; "  [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+  </h1>
+  <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;width: 330px;">Please fill in the following details:</label>
+</div>
+  <mat-stepper [linear]="true"  #stepper style="background-color: #eee;">
+    <mat-step [stepControl]="CompanyContactInfoFormGroup" >
+      <form [formGroup]="CompanyContactInfoFormGroup" style="display: inline-block;">
+        <ng-template matStepLabel>COMPANY CONTACT INFORMATION </ng-template>
+        <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
+            <tr>
+                <td><label>Company Name:</label></td>
+                <td> 
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Company Name" id="CompanyName" formControlName="CompanyName">
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td> <label>Company Email:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Company Email" formControlName="CompanyEmail" >
+                       </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td> <label>Company Telphone:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Company Telphone" formControlName="CompanyTelphone" [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyTelphone'].hasError('required')">Company telphone is required</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyTelphone'].hasError('maxlength')">Company telphone cannot be less than 10 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyTelphone'].hasError('maxlength')">Company telphone cannot be more than 10 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyTelphone'].hasError('pattern')">Company telphone cannot contain characters</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td> <label>Company Registered Address:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <textarea style="height: 80px" matInput placeholder="Company Registered Address" formControlName="CompanyRegisteredAddress" [errorStateMatcher]="matcher"></textarea>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyRegisteredAddress'].hasError('required')">Company registered address is required</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyRegisteredAddress'].hasError('maxlength')">Company registered address cannot be more than 100 characters long</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyRegisteredAddress'].hasError('pattern')">Company registered address number cannot contain characters</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Company Website:</label></td>
+                <td>
+                    <mat-checkbox formControlName="CompanyWebsiteCheck" (click)="CompanyWebsiteChange()"><span *ngIf="CompanyWebsiteChecker === false;">Add Company Website?</span><span *ngIf="CompanyWebsiteChecker === true;">Added Company Website</span></mat-checkbox> <br>
+                    <mat-form-field appearance="fill" *ngIf="CompanyWebsiteChecker === true;">
+                        <input matInput placeholder="Company Website" formControlName="CompanyWebsite"  [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyWebsite'].hasError('required')">Company Website is required</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            
+            <tr>
+                <td><label>Company Fax:</label></td>
+                <td>
+                    <mat-checkbox formControlName="CompanyFaxCheck" (click)="CompanyFaxChange()"><span *ngIf="CompanyFaxChecker === false;">Add Company Fax?</span><span *ngIf="CompanyFaxChecker === true;">Added Company Fax</span></mat-checkbox> <br>
+                    <mat-form-field appearance="fill" *ngIf="CompanyFaxChecker === true;">
+                        <input matInput id="Fax" placeholder="Company Fax" formControlName="CompanyFax" [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyFax'].hasError('required')">Company Fax is required</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyFax'].hasError('maxlength')">Name cannot be more than 32 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyFax'].hasError('pattern')">Contact person title cannot contain numbers</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Contact Person Title:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Contact Person Title" formControlName="ContactPersonTitle" [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonTitle'].hasError('required')">Contact person title is required</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonTitle'].hasError('maxlength')">Contact person title cannot be more than 3 characters long</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['CompanyRegisteredAddress'].hasError('pattern')">Contact person title cannot contain numbers</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Contact Person Name:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Contact Person Name" formControlName="ContactPersonName" [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonName'].hasError('required')">Contact person name is required</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonName'].hasError('maxlength')">Contact person name cannot be more than 32 characters long</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonName'].hasError('pattern')">Contact person name cannot contain numbers or other unique characters</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td> <label>Contact Person Phone:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Contact Person Phone" formControlName="ContactPersonPhone" [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonPhone'].hasError('required')">Contact person phone is required</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonPhone'].hasError('maxlength')">Contact person phone cannot be less than 10 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonPhone'].hasError('pattern')">Contact person phone can only contain numbers</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonPhone'].hasError('minlength')">Contact person phone should be 10 numbers</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td> <label>Contact Person Email:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Contact Person Email" formControlName="ContactPersonEmail" [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonEmail'].hasError('required')">Contact person email is required</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonEmail'].hasError('maxlength')">Contact person email cannot be more than 32 characters long</mat-error>
+                        <mat-error *ngIf="CompanyContactInfoFormGroup.controls['ContactPersonEmail'].hasError('email')">Contact person email is invalid</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+        </table>
+        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
+            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/vendor-view"> Cancel</button>
+            <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
+           </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="CompanyOverviewFormGroup" >
+      <form [formGroup]="CompanyOverviewFormGroup" style="display: inline-block;">
+        <ng-template matStepLabel>COMPANY OVERVIEW  </ng-template>
+        <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
+            <tr>
+                <td><label>Details Of Service Or Goods:</label></td>
+                <td> 
+                    <mat-form-field appearance="fill" >
+                        <textarea  matInput placeholder="Details Of Service Or Goods" formControlName="DetailsOfServiceOrGoods" [errorStateMatcher]="matcher"></textarea>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['DetailsOfServiceOrGoods'].hasError('required')">Details of service or goods is required</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['DetailsOfServiceOrGoods'].hasError('maxlength')">Details cannot be more than 50 characters long</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td> <label>Company Registration Number:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Company Registration Number" formControlName="CompanyRegistrationNumber"  [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('required')">Company registration number number is required</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('pattern')">Company registration number cannot contain characters</mat-error> 
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('maxlength')">Company registration number cannot be more than 10 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['CompanyRegistrationNumber'].hasError('minlength')">Company registration number should be 10 numbers</mat-error>
+                      </mat-form-field> 
+                </td>
+            </tr>
+            <tr>
+                <td> <label>New Company Registration Document:</label></td>
+                <td>
+                    <input  id="file" formControlName="CompanyRegistrationNumberDoc" type="file" class="file-upload" (change)="FileStorage(0,$event)" style="max-width: 247px;"> 
+                </td>
+            </tr>
+            <tr>
+                <td><label for="file" style="margin-right: 1%;" *ngIf="VendorDetail.registration_Provided == true">Current Registration Document: </label></td>
+                <td >  
+                  <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}">{{FileDetails[0].FileName}}</a>  
+                </td>
+            </tr>
+            <br>    
+            <tr>
+                <td><label>Vat Registration Number:</label></td>
+                <td>
+                    <mat-checkbox formControlName="VatRegistrationCheck" (click)="VatRegistrationChange()"><span *ngIf="VatRegistrationChecker === false;">Add Vat Registration details?</span><span *ngIf="VatRegistrationChecker === true;">Added Vat Registration details</span></mat-checkbox> <br>
+                    <mat-form-field appearance="fill" *ngIf="VatRegistrationChecker === true;" >
+                        <input matInput [errorStateMatcher]="matcher" placeholder="Vat Registration Number" formControlName="VatRegistrationNumber" >
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['VatRegistrationNumber'].hasError('required')">Vat registration number is required</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['VatRegistrationNumber'].hasError('pattern')">Vat registration number cannot contain characters</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr> 
+            <tr *ngIf="VatRegistrationChecker === true;">
+                <td> <label>New Vat Registration Number Document:</label></td>
+                <td>
+                    
+                    <input  id="file" formControlName="VatRegistrationNumberDoc" type="file" class="file-upload" (change)="FileStorage(1,$event)" style="max-width: 247px;"> 
+                </td>
+            </tr>
+            <tr *ngIf="VatRegistrationChecker == true">
+                <td><label for="file" style="margin-right: 1%;" >Current Vat Registration document: </label></td> 
+                <td >  
+                  <a href="{{FileDetails[1].FileURL}}" download="{{FileDetails[1].FileName}}">{{FileDetails[1].FileName}}</a>   
+                </td>
+              </tr>
+            <br>
+            <tr>
+                <td> <label>Income Tax Number:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Income Tax Number" formControlName="IncomeTaxNumber"  [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('required')">Income tax number is required</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('pattern')">Income tax number cannot contain characters</mat-error> 
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('maxlength')">Vat registration number cannot be more than 10 numbers long</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['IncomeTaxNumber'].hasError('minlength')">Vat registration number should be 10 numbers</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td><label>New Income Tax Number Document:</label></td>
+                <td>
+                    <input  id="file" formControlName="IncomeTaxNumberDoc" type="file" class="file-upload" (change)="FileStorage(2,$event)" style="max-width: 247px;">                   
+                </td>
+            </tr>
+            <tr *ngIf="VendorDetail.income_Tax_Num_Provided == true">
+                <td><label for="file" style="margin-right: 1%;" >Current Income Tax Number Document: </label></td> 
+                <td >  
+                    <a href="{{FileDetails[2].FileURL}}" download="{{FileDetails[2].FileName}}">{{FileDetails[2].FileName}}</a>   
+                </td>
+              </tr>
+            <br>
+            <tr>
+                <td><span *ngIf="SignedAgreementChecker === true;"><br><br></span><label>New Signed Agreement Document:</label></td>
+                <td>
+                    <mat-checkbox formControlName="SignedAgreementCheck" (click)="SignedAgreementChange()"><span *ngIf="SignedAgreementChecker === false;">Add Signed Agreement Document?</span><span *ngIf="SignedAgreementChecker === true;">Added Signed Agreement Document</span></mat-checkbox> <br>
+                    <input  id="file" formControlName="SignedAgreementDoc" type="file" class="file-upload" *ngIf="SignedAgreementChecker === true;" (change)="FileStorage(3,$event)" style="max-width: 247px;">           
+                </td>
+            </tr>
+            <tr *ngIf="SignedAgreementChecker == true && VendorDetail.signed_Agreement_Provided == true">
+                <td><label for="file" style="margin-right: 1%;" >Current Signed Agreement Document: </label></td> 
+                <td >  
+                    <a href="{{FileDetails[3].FileURL}}" download="{{FileDetails[3].FileName}}">{{FileDetails[3].FileName}}</a>   
+                </td>
+              </tr>
+            <tr>
+            <br>
+            <tr style="margin-bottom: 15px;">
+                <td><label>Insurance Cover:</label></td>
+                <td>
+                    <mat-checkbox formControlName="InsuranceCoverCheck" [disabled]="true"></mat-checkbox>            
+                </td>
+            </tr>
+            <br>
+            <tr>
+                <td> <label>Payment Terms:</label></td>
+                <td>
+                    <mat-checkbox formControlName="PaymentTermsCheck" (click)="PaymentTermsChange()"><span *ngIf="PaymentTermsChecker === false;">Add Payment Terms?</span><span *ngIf="PaymentTermsChecker === true;">Added Payment Terms</span></mat-checkbox> <br>
+                    <mat-form-field appearance="fill" *ngIf="PaymentTermsChecker === true;" >
+                        <textarea matInput placeholder="Payment Terms" formControlName="PaymentTerms"  [errorStateMatcher]="matcher"></textarea>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['PaymentTerms'].hasError('required')">Payment Terms is required</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['PaymentTerms'].hasError('maxlength')">Payment Terms cannot be more than 50 characters long</mat-error>
+                      </mat-form-field>    
+                </td>
+            </tr>
+            <br>
+            <tr>
+                <td> <label>License Or Accreditation Number:</label></td>
+                <td>
+                    <mat-checkbox formControlName="LicenseOrAccreditationCheck" (click)="LicenseOrAccreditationChange()"><span *ngIf="LicenseOrAccreditationChecker === false;">Add License Or Accreditation details?</span><span *ngIf="LicenseOrAccreditationChecker === true;">Added License Or Accreditation details</span></mat-checkbox> <br>
+                    <mat-form-field appearance="fill" *ngIf="LicenseOrAccreditationChecker === true;" >
+                        <input matInput placeholder="License Or Accreditation Number" formControlName="LicenseOrAccreditationNumber"  [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['LicenseOrAccreditationNumber'].hasError('required')">License or accreditation number is required</mat-error>
+                        <mat-error *ngIf="CompanyOverviewFormGroup.controls['LicenseOrAccreditationNumber'].hasError('pattern')">License or accreditation number cannot contain numbers or other unique characters</mat-error> 
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr *ngIf="LicenseOrAccreditationChecker === true;">
+                <td> <label>New License Or Accreditation Document:</label></td>
+                <td>  
+                    <input  id="file" formControlName="LicenseOrAccreditationNumberDoc" type="file" class="file-upload" (change)="FileStorage(5,$event)" style="max-width: 247px;">  
+                </td>
+            </tr>
+            <tr *ngIf="LicenseOrAccreditationChecker == true">
+                <td><label for="file" style="margin-right: 1%;" >Current License Or Accreditation Document: </label></td> 
+                <td >  
+                    <a href="{{FileDetails[5].FileURL}}" download="{{FileDetails[5].FileName}}">{{FileDetails[5].FileName}}</a>     
+                </td>
+              </tr>
+            <tr>
+        </table>
+        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
+            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
+            <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
+           </div>
+        
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="BankDetailsFormGroup" >
+        <form [formGroup]="BankDetailsFormGroup" style="display: inline-block;">
+          <ng-template matStepLabel>BANKING INFORMATION</ng-template>
+          <table style="background-color: white;border:1px solid #244688;border-bottom: white;">
+            <tr>
+                <td><label>Bank Name:</label></td>
+                <td> 
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Bank Name" formControlName="BankName" [errorStateMatcher]="matcher" >
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BankName'].hasError('required')">Bank name is required</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BankName'].hasError('maxlength')">Bank name cannot be more than 32 characters long</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BankName'].hasError('pattern')">Bank name can only contain characters</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td> <label>Branch Code:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Branch Code" formControlName="BranchCode" [errorStateMatcher]="matcher" >
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BranchCode'].hasError('required')">Branch code is required</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BranchCode'].hasError('maxlength')">Branch code cannot be more than 6 numbers long</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BranchCode'].hasError('pattern')">Branch code can only contain numbers</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BranchCode'].hasError('minlength')">Branch code should be 6 numbers</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Account Holder:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Account Name" formControlName="AccountHolder"  [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['AccountHolder'].hasError('required')">Account name is required</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['AccountHolder'].hasError('maxlength')">Account name cannot be more than 32 characters long</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['AccountHolder'].hasError('pattern')">Account name can only contain characters</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td> <label>Account Type:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Account Type" formControlName="AccountType" [errorStateMatcher]="matcher" >
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['AccountType'].hasError('required')">Account type is required</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['AccountType'].hasError('maxlength')">Account type cannot be more than 32 characters long</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['AccountType'].hasError('pattern')">Account type can only contain characters</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td> <label>Account Number:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Account Number" formControlName="AccountNumber" [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['AccountNumber'].hasError('required')">Account number is required</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['AccountNumber'].hasError('maxlength')">Account number cannot be more than 10 numbers long</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['AccountNumber'].hasError('pattern')">Account number can only contain numbers</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Bank Contact Name:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Bank Contact Name" formControlName="BankContactName" [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BankContactName'].hasError('required')">Bank contact name is required</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BankContactName'].hasError('maxlength')">Bank contact name cannot be more than 32 characters long</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BankContactName'].hasError('pattern')">Bank contact name can only contain characters</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Bank Contact Phone Number:</label></td>
+                <td>
+                    <mat-form-field appearance="fill">
+                        <input matInput placeholder="Bank Contact Phone Number" formControlName="BankContactPhoneNumber" [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BankContactPhoneNumber'].hasError('required')">Bank contact phone number is required</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BankContactPhoneNumber'].hasError('maxlength')">Bank contact phone number cannot be more than 10 numbers long</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BankContactPhoneNumber'].hasError('pattern')">Bank contact phone number can only contain numbers</mat-error>
+                        <mat-error *ngIf="BankDetailsFormGroup.controls['BankContactPhoneNumber'].hasError('minlength')">Bank contact phone number should be 10 numbers</mat-error>
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="file" style="margin-right: 1%;" >Current Bank Stamped Confirmation Letter: </label></td> 
+                <td >  
+                    <a href="{{FileDetails[6].FileURL}}" download="{{FileDetails[6].FileName}}">{{FileDetails[6].FileName}}</a>     
+                </td>
+              </tr>
+            <tr>
+            <tr>
+                <td><label>New Bank Stamped Confirmation Letter:</label></td>
+                <td>  
+                      <input  id="file" formControlName="BankStampedConfirmationLetter" type="file" class="file-upload" (change)="FileStorage(6,$event)" style="max-width: 247px;">  
+                </td>
+            </tr>
+            <br>
+        </table> 
+        <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 800px;justify-content: center;">
+            <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
+            <button mat-raised-button matStepperNext style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Next </button>
+           </div>    
+          
+        </form>
+      </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <div style="display: inline-block;" class="table-responsive">
+      <p style="margin: 0px;background-color: #244688;color: white;width: 700px;"><b>*Please ensure that all details are correct before updating anything on the vendor*</b></p> 
+      <div  style="background-color: white;display: flex;border:1px solid #244688;border-top:0px solid white;width: 700px;justify-content: center;">
+        <button id="btnHover" mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" matStepperPrevious >Back</button>
+        <button mat-raised-button (click)="Validate()" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" > Update </button>
+       </div>
+    </div>    
+    </mat-step>
+  </mat-stepper>
+</div>

@@ -1,0 +1,23 @@
+<div
+  style="color: white; background-color: #244688; text-align: center; display: flex; justify-content: center; align-items: center;">
+  <h1 mat-dialog-title style="color: white;" *ngIf="showConfirmationDialog == true">
+    BACKUP SYSTEM DATA
+  </h1>
+  <mat-icon (click)="openBackupTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+    style="font-size: 24pt; height: 37px; width: 37px; margin-bottom: 5px; cursor: pointer;"
+    [ngStyle]="{'color':'white'}" matTooltip="Need help? Click me!"></mat-icon>
+</div>
+
+
+<div mat-dialog-content *ngIf="showConfirmationDialog == true">
+  <p>You are about to create a Backup of the systems current data!</p>
+  <p>Are you sure you want to continue?</p>
+</div>
+<div class="spinner-container" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+</div>
+<div mat-dialog-actions align="end" *ngIf="showConfirmationDialog == true">
+  <button mat-raised-button (click)="onConfirm()" [disabled]="isLoading"
+    style="color: white; background-color: #94CC5B;">Yes</button>
+  <button mat-raised-button (click)="onCancel()" style="color: white; background-color: #244688;">Cancel</button>
+</div>

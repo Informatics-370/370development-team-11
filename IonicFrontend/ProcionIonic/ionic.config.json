@@ -1,0 +1,7 @@
+{
+  "name": "ProcionIonic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

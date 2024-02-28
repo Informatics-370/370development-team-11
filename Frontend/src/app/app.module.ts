@@ -1,0 +1,387 @@
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MainNavComponent } from './main-nav/main-nav.component';
+import { MaterialModule } from './material/material/material.module';
+import { MatToolbar, MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { ViewEmployeeRoleComponent } from './view-employee-role/view-employee-role.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatFormFieldModule, MatHint, MatLabel } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { CreateEmployeeRoleComponent } from './create-employee-role/create-employee-role.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { EditEmployeeRoleComponent } from './edit-employee-role/edit-employee-role.component';
+import { DeleteEmployeeRoleComponent } from './delete-employee-role/delete-employee-role.component';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { ViewEmployeeComponent } from './view-employee/view-employee.component';
+import { CreateEmployeeComponent } from './create-employee/create-employee.component';
+import { EditEmployeeComponent } from './edit-employee/edit-employee.component';
+import { DeleteEmployeeComponent } from './delete-employee/delete-employee.component';
+import { ViewConsumableComponent } from './view-consumable/view-consumable.component';
+import { HttpClientModule } from '@angular/common/http';
+import { CreateConsumableComponent } from './create-consumable/create-consumable.component';
+import { DeleteConsumableComponent } from './delete-consumable/delete-consumable.component';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBar } from '@angular/material/snack-bar';
+import { EditConsumableComponent } from './edit-consumable/edit-consumable.component';
+import { NotificationdisplayComponent } from './notificationdisplay/notificationdisplay.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { CreateAdminComponent } from './create-admin/create-admin.component';
+import { EditAdminComponent } from './edit-admin/edit-admin.component';
+import { DeleteAdminComponent } from './delete-admin/delete-admin.component';
+import { ViewAdminComponent } from './view-admin/view-admin.component';
+import { ViewConsumableCategoryComponent } from './view-consumable-category/view-consumable-category.component';
+import { CreateConsumableCategoryComponent } from './create-consumable-category/create-consumable-category.component';
+import { EditConsumableCategoryComponent } from './edit-consumable-category/edit-consumable-category.component';
+import { DeleteConsumableCategoryComponent } from './delete-consumable-category/delete-consumable-category.component';
+import { ViewMandateLimitComponent } from './view-mandate-limit/view-mandate-limit.component';
+import { CreateMandateLimitComponent } from './create-mandate-limit/create-mandate-limit.component';
+import { EditMandateLimitComponent } from './edit-mandate-limit/edit-mandate-limit.component';
+import { RequestViewComponent } from './onboard_request/request-view/request-view.component';
+import { RequestCreateComponent } from './onboard_request/request-create/request-create.component';
+import { RequestUpdateComponent } from './onboard_request/request-update/request-update.component';
+import { RequestDeleteComponent } from './onboard_request/request-delete/request-delete.component';
+import { VendorCreateComponent } from './vendor/vendor-create/vendor-create.component';
+import { VendorUpdateComponent } from './vendor/vendor-update/vendor-update.component';
+import { VendorViewComponent } from './vendor/vendor-view/vendor-view.component';
+import { VendorDeleteComponent } from './vendor/vendor-delete/vendor-delete.component';
+import { VendordetailsViewComponent } from './vendor/vendordetails-view/vendordetails-view.component';
+import { VendorCreateChoiceComponent } from './vendor/vendor-create-choice/vendor-create-choice.component';
+import { VendorApproveComponent } from './vendor/vendor-approve/vendor-approve.component';
+import { VendorUnofficialVendorlistComponent } from './vendor/vendor-unofficial-vendorlist/vendor-unofficial-vendorlist.component';
+import { VendorApprovedAddDetailsComponent } from './vendor/vendor-approved-add-details/vendor-approved-add-details.component';
+
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTabsModule } from '@angular/material/tabs';
+
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { CreateDepartmentComponent } from './create-department/create-department/create-department.component';
+import { DeleteDepartmentComponent } from './delete-department/delete-department/delete-department.component';
+import { EditDepartmentComponent } from './edit-department/edit-department/edit-department.component';
+import { ViewDepartmentComponent } from './view-department/view-department/view-department.component';
+import { ViewBranchComponent } from './view-branch/view-branch/view-branch.component';
+import { CreateBranchComponent } from './create-branch/create-branch/create-branch.component';
+import { DeleteBranchComponent } from './delete-branch/delete-branch/delete-branch.component';
+import { EditBranchComponent } from './edit-branch/edit-branch/edit-branch.component';
+import { LoginComponent } from './login/login.component';
+import { HomePageComponent } from './home-page/home-page.component';
+
+import { DeleteMandateLimitComponent } from './delete-mandate-limit/delete-mandate-limit.component';
+import { ViewBudgetCategoryComponent } from './view-budget-category/view-budget-category.component';
+import { CreateBudgetCategoryComponent } from './create-budget-category/create-budget-category.component';
+import { EditBudgetCategoryComponent } from './edit-budget-category/edit-budget-category.component';
+import { DeleteBudgetCategoryComponent } from './delete-budget-category/delete-budget-category.component';
+import { ViewBudgetAllocationComponent } from './view-budget-allocation/view-budget-allocation.component';
+import { CreateBudgetAllocationComponent } from './create-budget-allocation/create-budget-allocation.component';
+import { DeleteBudgetAllocationComponent } from './delete-budget-allocation/delete-budget-allocation.component';
+import { ViewBudgetLinesComponent } from './view-budget-lines/view-budget-lines.component';
+import { CreateBudgetLineComponent } from './create-budget-line/create-budget-line.component';
+import { EditBudgetLineComponent } from './edit-budget-line/edit-budget-line.component';
+import { DeleteBudgetLineComponent } from './delete-budget-line/delete-budget-line.component';
+import { EditBudgetAllocationComponent } from './edit-budget-allocation/edit-budget-allocation.component';
+import { MatCommonModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import { AuthInterceptorComponent } from './auth-interceptor/auth-interceptor.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { UserProfileComponent } from './User/user-profile/user-profile.component';
+import { UserProfileEditComponent } from './User/user-profile-edit/user-profile-edit.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { CropperModalComponent } from './User/cropper-modal/cropper-modal.component';
+import { ViewNotificationHubComponent } from './Notification-Hub/view-notification-hub/view-notification-hub.component';
+import { ViewDelegationComponent } from './Delegation/view-delegation/view-delegation.component';
+import { CreateHelpComponent } from './create-help/create-help/create-help.component';
+import { ViewHelpComponent } from './view-help/view-help/view-help.component';
+import { EditHelpComponent } from './edit-help/edit-help/edit-help.component';
+import { DeleteHelpComponent } from './delete-help/delete-help/delete-help.component';
+import { UpdateConsumableStockComponent } from './update-consumable-stock/update-consumable-stock.component';
+import { CreateDelegationComponent } from './Delegation/create-delegation/create-delegation.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { DeleteDelegationComponent } from './Delegation/delete-delegation/delete-delegation.component';
+import { MatSortModule } from '@angular/material/sort';
+import { EditDelegationComponent } from './Delegation/edit-delegation/edit-delegation.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AsyncPipe, CurrencyPipe, DatePipe, NgFor } from '@angular/common';
+import { RejectDelegationComponent } from './Delegation/reject-delegation/reject-delegation.component';
+import { ViewProcurementRequestComponent } from './view-procurement-request/view-procurement-request.component';
+import { UpdatePasswordComponent } from './User/update-password/update-password.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { VendorApproveEditComponent } from './vendor/vendor-approve-edit/vendor-approve-edit.component';
+import { CreateProcurementRequestComponent } from './create-procurement-request/create-procurement-request.component';
+
+
+import { MatBadgeModule } from '@angular/material/badge';
+
+import { VideoDialogComponent } from './VideoDialog/video-dialog/video-dialog.component';
+import { BackupComponent } from './Settings/backup/backup.component';
+import { RestoreComponent } from './Settings/backupDialog/restore.component';
+import { ViewPendingProcurementRequestComponent } from './view-pending-procurement-request/view-pending-procurement-request.component';
+import { PlaceProcurementRequestComponent } from './place-procurement-request/place-procurement-request.component';
+import { PlaceProcurementRequestCreateDetailsComponent } from './place-procurement-request-create-details/place-procurement-request-create-details.component';
+import { ViewProcurementRequestApprovalComponent } from './view-procurement-request-approval/view-procurement-request-approval.component';
+import { DeleteProcurementRequestComponent } from './delete-procurement-request/delete-procurement-request.component';
+import { EditProcurementRequestComponent } from './edit-procurement-request/edit-procurement-request.component';
+import { ViewFlaggedProcurementRequestComponent } from './view-flagged-procurement-request/view-flagged-procurement-request.component';
+import { ViewFlaggedProcurementDetailsComponent } from './view-flagged-procurement-details/view-flagged-procurement-details.component';
+import { FinalizeProcurementRequestComponent } from './finalize-procurement-request/finalize-procurement-request.component';
+import { FinalizeProcurementRequestCreateComponent } from './finalize-procurement-request-create/finalize-procurement-request-create.component';
+import { ViewProcurementDetailsComponent } from './view-procurement-details/view-procurement-details.component';
+import { ReceiveProcurementItemComponent } from './receive-procurement-item/receive-procurement-item.component';
+import { ViewHelpuserComponent } from './view-helpuser/view-helpuser/view-helpuser.component';
+import { RestoreDialogComponent } from './Settings/restore-dialog/restore-dialog.component';
+import { UploadPayementFileComponent } from './upload-payement-file/upload-payement-file.component';
+import { UploadInvoiceComponent } from './upload-invoice/upload-invoice.component';
+import { SignOffRequestComponent } from './sign-off-request/sign-off-request.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { OTPComponent } from './otp/otp.component';
+import { ReportsMainViewComponent } from './Reports/reports-main-view/reports-main-view.component';
+import { ReportFilterMenuComponent } from './Reports/report-filter-menu/report-filter-menu.component';
+import { ViewAuditLogComponent } from './view-audit-log/view-audit-log.component';
+import { BudgetVarianceReportComponent } from './budget-variance-report/budget-variance-report.component';
+import { EmployeeIFrameComponent } from './HelpIFrames/EmployeeIFrame/employee-iframe/employee-iframe.component';
+import { BranchIFrameComponent } from './HelpIFrames/BranchIFrame/branch-iframe/branch-iframe.component';
+import { AdminIFrameComponent } from './HelpIFrames/AdminIFrame/admin-iframe/admin-iframe.component';
+import { AuditLogIFrameComponent } from './HelpIFrames/AuditLogIFrame/audit-log-iframe/audit-log-iframe.component';
+import { DepartmentIFrameComponent } from './HelpIFrames/DepartmentIFrame/department-iframe/department-iframe.component';
+import { RoleIFrameComponent } from './HelpIFrames/RoleIFrame/role-iframe/role-iframe.component';
+import { MandateIFrameComponent } from './HelpIFrames/MandateIFrame/mandate-iframe/mandate-iframe.component';
+import { DelegationIFrameComponent } from './HelpIFrames/DelegationIFrame/delegation-iframe/delegation-iframe.component';
+import { ReportsIFrameComponent } from './HelpIFrames/ReportsIFrame/reports-iframe/reports-iframe.component';
+import { ConsumableIFrameComponent } from './HelpIFrames/ConsumableIFrame/consumable-iframe/consumable-iframe.component';
+import { ConsumableCategoryIFrameComponent } from './HelpIFrames/ConsumableCategoryIFrame/consumable-category-iframe/consumable-category-iframe.component';
+import { BudgetCategoryIFrameComponent } from './HelpIFrames/BudgetCategoryIFrame/budget-category-iframe/budget-category-iframe.component';
+import { BudgetAllocationIFrameComponent } from './HelpIFrames/BudgetAllocationIFrame/budget-allocation-iframe/budget-allocation-iframe.component';
+import { BudgetLineIFrameComponent } from './HelpIFrames/BudgetLineIFrame/budget-line-iframe/budget-line-iframe.component';
+import { FinalizeProcReqIFrameComponent } from './HelpIFrames/FinalizeProcReqIFrame/finalize-proc-req-iframe/finalize-proc-req-iframe.component';
+import { OnboardRequestIFrameComponent } from './HelpIFrames/OnboardRequestIFrame/onboard-request-iframe/onboard-request-iframe.component';
+import { ManageVendorIFrameComponent } from './HelpIFrames/ManageVendorIFrame/manage-vendor-iframe/manage-vendor-iframe.component';
+import { ApproveVendorIFrameComponent } from './HelpIFrames/ApproveVendorIFrame/approve-vendor-iframe/approve-vendor-iframe.component';
+import { ProcReqIFrameComponent } from './HelpIFrames/ProcReqIFrame/proc-req-iframe/proc-req-iframe.component';
+import { ProcReqPendingIFrameComponent } from './HelpIFrames/ProcReqPendingIFrame/proc-req-pending-iframe/proc-req-pending-iframe.component';
+import { PlaceProcDetailIFrameComponent } from './HelpIFrames/PlaceProcDetailIFrame/place-proc-detail-iframe/place-proc-detail-iframe.component';
+import { FlaggerProcDetailIFrameComponent } from './HelpIFrames/FlaggedProcDetailIFrame/flagger-proc-detail-iframe/flagger-proc-detail-iframe.component';
+import { ProcDetailIFrameComponent } from './HelpIFrames/ProcDetailIFrame/proc-detail-iframe/proc-detail-iframe.component';
+import { YearPickerComponent } from './year-picker/year-picker.component';
+import { ReceiveAssetComponent } from './receive-asset/receive-asset.component';
+import { ExportBaPickerComponent } from './export-ba-picker/export-ba-picker.component';
+import { ImportAllocationComponent } from './import-allocation/import-allocation.component';
+import { TimerComponent } from './Settings/timer/timer.component';
+
+import { MatTreeModule } from '@angular/material/tree';
+import { DynamicCreateDepartmentComponent } from './dynamic-create-department/dynamic-create-department.component';
+import { ViewPRDetailsExpandedComponent } from './view-prdetails-expanded/view-prdetails-expanded.component';
+import { CreateVatComponent } from './Settings/create-vat/create-vat.component';
+import { EditVatComponent } from './Settings/edit-vat/edit-vat.component';
+
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    MainNavComponent,
+    ViewEmployeeRoleComponent,
+    CreateEmployeeRoleComponent,
+    EditEmployeeRoleComponent,
+    DeleteEmployeeRoleComponent,
+    ViewEmployeeComponent,
+    CreateEmployeeComponent,
+    EditEmployeeComponent,
+    DeleteEmployeeComponent,
+    ViewConsumableComponent,
+    CreateConsumableComponent,
+    DeleteConsumableComponent,
+    EditConsumableComponent,
+    NotificationdisplayComponent,
+    CreateAdminComponent,
+    EditAdminComponent,
+    DeleteAdminComponent,
+    ViewAdminComponent,
+    ViewConsumableCategoryComponent,
+    CreateConsumableCategoryComponent,
+    EditConsumableCategoryComponent,
+    DeleteConsumableCategoryComponent,
+    ViewMandateLimitComponent,
+    CreateMandateLimitComponent,
+    EditMandateLimitComponent,
+    RequestViewComponent,
+    RequestCreateComponent,
+    RequestUpdateComponent,
+    CreateDepartmentComponent,
+    DeleteDepartmentComponent,
+    EditDepartmentComponent,
+    ViewDepartmentComponent,
+    ViewBranchComponent,
+    CreateBranchComponent,
+    DeleteBranchComponent,
+    EditBranchComponent,
+    RequestDeleteComponent,
+    VendorCreateComponent,
+    VendorUpdateComponent,
+    VendorViewComponent,
+    VendorDeleteComponent,
+    VendordetailsViewComponent,
+    VendorCreateChoiceComponent,
+    LoginComponent,
+    HomePageComponent,
+    DeleteMandateLimitComponent,
+    ViewBudgetCategoryComponent,
+    CreateBudgetCategoryComponent,
+    EditBudgetCategoryComponent,
+    DeleteBudgetCategoryComponent,
+    ViewBudgetAllocationComponent,
+    CreateBudgetAllocationComponent,
+    DeleteBudgetAllocationComponent,
+    ViewBudgetLinesComponent,
+    CreateBudgetLineComponent,
+    EditBudgetLineComponent,
+    DeleteBudgetLineComponent,
+    EditBudgetAllocationComponent,
+    VendorApproveComponent,
+    VendorUnofficialVendorlistComponent,
+    VendorApprovedAddDetailsComponent,
+    AuthInterceptorComponent,
+    UserProfileComponent,
+    UserProfileEditComponent,
+    CropperModalComponent,
+    ViewNotificationHubComponent,
+    ViewDelegationComponent,
+    CreateHelpComponent,
+    ViewHelpComponent,
+    EditHelpComponent,
+    DeleteHelpComponent,
+    UpdateConsumableStockComponent,
+    CreateDelegationComponent,
+    DeleteDelegationComponent,
+    EditDelegationComponent,
+    RejectDelegationComponent,
+    UpdateConsumableStockComponent,
+    ViewProcurementRequestComponent,
+    UpdatePasswordComponent,
+    VendorApproveEditComponent,
+    VideoDialogComponent,
+    BackupComponent,
+    RestoreComponent,
+    CreateProcurementRequestComponent,
+    ViewPendingProcurementRequestComponent,
+    PlaceProcurementRequestComponent,
+    PlaceProcurementRequestCreateDetailsComponent,
+    ViewProcurementRequestApprovalComponent,
+    DeleteProcurementRequestComponent,
+    EditProcurementRequestComponent,
+    ViewFlaggedProcurementRequestComponent,
+    ViewFlaggedProcurementDetailsComponent,
+    FinalizeProcurementRequestComponent,
+    FinalizeProcurementRequestCreateComponent,
+    ViewProcurementDetailsComponent,
+    ReceiveProcurementItemComponent,
+    ViewHelpuserComponent,
+    RestoreDialogComponent,
+    UploadPayementFileComponent,
+    UploadInvoiceComponent,
+    SignOffRequestComponent,
+    OTPComponent,
+    ReportsMainViewComponent,
+    ReportFilterMenuComponent,
+    ViewAuditLogComponent,
+    BudgetVarianceReportComponent,
+    EmployeeIFrameComponent,
+    BranchIFrameComponent,
+    AdminIFrameComponent,
+    AuditLogIFrameComponent,
+    DepartmentIFrameComponent,
+    RoleIFrameComponent,
+    MandateIFrameComponent,
+    DelegationIFrameComponent,
+    ReportsIFrameComponent,
+    ConsumableIFrameComponent,
+    ConsumableCategoryIFrameComponent,
+    BudgetCategoryIFrameComponent,
+    BudgetAllocationIFrameComponent,
+    BudgetLineIFrameComponent,
+    FinalizeProcReqIFrameComponent,
+    OnboardRequestIFrameComponent,
+    ManageVendorIFrameComponent,
+    ApproveVendorIFrameComponent,
+    ProcReqIFrameComponent,
+    ProcReqPendingIFrameComponent,
+    PlaceProcDetailIFrameComponent,
+    FlaggerProcDetailIFrameComponent,
+    ProcDetailIFrameComponent,
+    YearPickerComponent,
+    ReceiveAssetComponent,
+    ExportBaPickerComponent,
+    ImportAllocationComponent,
+    TimerComponent,
+    DynamicCreateDepartmentComponent,
+    ViewPRDetailsExpandedComponent,
+    CreateVatComponent,
+    EditVatComponent,
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatMenuModule,
+    ReactiveFormsModule,
+    FormsModule,
+    AppRoutingModule,
+    MatCardModule,
+    MatDialogModule,
+    MaterialModule,
+    HttpClientModule,
+    MatRadioModule,
+    MatTabsModule,
+    MatStepperModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
+    ImageCropperModule,
+    MatAutocompleteModule,
+    MatSortModule,
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatBadgeModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    AsyncPipe,
+    NgFor,
+    FlexLayoutModule,
+    MatTreeModule
+  ],
+  providers: [
+    //AppService,
+    //{ provide: LOCALE_ID, useValue: 'en-US' },
+    //{ provide: MOMENT, useValue: moment },
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    MatExpansionModule,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorComponent, // Add the AuthInterceptor as a provider
+      multi: true
+    },
+    DatePipe,
+    CurrencyPipe
+
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+

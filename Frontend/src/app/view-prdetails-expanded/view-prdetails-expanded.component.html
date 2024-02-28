@@ -1,0 +1,403 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <mat-card class="example-card" style="margin: 2%; width: 50%;" *ngIf="Type == 'Consumable'; else Asset">
+
+        <div style="display: flex; align-items: center;justify-content: center;">
+            <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
+                View Procurement Details
+            </h1>
+            <mat-icon (click)="openViewProcurementDetailsTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+                style="font-size:30pt; height: 37px; width: 37px; margin-left: 1px;" [ngStyle]="{'color':'#244688'}"
+                matTooltip="Need help? Click me!"></mat-icon>
+        </div>
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <mat-card-content>
+                <h2 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700;">Procurement Details</h2>
+                <div>
+                    <table style="margin-left: 1%;" class="table">
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Item Type:</label></td>
+                            <td>
+                                {{MasterTable.procurement_Details.item_Type}}
+                            </td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Buyer Name:</label></td>
+                            <td>
+                                {{MasterTable.procurement_Details.buyer_Name}}
+                            </td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Buyer Email:</label></td>
+                            <td>
+                                {{MasterTable.procurement_Details.buyer_Email}}
+                            </td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Vendor Name:</label></td>
+                            <td>
+                                {{MasterTable.procurement_Details.procurement_Request.vendor.name}}
+                            </td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Vendor Email:</label></td>
+                            <td>
+                                {{MasterTable.procurement_Details.procurement_Request.vendor.email}}
+                            </td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Full Payment Due Date:</label></td>
+                            <td>
+                                {{MasterTable.procurement_Details.full_Payment_Due_Date | date: "yyyy/MM/dd"}}
+                            </td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Total Amount:</label></td>
+                            <td>
+                                R {{MasterTable.procurement_Details.total_Amount}}
+                            </td>
+                        </tr>
+                        <br>
+                        <tr *ngIf="MasterTable.procurement_Details.payment_Made == false; else Made">
+                            <td style="max-width: 400px; width: 400px;"><label>Payment Made:</label></td>
+                            <td>
+                                {{MasterTable.procurement_Details.payment_Made}}
+                            </td>
+                        </tr>
+                        <ng-template #Made>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Payment Made:</label></td>
+                                <td>
+                                    {{MasterTable.procurement_Details.payment_Made}}
+                                </td>
+                            </tr>
+                            <br>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Proof of Payment File:</label></td>
+                                <td *ngIf="POPFileDetails[0] != null; else NoProof">
+                                    <a target="_blank" style="color: rgb(65, 143, 227);"
+                                        matTooltip="Click link to open this file in a new tab"
+                                        (click)="openPDFInNewTab(0)">{{POPFileDetails[0].FileName}}</a>
+                                </td>
+                                <ng-template #NoProof>
+                                    <td>
+                                        <b>No Proof of Payment Uploaded</b>
+                                    </td>
+                                </ng-template>
+                            </tr>
+                        </ng-template>
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Comment:</label></td>
+                            <td>
+                                {{MasterTable.procurement_Details.comment}}
+                            </td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Procurement Status:</label></td>
+                            <td [style.color]="getStatusColor(MasterTable.procurement_Details.procurement_Status.name)">
+                                {{MasterTable.procurement_Details.procurement_Status.name}}
+                            </td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Payment Status:</label></td>
+                            <td
+                                [style.color]="getStatusColor(MasterTable.procurement_Details.procurement_Payment_Status.name)">
+                                {{MasterTable.procurement_Details.procurement_Payment_Status.name}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <hr>
+                <h2 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700;">Invoices: </h2>
+                <div>
+                    <table style="margin-left: 1%;" class="table" *ngIf="InvoicesPresent == true; else NoInv">
+                        <thead>
+                            <tr style="background-color: lightgray;">
+                                <th>
+                                    Date Uploaded
+                                </th>
+
+                                <th>
+                                    File
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of Invoices; let i = index">
+                                <td>
+                                    {{item.date_Uploaded | date: "yyyy/MM/dd"}}
+                                </td>
+                                <td>
+                                    <a target="_blank" style="color: rgb(65, 143, 227);"
+                                        matTooltip="Click link to open this file in a new tab"
+                                        (click)="openINVPDFInNewTab(i)">{{INVFileDetails[i].FileName}}</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <ng-template #NoInv>
+                        <table style="margin-left: 1%;" class="table">
+                            <br>
+                            <tr>
+                                <td><b>No Invoices Uploaded</b></td>
+                            </tr>
+                        </table>
+                    </ng-template>
+                </div>
+                <hr>
+                <h2 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700;">Consumable Details
+                </h2>
+                <div>
+                    <table style="margin-left: 1%;" class="table">
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Name:</label></td>
+                            <td>
+                                {{MasterTable.consumable.name}}
+                            </td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Description:</label></td>
+                            <td>
+                                {{MasterTable.consumable.description}}
+                            </td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>On Hand:</label></td>
+                            <td>
+                                {{MasterTable.consumable.on_Hand}}
+                            </td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Minimum Reorder-Quantity:</label></td>
+                            <td>
+                                {{MasterTable.consumable.minimum_Reorder_Quantity}}
+                            </td>
+                        </tr>
+                        <br>
+                        <tr>
+                            <td style="max-width: 400px; width: 400px;"><label>Maximum Reorder-Quantity:</label></td>
+                            <td>
+                                {{MasterTable.consumable.maximum_Reorder_Quantity}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </mat-card-content>
+        </div>
+        <mat-card-actions>
+            <button mat-raised-button id="cBtn"
+                style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;"
+                (click)="Close()">
+                Close
+            </button>
+        </mat-card-actions>
+    </mat-card>
+
+    <!--Assets-->
+
+    <ng-template #Asset>
+        <mat-card class="example-card" style="margin: 2%; width: 50%;">
+
+            <div style="display: flex; align-items: center;justify-content: center;">
+                <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
+                    View Procurement Details
+                </h1>
+                <mat-icon aria-hidden="false" aria-label="admin icon" fontIcon="help"
+                    style="font-size:30pt; height: 37px; width: 37px; margin-left: 1px;" [ngStyle]="{'color':'#244688'}"
+                    matTooltip="Need help? Click me!"></mat-icon>
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <mat-card-content>
+                    <h2 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700;">Procurement Details
+                    </h2>
+                    <div>
+                        <table style="margin-left: 1%;" class="table">
+                            <br>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Item Type:</label></td>
+                                <td>
+                                    {{AssetMasterTable.procurement_Details.item_Type}}
+                                </td>
+                            </tr>
+                            <br>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Buyer Name:</label></td>
+                                <td>
+                                    {{AssetMasterTable.procurement_Details.buyer_Name}}
+                                </td>
+                            </tr>
+                            <br>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Buyer Email:</label></td>
+                                <td>
+                                    {{AssetMasterTable.procurement_Details.buyer_Email}}
+                                </td>
+                            </tr>
+                            <br>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Vendor Name:</label></td>
+                                <td>
+                                    {{AssetMasterTable.procurement_Details.procurement_Request.vendor.name}}
+                                </td>
+                            </tr>
+                            <br>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Vendor Email:</label></td>
+                                <td>
+                                    {{AssetMasterTable.procurement_Details.procurement_Request.vendor.email}}
+                                </td>
+                            </tr>
+                            <br>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Full Payment Due Date:</label></td>
+                                <td>
+                                    {{AssetMasterTable.procurement_Details.full_Payment_Due_Date | date: "yyyy/MM/dd"}}
+                                </td>
+                            </tr>
+                            <br>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Total Amount:</label></td>
+                                <td>
+                                    R {{AssetMasterTable.procurement_Details.total_Amount}}
+                                </td>
+                            </tr>
+                            <br>
+                            <tr *ngIf="AssetMasterTable.procurement_Details.payment_Made == false; else AssetMade">
+                                <td style="max-width: 400px; width: 400px;"><label>Payment Made:</label></td>
+                                <td>
+                                    {{AssetMasterTable.procurement_Details.payment_Made}}
+                                </td>
+                            </tr>
+                            <ng-template #AssetMade>
+                                <tr>
+                                    <td style="max-width: 400px; width: 400px;"><label>Payment Made:</label></td>
+                                    <td>
+                                        {{AssetMasterTable.procurement_Details.payment_Made}}
+                                    </td>
+                                </tr>
+                                <br>
+                                <tr>
+                                    <td style="max-width: 400px; width: 400px;"><label>Proof of Payment File:</label>
+                                    </td>
+                                    <td *ngIf="POPFileDetails[0] != null; else NoAssetProof">
+                                        <a target="_blank" style="color: rgb(65, 143, 227);"
+                                            matTooltip="Click link to open this file in a new tab"
+                                            (click)="openPDFInNewTab(0)">{{POPFileDetails[0].FileName}}</a>
+                                    </td>
+                                    <ng-template #NoAssetProof>
+                                        <td><b>No Proof of Payment Uploaded</b></td>
+                                    </ng-template>
+                                </tr>
+                            </ng-template>
+                            <br>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Comment:</label></td>
+                                <td>
+                                    {{AssetMasterTable.procurement_Details.comment}}
+                                </td>
+                            </tr>
+                            <br>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Procurement Status:</label></td>
+                                <td
+                                    [style.color]="getStatusColor(AssetMasterTable.procurement_Details.procurement_Status.name)">
+                                    {{AssetMasterTable.procurement_Details.procurement_Status.name}}
+                                </td>
+                            </tr>
+                            <br>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Payment Status:</label></td>
+                                <td
+                                    [style.color]="getStatusColor(AssetMasterTable.procurement_Details.procurement_Payment_Status.name)">
+                                    {{AssetMasterTable.procurement_Details.procurement_Payment_Status.name}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <hr>
+                    <h2 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700;">Invoices: </h2>
+                    <div>
+                        <table style="margin-left: 1%;" class="table" *ngIf="InvoicesPresent == true; else NoInv">
+                            <thead>
+                                <tr style="background-color: lightgray;">
+                                    <th>
+                                        Date Uploaded
+                                    </th>
+
+                                    <th>
+                                        File
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of Invoices; let i = index">
+                                    <td>
+                                        {{item.date_Uploaded | date: "yyyy/MM/dd"}}
+                                    </td>
+                                    <td>
+                                        <a target="_blank" style="color: rgb(65, 143, 227);"
+                                            matTooltip="Click link to open this file in a new tab"
+                                            (click)="openINVPDFInNewTab(i)">{{INVFileDetails[i].FileName}}</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <ng-template #NoInv>
+                            <table style="margin-left: 1%;" class="table">
+                                <br>
+                                <tr>
+                                    <td><b>No Invoices Uploaded</b></td>
+                                </tr>
+                            </table>
+                        </ng-template>
+                    </div>
+                    <hr>
+                    <h2 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700;">Asset Details
+                    </h2>
+                    <div>
+                        <table style="margin-left: 1%;" class="table">
+                            <br>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Name:</label></td>
+                                <td>
+                                    {{AssetMasterTable.asset.name}}
+                                </td>
+                            </tr>
+                            <br>
+                            <tr>
+                                <td style="max-width: 400px; width: 400px;"><label>Description:</label></td>
+                                <td>
+                                    {{AssetMasterTable.asset.description}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </mat-card-content>
+            </div>
+            <mat-card-actions>
+                <button mat-raised-button id="cBtn"
+                    style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;"
+                    (click)="Close()">
+                    Close
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </ng-template>
+
+
+</div>

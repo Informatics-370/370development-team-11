@@ -1,0 +1,51 @@
+<mat-sidenav-container class="main-sidenav-container">
+  <mat-sidenav mode="side" opened class="sidenav-container">
+    <mat-nav-list>
+
+      <div mat-list-item style="display: flex; align-items: center;">
+        <mat-icon aria-hidden="false" aria-label="admin icon" fontIcon="admin_panel_settings"
+          style="width:30px; height: 44px; margin-left: 5%;"></mat-icon>
+        <h2 class="uni-font">Administration</h2>
+      </div>
+
+      <a mat-list-item class="uni-font" routerLink="/ViewEmployee">Employees</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewAdmin">Admins</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewEmpRole">Roles</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewDepartment">Departments</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewBranch">Branch</a>
+      <a mat-list-item class="uni-font" routerLink="/Delegation">Delegation of Authority</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewMandateLimit">Mandate Limits</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewHelp">Manage Help</a>
+      <a mat-list-item class="uni-font" routerLink="/ViewSettings">Settings</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="Main-content">
+    <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt; align-items: center;">
+      Settings
+    </h1>
+
+    <div mat-list-item style=" display: flex;">
+
+      <button mat-raised-button (click)="openDialog()"
+        style="width: 200px; font-size: 14px; height: 42px; margin: 10px; background-color:#244688; color:white;">
+        Backup System
+      </button>
+      <button mat-raised-button (click)="openRestoreDialog()"
+        style="width: 200px; font-size: 14px; height: 42px; margin: 10px; background-color:#244688; color:white;">
+        Restore System
+      </button>
+      <button mat-raised-button (click)="openTimerDialog()"
+        style="width: 200px; font-size: 14px; height: 42px; margin: 10px; background-color:#244688; color:white;">
+        Edit OTP Timer</button>
+
+    </div>
+    <!--
+      <div class="d-flex justify-content-center">
+        <span class="loader" id="loading"></span>
+      </div>
+    -->
+
+
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

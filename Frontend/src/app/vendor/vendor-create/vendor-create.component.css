@@ -1,0 +1,63 @@
+
+label {
+    width: 290px;
+    text-align: justify;
+    font-weight: 500;
+    margin-left: 1%;
+    text-align-last: left;
+}
+
+mat-checkbox {
+    float: left;
+    margin-left: 2%;
+}
+
+.file-upload{
+    float: left;
+    margin-left: 4.5%;
+}
+
+mat-form-field{
+    margin-top: 1%;
+    width:400px
+}
+
+.content {
+    top: 63px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #eee;
+    border-top:1px solid;
+    text-align: center;
+   
+}
+table {
+    width: 800px;
+}
+td {
+    width: 600px;
+}
+
+mat-error {
+    display: none !important;
+}
+
+mat-error:first-child {
+    display: block !important;
+}
+
+.file-upload {
+    background-color: #244688;
+    color: white;
+    
+}
+
+
+#btnHover:hover {
+    background-color: #fe4945;
+  }
+  
+  #btnHover {
+    background-color: #22afbe;
+  }

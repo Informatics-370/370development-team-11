@@ -1,0 +1,370 @@
+import { Component, OnInit,ViewChild } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { DataService } from 'src/app/DataService/data-service';
+import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
+import { VendorDetails } from 'src/app/Shared/VendorDetails';
+import { VendorCreateChoiceComponent } from '../vendor-create-choice/vendor-create-choice.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import { Subscription, buffer, elementAt, groupBy } from 'rxjs';
+import { OnboardRequest } from 'src/app/Shared/OnboardRequest';
+import { TestScheduler } from 'rxjs/testing';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+import { ApproveVendorIFrameComponent } from 'src/app/HelpIFrames/ApproveVendorIFrame/approve-vendor-iframe/approve-vendor-iframe.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NotificationdisplayComponent } from 'src/app/notificationdisplay/notificationdisplay.component';
+
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
+
+export interface PendOnboardRequestDetails {
+  onboard_Request_Id : number;
+  SelectedRequestVendorName: string;
+  requestType: string;
+  quoteTotal : number;
+  employeeName : string;
+  vendorId: number;
+  VendorStatusId:number;
+  onboardRequestStatusID:number;
+}
+
+@Component({
+  selector: 'app-vendor-unofficial-vendorlist',
+  templateUrl: './vendor-unofficial-vendorlist.component.html',
+  styleUrls: ['./vendor-unofficial-vendorlist.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+})
+
+
+
+
+export class VendorUnofficialVendorlistComponent implements OnInit{
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  constructor(private VendorService: DataService, private dialog: MatDialog, private route: ActivatedRoute,private router: Router,private sanitizer: DomSanitizer) {
+   // this.router.routeReuseStrategy.shouldReuseRoute = () => false; 
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+      };
+      this.mySubscription = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+      // Trick the Router into believing it's last link wasn't previously loaded
+      this.router.navigated = false;
+      }
+      });
+  }
+  private refreshSubscription:Subscription;
+  PendingOnboardDetails: OnboardRequest[] = [];
+  PendingOnboardRequests: any = [];
+  PendingOnboardDetailSummary : PendOnboardRequestDetails[] = [];
+  onboardRequestData: any[] = [];
+  SearchResults: PendOnboardRequestDetails[] = [];
+  iRole: string;
+  rAdmin: string;
+  sFilter:string;
+  mySubscription: any;
+  
+
+
+  ngOnInit() {
+    this.iRole = ""
+    this.rAdmin = ""
+    
+
+    this.iRole = this.VendorService.decodeUserRole(sessionStorage.getItem("token"));
+
+
+    if (this.iRole == "Admin" || this.iRole == "MD") {
+      this.rAdmin = "true";
+    }
+
+    if(this.sFilter == undefined) {
+      if(this.rAdmin == "true") {
+        this.sFilter = "4"
+      }
+      else {
+        this.sFilter = "1";
+      }
+      
+    }
+    
+
+   this.VendorService.GetAllOnboardRequest().subscribe((result) => {
+      this.SearchResults = []
+      let RequestList:any[] = []
+      RequestList = result
+      this.onboardRequestData = [];
+      this.onboardRequestData = result 
+      console.log(result)
+      this.PendingOnboardDetails = [];
+      RequestList.forEach((element) => this.PendingOnboardDetails.push(element));
+      //RequestList.forEach((element) => this.vendor.push(element.vendors));
+      this.PendingOnboardRequests = [];
+      this.PendingOnboardRequests =  new MatTableDataSource(this.PendingOnboardDetails.filter((value, index, self) => self.map(x => x.onboard_Request_Id).indexOf(value.onboard_Request_Id) == index));
+      this.PendingOnboardRequests.paginator = this.paginator;
+      
+      let countsByPart = undefined
+      countsByPart = this.PendingOnboardDetails.reduce((accumulator, currentValue) => {
+        const partId = currentValue.onboard_Request_Id;
+        
+        if (!accumulator.hasOwnProperty(partId)) {
+          accumulator[partId] = 0;
+        }
+        
+        accumulator[partId] += 1;
+        
+        return accumulator;
+      }, {});
+      
+      this.PendingOnboardDetailSummary  = [];
+      this.PendingOnboardRequests.data.forEach(element => {
+        let sType = "General Suppliers"
+        if (countsByPart[element.onboard_Request_Id] == 1) {
+          sType = "Sole Supplier"
+        }
+        let result:PendOnboardRequestDetails = {
+          onboard_Request_Id: element.onboard_Request_Id,
+          SelectedRequestVendorName: this.getVendorName(element.onboard_Request_Id),
+          requestType: sType,
+          quoteTotal: countsByPart[element.onboard_Request_Id],
+          employeeName:element.employeeName,
+          vendorId:element.vendor_ID,
+          VendorStatusId:this.getVendorStatusID(element.onboard_Request_Id),
+          onboardRequestStatusID:this.getOnboardStatusID(element.onboard_Request_Id) ,
+        }
+        if(result.SelectedRequestVendorName != "Request Rejected") {
+          if(this.sFilter == "1") {
+            if(this.rAdmin == "true" && result.onboardRequestStatusID == 4) {
+              this.PendingOnboardDetailSummary.push(result)
+              this.SearchResults.push(result)
+            }
+            else if(result.onboardRequestStatusID != 4) {
+              this.PendingOnboardDetailSummary.push(result)
+              this.SearchResults.push(result)
+            }
+          }
+          else if(this.sFilter == "2"){
+            if((result.VendorStatusId == 3 && result.onboardRequestStatusID == 3) || (result.VendorStatusId == 4 && result.onboardRequestStatusID == 3)) {
+              this.PendingOnboardDetailSummary.push(result)
+              this.SearchResults.push(result)
+            }
+          }
+          else if(this.sFilter == "3") {
+            if((result.VendorStatusId == 2 && result.onboardRequestStatusID == 2) || (result.VendorStatusId == 1 && result.onboardRequestStatusID == 1) || (result.VendorStatusId == 5 && result.onboardRequestStatusID == 1) || (result.VendorStatusId == 1 && result.onboardRequestStatusID == 2)) {
+              this.PendingOnboardDetailSummary.push(result)
+              this.SearchResults.push(result)
+            }
+          }
+          else if(this.sFilter == "4") {
+            if(this.rAdmin == "true" && result.onboardRequestStatusID == 4 && result.VendorStatusId == 1) {
+              this.PendingOnboardDetailSummary.push(result)
+              this.SearchResults.push(result)
+            }
+          }
+          this.PendingOnboardRequests = new MatTableDataSource(this.SearchResults)
+          this.PendingOnboardRequests.paginator = this.paginator;
+        }
+        
+        //result.onboardRequestStatusID == 5 || result.onboardRequestStatusID == 3
+      })
+      if (result) {
+        hideloader();
+      }
+      console.log(this.SearchResults)
+      this.PendingOnboardRequests = new MatTableDataSource(this.SearchResults)
+      this.PendingOnboardRequests.paginator = this.paginator;
+      
+      
+      
+
+
+      function hideloader() {
+        document.getElementById('loading').style.display = "none";
+        document.getElementById('table').style.visibility = "visible";
+      }
+   })
+
+  }//ngoninIt
+
+  
+
+  ngOnDestroy() {
+    if (this.mySubscription) {
+    this.mySubscription.unsubscribe();
+    }
+  }
+
+  
+
+  ChangeFilter() {
+    this.ngOnInit()
+  }
+
+  searchWord: string = '';
+
+
+  applyFilter(event: Event) {
+
+    const filterValue = (event.target as HTMLInputElement).value;
+
+    this.PendingOnboardRequests.filter = filterValue.trim().toLowerCase();
+  
+    if (this.PendingOnboardRequests.paginator) {
+      this.PendingOnboardRequests.paginator.firstPage();
+    }
+  }
+
+
+
+  Edit(i:number) {
+    
+    this.VendorService.GetRequestByID(i).subscribe(result => {
+    for (let a = 0; a < result.length;a++) {
+      if(result[a].vendor.vendor_Status_ID == 4 || result[a].vendor.vendor_Status_ID == 3) {
+        this.router.navigate(['/vendor-approve-edit/' + result[a].vendor_ID])
+      }
+      
+    }
+  })
+      
+    
+  }
+  
+  getVendorName(i:number) {
+    let result = "Request pending"
+    for (let a = 0;a < this.onboardRequestData.length;a++) {
+        if(this.onboardRequestData[a].onboard_Request_Id == i) {
+          if(this.onboardRequestData[a].onboard_Request_status_ID == 3) {
+            result = ""
+            return this.onboardRequestData[a].vendors.name
+          }
+          else if(this.onboardRequestData[a].onboard_Request_status_ID == 2 && result != ""){
+            result = "Request Rejected"
+          }
+        }
+    }
+      return result
+  }
+
+  getVendorStatusID(i:number) {
+    let result = 5
+    
+    for (let a = 0;a < this.onboardRequestData.length;a++) {
+        if(this.onboardRequestData[a].onboard_Request_Id == i) {
+          if(this.onboardRequestData[a].vendors.vendor_Status_ID == 4 || this.onboardRequestData[a].vendors.vendor_Status_ID == 3) {
+            
+            result = this.onboardRequestData[a].vendors.vendor_Status_ID
+            return result
+          }
+          else if(this.onboardRequestData[a].vendors.vendor_Status_ID == 2 || this.onboardRequestData[a].vendors.vendor_Status_ID == 1) {
+            result = this.onboardRequestData[a].vendors.vendor_Status_ID
+            return result
+          }
+        }
+    }
+      return result
+  }
+
+  
+  getOnboardStatusID(i:number) {
+    let result = 2
+    for (let a = 0;a < this.onboardRequestData.length;a++) {
+        if(this.onboardRequestData[a].onboard_Request_Id == i) {
+          if(this.onboardRequestData[a].onboard_Request_status_ID == 3) {
+            
+            result = this.onboardRequestData[a].onboard_Request_status_ID
+            return result
+          }
+          else if(this.onboardRequestData[a].onboard_Request_status_ID == 1) {
+            result = this.onboardRequestData[a].onboard_Request_status_ID
+            return result
+          }
+          else if(this.onboardRequestData[a].onboard_Request_status_ID == 4) {
+            result = this.onboardRequestData[a].onboard_Request_status_ID
+            return result
+          }
+        }
+    }
+      return result
+  }
+
+  User:string;
+
+  UpdateOnboardRequestStatus(i:number) {
+
+    this.User = this.VendorService.decodeUser(sessionStorage.getItem('token'))
+    let irole = this.VendorService.decodeUserRole(sessionStorage.getItem('token'))
+    let iTemprole = this.VendorService.decodeTempAcc(sessionStorage.getItem('token'))
+    this.VendorService.GetEmployeeByUsername(this.User).subscribe(r => {
+      let EmployeeDetails: any = r
+      let name = EmployeeDetails.employeeName + " " + EmployeeDetails.employeeSurname
+
+      if(this.onboardRequestData.find(x=> x.onboard_Request_Id == i).employeeName != name || irole == "MD" || iTemprole == "MD") {
+        for (let a = 0; a < this.onboardRequestData.length; a++) {
+          if (this.onboardRequestData[a].onboard_Request_Id == i) {
+            if (this.onboardRequestData[a].onboard_Request_status_ID == 1) {
+              this.VendorService.ChangeOnboardStatus(5, i, this.onboardRequestData[a].vendor_ID).subscribe()
+            }
+          }
+        }
+        this.router.navigate(['/vendor-approve/' + i])
+      }
+      else {
+        var action = "ERROR";
+        var title = "VALIDATION ERROR";
+        var message: SafeHtml = this.sanitizer.bypassSecurityTrustHtml("Forbidden to <strong style='color:red'> APPROVE </strong> own request!");
+
+        const dialogRef:MatDialogRef<NotificationdisplayComponent> = this.dialog.open(NotificationdisplayComponent, {
+          disableClose: true,
+          data: { action, title, message }
+        });
+
+        const duration = 2200;
+        setTimeout(() => {
+          this.router.navigate(['/vendor-unofficial-vendorlist'])
+          dialogRef.close();
+        }, duration);
+      }
+
+    })
+  }
+
+  CorrectRouteChoice(i:number) {
+  
+    for (let a = 0;a < this.onboardRequestData.length;a++) {
+      if(this.onboardRequestData[a].onboard_Request_Id == i) {
+        if(this.onboardRequestData[a].onboard_Request_status_ID == 4) {
+         //this.VendorService.ChangeOnboardStatus(4,i,this.onboardRequestData[a].vendor_ID).subscribe()
+          this.router.navigate(['/vendor-approve/' + i])
+        }
+        else if(this.onboardRequestData[a].vendors.vendor_Status_ID == 5 || this.onboardRequestData[a].onboard_Request_status_ID == 3) {
+          this.router.navigate(['/vendor-approve/' + i])
+        }
+      }
+  }
+  }
+
+  displayedColumns : string[] = ["Id","selected","Type", "TotalQuotes","user","Edit","View"];
+
+
+
+
+
+
+
+  openApproveVendorIFrameTab(): void {
+    const dialogRef = this.dialog.open(ApproveVendorIFrameComponent, {
+      // width: '800px', // Set the desired width
+      // height: '600px', // Set the desired height
+      panelClass: 'iframe-dialog' // Apply CSS class for styling if needed
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any dialog close actions if needed
+    });
+  }
+}

@@ -1,0 +1,413 @@
+import { DatePipe } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+import { ActivatedRoute, Router } from '@angular/router';
+import { DataService } from 'src/app/DataService/data-service';
+import { AuditLog } from 'src/app/Shared/AuditLog';
+import { Vendor_Category } from 'src/app/Shared/VendorCategory';
+import { VendorDetails } from 'src/app/Shared/VendorDetails';
+import { Vendor_Fax } from 'src/app/Shared/VendorDetailsFax';
+import { Vendor_Tax } from 'src/app/Shared/VendorDetailsIncomeTaxNum';
+import { Vendor_Insurance } from 'src/app/Shared/VendorDetailsInsurance';
+import { Vendor_License } from 'src/app/Shared/VendorDetailsLicense';
+import { Vendor_Payment_Terms } from 'src/app/Shared/VendorDetailsPaymentTerms';
+import { Vendor_Registration } from 'src/app/Shared/VendorDetailsRegistration';
+import { Vendor_Agreement } from 'src/app/Shared/VendorDetailsSignedAgreement';
+import { Vendor_Vat } from 'src/app/Shared/VendorDetailsVatRegistered';
+import { Vendor_Website } from 'src/app/Shared/VendorDetailsWebsite';
+import { Vendor_Insurance_Type } from 'src/app/Shared/VendorInsuranceType';
+import { VendorOnboardRequest } from 'src/app/Shared/VendorOnboardRequest';
+import { VendorStatus } from 'src/app/Shared/VendorStatus';
+
+
+import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material/tooltip';
+export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
+  showDelay: 1000,
+  hideDelay: 1000,
+  touchendHideDelay: 1000,
+};
+@Component({
+  selector: 'app-vendor-delete',
+  templateUrl: './vendor-delete.component.html',
+  styleUrls: ['./vendor-delete.component.css'],
+  providers: [{provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}]
+})
+export class VendorDeleteComponent {
+
+  vendorCat: Vendor_Category = {
+    Vendor_Category_ID:0,
+    Name:"",
+    Description:"",
+  };
+
+  VStatus: VendorStatus = {
+    vendor_Status_ID: 0,
+    name: '',
+    description: '',
+  }
+
+  Vendor: VendorOnboardRequest = {
+    vendor_ID: 0,
+    vendor_Status_ID: 0,
+    vendor_Status: this.VStatus,
+    name: '',
+    email: '',
+    number_Of_Times_Used: 0,
+    sole_Supplier_Provided:false,
+    preferedVendor:false,
+  }
+  VendorDetail: VendorDetails = {
+    vendor_Detail_ID:0,
+    vendor_Category_ID:0,
+    vendor_ID:0,
+    vendor_Category: this.vendorCat,
+    vendor:this.Vendor,
+    telephone_Num:"",
+    contact_Person_Title:"",
+    contact_Person_Name:"",
+    contact_Person_ContactNum:"",
+    contact_Person_Email:"",
+    registered_Address:"",
+    faxProvided: false,
+    websiteProvided:false,
+    description_GSP:"",
+
+    vatRegistered:false,
+    registration_Provided:false,
+    income_Tax_Num_Provided:false,
+    soleSupplierProvided:false,
+    pOPIA_Provided:false,
+    payment_Terms_Provided:false,
+    insurance_Provided:false,
+    signed_Agreement_Provided:false,
+    license_Num_Provided:false,
+
+    bank_Name:"",
+    account_Holder:"",
+    bank_Account_Number:"",
+    branch_Code:"",
+    account_Type:"",
+    bank_Contact_Name:"",
+    bank_Contact_PhoneNum:"",
+    bankStampedConfirtmation:"",
+    beeRegistered:false,
+    dueDIllegenceRequired:false,
+    dateAccepted:new Date(),
+  }
+
+  Vendorfax: Vendor_Fax = {
+    fax_ID: 0,
+    vendor_Detail_ID: 0,
+    vendor_Detail: this.VendorDetail,
+    fax:"",
+  }
+
+  VendorVat: Vendor_Vat = {
+    vat_Registration_Number: "",
+    vendor_Detail_ID: 0,
+    vendor_Detail: this.VendorDetail,
+    vaT_Registration_Document:"",
+  }
+
+  VendorWebsite: Vendor_Website = {
+    website_ID: 0,
+    vendor_Detail_ID: 0,
+    vendor_Detail: this.VendorDetail,
+    url:"",
+  }
+
+  VendorLicense: Vendor_License = {
+    license_No: "",
+    vendor_Detail_ID: 0,
+    vendor_Detail: this.VendorDetail,
+    license_Doc_Upload:"",
+  }
+
+  VendorAgreement: Vendor_Agreement = {
+    agreement_ID: 0,
+    vendor_Detail_ID: 0,
+    vendor_Detail: this.VendorDetail,
+    signed_Agreement_Doc:"",
+  }
+
+  VendorInsuranceType: Vendor_Insurance_Type = {
+    vendor_Insurance_Type_ID : 4,
+    name: "",
+    description: "",
+  }
+
+  VendorInsurance: Vendor_Insurance = {
+    insurance_ID: 0,
+    vendor_ID: 0,
+    vendor : this.Vendor,
+    vendor_Insurance_Type_ID:0,
+    vendor_Insurance_Type: this.VendorInsuranceType,
+    confirmation_Doc:"",
+  } 
+
+  VendorPaymentTerms: Vendor_Payment_Terms = {
+    payment_Terms_ID: 0,
+    vendor_Detail_ID: 0,
+    vendor_Detail: this.VendorDetail,
+    payment_Terms:"",
+  }
+
+  VendorTax : Vendor_Tax = {
+    income_Tax_Num:"",
+    vendor_Detail_ID: 0,
+    vendor_Detail: this.VendorDetail,
+    tax_Clearance_Cert:"",
+  }
+
+  VendorRegistration  : Vendor_Registration = {
+    company_Registration_Number: "",
+    vendor_Detail_ID: 0,
+    vendor_Detail: this.VendorDetail,
+    proof_Of_Registration_Doc:"",
+  }
+
+  log: AuditLog = {
+    log_ID: 0,
+    user: "",
+    action: "",
+    actionTime: new Date(),
+  }
+
+  showConfirmationDialog: boolean = true;
+  showSuccessDialog: boolean = false;
+  FileDetails:any[] = [];
+  constructor(public dialogRef: MatDialogRef<VendorDeleteComponent>, private router: Router, private ActRoute: ActivatedRoute, private route: Router, private VendorService: DataService,
+    @Inject(MAT_DIALOG_DATA) public data: { ID: number }) { }
+//create api backend 1 for get and one for delete 
+OnboardRequestDetails: any[] = [];
+    ngOnInit(): void {
+      for(let i = 0;i < 7;i++) {
+        this.FileDetails.push({FileName:""})
+      }
+      this.ActRoute.paramMap.subscribe({
+        next: (params) => {
+          const ID = this.data.ID;
+  
+          if (ID) {
+            this.VendorService.GetVendorDetailByID(ID).subscribe(result => {
+               this.VendorDetail = result
+               this.Vendor = this.VendorDetail.vendor
+
+              if(this.VendorDetail.faxProvided == true ) {
+                this.getFax(this.VendorDetail.vendor_Detail_ID)
+              }
+              if(this.VendorDetail.vatRegistered == true) {
+                this.getVat(this.VendorDetail.vendor_Detail_ID)
+              }
+              if(this.VendorDetail.websiteProvided == true) {
+                this.getWebsite(this.VendorDetail.vendor_Detail_ID)
+              }
+              if(this.VendorDetail.license_Num_Provided == true) {
+                this.getLicense(this.VendorDetail.vendor_Detail_ID)
+              }
+              if(this.VendorDetail.signed_Agreement_Provided == true) {
+                this.getAgreement(this.VendorDetail.vendor_Detail_ID)
+              }
+
+              if(this.VendorDetail.payment_Terms_Provided == true) {
+                this.getPaymentTerms(this.VendorDetail.vendor_Detail_ID)
+              }
+              if(this.VendorDetail.registration_Provided == true) {
+                this.getRegistration(this.VendorDetail.vendor_Detail_ID)
+              }     
+              if(this.VendorDetail.income_Tax_Num_Provided == true) {
+                this.getIncomeTax(this.VendorDetail.vendor_Detail_ID)
+              }
+
+              this.getFileDetails(this.VendorDetail.bankStampedConfirtmation,6)
+              
+
+            });//result
+            
+          }//dataservice
+        }//if
+      })//next
+    };//actroute
+
+ 
+
+
+//add loop
+  onConfirm(VendorDetailsId: number): void {
+    let FolderCategory = ""
+    let VendorNo = ""
+    let fileName = ""
+
+    
+    if(this.VendorDetail.faxProvided == true ) {
+      this.VendorService.DeleteFaxByID(this.Vendorfax.fax_ID).subscribe()
+    }
+    if(this.VendorDetail.vatRegistered == true) {
+      
+      FolderCategory = "VATRegistration";
+      VendorNo = "Vendor" + this.Vendor.vendor_ID
+      fileName =  this.FileDetails[1].FileName
+      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
+      this.VendorService.DeleteVatByID(this.VendorVat.vendor_Detail_ID).subscribe()
+    }
+    if(this.VendorDetail.websiteProvided == true) {
+      this.VendorService.DeleteWebsiteByID(this.VendorWebsite.website_ID).subscribe()
+    }
+    if(this.VendorDetail.license_Num_Provided == true) {
+      FolderCategory = "LicenseOrAccreditationNumber";
+      fileName =  this.FileDetails[5].FileName
+      VendorNo = "Vendor" + this.Vendor.vendor_ID
+      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
+      this.VendorService.DeleteLicenseByID(this.VendorLicense.vendor_Detail_ID).subscribe()
+    }
+    if(this.VendorDetail.signed_Agreement_Provided == true) {
+
+      FolderCategory = "SignedAgreement";
+      VendorNo = "Vendor" + this.Vendor.vendor_ID
+      fileName =  this.FileDetails[3].FileName
+      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
+      this.VendorService.DeleteAgreementByID(this.VendorAgreement.agreement_ID).subscribe()
+    }
+    if(this.VendorDetail.payment_Terms_Provided == true) {
+      this.VendorService.DeletePaymentTerms(this.VendorPaymentTerms.payment_Terms_ID).subscribe()
+    }    
+    if(this.VendorDetail.income_Tax_Num_Provided == true) {
+      FolderCategory = "IncomeTax";
+      VendorNo = "Vendor" + this.Vendor.vendor_ID
+      fileName =  this.FileDetails[2].FileName
+      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
+      this.VendorService.DeleteIncomeTaxByID(this.VendorTax.vendor_Detail_ID).subscribe()
+    }
+    if(this.VendorDetail.registration_Provided == true) {
+      FolderCategory = "RegistrationProof";
+      VendorNo = "Vendor" + this.Vendor.vendor_ID
+      fileName =  this.FileDetails[0].FileName
+      this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe()
+      this.VendorService.DeleteRegistrationByID(this.VendorRegistration.vendor_Detail_ID).subscribe(Response => {
+        this.FinalDelete();
+      })
+    } 
+    
+       
+    }
+
+    FinalDelete() {
+    let  FolderCategory = "Bank";
+    let  VendorNo = "Vendor" + this.Vendor.vendor_ID 
+    let  fileName =  this.FileDetails[6].FileName
+    this.VendorService.DeleteVendorFile(FolderCategory,VendorNo,fileName).subscribe({next:(Response) => {
+    this.VendorService.DeleteVendorDetails(this.VendorDetail.vendor_Detail_ID).subscribe({
+      next:(response) => { 
+        this.log.action = "Exported Inventory Details";
+        this.log.user = this.VendorService.decodeUser(sessionStorage.getItem("token"));
+        let test: any
+        test = new DatePipe('en-ZA');
+        this.log.actionTime = test.transform(this.log.actionTime, 'MMM d, y, h:mm:ss a');
+        this.VendorService.AuditLogAdd(this.log).subscribe({
+          next: (Log) => {
+            this.showConfirmationDialog = false;
+            this.showSuccessDialog = true;
+            setTimeout(() => {
+              this.dialogRef.close();
+              this.VendorService.ChangeVendorStatus(4,this.Vendor.vendor_ID).subscribe(result => {
+               this.router.navigate(['/vendor-view']);
+              });
+            }, 1750);
+          }
+        })
+      
+    }
+    })
+  }})
+    }
+
+    onCancel(): void {
+      this.dialogRef.close();
+    }
+
+
+
+    getFax(FaxID:number) {
+      this.VendorService.GetFaxByID(FaxID).subscribe(result => {
+      this.Vendorfax = result
+    })
+    }
+    
+    getVat(VatID:number) {
+     this.VendorService.GetVatByID(VatID).subscribe(result => {
+     this.VendorVat = result
+     let sFilePath = this.VendorVat.vaT_Registration_Document
+     this.getFileDetails(sFilePath,1)
+    })
+    }
+    
+    getWebsite(WebsiteID:number) {
+     this.VendorService.GetWebsiteByID(WebsiteID).subscribe(result => {
+     this.VendorWebsite = result
+    })
+    }
+    
+    getLicense(LicenseID:number) {
+     this.VendorService.GetLicenseByID(LicenseID).subscribe(result => {
+     this.VendorLicense = result
+     let sFilePath = this.VendorLicense.license_Doc_Upload
+     this.getFileDetails(sFilePath,5)
+    })
+    }
+    
+    getAgreement(AgreementID:number) {
+     this.VendorService.GetAgreementByID(AgreementID).subscribe(result => {
+     this.VendorAgreement = result
+     let sFilePath = this.VendorAgreement.signed_Agreement_Doc
+     this.getFileDetails(sFilePath,3)
+    })
+    }
+    
+    getPaymentTerms(PaymentTermsID:number) {
+     this.VendorService.GetPaymentTerms(PaymentTermsID).subscribe(result => {
+     this.VendorPaymentTerms = result
+    })
+    }
+    
+    getRegistration(RegistrationID:number) {
+     this.VendorService.GetRegistrationByID(RegistrationID).subscribe(result => {
+     this.VendorRegistration = result
+     let sFilePath = this.VendorRegistration.proof_Of_Registration_Doc
+     this.getFileDetails(sFilePath,0)
+    })
+    }
+    getIncomeTax(IncomeTaxID:number) {
+     this.VendorService.GetIncomeTaxByID(IncomeTaxID).subscribe(result => {
+     this.VendorTax = result
+     let sFilePath = this.VendorTax.tax_Clearance_Cert
+     this.getFileDetails(sFilePath,2)
+    })
+    }
+
+    getFileDetails(sPath:string,ID:number) {
+      let Stringtouse = sPath.substring(sPath.indexOf("procionfiles/") + 13, sPath.length)
+      let FolderCategory = Stringtouse.substring(0, Stringtouse.indexOf("/"))
+      let VendorNo = Stringtouse.substring(Stringtouse.indexOf("/") + 1, Stringtouse.lastIndexOf("/"))
+      let filename = Stringtouse.substring(Stringtouse.lastIndexOf("/") + 1, Stringtouse.length)
+      this.FileDetails[ID].FileName = filename
+  }
+  
+   
+
+
+
+
+
+  openDeleteVendorTab(): void {
+    const userManualUrl = 'assets/PDF/DeleteVendorUM.pdf'; 
+    window.open(userManualUrl, '_blank');
+  }
+}
+
+  
+
+
+
+
+

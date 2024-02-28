@@ -1,0 +1,185 @@
+<mat-sidenav-container class="main-sidenav-container">
+    <mat-sidenav mode="side" opened class="sidenav-container">
+        <mat-nav-list>
+
+            <div mat-list-item style="display: flex; align-items: center;">
+                <mat-icon matSuffix style="width:30px; height: 44px; margin-left: 5%;">inventory</mat-icon>
+                <h2 class="uni-font">Inventory</h2>
+            </div>
+
+            <a mat-list-item class="uni-font" routerLink="/ViewConsumable">View Consumables</a>
+            <a mat-list-item class="uni-font" routerLink="/ViewConsumableCategory">View Consumable Categories</a>
+        </mat-nav-list>
+    </mat-sidenav>
+
+
+
+    <mat-sidenav-content class="Main-content">
+
+
+        <h1 style="margin-left: 1%; margin-top:1%; color: #244688; font-weight:700; font-size:32pt;">
+            View Consumables
+            <mat-icon (click)="openConsumableIFrameTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+            style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+        </h1>
+
+        <div mat-list-item style="margin-left: 0.5%; display: flex;  align-items: center; ">
+
+            <button mat-raised-button
+                style="width: 200px; font-size: 14px; height: 42px; margin: 10px; background-color:#244688; color:white;"
+                routerLink="/CreateConsumable">Create Consumable</button>
+
+            <button mat-raised-button
+                matTooltip="This will create a new PDF with all the current Consumable Details on the system"
+                style="width: 200px; font-size: 14px; height: 42px; margin: 10px; background-color:#244688; color:white;"
+                (click)="ExportInventoryDetails()">Export Details</button>
+
+            <span style="flex: 1 1 auto;"></span>
+
+            <mat-form-field appearance="fill"
+                style=" float:right; font-size: 12px; width: 300px; margin-top:0.5%; margin-right:1%;">
+                <mat-label>Search by Name...</mat-label>
+                <input matInput (keyup)="OnInPutChange()" [(ngModel)]="searchWord" placeholder="e.g. Water" />
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+
+        </div>
+
+
+
+        <div style="margin-right:1%; margin-left:1%;">
+
+            <div class="d-flex justify-content-center">
+                <span class="loader" id="loading"></span>
+            </div>
+
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" id="table">
+
+                <ng-container matColumnDef="Name">
+                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600">Name
+                    </th>
+                    <td mat-cell *matCellDef="let Consumable"> {{Consumable.name}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Description">
+                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600">
+                        Description</th>
+                    <td mat-cell *matCellDef="let Consumable"> {{Consumable.description}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="On Hand">
+                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;text-align: center;">On
+                        Hand </th>
+                    <td mat-cell *matCellDef="let Consumable" style="text-align: center;text-align: center;">
+                        {{Consumable.on_Hand}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Minimum Reorder Quantity">
+                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;text-align: center;">
+                        Minimum Reorder Quantity
+                    </th>
+                    <td mat-cell *matCellDef="let Consumable" style="text-align: center;">
+                        {{Consumable.minimum_Reorder_Quantity}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Maximum Reorder Quantity">
+                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600;text-align: center;">
+                        Maximum Reorder Quantity
+                    </th>
+                    <td mat-cell *matCellDef="let Consumable" style="text-align: center;">
+                        {{Consumable.maximum_Reorder_Quantity}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Category">
+                    <th mat-header-cell *matHeaderCellDef style="color:white; font-weight:600">
+                        Category</th>
+                    <td mat-cell *matCellDef="let Consumable"> {{Consumable.consumable_Category.name}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let Consumable" style="width:100px;">
+
+                        <button class="noselect" routerLink="/EditConsumable/{{Consumable.consumable_ID}}" type="button"
+                            style="background-color: #94CC5B;">
+                            <span class='text'>Edit</span>
+                            <span class="icon" style="border-left: 1px solid #94CC5B; ">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em"
+                                    viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                    <path
+                                        d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
+                                </svg>
+                            </span>
+                        </button>
+
+                        <!--<button mat-raised-button routerLink="/EditConsumable/{{Consumable.consumable_ID}}"
+                              style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 85px; margin-top: 0.5%;background-color: #94CC5B;"
+                              type="button">
+                        <mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Edit
+                      </button>-->
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="update">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let Consumable" style="width:100px;">
+
+                        <button class="noselect" (click)="openDialog(Consumable.name, Consumable.consumable_ID)"
+                            type="button" style="background-color: #94CC5B;"
+                            matTooltip="This will take you to the stock pop-up page where you can update stock levels and view predictions for this specific Consumable">
+                            <span class='text'>Stock</span>
+                            <span class="icon" style="border-left: 1px solid #94CC5B; ">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em"
+                                    viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                    <path
+                                        d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
+                                </svg>
+                            </span>
+                        </button>
+
+                        <!--<button mat-raised-button routerLink="/EditConsumable/{{Consumable.consumable_ID}}"
+                              style="margin-right: 5%; display: flex; align-items: center; font-size: 16px; width: 85px; margin-top: 0.5%;background-color: #94CC5B;"
+                              type="button">
+                        <mat-icon matPrefix style="margin-right:10%;">edit</mat-icon>Edit
+                      </button>-->
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="delete">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let Consumable" style="width:140px;">
+
+                        <button class="noselect" (click)="DeleteConsumable(Consumable.consumable_ID)">
+                            <span class='text'>Delete</span>
+                            <span class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em"
+                                    viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                    <style>
+                                        svg {
+                                            fill: #000000
+                                        }
+                                    </style>
+                                    <path
+                                        d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                </svg>
+                            </span>
+                        </button>
+
+                        <!--<button id="DeleteButton" mat-raised-button
+                            (click)="DeleteConsumable(Consumable.consumable_ID)">
+                            <mat-icon matPrefix style="margin-right:2%;">delete</mat-icon>Delete
+                        </button>-->
+                    </td>
+
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" style="background-color:#244688;"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator style="background-color: #eee;" [length]="100" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page">
+            </mat-paginator>
+        </div>
+
+    </mat-sidenav-content>
+</mat-sidenav-container>

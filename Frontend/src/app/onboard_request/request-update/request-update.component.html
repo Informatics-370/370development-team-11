@@ -1,0 +1,161 @@
+<div class="content">
+  <div style="display: inline-block; text-align: left;position: relative;width: 700px;">
+  <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
+    Update Vendor Onboard Request
+    <mat-icon (click)="openEditOnboardRequestTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+  </h1>
+
+  <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="VendorType == true ;Sole" #General>
+    
+    <br>
+      <mat-tab-group style="background-color: white;" #tabGroup [(selectedIndex)]=selectedIndex>
+        <form [formGroup]="CompanyContactInfoFormGroup" >
+        <mat-tab  formArrayName="RequestData" *ngFor="let data of rows.controls; let i = index;" > 
+         <div [formGroupName]="i">
+          <ng-template  mat-tab-label > 
+            <label style="color:white">Quotation {{i + 1}}</label>
+          </ng-template> 
+          <table style="margin-left: 1%;">
+            <br>
+          <tr>
+            <td><label  for="name" style="margin-right: 1%;">Company Name:</label></td>
+            <td> 
+                <mat-form-field appearance="fill">
+                    <input matInput placeholder="Company Name" id="CompanyName" formControlName="CompanyName" [errorStateMatcher]="matcher" >
+                    <mat-error *ngIf="data.get('CompanyName')?.hasError('required')">Company name(s) is required</mat-error>
+                    <mat-error *ngIf="data.get('CompanyName')?.hasError('maxlength')">Company name(s) cannot be more than 32 characters</mat-error>
+                    <mat-error *ngIf="data.get('CompanyName')?.hasError('pattern')">Company name(s) is invalid</mat-error>
+                  </mat-form-field>
+            </td>
+        </tr>
+        <tr>
+          <td><label  for="name" style="margin-right: 1%;">Company Email:</label></td>
+          <td> 
+              <mat-form-field appearance="fill">
+                  <input matInput placeholder="Company Email" id="CompanyName" formControlName="CompanyEmail" [errorStateMatcher]="matcher" >
+                  <mat-error *ngIf="data.get('CompanyName')?.hasError('required')">Company email is required</mat-error>
+                  <mat-error *ngIf="data.get('CompanyName')?.hasError('maxlength')">Company email cannot be more than 32 characters</mat-error>
+                  <mat-error *ngIf="data.get('CompanyName')?.hasError('email')">Company email is invalid</mat-error>
+                </mat-form-field>
+          </td>
+      </tr>
+        <tr>
+          <td><label for="file" style="margin-right: 1%;">New Company Quote: </label></td>
+          <td >  
+            <input id="file" type="file" class="file-upload" formControlName="CompanyQuote"  (change)="onFileUpload(i,$event)" style="max-width: 247px;">
+          </td>
+      </tr>
+      <br>
+      <tr *ngIf="FileDetails[i] != undefined ">
+        <td><label for="file" style="margin-right: 1%;">View current Company Quote: </label></td>
+        <td >  
+          <a href="{{FileDetails[i].FileURL}}" download="{{FileDetails[i].FileName}}">{{FileDetails[i].FileName}}</a>  
+        </td>
+    </tr>
+    <br>
+    <tr>
+      <td><label>Select as preferred vendor:</label></td>
+      <td><mat-checkbox formControlName="PreferedVendor" (click)="onPreferredChecked(i)" ></mat-checkbox></td>
+    </tr>   
+      <tr>
+        <td></td>
+        <td>  
+           <button id="btnHover" mat-raised-button [hidden]="i < 3" (click)="removeTab(i)" > Delete Quotation </button>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+      </table> 
+    </div>
+        </mat-tab>
+      </form>
+        <mat-tab disabled id="Add">
+          <ng-template  mat-tab-label> 
+            <button mat-icon-button  (click)="addTab()">  <mat-icon style="color: white">add_box</mat-icon> </button>
+          </ng-template>
+          
+        </mat-tab> 
+       
+      </mat-tab-group>
+      
+      <div  style="background-color: white;display: flex;border-left:1px solid #244688;border-right:1px solid #244688;border-bottom:1px solid #244688;">
+        <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;"  (click)="Validate()" [disabled]="!CompanyContactInfoFormGroup.valid"> Update </button>
+        <button mat-raised-button id="btnHover" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/request-view" > Cancel </button>
+     </div>
+    </div>
+
+
+
+
+
+
+
+
+
+    <!--  -->
+    <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="VendorType == false ;General" #Sole>
+      
+      <form  [formGroup]="SoleSupplierFormGroup" style="background-color: white;border:1px solid #244688;border-top:48px solid #244688;" >
+        <div style="margin-left:1%; margin-top:1%;margin-bottom: 20px;">
+          <table>
+            <br>
+            <tr>
+              <td><label for="name" style="margin-right: 1%;">Company name:</label></td>
+              <td>
+                <mat-form-field appearance="fill">
+                  <input matInput placeholder="Company Name" id="CompanyName" formControlName="CompanyName" [errorStateMatcher]="matcher" >
+                  <mat-error *ngIf="SoleSupplierFormGroup.controls['CompanyName'].hasError('required')">Company name is required</mat-error>
+                  <mat-error *ngIf="SoleSupplierFormGroup.controls['CompanyName'].hasError('maxlength')">Company name cannot be more than 32 characters</mat-error>
+                  <mat-error *ngIf="SoleSupplierFormGroup.controls['CompanyName'].hasError('pattern')">Company name is invalid</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td><label  for="name" style="margin-right: 1%;">Company Email:</label></td>
+              <td> 
+                  <mat-form-field appearance="fill">
+                      <input matInput placeholder="Company Email" id="CompanyName" formControlName="CompanyEmail" [errorStateMatcher]="matcher" >
+                      <mat-error *ngIf="SoleSupplierFormGroup.get('CompanyEmail')?.hasError('required')">Company email is required</mat-error>
+                      <mat-error *ngIf="SoleSupplierFormGroup.get('CompanyEmail')?.hasError('maxlength')">Company email cannot be more than 32 characters</mat-error>
+                      <mat-error *ngIf="SoleSupplierFormGroup.get('CompanyEmail')?.hasError('email')">Company email is invalid</mat-error>
+                    </mat-form-field>
+              </td>
+          </tr>
+            <tr>
+              <td><label for="reason" style="margin-right: 1%;">Reason:</label></td>
+              <td>
+                <mat-form-field appearance="fill">
+                  <input matInput placeholder="Company reason" id="Reason" formControlName="Reason" [errorStateMatcher]="matcher" >
+                  <mat-error *ngIf="SoleSupplierFormGroup.controls['Reason'].hasError('required')">Reason is required</mat-error>
+                  <mat-error *ngIf="SoleSupplierFormGroup.controls['Reason'].hasError('maxlength')">cannot be more than 32 characters</mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr *ngIf="FileDetails[0] != undefined ">
+              <td><label for="file" style="margin-right: 1%;" >Current Company Quote: </label></td>
+              <td *ngIf="onboardRequest[0].quotes != 'None'">  
+               <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}">{{FileDetails[0].FileName}}</a> 
+              </td>
+              <td *ngIf="onboardRequest[0].quotes == 'None'">None provided</td>
+           </tr>
+            <tr>
+              <td><label for="file" style="margin-right: 1%;">New Company Quote: </label></td>
+              <td>
+                <input id="file" type="file" class="file-upload"  formControlName="CompanyQuote" (change)="onFileUpload(0,$event)" style="max-width: 247px;">
+              </td>
+            </tr>
+            <br>
+          </table>
+        </div>
+        <div style="display: flex;">
+        <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;background-color: #94CC5B;" [disabled]="!SoleSupplierFormGroup.valid"  (click)="AddRequest()"> Update  </button> 
+        <button mat-raised-button id="btnHover" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 110px;" routerLink="/request-view" > Cancel </button>
+       </div>
+      </form>
+      
+    </div>
+  </div>
+  </div>

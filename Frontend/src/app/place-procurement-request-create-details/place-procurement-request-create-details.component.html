@@ -1,0 +1,310 @@
+<div class="content" style="display: flex;justify-content: center;">
+  <div >
+ <div>
+   <h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:32pt;">
+    Place Procurement Requests Details
+    <mat-icon (click)="openPPRDTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+                    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+  </h1>
+  <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:16pt;width: 330px;">Please fill in the following details:</label>
+  </div>
+      <form [formGroup]="ProcurementFormGroup"  style="text-align: -webkit-center;" >
+        <div style="background-color: white;border:1px solid #244688;width: 800px;height: 1100;">
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Buyer Name:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                    <input matInput placeholder="Buyer Name" formControlName="BuyerName" readonly (focus)="onFocus($event)" style="cursor: default; color: gray;">
+                  </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Buyer Email:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                    <input matInput placeholder="Buyer Email" formControlName="BuyerEmail" readonly (focus)="onFocus($event)" style="cursor: default; color: gray;">
+                   </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Item Type:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                    <mat-select formControlName="ItemType" placeholder="Consumable" style="display: contents;" (selectionChange)="ConsumableCheckChange()">
+                        <mat-option value="Consumable">Consumable</mat-option>
+                        <mat-option value="Assets">Assets</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <mat-expansion-panel hideToggle disabled expanded="{{ConsumableChecked}}" style="margin-left: 10px" >
+          <div>
+            <div class="row">
+              <div class="col-5">
+                <label style="width: 450px;">Select Consumable Item:</label>
+              </div>
+              <div class="col-7">
+                  <mat-form-field appearance="fill" *ngIf="ConsumableItems.length > 0">
+                      <mat-select formControlName="ConsumableItem" placeholder="Please Select a Consumable" style="display: contents;" [errorStateMatcher]="matcher" >
+                        <mat-option *ngFor="let Consumable of ConsumableItems" [value]="Consumable.consumable_ID">{{Consumable.name}}</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="ProcurementFormGroup.controls['ConsumableItem'].hasError('required')">No Consumable was selected</mat-error>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" *ngIf="ConsumableItems.length == 0">
+                    <mat-select formControlName="ConsumableItem" placeholder="No consumable exist on the system" style="display: contents;">
+                    </mat-select>
+                </mat-form-field>
+              </div>
+          </div>
+            <div class="row">
+              <div class="col-5">
+                <label style="width: 450px;">Quantity:</label>
+              </div>
+              <div class="col-7">
+                <mat-form-field appearance="outline">
+                  <input matInput type="number" formControlName="ConsumableQuantity" [errorStateMatcher]="matcher">
+                  <mat-error *ngIf="ProcurementFormGroup.controls['ConsumableQuantity'].hasError('required')">Consumable Quantity is required</mat-error>
+                  <mat-error *ngIf="ProcurementFormGroup.controls['ConsumableQuantity'].hasError('pattern')">Consumable Quantity can only contain numbers</mat-error>
+                </mat-form-field> 
+              </div>
+            </div>
+          </div>        
+        </mat-expansion-panel>
+        <mat-expansion-panel hideToggle disabled expanded="{{AssetChecked}}" style="margin-left: 10px" >
+          <div>
+            <div class="row">
+              <div class="col-5">
+                <label style="width: 450px;">Asset Name:</label>
+              </div>
+              <div class="col-7">
+                  <mat-form-field appearance="fill" *ngIf="assetnames != undefined">
+                    <input matInput formControlName="AssetName" [errorStateMatcher]="matcher" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" >
+                      <mat-option *ngFor="let assets of filteredAssets | async " [value]="assets" (click)="ChangeDescription(assets)">
+                        {{assets}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="ProcurementFormGroup.controls['AssetName'].hasError('required')">Asset name is required</mat-error>
+                    <mat-error *ngIf="ProcurementFormGroup.controls['AssetName'].hasError('maxlength')">Asset name cannot exceed more than 32 characters</mat-error>
+                    <mat-error *ngIf="ProcurementFormGroup.controls['AssetName'].hasError('pattern')">Asset name may only contain letters</mat-error>
+                  </mat-form-field>
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Description of Asset:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill" >
+                    <textarea matInput placeholder="Description of assets" formControlName="AssetDescription" [errorStateMatcher]="matcher"></textarea>
+                    <mat-error *ngIf="ProcurementFormGroup.controls['AssetDescription'].hasError('required')">Asset description is required</mat-error>
+                    <mat-error *ngIf="ProcurementFormGroup.controls['AssetDescription'].hasError('maxlength')">Asset description cannot exceed more than 50 characters</mat-error>
+                  </mat-form-field>
+            </div>
+          </div>    
+          </div>
+        </mat-expansion-panel>
+        <div class="row">
+          <div class="col-5">
+            <label style="width: 450px;">Account Code:</label>
+          </div>
+          <div class="col-7">
+            <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length != 0">
+              <mat-select formControlName="AccountCode" placeholder="Please Select an Account Code" style="display: contents;" [errorStateMatcher]="matcher">
+                <mat-optgroup *ngFor="let group of AccountCodeGroups" id="CBStyle" [label]="group.Month + ' - ' + group.Year" style="color: white;background-color: #244688;">
+                <mat-option *ngFor="let AccountCode of group.AccountDetails" [value]="AccountCode.AccountCodeValue">
+                {{AccountCode.AccountCodeName}}
+                </mat-option>
+                </mat-optgroup>
+              </mat-select>
+              <mat-error *ngIf="ProcurementFormGroup.controls['AccountCode'].hasError('required')">Please Select an Account Code</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" *ngIf="BudgetAllocationCode.length == 0">
+              <mat-select formControlName="AccountCode" placeholder="No Account code exist on the system" style="display: contents;">
+              </mat-select>
+          </mat-form-field>
+          </div>
+      </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Payment Type:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                    <mat-select formControlName="PaymentType" placeholder="Please select a payment method" style="display: contents;" [errorStateMatcher]="matcher">
+                        <mat-option value="1">Credit</mat-option>
+                        <mat-option value="2">Cash</mat-option>
+                        <mat-option value="2">EFT</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="ProcurementFormGroup.controls['PaymentType'].hasError('required')">Please Select a Payment Method</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Has Deposit?</label>
+            </div>
+            <div class="col-7">
+                <mat-checkbox formControlName="HasDeposit" (click)="DepositChange()"></mat-checkbox>
+            </div>
+        </div>
+        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('HasDeposit').value}}" style="margin-left: 10px" >
+            <div>
+              <div class="row">
+                <div class="col-5">
+                  <label style="width: 450px;">Deposit Amount:</label>
+                </div>
+                <div class="col-7">
+                  <mat-form-field appearance="outline">
+                    <input matInput type="number" formControlName="DepositAmount" [errorStateMatcher]="matcher" >
+                    <mat-error *ngIf="ProcurementFormGroup.controls['DepositAmount'].hasError('required')">Deposit Amount is required</mat-error>
+                    <mat-error *ngIf="ProcurementFormGroup.controls['DepositAmount'].hasError('pattern')">Deposit may only contain numbers</mat-error>
+                  </mat-form-field> 
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-5">
+                  <label style="width: 450px;">Deposit Due Date:</label>
+                </div>
+                <div class="col-7">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput  [matDatepicker]="dp1" formControlName="DepositDueDate" [min]="currentDate"   readonly (click)="dp1.open()" [errorStateMatcher]="matcher">
+                    <mat-datepicker-toggle matIconSuffix [for]="dp1" >
+                    <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #dp1 startView="year" [startAt]="currentDate"></mat-datepicker>
+                    <mat-error *ngIf="ProcurementFormGroup.controls['DepositDueDate'].hasError('required')">Deposit due date is required</mat-error>
+                  </mat-form-field> 
+                </div>
+              </div>
+            </div>        
+          </mat-expansion-panel>
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Full Payment Made?</label>
+            </div>
+            <div class="col-7">
+                <mat-checkbox formControlName="FullPaymentMade" (click)="PaymentMadeChange()"></mat-checkbox>
+            </div>
+        </div>
+        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('FullPaymentMade').value}}" style="margin-left: 10px" >
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Paid On Date:</label>
+            </div>
+            <div class="col-7">
+              <mat-form-field appearance="outline">
+                <mat-label>Choose a date</mat-label>
+                <input matInput  [matDatepicker]="dp2" formControlName="PaidOnDate" [max]="currentDate"  readonly (click)="dp2.open()" [errorStateMatcher]="matcher">
+                <mat-datepicker-toggle matIconSuffix [for]="dp2" >
+                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #dp2 startView="year" [startAt]="currentDate"></mat-datepicker>
+                <mat-error *ngIf="ProcurementFormGroup.controls['PaidOnDate'].hasError('required')">The Paid On Date is required</mat-error>
+              </mat-form-field> 
+            </div>
+          </div>
+          
+          <div class="row">
+                <div class="col-5">
+                  <label style="width: 450px;">Upload Receipt:</label>
+                </div>
+                <div class="col-7">
+                    <input  id="file"  type="file" class="file-upload" formControlName="UploadReceiptDoc" (change)="uploadFile(0,$event)" style="border: solid #244688; border-radius: 5px;height: fit-content; "> 
+                </div>
+              </div>     
+          </mat-expansion-panel>
+
+        
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Proof of payment?</label>
+            </div>
+            <div class="col-7">
+                <mat-checkbox formControlName="ProofOfPayment" (click)="ProofOfPaymentChange()"></mat-checkbox>
+            </div>
+        </div>  
+        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('ProofOfPayment').value}}" style="margin-left: 10px" >
+          <div class="row">
+                <div class="col-5">
+                  <label style="width: 450px;">Upload Proof of payment document:</label>
+                </div>
+                <div class="col-7">
+                    <input  type="file" class="file-upload" formControlName="ProofOfPaymentDoc" (change)="uploadFile(1,$event)" style="border: solid #244688; border-radius: 5px;height: fit-content; "> 
+                </div>
+              </div>     
+          </mat-expansion-panel>
+        
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Total Amount:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                    <input matInput formControlName="TotalAmount" [errorStateMatcher]="matcher" value="{{ProcurementFormGroup.get('TotalAmount').value}}">
+                    <mat-error *ngIf="ProcurementFormGroup.controls['TotalAmount'].hasError('required')">Total amount is required</mat-error>
+                    <mat-error *ngIf="ProcurementFormGroup.controls['TotalAmount'].hasError('pattern')">Total amount may only contain numbers</mat-error>
+                  </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Total Amount Due Date:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="outline">
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput  [matDatepicker]="dp3" formControlName="TotalAmountDueDate" [min]="currentDate" readonly (click)="dp3.open()" [errorStateMatcher]="matcher" >
+                    <mat-datepicker-toggle matIconSuffix [for]="dp3" >
+                    <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #dp3 startView="year" [startAt]="currentDate" ></mat-datepicker>
+                    <mat-error *ngIf="ProcurementFormGroup.controls['TotalAmountDueDate'].hasError('required')">Total Amount to be paid due date is required</mat-error>
+                </mat-form-field> 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Comments:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill" >
+                    <textarea matInput placeholder="Comments for Procurement Details" formControlName="Comments" [errorStateMatcher]="matcher"></textarea>
+                    <mat-error *ngIf="ProcurementFormGroup.controls['Comments'].hasError('maxlength')">Comments cannot exceed more than 50 characters</mat-error>
+                  </mat-form-field>
+            </div>
+        </div>
+        <br>
+        <div  style="background-color: white;display: flex;align-items: center;margin: 1%;place-content: center;">
+          <div class="wrapper">
+            <button class="" id="AnimationBtn"  (click)="Validation()" [disabled]="ProcurementFormGroup.invalid">
+              <span>Place</span>
+              <div class="success">
+                <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
+                <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+            </svg>
+              </div>
+            </button>
+          </div>
+          <div class="wrapper">
+          <button mat-raised-button id="cBtn" routerLink="/PlaceProcurementRequest" class="CloseButton"
+                  style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;"
+                  >
+            Cancel
+          </button>
+         </div>
+        </div>
+        </div>
+      
+
+      </form>
+    </div>
+</div>

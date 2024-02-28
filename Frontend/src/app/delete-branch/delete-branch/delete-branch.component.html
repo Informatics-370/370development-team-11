@@ -1,0 +1,25 @@
+<div style="color: white; background-color: #244688; text-align: center; display: flex; justify-content: center; align-items: center;">
+  <h1 mat-dialog-title style="color: white;"
+      *ngIf="showConfirmationDialog == true">
+    DELETE BRANCH
+  </h1>
+  <mat-icon (click)="openDeleteBranchTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help" *ngIf="showConfirmationDialog == true"
+            style="font-size: 24pt; height: 37px; width: 37px; margin-bottom: 5px; cursor: pointer;" [ngStyle]="{'color':'white'}" matTooltip="Need help? Click me!"></mat-icon>
+</div>
+
+
+<div mat-dialog-content *ngIf="showConfirmationDialog == true">
+  <p>You are about to delete the Branch: <strong>{{Branch.name}}</strong></p>
+  <p>Are you sure you want to continue?</p>
+</div>
+<div mat-dialog-actions align="end" *ngIf="showConfirmationDialog == true">
+  <button mat-raised-button (click)="onConfirm(data.branch_ID)" style="color: white; background-color: #94CC5B;">Yes</button>
+  <button mat-raised-button (click)="onCancel()" style="color: white; background-color: #244688;">Cancel</button>
+</div>
+
+<ng-container *ngIf="showSuccessDialog == true">
+  <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;">Delete Successful</h1>
+  <div mat-dialog-content>
+    <p>The Branch "{{ Branch.name }}" has been <strong style="color:red">DELETED</strong> successfully.</p>
+  </div>
+</ng-container>

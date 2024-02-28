@@ -1,0 +1,244 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+  <mat-card style="width: 600px; margin-top: 1%; align-items: center; margin-bottom: 1%;">
+    <form [formGroup]="myForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="10px"
+      (ngSubmit)="onSubmit()">
+      <mat-card-header>
+        <mat-card-title
+          style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">Create
+          Employee</mat-card-title>
+          <mat-icon (click)="openCreateEmployeeTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+        style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+        <mat-card-subtitle>
+
+          <table style="width:100%;" cellspacing="0">
+            <tr>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Name:</label>
+                  <br />
+                  <mat-form-field>
+                    <input matInput type="text" placeholder="E.g. John" formControlName="EmployeeName" id="EmployeeName"
+                           required>
+                    <mat-hint align="end">Not more than 32 characters long.</mat-hint>
+                    <mat-error *ngIf="myError('EmployeeName', 'required')">Name is required</mat-error>
+                    <mat-error *ngIf="myError('EmployeeName', 'maxlength')">Limit exceed</mat-error>
+                    <mat-error *ngIf="myError('EmployeeName', 'minlength')">
+                      Name must be 2 to 32 characters
+                      long
+                    </mat-error>
+                    <mat-error *ngIf="myError('EmployeeName', 'pattern')">Name can not contain numbers</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color: black;">Surname:</label>
+                  <br />
+                  <mat-form-field>
+                    <input matInput type="text" placeholder="E.g. Doe" formControlName="EmployeeSurname"
+                           id="EmployeeSurname" required>
+                    <mat-hint align="end">Not more than 50 characters long.</mat-hint>
+                    <mat-error *ngIf="myError('EmployeeSurname', 'required')">Surname is required</mat-error>
+                    <mat-error *ngIf="myError('EmployeeSurname', 'maxlength')">Limit exceed</mat-error>
+                    <mat-error *ngIf="myError('EmployeeSurname', 'pattern')">Surname can not contain numbers</mat-error>
+                    <mat-error *ngIf="myError('EmployeeSurname', 'minlength')">
+                      Surname must be 2 to 50 characters
+                      long
+                    </mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Email:</label>
+                  <br />
+                  <mat-form-field>
+                    <input matInput type="email" placeholder="E.g. example@gmail.com" formControlName="Email" id="Email"
+                           required>
+                    <mat-error *ngIf="myError('Email', 'required')">Email is required</mat-error>
+                    <mat-error *ngIf="myError('Email', 'maxlength')">Limit exceed</mat-error>
+                    <mat-error *ngIf="myError('Email', 'email')">Enter a valid email</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+              <td style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Phone Number:</label>
+                  <br />
+                  <mat-form-field>
+                    <input matInput type="text" placeholder="E.g. 0821234567" formControlName="CellPhone_Num"
+                           id="CellPhone_Num" required>
+                    <mat-hint align="end">Please include spaces as shown in the placeholder.</mat-hint>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'required')">Phone is required</mat-error>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'maxlength')">Limit exceed</mat-error>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'minlength')">Phone number must be 10 numbers</mat-error>
+                    <mat-error *ngIf="myError('CellPhone_Num', 'pattern')">Please enter a valid phone number</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+            </tr>
+            <tr>
+              <td id="RoleExists" style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Role:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-label>Choose one</mat-label>
+                    <mat-select formControlName="Role_ID" required>
+                      <mat-option>---</mat-option>
+                      <mat-option *ngFor="let role of roles" [value]="role">{{role.name}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="myError('Role_ID', 'required')">Please choose a role</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+
+              <td id="noRoleExists" style="width:100%; display: none">
+                <mat-card-content>
+                  <label style=" color:black;">Role:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-select formControlName="Role_ID" placeholder="No role exists on the system" required>
+                    </mat-select>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+
+              <td id="MandateExists" style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Mandate Limit:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-label>Choose one</mat-label>
+                    <mat-select formControlName="Mandate_ID" required>
+                      <mat-option>---</mat-option>
+                      <mat-option *ngFor="let ml of mandate_limits" [value]="ml">{{ml.ammount}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="myError('Mandate_ID', 'required')">Please choose a mandate limit</mat-error>
+                    <mat-hint align="end">Employee spend limit.</mat-hint>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+
+              <td id="noMandateExists" style="width:100%; display: none">
+                <mat-card-content>
+                  <label style=" color:black;">Mandate Limit:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-select formControlName="Mandate_ID" placeholder="No mandate limit exists on the system" required>
+                    </mat-select>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+            </tr>
+
+            <tr>
+              <td id="BranchExists" style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Branch:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-label>Choose one</mat-label>
+                    <mat-select formControlName="Branch_ID" required (selectionChange)='getBranch($event.value)'>
+                      <mat-option>---</mat-option>
+                      <mat-option *ngFor="let branch of branches" [value]="branch">{{branch.name}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="myError('Branch_ID', 'required')">Please choose a branch</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+
+              <td id="noBranchExists" style="width:100%; display: none">
+                <mat-card-content>
+                  <label style=" color:black;">Branch:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-select formControlName="Branch_ID" placeholder="No branch exists on the system" required>
+                    </mat-select>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+
+              <td id="noBranchSelected" style="width:100%;">
+                <mat-card-content>
+                  <label style=" color:black;">Department:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-select formControlName="Department_ID" placeholder="No branch selected" required>
+                    </mat-select>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+
+              <td id="noDepartmentExists" style="width:100%; display: none">
+                <mat-card-content>
+                  <label style=" color:black;">Department:</label>
+                  <br />
+                  <mat-form-field>
+                    <mat-select formControlName="Department_ID" placeholder="No department exists on the system" required>
+                    </mat-select>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+
+              <td id="BranchSelected" style="width:100%; display: none">
+                <mat-card-content>
+                  <div style="display: flex; text-align: left; justify-content: left; align-items: flex-start; ">
+                    <label style=" color: black;">
+                      Department:
+                    </label>
+                    <mat-icon aria-hidden="false" aria-label="add" fontIcon="add" style="color: black; cursor: pointer; font-size: 15pt; width: 20px; height: 20px; " (click)="DynamicDepartmentCreate()"></mat-icon>
+                  </div>
+
+                  <mat-form-field>
+                    <mat-label>Choose one</mat-label>
+                    <mat-select formControlName="Department_ID" required>
+                      <mat-option>---</mat-option>
+                      <mat-optgroup [label]="selectedBranch" [disabled]="selectedBranch.disabled" style="color: white; background-color: #244688;">
+                        <mat-option *ngFor="let dep of departments" [value]="dep">{{dep.name}}</mat-option>
+                      </mat-optgroup>
+                    </mat-select>
+                    <mat-error *ngIf="myError('Branch_ID', 'required')">Please choose a branch</mat-error>
+                  </mat-form-field>
+                </mat-card-content>
+              </td>
+
+            </tr>
+          </table>
+
+          <div class="d-flex justify-content-center">
+            <span class="loader" id="loading"></span>
+          </div>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
+
+        <div class="wrapper">
+          <button class="" id="AnimationBtn" type="submit" [disabled]="!myForm.valid">
+            <span>Save</span>
+            <div class="success">
+              <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
+              <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+              </svg>
+            </div>
+          </button>
+        </div>
+
+        <button mat-raised-button id="cBtn"
+                style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688; "
+                (click)="Close()">
+          Cancel
+        </button>
+
+        <!--<button mat-raised-button id="cBtn"
+                style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688; "
+                (click)="DynamicDepartmentCreate()">
+          Create Department
+        </button>-->
+
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>

@@ -1,0 +1,32 @@
+<div
+  style="color: white; background-color: #244688; text-align: center; display: flex; justify-content: center; align-items: center;">
+  <h1 mat-dialog-title style="color: white;" *ngIf="showConfirmationDialog == true">
+    DELETE BUDGET LINE
+  </h1>
+  <mat-icon (click)="openDeleteBLTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+    *ngIf="showConfirmationDialog == true"
+    style="font-size: 24pt; height: 37px; width: 37px; margin-bottom: 5px; cursor: pointer;"
+    [ngStyle]="{'color':'white'}" matTooltip="Need help? Click me!"></mat-icon>
+</div>
+
+
+<div mat-dialog-content *ngIf="showConfirmationDialog == true">
+  <p>You are about to delete the Budget Line: <strong>{{budgetLine.budget_Category.account_Code}}</strong> for month
+    <strong>{{budgetLine.month}}</strong>
+  </p>
+  <p>Are you sure you want to continue?</p>
+</div>
+<div mat-dialog-actions align="end" *ngIf="showConfirmationDialog == true">
+  <button mat-raised-button (click)="onConfirm(data.id2)" style="color: white; background-color: #94CC5B;">Yes</button>
+  <button mat-raised-button (click)="onCancel()" style="color: white; background-color: #244688;">Cancel</button>
+</div>
+
+<ng-container *ngIf="showSuccessDialog == true">
+  <h1 mat-dialog-title style="color: white; background-color: #244688; text-align: center;">DELETE SUCCESSFUL</h1>
+  <div mat-dialog-content>
+    <p>The budget line <strong>{{ budgetLine.budget_Category.account_Code }}</strong> for month
+      <strong>{{budgetLine.month}}</strong> has been <strong style="color:red">DELETED</strong>
+      successfully!
+    </p>
+  </div>
+</ng-container>

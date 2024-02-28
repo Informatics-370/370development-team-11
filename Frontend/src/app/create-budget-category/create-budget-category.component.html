@@ -1,0 +1,126 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+  <mat-card style="width: 600px; margin-top: 1%; display: flex; justify-content: center; align-items: center; ">
+    <form [formGroup]="budgetCategoryForm" novalidate fxLayout="column wrap" fxLayoutAlign="center center"
+      fxLayoutGap="10px" (ngSubmit)="onSubmit()">
+      <mat-card-header>
+        <mat-card-title
+          style="color: #244688; font-weight:700; font-size:32pt; margin-bottom:5%; text-align:center;">Create
+          Budget Category</mat-card-title>
+        <mat-icon (click)="openCreateBCTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+          style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}"
+          matTooltip="Need help? Click me!"></mat-icon>
+        <mat-card-subtitle style="justify-content: center; align-items: center;">
+
+          <label style="display: flex; justify-content: center; align-items: center; margin-right: 228px; color: black;">Name:</label>
+          <mat-card-content style="display: flex; justify-content: center; align-items: center;">
+
+
+            <mat-form-field style="width: 60%;">
+              <input matInput type="text" placeholder="" formControlName="account_Name" id="account_Name" required>
+              <mat-hint align="end">Not more than 150 characters long.</mat-hint>
+              <mat-error *ngIf="myError('account_Name', 'required')">
+                Name is
+                required
+              </mat-error>
+              <mat-error *ngIf="myError('account_Name', 'minlength')">
+                Name must be 3 to 150
+                characters
+                long
+              </mat-error>
+              <mat-error *ngIf="myError('account_Name', 'maxlength')">
+                Limit
+                exceeded
+              </mat-error>
+              <mat-error *ngIf="myError('account_Name', 'pattern')">
+                Name can not contain
+                numbers
+              </mat-error>
+            </mat-form-field>
+          </mat-card-content>
+          <br />
+          <label style="display: flex; justify-content: center; align-items: center; margin-right: 180px; color: black;">Account Code:</label>
+          <mat-card-content style="display: flex; justify-content: center; align-items: center;">
+
+            <mat-form-field style="width: 60%;">
+
+              <input matInput type="text" placeholder="" formControlName="account_Code" id="account_Code" required>
+              <mat-hint align="end">Not more than 9 characters long (incl. point or comma).</mat-hint>
+              <mat-error *ngIf="myError('account_Code', 'required')">
+                Accont code is
+                required
+              </mat-error>
+              <mat-error *ngIf="myError('account_Code', 'pattern')">
+                Accont code cannont contain special characters other than . or ,
+              </mat-error>
+              <mat-error *ngIf="myError('account_Code', 'minlength')">
+                Account code must be 4
+                to 9
+                characters
+                long
+              </mat-error>
+              <mat-error *ngIf="myError('account_Code', 'maxlength')">
+                Limit
+                exceeded
+              </mat-error>
+            </mat-form-field>
+          </mat-card-content>
+          <br />
+          <label style="display: flex; justify-content: center; align-items: center; margin-right: 188px; color: black;">Description:</label>
+          <mat-card-content style="display: flex; justify-content: center; align-items: center;">
+
+
+            <mat-form-field style="width: 60%;">
+              <textarea matInput type="text" placeholder="" formControlName="description" id="description"
+                        required></textarea>
+              <mat-hint align="end">Not more than 200 characters long.</mat-hint>
+              <mat-error *ngIf="myError('description', 'required')">
+                Description is
+                required
+              </mat-error>
+              <mat-error *ngIf="myError('description', 'minlength')">
+                Description must be 3 to
+                200 characters long
+              </mat-error>
+              <mat-error *ngIf="myError('description', 'maxlength')">
+                Limit
+                exceeded
+              </mat-error>
+              <mat-error *ngIf="myError('description', 'pattern')">
+                Description can not contain
+                symbols
+              </mat-error>
+            </mat-form-field>
+          </mat-card-content>
+
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions style="display: flex; justify-content: center; align-items: center; margin-top: 5%;">
+        <!--<button mat-raised-button type="submit"
+                      style="width: 150px; font-size: 14px; height: 42px; margin: 10px;"
+                      [disabled]="!budgetCategoryForm.valid"
+                      [ngStyle]="{'background-color': !budgetCategoryForm.valid ? 'rgba(148, 204, 91, 0.6)' : '#94CC5B','color': !budgetCategoryForm.valid ? 'rgba(255, 255, 255, 0.6)' : 'white'}">
+                Save
+              </button>-->
+
+        <div class="wrapper">
+          <button class="" id="AnimationBtn" type="submit" [disabled]="!budgetCategoryForm.valid">
+            <span>Save</span>
+            <div class="success">
+              <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756"
+                style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
+                <path
+                  d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+              </svg>
+            </div>
+          </button>
+        </div>
+
+        <button mat-raised-button id="cBtn"
+          style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;"
+          (click)="onCancel()">
+          Cancel
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>

@@ -1,0 +1,20 @@
+.main-spacer {
+  flex: 1 1 auto;
+}
+
+.main-nav {
+  color: white;
+  background-color: #244688;
+  border-bottom:solid black;
+}
+
+.image-container {
+  height: 24px;
+  width: 24px;
+  z-index: 1;
+  border-radius: 50%;
+  background-color: #fff;
+  background-position: center;
+  background-size: cover;
+}
+

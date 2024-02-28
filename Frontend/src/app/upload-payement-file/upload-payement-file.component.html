@@ -1,0 +1,52 @@
+<mat-tab-group (selectedTabChange)="onTabChange($event)">
+  <mat-tab label="Upload Receipt">
+    <ng-template matTabContent>
+
+      <div style="display: flex; justify-content: center; align-items: center; margin: 10px;">
+        <form [formGroup]="myForm" (submit)="onSubmitB()">
+          <div>
+            <h2 style="margin-left: 25px;">Upload a Receipt file</h2>
+            <input type="file" id="FileAdded" placeholder="" formControlName="FileAdded"
+              style="border: solid #244688; border-radius: 5px; max-width: 247px;" accept=".pdf" (change)="onFileUpload($event)"
+              required>
+          </div>
+
+          <div style="margin-top: 10px;">
+            <button mat-raised-button [disabled]="!myForm.valid"
+              style="color: white; background-color: #94CC5B; margin-right: 20px; margin-left: 10px;">
+              Upload File
+            </button>
+            <button mat-raised-button type="button" (click)="Close()"
+              style="color: white; background-color: #244688;">Cancel</button>
+          </div>
+        </form>
+
+      </div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Upload Credit Card Payment">
+    <ng-template matTabContent>
+      <h2 style="margin-left: 50px; margin-top: 10px;">Upload a Credit Card Payment file</h2>
+      <div style="display: flex; justify-content: center; align-items: center; margin: 10px;">
+        <form [formGroup]="myForm" (ngSubmit)="onSubmitA()">
+          <div>
+
+            <input type="file" id="file" placeholder="" formControlName="FileAdded"
+              style="border: solid #244688; border-radius: 5px; align-items: center; max-width: 247px;" accept=".pdf"
+              (change)="onFileUpload($event)" required>
+          </div>
+
+          <div style="margin-top: 10px;">
+            <button mat-raised-button [disabled]="!myForm.valid"
+              style="color: white; background-color: #94CC5B; margin-right: 20px; margin-left:10px;">
+              Upload File
+            </button>
+            <button mat-raised-button type="button" (click)="Close()"
+              style="color: white; background-color: #244688;">Cancel</button>
+          </div>
+        </form>
+
+      </div>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

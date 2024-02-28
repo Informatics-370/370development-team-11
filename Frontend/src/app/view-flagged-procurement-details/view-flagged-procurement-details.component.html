@@ -1,0 +1,265 @@
+<div class="content" *ngIf="ProcurementDetails != undefined">
+<div style="display: inline-block;">
+    <div style="text-align: left;position: relative;">
+<h1 style="margin: 1%;  color: #244688; font-weight:700; font-size:20pt;">
+  <button  mat-raised-button routerLink="/ViewFlaggedProcurementRequest" style="float:left; background-color:#244688; color:white;margin-right: 1%;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
+    Procurement Details for {{ProcurementDetails.procurement_Request.vendor.name}}
+    <mat-icon (click)="openFPDTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+                    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+  </h1>
+  <label style="margin-left: 1%; margin-top:1%;color: #244688;font-size:14pt;">Please Accept Or Reject the following request:</label>
+</div>
+      <form [formGroup]="ProcurementFormGroup"  style="text-align: -webkit-center;" >
+        <div style="background-color: white;border:1px solid #244688;width: 800px;height: 1100;">
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Buyer Name:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                    <input matInput readonly formControlName="BuyerName" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                  </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Buyer Email:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                    <input matInput readonly formControlName="BuyerEmail" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                   </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Item Type:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                        <input matInput readonly formControlName="ItemType" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                </mat-form-field>
+            </div>
+        </div>
+        <mat-expansion-panel hideToggle disabled expanded="{{ConsumableChecked}}" style="margin-left: 10px" >
+          <div>
+            <div class="row">
+              <div class="col-5">
+                <label style="width: 450px;">Select Consumable Item:</label>
+              </div>
+              <div class="col-7">
+                  <mat-form-field appearance="fill">
+                    <input matInput readonly formControlName="ConsumableItem" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                  </mat-form-field>
+              </div>
+          </div>
+            <div class="row">
+              <div class="col-5">
+                <label style="width: 450px;">Quantity:</label>
+              </div>
+              <div class="col-7">
+                <mat-form-field appearance="outline">
+                  <input matInput type="number" readonly formControlName="ConsumableQuantity" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                </mat-form-field> 
+              </div>
+            </div>
+          </div>        
+        </mat-expansion-panel>
+        <mat-expansion-panel hideToggle disabled expanded="{{AssetChecked}}" style="margin-left: 10px" >
+          <div>
+            <div class="row">
+              <div class="col-5">
+                <label style="width: 450px;">Asset Name:</label>
+              </div>
+              <div class="col-7">
+                  <mat-form-field appearance="fill">
+                    <input matInput readonly formControlName="AssetName" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                  </mat-form-field>
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Description of Asset:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill" >
+                    <textarea matInput readonly formControlName="AssetDescription" [disabled]="" (focus)="onFocus($event)" style="cursor: default"></textarea>
+                  </mat-form-field>
+            </div>
+          </div>    
+          </div>
+        </mat-expansion-panel>
+        <div class="row">
+          <div class="col-5">
+            <label style="width: 450px;">Account Code:</label>
+          </div>
+          <div class="col-7">
+            <mat-form-field appearance="fill">
+                <input matInput readonly formControlName="AccountCode" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+            </mat-form-field>
+          </div>
+      </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Payment Type:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                        <input matInput readonly formControlName="PaymentType" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Has Reposit?</label>
+            </div>
+            <div class="col-7">
+                <mat-checkbox formControlName="HasDeposit"></mat-checkbox>
+            </div>
+        </div>
+        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('HasDeposit').value}}" style="margin-left: 10px" >
+            <div>
+              <div class="row">
+                <div class="col-5">
+                  <label style="width: 450px;">Deposit Amount:</label>
+                </div>
+                <div class="col-7">
+                  <mat-form-field appearance="outline">
+                    <input matInput readonly formControlName="DepositAmount" value="{{this.ProcurementFormGroup.get('DepositAmount')?.value | currency:'R'}}" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                  </mat-form-field> 
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-5">
+                  <label style="width: 450px;">Deposit Due Date:</label>
+                </div>
+                <div class="col-7">
+                  <mat-form-field appearance="outline">
+                    <!-- <input matInput readonly formControlName="DepositDueDate" [disabled]="" (focus)="onFocus($event)" style="cursor: default"> -->
+                    <input matInput readonly formControlName="DepositDueDate">
+                  </mat-form-field> 
+                </div>
+              </div>
+            </div>        
+          </mat-expansion-panel>
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Full Payment Made?</label>
+            </div>
+            <div class="col-7">
+                <mat-checkbox formControlName="FullPaymentMade"></mat-checkbox>
+            </div>
+        </div>
+        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('FullPaymentMade').value}}" style="margin-left: 10px" *ngIf="files[0] != null">
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Paid On Date:</label>
+            </div>
+            <div class="col-7">
+              <mat-form-field appearance="outline">
+                <input matInput readonly formControlName="PaidOnDate" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+              </mat-form-field> 
+            </div>
+          </div>
+          
+          <div class="row" *ngIf="files[0].type == 'application/pdf'">
+                <div class="col-5">
+                  <label style="width: 450px;">Receipt:</label>
+                </div>
+                <div class="col-7">
+                    <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" style="color: black;font-weight: 600;">{{FileDetails[0].FileName}}</a>
+                </div>
+            </div>     
+            <div class="row" *ngIf="files[0].type != 'application/pdf'">
+                <div class="col-5">
+                  <label style="width: 450px;">Receipt:</label>
+                </div>
+                <div class="col-7">
+                    <a href="{{FileDetails[0].FileURL}}" download="{{FileDetails[0].FileName}}" target="_blank" style="color: black;">{{FileDetails[0].FileName}}</a>   
+                </div>
+            </div> 
+          </mat-expansion-panel>
+
+        
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Proof of payment?</label>
+            </div>
+            <div class="col-7">
+                <mat-checkbox formControlName="ProofOfPayment"></mat-checkbox>
+            </div>
+        </div>  
+        <mat-expansion-panel hideToggle disabled expanded="{{ProcurementFormGroup.get('ProofOfPayment').value}}" style="margin-left: 10px" *ngIf="files[1] != null">
+          <div class="row" *ngIf="files[1].type == 'application/pdf'">
+                <div class="col-5">
+                  <label style="width: 450px;">Proof of payment document:</label>
+                </div>
+                <div class="col-7">
+                    <a id="btnLink" (click)="openPDFInNewTab(1)" target="_blank">{{FileDetails[1].FileName}}</a>   
+                </div>
+            </div>   
+            <div class="row" *ngIf="files[1].type != 'application/pdf'">
+                <div class="col-5">
+                  <label style="width: 450px;">Proof of payment document:</label>
+                </div>
+                <div class="col-7">
+                    <a href="{{FileDetails[1].FileURL}}" download="{{FileDetails[1].FileName}}" target="_blank" style="color: black;">{{FileDetails[1].FileName}}</a>   
+                </div>
+            </div>    
+          </mat-expansion-panel>
+        
+          <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Total Amount:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill">
+                    <input matInput readonly formControlName="TotalAmount" value="{{this.ProcurementFormGroup.get('TotalAmount')?.value | currency:'R'}}" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                  </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Total Amount Due Date:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="outline">
+                    <input matInput readonly formControlName="TotalAmountDueDate" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                </mat-form-field> 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+              <label style="width: 450px;">Comments:</label>
+            </div>
+            <div class="col-7">
+                <mat-form-field appearance="fill" >
+                    <textarea matInput readonly formControlName="Comments" [disabled]="" (focus)="onFocus($event)" style="cursor: default"></textarea>
+                  </mat-form-field>
+            </div>
+        </div>
+        <br>
+        <div  style="background-color: white;display: flex;align-items: center;margin: 1%;place-content: center;">
+          <div class="wrapper">
+            <button class=""  (click)="AcceptRequest()">
+              <span>Accept</span>
+              <div class="success">
+                <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;" xml:space="preserve">
+                <path d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+            </svg>
+              </div>
+            </button>
+          </div>
+
+          <button mat-raised-button id="cBtn" (click)="RejectRequest()"
+                  style="width: 150px; font-size: 14px; height: 42px; margin: 10px; background-color: #244688; color: white; border: 3px solid #244688;"
+                  >
+            Reject
+          </button>
+        </div>
+        </div>
+      
+
+      </form>
+    </div>
+</div>

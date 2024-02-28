@@ -1,0 +1,187 @@
+<div class="content" *ngIf="ProcurementRequestDetails != undefined">
+  <div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="ProcurementRequestDetails.vendor.vendor_Status_ID == 6;">
+    <h1 style="margin: 1%;margin-left: 0px;  color: #244688; font-weight:700; font-size:24pt;" >
+        <button  mat-raised-button routerLink="/ViewPendingProcurementRequest" style="float:left; background-color:#244688; color:white;margin-right: 1%;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
+        Procurement Request For {{ProcurementRequestDetails.vendor.name}} 
+        <mat-icon (click)="openPPROtherTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+                    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+      </h1>
+    <div>  
+  <div>
+      <div style="display: inline-block; text-align: left;position: relative;width: 700px;" > 
+      <mat-tab-group style="background-color: white;">
+        <form [formGroup]="VendorFormGroup">  
+            <mat-tab > 
+             <div>
+              <ng-template  mat-tab-label > 
+                <label style="margin-left: 1%; margin-top:1%;color: white;font-size:16pt;">Please Approve or Reject the Procurement Request</label>
+              </ng-template> 
+              <table style="margin-left: 1%;">
+                <br>
+              <tr>
+                <td><label  for="name" style="margin-right: 1%;">Company Name:</label></td>
+                <td> 
+                    <mat-form-field appearance="fill" style="width: 310px;">
+                        <input matInput placeholder="Company Name" id="CompanyName" formControlName="CompanyName" readonly="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                      </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+              <td><label  for="name" style="margin-right: 1%;">Company Email:</label></td>
+              <td> 
+                  <mat-form-field appearance="fill" style="width: 310px;">
+                      <input matInput placeholder="Company Email" id="CompanyName" formControlName="CompanyEmail" readonly="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                    </mat-form-field>
+              </td>
+          </tr>
+          <tr>
+            <td><label  for="name" style="margin-right: 1%;">Description:</label></td>
+            <td> 
+                <mat-form-field appearance="fill" style="width: 310px;">
+                    <textarea matInput formControlName="Description" readonly="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default"></textarea>
+                  </mat-form-field>
+            </td>
+          </tr>
+          <tr *ngIf="FileDetails[0] != undefined">
+            <td><label for="file" style="margin-right: 1%;">Preffered Quote: </label></td> 
+            <td>
+                  <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank">{{FileDetails[0].FileName}}</a> 
+            </td>
+           <tr><br>
+            <tr *ngIf="FileDetails[0] != undefined">
+                <td><label for="file" style="margin-right: 1%;">Comparative  Quote 1: </label></td>
+                <td>
+                      <a id="btnLink" (click)="openPDFInNewTab(1)" target="_blank">{{FileDetails[1].FileName}}</a> 
+                </td>
+            <tr><br>
+                <tr *ngIf="FileDetails[0] != undefined">
+                    <td><label for="file" style="margin-right: 1%;">Comparative Quote 2: </label></td>
+                    <td>
+                          <a id="btnLink" (click)="openPDFInNewTab(2)" target="_blank" >{{FileDetails[2].FileName}}</a> 
+                    </td>
+                </tr>
+          </table> 
+          <br>
+        </div>
+             
+            </mat-tab>
+          </form>        
+      </mat-tab-group>
+      <div  style="background-color: white;display: flex;border-left:1px solid #244688;border-right:1px solid #244688;border-bottom:1px solid #244688;justify-content: center;">
+        <div class="wrapper" style="margin-bottom:1%;">
+          <button  (click)="AcceptRequest()">
+              <span>Approve</span>
+              <div class="success">
+                  <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                      viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;"
+                      xml:space="preserve">
+                      <path
+                          d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+                  </svg>
+              </div>
+          </button>
+
+          <button mat-raised-button type="button"  (click)="RejectRequest()" class="CloseButton"
+              style="margin-left: 5px;">
+              Reject
+          </button>
+
+      </div>
+        <!-- <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 160px;background-color: #244688;color: white;" > Accept Request</button>
+        <button mat-raised-button id="btnHover" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 160px;" (click)="RejectRequest()"> Reject Request </button> -->
+     </div>
+    </div>
+  </div> 
+  
+  
+  </div>
+
+
+
+
+
+</div>
+<!--  -->
+<div style="display: inline-block; text-align: left;position: relative;width: 700px;" *ngIf="ProcurementRequestDetails.vendor.vendor_Status_ID != 6" >
+  <h1 style="margin: 1%;margin-left: 0px;  color: #244688; font-weight:700; font-size:20pt;" >
+    <button  mat-raised-button routerLink="/ViewPendingProcurementRequest" style="float:left; background-color:#244688; color:white;margin-right: 1%;"><mat-icon style="margin-right: 0px;">arrow_back</mat-icon></button>
+     Procurement Request For {{ProcurementRequestDetails.vendor.name}}
+    <mat-icon (click)="openPPRNOTOtherTab()" aria-hidden="false" aria-label="admin icon" fontIcon="help"
+                    style="font-size:30pt; height: 37px; width: 37px;" [ngStyle]="{'color':'#244688'}" matTooltip="Need help? Click me!"></mat-icon>
+  </h1>
+  <div>  
+<div>
+    <div style="display: inline-block; text-align: left;position: relative;width: 700px;" > 
+    <mat-tab-group style="background-color: white;">
+      <form [formGroup]="VendorFormGroup">  
+      <mat-tab > 
+       <div>
+        <ng-template  mat-tab-label > 
+            <label style="margin-left: 1%; margin-top:1%;color: White;font-size:16pt;">Please Approve or Reject the Procurement Request</label>
+        </ng-template> 
+        <table style="margin-left: 1%;">
+          <br>
+        <tr>
+          <td><label  for="name" style="margin-right: 1%;">Company Name:</label></td>
+          <td> 
+              <mat-form-field appearance="fill" style="width: 310px;">
+                  <input matInput formControlName="CompanyName" readonly="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+                </mat-form-field>
+          </td>
+      </tr>
+      <tr>
+        <td><label  for="name" style="margin-right: 1%;">Company Email:</label></td>
+        <td> 
+            <mat-form-field appearance="fill" style="width: 310px;">
+                <input matInput formControlName="CompanyEmail" readonly="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default">
+              </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td><label  for="name" style="margin-right: 1%;">Description:</label></td>
+        <td> 
+            <mat-form-field appearance="fill" style="width: 310px;">
+                <textarea matInput formControlName="Description" readonly="true" [disabled]="" (focus)="onFocus($event)" style="cursor: default"></textarea>
+              </mat-form-field>
+        </td>
+      </tr>
+      <tr *ngIf="FileDetails[0] != undefined">
+        <td><label for="file" style="margin-right: 1%;">Procurement Quote: </label></td>
+        <td>
+              <a id="btnLink" (click)="openPDFInNewTab(0)" target="_blank" >{{FileDetails[0].FileName}}</a> 
+        </td>
+       </tr>
+    </table>
+    <br> 
+  </div>
+       
+      </mat-tab>
+    </form>      
+    </mat-tab-group>
+    <div  style="background-color: white;display: flex;border-left:1px solid #244688;border-right:1px solid #244688;border-bottom:1px solid #244688;justify-content: center;">
+      <div class="wrapper" style="margin-bottom:1%;">
+        <button  (click)="AcceptRequest()">
+            <span>Approve</span>
+            <div class="success">
+                <svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+                    viewBox="0 0 29.756 29.756" style="enable-background:new 0 0 29.756 29.756;"
+                    xml:space="preserve">
+                    <path
+                        d="M29.049,5.009L28.19,4.151c-0.943-0.945-2.488-0.945-3.434,0L10.172,18.737l-5.175-5.173   c-0.943-0.944-2.489-0.944-3.432,0.001l-0.858,0.857c-0.943,0.944-0.943,2.489,0,3.433l7.744,7.752   c0.944,0.943,2.489,0.943,3.433,0L29.049,8.442C29.991,7.498,29.991,5.953,29.049,5.009z" />
+                </svg>
+            </div>
+        </button>
+
+        <button mat-raised-button type="button"  (click)="RejectRequest()" class="CloseButton"
+            style="margin-left: 5px;">
+            Reject
+        </button>
+        <!-- <button mat-raised-button style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 170px;background-color: #244688;color: white;" (click)="AcceptRequest()"> Accept Request</button>
+        <button mat-raised-button id="btnHover" style="margin:1%; display: flex; align-items: center; font-size: 16px; width: 170px;" (click)="RejectRequest()"> Reject Request </button> -->
+     </div>
+    </div>
+ </div>
+  </div>
+</div>
+
+</div>
